@@ -1,2 +1,2 @@
-# jv-homework-template
-Реализовать свой ArrayList исходя из интерфейса https://pastebin.com/wMsifZSt
+# jv-array-list
+Реалізувати свій ArrayList який імплементує інтерфейс List

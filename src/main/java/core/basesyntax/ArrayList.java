@@ -1,7 +1,7 @@
 package core.basesyntax;
 
 /**
- * <p>Реалізувати свій ArrayList який імплементить інтерфейс List</p>
+ * <p>Реалізувати свій ArrayList який імплементує інтерфейс List</p>
  */
 public class ArrayList<T> implements List<T> {
 
