@@ -28,7 +28,7 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private void ArrayIndexOutOfBoundsException(int index) {
+    private void arrayIndexOutOfBoundsException(int index) {
         throw new ArrayIndexOutOfBoundsException("The index is out of range: "
                 + index + ", the size is: " + this.size());
     }
@@ -63,7 +63,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         if (index >= size || index < 0) {
-            ArrayIndexOutOfBoundsException(index);
+            arrayIndexOutOfBoundsException(index);
         }
         return (T) data[index];
     }
@@ -71,7 +71,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void set(T value, int index) {
         if (index >= size || index < 0) {
-            ArrayIndexOutOfBoundsException(index);
+            arrayIndexOutOfBoundsException(index);
         }
         data[index] = value;
     }
@@ -79,7 +79,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         if (index >= size) {
-            ArrayIndexOutOfBoundsException(index);
+            arrayIndexOutOfBoundsException(index);
         }
 
         T removedElement = (T) data[index];
