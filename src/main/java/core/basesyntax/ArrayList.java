@@ -1,5 +1,8 @@
 package core.basesyntax;
 
+/**
+ * <p>Реалізувати свій ArrayList який імплементить інтерфейс List</p>
+ */
 public class ArrayList<T> implements List<T> {
 
     @Override
