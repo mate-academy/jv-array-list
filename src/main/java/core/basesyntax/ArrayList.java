@@ -38,7 +38,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index >= size) {
+        if (index >= size || index < 0) {
             throw new ArrayIndexOutOfBoundsException("Given index is bigger than size.");
         }
         int newCapacity = size > capacity * loadFactor ? capacity : capacity * 3 / 2;
@@ -57,7 +57,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index >= size) {
+        if (index >= size || index < 0) {
             throw new ArrayIndexOutOfBoundsException();
         }
         return (T) data[index];
@@ -65,7 +65,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void set(T value, int index) {
-        if (index >= size) {
+        if (index >= size || index < 0) {
             throw new ArrayIndexOutOfBoundsException();
         }
         data[index] = value;
@@ -73,7 +73,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(int index) {
-        if (index >= size) {
+        if (index >= size || index < 0) {
             throw new ArrayIndexOutOfBoundsException("Index is bigger than size.");
         }
         T returnValue = (T) data[index];
