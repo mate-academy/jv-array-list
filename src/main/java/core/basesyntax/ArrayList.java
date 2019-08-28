@@ -28,10 +28,10 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value) {
         if (size > capacity * loadFactor) {
-            Object[] newData = new Object[capacity * 2];
+            Object[] newData = new Object[capacity * 3 / 2];
             System.arraycopy(this.data, 0, newData, 0, this.size);
             this.data = newData;
-            this.capacity = capacity * 2;
+            this.capacity = capacity * 3 / 2;
         }
         data[size++] = value;
     }
