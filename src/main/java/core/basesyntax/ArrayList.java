@@ -42,6 +42,9 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
+        if (index > size || index < 0) {
+            arrayIndexOutOfBoundsException(index);
+        }
         if (index == size - 1) {
             this.add(value);
         } else {
