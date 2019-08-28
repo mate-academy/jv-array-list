@@ -1,7 +1,6 @@
 package core.basesyntax;
 
 import java.util.Arrays;
-
 /**
  * Реалізувати свій ArrayList, який імплементує інтерфейс List
  */
@@ -21,7 +20,7 @@ public class ArrayList<T> implements List<T> {
         if (index <= size) {
             this.checkSize();
             for (int i = size; i > index; i--) {
-                arrayList[i++] = arrayList[i];
+                arrayList[i] = arrayList[i-1];
             }
             arrayList[index] = value;
             size++;
