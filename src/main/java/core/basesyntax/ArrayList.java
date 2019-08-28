@@ -3,12 +3,19 @@ package core.basesyntax;
 /**
  * <p>Реалізувати свій ArrayList який імплементує інтерфейс List</p>
  */
+@SuppressWarnings("checkstyle:SummaryJavadoc")
 public class ArrayList<T> implements List<T> {
     private Object[] arrayList;
     private int countElements;
     private int listSize;
 
-    public int indexOf(T t) {
+    public ArrayList() {
+        this.listSize = 10;
+        this.arrayList = new Object[listSize];
+        this.countElements = 0;
+    }
+
+    private int indexOf(T t) {
         for (int i = 0; i < arrayList.length; i++) {
             if (t.equals(arrayList[i])) {
                 return i;
@@ -17,20 +24,14 @@ public class ArrayList<T> implements List<T> {
         return -1;
     }
 
-    public ArrayList() {
-        this.listSize = 10;
-        this.arrayList = new Object[listSize];
-        this.countElements = 0;
-    }
-
-    public void resize() {
+    private void resize() {
         listSize *= 1.5;
         Object[] tempList = new Object[listSize];
         System.arraycopy(arrayList, 0, tempList, 0, countElements);
         arrayList = tempList;
     }
 
-    public void resize(int elements) {
+    private void resize(int elements) {
         listSize += elements + 4;
         Object[] tempList = new Object[listSize];
         System.arraycopy(arrayList, 0, tempList, 0, countElements);
