@@ -1,7 +1,5 @@
 package core.basesyntax;
 
-import java.util.Arrays;
-
 /**
  * Реалізувати свій ArrayList, який імплементує інтерфейс List
  */
