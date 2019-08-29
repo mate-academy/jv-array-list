@@ -62,9 +62,7 @@ public class ArrayList<T> implements List<T> {
         if (index < 0 || index > size) {
             throw new ArrayIndexOutOfBoundsException();
         }
-        setCapacity();
         arr[index] = value;
-        size++;
     }
 
     @Override
