@@ -61,10 +61,10 @@ public class ArrayList<T> implements List<T> {
         final T temp = array[index];
         T[] resizedArray = array;
         for (int i = index; i < size - 1; i++) {
-            array[i] = array[i + 1];
+            resizedArray[i] = resizedArray[i + 1];
         }
-        System.arraycopy(array, 0, array = (T[]) new Object[size - 1], 0, size - 1);
         size--;
+        System.arraycopy(array, 0, array = resizedArray, 0, size);
         return temp;
     }
 
