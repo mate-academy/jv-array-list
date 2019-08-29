@@ -4,7 +4,7 @@ import java.util.Arrays;
 
 
 public class ArrayList<T> implements List<T> {
-    private static final int CAPACITY = 16;
+    private static final int CAPACITY = 10;
     private int size;
     private T[] array = (T[]) new Object[CAPACITY];
 
