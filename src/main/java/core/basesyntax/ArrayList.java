@@ -4,12 +4,12 @@ package core.basesyntax;
  * <p>Реалізувати свій ArrayList який імплементує інтерфейс List</p>
  */
 public class ArrayList<T> implements List<T> {
-    private static final int init_capacity = 8;
+    private static final int INIT_CAPACITY = 8;
     private Object[] data;
     private int size;
 
     public <T> ArrayList() {
-        data = new Object[init_capacity];
+        data = new Object[INIT_CAPACITY];
         size = 0;
     }
 
