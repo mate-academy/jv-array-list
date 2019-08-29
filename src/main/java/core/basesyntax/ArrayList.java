@@ -1,14 +1,15 @@
 package core.basesyntax;
 
 public class ArrayList<T> implements List<T> {
+    private static final int DEFAULT_CAPACITY = 10;
+
     private int size = 0;
-    private T[] elements = (T[]) new Object[10];
+    private T[] elements = (T[]) new Object[DEFAULT_CAPACITY];
 
     @Override
     public void add(T value) {
         ensureCapacity(1);
-        elements[size] = value;
-        size++;
+        elements[size++] = value;
     }
 
     @Override
@@ -34,7 +35,7 @@ public class ArrayList<T> implements List<T> {
         if (checkIndex(index)) {
             return elements[index];
         }
-        return null;
+        throw new ArrayIndexOutOfBoundsException("Invalid index!");
     }
 
     @Override
@@ -48,15 +49,11 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         if (checkIndex(index)) {
             T result = elements[index];
-            if (index == size - 1) {
-                size--;
-                return result;
-            }
             System.arraycopy(elements, index + 1, elements, index, size - index - 1);
             size--;
             return result;
         }
-        return null;
+        throw new ArrayIndexOutOfBoundsException("Invalid index!");
     }
 
     @Override
@@ -91,9 +88,8 @@ public class ArrayList<T> implements List<T> {
     private boolean checkIndex(int index) {
         if (index < size && index >= 0) {
             return true;
-        } else {
-            throw new ArrayIndexOutOfBoundsException("source index " + index
-                    + " is out of bounds for maximum index " + (size - 1));
         }
+        throw new ArrayIndexOutOfBoundsException("source index " + index
+                + " is out of bounds for maximum index " + (size - 1));
     }
 }
