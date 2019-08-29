@@ -22,33 +22,25 @@ public class ArrayList<T> implements List<T> {
         data = new Object[DEFAULT_CAPACITY];
     }
 
-    private void ensureCapacity(int amount) {
-        if (data.length <= amount) {
-            data = Arrays.copyOf(data, data.length + amount + DEFAULT_CAPACITY);
-        }
-    }
-
-    private void arrayIndexOutOfBoundsException(int index) {
-        throw new ArrayIndexOutOfBoundsException("The index is out of range: "
-                + index + ", the size is: " + this.size());
-    }
-
     @Override
     public void add(T value) {
-        ensureCapacity(size + 1);
-        size++;
-        data[size - 1] = value;
+        if (size + 1 == data.length) {
+            data = Arrays.copyOf(data, data.length * 3 / 2);
+        }
+        data[size++] = value;
     }
 
     @Override
     public void add(T value, int index) {
         if (index > size || index < 0) {
-            arrayIndexOutOfBoundsException(index);
+            throw new ArrayIndexOutOfBoundsException();
         }
         if (index == size - 1) {
             this.add(value);
         } else {
-            ensureCapacity(size + 1);
+            if (size + 1 == data.length) {
+                data = Arrays.copyOf(data, data.length * 3 / 2);
+            }
             size++;
             System.arraycopy(data, index, data, index + 1, size - index);
             data[index] = value;
@@ -57,8 +49,10 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        ensureCapacity(size + 1);
         for (int i = 0; i < list.size(); i++) {
+            if (size + 1 == data.length) {
+                data = Arrays.copyOf(data, data.length * 3 / 2);
+            }
             this.add(list.get(i));
         }
     }
@@ -66,7 +60,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         if (index >= size || index < 0) {
-            arrayIndexOutOfBoundsException(index);
+            throw new ArrayIndexOutOfBoundsException();
         }
         return (T) data[index];
     }
@@ -74,7 +68,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void set(T value, int index) {
         if (index >= size || index < 0) {
-            arrayIndexOutOfBoundsException(index);
+            throw new ArrayIndexOutOfBoundsException();
         }
         data[index] = value;
     }
@@ -82,7 +76,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         if (index >= size) {
-            arrayIndexOutOfBoundsException(index);
+            throw new ArrayIndexOutOfBoundsException();
         }
 
         final T removedElement = (T) data[index];
