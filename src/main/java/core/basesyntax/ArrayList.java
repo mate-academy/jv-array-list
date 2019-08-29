@@ -10,13 +10,20 @@ public class ArrayList<T> implements List<T> {
     private Object[] arrayList = new Object[10];
 
     private void resizeArray(int deltaSize) {
-        Object[] newArrayList = Arrays.copyOf(arrayList, size() + deltaSize);
+        Object[] newArrayList = Arrays.copyOf(arrayList, arrayList.length * 3 / 2 + deltaSize);
+        arrayList = newArrayList;
+    }
+
+    private void resizeArray() {
+        Object[] newArrayList = Arrays.copyOf(arrayList, arrayList.length * 2);
         arrayList = newArrayList;
     }
 
     @Override
     public void add(T value) {
-        resizeArray(1);
+        if (size() == arrayList.length) {
+            resizeArray();
+        }
         arrayList[size()] = value;
     }
 
@@ -26,7 +33,9 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayIndexOutOfBoundsException("You cannot add an item to this position! ("
                     + index + ")");
         }
-        resizeArray(1);
+        if (size() == arrayList.length) {
+            resizeArray();
+        }
         if (index == size()) {
             arrayList[size()] = value;
         } else {
@@ -40,7 +49,9 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void addAll(List<T> list) {
         int arraySize = size();
-        resizeArray(list.size());
+        if (size() + list.size() >= arrayList.length) {
+            resizeArray(list.size());
+        }
         for (int i = 0; i <  list.size(); i++) {
             arrayList[arraySize + i] = list.get(i);
         }
