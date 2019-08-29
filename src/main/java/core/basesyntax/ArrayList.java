@@ -7,7 +7,8 @@ package core.basesyntax;
 import java.util.Arrays;
 
 public class ArrayList<T> implements List<T> {
-    private Object[] array = new Object[16];
+    private final int sizeArr = 16;
+    private Object[] elements = new Object[sizeArr];
     private int indexTopArray = 0;
 
     @Override
@@ -15,10 +16,10 @@ public class ArrayList<T> implements List<T> {
         if (value == null) {
             return;
         }
-        if (indexTopArray >= array.length) {
+        if (indexTopArray >= elements.length) {
             resizeAndCopyArray();
         }
-        array[indexTopArray] = value;
+        elements[indexTopArray] = value;
         indexTopArray++;
     }
 
@@ -31,11 +32,11 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayIndexOutOfBoundsException();
         }
         if (index == indexTopArray) {
-            array[index] = value;
+            elements[index] = value;
             indexTopArray++;
         } else {
-            System.arraycopy(array, index, array, index + 1, indexTopArray - index);
-            array[index] = value;
+            System.arraycopy(elements, index, elements, index + 1, indexTopArray - index);
+            elements[index] = value;
             indexTopArray++;
         }
     }
@@ -55,7 +56,7 @@ public class ArrayList<T> implements List<T> {
         if (index < 0 || index >= indexTopArray) {
             throw new ArrayIndexOutOfBoundsException();
         }
-        return (T) array[index];
+        return (T) elements[index];
     }
 
     @Override
@@ -66,7 +67,7 @@ public class ArrayList<T> implements List<T> {
         if (index < 0 || index >= indexTopArray) {
             throw new ArrayIndexOutOfBoundsException();
         }
-        array[index] = value;
+        elements[index] = value;
     }
 
     @Override
@@ -74,8 +75,8 @@ public class ArrayList<T> implements List<T> {
         if (index < 0 || index >= indexTopArray) {
             throw new ArrayIndexOutOfBoundsException();
         }
-        T t = (T) array[index];
-        System.arraycopy(array, index + 1, array, index, indexTopArray - 1 - index);
+        T t = (T) elements[index];
+        System.arraycopy(elements, index + 1, elements, index, indexTopArray - 1 - index);
         indexTopArray--;
         return t;
     }
@@ -86,7 +87,7 @@ public class ArrayList<T> implements List<T> {
             return null;
         }
         for (int i = 0; i < indexTopArray; i++) {
-            if (array[i].equals(t)) {
+            if (elements[i].equals(t)) {
                 return remove(i);
             }
         }
@@ -104,6 +105,6 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void resizeAndCopyArray() {
-        array = Arrays.copyOf(array, array.length * 2);
+        elements = Arrays.copyOf(elements, elements.length * 2);
     }
 }
