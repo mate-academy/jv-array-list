@@ -7,8 +7,8 @@ package core.basesyntax;
 import java.util.Arrays;
 
 public class ArrayList<T> implements List<T> {
-    private static final int SIZEARRAY = 10;
-    private Object[] elements = new Object[SIZEARRAY];
+    private static final int SIZE_ARRAY = 10;
+    private Object[] elements = new Object[SIZE_ARRAY];
     private int indexTopArray = 0;
 
     @Override
