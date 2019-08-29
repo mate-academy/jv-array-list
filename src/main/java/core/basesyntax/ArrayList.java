@@ -4,7 +4,7 @@ package core.basesyntax;
  * <p>Реалізувати свій ArrayList який імплементує інтерфейс List</p>
  */
 public class ArrayList<T> implements List<T> {
-    private static final int DEFAULT_CAPACITY = 16;
+    private static final int DEFAULT_CAPACITY = 10;
     private static final float LOAD_FACTOR = 0.75f;
     private int capacity;
     private int size;
