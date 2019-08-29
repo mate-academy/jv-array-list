@@ -4,7 +4,7 @@ package core.basesyntax;
  * <p>Реалізувати свій ArrayList який імплементує інтерфейс List</p>
  */
 public class ArrayList<T> implements List<T> {
-    private static final int init_capacity = 10;
+    private static final int init_capacity = 8;
     private Object[] data;
     private int size;
 
@@ -13,25 +13,27 @@ public class ArrayList<T> implements List<T> {
         size = 0;
     }
 
-    private void resizeIfFull() {
-        if (size == data.length) {
-            Object[] newData = new Object[size + 5];
-            System.arraycopy(data, 0, newData, 0, size);
-            data = newData;
-        }
+    private void resize() {
+        Object[] newData = new Object[size * 3 / 2];
+        System.arraycopy(data, 0, newData, 0, size);
+        data = newData;
     }
 
     @Override
     public void add(T value) {
-        resizeIfFull();
+        if (size == data.length) {
+            resize();
+        }
         data[size++] = value;
     }
 
     @Override
     public void add(T value, int index) {
-        resizeIfFull();
         if (index >= size) {
             throw new ArrayIndexOutOfBoundsException();
+        }
+        if (size == data.length) {
+            resize();
         }
         System.arraycopy(data, index, data, index + 1, size - index);
         data[index] = value;
@@ -60,8 +62,7 @@ public class ArrayList<T> implements List<T> {
         }
         data[index] = value;
     }
-
-    //TODO HERE
+    
     @Override
     public T remove(int index) {
         if (index >= size || index < 0) {
@@ -72,8 +73,7 @@ public class ArrayList<T> implements List<T> {
         data[--size] = null;
         return deleted;
     }
-
-    //TODO HERE
+    
     @Override
     public T remove(T t) {
         for (int i = 0; i < size; i++) {
