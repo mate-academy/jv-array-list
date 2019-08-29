@@ -12,14 +12,14 @@ public class ArrayList<T> implements List<T> {
 
     public ArrayList(int initialCapacity) {
         if (initialCapacity > 0) {
-            this.data = new Object[initialCapacity];
+            data = new Object[initialCapacity];
         } else {
             throw new IllegalArgumentException("Wrong initial capacity: " + initialCapacity);
         }
     }
 
     public ArrayList() {
-        this.data = new Object[DEFAULT_CAPACITY];
+        data = new Object[DEFAULT_CAPACITY];
     }
 
     private void ensureCapacity(int amount) {
@@ -86,14 +86,9 @@ public class ArrayList<T> implements List<T> {
         }
 
         T removedElement = (T) data[index];
-        if (index == size - 1) {
-            data[size - 1] = null;
-            size--;
-        } else {
-            System.arraycopy(data, index + 1, data, index, size - index - 1);
-            size--;
-            data[size] = null;
-        }
+        System.arraycopy(data, index + 1, data, index, size - index - 1);
+        size--;
+        data[size] = null;
         return removedElement;
     }
 
@@ -124,13 +119,13 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("[ ");
+        StringBuilder listToString = new StringBuilder();
+        listToString.append("[ ");
         for (int i = 0; i < size; i++) {
-            sb.append(data[i]);
-            sb.append(" ");
+            listToString.append(data[i]);
+            listToString.append(" ");
         }
-        sb.append("]");
-        return sb.toString();
+        listToString.append("]");
+        return listToString.toString();
     }
 }
