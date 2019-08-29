@@ -16,7 +16,7 @@ public class ArrayList<T> implements List<T> {
             return;
         }
         if (indexTopArray >= array.length) {
-            array = resizeAndCopyArray(array);
+            resizeAndCopyArray();
         }
         array[indexTopArray] = value;
         indexTopArray++;
@@ -29,9 +29,6 @@ public class ArrayList<T> implements List<T> {
         }
         if (index < 0 || index > indexTopArray) {
             throw new ArrayIndexOutOfBoundsException();
-        }
-        if (indexTopArray >= array.length) {
-            array = resizeAndCopyArray(array);
         }
         if (index == indexTopArray) {
             array[index] = value;
@@ -78,9 +75,7 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayIndexOutOfBoundsException();
         }
         T t = (T) array[index];
-        for (int i = index + 1; i < indexTopArray; i++) {
-            array[i - 1] = array[i];
-        }
+        System.arraycopy(array, index + 1, array, index, indexTopArray - 1 - index);
         indexTopArray--;
         return t;
     }
@@ -108,7 +103,7 @@ public class ArrayList<T> implements List<T> {
         return indexTopArray < 1;
     }
 
-    private Object[] resizeAndCopyArray(Object[] input) {
-        return Arrays.copyOf(input, input.length * 2);
+    private void resizeAndCopyArray() {
+        array = Arrays.copyOf(array, array.length * 2);
     }
 }
