@@ -33,9 +33,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayIndexOutOfBoundsException("Given index is bigger than size.");
-        }
+        checkIndex(index);
         resize();
         System.arraycopy(this.data, index, this.data, index + 1, this.size - index);
         this.data[index] = value;
@@ -51,25 +49,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayIndexOutOfBoundsException();
-        }
+        checkIndex(index);
         return (T) data[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayIndexOutOfBoundsException();
-        }
+        checkIndex(index);
         data[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayIndexOutOfBoundsException("Index is bigger than size.");
-        }
+        checkIndex(index);
         T returnValue = (T) data[index];
         System.arraycopy(data, index + 1, data, index, size - index - 1);
         this.size--;
@@ -95,13 +87,19 @@ public class ArrayList<T> implements List<T> {
     public boolean isEmpty() {
         return size == 0;
     }
-    
+
     private void resize() {
         if (size > capacity * LOAD_FACTOR) {
             Object[] newData = new Object[capacity * 3 / 2];
             System.arraycopy(this.data, 0, newData, 0, this.size);
             this.data = newData;
             this.capacity = capacity * 3 / 2;
+        }
+    }
+
+    private void checkIndex(int index) {
+        if (index >= size || index < 0) {
+            throw new ArrayIndexOutOfBoundsException("Index is bigger than size.");
         }
     }
 }
