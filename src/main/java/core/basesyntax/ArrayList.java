@@ -1,7 +1,7 @@
 package core.basesyntax;
 
 /**
- * Реалізувати свій ArrayList, який імплементує інтерфейс List
+ * Реалізувати свій ArrayList, який імплементує інтерфейс List.
  */
 public class ArrayList<T> implements List<T> {
     private final int initialCapacity = 10;
