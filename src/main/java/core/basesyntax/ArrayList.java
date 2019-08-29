@@ -1,6 +1,5 @@
 package core.basesyntax;
 
-import java.util.Arrays;
 
 public class ArrayList<T> implements List<T> {
     private static final int CAPACITY = 16;
@@ -43,10 +42,7 @@ public class ArrayList<T> implements List<T> {
         if (index < 0 || index > size) {
             throw new ArrayIndexOutOfBoundsException();
         }
-        if (index < size) {
-            return array[index];
-        }
-        return null;
+        return array[index];
     }
 
     @Override
@@ -54,9 +50,7 @@ public class ArrayList<T> implements List<T> {
         if (index < 0 || index > size) {
             throw new ArrayIndexOutOfBoundsException();
         }
-        if (index < size) {
-            array[index] = value;
-        }
+        array[index] = value;
     }
 
     @Override
@@ -64,12 +58,14 @@ public class ArrayList<T> implements List<T> {
         if (index < 0 || index > size) {
             throw new ArrayIndexOutOfBoundsException();
         }
+        final T temp = array[index];
+        T[] resizedArray = array;
         for (int i = index; i < size - 1; i++) {
             array[i] = array[i + 1];
         }
-        array[size - 1] = null;
+        System.arraycopy(array, 0, array = (T[]) new Object[size - 1], 0, size - 1);
         size--;
-        return array[index];
+        return temp;
     }
 
     @Override
@@ -89,11 +85,11 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public boolean isEmpty() {
-        return false;
+        return size == 0;
     }
 
     private void increaseSize() {
         int newCapacity = (array.length * 3 / 2) + 1;
-        array = Arrays.copyOf(array, newCapacity);
+        System.arraycopy(array, 0, array = (T[]) new Object[newCapacity], 0, size);
     }
 }
