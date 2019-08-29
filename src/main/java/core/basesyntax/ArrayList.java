@@ -4,7 +4,7 @@ package core.basesyntax;
  * Реалізувати свій ArrayList, який імплементує інтерфейс List.
  */
 public class ArrayList<T> implements List<T> {
-    private final static int INITIAL_CAPACITY = 10;
+    private static final int INITIAL_CAPACITY = 10;
     private Object[] data = new Object[INITIAL_CAPACITY];
     private int size = 0;
 
