@@ -6,7 +6,8 @@ import java.util.Arrays;
  * <p>Реалізувати свій ArrayList який імплементує інтерфейс List</p>
  */
 public class ArrayList<T> implements List<T> {
-    private Object [] elements = new Object [10];
+    private static final int INITIAL_CAPACITY = 15;
+    private Object [] elements = new Object [INITIAL_CAPACITY];
     private int size = 0;
 
     @Override
