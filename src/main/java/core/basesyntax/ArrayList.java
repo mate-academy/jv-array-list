@@ -82,9 +82,9 @@ public class ArrayList<T> implements List<T> {
 
     private void checkSize() {
         if (size == arrayList.length) {
-            Object[] newArrayList = new Object[size + (size >> 1)];
-            System.arraycopy(arrayList, 0, newArrayList, 0, size);
-            arrayList = newArrayList;
+            Object[] newArray = new Object[size + (size >> 1)];
+            System.arraycopy(arrayList, 0, newArray, 0, size);
+            arrayList = newArray;
         }
     }
 }
