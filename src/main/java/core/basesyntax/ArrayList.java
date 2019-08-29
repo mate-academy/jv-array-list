@@ -16,13 +16,12 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value) {
         resize();
-        objects[size] = value;
-        size++;
+        objects[size++] = value;
     }
 
     @Override
     public void add(T value, int index) {
-        if (index > size || size < 0) {
+        if (index > size || index < 0) {
             throw new ArrayIndexOutOfBoundsException("java.lang.ArrayIndexOutOfBoundsException");
         }
         resize();
@@ -33,23 +32,25 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        if (size + list.size() >= objects.length) {
+        while (size + list.size() >= objects.length) {
             resize();
         }
         for (int i = 0; i < list.size(); i++) {
-            objects[size] = list.get(i);
-            size++;
+            objects[size++] = list.get(i);
         }
     }
 
     @Override
     public T get(int index) {
+        if (index > size || index < 0) {
+            throw new ArrayIndexOutOfBoundsException("java.lang.ArrayIndexOutOfBoundsException");
+        }
         return (T) objects[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index > size) {
+        if (index > size || index < 0) {
             throw new ArrayIndexOutOfBoundsException("java.lang.ArrayIndexOutOfBoundsException");
         }
         objects[index] = value;
@@ -57,22 +58,15 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(int index) {
-        if (index > size || size < 0) {
+        if (index > size || index < 0) {
             throw new ArrayIndexOutOfBoundsException("java.lang.ArrayIndexOutOfBoundsException");
         }
-        Object[] tempArray = new Object[objects.length];
-        for (int i = 0; i < objects.length; i++) {
-            tempArray[i] = objects[i];
-        }
-        for (int i = 0; i < objects.length - 1; i++) {
-            if (i < index) {
-                objects[i] = tempArray[i];
-            } else {
-                objects[i] = tempArray[i + 1];
-            }
-        }
+        System.arraycopy(objects, index + 1, objects, index, objects.length - index - 1);
         size--;
-        return (T) tempArray[index];
+        if (size < 0) {
+            throw new ArrayIndexOutOfBoundsException("java.lang.ArrayIndexOutOfBoundsException");
+        }
+        return (T) objects[index];
     }
 
     @Override
@@ -80,32 +74,22 @@ public class ArrayList<T> implements List<T> {
         if (t == null) {
             throw new ArrayIndexOutOfBoundsException("java.lang.ArrayIndexOutOfBoundsException");
         }
-        Object[] tempArray = new Object[objects.length];
+        //Object[] tempArray = new Object[objects.length];
         int count = 0;
         int index = 0;
+        T object = null;
         for (int i = 0; i < objects.length; i++) {
-            tempArray[i] = objects[i];
             if (t.equals(objects[i])) {
                 count++;
+                index = i;
+                object = (T) objects[i];
             }
         }
         if (count == 0) {
             throw new ArrayIndexOutOfBoundsException("java.lang.ArrayIndexOutOfBoundsException");
         }
-        for (int i = 0; i < tempArray.length; i++) {
-            if (t.equals(objects[i])) {
-                index = i;
-            }
-        }
-        for (int i = 0; i < tempArray.length - 1; i++) {
-            if (i < index) {
-                objects[i] = tempArray[i];
-            } else {
-                objects[i] = tempArray[i + 1];
-            }
-        }
-        size--;
-        return (T) tempArray[index];
+        remove(index);
+        return object;
     }
 
     @Override
@@ -115,6 +99,6 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public boolean isEmpty() {
-        return size < 0;
+        return size == 0;
     }
 }
