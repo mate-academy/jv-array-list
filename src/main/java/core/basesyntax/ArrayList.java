@@ -100,9 +100,4 @@ public class ArrayList<T> implements List<T> {
         System.arraycopy(values, 0, newValues, 0, size);
         values = newValues;
     }
-    //  private void resizeLess() {
-    ////    Object[] newValues = new Object[values.length / 2];
-    // System.arraycopy(values, 0, newValues, 0, size);
-    ////    values = newValues;
-    //  }
 }
