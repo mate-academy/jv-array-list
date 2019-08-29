@@ -1,5 +1,7 @@
 package core.basesyntax;
 
+import java.util.Arrays;
+
 
 public class ArrayList<T> implements List<T> {
     private static final int CAPACITY = 16;
@@ -20,9 +22,8 @@ public class ArrayList<T> implements List<T> {
             increaseSize();
         }
         if (index < size) {
-            for (int i = size + 1; i > index; i--) {
-                array[i] = array[i - 1];
-            }
+            System.arraycopy(array, index, array,
+                    index + 1, array.length - 2);
             array[index] = value;
             size++;
         } else {
@@ -59,12 +60,9 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayIndexOutOfBoundsException();
         }
         final T temp = array[index];
-        T[] resizedArray = array;
-        for (int i = index; i < size - 1; i++) {
-            resizedArray[i] = resizedArray[i + 1];
-        }
+        System.arraycopy(array, index + 1,
+                array, index, array.length - 2);
         size--;
-        System.arraycopy(array, 0, array = resizedArray, 0, size);
         return temp;
     }
 
@@ -90,6 +88,6 @@ public class ArrayList<T> implements List<T> {
 
     private void increaseSize() {
         int newCapacity = (array.length * 3 / 2) + 1;
-        System.arraycopy(array, 0, array = (T[]) new Object[newCapacity], 0, size);
+        array = Arrays.copyOf(array, newCapacity);
     }
 }
