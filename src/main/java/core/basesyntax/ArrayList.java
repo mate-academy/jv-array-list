@@ -4,13 +4,14 @@ package core.basesyntax;
  * Реалізувати свій ArrayList, який імплементує інтерфейс List
  */
 public class ArrayList<T> implements List<T> {
-    private Object[] arrayList = new Object[10];
+    private final int initialCapacity = 10;
+    private Object[] data = new Object[initialCapacity];
     private int size = 0;
 
     @Override
     public void add(T value) {
         checkSize();
-        arrayList[size++] = value;
+        data[size++] = value;
     }
 
     @Override
@@ -20,9 +21,9 @@ public class ArrayList<T> implements List<T> {
         }
         checkSize();
         for (int i = size; i > index; i--) {
-            arrayList[i] = arrayList[i - 1];
+            data[i] = data[i - 1];
         }
-        arrayList[index] = value;
+        data[index] = value;
         size++;
     }
 
@@ -38,7 +39,7 @@ public class ArrayList<T> implements List<T> {
         if (index < 0 || index >= size) {
             throw new ArrayIndexOutOfBoundsException();
         }
-        return (T) arrayList[index];
+        return (T) data[index];
     }
 
     @Override
@@ -46,24 +47,23 @@ public class ArrayList<T> implements List<T> {
         if (index < 0 || index >= size) {
             throw new ArrayIndexOutOfBoundsException();
         }
-        arrayList[index] = value;
+        data[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayIndexOutOfBoundsException();
-        }
+        T result = get(index);
         for (int i = index; i < size; i++) {
-            set((T) arrayList[i + 1], i);
+            set((T) data[i + 1], i);
         }
-        return (T) arrayList[size--];
+        size--;
+        return result;
     }
 
     @Override
     public T remove(T t) {
         for (int i = 0; i < size; i++) {
-            if (arrayList[i].equals(t)) {
+            if (data[i].equals(t)) {
                 return remove(i);
             }
         }
@@ -77,14 +77,14 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public boolean isEmpty() {
-        return size > 0;
+        return size == 0;
     }
 
     private void checkSize() {
-        if (size == arrayList.length) {
-            Object[] newArray = new Object[size + (size >> 1)];
-            System.arraycopy(arrayList, 0, newArray, 0, size);
-            arrayList = newArray;
+        if (size == data.length) {
+            Object[] newData = new Object[size + (size >> 1)];
+            System.arraycopy(data, 0, newData, 0, size);
+            data = newData;
         }
     }
 }
