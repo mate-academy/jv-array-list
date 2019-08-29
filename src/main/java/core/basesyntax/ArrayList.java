@@ -5,14 +5,14 @@ package core.basesyntax;
  */
 public class ArrayList<T> implements List<T> {
     private Object[] storage;
-    private static final int defaultCapacity = 16;
+    private static final int DEFAULT_CAPACITY = 10;
     private int size = 0;
 
     public ArrayList() {
-        storage = new Object[defaultCapacity];
+        storage = new Object[DEFAULT_CAPACITY];
     }
 
-    ArrayList(int capacity) {
+    public ArrayList(int capacity) {
         storage = new Object[capacity];
     }
 
@@ -21,8 +21,7 @@ public class ArrayList<T> implements List<T> {
         if (size == storage.length - 1) {
             resize();
         }
-        storage[size] = value;
-        size++;
+        storage[size++] = value;
     }
 
     @Override
@@ -93,7 +92,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void resize() {
-        Object[] extended = new Object[storage.length * 2];
+        Object[] extended = new Object[storage.length + DEFAULT_CAPACITY];
         System.arraycopy(storage, 0, extended, 0, size);
         storage = extended;
     }
