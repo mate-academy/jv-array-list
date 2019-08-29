@@ -31,8 +31,8 @@ public class ArrayList<T> implements List<T> {
         arrayList = tempList;
     }
 
-    private void resize(int elements) {
-        listSize += elements + 4;
+    private void resize(int sizeOfIncrease) {
+        listSize += sizeOfIncrease * 1.5;
         Object[] tempList = new Object[listSize];
         System.arraycopy(arrayList, 0, tempList, 0, countElements);
         arrayList = tempList;
@@ -52,14 +52,13 @@ public class ArrayList<T> implements List<T> {
         if (countElements == listSize) {
             resize();
         }
-        if (index < countElements) {
-            Object[] tempList = new Object[countElements - index + 1];
-            System.arraycopy(arrayList, index, tempList, 0, countElements - index + 1);
-            arrayList[index] = value;
-            System.arraycopy(tempList, 0, arrayList, index + 1, countElements - index + 1);
-            countElements++;
-        } else {
+        if (index >= countElements || index < 0) {
             throw new ArrayIndexOutOfBoundsException();
+        }
+        if (index < countElements) {
+            System.arraycopy(arrayList, index, arrayList, index + 1, countElements - index + 1);
+            arrayList[index] = value;
+            countElements++;
         }
     }
 
@@ -75,28 +74,29 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
+        if (index >= countElements || index < 0) {
+            throw new ArrayIndexOutOfBoundsException();
+        }
         return (T) arrayList[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index < countElements) {
-            arrayList[index] = value;
-        } else {
+        if (index >= countElements || index < 0) {
             throw new ArrayIndexOutOfBoundsException();
         }
+        arrayList[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        T temp = (T) arrayList[index];
-        if (index < countElements) {
-            System.arraycopy(arrayList, index + 1, arrayList, index, arrayList.length - index - 1);
-            arrayList[arrayList.length - 1] = null;
-            countElements--;
-        } else {
+        if (index >= countElements || index < 0) {
             throw new ArrayIndexOutOfBoundsException();
         }
+        countElements--;
+        T temp = (T) arrayList[index];
+        System.arraycopy(arrayList, index + 1, arrayList, index, arrayList.length - index - 1);
+        arrayList[arrayList.length - 1] = null;
         return temp;
     }
 
