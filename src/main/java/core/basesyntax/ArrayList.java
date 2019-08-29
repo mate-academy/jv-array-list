@@ -7,8 +7,8 @@ package core.basesyntax;
 import java.util.Arrays;
 
 public class ArrayList<T> implements List<T> {
-    private final int sizeArr = 16;
-    private Object[] elements = new Object[sizeArr];
+    private static final int SIZEARRAY = 10;
+    private Object[] elements = new Object[SIZEARRAY];
     private int indexTopArray = 0;
 
     @Override
@@ -31,14 +31,9 @@ public class ArrayList<T> implements List<T> {
         if (index < 0 || index > indexTopArray) {
             throw new ArrayIndexOutOfBoundsException();
         }
-        if (index == indexTopArray) {
-            elements[index] = value;
-            indexTopArray++;
-        } else {
-            System.arraycopy(elements, index, elements, index + 1, indexTopArray - index);
-            elements[index] = value;
-            indexTopArray++;
-        }
+        System.arraycopy(elements, index, elements, index + 1, indexTopArray - index);
+        elements[index] = value;
+        indexTopArray++;
     }
 
     @Override
@@ -105,6 +100,6 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void resizeAndCopyArray() {
-        elements = Arrays.copyOf(elements, elements.length * 2);
+        elements = Arrays.copyOf(elements, elements.length * 3 / 2);
     }
 }
