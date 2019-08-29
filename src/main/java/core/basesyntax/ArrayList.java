@@ -11,65 +11,62 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        this.checkSize();
-        arrayList[size] = value;
-        size++;
+        checkSize();
+        arrayList[size++] = value;
     }
 
     @Override
     public void add(T value, int index) {
-        if (index >= 0 && index <= size) {
-            this.checkSize();
-            for (int i = size; i > index; i--) {
-                arrayList[i] = arrayList[i - 1];
-            }
-            arrayList[index] = value;
-            size++;
-        } else {
+        if (index < 0 || index > size) {
             throw new ArrayIndexOutOfBoundsException();
         }
+        checkSize();
+        for (int i = size; i > index; i--) {
+            arrayList[i] = arrayList[i - 1];
+        }
+        arrayList[index] = value;
+        size++;
     }
 
     @Override
     public void addAll(List<T> list) {
         for (int i = 0; i < list.size(); i++) {
-            this.add(list.get(i));
+            add(list.get(i));
         }
     }
 
     @Override
     public T get(int index) {
-        if (index >= 0 && index < size) {
-            return (T) arrayList[index];
+        if (index < 0 || index >= size) {
+            throw new ArrayIndexOutOfBoundsException();
         }
-        throw new ArrayIndexOutOfBoundsException();
+        return (T) arrayList[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index >= 0 && index < size) {
-            arrayList[index] = value;
-        } else {
+        if (index < 0 || index >= size) {
             throw new ArrayIndexOutOfBoundsException();
         }
+        arrayList[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index >= 0 && index < size) {
-            for (int i = index; i < size; i++) {
-                set((T) arrayList[i + 1], i);
-            }
-            return (T) arrayList[size--];
+        if (index < 0 || index >= size) {
+            throw new ArrayIndexOutOfBoundsException();
         }
-        throw new ArrayIndexOutOfBoundsException();
+        for (int i = index; i < size; i++) {
+            set((T) arrayList[i + 1], i);
+        }
+        return (T) arrayList[size--];
     }
 
     @Override
     public T remove(T t) {
         for (int i = 0; i < size; i++) {
             if (arrayList[i].equals(t)) {
-                return this.remove(i);
+                return remove(i);
             }
         }
         throw new ArrayIndexOutOfBoundsException();
@@ -87,7 +84,9 @@ public class ArrayList<T> implements List<T> {
 
     private void checkSize() {
         if (size == arrayList.length) {
-            arrayList = Arrays.copyOf(arrayList, arrayList.length + (arrayList.length >> 1));
+            Object[] newArrayList = new Object[size + (size >> 1)];
+            System.arraycopy(arrayList, 0, newArrayList, 0, size);
+            arrayList = newArrayList;
         }
     }
 }
