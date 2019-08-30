@@ -6,19 +6,19 @@ import java.util.Arrays;
  * <p>Реалізувати свій ArrayList який імплементує інтерфейс List</p>
  */
 public class ArrayList<T> implements List<T> {
-    private static final int DEFOULT_SIZE = 10;
-    private Object[] ownSet;
+    private static final int DEFAULT_SIZE = 10;
+    private Object[] dataElements;
     private int currentLength;
     private int capacity;
 
     public ArrayList() {
-        ownSet = (T[]) new Object[DEFOULT_SIZE];
+        dataElements = (T[]) new Object[DEFAULT_SIZE];
         currentLength = 0;
-        capacity = DEFOULT_SIZE;
+        capacity = DEFAULT_SIZE;
     }
 
     public ArrayList(int size) {
-        ownSet = (T[]) new Object[size];
+        dataElements = (T[]) new Object[size];
         currentLength = 0;
         capacity = size;
     }
@@ -30,9 +30,9 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void extendSpace() {
-        if (size() >= capacity * 0.8d) {
-            Object[] tempSet = Arrays.copyOf(ownSet, capacity * 2);
-            ownSet = tempSet;
+        if (size() >= capacity) {
+            Object[] tempSet = Arrays.copyOf(dataElements, capacity * 2);
+            dataElements = tempSet;
             capacity *= 2;
         }
     }
@@ -40,7 +40,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value) {
         extendSpace();
-        ownSet[currentLength] = value;
+        dataElements[currentLength] = value;
         currentLength++;
     }
 
@@ -50,9 +50,9 @@ public class ArrayList<T> implements List<T> {
         checkIndex(index);
 
         for (int i = size(); i > index; i--) {
-            ownSet[i] = ownSet[i - 1];
+            dataElements[i] = dataElements[i - 1];
         }
-        ownSet[index] = value;
+        dataElements[index] = value;
         currentLength++;
     }
 
@@ -66,31 +66,31 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         checkIndex(index);
-        return (T) ownSet[index];
+        return (T) dataElements[index];
     }
 
     @Override
     public void set(T value, int index) {
         checkIndex(index);
-
-        ownSet[index] = value;
+        dataElements[index] = value;
     }
 
     @Override
     public T remove(int index) {
         checkIndex(index);
 
-        for (int i = index; i < size(); i++) {
-            ownSet[i] = ownSet[i + 1];
+        for (int i = index; i < size() - 1; i++) {
+            dataElements[i] = dataElements[i + 1];
         }
+        dataElements[size() - 1] = null;
         currentLength--;
-        return (T) ownSet[index];
+        return (T) dataElements[index];
     }
 
     @Override
     public T remove(T t) {
         for (int i = 0; i < size(); i++) {
-            if (ownSet[i].equals(t)) {
+            if (dataElements[i].equals(t)) {
                 return remove(i);
             }
         }
