@@ -8,8 +8,6 @@ public class ArrayList<T> implements List<T> {
     private Object[] elementData = new Object[CAPACITY];
     private int size = 0;
 
-
-
     @Override
     public void add(T value) {
         resize();
