@@ -53,7 +53,7 @@ public class ArrayList<T> implements List<T> {
             if (size + 1 == data.length) {
                 data = Arrays.copyOf(data, data.length * 3 / 2);
             }
-            this.add(list.get(i));
+            add(list.get(i));
         }
     }
 
