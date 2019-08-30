@@ -8,25 +8,26 @@ import java.util.Arrays;
 public class ArrayList<T> implements List<T> {
     private static final int CAPACITY = 10;
     private int size = 0;
-    private Object[] array;
+    private Object[] elementsData;
+    java.util.ArrayList arrayList = new java.util.ArrayList();
 
     public ArrayList() {
-        array = new Object[CAPACITY];
+        elementsData = new Object[CAPACITY];
     }
 
     public ArrayList(int userCapacity) {
-        array = new Object[userCapacity];
+        elementsData = new Object[userCapacity];
     }
 
-    public void outOfCapacity(int length) {
-        array = Arrays.copyOf(array, length + CAPACITY + array.length);
+    public void outOfCapacity(int minCapacity) {
+        elementsData = Arrays.copyOf(elementsData, minCapacity + elementsData.length);
     }
 
     @Override
     public void add(T value) {
         outOfCapacity(size + 1);
         size++;
-        array[size - 1] = value;
+        elementsData[size - 1] = value;
     }
 
     @Override
@@ -36,8 +37,8 @@ public class ArrayList<T> implements List<T> {
         } else {
             outOfCapacity(size + 1);
             size++;
-            System.arraycopy(array, index, array, index + 1, size - index);
-            array[index] = value;
+            System.arraycopy(elementsData, index, elementsData, index + 1, size - index);
+            elementsData[index] = value;
         }
     }
 
@@ -54,7 +55,7 @@ public class ArrayList<T> implements List<T> {
         if (index < 0 || index > size) {
             throw new ArrayIndexOutOfBoundsException("Index out of range");
         }
-        return (T) array[index];
+        return (T) elementsData[index];
     }
 
     @Override
@@ -62,7 +63,7 @@ public class ArrayList<T> implements List<T> {
         if (index < 0 || index > size) {
             throw new ArrayIndexOutOfBoundsException("Index out of range");
         }
-        array[index] = value;
+        elementsData[index] = value;
     }
 
     @Override
@@ -70,25 +71,22 @@ public class ArrayList<T> implements List<T> {
         if (index > size) {
             throw new ArrayIndexOutOfBoundsException("Index out of range");
         }
-        T elem = (T) array[index];
-        System.arraycopy(array, index + 1, array, index, size - index - 1);
-        array[size--] = null;
+        T elem = (T) elementsData[index];
+        System.arraycopy(elementsData, index + 1, elementsData, index, size - index - 1);
+        elementsData[size--] = null;
         return elem;
     }
 
     @Override
     public T remove(T t) {
-        if (t != null) {
-            for (int i = 0; i < size; i++) {
-                if (array[i].equals(t)) {
-                    T elem = (T) array[i];
-                    remove(i);
-                    return elem;
-                }
+        for (int i = 0; i < size; i++) {
+            if (elementsData[i].equals(t)) {
+                T elem = (T) elementsData[i];
+                remove(i);
+                return elem;
             }
-            throw new ArrayIndexOutOfBoundsException("Index out of range");
         }
-        return null;
+        throw new ArrayIndexOutOfBoundsException("Index out of range");
     }
 
     @Override
