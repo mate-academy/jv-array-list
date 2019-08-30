@@ -24,7 +24,7 @@ public class ArrayList<T> implements List<T> {
 
     private void setCapacity() {
         if (size >= dataElements.length) {
-            dataElements = Arrays.copyOf(dataElements, (int) (dataElements.length * 1.5));
+            dataElements = Arrays.copyOf(dataElements, (int) (dataElements.length * 3/2));
         }
     }
 
