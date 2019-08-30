@@ -31,9 +31,9 @@ public class ArrayList<T> implements List<T> {
 
     private void extendSpace() {
         if (size() >= capacity) {
-            Object[] tempSet = Arrays.copyOf(dataElements, capacity * 2);
+            Object[] tempSet = Arrays.copyOf(dataElements, (capacity * 3) / 2);
             dataElements = tempSet;
-            capacity *= 2;
+            capacity = (capacity * 3) / 2;
         }
     }
 
@@ -78,13 +78,14 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
+        T removedObject = (T) dataElements[index];
 
         for (int i = index; i < size() - 1; i++) {
             dataElements[i] = dataElements[i + 1];
         }
         dataElements[size() - 1] = null;
         currentLength--;
-        return (T) dataElements[index];
+        return removedObject;
     }
 
     @Override
