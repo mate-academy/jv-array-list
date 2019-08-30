@@ -7,31 +7,31 @@ import java.util.Arrays;
  */
 public class ArrayList<T> implements List<T> {
     private int size;
-    private final int defaultCapacyty = 10;
-    private Object[] arrList;
+    private final int DEFAULT_CAPACITY = 10;
+    private Object[] dataElements;
 
     public ArrayList(int currentCapacity) {
         if (currentCapacity > 0) {
-            this.arrList = new Object[currentCapacity];
+            dataElements = new Object[currentCapacity];
         } else {
             throw new IllegalArgumentException("Wrong initial capacity: " + currentCapacity);
         }
     }
 
     public ArrayList() {
-        arrList = new Object[defaultCapacyty];
+        dataElements = new Object[DEFAULT_CAPACITY];
     }
 
     private void setCapacity() {
-        if (size >= arrList.length) {
-            arrList = Arrays.copyOf(arrList, (int) (arrList.length * 1.5));
+        if (size >= dataElements.length) {
+            dataElements = Arrays.copyOf(dataElements, (int) (dataElements.length * 1.5));
         }
     }
 
     @Override
     public void add(T value) {
         setCapacity();
-        arrList[size++] = value;
+        dataElements[size++] = value;
     }
 
     @Override
@@ -40,8 +40,8 @@ public class ArrayList<T> implements List<T> {
         if (index >= size || index < 0) {
             throw new ArrayIndexOutOfBoundsException();
         }
-        System.arraycopy(arrList, index, arrList, index + 1, size - index);
-        arrList[index] = value;
+        System.arraycopy(dataElements, index, dataElements, index + 1, size - index);
+        dataElements[index] = value;
         size++;
     }
 
@@ -57,7 +57,7 @@ public class ArrayList<T> implements List<T> {
         if (index < 0 || index > size) {
             throw new ArrayIndexOutOfBoundsException();
         }
-        return (T) arrList[index];
+        return (T) dataElements[index];
     }
 
     @Override
@@ -65,7 +65,7 @@ public class ArrayList<T> implements List<T> {
         if (index < 0 || index > size) {
             throw new ArrayIndexOutOfBoundsException();
         }
-        arrList[index] = value;
+        dataElements[index] = value;
     }
 
     @Override
@@ -73,16 +73,16 @@ public class ArrayList<T> implements List<T> {
         if (index < 0 || size <= index) {
             throw new ArrayIndexOutOfBoundsException();
         }
-        T result = (T) arrList[index];
-        System.arraycopy(arrList, index + 1, arrList, index, size - index - 1);
-        this.size--;
+        T result = (T) dataElements[index];
+        System.arraycopy(dataElements, index + 1, dataElements, index, size - index - 1);
+        size--;
         return result;
     }
 
     @Override
     public T remove(T t) {
         for (int i = 0; i < size; i++) {
-            if (t.equals(arrList[i])) {
+            if (t.equals(dataElements[i])) {
                 return remove(i);
             }
         }
