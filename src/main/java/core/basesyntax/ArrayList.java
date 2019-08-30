@@ -92,7 +92,7 @@ public class ArrayList<T> implements List<T> {
             for (int i = 0; i < size; i++) {
                 if (data[i].equals(t)) {
                     T removedElement = (T) data[i];
-                    this.remove(i);
+                    remove(i);
                     return removedElement;
                 }
             }
