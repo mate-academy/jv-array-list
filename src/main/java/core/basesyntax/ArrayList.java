@@ -7,7 +7,7 @@ import java.util.Arrays;
  */
 public class ArrayList<T> implements List<T> {
     private int size;
-    private final int defaultCapacity = 10;
+    private static final int DEFAULT_CAPACITY = 10;
     private Object[] dataElements;
 
     public ArrayList(int currentCapacity) {
@@ -19,7 +19,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     public ArrayList() {
-        dataElements = new Object[defaultCapacity];
+        dataElements = new Object[DEFAULT_CAPACITY];
     }
 
     private void setCapacity() {
