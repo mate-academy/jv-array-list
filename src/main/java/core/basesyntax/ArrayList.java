@@ -61,11 +61,11 @@ public class ArrayList<T> implements List<T> {
         if (index > size || index < 0) {
             throw new ArrayIndexOutOfBoundsException("java.lang.ArrayIndexOutOfBoundsException");
         }
-        System.arraycopy(objects, index + 1, objects, index, objects.length - index - 1);
-        size--;
         if (size < 0) {
             throw new ArrayIndexOutOfBoundsException("java.lang.ArrayIndexOutOfBoundsException");
         }
+        System.arraycopy(objects, index + 1, objects, index, objects.length - index - 1);
+        size--;
         return (T) objects[index];
     }
 
@@ -74,22 +74,14 @@ public class ArrayList<T> implements List<T> {
         if (t == null) {
             throw new ArrayIndexOutOfBoundsException("java.lang.ArrayIndexOutOfBoundsException");
         }
-        //Object[] tempArray = new Object[objects.length];
-        int count = 0;
-        int index = 0;
-        T object = null;
         for (int i = 0; i < objects.length; i++) {
             if (t.equals(objects[i])) {
-                count++;
-                index = i;
-                object = (T) objects[i];
+                return remove(i);
             }
         }
-        if (count == 0) {
+        {
             throw new ArrayIndexOutOfBoundsException("java.lang.ArrayIndexOutOfBoundsException");
         }
-        remove(index);
-        return object;
     }
 
     @Override
