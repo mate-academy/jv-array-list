@@ -17,22 +17,6 @@ public class ArrayList<T> implements List<T> {
         this.size = size;
     }
 
-    public Object[] getData() {
-        return data;
-    }
-
-    public void setData(Object[] data) {
-        this.data = data;
-    }
-
-    public int getSize() {
-        return size;
-    }
-
-    public void setSize(int size) {
-        this.size = size;
-    }
-
     private void resize() {
         if (size == data.length) {
             Object[] dataTwo = new Object[data.length + (data.length >> 1)];
@@ -95,7 +79,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T t) {
         for (int i = 0; i < data.length; i++) {
-            if (data[i] == t) {
+            if (t != null && data[i] == t) {
                 return remove(i);
             }
         }
