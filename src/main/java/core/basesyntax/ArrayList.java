@@ -36,7 +36,7 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayIndexOutOfBoundsException();
         }
         if (index == size - 1) {
-            this.add(value);
+            add(value);
         } else {
             if (size + 1 == data.length) {
                 data = Arrays.copyOf(data, data.length * 3 / 2);
