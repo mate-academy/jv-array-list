@@ -40,8 +40,8 @@ public class ArrayListTest {
         Assert.assertEquals("for", arrayList.get(2));
         Assert.assertEquals("Mate", arrayList.get(3));
         arrayList.add(null, 0);
-        Assert.assertEquals("Test failed! Size of array should be " + 4 + "but it is "
-                + arrayList.size(), 4, arrayList.size());
+        Assert.assertEquals("Test failed! Size of array should be " + 5 + "but it is "
+                + arrayList.size(), 5, arrayList.size());
         Assert.assertNull(arrayList.get(0));
     }
 
