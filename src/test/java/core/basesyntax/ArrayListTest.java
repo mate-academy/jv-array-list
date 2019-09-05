@@ -171,6 +171,25 @@ public class ArrayListTest {
     }
 
     @Test
+    public void removeObjectValueByValue() {
+        Cat firstCat = new Cat("Fantic", "grey");
+        Cat secondCat = new Cat("Barsik", "black");
+        Cat thirdCat = new Cat("Tom", "white");
+        Cat fourthCat = new Cat("Barsik", "black");
+        ArrayList<Cat> cats = new ArrayList<>();
+        cats.add(firstCat);
+        cats.add(secondCat);
+        cats.add(thirdCat);
+        Assert.assertEquals("Test failed! Size of array should be " + 3 + "but it is "
+                + cats.size(), 3, cats.size());
+        Cat actualResult = cats.remove(fourthCat);
+        Assert.assertEquals("Test failed! Returned value should be " + actualResult.toString(),
+                fourthCat, actualResult);
+        Assert.assertEquals("Test failed! Size of array should be " + 2 + "but it is "
+                + cats.size(), 2, cats.size());
+    }
+
+    @Test
     public void setValueInIndex() {
         ArrayList<String> arrayList = new ArrayList<>();
         arrayList.add("5");
