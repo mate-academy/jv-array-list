@@ -110,23 +110,9 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void ensureCapacity() {
-        if (counter > array.length - 1) {
-            array = grow(counter);
-        } else if (counter < array.length - 1) {
-            array = trim(counter);
-        }
-    }
+        Object[] newArr = Arrays.copyOf(array, counter + 1);
+        array = newArr;
 
-    private Object[] grow(int initialCapacity) {
-        int newCapacity = (initialCapacity + 1);
-        Object[] newArr = Arrays.copyOf(array, newCapacity);
-        return newArr;
-    }
-
-    private Object[] trim(int initialCapacity) {
-        int newCapacity = initialCapacity + 1;
-        Object[] newArr = Arrays.copyOf(array, newCapacity);
-        return newArr;
     }
 
 }
