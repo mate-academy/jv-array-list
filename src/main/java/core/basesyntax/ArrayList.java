@@ -9,9 +9,9 @@ import java.util.NoSuchElementException;
  */
 public class ArrayList<T> implements List<T> {
 
+    private static final int DEFAULT_SIZE = 10;
     private Object[] elementsData;
     private Object[] emptyArray = {};
-    private int DEFAULT_SIZE = 10;
     private int size;
 
     public ArrayList() {
@@ -39,15 +39,6 @@ public class ArrayList<T> implements List<T> {
         size++;
     }
 
-    private Object[] grow() {
-        int oldCapacity = elementsData.length;
-        if (oldCapacity > 0) {
-            int newCapacity = (elementsData.length * 3) / 2 + 1;
-            return elementsData = Arrays.copyOf(elementsData, newCapacity);
-        }
-        return elementsData = Arrays.copyOf(elementsData, Math.max(DEFAULT_SIZE, size + 1));
-    }
-
     @Override
     public void add(T value, int index) {
         checkIndex(index);
@@ -57,12 +48,6 @@ public class ArrayList<T> implements List<T> {
         System.arraycopy(elementsData, index, elementsData, index + 1, size - index);
         elementsData[index] = value;
         size += 1;
-    }
-
-    private void checkIndex(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayIndexOutOfBoundsException("Check your index");
-        }
     }
 
     @Override
@@ -107,10 +92,11 @@ public class ArrayList<T> implements List<T> {
                 }
             }
         } else {
-            for (; i < size; i++)
+            for (; i < size; i++) {
                 if (t.equals(elementsData[i])) {
                     return remove(i);
                 }
+            }
         }
         throw new NoSuchElementException();
     }
@@ -123,5 +109,20 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private Object[] grow() {
+        int oldCapacity = elementsData.length;
+        if (oldCapacity > 0) {
+            int newCapacity = (elementsData.length * 3) / 2 + 1;
+            return elementsData = Arrays.copyOf(elementsData, newCapacity);
+        }
+        return elementsData = Arrays.copyOf(elementsData, Math.max(DEFAULT_SIZE, size + 1));
+    }
+
+    private void checkIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayIndexOutOfBoundsException("Check your index");
+        }
     }
 }
