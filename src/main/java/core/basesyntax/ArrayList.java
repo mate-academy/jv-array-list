@@ -8,25 +8,21 @@ import java.util.NoSuchElementException;
  */
 
 public class ArrayList<T> implements List<T> {
-    private static final int DEFAULT_CAPACITY = 0;
+    private static final int DEFAULT_CAPACITY = 10;
     private Object[] elementData;
-    private int elements;
+    private int size;
 
     public ArrayList() {
         this.elementData = new Object[DEFAULT_CAPACITY];
     }
 
-    public ArrayList(int capacity) {
-        this.elementData = new Object[capacity];
-    }
-
     public void ensureCapacity() {
-        Object[] newElementData = Arrays.copyOf(elementData, elementData.length + 1);
+        Object[] newElementData = Arrays.copyOf(elementData, size + 1);
         elementData = newElementData;
     }
 
     public void rangeCheckForAdd(int index) {
-        if (index > elementData.length - 1 || index < 0) {
+        if (index > elementData.length || index < 0) {
             throw new ArrayIndexOutOfBoundsException("" + index + "out of bound");
         }
     }
@@ -34,38 +30,33 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value) {
         ensureCapacity();
-        elementData[elements] = value;
-        elements++;
+        elementData[size] = value;
+        size++;
     }
 
     @Override
     public void add(T value, int index) {
         rangeCheckForAdd(index);
+        ensureCapacity();
         Object[] tempData = new Object[elementData.length + 1];
         System.arraycopy(elementData, 0, tempData, 0, index);
         tempData[index] = value;
         System.arraycopy(elementData, index, tempData, index + 1, (elementData.length - index));
         elementData = tempData;
-        elements++;
+        size++;
     }
 
     @Override
     public void addAll(List<T> list) {
         for (int i = 0; i < list.size(); i++) {
             ensureCapacity();
-            elementData[elements++] = list.get(i);
+            elementData[size++] = list.get(i);
         }
     }
 
     @Override
     public T get(int index) {
-        rangeCheckForAdd(index);
-        for (int i = 0; i < elementData.length; i++) {
-            if (index == i && elementData[i] != null) {
-                return (T) elementData[i];
-            }
-        }
-        return null;
+        return (T) elementData[index];
     }
 
     @Override
@@ -77,12 +68,12 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         rangeCheckForAdd(index);
-        Object[] tempData = new Object[elementData.length - 1];
+        Object[] tempData = new Object[elementData.length];
         System.arraycopy(elementData, 0, tempData, 0, index);
         System.arraycopy(elementData, index + 1, tempData, index, elementData.length - index - 1);
         Object removedObject = elementData[index];
         elementData = tempData;
-        elements--;
+        size--;
         return (T) removedObject;
     }
 
@@ -104,11 +95,11 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public int size() {
-        return elements;
+        return size;
     }
 
     @Override
     public boolean isEmpty() {
-        return elements == 0;
+        return size == 0;
     }
 }
