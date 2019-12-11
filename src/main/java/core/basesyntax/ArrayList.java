@@ -65,7 +65,6 @@ public class ArrayList<T> implements List<T> {
         System.arraycopy(array, index + 1, tempArr, index, array.length - index - 1);
         Object oldObj = array[index];
         array = tempArr;
-        counter--;
         return (T) oldObj;
     }
 
@@ -87,7 +86,6 @@ public class ArrayList<T> implements List<T> {
             System.arraycopy(array, 0, tempArr, 0, index);
             System.arraycopy(array, index + 1, tempArr, index, array.length - index - 1);
             array = tempArr;
-            counter--;
         } else {
             throw new NoSuchElementException();
         }
