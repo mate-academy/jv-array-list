@@ -40,7 +40,7 @@ public class ArrayList<T> implements List<T> {
     public void addAll(List<T> list) {
         if (list != null) {
             size += list.size();
-            while (array.length <= size) {
+            while (array.length < size) {
                 ensureCapacity();
             }
             temporary = new Object[list.size()];
