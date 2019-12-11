@@ -18,7 +18,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        ensureCapacity();
+        resize();
         array[counter] = value;
         counter++;
     }
@@ -39,7 +39,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void addAll(List<T> list) {
         for (int i = 0; i < list.size(); i++) {
-            ensureCapacity();
+            resize();
             array[counter] = list.get(i);
             counter++;
         }
@@ -109,7 +109,7 @@ public class ArrayList<T> implements List<T> {
         return true;
     }
 
-    private void ensureCapacity() {
+    private void resize() {
         Object[] newArr = Arrays.copyOf(array, counter + 1);
         array = newArr;
 
