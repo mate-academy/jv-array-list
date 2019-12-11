@@ -14,7 +14,7 @@ public class ArrayListTest {
         arrayList.add(null);
         arrayList.add("for");
         arrayList.add("Mate");
-        Assert.assertEquals("Test failed! Size of array should be " + 4 + "but it is "
+        Assert.assertEquals("Test failed! Size of array should be " + 4 + " but it is "
                 + arrayList.size(), 4, arrayList.size());
         Assert.assertEquals("Test failed! Can't correct add element",
                 "Test", arrayList.get(0));
@@ -64,7 +64,7 @@ public class ArrayListTest {
         newArrayList.add("Academy");
         newArrayList.add("Kiev");
         arrayList.addAll(newArrayList);
-        Assert.assertEquals("Test failed! Size of array should be " + 5 + "but it is "
+        Assert.assertEquals("Test failed! Size of array should be " + 5 + " but it is "
                 + arrayList.size(), 5, arrayList.size());
         Assert.assertEquals("Academy", arrayList.get(3));
         Assert.assertEquals("Kiev", arrayList.get(4));
@@ -180,12 +180,12 @@ public class ArrayListTest {
         cats.add(firstCat);
         cats.add(secondCat);
         cats.add(thirdCat);
-        Assert.assertEquals("Test failed! Size of array should be " + 3 + "but it is "
+        Assert.assertEquals("Test failed! Size of array should be " + 3 + " but it is "
                 + cats.size(), 3, cats.size());
         Cat actualResult = cats.remove(fourthCat);
         Assert.assertEquals("Test failed! Returned value should be " + actualResult.toString(),
                 fourthCat, actualResult);
-        Assert.assertEquals("Test failed! Size of array should be " + 2 + "but it is "
+        Assert.assertEquals("Test failed! Size of array should be " + 2 + " but it is "
                 + cats.size(), 2, cats.size());
     }
 
@@ -196,12 +196,12 @@ public class ArrayListTest {
         arrayList.add("115");
         Assert.assertEquals("115", arrayList.get(1));
         arrayList.set("511", 1);
-        Assert.assertEquals("Test failed! Size of array should be " + 2 + "but it is "
+        Assert.assertEquals("Test failed! Size of array should be " + 2 + " but it is "
                 + arrayList.size(), 2, arrayList.size());
         Assert.assertEquals("Test failed! Can't set value by special position",
                 "511", arrayList.get(1));
         arrayList.set(null, 0);
-        Assert.assertEquals("Test failed! Size of array should be " + 2 + "but it is "
+        Assert.assertEquals("Test failed! Size of array should be " + 2 + " but it is "
                 + arrayList.size(), 2, arrayList.size());
         Assert.assertNull("Test failed! Can't set value by special position",
                 arrayList.get(0));
