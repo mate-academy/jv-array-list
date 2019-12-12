@@ -9,7 +9,7 @@ import java.util.NoSuchElementException;
 public class ArrayList<T> implements List<T> {
     private static final int CAPACITY = 10;
     private Object[] storage;
-    private int position = 0;
+    private int size = 0;
 
     public ArrayList() {
         storage = new Object[CAPACITY];
@@ -17,22 +17,20 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (position > 0 && position == storage.length) {
+        if (size == storage.length) {
             resize();
-            storage[position] = value;
-            position++;
+            storage[size] = value;
+            size++;
         } else {
-            storage[position] = value;
-            position++;
+            storage[size] = value;
+            size++;
         }
     }
 
     @Override
     public void add(T value, int index) {
-        position++;
-        for (int i = position - 1; i > index; i--) {
-            set((T) storage[i - 1], i);
-        }
+        size++;
+        System.arraycopy(storage, index, storage, index + 1, size - index);
         set(value, index);
     }
 
@@ -45,7 +43,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index >= position || index < 0) {
+        if (index >= size || index < 0) {
             throw new ArrayIndexOutOfBoundsException();
         }
         return (T) storage[index];
@@ -53,7 +51,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void set(T value, int index) {
-        if (index >= position || index < 0) {
+        if (index >= size || index < 0) {
             throw new ArrayIndexOutOfBoundsException();
         }
         storage[index] = value;
@@ -61,25 +59,20 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(int index) {
-        if (index > position || index < 0) {
+        if (index > size || index < 0) {
             throw new ArrayIndexOutOfBoundsException();
         }
         T temp = get(index);
-        for (int i = index; i < position; i++) {
-            storage[i] = storage[i + 1];
-        }
-        position--;
+        System.arraycopy(storage, index + 1, storage, index, size - index);
+        size--;
         return temp;
     }
 
     @Override
     public T remove(T t) {
-        T temp;
-        for (int i = 0; i < position; i++) {
+        for (int i = 0; i < size; i++) {
             if (storage[i] == null || storage[i].equals(t)) {
-                temp = (T) storage[i];
-                remove(i);
-                return temp;
+                return remove(i);
             }
         }
         throw new NoSuchElementException();
@@ -87,12 +80,12 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public int size() {
-        return position;
+        return size;
     }
 
     @Override
     public boolean isEmpty() {
-        if (storage[0] == null) {
+        if (size == 0) {
             return true;
         }
         return false;
@@ -100,9 +93,7 @@ public class ArrayList<T> implements List<T> {
 
     private void resize() {
         Object[] temp = new Object[storage.length * 2];
-        for (int i = 0; i < storage.length; i++) {
-            temp[i] = storage[i];
-        }
+        System.arraycopy(storage, 0, temp, 0, size);
         storage = temp;
     }
 }
