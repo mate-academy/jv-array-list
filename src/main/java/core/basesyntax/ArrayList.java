@@ -73,8 +73,7 @@ public class ArrayList<T> implements List<T> {
         for (int i = index; i < size() - 1; i++) {
             array[i] = array[i + 1];
         }
-        array[size()] = null;
-        size--;
+        sizeArrayDown();
         return (T) value;
     }
 
@@ -109,4 +108,8 @@ public class ArrayList<T> implements List<T> {
         array = Arrays.copyOf(array, realCapacity);
     }
 
+    private void sizeArrayDown() {
+        array[size()] = null;
+        size--;
+    }
 }
