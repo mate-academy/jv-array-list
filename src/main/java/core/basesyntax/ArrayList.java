@@ -21,18 +21,18 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        newSize();
+        checkSize();
         array[size] = value;
         size++;
     }
 
     @Override
     public void add(T value, int index) {
-        if (index >= size || index < 0){
+        if (index >= size || index < 0) {
             throw new ArrayIndexOutOfBoundsException(index);
         }
 
-        for (int i = size() ; i > index; i--){
+        for (int i = size(); i > index; i--) {
             array[i] = array[i - 1];
         }
         array[index] = value;
@@ -41,25 +41,24 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        for (int i = 0; i < list.size(); i++){
-            newSize();
+        for (int i = 0; i < list.size(); i++) {
+            checkSize();
             array[size] = list.get(i);
             size++;
         }
-
     }
 
     @Override
     public T get(int index) {
-        if (index >= size){
+        if (index >= size) {
             throw new ArrayIndexOutOfBoundsException();
         }
-        return (T)array[index];
+        return (T) array[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index >= size || index < 0){
+        if (index >= size || index < 0) {
             throw new ArrayIndexOutOfBoundsException(index);
         }
         array[index] = value;
@@ -67,11 +66,21 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(int index) {
-        return null;
+        if (index >= size || index < 0) {
+            throw new ArrayIndexOutOfBoundsException(index);
+        }
+        Object value = array[index];
+        for (int i = index; i < size() - 1; i++) {
+            array[i] = array[i + 1];
+        }
+        array[size()] = null;
+        size--;
+        return (T) value;
     }
 
     @Override
     public T remove(T t) {
+
         return null;
     }
 
@@ -79,13 +88,20 @@ public class ArrayList<T> implements List<T> {
     public int size() {
         return size;
     }
+
     @Override
     public boolean isEmpty() {
-        return size == 0;
+        for (Object i : array){
+            if (i != null){
+                return false;
+            }
+        }
+        return true;
     }
-    private void newSize(){
-        if (size() == array.length){
-            realCapacity = realCapacity * 3 /2;
+
+    private void checkSize() {
+        if (size() == array.length) {
+            realCapacity = realCapacity * 3 / 2;
         }
         array = Arrays.copyOf(array, realCapacity);
     }
