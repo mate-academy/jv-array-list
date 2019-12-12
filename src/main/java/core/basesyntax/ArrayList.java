@@ -22,7 +22,7 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private void checkForArrayIndexOutOfBoundsException(int index) {
+    private void checkIndex(int index) {
         if (index < 0 || index >= size) {
             throw new ArrayIndexOutOfBoundsException();
         }
@@ -37,9 +37,9 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        checkForArrayIndexOutOfBoundsException(index);
-        if (size >= 0) {
-            System.arraycopy(array, 0, array, 1, size);
+        checkIndex(index);
+        for (int i = size; i > 0; i--) {
+            array[i] = array[i - 1];
         }
         array[index] = value;
         size++;
@@ -54,31 +54,28 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        checkForArrayIndexOutOfBoundsException(index);
+        checkIndex(index);
         return array[index];
     }
 
     @Override
     public void set(T value, int index) {
-        checkForArrayIndexOutOfBoundsException(index);
+        checkIndex(index);
         array[index] = value;
 
     }
 
     @Override
     public T remove(int index) {
-        checkForArrayIndexOutOfBoundsException(index);
-        T removeValue = array[index];
-        if (size - index >= 0) {
-            System.arraycopy(array, index + 1, array, index, size - index);
-        }
+        checkIndex(index);
+        T removed = array[index];
+        System.arraycopy(array, index + 1, array, index, size - index - 1);
         size--;
-        return removeValue;
+        return removed;
     }
 
     @Override
     public T remove(T t) {
-
         for (int i = 0; i < size; i++) {
             if (array[i] == null || array[i].equals(t)) {
                 return remove(i);
@@ -94,7 +91,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public boolean isEmpty() {
-        return array[0] == null;
+        return size == 0;
 
     }
 }
