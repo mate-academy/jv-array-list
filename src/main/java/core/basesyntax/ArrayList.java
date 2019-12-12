@@ -10,45 +10,59 @@ import java.util.Arrays;
 public class ArrayList<T> implements List<T> {
 
     private static final int BEGINNER_CAPACITY = 10;
-    private Object[] list;
+    private Object[] array;
     private int realCapacity;
     private int size;
 
     public ArrayList() {
-        this.list = new Object[BEGINNER_CAPACITY];
+        this.array = new Object[BEGINNER_CAPACITY];
         this.realCapacity = BEGINNER_CAPACITY;
     }
 
     @Override
     public void add(T value) {
         newSize();
-        list[size] = value;
+        array[size] = value;
         size++;
     }
 
     @Override
     public void add(T value, int index) {
-        if (index < list.length-1){
+        if (index >= size || index < 0){
             throw new ArrayIndexOutOfBoundsException(index);
         }
-        newSize();
-        list[index] = value;
+
+        for (int i = size() ; i > index; i--){
+            array[i] = array[i - 1];
+        }
+        array[index] = value;
         size++;
     }
 
     @Override
     public void addAll(List<T> list) {
+        for (int i = 0; i < list.size(); i++){
+            newSize();
+            array[size] = list.get(i);
+            size++;
+        }
 
     }
 
     @Override
     public T get(int index) {
-        return (T)list[index];
+        if (index >= size){
+            throw new ArrayIndexOutOfBoundsException();
+        }
+        return (T)array[index];
     }
 
     @Override
     public void set(T value, int index) {
-
+        if (index >= size || index < 0){
+            throw new ArrayIndexOutOfBoundsException(index);
+        }
+        array[index] = value;
     }
 
     @Override
@@ -70,9 +84,9 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
     private void newSize(){
-        if (size() == list.length){
+        if (size() == array.length){
             realCapacity = realCapacity * 3 /2;
         }
-        list = Arrays.copyOf(list, realCapacity);
+        array = Arrays.copyOf(array, realCapacity);
     }
 }
