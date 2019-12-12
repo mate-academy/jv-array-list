@@ -10,7 +10,6 @@ public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private int size;
     private Object[] array;
-    private Object[] temporary;
 
     public ArrayList() {
         array = new Object[DEFAULT_CAPACITY];
@@ -39,15 +38,10 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void addAll(List<T> list) {
         if (list != null) {
-            size += list.size();
-            while (array.length < size) {
-                ensureCapacity();
-            }
-            temporary = new Object[list.size()];
             for (int i = 0; i < list.size(); i++) {
-                temporary[i] = list.get(i);
+                ensureCapacity();
+                add(list.get(i));
             }
-            System.arraycopy(temporary, 0, array, size - list.size(), temporary.length);
         }
     }
 
@@ -67,10 +61,10 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         checkIndex(index);
         final Object removedElement = array[index];
-        System.arraycopy(array,index + 1, array, index,size - index - 1);
+        System.arraycopy(array, index + 1, array, index, size - index - 1);
         array[size] = null;
         size--;
-        return (T)removedElement;
+        return (T) removedElement;
     }
 
     @Override
@@ -95,7 +89,8 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void ensureCapacity() {
-        if (size >= array.length) {
+        Object[] temporary;
+        if (size == array.length) {
             temporary = array;
             array = new Object[size * 3 / 2 + 1];
             System.arraycopy(temporary, 0, array, 0, temporary.length);
