@@ -12,18 +12,12 @@ public class ArrayList<T> implements List<T> {
     private Object[] array = new Object[CAPACITY];
     private int size = 0;
 
-    public ArrayList() {
-
-        T newList = (T) array;
-    }
-
     @Override
     public void add(T value) {
         if (size == array.length - 1) {
             resize();
         }
         array[size++] = value;
-
     }
 
     @Override
