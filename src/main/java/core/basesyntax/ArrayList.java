@@ -2,6 +2,7 @@ package core.basesyntax;
 
 
 import java.util.Arrays;
+import java.util.NoSuchElementException;
 
 /**
  * <p>Реалізувати свій ArrayList який імплементує інтерфейс List. Дотриматися основних вимог щодо
@@ -15,8 +16,8 @@ public class ArrayList<T> implements List<T> {
     private int size;
 
     public ArrayList() {
-        this.array = new Object[BEGINNER_CAPACITY];
-        this.realCapacity = BEGINNER_CAPACITY;
+        array = new Object[BEGINNER_CAPACITY];
+        realCapacity = BEGINNER_CAPACITY;
     }
 
     @Override
@@ -80,8 +81,12 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T t) {
-
-        return null;
+        for (int i = 0; i < size(); i++){
+            if (t != null ? t.equals(array[i]) : t == array[i]){
+                return remove(i);
+            }
+        }
+        throw new NoSuchElementException();
     }
 
     @Override
@@ -91,11 +96,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public boolean isEmpty() {
-        for (Object i : array){
-            if (i != null){
-                return false;
-            }
-        }
+
         return true;
     }
 
