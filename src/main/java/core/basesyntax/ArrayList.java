@@ -99,7 +99,7 @@ public class ArrayList<T> implements List<T> {
         for (int i = 0; i < size(); i++) {
             count++;
         }
-        return count >= 0;
+        return count == 0;
     }
 
     private void checkSize() {
@@ -108,4 +108,5 @@ public class ArrayList<T> implements List<T> {
         }
         array = Arrays.copyOf(array, realCapacity);
     }
+
 }
