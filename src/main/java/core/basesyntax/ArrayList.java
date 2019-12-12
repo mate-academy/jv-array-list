@@ -94,11 +94,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public boolean isEmpty() {
-        int count = 0;
-        for (int i = 0; i < size(); i++) {
-            count++;
-        }
-        return count == 0;
+        return size() == 0;
     }
 
     private void checkSize() {
