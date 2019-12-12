@@ -35,13 +35,12 @@ public class ArrayList<T> implements List<T> {
         size++;
     }
 
-
     @Override
     public void addAll(List<T> collection) {
-            for (int i = 0; i < collection.size(); i++) {
-                refrashList();
-                add(collection.get(i));
-            }
+        for (int i = 0; i < collection.size(); i++) {
+            refrashList();
+            add(collection.get(i));
+        }
     }
 
     @Override
