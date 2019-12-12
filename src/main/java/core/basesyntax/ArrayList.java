@@ -20,7 +20,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value) {
         if (size == array.length - 1) {
-            resize(array.length * 3 / 2);
+            resize();
         }
         array[size++] = value;
 
@@ -29,7 +29,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         if (index < size()) {
-            resize(size() * 3 / 2);
+            resize();
         }
         System.arraycopy(array, index, array, index + 1, size - index);
         array[index] = value;
@@ -94,10 +94,11 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public boolean isEmpty() {
-        return size() == 0;
+        return size == 0;
     }
 
-    private void resize(int newLength) {
+    private void resize() {
+        int newLength = size * 3 / 2;
         Object[] newArray = new Object[newLength];
         System.arraycopy(array, 0, newArray, 0, size);
         array = newArray;
