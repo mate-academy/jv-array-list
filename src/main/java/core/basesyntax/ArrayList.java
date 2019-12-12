@@ -19,12 +19,9 @@ public class ArrayList<T> implements List<T> {
     public void add(T value) {
         if (size == storage.length) {
             resize();
-            storage[size] = value;
-            size++;
-        } else {
-            storage[size] = value;
-            size++;
         }
+        storage[size] = value;
+        size++;
     }
 
     @Override
@@ -85,14 +82,11 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public boolean isEmpty() {
-        if (size == 0) {
-            return true;
-        }
-        return false;
+        return size == 0;
     }
 
     private void resize() {
-        Object[] temp = new Object[storage.length * 2];
+        Object[] temp = new Object[storage.length * 3 / 2];
         System.arraycopy(storage, 0, temp, 0, size);
         storage = temp;
     }
