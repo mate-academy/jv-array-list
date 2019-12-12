@@ -17,12 +17,14 @@ public class ArrayList<T> implements List<T> {
     }
 
     public void ensureCapacity() {
-        Object[] newElementData = Arrays.copyOf(elementData, size + 1);
-        elementData = newElementData;
+        if (size >= elementData.length) {
+            Object[] newElementData = Arrays.copyOf(elementData, size * 3 / 2 + 1);
+            elementData = newElementData;
+        }
     }
 
-    public void rangeCheckForAdd(int index) {
-        if (index > elementData.length || index < 0) {
+    public void checkIndex(int index) {
+        if (index >= size || index < 0) {
             throw new ArrayIndexOutOfBoundsException("" + index + "out of bound");
         }
     }
@@ -36,13 +38,10 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        rangeCheckForAdd(index);
+        checkIndex(index);
         ensureCapacity();
-        Object[] tempData = new Object[elementData.length + 1];
-        System.arraycopy(elementData, 0, tempData, 0, index);
-        tempData[index] = value;
-        System.arraycopy(elementData, index, tempData, index + 1, (elementData.length - index));
-        elementData = tempData;
+        System.arraycopy(elementData, index, elementData, index + 1, size - index);
+        elementData[index] = value;
         size++;
     }
 
@@ -55,41 +54,34 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
+        checkIndex(index);
         return (T) elementData[index];
     }
 
     @Override
     public void set(T value, int index) {
-        rangeCheckForAdd(index);
+        checkIndex(index);
         elementData[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        rangeCheckForAdd(index);
-        Object[] tempData = new Object[elementData.length];
-        System.arraycopy(elementData, 0, tempData, 0, index);
-        System.arraycopy(elementData, index + 1, tempData, index, elementData.length - index - 1);
+        checkIndex(index);
         Object removedObject = elementData[index];
-        elementData = tempData;
+        System.arraycopy(elementData, index + 1, elementData, index, size - index - 1);
         size--;
         return (T) removedObject;
     }
 
     @Override
     public T remove(T t) {
-        boolean elementExist = false;
-        int index = 0;
-        for (int i = 0; i < elementData.length; i++) {
+        for (int i = 0; i < size; i++) {
             if (t != null && t.equals(elementData[i]) || t == elementData[i]) {
-                index = i;
-                elementExist = true;
+                return remove(i);
+
             }
         }
-        if (!elementExist) {
-            throw new NoSuchElementException("There is no such element");
-        }
-        return remove(index);
+        throw new NoSuchElementException("There is no such element");
     }
 
     @Override
