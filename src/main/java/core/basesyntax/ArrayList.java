@@ -64,8 +64,7 @@ public class ArrayList<T> implements List<T> {
     public T remove(T t) {
         for (int i = 0; i < size; i++) {
             if (t == array[i] || t != null && t.equals(array[i])) {
-                remove(i);
-                return t;
+                return remove(i);
             }
         }
         throw new NoSuchElementException();
@@ -78,10 +77,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public boolean isEmpty() {
-        if (size == 0) {
-            return true;
-        }
-        return false;
+        return size == 0;
     }
 
     private void ensureCapacity() {
