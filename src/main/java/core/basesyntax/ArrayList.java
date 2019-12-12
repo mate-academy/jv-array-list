@@ -18,8 +18,7 @@ public class ArrayList<T> implements List<T> {
 
     public void ensureCapacity() {
         if (size >= elementData.length) {
-            Object[] newElementData = Arrays.copyOf(elementData, size * 3 / 2 + 1);
-            elementData = newElementData;
+            elementData = Arrays.copyOf(elementData, size * 3 / 2 + 1);
         }
     }
 
