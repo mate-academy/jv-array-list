@@ -1,6 +1,5 @@
 package core.basesyntax;
 
-
 import java.util.Arrays;
 import java.util.NoSuchElementException;
 
@@ -81,8 +80,8 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T t) {
-        for (int i = 0; i < size(); i++){
-            if (t != null ? t.equals(array[i]) : t == array[i]){
+        for (int i = 0; i < size(); i++) {
+            if (t != null ? t.equals(array[i]) : t == array[i]) {
                 return remove(i);
             }
         }
@@ -96,8 +95,11 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public boolean isEmpty() {
-
-        return true;
+        int count = 0;
+        for (int i = 0; i < size(); i++) {
+            count++;
+        }
+        return count >= 0;
     }
 
     private void checkSize() {
