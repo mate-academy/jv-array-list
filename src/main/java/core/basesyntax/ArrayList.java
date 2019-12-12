@@ -1,5 +1,7 @@
 package core.basesyntax;
 
+import java.util.NoSuchElementException;
+
 /**
  * <p>Реалізувати свій ArrayList який імплементує інтерфейс List. Дотриматися основних вимог щодо
  * реалізації ArrayList (default capacity, newCapacity...)</p>
@@ -9,11 +11,12 @@ public class ArrayList<T> implements List<T> {
     private int newCapacity = 10;
     private int capacity = 10;
     private int actualSize = 0;
-    private Object[] value = new Object[capacity];
+
+    private Object[] value;
     private Object[] newValue;
 
-    public ArrayList() {
-
+    public <T> ArrayList() {
+        this.value = new Object[capacity];
     }
 
     private void extendArray() {
@@ -36,13 +39,13 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index < 0 || index > capacity - 1) {
-            throw new IndexOutOfBoundsException();
+        if (index < 0 || index >= actualSize) {
+            throw new ArrayIndexOutOfBoundsException();
         }
         if (actualSize == capacity) {
             extendArray();
         }
-        for (int i = capacity; i >= index; i--) {
+        for (int i = capacity - 1; i > index; i--) {
             this.value[i] = this.value[i - 1];
         }
         this.value[index] = value;
@@ -50,18 +53,23 @@ public class ArrayList<T> implements List<T> {
     }
 
     @Override
-    public void addAll(List<T> list) {
+    public void addAll(List<T> list) throws Exception {
         while (actualSize + list.size() > capacity) {
             extendArray();
         }
-        System.arraycopy(list, 0, this.value, capacity, capacity);
+        Object[] copyListToArray = new Object[list.size()];
+
+        for (int i = 0; i < list.size(); i++) {
+            copyListToArray[i] = list.get(i);
+        }
+        System.arraycopy(copyListToArray, 0, this.value, actualSize, copyListToArray.length);
         actualSize += list.size();
     }
 
     @Override
     public T get(int index) {
-        if (index < 0 || index > actualSize) {
-            throw new IndexOutOfBoundsException();
+        if (index < 0 || index >= actualSize) {
+            throw new ArrayIndexOutOfBoundsException();
         }
         return (T) this.value[index];
     }
@@ -69,8 +77,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void set(T value, int index) {
 
-        if (index < 0 || index > actualSize) {
-            throw new IndexOutOfBoundsException();
+        if (index < 0 || index >= actualSize) {
+            throw new ArrayIndexOutOfBoundsException();
         }
         this.value[index] = value;
     }
@@ -78,8 +86,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
 
-        if (index < 0 || index > actualSize) {
-            throw new IndexOutOfBoundsException();
+        if (index < 0 || index >= actualSize) {
+            throw new ArrayIndexOutOfBoundsException();
         }
         Object[] removedValue = new Object[1];
         removedValue[0] = this.value[index];
@@ -97,11 +105,16 @@ public class ArrayList<T> implements List<T> {
     public T remove(T t) {
 
         for (int i = 0; i < actualSize; i++) {
-            if (t.equals(this.value[i])) {
-                return (T) this.value[i];
+            if (t == null || this.value[i].equals(t)) {
+                for (int j = i; j < actualSize - 1; j++) {
+                    this.value[j] = this.value[j + 1];
+                }
+                this.value[actualSize - 1] = null;
+                actualSize--;
+                return t;
             }
-            return null;
         }
+        throw new NoSuchElementException();
     }
 
     @Override
@@ -111,6 +124,6 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public boolean isEmpty() {
-        return actualSize > 0;
+        return actualSize == 0;
     }
 }

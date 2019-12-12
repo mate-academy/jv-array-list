@@ -2,15 +2,15 @@ package core.basesyntax;
 
 public interface List<T> {
 
-    void add(T value);
+    void add(T value) throws Exception;
 
     void add(T value, int index);
 
-    void addAll(List<T> list);
+    void addAll(List<T> list) throws Exception;
 
-    T get(int index);
+    T get(int index) throws Exception;
 
-    void set(T value, int index);
+    void set(T value, int index) throws Exception;
 
     T remove(int index);
 
