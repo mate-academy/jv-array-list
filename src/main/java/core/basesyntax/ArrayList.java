@@ -38,9 +38,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         checkIndex(index);
-        for (int i = size; i > 0; i--) {
-            array[i] = array[i - 1];
-        }
+        System.arraycopy(array, index, array, index + 1, size - index);
         array[index] = value;
         size++;
     }
