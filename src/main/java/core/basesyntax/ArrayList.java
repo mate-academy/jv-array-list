@@ -91,13 +91,13 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void ensureCapacity() {
-        if (elementData.length < size + 1) {
+        if (elementData.length == size) {
             grow();
         }
     }
 
     private T[] grow() {
-        return elementData = Arrays.copyOf(elementData, size + 5);
+        return elementData = Arrays.copyOf(elementData, size + (size >> 1));
     }
 
     private void checkIndex(int index) {
