@@ -29,14 +29,14 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        ensureCapacity(size + 1);
+        ensureCapacity();
         elementData[size++] = value;
     }
 
     @Override
     public void add(T value, int index) {
         checkIndex(index);
-        ensureCapacity(size + 1);
+        ensureCapacity();
         System.arraycopy(elementData, index, elementData, index + 1, size - index);
         elementData[index] = value;
         size++;
@@ -72,17 +72,9 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T t) {
-        if (t == null) {
-            for (int i = 0; i < size; i++) {
-                if (elementData[i] == null) {
-                    return remove(i);
-                }
-            }
-        } else {
-            for (int i = 0; i < size; i++) {
-                if (elementData[i].equals(t)) {
-                    return remove(i);
-                }
+        for (int i = 0; i < size; i++) {
+            if (elementData[i] == null || elementData[i].equals(t)) {
+                return remove(i);
             }
         }
         throw new NoSuchElementException("There is no such element found");
@@ -98,14 +90,14 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void ensureCapacity(int minCapacity) {
-        if (elementData.length < minCapacity) {
-            grow(minCapacity);
+    private void ensureCapacity() {
+        if (elementData.length < size + 1) {
+            grow();
         }
     }
 
-    private T[] grow(int minCapacity) {
-        return elementData = Arrays.copyOf(elementData, minCapacity);
+    private T[] grow() {
+        return elementData = Arrays.copyOf(elementData, size + 5);
     }
 
     private void checkIndex(int index) {
