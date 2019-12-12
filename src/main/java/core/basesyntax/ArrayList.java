@@ -96,7 +96,12 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T t) {
 
-        return null;
+        for (int i = 0; i < actualSize; i++) {
+            if (t.equals(this.value[i])) {
+                return (T) this.value[i];
+            }
+            return null;
+        }
     }
 
     @Override
