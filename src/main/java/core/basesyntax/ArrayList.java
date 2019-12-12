@@ -13,7 +13,7 @@ public class ArrayList<T> implements List<T> {
     private int size;
 
     public ArrayList() {
-        this.elementData = new Object[DEFAULT_CAPACITY];
+        elementData = new Object[DEFAULT_CAPACITY];
     }
 
     public void ensureCapacity() {
@@ -31,8 +31,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value) {
         ensureCapacity();
-        elementData[size] = value;
-        size++;
+        elementData[size++] = value;
     }
 
     @Override
