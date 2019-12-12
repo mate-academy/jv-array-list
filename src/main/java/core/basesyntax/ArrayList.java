@@ -9,19 +9,18 @@ import java.util.NoSuchElementException;
 public class ArrayList<T> implements List<T> {
 
     private static final int CAPACITY = 16;
-    private static final int RATE = 4;
     private Object[] array = new Object[CAPACITY];
     private int size = 0;
 
     public ArrayList() {
 
-        T elementData = (T) new Object[CAPACITY];
+        T newList = (T) array;
     }
 
     @Override
     public void add(T value) {
         if (size == array.length - 1) {
-            resize(array.length * 2);
+            resize(array.length * 3 / 2);
         }
         array[size++] = value;
 
@@ -30,7 +29,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         if (index < size()) {
-            resize(size() * 2);
+            resize(size() * 3 / 2);
         }
         System.arraycopy(array, index, array, index + 1, size - index);
         array[index] = value;
@@ -70,20 +69,19 @@ public class ArrayList<T> implements List<T> {
         if (index < 0 || index >= size()) {
             throw new ArrayIndexOutOfBoundsException();
         }
-        T removeItem = (T) array[index];
-        for (int i = index; i < size() - 1; i++) {
-            array[i] = array[i + 1];
+        T oldValue = (T) array[index];
+        if ((size - index - 1) > 0) {
+            System.arraycopy(array, index + 1, array, index, size - index - 1);
         }
-        size--;
-        return removeItem;
+        array[--size] = null;
+        return oldValue;
     }
 
     @Override
     public T remove(T t) {
         for (int i = 0; i < size; i++) {
             if (t != null && t.equals(array[i]) || t == null && array[i] == null) {
-                remove(i);
-                return t;
+                return remove(i);
             }
         }
         throw new NoSuchElementException();
@@ -96,7 +94,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public boolean isEmpty() {
-        return size == 0;
+        return size() == 0;
     }
 
     private void resize(int newLength) {
