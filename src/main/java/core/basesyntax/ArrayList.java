@@ -31,10 +31,7 @@ public class ArrayList<T> implements List<T> {
         if (index >= size || index < 0) {
             throw new ArrayIndexOutOfBoundsException(index);
         }
-
-        for (int i = size(); i > index; i--) {
-            array[i] = array[i - 1];
-        }
+        System.arraycopy(array, index, array,index + 1, size - index);
         array[index] = value;
         size++;
     }
@@ -42,9 +39,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void addAll(List<T> list) {
         for (int i = 0; i < list.size(); i++) {
-            checkSize();
-            array[size] = list.get(i);
-            size++;
+            add(list.get(i));
         }
     }
 
@@ -69,11 +64,10 @@ public class ArrayList<T> implements List<T> {
         if (index >= size || index < 0) {
             throw new ArrayIndexOutOfBoundsException(index);
         }
-        Object value = array[index];
-        for (int i = index; i < size() - 1; i++) {
-            array[i] = array[i + 1];
-        }
-        sizeArrayDown();
+        final Object value = array[index];
+        System.arraycopy(array,index + 1, array, index, size - index - 1);
+        array[size()] = null;
+        size--;
         return (T) value;
     }
 
@@ -102,10 +96,5 @@ public class ArrayList<T> implements List<T> {
             realCapacity = realCapacity * 3 / 2;
         }
         array = Arrays.copyOf(array, realCapacity);
-    }
-
-    private void sizeArrayDown() {
-        array[size()] = null;
-        size--;
     }
 }
