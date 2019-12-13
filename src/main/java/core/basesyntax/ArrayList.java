@@ -58,7 +58,8 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         if (index < size && index >= 0) {
             T oldValue = (T) elementData[index];
-            remover(elementData, index);
+            System.arraycopy(elementData, index + 1, elementData, index, size - 1 - index);
+            elementData[size--] = null;
             return oldValue;
         }
         throw new ArrayIndexOutOfBoundsException();
@@ -68,12 +69,13 @@ public class ArrayList<T> implements List<T> {
     public T remove(T t) {
         for (int i = 0; i < size; i++) {
             if (t == null) {
-                remover(elementData, i);
+                System.arraycopy(elementData, i + 1, elementData, i, size - 1 - i);
+                size--;
                 return null;
-            }
-            if (t.equals(elementData[i])) {
+            } else if (t.equals(elementData[i])) {
                 T oldValue = (T) elementData[i];
-                remover(elementData, i);
+                System.arraycopy(elementData, i + 1, elementData, i, size - 1 - i);
+                elementData[size--] = null;
                 return oldValue;
             }
         }
@@ -100,13 +102,5 @@ public class ArrayList<T> implements List<T> {
         T[] oldData = elementData;
         elementData = (T[]) new Object[elementData.length + elementData.length / 2];
         System.arraycopy(oldData, 0, elementData, 0, size);
-    }
-
-    private void remover(Object[] es, int i) {
-        final int newSize;
-        if ((newSize = size - 1) > i) {
-            System.arraycopy(es, i + 1, es, i, newSize - i);
-        }
-        es[size = newSize] = null;
     }
 }
