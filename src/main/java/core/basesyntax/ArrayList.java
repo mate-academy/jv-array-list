@@ -18,10 +18,8 @@ public class ArrayList<T> implements List<T> {
     public ArrayList(int initialCapacity) {
         if (initialCapacity > 0) {
             elementData = new Object[initialCapacity];
-        } else {
-            if (initialCapacity != 0) {
-                throw new IllegalArgumentException("Illegal Capacity: " + initialCapacity);
-            }
+        } else if (initialCapacity != 0) {
+            throw new IllegalArgumentException("Illegal Capacity: " + initialCapacity);
         }
     }
 
