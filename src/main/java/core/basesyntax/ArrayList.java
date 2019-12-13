@@ -28,77 +28,66 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void grow() {
-        T[] temp = (T[]) new Object[Math.round(elementData.length * 3 / 2) + 1];
+        T[] temp = (T[]) new Object[(elementData.length * 3 / 2) + 1];
         temp = Arrays.copyOf(elementData, temp.length);
         elementData = temp;
     }
 
-    private boolean validIndex(int index) {
-        if (index < 0 || !(index < size)) {
+    private void validIndex(int index) {
+        if (index < 0 || index >= size) {
             throw new ArrayIndexOutOfBoundsException("Illegal Index: " + index);
         }
-        return true;
     }
 
     @Override
     public void add(T value) {
-        if (elementData.length > size + 1) {
-            elementData[size] = value;
-            size++;
-        } else {
+        if (!(elementData.length > size)) {
             this.grow();
-            this.add(value);
         }
+        elementData[size] = value;
+        size++;
     }
 
     @Override
     public void add(T value, int index) {
-        if (this.validIndex(index) && elementData.length > size + 1) {
-            System.arraycopy(elementData, index, elementData, index + 1, size - index);
-            elementData[index] = value;
-            size++;
-        } else {
+        this.validIndex(index);
+        if (!(elementData.length > size)) {
             this.grow();
-            this.add(value, index);
         }
+        System.arraycopy(elementData, index, elementData, index + 1, size - index);
+        elementData[index] = value;
+        size++;
     }
 
     @Override
     public void addAll(List<T> list) {
-        if ((elementData.length - size) > (list.size() * 2)) {
-            for (int i = 0; i < list.size(); i++) {
-                this.add(list.get(i));
-            }
-        } else {
+        if (!((elementData.length - size) > (list.size() * 2))) {
             this.grow();
-            this.addAll(list);
+        }
+        for (int i = 0; i < list.size(); i++) {
+            this.add(list.get(i));
         }
     }
 
     @Override
     public T get(int index) {
-        if (this.validIndex(index)) {
-            return elementData[index];
-        }
-        return null;
+        this.validIndex(index);
+        return elementData[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (this.validIndex(index)) {
-            elementData[index] = value;
-        }
+        this.validIndex(index);
+        elementData[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (this.validIndex(index)) {
-            T removed = elementData[index];
-            System.arraycopy(elementData, index + 1, elementData, index, size-- - index);
-            elementData[size] = null;
-            return removed;
-        }
-        return null;
+        this.validIndex(index);
+        T removed = elementData[index];
+        System.arraycopy(elementData, index + 1, elementData, index, size-- - index);
+        elementData[size] = null;
+        return removed;
     }
 
     @Override
