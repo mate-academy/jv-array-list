@@ -24,27 +24,21 @@ public class ArrayList<T> implements List<T> {
             resize();
         }
         elementData[size++] = value;
-
     }
 
     @Override
     public void add(T value, int index) {
         if (index > size || index < 0) {
             throw new ArrayIndexOutOfBoundsException();
-        } else if (size == elementData.length) {
-            resize();
-            for (int i = size; i > index; i--) {
-                elementData[i] = elementData[i - 1];
-            }
-            elementData[index] = value;
-            size++;
-        } else {
-            for (int i = size; i > index; i--) {
-                elementData[i] = elementData[i - 1];
-            }
-            elementData[index] = value;
-            size++;
         }
+        if (size == elementData.length) {
+            resize();
+        }
+        for (int i = size; i > index; i--) {
+            elementData[i] = elementData[i - 1];
+        }
+        elementData[index] = value;
+        size++;
     }
 
     @Override
@@ -69,7 +63,6 @@ public class ArrayList<T> implements List<T> {
         } else {
             throw new ArrayIndexOutOfBoundsException();
         }
-
     }
 
     private void resize() {
@@ -81,42 +74,36 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
 
-        if (index >= 0 && index <= size && elementData[index] != null) {
-            T temp = (T) elementData[index];
-            for (int i = index; i < size; i++) {
-                elementData[i] = elementData[i + 1];
-            }
-            size--;
-            return temp;
-        } else {
+        if (index < 0 || index > size || elementData[index] == null) {
             throw new ArrayIndexOutOfBoundsException();
         }
-
+        T temp = (T) elementData[index];
+        for (int i = index; i < size; i++) {
+            elementData[i] = elementData[i + 1];
+        }
+        size--;
+        return temp;
     }
 
     @Override
     public T remove(T t) {
-
         Boolean exist = elementExists(t);
         if (!exist) {
             throw new NoSuchElementException();
-        } else {
-            for (int i = 0; i < size; i++) {
-                if (elementData[i].equals(t) || elementData[i] == t || t == null) {
-                    remove(i);
-                    return t;
-                }
+        }
+        for (int i = 0; i < size; i++) {
+            if (elementData[i].equals(t) || elementData[i] == t || t == null) {
+                remove(i);
+                return t;
             }
         }
         return t;
-
     }
 
     private Boolean elementExists(T t) {
         for (int i = 0; i < size; i++) {
-            if ((elementData[i] == null)) {
-                return true;
-            } else if ((elementData[i].equals(t) || elementData[i] == t)) {
+            if ((elementData[i] == null)
+                    || (elementData[i].equals(t) || elementData[i] == t)) {
                 return true;
             }
         }
