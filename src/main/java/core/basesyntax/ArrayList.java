@@ -8,9 +8,9 @@ import java.util.NoSuchElementException;
  */
 public class ArrayList<T> implements List<T> {
 
-    private int newCapacity = 10;
+    private int newCapacity;
     private int capacity = 10;
-    private int actualSize = 0;
+    private int size;
 
     private Object[] value;
     private Object[] newValue;
@@ -30,50 +30,46 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (actualSize == capacity) {
+        if (size == capacity) {
             extendArray();
         }
-        this.value[actualSize] = value;
-        actualSize++;
+        this.value[size] = value;
+        size++;
     }
 
     @Override
     public void add(T value, int index) {
-        if (index < 0 || index >= actualSize) {
+        if (index < 0 || index >= size) {
             throw new ArrayIndexOutOfBoundsException();
         }
-        if (actualSize == capacity) {
+        if (size == capacity) {
             extendArray();
         }
-        for (int i = capacity - 1; i > index; i--) {
-            this.value[i] = this.value[i - 1];
-        }
+        System.arraycopy(this.value, index, this.value, index + 1, size - index);
         this.value[index] = value;
-        actualSize++;
+        size++;
     }
 
     @Override
-    public void addAll(List<T> list) {
-        try {
-            while (actualSize + list.size() > capacity) {
-                extendArray();
-            }
-            Object[] copyListToArray = new Object[list.size()];
+    public void addAll(List<T> list) throws Exception {
 
-            for (int i = 0; i < list.size(); i++) {
-                copyListToArray[i] = list.get(i);
-            }
-
-            System.arraycopy(copyListToArray, 0, this.value, actualSize, copyListToArray.length);
-            actualSize += list.size();
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
+        while (size + list.size() > capacity) {
+            extendArray();
         }
+        Object[] copyListToArray = new Object[list.size()];
+
+        for (int i = 0; i < list.size(); i++) {
+            copyListToArray[i] = list.get(i);
+        }
+
+        System.arraycopy(copyListToArray, 0, this.value, size, copyListToArray.length);
+        size += list.size();
+
     }
 
     @Override
     public T get(int index) {
-        if (index < 0 || index >= actualSize) {
+        if (index < 0 || index >= size) {
             throw new ArrayIndexOutOfBoundsException();
         }
         return (T) this.value[index];
@@ -82,7 +78,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void set(T value, int index) {
 
-        if (index < 0 || index >= actualSize) {
+        if (index < 0 || index >= size) {
             throw new ArrayIndexOutOfBoundsException();
         }
         this.value[index] = value;
@@ -91,17 +87,14 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
 
-        if (index < 0 || index >= actualSize) {
+        if (index < 0 || index >= size) {
             throw new ArrayIndexOutOfBoundsException();
         }
         Object[] removedValue = new Object[1];
         removedValue[0] = this.value[index];
 
-        for (int i = index; i < actualSize; i++) {
-            this.value[i] = this.value[i + 1];
-        }
-        this.value[actualSize - 1] = null;
-        actualSize--;
+        System.arraycopy(this.value, index + 1, this.value, index, size - index - 1);
+        size--;
 
         return (T) removedValue[0];
     }
@@ -109,13 +102,13 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T t) {
 
-        for (int i = 0; i < actualSize; i++) {
+        for (int i = 0; i < size; i++) {
             if (t == null || this.value[i].equals(t)) {
-                for (int j = i; j < actualSize - 1; j++) {
+                for (int j = i; j < size - 1; j++) {
                     this.value[j] = this.value[j + 1];
                 }
-                this.value[actualSize - 1] = null;
-                actualSize--;
+                this.value[size - 1] = null;
+                size--;
                 return t;
             }
         }
@@ -124,11 +117,11 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public int size() {
-        return actualSize;
+        return size;
     }
 
     @Override
     public boolean isEmpty() {
-        return actualSize == 0;
+        return size == 0;
     }
 }
