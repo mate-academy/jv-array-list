@@ -17,15 +17,15 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        ensureCapacity(size + 1);
+        ensureCapacity();
         elementData[size] = value;
         size++;
     }
 
     @Override
     public void add(T value, int index) {
-        ensureCapacity(size + 1);
-        System.arraycopy(elementData,index,elementData,index + 1,size - index);
+        ensureCapacity();
+        System.arraycopy(elementData, index, elementData, index + 1,size - index);
         elementData[index] = value;
         size++;
 
@@ -42,10 +42,8 @@ public class ArrayList<T> implements List<T> {
     public T get(int index) {
         if (index < size && index >= 0) {
             return elementData[index];
-        } else {
-            throw new ArrayIndexOutOfBoundsException();
         }
-
+        throw new ArrayIndexOutOfBoundsException();
     }
 
     @Override
@@ -60,10 +58,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         if (index < size && index >= 0) {
-            final Object[] localArray = elementData;
-
-            T oldValue = (T) localArray[index];
-            remover(localArray, index);
+            T oldValue = (T) elementData[index];
+            remover(elementData, index);
             return oldValue;
         }
         throw new ArrayIndexOutOfBoundsException();
@@ -71,15 +67,14 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T t) {
-        if (t == null) {
-            size--;
-            return null;
-        }
         for (int i = 0; i < size; i++) {
+            if (t == null) {
+                remover(elementData, i);
+                return null;
+            }
             if (t.equals(elementData[i])) {
-                final Object[] localElements = elementData;
-                T oldValue = (T) localElements[i];
-                remover(localElements, i);
+                T oldValue = (T) elementData[i];
+                remover(elementData, i);
                 return oldValue;
             }
         }
@@ -96,17 +91,15 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    public  void ensureCapacity(int minCapacity) {
-        if (minCapacity > elementData.length) {
+    public  void ensureCapacity() {
+        if (size + 1 > elementData.length) {
             newCapacity();
         }
     }
 
     private void newCapacity() {
-        int oldCapacity = elementData.length;
-        int newCapacity = oldCapacity + oldCapacity / 2;
         T[] oldData = elementData;
-        elementData = (T[]) new Object[newCapacity];
+        elementData = (T[]) new Object[elementData.length + elementData.length / 2];
         System.arraycopy(oldData, 0, elementData, 0, size);
     }
 
