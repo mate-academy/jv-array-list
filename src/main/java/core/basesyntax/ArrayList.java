@@ -1,7 +1,5 @@
 package core.basesyntax;
 
-import org.jetbrains.annotations.NotNull;
-
 /**
  * <p>Реалізувати свій ArrayList який імплементує інтерфейс List. Дотриматися основних вимог щодо
  * реалізації ArrayList (default capacity, newCapacity...)</p>
@@ -68,7 +66,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     @Override
-    public void addAll(@NotNull List<T> list) {
+    public void addAll(List<T> list) {
         for (int i = 0; i < list.size(); i++) {
             add(list.get(i));
         }
