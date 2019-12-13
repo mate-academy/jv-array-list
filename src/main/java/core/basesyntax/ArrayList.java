@@ -25,16 +25,12 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (elementData.length >= size + 1) {
-            elementData[size] = value;
-            size++;
-            trimToSize();
-        } else {
+        if (elementData.length <= size) {
             grow();
-            elementData[size] = value;
-            size++;
-            trimToSize();
         }
+        elementData[size] = value;
+        size++;
+        trimToSize();
     }
 
     @Override
@@ -42,18 +38,12 @@ public class ArrayList<T> implements List<T> {
         if (checkIndex(index)) {
             throw new ArrayIndexOutOfBoundsException("Wrong index " + index);
         }
-        if (elementData.length >= size + 1) {
-            System.arraycopy(elementData, index, elementData, index + 1, size - index);
-            elementData[index] = value;
-            size++;
-            trimToSize();
-        } else {
+        if (elementData.length <= size) {
             grow();
-            System.arraycopy(elementData, index, elementData, index + 1, size - index);
-            elementData[index] = value;
-            size++;
-            trimToSize();
         }
+        System.arraycopy(elementData, index, elementData, index + 1, size - index);
+        elementData[index] = value;
+        size++;
     }
 
     @Override
