@@ -63,7 +63,7 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) throws ArrayIndexOutOfBoundsException {
         checkIndex(index);
         T elementToDelete = (T) arrayOfElements[index];
-        System.arraycopy(arrayOfElements, index + 1, arrayOfElements, index, size - index);
+        System.arraycopy(arrayOfElements, index + 1, arrayOfElements, index, size - index - 1);
         arrayOfElements[size--] = null;
         return elementToDelete;
     }
