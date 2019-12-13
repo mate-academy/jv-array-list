@@ -28,11 +28,8 @@ public class ArrayList<T> implements List<T> {
     public void add(T value, int index) {
         checkIndex(index);
         resizeIfFull();
-        Object[] tmp = new Object[size + 1];
-        System.arraycopy(list, 0, tmp, 0, size - (size - 1));
-        tmp[index] = value;
-        System.arraycopy(list, index, tmp, index + 1, size - index);
-        list = tmp;
+        System.arraycopy(list, index, list, index + 1, size - index + 1);
+        list[index] = value;
         size++;
     }
 
@@ -59,10 +56,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
-        Object[] tmp = new Object[size - index - 1];
-        System.arraycopy(list, index + 1, tmp, 0, size - index - 1);
         final T item = (T) list[index];
-        System.arraycopy(tmp, 0, list, index, tmp.length);
+        System.arraycopy(list, index + 1, list, index, size - index - 1);
         list[size] = null;
         size--;
         return item;
