@@ -53,17 +53,22 @@ public class ArrayList<T> implements List<T> {
     }
 
     @Override
-    public void addAll(List<T> list) throws Exception {
-        while (actualSize + list.size() > capacity) {
-            extendArray();
-        }
-        Object[] copyListToArray = new Object[list.size()];
+    public void addAll(List<T> list) {
+        try {
+            while (actualSize + list.size() > capacity) {
+                extendArray();
+            }
+            Object[] copyListToArray = new Object[list.size()];
 
-        for (int i = 0; i < list.size(); i++) {
-            copyListToArray[i] = list.get(i);
+            for (int i = 0; i < list.size(); i++) {
+                copyListToArray[i] = list.get(i);
+            }
+
+            System.arraycopy(copyListToArray, 0, this.value, actualSize, copyListToArray.length);
+            actualSize += list.size();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
         }
-        System.arraycopy(copyListToArray, 0, this.value, actualSize, copyListToArray.length);
-        actualSize += list.size();
     }
 
     @Override
