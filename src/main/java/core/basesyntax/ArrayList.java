@@ -1,6 +1,7 @@
 package core.basesyntax;
 
 import java.util.NoSuchElementException;
+
 /**
  * <p>Реалізувати свій ArrayList який імплементує інтерфейс List. Дотриматися основних вимог щодо
  * реалізації ArrayList (default capacity, newCapacity...)</p>
@@ -42,30 +43,27 @@ public class ArrayList<T> implements List<T> {
     public T get(int index) {
         if (amountOfElements <= index || index < 0) {
             throw new ArrayIndexOutOfBoundsException();
-        } else {
-            return (T) array[index];
         }
+        return (T) array[index];
     }
 
     @Override
     public void set(T value, int index) {
         if (amountOfElements <= index || index < 0) {
             throw new ArrayIndexOutOfBoundsException();
-        } else {
-            array[index] = value;
         }
+        array[index] = value;
     }
 
     @Override
     public T remove(int index) {
         if (index > amountOfElements || index < 0) {
             throw new ArrayIndexOutOfBoundsException();
-        } else {
-            T elementToRemove = get(index);
-            System.arraycopy(array, index + 1, array, index, amountOfElements - index);
-            amountOfElements--;
-            return elementToRemove;
         }
+        T elementToRemove = get(index);
+        System.arraycopy(array, index + 1, array, index, amountOfElements - index);
+        amountOfElements--;
+        return elementToRemove;
     }
 
     @Override
@@ -91,10 +89,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public boolean isEmpty() {
-        if (amountOfElements == 0) {
-            return true;
-        } else {
-            return false;
-        }
+        return amountOfElements == 0;
     }
 }
+
