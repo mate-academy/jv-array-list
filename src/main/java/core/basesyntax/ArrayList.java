@@ -18,14 +18,14 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        arraySize();
+        checkSize();
         array[count++] = value;
     }
 
     @Override
     public void add(T value, int index) {
-        verification(index);
-        arraySize();
+        checkIndex(index);
+        checkSize();
         System.arraycopy(array, index, array, index + 1, count - index);
         array[index] = value;
         count++;
@@ -34,26 +34,25 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void addAll(List<T> list) {
         for (int i = 0; i < list.size(); i++) {
-            arraySize();
             add(list.get(i));
         }
     }
 
     @Override
     public T get(int index) {
-        verification(index);
+        checkIndex(index);
         return (T) array[index];
     }
 
     @Override
     public void set(T value, int index) {
-        verification(index);
+        checkIndex(index);
         array[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        verification(index);
+        checkIndex(index);
         Object removedObject = array[index];
         System.arraycopy(array, index + 1, array, index, count - index - 1);
         count--;
@@ -80,13 +79,13 @@ public class ArrayList<T> implements List<T> {
         return count == 0;
     }
 
-    public void verification(int index) {
+    public void checkIndex(int index) {
         if ((index < 0) || (index >= count)) {
             throw new ArrayIndexOutOfBoundsException();
         }
     }
 
-    public void arraySize() {
+    public void checkSize() {
         if (count >= array.length) {
             array = Arrays.copyOf(array, count * 3 / 2 + 1);
         }
