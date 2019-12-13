@@ -17,7 +17,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (amountOfElements == array.length - 1) {
+        if (amountOfElements == array.length) {
             reSize();
         }
         array[amountOfElements] = value;
