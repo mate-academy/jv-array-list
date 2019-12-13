@@ -11,13 +11,13 @@ public class ArrayList<T> implements List<T> {
     private Object[] elementData;
 
     public ArrayList() {
-        this.elementData = new Object[DEFAULT_CAPACITY];
-        this.size = 0;
+        elementData = new Object[DEFAULT_CAPACITY];
+        size = 0;
     }
 
     public ArrayList(int initialCapacity) {
         if (initialCapacity > 0) {
-            this.elementData = new Object[initialCapacity];
+            elementData = new Object[initialCapacity];
         } else {
             if (initialCapacity != 0) {
                 throw new IllegalArgumentException("Illegal Capacity: " + initialCapacity);
@@ -28,7 +28,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value) {
         if (ensureCapacity()) {
-            this.elementData[size] = value;
+            elementData[size] = value;
             size++;
             trimToSize();
         } else {
@@ -77,7 +77,7 @@ public class ArrayList<T> implements List<T> {
         if (checkIndex(index)) {
             throw new ArrayIndexOutOfBoundsException("Wrong index " + index);
         }
-        return (T) this.elementData[index];
+        return (T) elementData[index];
     }
 
     @Override
@@ -85,7 +85,7 @@ public class ArrayList<T> implements List<T> {
         if (checkIndex(index)) {
             throw new ArrayIndexOutOfBoundsException("Wrong index " + index);
         }
-        this.elementData[index] = value;
+        elementData[index] = value;
     }
 
     @Override
@@ -120,24 +120,24 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public int size() {
-        return this.elementData.length;
+        return elementData.length;
     }
 
     @Override
     public boolean isEmpty() {
-        return this.size == 0;
+        return size == 0;
     }
 
     private boolean ensureCapacity() {
-        return this.elementData.length >= this.size + 1;
+        return elementData.length >= size + 1;
     }
 
     private Object[] grow() {
-        return new Object[this.elementData.length + (this.elementData.length >> 1) + 1];
+        return new Object[elementData.length + (elementData.length >> 1) + 1];
     }
 
     private boolean checkIndex(int index) {
-        return index < 0 || index > this.elementData.length;
+        return index < 0 || index > elementData.length;
     }
 
     private int getIndex(T t) {
@@ -153,7 +153,7 @@ public class ArrayList<T> implements List<T> {
 
     private void trimToSize() {
         Object[] newElementData = new Object[size];
-        System.arraycopy(this.elementData, 0, newElementData, 0, size);
-        this.elementData = newElementData;
+        System.arraycopy(elementData, 0, newElementData, 0, size);
+        elementData = newElementData;
     }
 }
