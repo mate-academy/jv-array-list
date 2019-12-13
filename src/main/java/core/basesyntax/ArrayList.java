@@ -25,15 +25,13 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (ensureCapacity()) {
+        if (elementData.length >= size + 1) {
             elementData[size] = value;
             size++;
             trimToSize();
         } else {
-            Object[] array = grow();
-            System.arraycopy(elementData, 0, array, 0, size);
-            array[size] = value;
-            elementData = array;
+            grow();
+            elementData[size] = value;
             size++;
             trimToSize();
         }
@@ -44,20 +42,15 @@ public class ArrayList<T> implements List<T> {
         if (checkIndex(index)) {
             throw new ArrayIndexOutOfBoundsException("Wrong index " + index);
         }
-        if (ensureCapacity()) {
-            Object[] array = new Object[elementData.length];
-            System.arraycopy(elementData, 0, array, 0, index - 1);
-            array[index] = value;
-            System.arraycopy(elementData, index + 1, array, index + 1, elementData.length - index);
-            elementData = array;
+        if (elementData.length >= size + 1) {
+            System.arraycopy(elementData, index, elementData, index + 1, size - index);
+            elementData[index] = value;
             size++;
             trimToSize();
         } else {
-            Object[] array = grow();
-            System.arraycopy(elementData, 0, array, 0, index);
-            array[index] = value;
-            System.arraycopy(elementData, index, array, index + 1, elementData.length - index);
-            elementData = array;
+            grow();
+            System.arraycopy(elementData, index, elementData, index + 1, size - index);
+            elementData[index] = value;
             size++;
             trimToSize();
         }
@@ -88,11 +81,10 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(int index) throws ArrayIndexOutOfBoundsException {
+        T oldValue = get(index);
         if (checkIndex(index)) {
             throw new ArrayIndexOutOfBoundsException("Wrong index " + index);
-        }
-        T oldValue = get(index);
-        if (size - index - 1 >= 0) {
+        } else {
             System.arraycopy(elementData, index + 1, elementData, index, size - index - 1);
             elementData[size - 1] = null;
             size--;
@@ -107,12 +99,10 @@ public class ArrayList<T> implements List<T> {
         if (index == -1) {
             throw new java.util.NoSuchElementException();
         }
-        if (size - index - 1 >= 0) {
-            System.arraycopy(elementData, index + 1, elementData, index, size - index - 1);
-            elementData[size - 1] = null;
-            size--;
-            trimToSize();
-        }
+        System.arraycopy(elementData, index + 1, elementData, index, size - index - 1);
+        elementData[size - 1] = null;
+        size--;
+        trimToSize();
         return t;
     }
 
@@ -126,12 +116,10 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private boolean ensureCapacity() {
-        return elementData.length >= size + 1;
-    }
-
-    private Object[] grow() {
-        return new Object[elementData.length + (elementData.length >> 1) + 1];
+    private void grow() {
+        Object[] grew = new Object[elementData.length + (elementData.length >> 1) + 1];
+        System.arraycopy(elementData, 0, grew, 0, size);
+        elementData = grew;
     }
 
     private boolean checkIndex(int index) {
