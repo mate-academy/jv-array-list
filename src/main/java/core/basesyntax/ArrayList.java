@@ -19,49 +19,51 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        refrashList();
+        resizeIfFull();
         list[size] = value;
         size++;
     }
 
     @Override
     public void add(T value, int index) {
-        isIndexAcceptableLimits(index);
-        refrashList();
-        for (int i = size - 1; i >= size - (size - index); i--) {
-            list[i + 1] = list[i];
-        }
-        list[index] = value;
+        checkIndex(index);
+        resizeIfFull();
+        Object[] tmp = new Object[size + 1];
+        System.arraycopy(list, 0, tmp, 0, size - (size - 1));
+        tmp[index] = value;
+        System.arraycopy(list, index, tmp, index + 1, size - index);
+        list = tmp;
         size++;
     }
 
     @Override
     public void addAll(List<T> collection) {
         for (int i = 0; i < collection.size(); i++) {
-            refrashList();
+            resizeIfFull();
             add(collection.get(i));
         }
     }
 
     @Override
     public T get(int index) {
-        isIndexAcceptableLimits(index);
+        checkIndex(index);
         return (T) list[index];
     }
 
     @Override
     public void set(T value, int index) {
-        isIndexAcceptableLimits(index);
+        checkIndex(index);
         list[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        isIndexAcceptableLimits(index);
+        checkIndex(index);
         T item = (T) list[index];
-        for (int i = index; i < size; i++) {
-            list[i] = list[i + 1];
-        }
+        Object[] tmp = new Object[size - index - 1];
+        System.arraycopy(list, index + 1, tmp, 0, size - index - 1);
+        System.arraycopy(tmp, 0, list, index, tmp.length);
+        list[size] = null;
         size--;
         return item;
     }
@@ -86,13 +88,13 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void refrashList() {
+    private void resizeIfFull() {
         if (!isCapacityLengthEnsure()) {
             list = Arrays.copyOf(list, (list.length * 3) / 2 + 1);
         }
     }
 
-    private boolean isIndexAcceptableLimits(int index) {
+    private boolean checkIndex(int index) {
         if (index >= size || index < 0) {
             throw new ArrayIndexOutOfBoundsException("Index -" + index + " outside the array ");
         }
