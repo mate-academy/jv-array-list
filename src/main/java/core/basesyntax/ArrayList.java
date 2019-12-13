@@ -48,11 +48,10 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void set(T value, int index) {
-        if (index < size && index >= 0) {
-            elementData[index] = value;
-        } else {
+        if (index >= size || index < 0) {
             throw new ArrayIndexOutOfBoundsException();
         }
+        elementData[index] = value;
     }
 
     @Override
