@@ -26,11 +26,8 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        checkIndex(index);
-        resizeIfFull();
-        System.arraycopy(list, index, list, index + 1, size - index + 1);
+        resizeOnOneElement(index, 1);
         list[index] = value;
-        size++;
     }
 
     @Override
@@ -57,9 +54,8 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         checkIndex(index);
         final T item = (T) list[index];
-        System.arraycopy(list, index + 1, list, index, size - index - 1);
+        resizeOnOneElement(index, -1);
         list[size] = null;
-        size--;
         return item;
     }
 
@@ -87,6 +83,14 @@ public class ArrayList<T> implements List<T> {
         if (!isCapacityLengthEnsure()) {
             list = Arrays.copyOf(list, (list.length * 3) / 2 + 1);
         }
+    }
+
+    private void resizeOnOneElement(int index, int marker) {
+        checkIndex(index);
+        resizeIfFull();
+        System.arraycopy(list, index + (marker < 0 ? 1 : 0), list,
+                index + (marker > 0 ? 1 : 0), size - index + (1 * marker));
+        size = size + marker;
     }
 
     private boolean checkIndex(int index) {
