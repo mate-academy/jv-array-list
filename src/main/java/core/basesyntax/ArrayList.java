@@ -55,7 +55,6 @@ public class ArrayList<T> implements List<T> {
         checkIndex(index);
         final T item = (T) list[index];
         resizeOnOneElement(index, -1);
-        list[size] = null;
         return item;
     }
 
@@ -91,6 +90,9 @@ public class ArrayList<T> implements List<T> {
         System.arraycopy(list, index + (marker < 0 ? 1 : 0), list,
                 index + (marker > 0 ? 1 : 0), size - index + (1 * marker));
         size = size + marker;
+        if (marker < 0) {
+            list[size] = null;
+        }
     }
 
     private boolean checkIndex(int index) {
