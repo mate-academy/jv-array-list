@@ -59,9 +59,9 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
-        T item = (T) list[index];
         Object[] tmp = new Object[size - index - 1];
         System.arraycopy(list, index + 1, tmp, 0, size - index - 1);
+        final T item = (T) list[index];
         System.arraycopy(tmp, 0, list, index, tmp.length);
         list[size] = null;
         size--;
