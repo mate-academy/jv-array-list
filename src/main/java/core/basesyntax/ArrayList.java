@@ -30,10 +30,8 @@ public class ArrayList<T> implements List<T> {
     public void add(T value) {
         if (elementData.length == 0 || size == elementData.length) {
             grow();
-            add(value);
-        } else {
-            elementData[size++] = value;
         }
+        elementData[size++] = value;
     }
 
     @Override
@@ -44,25 +42,18 @@ public class ArrayList<T> implements List<T> {
         if (index < 0 || index > size) {
             throw new ArrayIndexOutOfBoundsException("Your index is lesser that 0");
         }
-        add((T) elementData[size]);
-        for (int i = size - 1; i > index - 1; i--) {
-            if (i == index) {
-                set(value, i);
-            } else {
-                set((T) elementData[i - 1], i);
-            }
+        add(value);
+        for (int i = size - 1; i > index; i--) {
+            T tmp = (T) elementData[i - 1];
+            elementData[i - 1] = elementData[i];
+            elementData[i] = tmp;
         }
     }
 
     @Override
     public void addAll(List<T> list) {
-        if (list.size() > elementData.length) {
-            grow();
-            addAll(list);
-        } else {
-            for (int i = 0; i < list.size(); i++) {
-                add(list.get(i));
-            }
+        for (int i = 0; i < list.size(); i++) {
+            add(list.get(i));
         }
     }
 
@@ -78,9 +69,6 @@ public class ArrayList<T> implements List<T> {
     public void set(T value, int index) {
         if (index < 0 || index > size - 1) {
             throw new ArrayIndexOutOfBoundsException("Your index is lesser that 0");
-        }
-        if (index > elementData.length) {
-            grow();
         }
         elementData[index] = value;
     }
@@ -98,7 +86,7 @@ public class ArrayList<T> implements List<T> {
             if (i == index) {
                 value = (T) elementData[i];
             }
-            set((T) elementData[i + 1], i);
+            elementData[i] = elementData[i + 1];
         }
         size--;
         return value;
@@ -109,13 +97,13 @@ public class ArrayList<T> implements List<T> {
         int i = 0;
         for (; i < size; i++) {
             if (elementData[i] == t || elementData[i].equals(t)) {
-                break;
+                return remove(i);
             }
             if (i == size - 1) {
                 throw new NoSuchElementException("Check your index");
             }
         }
-        return remove(i);
+        return null;
     }
 
     @Override
