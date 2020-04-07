@@ -20,18 +20,14 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (array.length == size) {
-            resize();
-        }
+        resizeIfNeed();
         array[size++] = value;
     }
 
     @Override
     public void add(T value, int index) {
         throwExceptionIfIndexOutOfBounds(index);
-        if (array.length == size) {
-            resize();
-        }
+        resizeIfNeed();
         System.arraycopy(array, index, array, index + 1, size - index);
         array[index] = value;
         size++;
@@ -86,16 +82,17 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void throwExceptionIfIndexOutOfBounds(int index) {
-        if (index > size - 1 || index < 0) {
+        if (index < 0 || index > size - 1) {
             throw new ArrayIndexOutOfBoundsException();
         }
     }
 
-    private void resize() {
-        int oldCapacity = array.length;
-        int newCapacity = oldCapacity + (oldCapacity >> 1);
-        Object[] temp = array;
-        array = new Object[newCapacity];
-        System.arraycopy(temp, 0, array, 0, oldCapacity);
+    private void resizeIfNeed() {
+        if (array.length == size) {
+            int oldCapacity = array.length;
+            Object[] temp = array;
+            array = new Object[oldCapacity + (oldCapacity >> 1)];
+            System.arraycopy(temp, 0, array, 0, oldCapacity);
+        }
     }
 }
