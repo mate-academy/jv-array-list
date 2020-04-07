@@ -10,27 +10,27 @@ import java.util.NoSuchElementException;
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private T[] elementData;
-    private int lastElement;
+    private int actualSize;
 
     public ArrayList() {
         elementData = (T[]) new Object[DEFAULT_CAPACITY];
-        lastElement = 0;
+        actualSize = 0;
     }
 
     @Override
     public void add(T value) {
         ensureCapacity();
-        elementData[lastElement++] = value;
+        elementData[actualSize++] = value;
     }
 
     @Override
     public void add(T value, int index) {
         indexInBoundsCheck(index);
         ensureCapacity();
-        int elementsMoved = lastElement - index;
+        int elementsMoved = actualSize - index;
         System.arraycopy(elementData, index, elementData, index + 1, elementsMoved);
         elementData[index] = value;
-        lastElement++;
+        actualSize++;
     }
 
     @Override
@@ -55,26 +55,26 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         indexInBoundsCheck(index);
-        int elementsMoved = lastElement - index - 1;
+        int elementsMoved = actualSize - index - 1;
         T valueHolder = elementData[index];
         System.arraycopy(elementData, index + 1, elementData, index, elementsMoved);
-        elementData[--lastElement] = null;
+        elementData[--actualSize] = null;
         return valueHolder;
     }
 
     @Override
     public T remove(T t) {
-        for (int i = 0; i < lastElement; i++) {
+        for (int i = 0; i < actualSize; i++) {
             if (t == elementData[i] || (t != null && t.equals(elementData[i]))) {
                 return remove(i);
             }
         }
-        throw new NoSuchElementException("Element " + t + " not found in the array");
+        throw new NoSuchElementException("Element '" + t + "' not found in the array");
     }
 
     @Override
     public int size() {
-        return lastElement;
+        return actualSize;
     }
 
     @Override
@@ -83,15 +83,15 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void ensureCapacity() {
-        if (lastElement + 1 >= elementData.length) {
-            int newCapacity = elementData.length + (elementData.length >> 1);
-            elementData = Arrays.copyOf(elementData, newCapacity);
+        if (actualSize + 1 >= elementData.length) {
+            int increasedCapacity = elementData.length + (elementData.length >> 1);
+            elementData = Arrays.copyOf(elementData, increasedCapacity);
         }
     }
 
     private void indexInBoundsCheck(int index) {
-        if (index < 0 || index >= lastElement) {
-            throw new ArrayIndexOutOfBoundsException("Illegal index: " + index + " .");
+        if (index < 0 || index >= actualSize) {
+            throw new ArrayIndexOutOfBoundsException("Illegal index: '" + index + "' .");
         }
     }
 }
