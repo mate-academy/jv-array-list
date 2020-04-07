@@ -22,7 +22,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        T[] newArray = grow();
+        T[] newArray = grow(size + 1);
         if (index <= size) {
             System.arraycopy(arrayT, 0, newArray, 0, index);
             newArray[index] = value;
@@ -91,7 +91,7 @@ public class ArrayList<T> implements List<T> {
             size--;
             return res;
         }
-        T[] newArray = unGrow();
+        T[] newArray = grow(size - 1);
         T result;
         if (index < size) {
             System.arraycopy(arrayT, 0, newArray, 0, index);
@@ -118,7 +118,7 @@ public class ArrayList<T> implements List<T> {
         if (index == -1) {
             throw new java.util.NoSuchElementException();
         }
-        T[] newArray = unGrow();
+        T[] newArray = grow(size - 1);
         T result;
         if (index < size) {
             System.arraycopy(arrayT, 0, newArray, 0, index);
@@ -143,15 +143,8 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    public T[] grow() {
-        return (T[]) new Object[size + 1];
-    }
-
     public T[] grow(int capacity) {
         return (T[]) new Object[capacity];
     }
 
-    public T[] unGrow() {
-        return (T[]) new Object[size - 1];
-    }
 }
