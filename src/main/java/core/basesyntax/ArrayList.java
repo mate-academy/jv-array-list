@@ -101,7 +101,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void checkIndex(int index) {
-        if (index < 0 || index > elementNumber - 1) {
+        if (index < 0 || index >= elementNumber) {
             throw new ArrayIndexOutOfBoundsException();
         }
     }
