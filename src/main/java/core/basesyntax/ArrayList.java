@@ -25,10 +25,9 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        indexInBoundsCheck(index);
+        checkIndexBounds(index);
         ensureCapacity();
-        int elementsMoved = actualSize - index;
-        System.arraycopy(elementData, index, elementData, index + 1, elementsMoved);
+        System.arraycopy(elementData, index, elementData, index + 1, actualSize - index);
         elementData[index] = value;
         actualSize++;
     }
@@ -42,22 +41,21 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        indexInBoundsCheck(index);
+        checkIndexBounds(index);
         return (T) elementData[index];
     }
 
     @Override
     public void set(T value, int index) {
-        indexInBoundsCheck(index);
+        checkIndexBounds(index);
         elementData[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        indexInBoundsCheck(index);
-        int elementsMoved = actualSize - index - 1;
+        checkIndexBounds(index);
         T valueHolder = elementData[index];
-        System.arraycopy(elementData, index + 1, elementData, index, elementsMoved);
+        System.arraycopy(elementData, index + 1, elementData, index, actualSize - index - 1);
         elementData[--actualSize] = null;
         return valueHolder;
     }
@@ -89,7 +87,7 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private void indexInBoundsCheck(int index) {
+    private void checkIndexBounds(int index) {
         if (index < 0 || index >= actualSize) {
             throw new ArrayIndexOutOfBoundsException("Illegal index: '" + index + "' .");
         }
