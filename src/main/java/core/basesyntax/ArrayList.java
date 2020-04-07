@@ -53,7 +53,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void set(T value, int index) {
-        if (index < count && index >=0) {
+        if (index < count && index >= 0) {
             arrayList[index] = value;
         } else {
             throw new ArrayIndexOutOfBoundsException();
