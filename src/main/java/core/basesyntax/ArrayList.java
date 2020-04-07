@@ -25,11 +25,6 @@ public class ArrayList<T> implements List<T> {
         elements[size++] = value;
     }
 
-    private void ensureCapacity() {
-        int newSize = (elements.length * 3) / 2 + 1;
-        elements = Arrays.copyOf(elements, newSize);
-    }
-
     @Override
     public void add(T value, int index) {
         if (index < size) {
@@ -60,7 +55,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index >= 0 && index < size){
+        if (index >= 0 && index < size) {
             return (T) elements[index];
         }
         throw new ArrayIndexOutOfBoundsException();
@@ -102,5 +97,10 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private void ensureCapacity() {
+        int newSize = (elements.length * 3) / 2 + 1;
+        elements = Arrays.copyOf(elements, newSize);
     }
 }
