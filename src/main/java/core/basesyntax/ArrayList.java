@@ -104,7 +104,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void increaseObjectsLength() {
-        Object[] increasedObjects = new Object[objects.length + 1 << objects.length];
+        Object[] increasedObjects = new Object[objects.length + (objects.length >> 1)];
         System.arraycopy(objects, 0, increasedObjects, 0, objects.length);
         objects = increasedObjects;
     }
