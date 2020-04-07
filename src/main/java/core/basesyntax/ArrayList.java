@@ -46,9 +46,8 @@ public class ArrayList<T> implements List<T> {
     public T get(int index) {
         if (index < count && index >= 0) {
             return arrayList[index];
-        } else {
-            throw new ArrayIndexOutOfBoundsException();
         }
+        throw new ArrayIndexOutOfBoundsException();
     }
 
     @Override
