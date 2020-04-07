@@ -1,53 +1,108 @@
 package core.basesyntax;
 
+import java.util.Arrays;
+import java.util.NoSuchElementException;
+
 /**
  * <p>Реалізувати свій ArrayList який імплементує інтерфейс List. Дотриматися основних вимог щодо
  * реалізації ArrayList (default capacity, newCapacity...)</p>
  */
 public class ArrayList<T> implements List<T> {
 
-    @Override
-    public void add(T value) {
+    private static final int DEFAULT_CAPACITY = 10;
+    private T[] array;
+    private int elementNumber;
 
+    public ArrayList() { // done
+        array = (T[]) new Object[DEFAULT_CAPACITY];
+        elementNumber = 0;
+    }
+
+    public ArrayList(int capacity) { //done
+        array = (T[]) new Object[capacity];
+        elementNumber = 0;
     }
 
     @Override
+    public void add(T value) { //done
+        arrayResize();
+        array[elementNumber++] = value;
+    }
+
+    @Override //done
     public void add(T value, int index) {
-
+        checkIndex(index);
+        arrayResize();
+        T[] secondPartArray = Arrays.copyOfRange(array, index, array.length - 1);
+        array[index] = value;
+        elementNumber++;
+        System.arraycopy(secondPartArray, 0, array, index + 1, elementNumber - index);
     }
 
-    @Override
+    @Override //done
     public void addAll(List<T> list) {
-
+        arrayResize();
+        for (int i = 0; i < list.size(); i++) {
+            array[elementNumber++] = list.get(i);
+        }
     }
 
-    @Override
+    @Override //done
     public T get(int index) {
-        return null;
+        checkIndex(index);
+        return array[index];
     }
 
-    @Override
+    @Override //done
     public void set(T value, int index) {
-
+        checkIndex(index);
+        array[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        return null;
+        if (index < 0 || index > elementNumber - 1) {
+            throw new ArrayIndexOutOfBoundsException();
+        }
+        T[] secondPartArray = Arrays.copyOfRange(array, index + 1, array.length - 1);
+        final T returning = array[index];
+        array[index] = null;
+        System.arraycopy(secondPartArray, 0, array, index, elementNumber - index);
+        array[elementNumber--] = null;
+        return returning;
     }
 
     @Override
     public T remove(T t) {
-        return null;
+        for (int i = 0; i < elementNumber; i++) {
+            if ((t == array[i]) || t != null && t.equals(array[i])) {
+                T returning = array[i];
+                remove(i);
+                return returning;
+            }
+        }
+        throw new NoSuchElementException();
     }
 
-    @Override
+    @Override //done
     public int size() {
-        return 0;
+        return elementNumber;
     }
 
-    @Override
+    @Override //done
     public boolean isEmpty() {
-        return false;
+        return elementNumber == 0;
+    }
+
+    private void arrayResize() {
+        if (elementNumber > array.length - 1) {
+            array = Arrays.copyOf(array, array.length * 3 / 2 + 1);
+        }
+    }
+
+    private void checkIndex(int index) {
+        if (index < 0 || index > elementNumber - 1) {
+            throw new ArrayIndexOutOfBoundsException();
+        }
     }
 }
