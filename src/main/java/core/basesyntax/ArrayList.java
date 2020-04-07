@@ -8,11 +8,11 @@ import java.util.NoSuchElementException;
  */
 public class ArrayList<T> implements List<T> {
     private static int DEFAULT_CAPACITY = 10;
-    private Object[] data;
+    private T[] data;
     private int size;
 
     public ArrayList() {
-        data = new Object[DEFAULT_CAPACITY];
+        data = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
     @Override
@@ -86,7 +86,7 @@ public class ArrayList<T> implements List<T> {
             newCapacity += newCapacity >> 1;
         } while (newCapacity < requiredCapacity);
 
-        Object[] newData = new Object[newCapacity];
+        T[] newData = (T[]) new Object[newCapacity];
         System.arraycopy(data, 0, newData, 0, data.length);
         data = newData;
     }
