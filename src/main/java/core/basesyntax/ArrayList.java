@@ -55,8 +55,13 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         indexInBoundsCheck(index);
         T valueHolder = elementData[index];
-        System.arraycopy(elementData, index + 1, elementData, index, lastElement - index - 1);
-        elementData[--lastElement] = null;
+        for (int i = index; i < lastElement; i++) {
+            if (i == index) {
+                valueHolder = elementData[i];
+            }
+            elementData[i] = elementData[i + 1];
+        }
+        lastElement--;
         return valueHolder;
     }
 
