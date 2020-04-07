@@ -73,7 +73,7 @@ public class ArrayList<T> implements List<T> {
             }
         }
         if (element == null && t != null) {
-            throw new NoSuchElementException("Такого элемента нет!");
+            throw new NoSuchElementException("There is no such element!");
         }
         return element;
     }
@@ -98,7 +98,7 @@ public class ArrayList<T> implements List<T> {
 
     private void assertIndex(int index) {
         if (index >= size) {
-            throw new ArrayIndexOutOfBoundsException("Указанный индекс превышает длину массива!");
+            throw new ArrayIndexOutOfBoundsException("The index exceeds the array length!");
         }
     }
 }
