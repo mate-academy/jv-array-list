@@ -61,11 +61,9 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T t) {
-        T valueHolder = null;
         for (int i = 0; i < lastElement; i++) {
             if (t == elementData[i] || (t != null && t.equals(elementData[i]))) {
-                valueHolder = remove(i);
-                return valueHolder;
+                return remove(i);
             }
         }
         throw new NoSuchElementException("Element " + t + " not found in the array");
