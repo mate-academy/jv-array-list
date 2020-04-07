@@ -33,10 +33,8 @@ public class ArrayList<T> implements List<T> {
     public void add(T value, int index) {
         checkIndex(index);
         arrayResize();
-        T[] secondPartArray = Arrays.copyOfRange(array, index, array.length - 1);
-        array[index] = value;
+        System.arraycopy(array, index, array, index + 1, elementNumber - index);
         elementNumber++;
-        System.arraycopy(secondPartArray, 0, array, index + 1, elementNumber - index);
     }
 
     @Override //done
