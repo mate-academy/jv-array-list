@@ -86,7 +86,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void growCapacity() {
-        int newCapacity = (int)(size * 3) / 2 + 1;
+        int newCapacity = (size * 3) / 2 + 1;
         T[] oldArray = array;
         array = (T[]) new Object[newCapacity];
         System.arraycopy(oldArray,0, array,0,size);
@@ -101,7 +101,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void removeElement(int index) {
-        System.arraycopy(array,index + 1, array, index, size - index);
-        size--;
+        System.arraycopy(array,index + 1, array, index, size - index - 1);
+        array[--size] = null;
     }
 }
