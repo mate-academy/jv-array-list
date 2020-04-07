@@ -17,6 +17,11 @@ public class ArrayList<T> implements List<T> {
         lastIndex = 0;
     }
 
+    public ArrayList(int capacity) {
+        elementData = (T[]) new Object[capacity];
+        lastIndex = 0;
+    }
+
     @Override
     public void add(T value) {
         if (lastIndex >= elementData.length) {
