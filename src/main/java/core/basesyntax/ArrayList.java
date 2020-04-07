@@ -26,7 +26,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (inArray(index)) {
+        if (checkIndex(index)) {
             System.arraycopy(array, index, array, index + 1, size - index);
             array[index] = value;
             size++;
@@ -42,21 +42,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        return inArray(index) ? array[index] : null;
+        return checkIndex(index) ? array[index] : null;
     }
 
     @Override
     public void set(T value, int index) {
-        if (inArray(index)) {
-            System.arraycopy(array, index, array, index + 1, size - index);
-            array[index] = value;
-        }
+        checkIndex(index);
+        array[index] = value;
     }
 
     @Override
     public T remove(int index) {
         T value = null;
-        if (inArray(index)) {
+        if (checkIndex(index)) {
             value = array[index];
             removeElement(index);
         }
@@ -89,11 +87,11 @@ public class ArrayList<T> implements List<T> {
         int newCapacity = (size * 3) / 2 + 1;
         T[] oldArray = array;
         array = (T[]) new Object[newCapacity];
-        System.arraycopy(oldArray,0, array,0,size);
+        System.arraycopy(oldArray, 0, array, 0, size);
 
     }
 
-    private boolean inArray(int index) {
+    private boolean checkIndex(int index) {
         if (index >= size || index < 0) {
             throw new ArrayIndexOutOfBoundsException();
         }
@@ -101,7 +99,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void removeElement(int index) {
-        System.arraycopy(array,index + 1, array, index, size - index - 1);
+        System.arraycopy(array, index + 1, array, index, size - index - 1);
         array[--size] = null;
     }
 }
