@@ -69,12 +69,10 @@ public class ArrayList<T> implements List<T> {
         T element = null;
         for (int i = 0; i < size; i++) {
             if (t == elementData[i] || t != null && t.equals(elementData[i])) {
-                element = elementData[i];
-                System.arraycopy(elementData, i + 1, elementData, i, size - i - 1);
-                elementData[--size] = null;
+                element = remove(i);
             }
         }
-        if (t != element && element == null) {
+        if (element == null && t != null) {
             throw new NoSuchElementException("Такого элемента нет!");
         }
         return element;
