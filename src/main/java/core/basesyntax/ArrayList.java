@@ -1,7 +1,7 @@
 package core.basesyntax;
 
 public class ArrayList<T> implements List<T> {
-    private static final int DEFAULT_CAPACITY = 1;
+    private static final int DEFAULT_CAPACITY = 10;
     private T[] massive;
     private int capacity;
 
@@ -88,7 +88,7 @@ public class ArrayList<T> implements List<T> {
 
     private void maxCapacity() {
         if (capacity == massive.length) {
-            T[] newArr = (T[]) new Object[capacity + 1];
+            T[] newArr = (T[]) new Object[massive.length * 3 / 2];
             System.arraycopy(massive, 0, newArr, 0, capacity);
             massive = newArr;
         }
