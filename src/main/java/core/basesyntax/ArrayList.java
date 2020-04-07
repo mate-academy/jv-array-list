@@ -48,7 +48,6 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void set(T value, int index) {
         if (isIndexExist(index)) {
-            System.arraycopy(array, index, array, index + 1, size - index);
             array[index] = value;
         }
     }
@@ -85,18 +84,18 @@ public class ArrayList<T> implements List<T> {
     }
 
     public void removeElement(int index) {
-        System.arraycopy(array, index + 1, array, index, size - index);
+        System.arraycopy(array, index + 1, array, index, size - index - 1);
         size--;
     }
 
-    public void ensureCapacity() {
+    private void ensureCapacity() {
         int newSize = size + (size >> 1);
         T[] oldArray = array;
         array = (T[]) new Object[newSize];
-        System.arraycopy(oldArray,0,array,0, size);
+        System.arraycopy(oldArray,0, array, 0, size);
     }
 
-    public boolean isIndexExist(int index) {
+    private boolean isIndexExist(int index) {
         if (index < 0 || index >= size) {
             throw new ArrayIndexOutOfBoundsException();
         }
