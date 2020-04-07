@@ -90,7 +90,6 @@ public class ArrayList<T> implements List<T> {
         T[] oldArr = elementArr;
         elementArr = (T[]) new Object[newCapacity];
         System.arraycopy(oldArr,0,elementArr,0,size);
-
     }
 
     private boolean isInArray(int index) {
