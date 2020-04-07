@@ -66,9 +66,8 @@ public class ArrayList<T> implements List<T> {
             System.arraycopy(arrayList, index + 1, arrayList, index, count - index - 1);
             count--;
             return result;
-        } else {
-            throw new ArrayIndexOutOfBoundsException();
         }
+        throw new ArrayIndexOutOfBoundsException();
     }
 
     @Override
