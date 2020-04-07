@@ -47,9 +47,8 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void set(T value, int index) {
-        if (isIndexExist(index)) {
-            array[index] = value;
-        }
+        isIndexExist(index);
+        array[index] = value;
     }
 
     @Override
