@@ -8,25 +8,25 @@ import java.util.NoSuchElementException;
  */
 public class ArrayList<T> implements List<T> {
     private static int CAPACITY = 10;
-    private T[] list;
+    private T[] elementData;
     private int size;
 
     public ArrayList() {
-        list = (T[])new Object[CAPACITY];
+        elementData = (T[])new Object[CAPACITY];
         size = 0;
     }
 
     @Override
     public void add(T value) {
         ensureCapacity();
-        list[size++] = value;
+        elementData[size++] = value;
     }
 
     @Override
     public void add(T value, int index) {
         ensureCapacity();
-        System.arraycopy(list, index, list, index + 1, size - index);
-        list[index] = value;
+        System.arraycopy(elementData, index, elementData, index + 1, size - index);
+        elementData[index] = value;
         size++;
     }
 
@@ -40,28 +40,28 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         checkIndex(index);
-        return list[index];
+        return elementData[index];
     }
 
     @Override
     public void set(T value, int index) {
         checkIndex(index);
-        list[index] = value;
+        elementData[index] = value;
     }
 
     @Override
     public T remove(int index) {
         checkIndex(index);
-        Object removed = list[index];
-        System.arraycopy(list, index + 1, list, index, size - index - 1);
+        Object removed = elementData[index];
+        System.arraycopy(elementData, index + 1, elementData, index, size - index - 1);
         size--;
         return (T) removed;
     }
 
     @Override
     public T remove(T t) {
-        for (int i = 0; i < list.length; i++) {
-            if (list[i] != null && list[i].equals(t) || list[i] == t) {
+        for (int i = 0; i < elementData.length; i++) {
+            if (elementData[i] != null && elementData[i].equals(t) || elementData[i] == t) {
                 return remove(i);
             }
         }
@@ -79,10 +79,10 @@ public class ArrayList<T> implements List<T> {
     }
 
     public void ensureCapacity() {
-        if (size == list.length) {
-            Object oldList = list;
-            list = (T[]) new Object[(size * 3) / 2 + 1];
-            System.arraycopy(oldList, 0, list, 0, size);
+        if (size == elementData.length) {
+            Object oldElementData = elementData;
+            elementData = (T[]) new Object[(size * 3) / 2 + 1];
+            System.arraycopy(oldElementData, 0, elementData, 0, size);
         }
     }
 
