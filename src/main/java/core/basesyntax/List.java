@@ -14,7 +14,7 @@ public interface List<T> {
 
     T remove(int index);
 
-    T remove(T t);
+    T remove(T t) throws NoSuchFieldException;
 
     int size();
 
