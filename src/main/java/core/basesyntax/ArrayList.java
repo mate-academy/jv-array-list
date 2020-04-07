@@ -81,7 +81,7 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    public void expandCapacity() {
+    private void expandCapacity() {
         int expandedCapacity = (int) (size + (size * 1.5));
         T[] oldArr = data;
         data = (T[]) new Object[expandedCapacity];
