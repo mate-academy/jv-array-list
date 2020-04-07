@@ -10,26 +10,26 @@ import java.util.NoSuchElementException;
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private T[] elementData;
-    private int actualSize;
+    private int size;
 
     public ArrayList() {
         elementData = (T[]) new Object[DEFAULT_CAPACITY];
-        actualSize = 0;
+        size = 0;
     }
 
     @Override
     public void add(T value) {
         ensureCapacity();
-        elementData[actualSize++] = value;
+        elementData[size++] = value;
     }
 
     @Override
     public void add(T value, int index) {
         checkIndexBounds(index);
         ensureCapacity();
-        System.arraycopy(elementData, index, elementData, index + 1, actualSize - index);
+        System.arraycopy(elementData, index, elementData, index + 1, size - index);
         elementData[index] = value;
-        actualSize++;
+        size++;
     }
 
     @Override
@@ -55,14 +55,14 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         checkIndexBounds(index);
         T valueHolder = elementData[index];
-        System.arraycopy(elementData, index + 1, elementData, index, actualSize - index - 1);
-        elementData[--actualSize] = null;
+        System.arraycopy(elementData, index + 1, elementData, index, size - index - 1);
+        elementData[--size] = null;
         return valueHolder;
     }
 
     @Override
     public T remove(T t) {
-        for (int i = 0; i < actualSize; i++) {
+        for (int i = 0; i < size; i++) {
             if (t == elementData[i] || (t != null && t.equals(elementData[i]))) {
                 return remove(i);
             }
@@ -72,7 +72,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public int size() {
-        return actualSize;
+        return size;
     }
 
     @Override
@@ -81,14 +81,14 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void ensureCapacity() {
-        if (actualSize + 1 >= elementData.length) {
+        if (size + 1 >= elementData.length) {
             int increasedCapacity = elementData.length + (elementData.length >> 1);
             elementData = Arrays.copyOf(elementData, increasedCapacity);
         }
     }
 
     private void checkIndexBounds(int index) {
-        if (index < 0 || index >= actualSize) {
+        if (index < 0 || index >= size) {
             throw new ArrayIndexOutOfBoundsException("Illegal index: '" + index + "' .");
         }
     }
