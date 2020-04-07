@@ -24,26 +24,20 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (ensureCapacity(size + 1)) {
-            elementData[size++] = value;
-        } else {
+        if (!ensureCapacity(size + 1)) {
             ensurenseCapacity();
-            elementData[size++] = value;
         }
+        elementData[size++] = value;
     }
 
     @Override
     public void add(T value, int index) {
-        if (ensureCapacity(size + 1)) {
-            System.arraycopy(elementData, index, elementData, index + 1, size - index);
-            elementData[index] = value;
-            size++;
-        } else {
+        if (!ensureCapacity(size + 1)) {
             ensurenseCapacity();
-            System.arraycopy(elementData, index, elementData, index + 1, size - index);
-            elementData[index] = value;
-            size++;
         }
+        System.arraycopy(elementData, index, elementData, index + 1, size - index);
+        elementData[index] = value;
+        size++;
     }
 
     @Override
