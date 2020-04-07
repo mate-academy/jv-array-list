@@ -50,7 +50,6 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void set(T value, int index) {
         if (index < size && index >= 0) {
-            reviewSize();
             arrayList[index] = value;
         } else {
             throw new ArrayIndexOutOfBoundsException();
