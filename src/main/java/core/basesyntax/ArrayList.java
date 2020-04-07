@@ -16,7 +16,7 @@ public class ArrayList<T> implements List<T> {
         list = new Object[DEFAULT_CAPACITY];
     }
 
-    private void raiseIfFull() {
+    private void resizeIfFull() {
         if (list.length == size) {
             list = Arrays.copyOf(list, (list.length * 3) / 2);
         }
@@ -30,14 +30,14 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        raiseIfFull();
+        resizeIfFull();
         list[size] = value;
         size++;
     }
 
     @Override
     public void add(T value, int index) {
-        raiseIfFull();
+        resizeIfFull();
         System.arraycopy(list, index, list, index + 1, size - index);
         list[index] = value;
         size++;
