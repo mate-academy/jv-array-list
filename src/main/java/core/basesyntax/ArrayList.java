@@ -4,6 +4,7 @@ package core.basesyntax;
  * <p>Реалізувати свій ArrayList який імплементує інтерфейс List. Дотриматися основних вимог щодо
  * реалізації ArrayList (default capacity, newCapacity...)</p>
  */
+
 public class ArrayList<T> implements List<T> {
 
     private T[] arrayT;
@@ -16,17 +17,13 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        T[] newArray = grow();
-        System.arraycopy(arrayT, 0, newArray, 0, size);
-        newArray[size] = value;
-        arrayT = newArray;
-        size = newArray.length;
+        add(value, size);
     }
 
     @Override
     public void add(T value, int index) {
         T[] newArray = grow();
-        if (index < size) {
+        if (index <= size) {
             System.arraycopy(arrayT, 0, newArray, 0, index);
             newArray[index] = value;
             index++;
@@ -71,13 +68,8 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void set(T value, int index) {
-        T[] newArray = grow(size);
-        if (index < size) {
-            System.arraycopy(arrayT, 0, newArray, 0, index);
-            newArray[index] = value;
-            index++;
-            System.arraycopy(arrayT, index, newArray, index, size - index);
-            arrayT = newArray;
+        if (index < size && index >= 0) {
+            arrayT[index] = value;
         } else {
             throw new ArrayIndexOutOfBoundsException("Index "
                     + index + " out of bounds for length " + size);
