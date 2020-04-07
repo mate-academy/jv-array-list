@@ -27,7 +27,8 @@ public class ArrayList<T> implements List<T> {
     public void add(T value, int index) {
         indexInBoundsCheck(index);
         ensureCapacity();
-        System.arraycopy(elementData, index, elementData, index + 1, lastElement - index);
+        int elementsMoved = lastElement - index;
+        System.arraycopy(elementData, index, elementData, index + 1, elementsMoved);
         elementData[index] = value;
         lastElement++;
     }
