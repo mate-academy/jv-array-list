@@ -85,6 +85,7 @@ public class ArrayList<T> implements List<T> {
             System.arraycopy(list, 0, trimmed, 0, index);
             System.arraycopy(list, index + 1, trimmed, index, elementNum - index - 1);
         }
+        removedElement = removedElement;
         list = trimmed;
         elementNum = elementNum - 1;
         return removedElement;
