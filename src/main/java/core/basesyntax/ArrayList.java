@@ -8,31 +8,32 @@ import java.util.NoSuchElementException;
  */
 public class ArrayList<T> implements List<T> {
 
+    private static final int CAPACITY = 10;
+
     private T[] arrayList;
-    private int count = 0;
-    private int capacity = 10;
+    private int size = 0;
 
     public ArrayList() {
-        arrayList = (T[]) new Object[capacity];
+        arrayList = (T[]) new Object[CAPACITY];
     }
 
     @Override
     public void add(T value) {
-        if (count >= capacity) {
-            enlargeArray();
+        if (size == arrayList.length) {
+            increaseArrayList();
         }
-        arrayList[count] = value;
-        count++;
+        arrayList[size] = value;
+        size++;
     }
 
     @Override
     public void add(T value, int index) {
-        if (index > count) {
+        if (index > size) {
             throw new ArrayIndexOutOfBoundsException();
         } else {
-            System.arraycopy(arrayList, index, arrayList, index + 1, count - index);
+            System.arraycopy(arrayList, index, arrayList, index + 1, size - index);
             arrayList[index] = value;
-            count++;
+            size++;
         }
     }
 
@@ -45,7 +46,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index < count) {
+        if (index < size) {
             return arrayList[index];
         } else {
             throw new ArrayIndexOutOfBoundsException();
@@ -54,7 +55,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void set(T value, int index) {
-        if (index < count) {
+        if (index < size) {
             arrayList[index] = value;
         } else {
             throw new ArrayIndexOutOfBoundsException();
@@ -63,19 +64,20 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(int index) {
-        if (index > count) {
+        if (index > size) {
             throw new ArrayIndexOutOfBoundsException();
         } else {
+            size--;
             T element = arrayList[index];
-            System.arraycopy(arrayList, index + 1, arrayList, index, count - index);
-            count--;
+            System.arraycopy(arrayList, index + 1, arrayList, index, size - index);
+            arrayListReductionByOne();
             return element;
         }
     }
 
     @Override
     public T remove(T t) {
-        for (int i = 0; i < count; i++) {
+        for (int i = 0; i < size; i++) {
             if (t == null && arrayList[i] == null
                     || t != null && t.equals(arrayList[i])) {
                 return remove(i);
@@ -86,18 +88,25 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public int size() {
-        return count;
+        return size;
     }
 
     @Override
     public boolean isEmpty() {
-        return count == 0;
+        return size == 0;
     }
 
-    private void enlargeArray() {
-        capacity = capacity + (capacity >> 1);
-        T[] newArrayList = (T[]) new Object[capacity];
-        System.arraycopy(arrayList, 0, newArrayList, 0, count);
+    private void increaseArrayList() {
+        int lengthArrayList = arrayList.length;
+        lengthArrayList = lengthArrayList + (lengthArrayList >> 1);
+        T[] newArrayList = (T[]) new Object[lengthArrayList];
+        System.arraycopy(arrayList, 0, newArrayList, 0, size);
+        arrayList = newArrayList;
+    }
+
+    private void arrayListReductionByOne() {
+        T[] newArrayList = (T[]) new Object[arrayList.length - 1];
+        System.arraycopy(arrayList, 0, newArrayList, 0, size);
         arrayList = newArrayList;
     }
 }
