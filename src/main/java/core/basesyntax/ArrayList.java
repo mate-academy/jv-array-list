@@ -1,53 +1,92 @@
 package core.basesyntax;
 
+import java.util.NoSuchElementException;
+
 /**
  * <p>Реалізувати свій ArrayList який імплементує інтерфейс List. Дотриматися основних вимог щодо
  * реалізації ArrayList (default capacity, newCapacity...)</p>
  */
 public class ArrayList<T> implements List<T> {
+    private static final int DEFAULT_CAPACITY = 10;
+    private Object[] list;
+    private int size = 0;
+
+    public ArrayList() {
+        list = new Object[DEFAULT_CAPACITY];
+    }
+
+    private void resizeArrayIfFull() {
+        if (list.length == size) {
+            Object[] newList = new Object[((list.length * 3) / 2 + 1)];
+            System.arraycopy(list, 0, newList, 0, size);
+            list = newList;
+        }
+    }
+
+    private void checkAvailable(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayIndexOutOfBoundsException(index + " index out of bounds");
+        }
+    }
 
     @Override
     public void add(T value) {
-
+        resizeArrayIfFull();
+        list[size++] = value;
     }
 
     @Override
     public void add(T value, int index) {
-
+        System.arraycopy(list, index, list, index + 1, size - index);
+        list[index] = value;
+        size++;
     }
 
     @Override
     public void addAll(List<T> list) {
-
+        for (int i = 0; i < list.size(); i++) {
+            add(list.get(i));
+        }
     }
 
     @Override
     public T get(int index) {
-        return null;
+        checkAvailable(index);
+        return (T) list[index];
     }
 
     @Override
     public void set(T value, int index) {
-
+        checkAvailable(index);
+        list[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        return null;
+        checkAvailable(index);
+        Object result = list[index];
+        System.arraycopy(list, index + 1, list, index, size - index - 1);
+        size--;
+        return (T) result;
     }
 
     @Override
     public T remove(T t) {
-        return null;
+        for (int i = 0; i < size; i++) {
+            if (t == list[i] || t != null && t.equals(list[i])) {
+                return remove(i);
+            }
+        }
+        throw new NoSuchElementException();
     }
 
     @Override
     public int size() {
-        return 0;
+        return size;
     }
 
     @Override
     public boolean isEmpty() {
-        return false;
+        return size == 0;
     }
 }
