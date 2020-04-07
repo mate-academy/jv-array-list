@@ -95,7 +95,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void arrayResize() {
-        if (elementNumber > array.length - 1) {
+        if (elementNumber == array.length ) {
             array = Arrays.copyOf(array, array.length * 3 / 2 + 1);
         }
     }
