@@ -30,7 +30,7 @@ public class ArrayList<T> implements List<T> {
         if (index > size) {
             throw new ArrayIndexOutOfBoundsException();
         }
-        if (index == size) {
+        if (size == arrayList.length) {
             increaseArrayList();
         }
         System.arraycopy(arrayList, index, arrayList, index + 1, size - index);
