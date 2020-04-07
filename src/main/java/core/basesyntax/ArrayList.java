@@ -12,7 +12,7 @@ public class ArrayList<T> implements List<T> {
     private T[] arrayList;
     private int count;
 
-    ArrayList() {
+    public ArrayList() {
         arrayList = (T[]) new Object[SIZE];
         count = 0;
     }
@@ -26,27 +26,25 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        growArray();
-        if (index < count) {
-            System.arraycopy(arrayList, index, arrayList, index + 1, count - index);
-            arrayList[index] = value;
-            count++;
-        } else {
+        if (index > count || index < 0) {
             throw new ArrayIndexOutOfBoundsException();
         }
+        growArray();
+        System.arraycopy(arrayList, index, arrayList, index + 1, count - index);
+        arrayList[index] = value;
+        count++;
     }
 
     @Override
     public void addAll(List<T> list) {
         for (int i = 0; i < list.size(); i++) {
-            arrayList[count] = list.get(i);
-            count++;
+            add(list.get(i));
         }
     }
 
     @Override
     public T get(int index) {
-        if (index < count) {
+        if (index < count && index >= 0) {
             return arrayList[index];
         } else {
             throw new ArrayIndexOutOfBoundsException();
@@ -55,7 +53,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void set(T value, int index) {
-        if (index < count) {
+        if (index < count && index >=0) {
             arrayList[index] = value;
         } else {
             throw new ArrayIndexOutOfBoundsException();
