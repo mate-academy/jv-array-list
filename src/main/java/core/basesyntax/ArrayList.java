@@ -23,13 +23,12 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        ensureCapacity();
-        elementData[size++] = value;
+        add(value, size);
     }
 
     @Override
     public void add(T value, int index) {
-        assertIndex(index);
+        assertIndexForAdd(index);
         ensureCapacity();
         System.arraycopy(elementData, index, elementData, index + 1, size - index);
         elementData[index] = value;
@@ -39,7 +38,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void addAll(List<T> list) {
         for (int i = 0; i < list.size(); i++) {
-            add(list.get(i));
+            add(list.get(i), size);
         }
     }
 
@@ -93,7 +92,13 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void assertIndex(int index) {
-        if (index >= size) {
+        if (index >= size || index < 0) {
+            throw new ArrayIndexOutOfBoundsException("The index exceeds the array length!");
+        }
+    }
+
+    private void assertIndexForAdd(int index) {
+        if (index > size || index < 0) {
             throw new ArrayIndexOutOfBoundsException("The index exceeds the array length!");
         }
     }
