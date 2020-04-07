@@ -22,19 +22,20 @@ public class ArrayList<T> implements List<T> {
         if (size == arrayList.length) {
             increaseArrayList();
         }
-        arrayList[size] = value;
-        size++;
+        arrayList[size++] = value;
     }
 
     @Override
     public void add(T value, int index) {
         if (index > size) {
             throw new ArrayIndexOutOfBoundsException();
-        } else {
-            System.arraycopy(arrayList, index, arrayList, index + 1, size - index);
-            arrayList[index] = value;
-            size++;
         }
+        if (index == size) {
+            increaseArrayList();
+        }
+        System.arraycopy(arrayList, index, arrayList, index + 1, size - index);
+        arrayList[index] = value;
+        size++;
     }
 
     @Override
@@ -67,10 +68,9 @@ public class ArrayList<T> implements List<T> {
         if (index > size) {
             throw new ArrayIndexOutOfBoundsException();
         } else {
-            size--;
             T element = arrayList[index];
-            System.arraycopy(arrayList, index + 1, arrayList, index, size - index);
-            arrayListReductionByOne();
+            System.arraycopy(arrayList, index + 1, arrayList, index, size - index - 1);
+            arrayList[--size] = null;
             return element;
         }
     }
@@ -100,12 +100,6 @@ public class ArrayList<T> implements List<T> {
         int lengthArrayList = arrayList.length;
         lengthArrayList = lengthArrayList + (lengthArrayList >> 1);
         T[] newArrayList = (T[]) new Object[lengthArrayList];
-        System.arraycopy(arrayList, 0, newArrayList, 0, size);
-        arrayList = newArrayList;
-    }
-
-    private void arrayListReductionByOne() {
-        T[] newArrayList = (T[]) new Object[arrayList.length - 1];
         System.arraycopy(arrayList, 0, newArrayList, 0, size);
         arrayList = newArrayList;
     }
