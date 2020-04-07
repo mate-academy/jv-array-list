@@ -54,8 +54,9 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         indexInBoundsCheck(index);
+        int elementsMoved = lastElement - index - 1;
         T valueHolder = elementData[index];
-        System.arraycopy(elementData, index + 1, elementData, index, lastElement - index - 1);
+        System.arraycopy(elementData, index + 1, elementData, index, elementsMoved);
         elementData[--lastElement] = null;
         return valueHolder;
     }
