@@ -11,7 +11,7 @@ public class ArrayList<T> implements List<T> {
 
     private static final int DEFAULT_CAPACITY = 10;
     private T[] array;
-    private int elementNumber;
+    private int size;
 
     public ArrayList() { // done
         array = (T[]) new Object[DEFAULT_CAPACITY];
