@@ -49,7 +49,7 @@ public class ArrayList<T> implements List<T> {
             elementData[index] = value;
             size++;
         } else {
-            throw new java.lang.ArrayIndexOutOfBoundsException();
+            throw new ArrayIndexOutOfBoundsException();
         }
     }
 
@@ -80,15 +80,15 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(int index) {
-        T res = get(index);
+        T result = get(index);
         if (index < 0) {
-            throw new java.lang.ArrayIndexOutOfBoundsException();
+            throw new ArrayIndexOutOfBoundsException();
         } else {
             size--;
             System.arraycopy(elementData, index + 1,
                     elementData, index, size);
         }
-        return res;
+        return result;
     }
 
     @Override
