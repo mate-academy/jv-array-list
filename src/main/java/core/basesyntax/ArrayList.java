@@ -4,20 +4,11 @@ import java.util.Arrays;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 
-/**
- * <p>Реалізувати свій ArrayList який імплементує інтерфейс List. Дотриматися основних вимог щодо
- * реалізації ArrayList (default capacity, newCapacity...)</p>
- * Resize the array in a separate method.
- *array growth should happen when it is full, and it should grow for 1,5 from the current size).
- * Use System.arraycopy to move your array elements.
- *Default capacity of the array should be imaged as a constant field.
- */
 public class ArrayList<T> implements List<T> {
+    private static final int DEFAULT_CAPACITY = 10;
+    private static final int MAX_ARRAY_SIZE = Integer.MAX_VALUE;
     transient Object[] elementData;
     private int size;
-    private static final int MAX_ARRAY_SIZE = Integer.MAX_VALUE;
-    private static final int DEFAULT_CAPACITY = 10;
-
 
     public ArrayList(int initialCapacity) {
         if (initialCapacity < 0) {
@@ -34,21 +25,21 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void resize() {
-        if(size >= MAX_ARRAY_SIZE) {
+        if (size >= MAX_ARRAY_SIZE) {
             throw new OutOfMemoryError("out of memory");
         }
-        if(size == elementData.length) {
+        if (size == elementData.length) {
             int newCapacity = 0;
             if (size == elementData.length) {
-                newCapacity = elementData.length + (elementData.length >> 1 +1);
+                newCapacity = elementData.length + (elementData.length >> 1 + 1);
             }
             elementData = Arrays.copyOf(elementData, newCapacity);
         }
     }
 
-    private void rangeCheck (int index) {
-        if(index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException(index + "out of bound");
+    private void rangeCheck(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayIndexOutOfBoundsException("Put correct index");
         }
     }
 
@@ -81,7 +72,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         rangeCheck(index);
-        if(index > elementData.length) {
+        if (index > elementData.length) {
             throw new IndexOutOfBoundsException("Put correct index");
         }
         return (T) elementData[index];
@@ -121,6 +112,6 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public boolean isEmpty() {
-        return size==0;
+        return size == 0;
     }
 }
