@@ -75,7 +75,7 @@ public class ArrayList<T> implements List<T> {
         for (int i = 0; i < elementNumber; i++) {
             if ((t == array[i]) || t != null && t.equals(array[i])) {
                 T returning = array[i];
-                remove(i);
+                return remove(i);
                 return returning;
             }
         }
