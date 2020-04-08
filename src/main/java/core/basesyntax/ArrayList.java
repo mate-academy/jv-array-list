@@ -38,21 +38,9 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        int newSize = size + list.size();
-        T[] newArray = grow(newSize);
-        if (size == 0) {
-            for (int i = 0; i < list.size(); i++) {
-                newArray[i] = list.get(i);
-            }
-        } else {
-            System.arraycopy(arrayT, 0, newArray, 0, size - 1);
-            for (int i = 0; i < list.size(); i++) {
-                newArray[i + size] = list.get(i);
-            }
+        for (int i = 0; i < list.size(); i++) {
+            add(list.get(i));
         }
-        arrayT = newArray;
-        size = newSize;
-
     }
 
     @Override
@@ -146,5 +134,4 @@ public class ArrayList<T> implements List<T> {
     public T[] grow(int capacity) {
         return (T[]) new Object[capacity];
     }
-
 }
