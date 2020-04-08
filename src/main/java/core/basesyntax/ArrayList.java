@@ -7,22 +7,13 @@ import java.util.NoSuchElementException;
  * реалізації ArrayList (default capacity, newCapacity...)</p>
  */
 public class ArrayList<T> implements List<T> {
-    private static final int DEFAULT_CAPACITY = 10;
+    private final int defaultCapacity;
     private T[] values;
     private int size;
 
     public ArrayList() {
-        this.values = (T[]) new Object[DEFAULT_CAPACITY];
-    }
-
-    public ArrayList(int initialCapacity) {
-        if (initialCapacity > 0) {
-            this.values = (T[]) new Object[initialCapacity];
-        } else if (initialCapacity == 0) {
-            this.values = (T[]) new Object[0];
-        } else {
-            throw new IllegalArgumentException("Wrong argument : " + initialCapacity);
-        }
+        defaultCapacity = 10;
+        this.values = (T[]) new Object[defaultCapacity];
     }
 
     @Override
@@ -70,17 +61,9 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T t) {
-        if (t == null) {
-            for (int i = 0; i < size; i++) {
-                if (values[i] == null) {
-                    return remove(i);
-                }
-            }
-        } else {
-            for (int i = 0; i < size; i++) {
-                if (t.equals(values[i])) {
-                    return remove(i);
-                }
+        for (int i = 0; i < size; i++) {
+            if (values[i] == t || t != null && t.equals(values[i])) {
+                return remove(i);
             }
         }
         throw new NoSuchElementException();
