@@ -23,7 +23,9 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        grow();
+        if ((position + 1) == capacity) {
+            grow();
+        }
 
         elementData[position++] = value;
 
@@ -32,10 +34,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         check(index);
-        grow();
-        if (index < position) {
-            System.arraycopy(elementData, index, elementData, index + 1, position - index);
-        }
+        System.arraycopy(elementData, index, elementData, index + 1, position - index);
         this.elementData[index] = value;
         position++;
     }
@@ -95,10 +94,8 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void grow() {
-        if ((position + 1) == capacity) {
-            T[] clone = (T[]) Arrays.copyOf(elementData, capacity);
-            capacity = 3 * capacity / 2 + 1;
-            elementData = Arrays.copyOf(clone, capacity);
-        }
+        T[] clone = (T[]) Arrays.copyOf(elementData, capacity);
+        capacity = 3 * capacity / 2 + 1;
+        elementData = Arrays.copyOf(clone, capacity);
     }
 }
