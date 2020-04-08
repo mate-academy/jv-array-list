@@ -67,7 +67,6 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         T removed = elementData[index];
         System.arraycopy(elementData,index + 1, elementData, index,size - index);
-        elementData[currentCapacity - 1] = null;
         size--;
         return removed;
     }
