@@ -13,11 +13,6 @@ public class ArrayList<T> implements List<T> {
     private Object[] array = new Object[DEFAULT_CAPACITY];
     private int size;
 
-    private void resize() {
-        int newSize = (size * 3 / 2);
-        array = Arrays.copyOf(array, newSize);
-    }
-
     @Override
     public void add(T value) {
         if (size == array.length) {
@@ -28,7 +23,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index >= size) {
+        if (index > size) {
             throw new ArrayIndexOutOfBoundsException();
         }
         if (size + 1 >= array.length) {
@@ -64,11 +59,10 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(int index) {
-        T value;
         if ((index >= size || index < 0)) {
             throw new ArrayIndexOutOfBoundsException();
         }
-        value = (T) array[index];
+        T value = (T) array[index];
         removeElement(index);
         return value;
     }
@@ -97,5 +91,10 @@ public class ArrayList<T> implements List<T> {
     private void removeElement(int index) {
         System.arraycopy(array, index + 1, array, index, size - index - 1);
         array[--size] = null;
+    }
+
+    private void resize() {
+        int newSize = (size * 3 / 2);
+        array = Arrays.copyOf(array, newSize);
     }
 }
