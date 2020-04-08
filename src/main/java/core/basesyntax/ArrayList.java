@@ -29,9 +29,9 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         isPresentInArray(index);
-            System.arraycopy(objects, index, objects, index + 1, size - index);
-            objects[index] = value;
-            size++;
+        System.arraycopy(objects, index, objects, index + 1, size - index);
+        objects[index] = value;
+        size++;
     }
 
     public void newSize() {
@@ -61,9 +61,9 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         isPresentInArray(index);
-            T valueDelete = (T) objects[index];
-            System.arraycopy(objects, index + 1, objects, index, size - index - 1);
-            objects[size--] = null;
+        T valueDelete = (T) objects[index];
+        System.arraycopy(objects, index + 1, objects, index, size - index - 1);
+        objects[size--] = null;
         return valueDelete;
     }
 
