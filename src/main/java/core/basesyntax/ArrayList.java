@@ -29,10 +29,8 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        int zero = 0;
         for (int i = 0; i < list.size(); i++) {
             add(list.get(i));
-            add(test);
         }
     }
 
@@ -65,7 +63,7 @@ public class ArrayList<T> implements List<T> {
                 return remove(i);
             }
         }
-        throw new java.util.NoSuchElementException("No such element");
+        throw new NoSuchElementException("No such element");
     }
 
     @Override
