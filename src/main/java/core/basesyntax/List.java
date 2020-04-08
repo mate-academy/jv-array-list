@@ -1,7 +1,5 @@
 package core.basesyntax;
 
-import java.io.FileNotFoundException;
-
 public interface List<T> {
 
     void add(T value);
@@ -16,7 +14,7 @@ public interface List<T> {
 
     T remove(int index);
 
-    T remove(T t) throws FileNotFoundException;
+    T remove(T t);
 
     int size();
 
