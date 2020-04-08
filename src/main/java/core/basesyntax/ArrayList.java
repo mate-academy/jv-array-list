@@ -8,13 +8,12 @@ import java.util.NoSuchElementException;
  */
 public class ArrayList<T> implements List<T> {
 
-    private int defaultCapacity;
+    private static final int DEFAULT_CAPACITY = 10;
     private T[] list;
     private int size;
 
     public ArrayList() {
-        defaultCapacity = 10;
-        list = (T[]) new Object[defaultCapacity];
+        list = (T[]) new Object[DEFAULT_CAPACITY];
         size = 0;
     }
 
@@ -92,10 +91,9 @@ public class ArrayList<T> implements List<T> {
     }
 
     public void ensureCapacity(int size) {
-        if (size > defaultCapacity) {
-            defaultCapacity = (int) (size * 1.5);
+        if (size > list.length) {
             T[] oldList = list;
-            list = (T[]) new Object[defaultCapacity];
+            list = (T[]) new Object[(int) (size * 1.5)];
             System.arraycopy(oldList, 0, list, 0, size - 1);
         }
     }
