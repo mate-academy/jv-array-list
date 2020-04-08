@@ -22,6 +22,9 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
+        if (index > size || index < 0) {
+            throw new ArrayIndexOutOfBoundsException(index + "out of bound");
+        }
         newCapacity();
         System.arraycopy(arrayList, index, arrayList, index + 1, size - index);
         arrayList[index] = value;
@@ -88,3 +91,4 @@ public class ArrayList<T> implements List<T> {
         }
     }
 }
+
