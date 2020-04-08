@@ -28,13 +28,11 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         validateIndex(index);
-        Object[] increasedObjects = new Object[objects.length + 1];
-        if (index > 0) {
-            System.arraycopy(objects, 0, increasedObjects, 0, index);
+        if (objects.length == size) {
+            increaseObjectsLength();
         }
-        System.arraycopy(objects, index, increasedObjects, index + 1, objects.length - index);
-        increasedObjects[index] = value;
-        objects = increasedObjects;
+        System.arraycopy(objects, index, objects, index + 1, size - index);
+        objects[index] = value;
         size++;
     }
 
@@ -74,17 +72,12 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T t) {
-        int index = -1;
         for (int i = 0; i < size; i++) {
             if ((objects[i] != null && ((T) objects[i]).equals(t)) || objects[i] == t) {
-                index = i;
-                break;
+                return remove(i);
             }
         }
-        if (index < 0) {
-            throw new NoSuchElementException();
-        }
-        return remove(index);
+        throw new NoSuchElementException();
     }
 
     @Override
@@ -105,7 +98,7 @@ public class ArrayList<T> implements List<T> {
 
     private void increaseObjectsLength() {
         Object[] increasedObjects = new Object[objects.length + (objects.length >> 1)];
-        System.arraycopy(objects, 0, increasedObjects, 0, objects.length);
+        System.arraycopy(objects, 0, increasedObjects, 0, size);
         objects = increasedObjects;
     }
 }
