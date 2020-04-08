@@ -29,6 +29,9 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayIndexOutOfBoundsException();
+        }
         if (currentCapacity == size) {
             ensureCapacity();
         }
@@ -39,9 +42,6 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        while (list.size() + size >= currentCapacity) {
-            ensureCapacity();
-        }
         for (int i = 0; i < list.size(); i++) {
             add(list.get(i));
         }
@@ -49,7 +49,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if ((index < 0) || (index > size - 1)) {
+        if ((index < 0) || (index >= size)) {
             throw new ArrayIndexOutOfBoundsException();
         }
         return elementData[index];
@@ -57,7 +57,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void set(T value, int index) {
-        if ((index < 0) || (index > size - 1)) {
+        if ((index < 0) || (index >= size)) {
             throw new ArrayIndexOutOfBoundsException();
         }
         elementData[index] = value;
@@ -65,6 +65,9 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(int index) {
+        if ((index < 0) || (index >= size)) {
+            throw new ArrayIndexOutOfBoundsException();
+        }
         T removed = elementData[index];
         System.arraycopy(elementData,index + 1, elementData, index,size - index);
         size--;
@@ -91,7 +94,7 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    public void ensureCapacity() {
+    private void ensureCapacity() {
         currentCapacity = currentCapacity * 3 / 2 + 1;
         T[] elementDataNew = (T[]) new Object[currentCapacity];
         System.arraycopy(elementData, 0,elementDataNew,0, size);
