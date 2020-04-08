@@ -68,11 +68,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void set(T value, int index) {
         indexCheck(index);
-        if (list[index] == null) {
-            list[index] = value;
-            elementNum++;
-        } else {
-            list[index] = value;
+         list[index] = value;
         }
     }
 
