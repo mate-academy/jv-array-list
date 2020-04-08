@@ -22,7 +22,9 @@ public class ArrayList<T> implements List<T> {
     public void add(T value, int index) {
 
         checkIfIndexOutOfBoundsException(index);
-        grow();
+        if (size + 1 >= values.length) {
+            grow();
+        }
         System.arraycopy(values, index, values, index + 1, size - index);
         values[index] = value;
         size++;
