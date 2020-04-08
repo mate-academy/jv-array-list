@@ -63,7 +63,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void set(T value, int index) {
         check(index);
-        this.elementData[index] = value;
+        elementData[index] = value;
     }
 
     @Override
