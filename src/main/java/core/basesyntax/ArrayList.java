@@ -35,7 +35,7 @@ public class ArrayList<T> implements List<T> {
     public void add(T value, int index) {
         check(index);
         System.arraycopy(elementData, index, elementData, index + 1, position - index);
-        this.elementData[index] = value;
+        elementData[index] = value;
         position++;
     }
 
