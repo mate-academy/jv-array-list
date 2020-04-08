@@ -73,7 +73,7 @@ public class ArrayList<T> implements List<T> {
         if (index < elementData) {
             this.array[index] = value;
         } else {
-            throw new ArrayIndexOutOfBoundsException();
+            throw new ArrayIndexOutOfBoundsException("Index: " + index + " Size: " + elementData);
         }
     }
 
@@ -92,7 +92,7 @@ public class ArrayList<T> implements List<T> {
                 return result;
             }
         }
-        throw new NoSuchElementException();
+        throw new NoSuchElementException("No such element in array.");
     }
 
     private Integer cutting(int index) {
