@@ -30,16 +30,15 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index < size) {
-            if ((size + 1) > array.length) {
-                newCapacity();
-            }
-            System.arraycopy(array, index, array, index + 1, size - index);
-            array[index] = value;
-            size++;
-        } else {
+        if (index >= size) {
             throw new ArrayIndexOutOfBoundsException();
         }
+        if ((size + 1) > array.length) {
+            newCapacity();
+        }
+        System.arraycopy(array, index, array, index + 1, size - index);
+        array[index] = value;
+        size++;
     }
 
     @Override
@@ -51,11 +50,10 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index < size) {
-            return (T) array[index];
-        } else {
+        if (index >= size) {
             throw new ArrayIndexOutOfBoundsException();
         }
+        return (T) array[index];
     }
 
     @Override
@@ -69,11 +67,10 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(int index) {
-        if (index < size) {
-            return removeShift(index);
-        } else {
+        if (index >= size) {
             throw new ArrayIndexOutOfBoundsException();
         }
+        return removeShift(index);
     }
 
     @Override
