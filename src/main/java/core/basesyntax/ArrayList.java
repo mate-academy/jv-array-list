@@ -16,20 +16,6 @@ public class ArrayList<T> implements List<T> {
         array = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
-    private void grow() {
-        int newCapacity = (size * 3) / 2;
-        T[] oldArray = array;
-        array = (T[]) new Object[newCapacity];
-        System.arraycopy(oldArray, 0, array, 0, size);
-    }
-
-    private boolean checkIndex(int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayIndexOutOfBoundsException();
-        }
-        return true;
-    }
-
     @Override
     public void add(T value) {
         if (size >= array.length) {
@@ -40,11 +26,12 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (checkIndex(index)) {
-            System.arraycopy(array, index, array, index + 1, size - index);
-            array[index] = value;
-            size++;
+        if (index > size || index < 0) {
+            throw new ArrayIndexOutOfBoundsException();
         }
+        System.arraycopy(array, index, array, index + 1, size - index);
+        array[index] = value;
+        size++;
     }
 
     @Override
@@ -56,9 +43,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (!checkIndex(index)) {
-            return null;
-        }
+        checkIndex(index);
         return array[index];
     }
 
@@ -83,9 +68,7 @@ public class ArrayList<T> implements List<T> {
     public T remove(T t) {
         for (int i = 0; i < size; i++) {
             if (array[i] == t || (array[i] != null && array[i].equals(t))) {
-                System.arraycopy(array, i + 1, array, i, size - i - 1);
-                array[size--] = null;
-                return t;
+                return remove(i);
             }
         }
         throw new NoSuchElementException();
@@ -99,5 +82,19 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private void grow() {
+        int newCapacity = (size * 3) / 2 + 1;
+        T[] oldArray = array;
+        array = (T[]) new Object[newCapacity];
+        System.arraycopy(oldArray, 0, array, 0, size);
+    }
+
+    private boolean checkIndex(int index) {
+        if (index >= size || index < 0) {
+            throw new ArrayIndexOutOfBoundsException();
+        }
+        return true;
     }
 }
