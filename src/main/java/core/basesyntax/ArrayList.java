@@ -97,18 +97,12 @@ public class ArrayList<T> implements List<T> {
                 return remove(i);
             }
         }
-        for (Object o : list) {
-            if (o.equals(t)) {
-                break;
-            }
-            position = position + 1;
-            if (position == elementNum) {
-                throw new NoSuchElementException();
+        for (int i = 0; i < elementNum; i++) {
+            if (list[i] == t || list[i].equals(t)) {
+                return remove(i);
             }
         }
-        T removedElement = (T) list[position];
-        remove(position);
-        return removedElement;
+        throw new NoSuchElementException();
     }
 
     @Override
