@@ -81,7 +81,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void ensureCapacity() {
-        if (size + 1 >= elementData.length) {
+        if (size + 1 == elementData.length) {
             int increasedCapacity = elementData.length + (elementData.length >> 1);
             elementData = Arrays.copyOf(elementData, increasedCapacity);
         }
