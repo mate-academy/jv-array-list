@@ -23,7 +23,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index < 0 || index >= size + 1) {
+        if (index < 0 || index > size) {
             throw new ArrayIndexOutOfBoundsException(index + " index out of bounds");
         }
         System.arraycopy(data, index, data, index + 1, size - index);
