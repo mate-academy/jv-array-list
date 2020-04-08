@@ -18,7 +18,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if(size >= elementData.length) {
+        if (size >= elementData.length) {
             ensureCapacity();
         }
         elementData[size++] = value;
