@@ -22,7 +22,6 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        checkIndex(index);
         newCapacity();
         System.arraycopy(arrayList, index, arrayList, index + 1, size - index);
         arrayList[index] = value;
