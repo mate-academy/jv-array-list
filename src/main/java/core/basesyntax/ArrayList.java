@@ -83,7 +83,7 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    public void newCapacity() {
+    private void newCapacity() {
         if (arrayList.length == size) {
             arrayList = Arrays.copyOf(arrayList, arrayList.length * 3 / 2);
         }
