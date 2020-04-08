@@ -63,17 +63,12 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T t) {
-        int index = -1;
         for (int i = 0; i < arrayList.length; i++) {
             if (t == arrayList[i] || (t != null && t.equals(arrayList[i]))) {
                 return remove(i);
             }
         }
-        if (index != -1) {
-            return remove(index);
-        } else {
             throw new java.util.NoSuchElementException();
-        }
     }
 
     @Override
