@@ -27,8 +27,7 @@ public class ArrayList<T> implements List<T> {
         if (lastIndex >= elementData.length) {
             ensureCapacity();
         }
-        elementData[lastIndex] = value;
-        lastIndex++;
+        elementData[lastIndex++] = value;
     }
 
     @Override
@@ -72,8 +71,8 @@ public class ArrayList<T> implements List<T> {
         T item = null;
         if (checkIndex(index)) {
             item = elementData[index];
-            System.arraycopy(elementData, index + 1, elementData, index, lastIndex - index);
-            lastIndex--;
+            System.arraycopy(elementData, index + 1, elementData, index, lastIndex - index - 1);
+            elementData[--lastIndex] = null;
         }
         return item;
     }
