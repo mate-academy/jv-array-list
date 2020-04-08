@@ -10,21 +10,23 @@ import java.util.NoSuchElementException;
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private T[] elementData;
-    private int size;
+    private int size = 0;
 
     public ArrayList() {
         elementData = (T[]) new Object[DEFAULT_CAPACITY];
-        size = 0;
     }
 
     @Override
     public void add(T value) {
-        add(value, size);
+        if(size >= elementData.length) {
+            ensureCapacity();
+        }
+        elementData[size++] = value;
     }
 
     @Override
     public void add(T value, int index) {
-        declareIndexForAdd(index);
+        checkIndexForAdd(index);
         ensureCapacity();
         System.arraycopy(elementData, index, elementData, index + 1, size - index);
         elementData[index] = value;
@@ -34,25 +36,25 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void addAll(List<T> list) {
         for (int i = 0; i < list.size(); i++) {
-            add(list.get(i), size);
+            add(list.get(i));
         }
     }
 
     @Override
     public T get(int index) {
-        declareIndex(index);
+        checkIndex(index);
         return elementData[index];
     }
 
     @Override
     public void set(T value, int index) {
-        declareIndex(index);
+        checkIndex(index);
         elementData[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        declareIndex(index);
+        checkIndex(index);
         T element = elementData[index];
         System.arraycopy(elementData, index + 1, elementData, index, size - index - 1);
         elementData[--size] = null;
@@ -87,13 +89,13 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private void declareIndex(int index) {
+    private void checkIndex(int index) {
         if (index >= size || index < 0) {
             throw new ArrayIndexOutOfBoundsException("The index exceeds the array length!");
         }
     }
 
-    private void declareIndexForAdd(int index) {
+    private void checkIndexForAdd(int index) {
         if (index > size || index < 0) {
             throw new ArrayIndexOutOfBoundsException("The index exceeds the array length!");
         }
