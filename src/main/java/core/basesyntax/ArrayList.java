@@ -32,6 +32,9 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
+        if (size <= index) {
+            throw new ArrayIndexOutOfBoundsException("Invalid index");
+        }
         ensureCapacity();
         System.arraycopy(values, index, values, index + 1, size - index);
         values[index] = value;
@@ -48,7 +51,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (size < (index + 1)) {
+        if (size <= index) {
             throw new ArrayIndexOutOfBoundsException("Invalid index");
         }
 
@@ -58,7 +61,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void set(T value, int index) {
 
-        if (size < (index + 1)) {
+        if (size <= index) {
             throw new ArrayIndexOutOfBoundsException("Invalid index");
         }
         values[index] = value;
@@ -68,25 +71,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         T removed = get(index);
-        if (index == 0) {
-            Object[] newValues = new Object[values.length];
-            System.arraycopy(values, 1, newValues, 0, values.length - 1);
-            values = newValues;
-            size--;
-            return removed;
-        }
-
-        if (index + 1 == size) {
-            size--;
-            return removed;
-        }
-
-        Object[] newValues = new Object[values.length];
-        System.arraycopy(values, 0, newValues, 0, index);
-        System.arraycopy(values, index + 1, newValues, index, values.length - index - 1);
-        values = newValues;
+        System.arraycopy(values, index + 1, values, index, size - index - 1);
         size--;
-
         return removed;
     }
 
@@ -114,14 +100,6 @@ public class ArrayList<T> implements List<T> {
     private void ensureCapacity() {
         if (size == values.length) {
             Object[] newValues = new Object[(values.length * 3) / 2 + 1];
-            System.arraycopy(values, 0, newValues, 0, values.length);
-            values = newValues;
-        }
-    }
-
-    private void extendArray(int index) {
-        if (values.length < index + 1) {
-            Object[] newValues = new Object[index + 1];
             System.arraycopy(values, 0, newValues, 0, values.length);
             values = newValues;
         }
