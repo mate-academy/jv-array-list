@@ -8,16 +8,18 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
 
-    private static final int INITIAL_CAPACITY = 1;
-    private int elementNum = 0;
+    private static final int INITIAL_CAPACITY = 10;
+    private int elementNum;
     private Object[] list;
 
     public ArrayList() {
         list = new Object[INITIAL_CAPACITY];
+        elementNum = 0;
     }
 
     public ArrayList(int capacity) {
         list = new Object[capacity];
+        elementNum = 0;
     }
 
     private void capacityCheck() {
@@ -38,7 +40,7 @@ public class ArrayList<T> implements List<T> {
     public void add(T value) {
         capacityCheck();
         list[elementNum] = value;
-        elementNum = elementNum + 1;
+        elementNum++;
     }
 
     @Override
@@ -47,7 +49,7 @@ public class ArrayList<T> implements List<T> {
         capacityCheck();
         System.arraycopy(list, index, list, index + 1, elementNum - index);
         list[index] = value;
-        elementNum = elementNum + 1;
+        elementNum++;
     }
 
     @Override
@@ -68,7 +70,7 @@ public class ArrayList<T> implements List<T> {
         indexCheck(index);
         if (list[index] == null) {
             list[index] = value;
-            elementNum = elementNum + 1;
+            elementNum++;
         } else {
             list[index] = value;
         }
@@ -87,7 +89,7 @@ public class ArrayList<T> implements List<T> {
         }
         removedElement = removedElement;
         list = trimmed;
-        elementNum = elementNum - 1;
+        elementNum--;
         return removedElement;
     }
 
@@ -95,12 +97,9 @@ public class ArrayList<T> implements List<T> {
     public T remove(T t) {
         int position = 0;
 
-        if (t == null) {
-            for (int i = 0; i < elementNum; i++) {
-                if (list[i] == null) {
-                    remove(i);
-                    return null;
-                }
+        for (int i = 0; i < elementNum; i++) {
+            if (list[i] == t || list[i].equals(t)) {
+                return remove(i);
             }
         }
         for (Object o : list) {
