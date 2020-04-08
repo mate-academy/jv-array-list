@@ -18,37 +18,29 @@ public class ArrayList<T> implements List<T> {
     public ArrayList() {
         capacity = DEFAULT_CAPACITY;
         idx = 0;
-        elementData =  new Object[DEFAULT_CAPACITY];
+        elementData = new Object[DEFAULT_CAPACITY];
     }
 
     @Override
     public void add(T value) {
-        elementData[idx++] = value;
-
         if ((idx + 1) == capacity) {
             grow();
         }
+
+        elementData[idx++] = value;
+
     }
 
     @Override
     public void add(T value, int index) {
         check(index);
-        int i = idx;
-        while (index != i) {
-            T oldValue = (T) this.elementData[i - 1];
-            this.elementData[i] = oldValue;
-            i--;
-        }
+        System.arraycopy(elementData, index, elementData, index + 1, idx - index);
         this.elementData[index] = value;
         idx++;
     }
 
     @Override
     public void addAll(List<T> list) {
-        if (list.size() >= capacity - idx) {
-            grow();
-        }
-
         for (int i = 0; i < list.size(); i++) {
             add(list.get(i));
         }
@@ -69,14 +61,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         check(index);
-        T oldValue;
-        oldValue = (T) this.elementData[index];
-        while (index != (idx - 1)) {
-            this.elementData[index] = this.elementData[index + 1];
-            index++;
-        }
-
-        this.elementData[index] = null;
+        T oldValue = (T) elementData[index];
+        System.arraycopy(elementData, index + 1, elementData, index, idx - index);
         idx--;
         return oldValue;
     }
