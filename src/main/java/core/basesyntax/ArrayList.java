@@ -1,5 +1,7 @@
 package core.basesyntax;
 
+import java.util.Arrays;
+
 /**
  * <p>Реалізувати свій ArrayList який імплементує інтерфейс List. Дотриматися основних вимог щодо
  * реалізації ArrayList (default capacity, newCapacity...)</p>
@@ -7,14 +9,14 @@ package core.basesyntax;
 
 public class ArrayList<T> implements List<T> {
 
-    public static final int INITIAL_CAPACITY = 0;
+    public static final int INITIAL_CAPACITY = 10;
 
     private T[] arrayT;
     private int size;
 
     public ArrayList() {
         arrayT = (T[]) new Object[INITIAL_CAPACITY];
-        size = arrayT.length;
+        size = 0;
     }
 
     @Override
@@ -24,19 +26,13 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        resize(1);
-        T[] newArray = (T[]) new Object[arrayT.length];
-        if (index <= size) {
-            System.arraycopy(arrayT, 0, newArray, 0, index);
-            newArray[index] = value;
-            index++;
-            System.arraycopy(arrayT, index - 1, newArray, index, size - index + 1);
-            arrayT = newArray;
-            size = newArray.length;
-        } else {
-            throw new ArrayIndexOutOfBoundsException("Index "
-                    + index + " out of bounds for length " + size);
+        if (index > index || index < 0) {
+            throw new ArrayIndexOutOfBoundsException();
         }
+        grow();
+        System.arraycopy(arrayT, index, arrayT, index + 1, size - index);
+        arrayT[index] = value;
+        size++;
     }
 
     @Override
@@ -60,25 +56,13 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(int index) {
-        checkIndex(index);
-        if (isEmpty()) {
-            return null;
-        }
-        if (size == 1) {
-            T res = arrayT[0];
-            arrayT = grow(0);
+        if (index < size && index >= 0) {
+            T result = arrayT[index];
+            System.arraycopy(arrayT, index + 1, arrayT, index, size - index - 1);
             size--;
-            return res;
+            return result;
         }
-        T[] newArray = grow(size - 1);
-        T result;
-        System.arraycopy(arrayT, 0, newArray, 0, index);
-        result = arrayT[index];
-        System.arraycopy(arrayT, index + 1, newArray, index, size - 1 - index);
-        arrayT = newArray;
-        size = newArray.length;
-
-        return result;
+        throw new ArrayIndexOutOfBoundsException();
     }
 
     @Override
@@ -96,8 +80,11 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private T[] grow(int capacity) {
-        return (T[]) new Object[capacity];
+    public void grow() {
+        if (size == arrayT.length) {
+            int newSize = arrayT.length / 2 * 3;
+            arrayT = Arrays.copyOf(arrayT, newSize);
+        }
     }
 
     private int indexOf(T t) {
@@ -121,9 +108,4 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private void resize(int index) {
-        T[] newArr = (T[]) new Object[arrayT.length + index];
-        System.arraycopy(arrayT, 0, newArr, 0, arrayT.length);
-        arrayT = newArr;
-    }
 }
