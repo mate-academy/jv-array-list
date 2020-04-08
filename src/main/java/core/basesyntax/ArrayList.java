@@ -13,14 +13,13 @@ public class ArrayList<T> implements List<T> {
         this.elementData = (T[]) new Object[DEFAULT_SIZE];
     }
 
-    private boolean ensureCapacity() {
+    private void ensureCapacity() {
         if (elementData.length == size) {
             T[] add = (T[]) new Object[size + (size / 2)];
             System.arraycopy(elementData, 0,
                     add, 0, elementData.length);
             elementData = add;
         }
-        return true;
     }
 
     private int valueIndex(T value) {
@@ -34,9 +33,8 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (ensureCapacity()) {
-            elementData[size++] = value;
-        }
+        ensureCapacity();
+        elementData[size++] = value;
     }
 
     @Override
