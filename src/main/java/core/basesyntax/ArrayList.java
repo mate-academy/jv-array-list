@@ -110,6 +110,6 @@ public class ArrayList<T> implements List<T> {
     private void grow() {
         T[] clone = (T[]) Arrays.copyOf(elementData, capacity);
         capacity = 3 * capacity / 2 + 1;
-        this.elementData = Arrays.copyOf(clone, capacity);
+        elementData = Arrays.copyOf(clone, capacity);
     }
 }
