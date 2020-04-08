@@ -27,29 +27,23 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index < size) {
-            if (size + 1 >= elements.length) {
-                ensureCapacity();
-            }
-            System.arraycopy(elements, index, elements, index + 1, size - index);
-            elements[index] = value;
-            size++;
-        } else {
+        if (index >= size) {
             throw new ArrayIndexOutOfBoundsException();
         }
+        if (size + 1 >= elements.length) {
+            ensureCapacity();
+        }
+        System.arraycopy(elements, index, elements, index + 1, size - index);
+        elements[index] = value;
+        size++;
     }
 
     @Override
     public void addAll(List<T> list) {
         int resultLength = size + list.size();
-        Object[] arrFromList = new Object[list.size()];
-        while (elements.length < resultLength) {
-            ensureCapacity();
+        for (int i = 0; i < list.size(); i++) {
+            this.add(list.get(i));
         }
-        for (int i = 0; i < arrFromList.length; i++) {
-            arrFromList[i] = list.get(i);
-        }
-        System.arraycopy(arrFromList, 0, elements, size, list.size());
         size = resultLength;
     }
 
@@ -63,11 +57,10 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void set(T value, int index) {
-        if (index < size && index >= 0) {
-            elements[index] = value;
-        } else {
+        if (index >= size || index < 0) {
             throw new ArrayIndexOutOfBoundsException();
         }
+        elements[index] = value;
     }
 
     @Override
