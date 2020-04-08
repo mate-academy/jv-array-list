@@ -5,24 +5,12 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
 
-    private static final int DEFAULT_CAPACITY = 2;
+    private static final int DEFAULT_CAPACITY = 10;
     private Object[] arrayList;
     private int size = 0;
 
     public ArrayList() {
         arrayList = new Object[DEFAULT_CAPACITY];
-    }
-
-    private void rangeCheckForAdd(int index) {
-        if (index > size || index < 0) {
-            throw new ArrayIndexOutOfBoundsException(index + "out of bound");
-        }
-    }
-
-    public void newCapacity() {
-        if (arrayList.length == size) {
-            arrayList = Arrays.copyOf(arrayList, arrayList.length * 3 / 2);
-        }
     }
 
     @Override
@@ -34,6 +22,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
+        checkIndex(index);
         newCapacity();
         System.arraycopy(arrayList, index, arrayList, index + 1, size - index);
         arrayList[index] = value;
@@ -49,20 +38,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        rangeCheckForAdd(index);
         System.out.println(arrayList[index]);
         return (T) arrayList[index];
     }
 
     @Override
     public void set(T value, int index) {
-        rangeCheckForAdd(index);
+        checkIndex(index);
         arrayList[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        rangeCheckForAdd(index);
+        checkIndex(index);
         Object removeElement = arrayList[index];
         System.arraycopy(arrayList, index + 1, arrayList, index, size - index - 1);
         size--;
@@ -86,9 +74,18 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public boolean isEmpty() {
-        if (size == 0) {
-            return true;
+            return size == 0;
+    }
+
+    private void checkIndex(int index) {
+        if (index > size || index < 0) {
+            throw new ArrayIndexOutOfBoundsException(index + "out of bound");
         }
-        return false;
+    }
+
+    private void newCapacity() {
+        if (arrayList.length == size) {
+            arrayList = Arrays.copyOf(arrayList, arrayList.length * 3 / 2);
+        }
     }
 }
