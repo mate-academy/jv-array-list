@@ -14,13 +14,13 @@ public class ArrayList<T> implements List<T> {
     private int capacity;
 
     public ArrayList() {
-        dataElements = (T[]) new Object[DEFAULT_SIZE];
+        dataElements = new Object[DEFAULT_SIZE];
         currentLength = 0;
         capacity = DEFAULT_SIZE;
     }
 
     public ArrayList(int size) {
-        dataElements = (T[]) new Object[size];
+        dataElements = new Object[size];
         currentLength = 0;
         capacity = size;
     }
@@ -32,7 +32,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void extendSpace() {
-        if (size() >= capacity) {
+        if (currentLength >= capacity) {
             Object[] tempSet = Arrays.copyOf(dataElements, (capacity * 3) / 2);
             dataElements = tempSet;
             capacity = (capacity * 3) / 2;
@@ -48,8 +48,8 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        extendSpace();
         checkIndex(index);
+        extendSpace();
 
         System.arraycopy(dataElements, index, dataElements, index + 1, currentLength - index);
         dataElements[index] = value;
@@ -87,10 +87,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T t) {
         for (int i = 0; i < size(); i++) {
-            if (t == null && dataElements[i] == null) {
-                return remove(i);
-            }
-            if (dataElements[i].equals(t)) {
+            if (t == dataElements[i] || t != null && dataElements[i].equals(t)) {
                 return remove(i);
             }
         }
