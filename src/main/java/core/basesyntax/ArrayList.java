@@ -90,8 +90,6 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T t) {
-        int position = 0;
-
         for (int i = 0; i < elementNum; i++) {
             if (list[i] == t || list[i].equals(t)) {
                 return remove(i);
