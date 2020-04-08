@@ -29,7 +29,6 @@ public class ArrayList<T> implements List<T> {
         }
         reviewSize();
         addingShift(value, index);
-        arrayList[index] = value;
     }
 
     @Override
