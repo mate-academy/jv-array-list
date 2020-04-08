@@ -8,12 +8,12 @@ import java.util.NoSuchElementException;
  */
 public class ArrayList<T> implements List<T> {
 
-    private static final int SIZE = 10;
+    private static final int DEFAULT_SIZE = 10;
     private T[] elementData;
     private int lastIndex;
 
     public ArrayList() {
-        elementData = (T[]) new Object[SIZE];
+        elementData = (T[]) new Object[DEFAULT_SIZE];
         lastIndex = 0;
     }
 
@@ -32,10 +32,11 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        checkIndex(index);
-        System.arraycopy(elementData, index, elementData, index + 1, lastIndex - index);
-        elementData[index] = value;
-        lastIndex++;
+        if (checkIndex(index)) {
+            System.arraycopy(elementData, index, elementData, index + 1, lastIndex - index);
+            elementData[index] = value;
+            lastIndex++;
+        }
     }
 
     @Override
@@ -48,22 +49,13 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         checkIndex(index);
-        for (int i = 0; i < lastIndex; i++) {
-            if (i == index) {
-                return elementData[i];
-            }
-        }
-        return null;
+        return elementData[index];
     }
 
     @Override
     public void set(T value, int index) {
         checkIndex(index);
-        for (int i = 0; i < lastIndex; i++) {
-            if (i == index) {
-                elementData[i] = value;
-            }
-        }
+        elementData[index] = value;
     }
 
     @Override
@@ -81,8 +73,7 @@ public class ArrayList<T> implements List<T> {
     public T remove(T t) {
         for (int i = 0; i < lastIndex; i++) {
             if (elementData[i] == t || elementData[i] != null && elementData[i].equals(t)) {
-                System.arraycopy(elementData, i + 1, elementData, i, lastIndex - i);
-                lastIndex--;
+                remove(i);
                 return t;
             }
         }
