@@ -15,12 +15,8 @@ public class ArrayList<T> implements List<T> {
         arrayList = (T[]) new Object[CAPACITY];
     }
 
-    public ArrayList(int size) {
-        ensureCapacity(size);
-    }
-
     public void ensureCapacity(int size) {
-        if (size >= CAPACITY) {
+        if (size >= arrayList.length) {
             T[] oldArrayList = (T[]) new Object[this.size];
             oldArrayList = arrayList;
             arrayList = (T[]) new Object[size];
