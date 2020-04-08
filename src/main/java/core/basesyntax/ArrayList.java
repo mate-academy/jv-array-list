@@ -26,8 +26,13 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void checkIndex(int index) {
-        if (index < 0 || index >= currentLength) {
-            throw new ArrayIndexOutOfBoundsException("wrong input idex");
+        if (index < 0 || index >= currentLength ) {
+            throw new ArrayIndexOutOfBoundsException("wrong input index");
+        }
+    }
+    private void checkIndexForAdd(int index) {
+        if (index < 0 || index > currentLength ) {
+            throw new ArrayIndexOutOfBoundsException("wrong input index");
         }
     }
 
@@ -48,7 +53,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        checkIndex(index);
+        checkIndexForAdd(index);
         extendSpace();
 
         System.arraycopy(dataElements, index, dataElements, index + 1, currentLength - index);
