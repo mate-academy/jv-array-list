@@ -1,5 +1,6 @@
 package core.basesyntax;
 
+import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 /**
@@ -8,16 +9,13 @@ import java.util.NoSuchElementException;
  */
 
 public class ArrayList<T> implements List<T> {
-    private static final int DEFAULT_SIZE = 10;
+    private static final int DEFAULT_CAPACITY = 10;
     private Object[] objects;
     private int size;
 
     public ArrayList() {
-        objects = new Object[DEFAULT_SIZE];
-    }
-
-    public ArrayList(int customSize) {
-        objects = new Object[customSize];
+        objects = new Object[DEFAULT_CAPACITY];
+        size = 0;
     }
 
     @Override
@@ -30,22 +28,15 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (isPresentInArray(index)) {
-            for (int i = size + 1; i > index; i--) {
-                objects[i] = objects[i - 1];
-            }
+        isPresentInArray(index);
+            System.arraycopy(objects, index, objects, index + 1, size - index);
             objects[index] = value;
             size++;
-        }
     }
 
     public void newSize() {
-        int newCapacity = (int)(objects.length * 3 * 0.5) + 1;
-        T[] old = (T[]) objects;
-        objects = new Object[newCapacity];
-        for (int i = 0; i < size(); i++) {
-            objects[i] = old[i];
-        }
+        int newCapacity = size >> 1;
+        objects = Arrays.copyOf(objects, size + newCapacity);
     }
 
     @Override
@@ -69,18 +60,11 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(int index) {
-        T obj = (T) objects[index];
-        if (isPresentInArray(index)) {
-            objects[index] = null;
-            int tmp = index;
-            while (tmp < size) {
-                objects[tmp] = objects[tmp + 1];
-                objects[tmp + 1] = null;
-                tmp++;
-            }
-            size--;
-        }
-        return obj;
+        isPresentInArray(index);
+            T valueDelete = (T) objects[index];
+            System.arraycopy(objects, index + 1, objects, index, size - index - 1);
+            objects[size--] = null;
+        return valueDelete;
     }
 
     @Override
