@@ -1,6 +1,5 @@
 package core.basesyntax;
 
-import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 /**
@@ -9,14 +8,13 @@ import java.util.NoSuchElementException;
  */
 public class ArrayList<T> implements List<T> {
 
-    private static final int DEFAULT_CAPACITY = 10;
-    private int newCapacity;
+    private int defaultCapacity;
     private T[] list;
     private int size;
 
     public ArrayList() {
-        newCapacity = DEFAULT_CAPACITY;
-        list = (T[]) new Object[DEFAULT_CAPACITY];
+        defaultCapacity = 10;
+        list = (T[]) new Object[defaultCapacity];
         size = 0;
     }
 
@@ -32,18 +30,16 @@ public class ArrayList<T> implements List<T> {
         if (index < 0 || index > size - 1) {
             throw new ArrayIndexOutOfBoundsException();
         }
-        for (int i = size; i > index; i--) {
-            list[i] = list[i - 1];
-        }
+        System.arraycopy(list, index, list, index + 1, size - index);
+        System.out.println();
         list[index] = value;
         size++;
     }
 
     @Override
     public void addAll(List<T> list) {
-        ensureCapacity(size + 1);
         for (int i = 0; i < list.size(); i++) {
-            this.list[size++] = list.get(i);
+            add(list.get(i));
         }
     }
 
@@ -69,9 +65,7 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayIndexOutOfBoundsException();
         }
         final T object = list[index];
-        for (int i = index; i < size; i++) {
-            list[i] = list[i + 1];
-        }
+        System.arraycopy(list, index + 1, list, index, size - index - 1);
         size--;
         return object;
     }
@@ -98,9 +92,11 @@ public class ArrayList<T> implements List<T> {
     }
 
     public void ensureCapacity(int size) {
-        if (size > newCapacity) {
-            newCapacity = (int) (size * 1.5);
-            list = Arrays.copyOf(list, newCapacity);
+        if (size > defaultCapacity) {
+            defaultCapacity = (int) (size * 1.5);
+            T[] oldList = list;
+            list = (T[]) new Object[defaultCapacity];
+            System.arraycopy(oldList, 0, list, 0, size - 1);
         }
     }
 }
