@@ -22,7 +22,7 @@ public class ArrayList<T> implements List<T> {
             elementData[ammountOfElements++] = value;
         } else {
             Object[] oldData = elementData;
-            newArrayCapasity(elementData.length);
+            newArrayCapacity(elementData.length);
             System.arraycopy(oldData, 0, elementData, 0, ammountOfElements + 1);
             elementData[ammountOfElements++] = value;
         }
@@ -41,7 +41,7 @@ public class ArrayList<T> implements List<T> {
             ammountOfElements++;
         } else {
             Object[] oldData = elementData;
-            newArrayCapasity(elementData.length);
+            newArrayCapacity(elementData.length);
             System.arraycopy(oldData, index, elementData,
                     index + 1, ammountOfElements + 1 - index);
             elementData[index] = value;
@@ -51,17 +51,8 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        if (ensureCapacity(ammountOfElements + list.size())) {
-            for (int i = 0; i < list.size(); i++) {
-                add(list.get(i));
-            }
-        } else {
-            Object[] oldData = elementData;
-            newArrayCapasity(ammountOfElements + list.size());
-            System.arraycopy(oldData, 0, elementData, 0, ammountOfElements + 1);
-            for (int i = 0; i < list.size(); i++) {
-                add(list.get(i));
-            }
+        for (int i = 0; i < list.size(); i++) {
+            add(list.get(i));
         }
     }
 
@@ -121,9 +112,9 @@ public class ArrayList<T> implements List<T> {
         return this.elementData.length > size;
     }
 
-    private void newArrayCapasity(int oldCapasity) {
-        int arrayCapasity = (oldCapasity * 3) / 2 + 1;
-        this.elementData = (T[]) new Object[arrayCapasity];
+    private void newArrayCapacity(int oldCapacity) {
+        int arrayCapacity = (oldCapacity * 3) / 2 + 1;
+        this.elementData = (T[]) new Object[arrayCapacity];
     }
 
     private void trimelEmentData() {
