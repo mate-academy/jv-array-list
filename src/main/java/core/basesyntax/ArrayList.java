@@ -12,7 +12,6 @@ public class ArrayList<T> implements List<T> {
     private int ammountOfElements;
 
     public ArrayList() {
-        //arrayCapasity = DEFAULT_ARRAY_CAPACITY;
         ammountOfElements = 0;
         this.elementData = (T[]) new Object[DEFAULT_ARRAY_CAPACITY];
     }
