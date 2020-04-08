@@ -7,54 +7,52 @@ public class ArrayList<T> implements List<T> {
 
     public ArrayList() {
         capacity = 0;
-        massive = (T[]) new Object[DEFAULT_CAPACITY];
+        data = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
     @Override
     public void add(T value) {
-        maxCapacity();
-        massive[capacity] = value;
+        increaseCapacity();
+        data[capacity] = value;
         capacity++;
     }
 
     @Override
     public void add(T value, int index) {
-        checkAvailable(index);
-        maxCapacity();
-        System.arraycopy(massive, index, massive,index + 1,capacity - index);
-        massive[index] = value;
+        if (index < 0 || index > capacity) {
+            throw new ArrayIndexOutOfBoundsException(index + " Index is out of bounds");
+        }
+        System.arraycopy(data, index, data,index + 1,capacity - index);
+        data[index] = value;
         capacity++;
     }
 
     @Override
     public void addAll(List<T> list) {
         int zero = 0;
-        while (zero < list.size()) {
-            T test = list.get(zero);
+        for (int i = 0; i < list.size(); i++) {
+            T test = list.get(i);
             add(test);
-            zero++;
         }
     }
 
     @Override
     public T get(int index) {
-        if (index < capacity && index >= 0) {
-            return (T) massive[index];
-        }
-        throw new ArrayIndexOutOfBoundsException("The index exceeds the array length!");
+        checkAvailable(index);
+        return (T) data[index];
     }
 
     @Override
     public void set(T value, int index) {
         checkAvailable(index);
-        massive[index] = value;
+        data[index] = value;
     }
 
     @Override
     public T remove(int index) {
         checkAvailable(index);
-        T result = massive[index];
-        System.arraycopy(massive, index + 1, massive, index, capacity - index - 1);
+        T result = data[index];
+        System.arraycopy(data, index + 1, data, index, capacity - index - 1);
         capacity--;
         return result;
     }
@@ -62,8 +60,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T t) {
         for (int i = 0; i < capacity; i++) {
-            if (t == massive[i]
-                    || t != null && t.equals(massive[i])) {
+            if (t == data[i]
+                    || t != null && t.equals(data[i])) {
                 return remove(i);
             }
         }
@@ -87,10 +85,10 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void increaseCapacity() {
-        if (capacity == massive.length) {
-            T[] newArr = (T[]) new Object[massive.length * 3 / 2];
-            System.arraycopy(massive, 0, newArr, 0, capacity);
-            massive = newArr;
+        if (capacity == data.length) {
+            T[] newArr = (T[]) new Object[(data.length * 3 / 2)];
+            System.arraycopy(data, 0, newArr, 0, capacity);
+            data = newArr;
         }
     }
 }
