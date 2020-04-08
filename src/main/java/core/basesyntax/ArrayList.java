@@ -38,7 +38,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        System.out.println(arrayList[index]);
+        checkIndex(index);
         return (T) arrayList[index];
     }
 
@@ -74,16 +74,16 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public boolean isEmpty() {
-            return size == 0;
+        return size == 0;
     }
 
     private void checkIndex(int index) {
-        if (index > size || index < 0) {
+        if (index >= size || index < 0) {
             throw new ArrayIndexOutOfBoundsException(index + "out of bound");
         }
     }
 
-    private void newCapacity() {
+    public void newCapacity() {
         if (arrayList.length == size) {
             arrayList = Arrays.copyOf(arrayList, arrayList.length * 3 / 2);
         }
