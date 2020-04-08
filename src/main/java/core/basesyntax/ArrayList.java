@@ -86,7 +86,7 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private void maxCapacity() {
+    private void increaseCapacity() {
         if (capacity == massive.length) {
             T[] newArr = (T[]) new Object[massive.length * 3 / 2];
             System.arraycopy(massive, 0, newArr, 0, capacity);
