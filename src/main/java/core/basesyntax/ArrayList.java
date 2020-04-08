@@ -47,32 +47,29 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index < size) {
-            return arrayList[index];
-        } else {
+        if (index >= size) {
             throw new ArrayIndexOutOfBoundsException();
         }
+        return arrayList[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index < size) {
-            arrayList[index] = value;
-        } else {
+        if (index >= size) {
             throw new ArrayIndexOutOfBoundsException();
         }
+        arrayList[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index > size) {
+        if (index >= size) {
             throw new ArrayIndexOutOfBoundsException();
-        } else {
-            T element = arrayList[index];
-            System.arraycopy(arrayList, index + 1, arrayList, index, size - index - 1);
-            arrayList[--size] = null;
-            return element;
         }
+        T element = arrayList[index];
+        System.arraycopy(arrayList, index + 1, arrayList, index, size - index - 1);
+        arrayList[--size] = null;
+        return element;
     }
 
     @Override
