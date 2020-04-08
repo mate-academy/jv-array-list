@@ -15,9 +15,12 @@ public class ArrayList<T> implements List<T> {
 
     private boolean ensureCapacity() {
         if (elementData.length == size) {
-            return true;
+            T[] add = (T[]) new Object[size + (size / 2)];
+            System.arraycopy(elementData, 0,
+                    add, 0, elementData.length);
+            elementData = add;
         }
-        return false;
+        return true;
     }
 
     private int valueIndex(T value) {
@@ -32,25 +35,19 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value) {
         if (ensureCapacity()) {
-            T[] add = (T[]) new Object[size + (size / 2)];
-            System.arraycopy(elementData, 0,
-                    add, 0, elementData.length);
-            elementData = add;
+            elementData[size++] = value;
         }
-        elementData[size++] = value;
-
     }
 
     @Override
     public void add(T value, int index) {
-        if (index < size) {
-            System.arraycopy(elementData, index,
-                    elementData, index + 1, size - index);
-            elementData[index] = value;
-            size++;
-        } else {
+        if (index >= size) {
             throw new ArrayIndexOutOfBoundsException();
         }
+        System.arraycopy(elementData, index,
+                elementData, index + 1, size - index);
+        elementData[index] = value;
+        size++;
     }
 
     @Override
@@ -71,23 +68,21 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void set(T value, int index) {
-        if (index < size) {
-            elementData[index] = value;
-        } else {
+        if (index >= size) {
             throw new ArrayIndexOutOfBoundsException();
         }
+        elementData[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        T result = get(index);
         if (index < 0) {
             throw new ArrayIndexOutOfBoundsException();
-        } else {
-            size--;
-            System.arraycopy(elementData, index + 1,
-                    elementData, index, size);
         }
+        T result = get(index);
+        size--;
+        System.arraycopy(elementData, index + 1,
+                elementData, index, size);
         return result;
     }
 
