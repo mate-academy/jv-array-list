@@ -52,7 +52,6 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void set(T value, int index) {
         isIndexExist(index);
-        T oldValue = elementData[index];
         elementData[index] = value;
     }
 
