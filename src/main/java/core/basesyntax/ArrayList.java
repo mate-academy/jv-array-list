@@ -26,12 +26,13 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void checkIndex(int index) {
-        if (index < 0 || index >= currentLength ) {
+        if (index < 0 || index >= currentLength) {
             throw new ArrayIndexOutOfBoundsException("wrong input index");
         }
     }
+
     private void checkIndexForAdd(int index) {
-        if (index < 0 || index > currentLength ) {
+        if (index < 0 || index > currentLength) {
             throw new ArrayIndexOutOfBoundsException("wrong input index");
         }
     }
