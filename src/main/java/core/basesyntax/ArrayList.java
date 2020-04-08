@@ -76,9 +76,8 @@ public class ArrayList<T> implements List<T> {
             T temp = elementData[index];
             deleteByIndex(index);
             return temp;
-        } else {
-            throw new ArrayIndexOutOfBoundsException();
         }
+        throw new ArrayIndexOutOfBoundsException();
     }
 
     @Override
