@@ -7,15 +7,14 @@ import java.util.NoSuchElementException;
  * реалізації ArrayList (default capacity, newCapacity...)</p>
  */
 public class ArrayList<T> implements List<T> {
-    private static final int DEFAULT_ARRAY_CAPASITY = 10;
+    private static final int DEFAULT_ARRAY_CAPACITY = 10;
     private Object[] elementData;
-    private int arrayCapasity;
     private int ammountOfElements;
 
     public ArrayList() {
-        arrayCapasity = DEFAULT_ARRAY_CAPASITY;
+        //arrayCapasity = DEFAULT_ARRAY_CAPACITY;
         ammountOfElements = 0;
-        this.elementData = (T[]) new Object[DEFAULT_ARRAY_CAPASITY];
+        this.elementData = (T[]) new Object[DEFAULT_ARRAY_CAPACITY];
     }
 
     @Override
@@ -24,7 +23,7 @@ public class ArrayList<T> implements List<T> {
             elementData[ammountOfElements++] = value;
         } else {
             Object[] oldData = elementData;
-            newArrayCapasity(arrayCapasity);
+            newArrayCapasity(elementData.length);
             System.arraycopy(oldData, 0, elementData, 0, ammountOfElements + 1);
             elementData[ammountOfElements++] = value;
         }
@@ -32,23 +31,22 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index < ammountOfElements + 1 || index < 0) {
-            if (ensureCapacity(ammountOfElements + 1)) {
-                System.arraycopy(elementData, index, elementData,
-                        index + 1, ammountOfElements + 1 - index);
-                elementData[index] = value;
-                ammountOfElements++;
-            } else {
-                Object[] oldData = elementData;
-                newArrayCapasity(arrayCapasity);
-                System.arraycopy(oldData, index, elementData,
-                        index + 1, ammountOfElements + 1 - index);
-                elementData[index] = value;
-                ammountOfElements++;
-            }
-        } else {
+        if (index > ammountOfElements + 1 || index < 0) {
             throw new ArrayIndexOutOfBoundsException("ammountOfElements: "
                     + ammountOfElements + "<" + "index: " + index);
+        }
+        if (ensureCapacity(ammountOfElements + 1)) {
+            System.arraycopy(elementData, index, elementData,
+                    index + 1, ammountOfElements + 1 - index);
+            elementData[index] = value;
+            ammountOfElements++;
+        } else {
+            Object[] oldData = elementData;
+            newArrayCapasity(elementData.length);
+            System.arraycopy(oldData, index, elementData,
+                    index + 1, ammountOfElements + 1 - index);
+            elementData[index] = value;
+            ammountOfElements++;
         }
     }
 
@@ -56,50 +54,47 @@ public class ArrayList<T> implements List<T> {
     public void addAll(List<T> list) {
         if (ensureCapacity(ammountOfElements + list.size())) {
             for (int i = 0; i < list.size(); i++) {
-                elementData[ammountOfElements++] = list.get(i);
+                add(list.get(i));
             }
         } else {
             Object[] oldData = elementData;
             newArrayCapasity(ammountOfElements + list.size());
             System.arraycopy(oldData, 0, elementData, 0, ammountOfElements + 1);
             for (int i = 0; i < list.size(); i++) {
-                elementData[ammountOfElements++] = list.get(i);
+                add(list.get(i));
             }
         }
     }
 
     @Override
     public T get(int index) {
-        if (index < ammountOfElements) {
-            return (T) elementData[index];
-        } else {
+        if (index >= ammountOfElements) {
             throw new ArrayIndexOutOfBoundsException("ammountOfElements: "
                     + ammountOfElements + "<" + "index: " + index);
         }
+        return (T) elementData[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index < ammountOfElements || index < 0) {
-            elementData[index] = value;
-        } else {
+        if (index >= ammountOfElements || index < 0) {
             throw new ArrayIndexOutOfBoundsException("ammountOfElements: "
                     + ammountOfElements + "<" + "index: " + index);
         }
+        elementData[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index < ammountOfElements || index < 0) {
-            int numMoved = ammountOfElements - index - 1;
-            T result = (T) elementData[index];
-            System.arraycopy(elementData, index + 1, elementData, index, numMoved);
-            elementData[--ammountOfElements] = null;
-            return result;
-        } else {
+        if (index >= ammountOfElements || index < 0) {
             throw new ArrayIndexOutOfBoundsException("ammountOfElements: "
                     + ammountOfElements + "<" + "index: " + index);
         }
+        int numMoved = ammountOfElements - index - 1;
+        T result = (T) elementData[index];
+        System.arraycopy(elementData, index + 1, elementData, index, numMoved);
+        elementData[--ammountOfElements] = null;
+        return result;
     }
 
     @Override
@@ -107,11 +102,7 @@ public class ArrayList<T> implements List<T> {
         for (int i = 0; i < ammountOfElements; i++) {
             if ((t == null && elementData[i] == null)
                     || (elementData[i] != null && elementData[i].equals(t))) {
-                int numMoved = ammountOfElements - i - 1;
-                T result = (T) elementData[i];
-                System.arraycopy(elementData, i + 1, elementData, i, numMoved);
-                elementData[--ammountOfElements] = null;
-                return result;
+                return remove(i);
             }
         }
         throw new NoSuchElementException("NoSuchElement");
@@ -128,11 +119,18 @@ public class ArrayList<T> implements List<T> {
     }
 
     private boolean ensureCapacity(int size) {
-        return this.arrayCapasity > size;
+        return this.elementData.length > size;
     }
 
     private void newArrayCapasity(int oldCapasity) {
-        this.arrayCapasity = (oldCapasity * 3) / 2 + 1;
+        int arrayCapasity = (oldCapasity * 3) / 2 + 1;
         this.elementData = (T[]) new Object[arrayCapasity];
+    }
+
+    private void trimelEmentData() {
+        Object[] oldData = elementData;
+        elementData = (T[]) new Object[elementData.length - 1];
+        System.arraycopy(oldData, 0, elementData, 0, ammountOfElements);
+        ammountOfElements--;
     }
 }
