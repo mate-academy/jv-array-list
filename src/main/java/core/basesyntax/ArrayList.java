@@ -30,7 +30,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (elementData[index] == null) {
+        if (index > elementData.length) {
             throw new ArrayIndexOutOfBoundsException();
         }
         ensureCapacity();
