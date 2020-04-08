@@ -8,17 +8,26 @@ import java.util.NoSuchElementException;
  * реалізації ArrayList (default capacity, newCapacity...)</p>
  */
 public class ArrayList<T> implements List<T> {
+
     private T[] dataArray;
     private final int LENGTH = 10;
     private int size;
+
     public ArrayList() {
         dataArray = (T[]) new Object[LENGTH];
         size = 0;
     }
+
+
     @Override
     public void add(T value) {
-        add(value , size());
+        if (size == dataArray.length) {
+            optimizeCapacity();
+        }
+        dataArray[size] = value;
+        size++;
     }
+
     @Override
     public void add(T value, int index) {
         if (index > size || index < 0) {
@@ -27,10 +36,12 @@ public class ArrayList<T> implements List<T> {
         if (size == dataArray.length) {
             optimizeCapacity();
         }
-        System.arraycopy(dataArray, index, dataArray, index + 1, size - index);
-        dataArray[index] = value;
-        size++;
+            System.arraycopy(dataArray, index, dataArray, index + 1, size - index);
+            dataArray[index] = value;
+            size++;
+
     }
+
     @Override
     public void addAll(List<T> list) {
         while (dataArray.length - size < list.size()) {
@@ -40,6 +51,7 @@ public class ArrayList<T> implements List<T> {
             add(list.get(i));
         }
     }
+
     @Override
     public T get(int index) {
         if (index >= size) {
@@ -47,6 +59,7 @@ public class ArrayList<T> implements List<T> {
         }
         return dataArray[index];
     }
+
     @Override
     public void set(T value, int index) {
         if (index >= size) {
@@ -54,7 +67,9 @@ public class ArrayList<T> implements List<T> {
         }
         dataArray[index] = value;
     }
+
     @Override
+
     public T remove(int index) {
         if (index > size || index < 0) {
             throw new ArrayIndexOutOfBoundsException("Wrong index");
@@ -67,6 +82,7 @@ public class ArrayList<T> implements List<T> {
         size--;
         return found;
     }
+
     @Override
     public T remove(T t) {
         for (int i = 0; i < size; i++) {
@@ -76,18 +92,22 @@ public class ArrayList<T> implements List<T> {
         }
         throw new NoSuchElementException();
     }
+
     @Override
     public int size() {
         return size;
     }
+
     @Override
     public boolean isEmpty() {
         return size == 0 ? true : false;
     }
+
     private void optimizeCapacity() {
-        T[] optimized = (T[]) new Object[size];
-        optimized = dataArray;
-        dataArray = (T[]) new Object[(size * 3) / 2 + 1];
-        System.arraycopy(optimized, 0, dataArray, 0,size);
+        T[] optimized = (T[]) new Object[size + size / 2];
+
+        System.arraycopy(dataArray,0,optimized,0, size);
+        dataArray = optimized;
     }
 }
+
