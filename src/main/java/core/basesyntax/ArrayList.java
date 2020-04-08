@@ -110,9 +110,4 @@ public class ArrayList<T> implements List<T> {
         }
         size++;
     }
-
-    public static void main(String[] args) {
-        ArrayList<Integer> list = new ArrayList<>();
-
-    }
 }
