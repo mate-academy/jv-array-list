@@ -7,10 +7,11 @@ import java.util.Objects;
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private static final int MAX_ARRAY_SIZE = Integer.MAX_VALUE;
-    transient Object[] elementData;
+    private Object[] elementData;
     private int size;
 
     public ArrayList(int initialCapacity) {
+        size = 0;
         if (initialCapacity < 0) {
             throw new IllegalArgumentException("Please enter positive value");
         } else if (initialCapacity == 0) {
@@ -22,19 +23,7 @@ public class ArrayList<T> implements List<T> {
 
     public ArrayList() {
         elementData = new Object[DEFAULT_CAPACITY];
-    }
-
-    private void resize() {
-        if (size >= MAX_ARRAY_SIZE) {
-            throw new OutOfMemoryError("out of memory");
-        }
-        if (size == elementData.length) {
-            int newCapacity = 0;
-            if (size == elementData.length) {
-                newCapacity = elementData.length + (elementData.length >> 1 + 1);
-            }
-            elementData = Arrays.copyOf(elementData, newCapacity);
-        }
+        size = 0;
     }
 
     private void rangeCheck(int index) {
@@ -72,15 +61,11 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         rangeCheck(index);
-        if (index > elementData.length) {
-            throw new IndexOutOfBoundsException("Put correct index");
-        }
         return (T) elementData[index];
     }
 
     @Override
     public void set(T value, int index) {
-        //petezatiraet
         rangeCheck(index);
         elementData[index] = value;
     }
@@ -113,5 +98,16 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private void resize() {
+
+        if (size >= MAX_ARRAY_SIZE) {
+            throw new OutOfMemoryError("out of memory");
+        }
+        if (size == elementData.length) {
+            int newCapacity = elementData.length + (elementData.length >> 1 + 1);;
+            elementData = Arrays.copyOf(elementData, newCapacity);
+        }
     }
 }
