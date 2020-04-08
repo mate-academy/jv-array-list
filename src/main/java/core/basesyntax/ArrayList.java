@@ -7,11 +7,13 @@ package core.basesyntax;
 
 public class ArrayList<T> implements List<T> {
 
+    public static final int INITIAL_CAPACITY = 0;
+
     private T[] arrayT;
     private int size;
 
     public ArrayList() {
-        arrayT = grow(0);
+        arrayT = (T[]) new Object[INITIAL_CAPACITY];
         size = arrayT.length;
     }
 
@@ -22,7 +24,8 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        T[] newArray = grow(size + 1);
+        resize(1);
+        T[] newArray = (T[]) new Object[arrayT.length];
         if (index <= size) {
             System.arraycopy(arrayT, 0, newArray, 0, index);
             newArray[index] = value;
@@ -80,20 +83,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T t) {
-        int index = indexOf(t);
-        T[] newArray = grow(size - 1);
-        T result;
-        if (index < size) {
-            System.arraycopy(arrayT, 0, newArray, 0, index);
-            result = arrayT[index];
-            System.arraycopy(arrayT, index + 1, newArray, index, size - 1 - index);
-            arrayT = newArray;
-            size--;
-        } else {
-            throw new ArrayIndexOutOfBoundsException("Index "
-                    + index + " out of bounds for length " + size);
-        }
-        return result;
+        return remove(indexOf(t));
     }
 
     @Override
@@ -129,5 +119,11 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayIndexOutOfBoundsException("Index "
                     + index + " out of bounds for length " + size);
         }
+    }
+
+    private void resize(int index) {
+        T[] newArr = (T[]) new Object[arrayT.length + index];
+        System.arraycopy(arrayT, 0, newArr, 0, arrayT.length);
+        arrayT = newArr;
     }
 }
