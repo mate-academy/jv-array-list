@@ -30,6 +30,9 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
+        if (elementData[index] == null) {
+            throw new ArrayIndexOutOfBoundsException();
+        }
         ensureCapacity();
         System.arraycopy(elementData, index, elementData, index + 1, size - index);
         elementData[index] = value;
@@ -91,7 +94,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void ensureCapacity() {
-        if (elementData.length == size + 1) {
+        if (elementData.length <= size) {
             Object[] newCapacity = new Object[(elementData.length * 3) / 2 + 1];
             System.arraycopy(elementData, 0, newCapacity, 0, size);
             elementData = (T[]) newCapacity;
