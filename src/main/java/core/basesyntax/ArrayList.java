@@ -24,13 +24,12 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index < size && index >= 0) {
-            reviewSize();
-            addingShift(index);
-            arrayList[index] = value;
-        } else {
+        if (index >= size || index < 0) {
             throw new ArrayIndexOutOfBoundsException();
         }
+        reviewSize();
+        addingShift(value, index);
+        arrayList[index] = value;
     }
 
     @Override
@@ -50,11 +49,10 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void set(T value, int index) {
-        if (index < size && index >= 0) {
-            arrayList[index] = value;
-        } else {
+        if (index >= size || index < 0) {
             throw new ArrayIndexOutOfBoundsException();
         }
+        arrayList[index] = value;
     }
 
     @Override
@@ -69,8 +67,7 @@ public class ArrayList<T> implements List<T> {
         int index = -1;
         for (int i = 0; i < arrayList.length; i++) {
             if (t == arrayList[i] || (t != null && t.equals(arrayList[i]))) {
-                return.remove(i);
-                break;
+                return remove(i);
             }
         }
         if (index != -1) {
@@ -98,16 +95,13 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void removingShift(int index) {
-        for (int i = index; i < size - 1; i++) {
-            arrayList[i] = arrayList[i + 1];
-        }
+        System.arraycopy(arrayList,index + 1, arrayList, index, size - index);
         size--;
     }
 
-    private void addingShift(int index) {
-        for (int i = size; i > index; i--) {
-            arrayList[i] = arrayList[i - 1];
-        }
+    private void addingShift(T value, int index) {
+        System.arraycopy(arrayList, index, arrayList, index + 1, size - index);
+        arrayList[index] = value;
         size++;
     }
 }
