@@ -45,31 +45,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index < size) {
-            return arrayT[index];
-        } else {
-            throw new ArrayIndexOutOfBoundsException("Index "
-                    + index + " out of bounds for length " + size);
-        }
-
+        checkIndex(index);
+        return arrayT[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index < size && index >= 0) {
-            arrayT[index] = value;
-        } else {
-            throw new ArrayIndexOutOfBoundsException("Index "
-                    + index + " out of bounds for length " + size);
-        }
+        checkIndex(index);
+        arrayT[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index < 0) {
-            throw new ArrayIndexOutOfBoundsException("Index "
-                    + index + " out of bounds for length " + size);
-        }
+        checkIndex(index);
         if (isEmpty()) {
             return null;
         }
@@ -81,31 +69,18 @@ public class ArrayList<T> implements List<T> {
         }
         T[] newArray = grow(size - 1);
         T result;
-        if (index < size) {
-            System.arraycopy(arrayT, 0, newArray, 0, index);
-            result = arrayT[index];
-            System.arraycopy(arrayT, index + 1, newArray, index, size - 1 - index);
-            arrayT = newArray;
-            size = newArray.length;
-        } else {
-            throw new ArrayIndexOutOfBoundsException("Index "
-                    + index + " out of bounds for length " + size);
-        }
+        System.arraycopy(arrayT, 0, newArray, 0, index);
+        result = arrayT[index];
+        System.arraycopy(arrayT, index + 1, newArray, index, size - 1 - index);
+        arrayT = newArray;
+        size = newArray.length;
+
         return result;
     }
 
     @Override
     public T remove(T t) {
-        int index = -1;
-        for (int i = 0; i < size; i++) {
-            if (arrayT[i] == t || arrayT[i] != null && arrayT[i].equals(t)) {
-                index = i;
-                break;
-            }
-        }
-        if (index == -1) {
-            throw new java.util.NoSuchElementException();
-        }
+        int index = indexOf(t);
         T[] newArray = grow(size - 1);
         T result;
         if (index < size) {
@@ -131,7 +106,28 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    public T[] grow(int capacity) {
+    private T[] grow(int capacity) {
         return (T[]) new Object[capacity];
+    }
+
+    private int indexOf(T t) {
+        int index = -1;
+        for (int i = 0; i < size; i++) {
+            if (arrayT[i] == t || arrayT[i] != null && arrayT[i].equals(t)) {
+                index = i;
+                break;
+            }
+        }
+        if (index == -1) {
+            throw new java.util.NoSuchElementException();
+        }
+        return index;
+    }
+
+    private void checkIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayIndexOutOfBoundsException("Index "
+                    + index + " out of bounds for length " + size);
+        }
     }
 }
