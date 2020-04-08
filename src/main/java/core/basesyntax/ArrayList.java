@@ -1,6 +1,5 @@
 package core.basesyntax;
 
-import java.io.FileNotFoundException;
 import java.util.NoSuchElementException;
 
 /**
@@ -9,15 +8,14 @@ import java.util.NoSuchElementException;
  */
 public class ArrayList<T> implements List<T> {
 
+    private static final int INITIAL_LENGTH = 10;
     private T[] dataArray;
-    private final int LENGTH = 10;
     private int size;
 
     public ArrayList() {
-        dataArray = (T[]) new Object[LENGTH];
+        dataArray = (T[]) new Object[INITIAL_LENGTH];
         size = 0;
     }
-
 
     @Override
     public void add(T value) {
@@ -36,9 +34,9 @@ public class ArrayList<T> implements List<T> {
         if (size == dataArray.length) {
             optimizeCapacity();
         }
-            System.arraycopy(dataArray, index, dataArray, index + 1, size - index);
-            dataArray[index] = value;
-            size++;
+        System.arraycopy(dataArray, index, dataArray, index + 1, size - index);
+        dataArray[index] = value;
+        size++;
 
     }
 
@@ -75,10 +73,7 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayIndexOutOfBoundsException("Wrong index");
         }
         T found = dataArray[index];
-        for (int i = index; i < size; i++) {
-            dataArray[i] = dataArray[i + 1];
-        }
-        dataArray[size - 1] = null;
+        System.arraycopy(dataArray,index + 1,dataArray,index,size - index);
         size--;
         return found;
     }
@@ -106,8 +101,7 @@ public class ArrayList<T> implements List<T> {
     private void optimizeCapacity() {
         T[] optimized = (T[]) new Object[size + size / 2];
 
-        System.arraycopy(dataArray,0,optimized,0, size);
+        System.arraycopy(dataArray, 0, optimized, 0, size);
         dataArray = optimized;
     }
 }
-
