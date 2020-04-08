@@ -98,7 +98,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public boolean isEmpty() {
-        return this.idx == 0;
+        return idx == 0;
     }
 
     private void check(int index) {
