@@ -26,7 +26,10 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        checkIndexLimits(index);
+        if (index > size || index < 0) {
+            throw new ArrayIndexOutOfBoundsException("Illegal index: " + index);
+        }
+
         ensureCapacity();
         System.arraycopy(elementData, index, elementData, index + 1, size - index);
         elementData[index] = value;
