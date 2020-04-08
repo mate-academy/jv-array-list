@@ -18,7 +18,7 @@ public class ArrayList<T> implements List<T> {
     public ArrayList() {
         capacity = DEFAULT_CAPACITY;
         idx = 0;
-        elementData = (T[]) new Object[DEFAULT_CAPACITY];
+        elementData =  new Object[DEFAULT_CAPACITY];
     }
 
     @Override
