@@ -20,10 +20,9 @@ public class ArrayList<T> implements List<T> {
     public ArrayList(int initialCapacity) {
         if (initialCapacity >= 0) {
             elementData = (T[]) new Object[initialCapacity];
-        } else {
-            throw new IllegalArgumentException("Illegal Capacity: " + initialCapacity);
+            length = 0;
         }
-        length = 0;
+        throw new IllegalArgumentException("Illegal Capacity: " + initialCapacity);
     }
 
     public ArrayList(Collection<? extends T> c) {
@@ -40,14 +39,12 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         increaseArray();
-        if (indexIsExist(index)) {
-            length++;
-            System.arraycopy(elementData, index, elementData, index + 1, length - index - 1);
-            elementData[index] = value;
-
-        } else {
+        if (!indexIsExist(index)) {
             throw new ArrayIndexOutOfBoundsException();
         }
+        length++;
+        System.arraycopy(elementData, index, elementData, index + 1, length - index - 1);
+        elementData[index] = value;
     }
 
     @Override
@@ -59,20 +56,18 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (indexIsExist(index)) {
-            return elementData[index];
-        } else {
+        if (!indexIsExist(index)) {
             throw new ArrayIndexOutOfBoundsException();
         }
+        return elementData[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (indexIsExist(index)) {
-            elementData[index] = value;
-        } else {
+        if (!indexIsExist(index)) {
             throw new ArrayIndexOutOfBoundsException();
         }
+        elementData[index] = value;
     }
 
     @Override
