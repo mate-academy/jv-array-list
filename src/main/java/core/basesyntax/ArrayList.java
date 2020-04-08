@@ -32,7 +32,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (checkIndex(index)) {
+        if (index < lastIndex || index >= 0) {
             System.arraycopy(elementData, index, elementData, index + 1, lastIndex - index);
             elementData[index] = value;
             lastIndex++;
