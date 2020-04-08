@@ -69,7 +69,7 @@ public class ArrayList<T> implements List<T> {
         int index = -1;
         for (int i = 0; i < arrayList.length; i++) {
             if (t == arrayList[i] || (t != null && t.equals(arrayList[i]))) {
-                index = i;
+                return.remove(i);
                 break;
             }
         }
