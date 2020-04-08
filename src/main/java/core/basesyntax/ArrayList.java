@@ -7,11 +7,12 @@ import java.util.Arrays;
  * реалізації ArrayList (default capacity, newCapacity...)</p>
  */
 public class ArrayList<T> implements List<T> {
+    private static final int DEFAULT_CAPACITY = 10;
     private T[] arrayList;
     private int size;
 
     public ArrayList() {
-        arrayList = (T[]) new Object[2];
+        arrayList = (T[]) new Object[DEFAULT_CAPACITY];
         size = 0;
     }
 
@@ -108,5 +109,10 @@ public class ArrayList<T> implements List<T> {
             arrayList[i] = arrayList[i - 1];
         }
         size++;
+    }
+
+    public static void main(String[] args) {
+        ArrayList<Integer> list = new ArrayList<>();
+
     }
 }
