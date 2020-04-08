@@ -24,17 +24,13 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (!ensureCapacity(size + 1)) {
-            ensurenseCapacity();
-        }
+        ensureCapacity();
         elementData[size++] = value;
     }
 
     @Override
     public void add(T value, int index) {
-        if (!ensureCapacity(size + 1)) {
-            ensurenseCapacity();
-        }
+        ensureCapacity();
         System.arraycopy(elementData, index, elementData, index + 1, size - index);
         elementData[index] = value;
         size++;
@@ -75,13 +71,10 @@ public class ArrayList<T> implements List<T> {
     }
 
     @Override
-    public T remove(T t) {
+    public T remove(T t) throws NoSuchElementException {
         for (int i = 0; i < size; i++) {
             if (t == elementData[i] || (t != null && t.equals(elementData[i]))) {
-                T deletedElement = elementData[i];
-                System.arraycopy(elementData, i + 1, elementData, i, size - i - 1);
-                elementData[--size] = null;
-                return deletedElement;
+                return remove(i);
             }
         }
         throw new NoSuchElementException();
@@ -97,14 +90,11 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    public void ensurenseCapacity() {
-        int num = (elementData.length * 3) / 2 + 1;
-        Object[] newCapacity = new Object[num];
-        System.arraycopy(elementData, 0, newCapacity, 0, size);
-        elementData = (T[]) newCapacity;
-    }
-
-    public boolean ensureCapacity(int needsSpase) {
-        return elementData.length >= needsSpase;
+    private void ensureCapacity() {
+        if (elementData.length == size + 1) {
+            Object[] newCapacity = new Object[(elementData.length * 3) / 2 + 1];
+            System.arraycopy(elementData, 0, newCapacity, 0, size);
+            elementData = (T[]) newCapacity;
+        }
     }
 }
