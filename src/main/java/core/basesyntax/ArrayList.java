@@ -23,7 +23,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if ((position + 1) == capacity) {
+        if ((position + 1) == elementData.length) {
             grow();
         }
 
