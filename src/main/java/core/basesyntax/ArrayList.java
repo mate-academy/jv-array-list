@@ -84,8 +84,8 @@ public class ArrayList<T> implements List<T> {
 
     private void checkIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new ArrayIndexOutOfBoundsException("The index exceeds " +
-                    "the array length! Index: " + index);
+            throw new ArrayIndexOutOfBoundsException("The index exceeds "
+                    + "the array length! Index: " + index);
         }
     }
 
