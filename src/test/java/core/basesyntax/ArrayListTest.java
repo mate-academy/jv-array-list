@@ -43,6 +43,11 @@ public class ArrayListTest {
         Assert.assertEquals("Test failed! Size of array should be " + 5 + "but it is "
                 + arrayList.size(), 5, arrayList.size());
         Assert.assertNull(arrayList.get(0));
+        arrayList.add("value", 5);
+        Assert.assertEquals("Test failed! Can't correct add element by index " + 5,
+                "value", arrayList.get(5));
+        Assert.assertEquals("Test failed! Size of array should be " + 6 + "but it is "
+                + arrayList.size(), 6, arrayList.size());
     }
 
     @Test(expected = ArrayIndexOutOfBoundsException.class)
