@@ -1,53 +1,99 @@
 package core.basesyntax;
 
+import java.util.Arrays;
+import java.util.NoSuchElementException;
+
 /**
  * <p>Реалізувати свій ArrayList який імплементує інтерфейс List. Дотриматися основних вимог щодо
  * реалізації ArrayList (default capacity, newCapacity...)</p>
  */
 public class ArrayList<T> implements List<T> {
+    private static final int DEFAULT_CAPACITY = 10;
+    private T[] elementData;
+    private int size;
+
+    public ArrayList() {
+        elementData = (T[]) new Object[DEFAULT_CAPACITY];
+        size = 0;
+    }
 
     @Override
     public void add(T value) {
 
+        ensureCapacity();
+        elementData[size++] = value;
     }
 
     @Override
     public void add(T value, int index) {
+        if (index > size || index < 0) {
+            throw new ArrayIndexOutOfBoundsException("Illegal index: " + index);
+        }
 
+        ensureCapacity();
+        System.arraycopy(elementData, index, elementData, index + 1, size - index);
+        elementData[index] = value;
+        size++;
     }
 
     @Override
     public void addAll(List<T> list) {
-
+        for (int i = 0; i < list.size(); i++) {
+            add(list.get(i));
+        }
     }
 
     @Override
     public T get(int index) {
-        return null;
+        checkIndexLimits(index);
+        return (T) elementData[index];
     }
 
     @Override
     public void set(T value, int index) {
-
+        checkIndexLimits(index);
+        elementData[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        return null;
+        checkIndexLimits(index);
+        T valueHolder = elementData[index];
+        System.arraycopy(elementData, index + 1, elementData, index, size - index - 1);
+        elementData[--size] = null;
+        return valueHolder;
     }
 
     @Override
     public T remove(T t) {
-        return null;
+        for (int i = 0; i < size; i++) {
+            if (t == elementData[i] || (t != null && t.equals(elementData[i]))) {
+                return remove(i);
+            }
+        }
+        throw new NoSuchElementException("Element " + t + " not found in array");
     }
 
     @Override
     public int size() {
-        return 0;
+        return size;
     }
 
     @Override
     public boolean isEmpty() {
-        return false;
+        return size() == 0;
+    }
+
+    private void ensureCapacity() {
+        if (size + 1 >= elementData.length) {
+            int increasedCapacity = elementData.length + (elementData.length >> 1);
+            elementData = Arrays.copyOf(elementData, increasedCapacity);
+        }
+    }
+
+    private void checkIndexLimits(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayIndexOutOfBoundsException("Illegal index " + index);
+        }
     }
 }
