@@ -1,53 +1,112 @@
 package core.basesyntax;
 
+import java.util.Arrays;
+import java.util.NoSuchElementException;
+
 /**
  * <p>Реалізувати свій ArrayList який імплементує інтерфейс List. Дотриматися основних вимог щодо
  * реалізації ArrayList (default capacity, newCapacity...)</p>
  */
 public class ArrayList<T> implements List<T> {
+    private static final int DEFAULT_SIZE = 10;
+    private Object[] dataElements;
+    private int currentLength;
+    private int capacity;
+
+    public ArrayList() {
+        dataElements = new Object[DEFAULT_SIZE];
+        currentLength = 0;
+        capacity = DEFAULT_SIZE;
+    }
+
+    public ArrayList(int size) {
+        dataElements = new Object[size];
+        currentLength = 0;
+        capacity = size;
+    }
+
+    private void checkIndex(int index) {
+        if (index < 0 || index >= currentLength) {
+            throw new ArrayIndexOutOfBoundsException("wrong input index");
+        }
+    }
+
+    private void checkIndexForAdd(int index) {
+        if (index < 0 || index > currentLength) {
+            throw new ArrayIndexOutOfBoundsException("wrong input index");
+        }
+    }
+
+    private void extendSpace() {
+        if (currentLength >= capacity) {
+            Object[] tempSet = Arrays.copyOf(dataElements, (capacity * 3) / 2);
+            dataElements = tempSet;
+            capacity = (capacity * 3) / 2;
+        }
+    }
 
     @Override
     public void add(T value) {
-
+        extendSpace();
+        dataElements[currentLength] = value;
+        currentLength++;
     }
 
     @Override
     public void add(T value, int index) {
+        checkIndexForAdd(index);
+        extendSpace();
 
+        System.arraycopy(dataElements, index, dataElements, index + 1, currentLength - index);
+        dataElements[index] = value;
+        currentLength++;
     }
 
     @Override
     public void addAll(List<T> list) {
-
+        for (int i = 0; i < list.size(); i++) {
+            add(list.get(i));
+        }
     }
 
     @Override
     public T get(int index) {
-        return null;
+        checkIndex(index);
+        return (T) dataElements[index];
     }
 
     @Override
     public void set(T value, int index) {
-
+        checkIndex(index);
+        dataElements[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        return null;
+        checkIndex(index);
+        final T removedObject = (T) dataElements[index];
+        System.arraycopy(dataElements, index + 1, dataElements, index, currentLength - index - 1);
+        currentLength--;
+        return removedObject;
     }
 
     @Override
     public T remove(T t) {
-        return null;
+        for (int i = 0; i < size(); i++) {
+            if (t == dataElements[i] || t != null && dataElements[i].equals(t)) {
+                return remove(i);
+            }
+        }
+        throw new NoSuchElementException();
     }
 
     @Override
     public int size() {
-        return 0;
+        return currentLength;
     }
 
     @Override
     public boolean isEmpty() {
-        return false;
+        return currentLength == 0;
     }
 }
