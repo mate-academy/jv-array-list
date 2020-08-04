@@ -27,16 +27,19 @@ public class ArrayList<T> implements List<T> {
         elementData[size++] = value;
     }
 
-
     @Override
     public void add(T value, int index) {
-        checkIndex(index);
-        if (size == elementData.length) {
-            elementData = grow(preferredNewCapacity());
+        if (index == size) {
+            add(value);
+        } else {
+            checkIndex(index);
+            if (size == elementData.length) {
+                elementData = grow(preferredNewCapacity());
+            }
+            System.arraycopy(elementData, index, elementData, index + 1, size - index);
+            elementData[index] = value;
+            size++;
         }
-        System.arraycopy(elementData, index, elementData, index + 1, size - index);
-        elementData[index] = value;
-        size++;
     }
 
     @Override
@@ -55,6 +58,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     @SuppressWarnings("unchecked")
     public T get(int index) {
+        checkIndex(index);
         return (T) elementData[index];
     }
 
@@ -95,7 +99,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void checkIndex(int index) {
-        if (index < 0 || index > size) {
+        if (index < 0 || index >= size) {
             throw new ArrayIndexOutOfBoundsException();
         }
     }
