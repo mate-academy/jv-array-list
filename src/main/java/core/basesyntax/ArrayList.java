@@ -28,14 +28,14 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    public void checkingForArrayOutOfBounds(int index) {
+    public void checkingIndex(int index) {
         if (index >= size || index < 0) {
             throw new ArrayIndexOutOfBoundsException();
         }
     }
 
-    public T[] ensureCapacity(int numberOfElements) {
-        if (elementData.length - 1 - size >= numberOfElements) {
+    public T[] ensureCapacity() {
+        if (elementData.length - 1 - size >= ONE_ELEMENT) {
             return elementData;
         }
         T[] newArrayData = (T[]) new Object[elementData.length + (elementData.length >> 1)];
@@ -45,14 +45,14 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        elementData = ensureCapacity(ONE_ELEMENT);
+        elementData = ensureCapacity();
         elementData[size] = value;
         size++;
     }
 
     @Override
     public void add(T value, int index) {
-        elementData = ensureCapacity(ONE_ELEMENT);
+        elementData = ensureCapacity();
         System.arraycopy(elementData, index, elementData, index + 1, size - index);
         elementData[index] = value;
         size++;
@@ -67,19 +67,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        checkingForArrayOutOfBounds(index);
+        checkingIndex(index);
         return elementData[index];
     }
 
     @Override
     public void set(T value, int index) {
-        checkingForArrayOutOfBounds(index);
+        checkingIndex(index);
         elementData[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        checkingForArrayOutOfBounds(index);
+        checkingIndex(index);
         T removed = (T) elementData[index];
         System.arraycopy(elementData, index + 1, elementData, index, size - index);
         elementData[--size] = null;
