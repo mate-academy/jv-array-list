@@ -29,7 +29,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (filledWithElements == arrayList.length - 1) {
+        if (filledWithElements == arrayList.length) {
             resize((int) (arrayList.length * 1.5));
         }
         arrayList[filledWithElements++] = value;
@@ -39,7 +39,7 @@ public class ArrayList<T> implements List<T> {
     public void add(T value, int index) {
         if (index < 0 || index > filledWithElements) {
             throw new ArrayIndexOutOfBoundsException();
-        } else if (filledWithElements == arrayList.length - 1) {
+        } else if (filledWithElements == arrayList.length) {
             resize((int) (arrayList.length * 1.5));
         }
         System.arraycopy(arrayList, index, arrayList, index + 1, filledWithElements - index);
