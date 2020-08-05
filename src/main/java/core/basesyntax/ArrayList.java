@@ -1,53 +1,108 @@
 package core.basesyntax;
 
+import java.util.NoSuchElementException;
+
 /**
  * <p>Реалізувати свій ArrayList який імплементує інтерфейс List. Дотриматися основних вимог щодо
  * реалізації ArrayList (default capacity, newCapacity...)</p>
  */
 public class ArrayList<T> implements List<T> {
+    private static final int DEFAULT_CAPACITY = 10;
+    private T[] arrayList;
+    private int currentCapacity;
+    private int currentIndex;
+
+    public ArrayList() {
+        arrayList = (T[]) new Object[DEFAULT_CAPACITY];
+        currentCapacity = DEFAULT_CAPACITY;
+    }
+
+    public void addValue(T value, int index) {
+        sizeCheck(index);
+        arrayList[index] = value;
+        currentIndex++;
+    }
 
     @Override
     public void add(T value) {
-
+        addValue(value, currentIndex);
     }
 
     @Override
     public void add(T value, int index) {
-
+        if (index > currentIndex) {
+            throw new ArrayIndexOutOfBoundsException(" Index above the size of Array");
+        }
+        sizeCheck(index);
+        if (index < currentIndex) {
+            System.arraycopy(arrayList, index, arrayList, index + 1, currentIndex + 1);
+        }
+        addValue(value, index);
     }
 
     @Override
     public void addAll(List<T> list) {
-
+        for (int i = 0; i < list.size(); i++) {
+            addValue(list.get(i), currentIndex);
+        }
     }
 
     @Override
     public T get(int index) {
-        return null;
+        if (index >= currentIndex) {
+            throw new ArrayIndexOutOfBoundsException(("No element with index"));
+        }
+        return arrayList[index];
     }
 
     @Override
     public void set(T value, int index) {
-
+        if (currentIndex <= index) {
+            throw new ArrayIndexOutOfBoundsException("Index above Array size");
+        }
+        sizeCheck(index);
+        arrayList[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        return null;
+        T removedElement = get(index);
+        System.arraycopy(arrayList, index + 1, arrayList, index, currentIndex - 1);
+        currentIndex--;
+        return removedElement;
     }
 
     @Override
     public T remove(T t) {
-        return null;
+        for (int i = 0; i < currentIndex; i++) {
+            if (t == arrayList[i] || (t != null && t.equals(arrayList[i]))) {
+                return remove(i);
+            }
+        }
+        throw new NoSuchElementException("Such element does not exist.");
     }
 
     @Override
     public int size() {
-        return 0;
+        return currentIndex;
     }
 
     @Override
     public boolean isEmpty() {
-        return false;
+        return currentIndex == 0;
+    }
+
+    public void increaseCapacity() {
+        currentCapacity = currentCapacity + (currentCapacity >> 1);
+        Object[] arrayListTemporary = (T[]) new Object[currentCapacity];
+        System.arraycopy(arrayList, 0, arrayListTemporary, 0, currentIndex);
+        arrayList = (T[]) arrayListTemporary;
+    }
+
+    public void sizeCheck(int sizeForTest) {
+        if (sizeForTest == currentCapacity) {
+            increaseCapacity();
+        }
     }
 }
+
