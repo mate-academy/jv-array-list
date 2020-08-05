@@ -1,5 +1,7 @@
 package core.basesyntax;
 
+import java.util.NoSuchElementException;
+
 /**
  * <p>Реалізувати свій ArrayList який імплементує інтерфейс List. Дотриматися основних вимог щодо
  * реалізації ArrayList (default capacity, newCapacity...)</p>
@@ -7,7 +9,7 @@ package core.basesyntax;
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private int size = DEFAULT_CAPACITY;
-    private int currentSize = 0;
+    private int currentSize;
     T[] elementData;
 
     public ArrayList() {
@@ -51,6 +53,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
+        if (index < 0 || index >= currentSize) throw new ArrayIndexOutOfBoundsException();
         for (int i = 0; i < currentSize; i++) {
             if (i == index) {
                 return elementData[i];
@@ -61,6 +64,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void set(T value, int index) {
+        if (index < 0 || index >= currentSize) throw new ArrayIndexOutOfBoundsException();
         for (int i = 0; i < currentSize; i++) {
             if (index == i) {
                 elementData[i] = value;
@@ -85,7 +89,7 @@ public class ArrayList<T> implements List<T> {
                 return remove(i);
             }
         }
-        return null;
+        throw new NoSuchElementException();
     }
 
     @Override
@@ -95,6 +99,6 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public boolean isEmpty() {
-        return false;
+        return currentSize == 0;
     }
 }
