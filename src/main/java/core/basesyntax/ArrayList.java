@@ -39,6 +39,9 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayIndexOutOfBoundsException("Index is not exists");
+        }
         ensureCapacity(size + 1);
         System.arraycopy(elementData, index, elementData, index + 1, size - index);
         elementData[index] = value;
@@ -59,7 +62,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         if (index < 0 || index >= size) {
-            throw new ArrayIndexOutOfBoundsException();
+            throw new ArrayIndexOutOfBoundsException("Index is not exists");
         }
         return (T) elementData[index];
     }
@@ -67,14 +70,14 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void set(T value, int index) {
         if (index < 0 || index >= size) {
-            throw new ArrayIndexOutOfBoundsException();
+            throw new ArrayIndexOutOfBoundsException("Index is not exists");
         }
         elementData[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        Object removedValue = elementData[index];
+        final Object removedValue = elementData[index];
         System.arraycopy(elementData, index + 1, elementData, index, size - index - 1);
         elementData[size] = null;
         size--;
@@ -83,22 +86,15 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T t) {
-        Object removedValue = null;
-        int removedIndex = 0;
         for (int i = 0; i < size; i++) {
             if (t == null && elementData[i] == null || elementData[i].equals(t)) {
-                removedValue = elementData[i];
-                removedIndex = i;
-                System.arraycopy(elementData, removedIndex + 1, elementData, removedIndex, size - removedIndex - 1);
-                elementData[size] = null;
-                size--;
-                break;
+                return remove(i);
             }
             if (i == size - 1) {
-                throw new NoSuchElementException();
+                throw new NoSuchElementException("Element is not exists");
             }
         }
-        return (T) removedValue;
+        return null;
     }
 
     @Override
