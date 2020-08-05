@@ -1,6 +1,7 @@
 package core.basesyntax;
 
 import java.util.NoSuchElementException;
+import java.util.Objects;
 
 /**
  * <p>Реалізувати свій ArrayList який імплементує інтерфейс List. Дотриматися основних вимог щодо
@@ -10,7 +11,7 @@ public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private int size = DEFAULT_CAPACITY;
     private int currentSize;
-    T[] elementData;
+    private T[] elementData;
 
     public ArrayList() {
         elementData = (T[]) new Object[size];
@@ -38,22 +39,23 @@ public class ArrayList<T> implements List<T> {
         if (currentSize >= size) {
             elementData = resizeTheArray(elementData);
         }
-        System.arraycopy(elementData, index, elementData, index + 1, size);
+        System.arraycopy(elementData, index, elementData, index + 1, currentSize - index);
         elementData[index] = value;
         currentSize++;
     }
 
     @Override
     public void addAll(List<T> list) {
-        while(list.size() < size) {
-            elementData = resizeTheArray(elementData);
+        for (int i = 0; i < list.size(); i++) {
+            add(list.get(i));
         }
-
     }
 
     @Override
     public T get(int index) {
-        if (index < 0 || index >= currentSize) throw new ArrayIndexOutOfBoundsException();
+        if (index < 0 || index >= currentSize) {
+            throw new ArrayIndexOutOfBoundsException();
+        }
         for (int i = 0; i < currentSize; i++) {
             if (i == index) {
                 return elementData[i];
@@ -64,7 +66,9 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void set(T value, int index) {
-        if (index < 0 || index >= currentSize) throw new ArrayIndexOutOfBoundsException();
+        if (index < 0 || index >= currentSize) {
+            throw new ArrayIndexOutOfBoundsException();
+        }
         for (int i = 0; i < currentSize; i++) {
             if (index == i) {
                 elementData[i] = value;
@@ -75,8 +79,13 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(int index) {
-        T cup = elementData[index];
-        System.arraycopy(elementData, index, elementData, index - 1, size);
+        if (index < 0 || index >= currentSize) {
+            throw new ArrayIndexOutOfBoundsException();
+        }
+        final T cup = elementData[index];
+        if (currentSize - 1 - index >= 0) {
+            System.arraycopy(elementData, index + 1, elementData, index, currentSize - 1 - index);
+        }
         currentSize--;
         elementData[currentSize] = null;
         return cup;
@@ -85,7 +94,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T t) {
         for (int i = 0; i < currentSize; i++) {
-            if (elementData[i].equals(t)) {
+            if (Objects.equals(elementData[i], t)) {
                 return remove(i);
             }
         }
