@@ -17,15 +17,9 @@ public class ArrayList<T> implements List<T> {
         currentCapacity = DEFAULT_CAPACITY;
     }
 
-    public void addValue(T value, int index) {
-        sizeCheck(index);
-        arrayList[index] = value;
-        currentIndex++;
-    }
-
     @Override
     public void add(T value) {
-        addValue(value, currentIndex);
+        addElementToArray(value, currentIndex);
     }
 
     @Override
@@ -37,13 +31,13 @@ public class ArrayList<T> implements List<T> {
         if (index < currentIndex) {
             System.arraycopy(arrayList, index, arrayList, index + 1, currentIndex + 1);
         }
-        addValue(value, index);
+        addElementToArray(value, index);
     }
 
     @Override
     public void addAll(List<T> list) {
         for (int i = 0; i < list.size(); i++) {
-            addValue(list.get(i), currentIndex);
+            addElementToArray(list.get(i), currentIndex);
         }
     }
 
@@ -90,6 +84,12 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return currentIndex == 0;
+    }
+
+    public void addElementToArray(T value, int index) {
+        sizeCheck(index);
+        arrayList[index] = value;
+        currentIndex++;
     }
 
     public void increaseCapacity() {
