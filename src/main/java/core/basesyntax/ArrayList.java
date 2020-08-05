@@ -21,7 +21,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value) {
         if (size == currentCapacity) {
-            elementData = ensureCapacity(currentCapacity, elementData);
+            elementData = ensureCapacity();
         }
         elementData[size++] = value;
     }
@@ -29,7 +29,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         if (size == currentCapacity) {
-            elementData = ensureCapacity(currentCapacity, elementData);
+            elementData = ensureCapacity();
         }
         if (index > size) {
             throw new ArrayIndexOutOfBoundsException("Wrong index!");
@@ -44,7 +44,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void addAll(List<T> list) {
         if (size + list.size() >= currentCapacity) {
-            elementData = ensureCapacity(currentCapacity, elementData);
+            elementData = ensureCapacity();
         }
         addElementsFromListToArray(list);
     }
@@ -92,15 +92,11 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private T[] ensureCapacity(int oldCapacity, T[] elementData) {
-        currentCapacity = (oldCapacity * 3) / 2 + 1;
+    private T[] ensureCapacity() {
+        currentCapacity = (currentCapacity * 3) / 2 + 1;
         T[] currentArray = (T[]) new Object[currentCapacity];
-        System.arraycopy(elementData, 0, currentArray, 0, oldCapacity);
+        System.arraycopy(elementData, 0, currentArray, 0, size);
         return currentArray;
-    }
-
-    private boolean checkCapacity(int currentCapacity, int size) {
-        return size != currentCapacity;
     }
 
     private void addElementsFromListToArray(List<T> list) {
