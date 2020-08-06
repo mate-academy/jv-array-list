@@ -45,9 +45,6 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        if (size + list.size() >= elementData.length) {
-            elementData = resize();
-        }
         for (int i = 0; i < list.size(); i++) {
             add(list.get(i));
         }
@@ -63,10 +60,11 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void set(T value, int index) {
-        if (index >= size) {
-            throw new ArrayIndexOutOfBoundsException("Wrong index!");
+        if (checkIndex(index)) {
+            elementData[index] = value;
+            return;
         }
-        elementData[index] = value;
+        throw new ArrayIndexOutOfBoundsException("Wrong index!");
     }
 
     @Override
@@ -103,7 +101,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     private int findRemovingElement(T element) {
-        for (int i = 0; i < elementData.length; i++) {
+        for (int i = 0; i < size; i++) {
             if (elementData[i] == element
                     || elementData[i] != null && elementData[i].equals(element)) {
                 return i;
@@ -120,6 +118,6 @@ public class ArrayList<T> implements List<T> {
     }
 
     private boolean checkIndex(int index) {
-        return index < size;
+        return index < size & index >= 0;
     }
 }
