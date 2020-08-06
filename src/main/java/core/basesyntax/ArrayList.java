@@ -12,19 +12,6 @@ public class ArrayList<T> implements List<T> {
         this.size = 0;
     }
 
-    private void checkCapacity() {
-        if (storage.length == size) {
-            storage = resize();
-        }
-    }
-
-    private T[] resize() {
-        int newCapacity = storage.length + (storage.length >> 1) + 1;
-        T[] newStorage = (T[]) new Object[newCapacity];
-        System.arraycopy(storage, 0, newStorage, 0, size);
-        return newStorage;
-    }
-
     @Override
     public void add(T value) {
         checkCapacity();
@@ -95,6 +82,19 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private void checkCapacity() {
+        if (storage.length == size) {
+            storage = resize();
+        }
+    }
+
+    private T[] resize() {
+        int newCapacity = storage.length + (storage.length >> 1) + 1;
+        T[] newStorage = (T[]) new Object[newCapacity];
+        System.arraycopy(storage, 0, newStorage, 0, size);
+        return newStorage;
     }
 
     private void indexCheck(int index) {
