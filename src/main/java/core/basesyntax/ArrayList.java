@@ -16,38 +16,38 @@ public class ArrayList<T> implements List<T> {
         array = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
-    private boolean hasLackOfSpace(int amount) {
-        return array.length <= currentAmount + amount;
+    private void check(int index) {
+        if (index >= currentAmount) {
+            throw new ArrayIndexOutOfBoundsException("No such index exists");
+        }
     }
 
-    private T[] increaseCapacity(int amount) {
-        int biggerLength = Math.max((array.length + (array.length >> 1)), amount);
-        T[] biggerArray = (T[]) new Object[biggerLength];
-        System.arraycopy(array, 0, biggerArray, 0, currentAmount);
-        return biggerArray;
+    private void checkCapacity(int amount) {
+        if (array.length <= currentAmount + amount) {
+            int biggerLength = Math.max((array.length + (array.length >> 1)), amount);
+            T[] biggerArray = (T[]) new Object[biggerLength];
+            System.arraycopy(array, 0, biggerArray, 0, currentAmount);
+            array = biggerArray;
+        }
     }
 
     private int newLength() {
-        return array.length + (array.length >> 1);
+        return array.length >> 1;
     }
 
     @Override
     public void add(T value) {
-        if (hasLackOfSpace(1)) {
-            array = increaseCapacity(newLength());
-        }
+        checkCapacity(newLength());
         array[currentAmount] = value;
         currentAmount++;
     }
 
     @Override
     public void add(T value, int index) {
-        if (index > currentAmount) {
-            throw new ArrayIndexOutOfBoundsException("No such index exists");
+        if (index != currentAmount) {
+            check(index);
         }
-        if (hasLackOfSpace(1)) {
-            array = increaseCapacity(newLength());
-        }
+        checkCapacity(newLength());
         System.arraycopy(array, index, array, index + 1, currentAmount - index);
         currentAmount++;
         array[index] = value;
@@ -55,9 +55,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        while (hasLackOfSpace(list.size())) {
-            array = increaseCapacity(newLength());
-        }
+        checkCapacity(list.size());
         for (int i = 0; i < list.size(); i++) {
             array[currentAmount + i] = list.get(i);
         }
@@ -66,29 +64,23 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index < currentAmount) {
-            return array[index];
-        }
-        throw new ArrayIndexOutOfBoundsException("No such index exists");
+        check(index);
+        return array[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index >= currentAmount) {
-            throw new ArrayIndexOutOfBoundsException("No such index exists");
-        }
+        check(index);
         array[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index < currentAmount) {
-            T removedObject = array[index];
-            currentAmount--;
-            System.arraycopy(array, index + 1, array, index, currentAmount);
-            return removedObject;
-        }
-        throw new ArrayIndexOutOfBoundsException("No such index exists");
+        check(index);
+        T removedObject = array[index];
+        currentAmount--;
+        System.arraycopy(array, index + 1, array, index, currentAmount);
+        return removedObject;
     }
 
     @Override
