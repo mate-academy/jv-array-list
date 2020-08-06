@@ -10,35 +10,36 @@ public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private int capacity = DEFAULT_CAPACITY;
     private T[] storage;
-    private int current = 0;
+    private int currentSize;
 
     public ArrayList() {
         storage = (T[]) new Object[capacity];
+        currentSize = 0;
     }
 
     private T[] resize() {
         capacity = (capacity * 3) / 2 + 1;
         T[] newArray = (T[]) new Object[capacity];
-        System.arraycopy(storage, 0, newArray, 0, current);
+        System.arraycopy(storage, 0, newArray, 0, currentSize);
         return newArray;
     }
 
     @Override
     public void add(T value) {
-        if (capacity == current) {
+        if (capacity == currentSize) {
             storage = resize();
         }
-        storage[current++] = value;
+        storage[currentSize++] = value;
     }
 
     @Override
     public void add(T value, int index) {
-        while (index > capacity) {
-            storage = resize();
+        if (index > capacity && -1 < index) {
+            throw new IndexOutOfBoundsException("Index " + index + " out of bounds of " + capacity);
         }
-        System.arraycopy(storage, index, storage, index + 1, current - index);
+        System.arraycopy(storage, index, storage, index + 1, currentSize - index);
         storage[index] = value;
-        current++;
+        currentSize++;
     }
 
     @Override
@@ -50,7 +51,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index < current) {
+        if (index < currentSize && -1 < index) {
             return (T) storage[index];
         } else {
             throw new ArrayIndexOutOfBoundsException("Index out of bounds");
@@ -59,7 +60,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void set(T value, int index) {
-        if (index < current) {
+        if (index < currentSize && -1 < index) {
             storage[index] = value;
         } else {
             throw new ArrayIndexOutOfBoundsException("Index out of bounds");
@@ -68,35 +69,30 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(int index) {
-        if (index < current) {
+        if (index < currentSize && -1 < index) {
             T toReturn = storage[index];
-            System.arraycopy(storage, index + 1, storage, index, current - (index + 1));
-            current--;
+            System.arraycopy(storage, index + 1, storage, index, currentSize - (index + 1));
+            currentSize--;
             return toReturn;
         } else {
             throw new ArrayIndexOutOfBoundsException("Index out of bounds");
         }
-
     }
 
     @Override
     public T remove(T t) {
-        int index = -1;
-        for (int i = 0; i < current; i++) {
+        for (int i = 0; i < currentSize; i++) {
             if (storage[i] == t
                     || storage[i] != null && storage[i].equals(t)) {
-                index = i;
+                return remove(i);
             }
-        }
-        if (index != -1) {
-            return remove(index);
         }
         throw new NoSuchElementException("No Such Element Found");
     }
 
     @Override
     public int size() {
-        return current;
+        return currentSize;
     }
 
     @Override
