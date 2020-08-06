@@ -27,6 +27,12 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
+    private void checkIndex(int index) {
+        if (index >= size || index < 0) {
+            throw new ArrayIndexOutOfBoundsException("This index is not correct");
+        }
+    }
+
     @Override
     public void add(T value) {
         changeSize();
@@ -37,7 +43,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         if (index > size || index < 0) {
-            throw new ArrayIndexOutOfBoundsException();
+            throw new ArrayIndexOutOfBoundsException("This index is not correct");
         }
         changeSize();
         T[] tmpArray = (T[]) new Object[array.length];
@@ -57,25 +63,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayIndexOutOfBoundsException();
-        }
+        checkIndex(index);
         return array[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayIndexOutOfBoundsException();
-        }
+        checkIndex(index);
         array[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index > size || index < 0) {
-            throw new ArrayIndexOutOfBoundsException();
-        }
+        checkIndex(index);
         T element = array[index];
         System.arraycopy(array, index + 1, array, index, size - index);
         --size;
@@ -89,7 +89,7 @@ public class ArrayList<T> implements List<T> {
                 return remove(i);
             }
         }
-        throw new NoSuchElementException();
+        throw new NoSuchElementException("There is no such element");
     }
 
     @Override
