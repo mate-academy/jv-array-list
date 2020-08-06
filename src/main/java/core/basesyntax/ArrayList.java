@@ -20,26 +20,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (size == values.length) {
-            extend();
-        }
+        extend();
         values[size] = value;
         size++;
     }
 
     @Override
     public void add(T value, int index) {
-        if (index < 0 || index >= values.length) {
-            throw new java.lang.ArrayIndexOutOfBoundsException();
+        if (index < 0 || index > size) {
+            throw new ArrayIndexOutOfBoundsException();
         }
-        if (size == values.length) {
-            extend();
-        }
-        T[] arr = (T[])new Object[values.length];
-        System.arraycopy(values, 0, arr, 0, index);
-        arr[index] = value;
-        System.arraycopy(values, index, arr, index + 1, size - index);
-        values = arr;
+        extend();
+        System.arraycopy(values, index, values, index + 1, size - index);
+        values[index] = value;
         size++;
     }
 
@@ -52,25 +45,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayIndexOutOfBoundsException();
-        }
+        isValid(index);
         return values[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayIndexOutOfBoundsException();
-        }
+        isValid(index);
         values[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index < 0 || index > size) {
-            throw new ArrayIndexOutOfBoundsException();
-        }
+        isValid(index);
         T[] arr = (T[])new Object[values.length];
         System.arraycopy(values, 0, arr, 0, index);
         System.arraycopy(values, index + 1, arr, index, size - 1 - index);
@@ -105,19 +92,18 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private int firstEmptyCell() {
-        for (int i = 0; i < values.length; i++) {
-            if (values[i] == null) {
-                return i;
-            }
+    private void isValid(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayIndexOutOfBoundsException();
         }
-        return -1;
     }
 
     private void extend() {
-        T[] extendedValues = (T[])new Object[(int)Math.ceil(values.length * 2)];
-        System.arraycopy(values, 0, extendedValues, 0, size);
-        values = extendedValues;
+        if (size == values.length) {
+            T[] extendedValues = (T[]) new Object[(int) Math.ceil(values.length * 2)];
+            System.arraycopy(values, 0, extendedValues, 0, size);
+            values = extendedValues;
+        }
     }
 
 }
