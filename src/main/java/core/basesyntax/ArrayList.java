@@ -8,10 +8,10 @@ import java.util.NoSuchElementException;
  */
 public class ArrayList<T> implements List<T> {
 
-    private static int INITIAL_SIZE = 10;
+    private static final int INITIAL_SIZE = 10;
 
     private Object[] array = new Object[INITIAL_SIZE];
-    private int numberOfElements = 0;
+    private int numberOfElements;
 
     @Override
     public void add(T value) {
@@ -32,9 +32,6 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        while (list.size() > array.length - numberOfElements) {
-            resize(array.length * 3 / 2);
-        }
         for (int i = 0; i < list.size(); i++) {
             add(list.get(i));
         }
@@ -67,12 +64,11 @@ public class ArrayList<T> implements List<T> {
         for (int i = 0; i < numberOfElements; i++) {
             if (array[i] == null ? array[i] == t : array[i].equals(t)) {
                 removedElement = array[i];
-                System.arraycopy(array, i + 1, array, i, numberOfElements - 1);
-                numberOfElements--;
+                remove(i);
                 return (T) removedElement;
             }
         }
-        throw new NoSuchElementException();
+        throw new NoSuchElementException("There is no elements with this value");
     }
 
     @Override
@@ -98,12 +94,12 @@ public class ArrayList<T> implements List<T> {
 
     private void exceptionCheck(int index) {
         if (index < 0 || index >= numberOfElements) {
-            throw new ArrayIndexOutOfBoundsException();
+            throw new ArrayIndexOutOfBoundsException("Index is out of bounds");
         }
     }
 
     private void checkWhetherResize() {
-        if (numberOfElements == array.length - 1) {
+        if (numberOfElements == array.length) {
             resize(array.length * 3 / 2);
         }
     }
