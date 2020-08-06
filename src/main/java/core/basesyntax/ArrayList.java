@@ -19,15 +19,6 @@ public class ArrayList<T> implements List<T> {
         elementData = new Object[capacity];
     }
 
-    private void ensureCapacity(int size) {
-        while (size + 1 > elementData.length) {
-            int newCapacity = (elementData.length * 3) / 2 + 1;
-            Object[] newArray = new Object[newCapacity];
-            System.arraycopy(elementData, 0, newArray, 0, size);
-            elementData = newArray;
-        }
-    }
-
     @Override
     public void add(T value) {
         ensureCapacity(size);
@@ -57,12 +48,6 @@ public class ArrayList<T> implements List<T> {
     public T get(int index) {
         checkArrayIndexOutOfBoundsException(index);
         return (T) elementData[index];
-    }
-
-    private void checkArrayIndexOutOfBoundsException(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayIndexOutOfBoundsException("Index is not exists");
-        }
     }
 
     @Override
@@ -98,5 +83,20 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private void ensureCapacity(int size) {
+        while (size + 1 > elementData.length) {
+            int newCapacity = (elementData.length * 3) / 2 + 1;
+            Object[] newArray = new Object[newCapacity];
+            System.arraycopy(elementData, 0, newArray, 0, size);
+            elementData = newArray;
+        }
+    }
+
+    private void checkArrayIndexOutOfBoundsException(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayIndexOutOfBoundsException("Index is not exists");
+        }
     }
 }
