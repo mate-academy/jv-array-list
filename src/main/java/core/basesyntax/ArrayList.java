@@ -10,33 +10,30 @@ public class ArrayList<T> implements List<T> {
     private static final int INITIAL_CAPACITY = 10;
     private Object[] elements;
     private int size;
-    private int index;
 
     public ArrayList() {
         elements = new Object[INITIAL_CAPACITY];
     }
 
     private void growArray() {
-        Object[] newArray = new Object[elements.length + elements.length / 2];
-        System.arraycopy(elements, 0, newArray, 0, elements.length);
-        elements = newArray;
+        if (size == elements.length) {
+            Object[] newArray = new Object[elements.length + elements.length / 2];
+            System.arraycopy(elements, 0, newArray, 0, elements.length);
+            elements = newArray;
+        }
     }
 
     private void checkIndex(int index) {
-        if (index < 0 || index >= this.index) {
-            throw new ArrayIndexOutOfBoundsException();
+        if (index < 0 || index >= size) {
+            throw new ArrayIndexOutOfBoundsException("Index is out of array bounds");
         }
     }
 
     @Override
     public void add(T value) {
-        if (index == elements.length) {
-            growArray();
-        }
-        elements[index] = value;
-        index++;
+        growArray();
+        elements[size] = value;
         size++;
-
     }
 
     @Override
@@ -44,9 +41,8 @@ public class ArrayList<T> implements List<T> {
         if (index == elements.length) {
             growArray();
         }
-        System.arraycopy(elements, index, elements, index + 1, this.index - index);
+        System.arraycopy(elements, index, elements, index + 1, size - index);
         elements[index] = value;
-        this.index++;
         size++;
     }
 
@@ -70,9 +66,8 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void removeAction(int index) {
-        System.arraycopy(elements, index + 1, elements, index, this.index - index);
+        System.arraycopy(elements, index + 1, elements, index, size - index);
         size--;
-        this.index--;
     }
 
     @Override
@@ -85,20 +80,16 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T t) {
-        if (t == null) {
-            size--;
-            this.index--;
-            return null;
-        }
         int index = -1;
         for (int i = 0; i < size; i++) {
-            if (t == elements[i] || t.equals(elements[i])) {
+            if ((t == null && elements[i] == null)
+                    || (t != null) && (t == elements[i] || t.equals(elements[i]))) {
                 index = i;
                 break;
             }
         }
         if (index == -1) {
-            throw new NoSuchElementException();
+            throw new NoSuchElementException("No such element in array");
         }
         T result = (T) elements[index];
         removeAction(index);
