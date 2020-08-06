@@ -59,6 +59,7 @@ public class ArrayList<T> implements List<T> {
         checkIndexBounds(index);
         T removed = (T) list[index];
         trimArray(index);
+        list[size] = null;
         return removed;
     }
 
@@ -93,7 +94,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void trimArray(int index) {
-        System.arraycopy(list, index + 1, list, index, list.length - size);
+        System.arraycopy(list, index + 1, list, index, size - index - 1);
         size--;
     }
 
