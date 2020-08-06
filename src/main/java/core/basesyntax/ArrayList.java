@@ -48,9 +48,8 @@ public class ArrayList<T> implements List<T> {
         if (size == index) {
             add(value);
             return;
-        } else {
-            checkIndex(index);
         }
+        checkIndex(index);
         ensureCapacity(size + 1);
         System.arraycopy(elementData, index, elementData, index + 1, size - index);
         elementData[index] = value;
@@ -108,24 +107,12 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    @Override
-    public boolean isNotEmpty() {
-        return size > 0;
-    }
-
     private void ensureCapacity(int minCapacity) {
         if (minCapacity > elementData.length) {
-            grow(minCapacity);
+            int oldCapacity = elementData.length;
+            int newCapacity = oldCapacity + (oldCapacity / 2);
+            elementData = Arrays.copyOf(elementData, newCapacity);
         }
-    }
-
-    private void grow(int minCapacity) {
-        int oldCapacity = elementData.length;
-        int newCapacity = oldCapacity + (oldCapacity / 2);
-        if (newCapacity - minCapacity < 0) {
-            newCapacity = minCapacity;
-        }
-        elementData = Arrays.copyOf(elementData, newCapacity);
     }
 
     private void checkIndex(int index) {
