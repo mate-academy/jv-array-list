@@ -9,13 +9,11 @@ import java.util.NoSuchElementException;
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private int counter;
-    private int currentCapacity;
     private T[] values;
 
     public ArrayList() {
         values = (T[]) new Object[DEFAULT_CAPACITY];
         counter = 0;
-        currentCapacity = DEFAULT_CAPACITY;
     }
 
     @Override
@@ -59,19 +57,15 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         checkIndex(index);
         T removedItem = values[index];
-        System.arraycopy(values,index + 1, values, index, counter - index);
+        System.arraycopy(values,index + 1, values, index, counter - index - 1);
         counter--;
         return removedItem;
     }
 
     @Override
     public T remove(T t) {
-        if (t == null) {
-            counter--;
-            return null;
-        }
         for (int i = 0; i < counter; i++) {
-            if (values[i] == t || t != null && values[i].equals(t)) {
+            if (values[i] == t || values[i] != null && values[i].equals(t)) {
                 return remove(i);
             }
         }
@@ -89,16 +83,15 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void checkCapacity() {
-        if (counter >= currentCapacity) {
-            currentCapacity = counter * 3 / 2 + 1;
-            Object[] newValues = new Object[currentCapacity];
+        if (counter >= values.length) {
+            Object[] newValues = new Object[values.length * 3 / 2 + 1];
             System.arraycopy(values, 0, newValues, 0, counter);
             values = (T[]) newValues;
         }
     }
 
     private void checkIndex(int index) {
-        if (index >= counter) {
+        if (index >= counter || index < 0) {
             throw new ArrayIndexOutOfBoundsException("This index is out of bounds.");
         }
     }
