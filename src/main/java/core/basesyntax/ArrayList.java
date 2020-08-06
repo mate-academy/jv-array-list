@@ -64,7 +64,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T t) {
         int indexObjectDelete = -1;
-        for (int i = 0; i < items.length; i++) {
+        for (int i = 0; i < size; i++) {
             if (t != null ? t.equals(items[i]) : items[i] == null) {
                 indexObjectDelete = i;
             }
@@ -72,12 +72,7 @@ public class ArrayList<T> implements List<T> {
         if (indexObjectDelete == -1) {
             throw new NoSuchElementException("No element with this value exists");
         }
-        T item = items[indexObjectDelete];
-        for (int i = indexObjectDelete; i < size - 1; i++) {
-            items[i] = items[i + 1];
-        }
-        size -= 1;
-        return item;
+        return remove(indexObjectDelete);
     }
 
     @Override
