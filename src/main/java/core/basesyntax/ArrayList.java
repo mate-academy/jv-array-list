@@ -48,7 +48,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (!(index >= arraySize || index < 0)) {
+        if (isIndexCorrect(index)) {
             return (T) values[index];
         }
         throw new ArrayIndexOutOfBoundsException("we have not this place in our list");
@@ -56,7 +56,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void set(T value, int index) {
-        if (!(index < arraySize && index >= 0)) {
+        if (!isIndexCorrect(index)) {
             throw new ArrayIndexOutOfBoundsException("we have not this place in our list");
         }
         values[index] = value;
@@ -64,7 +64,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(int index) {
-        if (index < arraySize && index >= 0) {
+        if (isIndexCorrect(index)) {
             T removed = (T) values[index];
             int numMoved = arraySize - index - 1;
             System.arraycopy(values, index + 1, values, index, numMoved);
@@ -77,7 +77,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T t) {
         for (int i = 0; i < values.length; i++) {
-            if ((T) values[i] == t || t != null && t.equals((T) values[i])) {
+            if (values[i] == t || t != null && t.equals(values[i])) {
                 int numMoved = arraySize - i - 1;
                 System.arraycopy(values, i + 1, values, i, numMoved);
                 values[--arraySize] = null;
@@ -107,5 +107,9 @@ public class ArrayList<T> implements List<T> {
         Object[] newArray = (T[]) new Object[newCapacity];
         System.arraycopy(values, 0, newArray, 0, arraySize);
         values = newArray;
+    }
+
+    public boolean isIndexCorrect(int index) {
+        return index < arraySize && index >= 0;
     }
 }
