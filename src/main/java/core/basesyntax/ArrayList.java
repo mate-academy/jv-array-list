@@ -1,22 +1,24 @@
 package core.basesyntax;
 
+import java.util.NoSuchElementException;
+
 /**
  * <p>Реалізувати свій ArrayList який імплементує інтерфейс List. Дотриматися основних вимог щодо
  * реалізації ArrayList (default capacity, newCapacity...)</p>
  */
 public class ArrayList<T> implements List<T> {
-    public int arraySize;
-    public Object[] values;
-    public int flag;
+    public static final int DEFAULT_CAPACITY = 10;
+    private int arraySize;
+    private Object[] values;
 
-    private ArrayList() {
+    public ArrayList() {
         arraySize = 0;
-        values = (T[]) new Object[10];
+        values = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
     @Override
     public void add(T value) {
-        if (isEnoughSpace() == false) {
+        if (isNotEnoughSpace()) {
             resize();
         }
         values[arraySize] = value;
@@ -25,9 +27,12 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-      if(isEnoughSpace() == false){
-          resize();
-      }
+        if (index > arraySize || index < 0) {
+            throw new ArrayIndexOutOfBoundsException("wrong index");
+        }
+        if (isNotEnoughSpace()) {
+            resize();
+        }
         System.arraycopy(values, index, values, index + 1, arraySize - index);
         values[index] = value;
         arraySize++;
@@ -35,72 +40,72 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-   if(isEnoughSpaceForList(list.size())==false){
-        resize();
-        continue;
-   }
-      for(int i=0; i<list.size(); i++){
-          values[arraySize] = get(i);
-          arraySize++;
-      }
+
+        for (int i = 0; i < list.size(); i++) {
+            add(list.get(i));
+        }
     }
 
     @Override
     public T get(int index) {
-        if (index >= values.length) {
-            return null;
+        if (!(index >= arraySize || index < 0)) {
+            return (T) values[index];
         }
-        return (T) values[index];
+        throw new ArrayIndexOutOfBoundsException("we have not this place in our list");
     }
 
     @Override
     public void set(T value, int index) {
-         if(index<values.length){
-             values[index] = value;
-         }
+        if (!(index < arraySize && index >= 0)) {
+            throw new ArrayIndexOutOfBoundsException("we have not this place in our list");
+        }
+        values[index] = value;
     }
 
     @Override
     public T remove(int index) {
-
-        return null;
+        if (index < arraySize && index >= 0) {
+            T removed = (T) values[index];
+            int numMoved = arraySize - index - 1;
+            System.arraycopy(values, index + 1, values, index, numMoved);
+            values[--arraySize] = null;
+            return removed;
+        }
+        throw new ArrayIndexOutOfBoundsException("wrong index");
     }
 
     @Override
     public T remove(T t) {
-        return null;
+        for (int i = 0; i < values.length; i++) {
+            if ((T) values[i] == t || t != null && t.equals((T) values[i])) {
+                int numMoved = arraySize - i - 1;
+                System.arraycopy(values, i + 1, values, i, numMoved);
+                values[--arraySize] = null;
+                return t;
+            }
+        }
+        throw new NoSuchElementException();
     }
 
     @Override
     public int size() {
-
-        return values.length;
+        return arraySize;
     }
 
     @Override
     public boolean isEmpty() {
-
-        return values.length == 0;
+        return arraySize == 0;
     }
 
-
-    public boolean isEnoughSpace() {
-       return  (arraySize + 1 < values.length);
+    public boolean isNotEnoughSpace() {
+        return (arraySize == values.length);
     }
-
-    public boolean isEnoughSpaceForList(int listLength) {
-        return (listLength <= values.length - arraySize);
-
-    }
-
 
     public void resize() {
-        Object[] oldValues = values;
         int oldCapacity = values.length;
-        int newCapacity = (oldCapacity * 3) / 2 + 1;
-        values = (T[]) new Object[newCapacity];
-        arraySize = newCapacity;
-        // oldData - временное хранилище текущего массива с данными
-        System.arraycopy(oldValues, 0, values, 0, arraySize);
+        int newCapacity = (oldCapacity * 3) / 2;
+        Object[] newArray = (T[]) new Object[newCapacity];
+        System.arraycopy(values, 0, newArray, 0, arraySize);
+        values = newArray;
     }
 }
