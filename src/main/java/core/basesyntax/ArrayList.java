@@ -9,6 +9,7 @@ public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private T[] elements;
     private int size;
+    private int index;
 
     public ArrayList() {
         elements = (T[]) new Object[DEFAULT_CAPACITY];
@@ -28,6 +29,7 @@ public class ArrayList<T> implements List<T> {
         System.arraycopy(elements, index, elements, index + 1, size - index);
         elements[index] = value;
         size++;
+        this.index++;
     }
 
     @Override
@@ -49,8 +51,9 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         checkIndex(index);
         T element = elements[index];
-        System.arraycopy(elements, index + 1, elements, index, size - index);
+        System.arraycopy(elements, index + 1, elements, index, this.index - index);
         size--;
+        this.index--;
         return element;
     }
 
@@ -70,7 +73,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void checkIndex(int index) {
-        if (index < 0 || index >= size) {
+        if (index < 0 || index >= this.index) {
             throw new ArrayIndexOutOfBoundsException();
         }
     }
