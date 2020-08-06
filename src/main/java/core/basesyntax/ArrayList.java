@@ -7,24 +7,21 @@ public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private T[] elementData;
     private int size;
-    private int capacity;
 
     public ArrayList() {
         elementData = (T[]) new Object[DEFAULT_CAPACITY];
-        capacity = DEFAULT_CAPACITY;
     }
 
     public ArrayList(int capacity) {
-        this.capacity = capacity;
         elementData = (T[]) new Object[capacity];
     }
 
-    public void ensureCapacity(int minCapacity) {
-        if (minCapacity > capacity) {
-            capacity = (minCapacity * 3) / 2 + 1;
+    private void ensureCapacity(int minCapacity) {
+        if (minCapacity > elementData.length) {
+            int newCapacity = (minCapacity * 3) / 2 + 1;
             Object[] oldData = elementData;
-            elementData = (T[]) new Object[capacity];
-            System.arraycopy(oldData, 0, elementData, 0, size - 1);
+            elementData = (T[]) new Object[newCapacity];
+            System.arraycopy(oldData, 0, elementData, 0, size);
         }
     }
 
@@ -37,8 +34,8 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
+        ensureCapacity(size + 1);
         size++;
-        ensureCapacity(size);
         elementData[size - 1] = value;
     }
 
@@ -48,17 +45,18 @@ public class ArrayList<T> implements List<T> {
             add(value);
             return;
         }
+
         checkIndex(index);
-        size++;
         ensureCapacity(size);
-        System.arraycopy(elementData, index, elementData, index + 1, size - index - 1);
+        System.arraycopy(elementData, index, elementData, index + 1, size - index);
+        size++;
         elementData[index] = value;
     }
 
     @Override
     public void addAll(List<T> list) {
+        ensureCapacity(size + list.size());
         size += list.size();
-        ensureCapacity(size);
         T[] array = (T[]) new Object[list.size()];
         for (int i = 0; i < array.length; i++) {
             array[i] = list.get(i);
@@ -94,7 +92,7 @@ public class ArrayList<T> implements List<T> {
                 return remove(i);
             }
         }
-        throw new NoSuchElementException();
+        throw new NoSuchElementException("There is no such element in the ArrayList");
     }
 
     @Override
