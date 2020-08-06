@@ -91,8 +91,8 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private void checkConditions(int index, int check) {
-        if (index < 0 || index >= check) {
+    private void checkConditions(int index, int checkSize) {
+        if (index < 0 || index >= checkSize) {
             throw new ArrayIndexOutOfBoundsException();
         }
     }
