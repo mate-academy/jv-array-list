@@ -28,16 +28,14 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayIndexOutOfBoundsException();
         }
         checkAndIncreaseCapacity();
-        shiftToTheRightFrom(index);
+        System.arraycopy(elements, index, elements, index + 1,
+                elements.length - index - 1);
         nextEmptyPosition++;
         elements[index] = value;
     }
 
     @Override
     public void addAll(List<T> list) {
-        while (list.size() > elements.length - nextEmptyPosition - 1) {
-            increaseCapacity();
-        }
         for (int i = 0; i < list.size(); i++) {
             add(list.get(i));
         }
@@ -59,22 +57,17 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         checkIndexInRange(index);
         T removedElement = elements[index];
-        if (index != nextEmptyPosition) {
-            shiftToTheLeftFrom(index);
-        }
+        System.arraycopy(elements, index + 1, elements, index,
+                elements.length - index - 1);
         nextEmptyPosition--;
         return removedElement;
     }
 
     @Override
     public T remove(T t) {
-        T removedElement;
         for (int i = 0; i < nextEmptyPosition; i++) {
             if (elements[i] == null ? elements[i] == t : elements[i].equals(t)) {
-                removedElement = elements[i];
-                shiftToTheLeftFrom(i);
-                nextEmptyPosition--;
-                return removedElement;
+                return this.remove(i);
             }
         }
         throw new NoSuchElementException();
@@ -94,16 +87,6 @@ public class ArrayList<T> implements List<T> {
         T[] temp = elements;
         elements = (T[]) new Object[elements.length + (elements.length >> 1)];
         System.arraycopy(temp, 0, elements, 0, temp.length);
-    }
-
-    private void shiftToTheLeftFrom(int i) {
-        System.arraycopy(elements, i + 1, elements,
-                i, elements.length - i - 1);
-    }
-
-    private void shiftToTheRightFrom(int index) {
-        System.arraycopy(elements, index, elements, index + 1,
-                elements.length - index - 1);
     }
 
     private void checkAndIncreaseCapacity() {
