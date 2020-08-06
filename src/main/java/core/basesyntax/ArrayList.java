@@ -32,7 +32,7 @@ public class ArrayList<T> implements List<T> {
         }
         ensureCapacity();
         // TODO This
-        System.arraycopy(values, index, values, index + 1, values.length);
+        System.arraycopy(values, index, values, index + 1, values.length - index - 1);
         values[index] = value;
         currentSize++;
     }
@@ -46,7 +46,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index > currentSize - 1 || index < 0) {
+        if (index >= currentSize || index < 0) {
             throw new ArrayIndexOutOfBoundsException("List has no such index");
         }
         return values[index];
@@ -54,7 +54,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void set(T value, int index) {
-        if (index > currentSize - 1 || index < 0) {
+        if (index >= currentSize || index < 0) {
             throw new ArrayIndexOutOfBoundsException("List has no such index");
         }
         values[index] = value;
