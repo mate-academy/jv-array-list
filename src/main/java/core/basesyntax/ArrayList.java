@@ -25,7 +25,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         checkIndexToAdd(index);
-        resize();
+        checkSize();
         System.arraycopy(elementData, index, elementData, index + 1, size - index);
         elementData[index] = value;
         size++;
@@ -81,7 +81,7 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void resize() {
+    private void checkSize() {
         if (size == elementData.length) {
             Object[] newArray = new Object[elementData.length + (elementData.length >> 1)];
             System.arraycopy(elementData, 0, newArray, 0, size);
@@ -91,13 +91,13 @@ public class ArrayList<T> implements List<T> {
 
     private void checkIndexToAdd(int index) {
         if (index > size || index < 0) {
-            throw new ArrayIndexOutOfBoundsException();
+            throw new ArrayIndexOutOfBoundsException("Index exceeds the length of the array!");
         }
     }
 
     private void checkIndex(int index) {
         if (index >= size || index < 0) {
-            throw new ArrayIndexOutOfBoundsException();
+            throw new ArrayIndexOutOfBoundsException("Index exceeds the length of the array!");
         }
     }
 }
