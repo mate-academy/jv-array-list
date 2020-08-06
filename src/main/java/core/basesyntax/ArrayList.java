@@ -29,15 +29,6 @@ public class ArrayList<T> implements List<T> {
         currentSize++;
     }
 
-    private void checkSize() {
-        if (currentSize >= elementData.length) {
-            int newSize = elementData.length * 3 / 2;
-            T[] resultArray = (T[]) new Object[newSize];
-            System.arraycopy(elementData, 0, resultArray, 0, elementData.length);
-            elementData = resultArray;
-        }
-    }
-
     @Override
     public void addAll(List<T> list) {
         for (int i = 0; i < list.size(); i++) {
@@ -49,12 +40,6 @@ public class ArrayList<T> implements List<T> {
     public T get(int index) {
         isIndexExist(index);
         return elementData[index];
-    }
-
-    private void isIndexExist(int index) {
-        if (index < 0 || index >= currentSize) {
-            throw new ArrayIndexOutOfBoundsException("Given index does not exist in this list!");
-        }
     }
 
     @Override
@@ -93,5 +78,20 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return currentSize == 0;
+    }
+
+    private void checkSize() {
+        if (currentSize >= elementData.length) {
+            int newSize = elementData.length * 3 / 2;
+            T[] resultArray = (T[]) new Object[newSize];
+            System.arraycopy(elementData, 0, resultArray, 0, elementData.length);
+            elementData = resultArray;
+        }
+    }
+
+    private void isIndexExist(int index) {
+        if (index < 0 || index >= currentSize) {
+            throw new ArrayIndexOutOfBoundsException("Given index does not exist in this list!");
+        }
     }
 }
