@@ -10,48 +10,52 @@ public class ArrayList<T> implements List<T> {
 
     private static final int CAPACITY = 10;
     private T[] elementData;
-    private int size = 0;
-    private int currentCapacity;
+    private int size;
 
     public ArrayList() {
         elementData = (T[]) new Object[CAPACITY];
-        currentCapacity = CAPACITY;
+        size = 0;
     }
 
     @Override
     public void add(T value) {
-        if (size == currentCapacity) {
-            elementData = ensureCapacity();
+        if (size == elementData.length) {
+            elementData = resize();
         }
         elementData[size++] = value;
     }
 
     @Override
     public void add(T value, int index) {
-        if (size == currentCapacity) {
-            elementData = ensureCapacity();
+        if (index == size) {
+            add(value);
+            return;
         }
-        if (index > size) {
+        if (index > size || index < 0) {
             throw new ArrayIndexOutOfBoundsException("Wrong index!");
         }
-        if (index < size) {
-            System.arraycopy(elementData, index, elementData, index + 1, currentCapacity - size);
+        if (size == elementData.length) {
+            elementData = resize();
         }
+        System.arraycopy(elementData, index, elementData, index + 1,
+                size - index);
         elementData[index] = value;
         size++;
     }
 
     @Override
     public void addAll(List<T> list) {
-        if (size + list.size() >= currentCapacity) {
-            elementData = ensureCapacity();
+        if (size + list.size() >= elementData.length) {
+            elementData = resize();
         }
-        addElementsFromListToArray(list);
+        for (int i = 0; i < list.size(); i++) {
+            add(list.get(i));
+        }
     }
 
     @Override
     public T get(int index) {
-        if (index < size) {
+        if (checkIndex(index)) {
             return elementData[index];
         }
         throw new ArrayIndexOutOfBoundsException("Wrong parameter!");
@@ -60,17 +64,17 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void set(T value, int index) {
         if (index >= size) {
-            throw new ArrayIndexOutOfBoundsException();
+            throw new ArrayIndexOutOfBoundsException("Wrong index!");
         }
         elementData[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index < size) {
+        if (checkIndex(index)) {
             return editArrayAndReturnObj(index);
         }
-        throw new ArrayIndexOutOfBoundsException();
+        throw new ArrayIndexOutOfBoundsException("Wrong index!");
     }
 
     @Override
@@ -79,7 +83,7 @@ public class ArrayList<T> implements List<T> {
         if (index != -1) {
             return editArrayAndReturnObj(index);
         }
-        throw new NoSuchElementException();
+        throw new NoSuchElementException("Element not found in collection!");
     }
 
     @Override
@@ -92,18 +96,10 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private T[] ensureCapacity() {
-        currentCapacity = (currentCapacity * 3) / 2 + 1;
-        T[] currentArray = (T[]) new Object[currentCapacity];
+    private T[] resize() {
+        T[] currentArray = (T[]) new Object[(elementData.length * 3) / 2 + 1];
         System.arraycopy(elementData, 0, currentArray, 0, size);
         return currentArray;
-    }
-
-    private void addElementsFromListToArray(List<T> list) {
-        for (int i = 0; i < list.size(); i++) {
-            elementData[size] = list.get(i);
-            size++;
-        }
     }
 
     private int findRemovingElement(T element) {
@@ -121,5 +117,9 @@ public class ArrayList<T> implements List<T> {
         System.arraycopy(elementData, index + 1, elementData, index, size - (index + 1));
         size--;
         return element;
+    }
+
+    private boolean checkIndex(int index) {
+        return index < size;
     }
 }
