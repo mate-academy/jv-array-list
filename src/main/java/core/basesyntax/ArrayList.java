@@ -8,8 +8,8 @@ public class ArrayList<T> implements List<T> {
     private int size;
 
     public ArrayList() {
-        this.storage = (T[]) new Object[DEFAULT_CAPACITY];
-        this.size = 0;
+        storage = (T[]) new Object[DEFAULT_CAPACITY];
+        size = 0;
     }
 
     @Override
@@ -23,9 +23,7 @@ public class ArrayList<T> implements List<T> {
         if (index == size) {
             add(value);
         } else {
-            if (index < 0 || index > size) {
-                throw new ArrayIndexOutOfBoundsException("Element with such index doesn't exist!");
-            }
+            indexCheck(index);
             checkCapacity();
             System.arraycopy(storage, index, storage, index + 1, size - index);
             storage[index] = value;
@@ -35,9 +33,6 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        if (list.size() + size > storage.length) {
-            storage = resize();
-        }
         for (int i = 0; i < list.size(); i++) {
             add(list.get(i));
         }
