@@ -7,12 +7,11 @@ package core.basesyntax;
 public class ArrayList<T> implements List<T> {
 
     private static final int DEFAULT_CAPACITY = 10;
-    private T[] elements;
+    private Object[] elements;
     private int size;
-    private int index;
 
     public ArrayList() {
-        elements = (T[]) new Object[DEFAULT_CAPACITY];
+        elements = new Object[DEFAULT_CAPACITY];
         size = 0;
     }
 
@@ -29,7 +28,6 @@ public class ArrayList<T> implements List<T> {
         System.arraycopy(elements, index, elements, index + 1, size - index);
         elements[index] = value;
         size++;
-        this.index++;
     }
 
     @Override
@@ -50,10 +48,9 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
-        T element = elements[index];
-        System.arraycopy(elements, index + 1, elements, index, this.index - index);
+        T element = (T) elements[index];
+        System.arraycopy(elements, index + 1, elements, index, size - index);
         size--;
-        this.index--;
         return element;
     }
 
@@ -73,15 +70,14 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void checkIndex(int index) {
-        if (index < 0 || index >= this.index) {
-            throw new ArrayIndexOutOfBoundsException();
+        if (index < 0 || index >= size) {
+            throw new ArrayIndexOutOfBoundsException("This index is out of list size");
         }
     }
 
-    @SuppressWarnings("checked")
     private void resize() {
         Object[] newArray = new Object[elements.length + (elements.length / 2 + 1)];
         System.arraycopy(elements, 0, newArray, 0, elements.length);
-        elements = (T[]) newArray;
+        elements = newArray;
     }
 }
