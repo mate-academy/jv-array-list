@@ -2,7 +2,6 @@ package core.basesyntax;
 
 import java.util.Arrays;
 import java.util.NoSuchElementException;
-import java.util.Objects;
 
 /**
  * <p>Реалізувати свій ArrayList який імплементує інтерфейс List. Дотриматися основних вимог щодо
@@ -19,22 +18,17 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (array.length == size) {
-            resize();
-        }
+        resize();
         array[size++] = value;
     }
 
     @Override
     public void add(T value, int index) {
-        if (array.length > size) {
-            resize();
-            System.arraycopy(array, index, array, index + 1, size - index);
-            array[index] = value;
-            size++;
-        } else {
-            throw new ArrayIndexOutOfBoundsException();
-        }
+        checkIndexAdd(index);
+        resize();
+        System.arraycopy(array, index, array, index + 1, size - index);
+        array[index] = value;
+        size++;
     }
 
     @Override
@@ -68,11 +62,11 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T t) {
         for (int i = 0; i < size; i++) {
-            if (Objects.equals(array[i], t)) {
+            if (t == null ? t == array[i] : t.equals(array[i])) {
                 return remove(i);
             }
         }
-        throw new NoSuchElementException();
+        throw new NoSuchElementException("The input element don't exist here!");
     }
 
     @Override
@@ -86,12 +80,20 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void checkIndex(int index) {
-        if (index < 0 || index > size - 1) {
-            throw new ArrayIndexOutOfBoundsException("IndexOutOfBoundsException!");
+        if (index < 0 || index >= size) {
+            throw new ArrayIndexOutOfBoundsException("Index out of bounds!");
         }
     }
 
     private void resize() {
-        array = Arrays.copyOf(array, (array.length + (array.length >> 1)));
+        if (size == array.length) {
+            array = Arrays.copyOf(array, (array.length + (array.length >> 1)));
+        }
+    }
+
+    private void checkIndexAdd(int index) {
+        if (index < 0 || index > size) {
+            throw new ArrayIndexOutOfBoundsException("The index is bigger than array length!");
+        }
     }
 }
