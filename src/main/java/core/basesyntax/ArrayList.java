@@ -10,7 +10,7 @@ public class ArrayList<T> implements List<T> {
     private T[] elements;
     private int size;
 
-    ArrayList() {
+    public ArrayList() {
         elements = (T[]) new Object[DEFAULT_CAPACITY];
         size = 0;
     }
