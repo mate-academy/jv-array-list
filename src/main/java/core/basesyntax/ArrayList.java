@@ -37,14 +37,8 @@ public class ArrayList<T> implements List<T> {
         }
         if (size == array.length) {
             newArray = resize((int) (newArray.length * 1.5));
-        }
-        if (index == 0) {
-            System.arraycopy(array, 0, newArray, 1, array.length - 1);
-            newArray[0] = value;
-            array = newArray;
-            size++;
         } else {
-            System.arraycopy(array, 0, newArray, 0, index);
+            System.arraycopy(array, 0, newArray, 0, index + 1);
             newArray[index] = value;
             System.arraycopy(array, index, newArray, index + 1, size - index);
             array = newArray;
