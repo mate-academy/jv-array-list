@@ -19,18 +19,17 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (sizeList >= myList.length) {
-            resizeList();
-        }
+        checkResizeList();
         myList[sizeList] = value;
         sizeList += 1;
     }
 
     @Override
     public void add(T value, int index) {
-        if (sizeList >= myList.length) {
-            resizeList();
+        if (index < 0) {
+            throw new ArrayIndexOutOfBoundsException();
         }
+        checkResizeList();
         System.arraycopy(myList, index, myList, index + 1, sizeList - index);
         myList[index] = value;
         sizeList += 1;
@@ -91,10 +90,12 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    public void resizeList() {
-        final T[] tmpList = myList;
+    public void checkResizeList() {
+        if (sizeList >= myList.length) {
+            final T[] tmpList = myList;
 
-        myList = (T[]) new Object[(sizeList * 3) / 2 + 1];
-        System.arraycopy(tmpList, 0, myList, 0, tmpList.length);
+            myList = (T[]) new Object[(sizeList * 3) / 2 + 1];
+            System.arraycopy(tmpList, 0, myList, 0, tmpList.length);
+        }
     }
 }
