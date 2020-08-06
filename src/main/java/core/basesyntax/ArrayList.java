@@ -8,6 +8,10 @@ import java.util.NoSuchElementException;
  */
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
+    private static final String OUT_OF_BOUNDS_EXCEPTION_MESSAGE
+            = "Index is out of this arrays size";
+    private static final String NO_SUCH_ELEMENT_EXCEPTION_MESSAGE
+            = "This elements isn't in this array";
     private int nextEmptyPosition;
     private T[] elements;
 
@@ -25,7 +29,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         if (index < 0 || index > nextEmptyPosition) {
-            throw new ArrayIndexOutOfBoundsException();
+            throw new ArrayIndexOutOfBoundsException(OUT_OF_BOUNDS_EXCEPTION_MESSAGE);
         }
         checkAndIncreaseCapacity();
         System.arraycopy(elements, index, elements, index + 1,
@@ -70,7 +74,7 @@ public class ArrayList<T> implements List<T> {
                 return this.remove(i);
             }
         }
-        throw new NoSuchElementException();
+        throw new NoSuchElementException(NO_SUCH_ELEMENT_EXCEPTION_MESSAGE);
     }
 
     @Override
@@ -97,7 +101,7 @@ public class ArrayList<T> implements List<T> {
 
     private void checkIndexInRange(int index) {
         if (index < 0 || index >= nextEmptyPosition) {
-            throw new ArrayIndexOutOfBoundsException();
+            throw new ArrayIndexOutOfBoundsException(OUT_OF_BOUNDS_EXCEPTION_MESSAGE);
         }
     }
 }
