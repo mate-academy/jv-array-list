@@ -11,7 +11,7 @@ import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
 
-    private final int DEFAULT_CAPACITY = 10;
+    private static final int DEFAULT_CAPACITY = 10;
     private Object[] result;
     private int count;
 
@@ -50,7 +50,7 @@ public class ArrayList<T> implements List<T> {
             result = Arrays.copyOf(result, (result.length * 3) / 2);
         }
         int i;
-        for(i = 0; i < list.size(); i++) {
+        for (i = 0; i < list.size(); i++) {
             result[count++] = list.get(i);
         }
     }
@@ -98,7 +98,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     public void indexCheck(int index) {
-        if (index == count || index < 0) {
+        if (index >= count || index < 0) {
             throw new ArrayIndexOutOfBoundsException();
         }
     }
