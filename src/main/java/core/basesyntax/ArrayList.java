@@ -30,7 +30,7 @@ public class ArrayList<T> implements List<T> {
 
     public void checkingIndex(int index) {
         if (index >= size || index < 0) {
-            throw new ArrayIndexOutOfBoundsException();
+            throw new ArrayIndexOutOfBoundsException("Out of bounds search index");
         }
     }
 
