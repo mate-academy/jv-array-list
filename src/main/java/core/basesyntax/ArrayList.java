@@ -25,7 +25,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         if (index > size) {
-            throw new ArrayIndexOutOfBoundsException();
+            throw new ArrayIndexOutOfBoundsException(
+                    String.format("Index %s out of bounds for length %s", index, size));
         }
         if (size >= elements.length) {
             increaseCapacity();
@@ -44,24 +45,22 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index >= size) {
-            throw new ArrayIndexOutOfBoundsException();
-        }
+        indexCheck(index);
         return (T) elements[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index >= size) {
-            throw new ArrayIndexOutOfBoundsException();
-        }
+        indexCheck(index);
         elements[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        T value = (T) elements[index];
-        System.arraycopy(elements, index + 1, elements, index, size - index);
+        indexCheck(index);
+        final T value = (T) elements[index];
+        System.arraycopy(elements, index + 1, elements, index, size - index - 1);
+        elements[size - 1] = null;
         size--;
         return value;
     }
@@ -73,7 +72,8 @@ public class ArrayList<T> implements List<T> {
                 return remove(i);
             }
         }
-        throw new java.util.NoSuchElementException();
+        throw new java.util.NoSuchElementException(
+                String.format("Element \"%s\" is't present in the list", t));
     }
 
     @Override
@@ -90,5 +90,12 @@ public class ArrayList<T> implements List<T> {
         Object[] newElements = new Object[elements.length + elements.length / 2];
         System.arraycopy(elements, 0, newElements, 0, elements.length);
         elements = newElements;
+    }
+
+    private void indexCheck(int index) {
+        if (index >= size || index < 0) {
+            throw new ArrayIndexOutOfBoundsException(
+                    String.format("Index %s out of bounds for length %s", index, size));
+        }
     }
 }
