@@ -29,7 +29,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         if (index < 0 || index > nextEmptyPosition) {
-            throw new ArrayIndexOutOfBoundsException(OUT_OF_BOUNDS_EXCEPTION_MESSAGE);
+            throw new ArrayIndexOutOfBoundsException(OUT_OF_BOUNDS_EXCEPTION_MESSAGE
+                    + " Index: " + index + " Array size: " + nextEmptyPosition);
         }
         checkAndIncreaseCapacity();
         System.arraycopy(elements, index, elements, index + 1,
@@ -101,7 +102,8 @@ public class ArrayList<T> implements List<T> {
 
     private void checkIndexInRange(int index) {
         if (index < 0 || index >= nextEmptyPosition) {
-            throw new ArrayIndexOutOfBoundsException(OUT_OF_BOUNDS_EXCEPTION_MESSAGE);
+            throw new ArrayIndexOutOfBoundsException(OUT_OF_BOUNDS_EXCEPTION_MESSAGE
+                    + " Index: " + index + " Array size: " + nextEmptyPosition);
         }
     }
 }
