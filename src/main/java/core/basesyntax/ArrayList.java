@@ -18,7 +18,6 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-
         if (arrayList.length == mySize) {
             makeBigger(mySize * 3 / 2);
         }
@@ -70,7 +69,6 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(int index) {
-
         if (index < 0 || index > mySize - 1) {
             throw new ArrayIndexOutOfBoundsException();
         }
@@ -85,7 +83,7 @@ public class ArrayList<T> implements List<T> {
         int i;
         for (i = 0; i < mySize; i++) {
             T result;
-            if (t == arrayList[i] || t != null && arrayList[i].equals(t)) {
+            if (t == arrayList[i] || arrayList[i] != null && arrayList[i].equals(t)) {
                 result = arrayList[i];
                 remove(i);
                 return result;
@@ -107,7 +105,7 @@ public class ArrayList<T> implements List<T> {
         return mySize == 0;
     }
 
-    public void makeBigger(int size) {
+    private void makeBigger(int size) {
         T[] tempArray = (T[]) new Object[size];
         System.arraycopy(arrayList, 0, tempArray, 0, mySize);
         arrayList = tempArray;
