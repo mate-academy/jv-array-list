@@ -92,10 +92,11 @@ public class ArrayList<T> implements List<T> {
         elements = newElements;
     }
 
-    private void indexCheck(int index) {
+    private boolean indexCheck(int index) {
         if (index >= size || index < 0) {
             throw new ArrayIndexOutOfBoundsException(
                     String.format("Index %s out of bounds for length %s", index, size));
         }
+        return true;
     }
 }
