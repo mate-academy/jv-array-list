@@ -15,20 +15,6 @@ public class ArrayList<T> implements List<T> {
         elements = new Object[INITIAL_CAPACITY];
     }
 
-    private void growArray() {
-        if (size == elements.length) {
-            Object[] newArray = new Object[elements.length + elements.length / 2];
-            System.arraycopy(elements, 0, newArray, 0, elements.length);
-            elements = newArray;
-        }
-    }
-
-    private void checkIndex(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayIndexOutOfBoundsException("Index is out of array bounds");
-        }
-    }
-
     @Override
     public void add(T value) {
         growArray();
@@ -65,11 +51,6 @@ public class ArrayList<T> implements List<T> {
         elements[index] = value;
     }
 
-    private void removeAction(int index) {
-        System.arraycopy(elements, index + 1, elements, index, size - index);
-        size--;
-    }
-
     @Override
     public T remove(int index) {
         checkIndex(index);
@@ -104,5 +85,24 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private void growArray() {
+        if (size == elements.length) {
+            Object[] newArray = new Object[elements.length + elements.length / 2];
+            System.arraycopy(elements, 0, newArray, 0, elements.length);
+            elements = newArray;
+        }
+    }
+
+    private void checkIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayIndexOutOfBoundsException("Index is out of array bounds");
+        }
+    }
+
+    private void removeAction(int index) {
+        System.arraycopy(elements, index + 1, elements, index, size - index);
+        size--;
     }
 }
