@@ -8,10 +8,8 @@ import java.util.NoSuchElementException;
  * реалізації ArrayList (default capacity, newCapacity...)</p>
  */
 public class ArrayList<T> implements List<T> {
-
     private static final int DEFAULT_CAPACITY = 10;
     private int size;
-
     private T[] items;
 
     public ArrayList() {
@@ -27,13 +25,11 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         rangeCheckForAdd(index);
-        if (index == items.length - 1) {
+        if (index == items.length) {
             items = grow();
         }
         size += 1;
-        for (int i = size; i >= index + 1; i--) {
-            items[i] = items[i - 1];
-        }
+        System.arraycopy(items, index, items, index + 1, items.length - index - 1);
         items[index] = value;
     }
 
@@ -60,9 +56,7 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         rangeCheck(index);
         T item = items[index];
-        for (int i = index; i < size - 1; i++) {
-            items[i] = items[i + 1];
-        }
+        System.arraycopy(items, index + 1, items, index, size - 1 - index);
         size -= 1;
         return item;
     }
