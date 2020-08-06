@@ -51,27 +51,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index >= 0 && index < mySize) {
-            return arrayList[index];
-        } else {
-            throw new ArrayIndexOutOfBoundsException();
-        }
+        checkConditions(index);
+        return arrayList[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index < 0 || index > mySize - 1) {
-            throw new ArrayIndexOutOfBoundsException();
-        } else {
-            arrayList[index] = value;
-        }
+        checkConditions(index);
+        arrayList[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index < 0 || index > mySize - 1) {
-            throw new ArrayIndexOutOfBoundsException();
-        }
+        checkConditions(index);
         T result = arrayList[index];
         System.arraycopy(arrayList, index + 1, arrayList, index, arrayList.length - index - 1);
         mySize--;
@@ -109,6 +101,12 @@ public class ArrayList<T> implements List<T> {
         T[] tempArray = (T[]) new Object[size];
         System.arraycopy(arrayList, 0, tempArray, 0, mySize);
         arrayList = tempArray;
+    }
+
+    private void checkConditions(int index) {
+        if (index < 0 || index >= mySize) {
+            throw new ArrayIndexOutOfBoundsException();
+        }
     }
 }
 
