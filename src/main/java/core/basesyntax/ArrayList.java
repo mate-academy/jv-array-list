@@ -101,7 +101,7 @@ public class ArrayList<T> implements List<T> {
 
     private void checkIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new ArrayIndexOutOfBoundsException();
+            throw new ArrayIndexOutOfBoundsException(outOfBoundsMsg(index));
         }
     }
 
@@ -115,5 +115,9 @@ public class ArrayList<T> implements List<T> {
     private int preferredNewCapacity() {
         int oldCapacity = elementData.length;
         return oldCapacity + (oldCapacity >> 1);
+    }
+
+    private String outOfBoundsMsg(int index) {
+        return "Index: " + index + ", Size: " + size;
     }
 }
