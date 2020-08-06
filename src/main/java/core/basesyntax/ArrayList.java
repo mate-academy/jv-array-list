@@ -25,9 +25,10 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        checkConditions(index, mySize + 1);
-        checkSize(index);
-        resizeArray(index, index + 1);
+        if (index < 0 || index > mySize) {
+            throw new ArrayIndexOutOfBoundsException();
+        }
+        System.arraycopy(arrayList, index, arrayList, index + 1, arrayList.length - index - 1);
         arrayList[index] = value;
         mySize++;
     }
@@ -41,21 +42,21 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        checkConditions(index, mySize);
+        checkConditions(index);
         return arrayList[index];
     }
 
     @Override
     public void set(T value, int index) {
-        checkConditions(index, mySize);
+        checkConditions(index);
         arrayList[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        checkConditions(index, mySize);
+        checkConditions(index);
         T result = arrayList[index];
-        resizeArray(index + 1, index);
+        System.arraycopy(arrayList, index + 1, arrayList, index, arrayList.length - index - 1);
         mySize--;
         return result;
     }
@@ -63,14 +64,11 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T t) {
         for (int i = 0; i < mySize; i++) {
-            T result;
             if (t == arrayList[i] || arrayList[i] != null && arrayList[i].equals(t)) {
-                result = arrayList[i];
-                remove(i);
-                return result;
+                return remove(i);
             }
         }
-        throw new NoSuchElementException();
+        throw new NoSuchElementException("This element dosn't exist.");
     }
 
     @Override
@@ -91,16 +89,9 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private void checkConditions(int index, int checkSize) {
-        if (index < 0 || index >= checkSize) {
+    private void checkConditions(int index) {
+        if (index < 0 || index >= mySize) {
             throw new ArrayIndexOutOfBoundsException();
         }
     }
-
-    private void resizeArray(int firstBegin, int secondBegin) {
-        System.arraycopy(arrayList, firstBegin, arrayList, secondBegin,
-                arrayList.length - Math.min(firstBegin,secondBegin) - 1);
-    }
 }
-
-
