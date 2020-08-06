@@ -26,7 +26,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index < 0  || index > sizeList) {
+        if (index < 0 || index > sizeList) {
             throw new ArrayIndexOutOfBoundsException("Incorrect index!");
         }
         checkResizeList();
