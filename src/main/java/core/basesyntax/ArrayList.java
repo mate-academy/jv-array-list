@@ -7,8 +7,7 @@ import java.util.NoSuchElementException;
  * реалізації ArrayList (default capacity, newCapacity...)</p>
  */
 public class ArrayList<T> implements List<T> {
-
-    static final int DEFAULT_CAPACITY = 10;
+    private static final int DEFAULT_CAPACITY = 10;
     private T[] elementData;
     private int size;
 
@@ -26,17 +25,13 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index < 0 || index > elementData.length) {
-            throw new ArrayIndexOutOfBoundsException("Your ArrayIndex are out of bounds");
-        } else {
-            if (size == elementData.length) {
-                grow();
-            } else {
-                System.arraycopy(elementData, index, elementData, index + 1, size - index);
-                elementData[index] = value;
-                size++;
-            }
+        checkIndex(index);
+        if (size == elementData.length) {
+            grow();
         }
+        System.arraycopy(elementData, index, elementData, index + 1, size - index);
+        elementData[index] = value;
+        size++;
     }
 
     @Override
@@ -46,18 +41,10 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    //// как создать проверку на не существующий объект
     @Override
     public T get(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayIndexOutOfBoundsException("Your ArrayIndex are out of bounds");
-        }
-        for (int i = 0; i < elementData.length; i++) {
-            if (elementData[i] == elementData[index]) {
-                return elementData[i];
-            }
-        }
-        return null;
+        checkIndexWithEquel(index);
+        return elementData[index];
     }
 
     @Override
@@ -65,21 +52,13 @@ public class ArrayList<T> implements List<T> {
         if (index < 0 || index >= size) {
             throw new ArrayIndexOutOfBoundsException("Your ArrayIndex are out of bounds");
         }
-        for (int i = 0; i < elementData.length; i++) {
-            if (elementData[i] == elementData[index]) {
-                elementData[index] = value;
-            }
-        }
+        elementData[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        T temp;
-        if (index < 0 || index >= size) {
-            throw new ArrayIndexOutOfBoundsException("Your ArrayIndex are out of bounds");
-        }
-        temp = elementData[index];
-        elementData[index] = null;
+        checkIndexWithEquel(index);
+        T temp = elementData[index];
         System.arraycopy(elementData, index + 1, elementData, index, size - index - 1);
         elementData[--size] = null;
         return temp;
@@ -109,7 +88,18 @@ public class ArrayList<T> implements List<T> {
         T[] newElementData = (T[]) new Object[elementData.length + (elementData.length >> 1)];
         System.arraycopy(elementData, 0, newElementData, 0, size);
         elementData = newElementData;
+    }
 
+    private void checkIndex(int index) {
+        if (index < 0 || index > size) {
+            throw new ArrayIndexOutOfBoundsException("Your ArrayIndex are out of bounds");
+        }
+    }
+
+    private void checkIndexWithEquel(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayIndexOutOfBoundsException("Your ArrayIndex are out of bounds");
+        }
     }
 
 }
