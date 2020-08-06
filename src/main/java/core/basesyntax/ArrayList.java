@@ -78,7 +78,7 @@ public class ArrayList<T> implements List<T> {
             }
         }
         if (oldSize == size) {
-            throw new NoSuchElementException();
+            throw new NoSuchElementException("The element is not found");
         }
         return deleted;
     }
