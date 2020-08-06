@@ -58,7 +58,6 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         checkIndexBounds(index);
         T removed = (T) list[index];
-        list[index] = null;
         trimArray(index);
         return removed;
     }
