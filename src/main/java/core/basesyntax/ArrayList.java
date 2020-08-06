@@ -23,6 +23,9 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
+        if (index < 0 || index > currentSize) {
+            throw new ArrayIndexOutOfBoundsException("Given index does not exist in this list!");
+        }
         checkSize();
         System.arraycopy(elementData, index, elementData, index + 1, currentSize - index);
         elementData[index] = value;
