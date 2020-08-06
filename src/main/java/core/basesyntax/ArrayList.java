@@ -12,7 +12,6 @@ public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
 
     private int size;
-
     private Object[] elementData;
 
     public ArrayList() {
@@ -29,13 +28,14 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        isFull();
+        checkCapacity();
         elementData[size++] = value;
     }
 
     @Override
     public void add(T value, int index) {
-        isFull();
+        checkIndexAdd(index);
+        checkCapacity();
         System.arraycopy(elementData, index, elementData, index + 1, size - index);
         elementData[index] = value;
         size++;
@@ -43,33 +43,32 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        isFull();
+        checkCapacity();
         if (size + list.size() > elementData.length) {
             elementData = grow(size + list.size());
         }
         for (int i = 0; i < list.size(); i++) {
-            elementData[size++] = list.get(i);
+            add(list.get(i));
         }
     }
 
     @Override
     public T get(int index) {
-        indexIsOut(index);
+        checkIndex(index);
         return (T) elementData[index];
     }
 
     @Override
     public void set(T value, int index) {
-        indexIsOut(index);
+        checkIndex(index);
         elementData[index] = value;
     }
 
     @Override
     public T remove(int index) {
         T removedElement = (T) elementData[index];
-        int deletedIndex = index;
-        System.arraycopy(elementData, deletedIndex + 1,
-                elementData, deletedIndex, size - deletedIndex - 1);
+        System.arraycopy(elementData, index + 1,
+                elementData, index, size - index - 1);
         size--;
         return removedElement;
     }
@@ -93,18 +92,26 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public boolean isEmpty() {
-        return size > 0 ? false : true;
+        return size == 0;
     }
 
-    public void isFull() {
+    public void checkCapacity() {
         if (size == elementData.length) {
             grow(elementData.length);
         }
         return;
     }
 
-    public void indexIsOut(int index) {
+    private void checkIndex(int index) {
         if (index >= 0 && index < size) {
+            return;
+        } else {
+            throw new ArrayIndexOutOfBoundsException("Index " + index + " is wrong!");
+        }
+    }
+
+    private void checkIndexAdd(int index) {
+        if (index >= 0 && index < elementData.length) {
             return;
         } else {
             throw new ArrayIndexOutOfBoundsException("Index " + index + " is wrong!");
