@@ -22,13 +22,6 @@ public class ArrayList<T> implements List<T> {
         return arrayElements;
     }
 
-    private boolean indexChecking(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayIndexOutOfBoundsException("The index is not correct");
-        }
-        return true;
-    }
-
     @Override
     public void add(T value) {
         if (size > arrayElements.length - 1) {
@@ -101,5 +94,12 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private boolean indexChecking(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayIndexOutOfBoundsException("The index is not correct");
+        }
+        return true;
     }
 }
