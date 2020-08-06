@@ -27,12 +27,9 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index > currentSize || index < 0) {
-            throw new ArrayIndexOutOfBoundsException("List has no such index");
-        }
+        checkIndex(index);
         ensureCapacity();
-        // TODO This
-        System.arraycopy(values, index, values, index + 1, values.length - index - 1);
+        System.arraycopy(values, index, values, index + 1, currentSize - index);
         values[index] = value;
         currentSize++;
     }
@@ -62,12 +59,11 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(int index) {
-        if (index > currentSize || index < 0) {
-            throw new ArrayIndexOutOfBoundsException("List has no such index");
-        }
+        checkIndex(index);
         T valueToReturn = values[index];
-        // TODO
-        System.arraycopy(values, index + 1, values, index, currentSize--);
+        int toCopy = currentSize - index - 1;
+        System.arraycopy(values, index + 1, values, index, toCopy);
+        values[currentSize--] = null;
         return valueToReturn;
     }
 
@@ -89,6 +85,12 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return currentSize == 0;
+    }
+
+    private void checkIndex(int index) {
+        if (index > currentSize || index < 0) {
+            throw new ArrayIndexOutOfBoundsException("List has no such index");
+        }
     }
 
     private void ensureCapacity() {
