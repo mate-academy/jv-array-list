@@ -27,15 +27,13 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        indexValidation(index);
+        indexValidationForAdd(index);
         if (elements.length == size) {
             growCapacity();
         }
-        if (elements.length > index) {
-            System.arraycopy(elements, index, elements, index + 1, size - index);
-            elements[index] = value;
-            size++;
-        }
+        System.arraycopy(elements, index, elements, index + 1, size - index);
+        elements[index] = value;
+        size++;
     }
 
     @Override
@@ -48,19 +46,18 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         indexValidation(index);
-        indexCheckMaxValue(index);
         return (T) elements[index];
     }
 
     @Override
     public void set(T value, int index) {
         indexValidation(index);
-        indexCheckMaxValue(index);
         elements[index] = value;
     }
 
     @Override
     public T remove(int index) {
+        indexValidation(index);
         T deleted = (T) elements[index];
         System.arraycopy(elements, index + 1, elements, index, size - index - 1);
         size--;
@@ -69,18 +66,16 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T t) {
-        T deleted = null;
-        int oldSize = size;
         for (int index = 0; index < size; index++) {
-            if (t == null ? elements[index] == t : elements[index].equals(t)) {
-                deleted = remove(index);
-                break;
+            if ((t == null || elements[index] == null)
+                    ? elements[index] == t : elements[index].equals(t)) {
+                return remove(index);
             }
         }
-        if (oldSize == size) {
+        if (true) {
             throw new NoSuchElementException("The element is not found");
         }
-        return deleted;
+        return null;
     }
 
     @Override
@@ -96,17 +91,17 @@ public class ArrayList<T> implements List<T> {
     public Object[] growCapacity() {
         int newCapacity = size + (size >> 1) + 1;
         Object[] grownCapacity = new Object[newCapacity];
-        System.arraycopy(elements, 0, grownCapacity,0, size);
+        System.arraycopy(elements, 0, grownCapacity, 0, size);
         return elements = grownCapacity;
     }
 
-    public void indexCheckMaxValue(int index) {
-        if (index > size - 1) {
+    public void indexValidation(int index) {
+        if (index < 0 || index >= size) {
             throw new ArrayIndexOutOfBoundsException("Index is out of range.");
         }
     }
 
-    public void indexValidation(int index) {
+    public void indexValidationForAdd(int index) {
         if (index < 0 || index > size) {
             throw new ArrayIndexOutOfBoundsException("Index is out of range.");
         }
