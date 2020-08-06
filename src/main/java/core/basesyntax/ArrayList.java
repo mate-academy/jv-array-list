@@ -1,53 +1,104 @@
 package core.basesyntax;
 
+import java.util.NoSuchElementException;
+
 /**
  * <p>Реалізувати свій ArrayList який імплементує інтерфейс List. Дотриматися основних вимог щодо
  * реалізації ArrayList (default capacity, newCapacity...)</p>
  */
 public class ArrayList<T> implements List<T> {
+    private static final int DEFAULT_CAPACITY = 10;
+    private T[] arrayList;
+    private int currentCapacity;
+    private int currentIndex;
+
+    public ArrayList() {
+        arrayList = (T[]) new Object[DEFAULT_CAPACITY];
+        currentCapacity = DEFAULT_CAPACITY;
+    }
 
     @Override
     public void add(T value) {
-
+        addElementToArray(value, currentIndex);
     }
 
     @Override
     public void add(T value, int index) {
-
+        indexCheck(index);
+        sizeCheck();
+        if (index < currentIndex) {
+            System.arraycopy(arrayList, index, arrayList, index + 1, currentIndex + 1);
+        }
+        addElementToArray(value, index);
     }
 
     @Override
     public void addAll(List<T> list) {
-
+        for (int i = 0; i < list.size(); i++) {
+            add(list.get(i));
+        }
     }
 
     @Override
     public T get(int index) {
-        return null;
+        indexCheck(index + 1);
+        return arrayList[index];
     }
 
     @Override
     public void set(T value, int index) {
-
+        indexCheck(index + 1);
+        sizeCheck();
+        arrayList[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        return null;
+        T removedElement = get(index);
+        System.arraycopy(arrayList, index + 1, arrayList, index, currentIndex - 1);
+        currentIndex--;
+        return removedElement;
     }
 
     @Override
     public T remove(T t) {
-        return null;
+        for (int i = 0; i < currentIndex; i++) {
+            if (t == arrayList[i] || (t != null && t.equals(arrayList[i]))) {
+                return remove(i);
+            }
+        }
+        throw new NoSuchElementException("Such element does not exist.");
     }
 
     @Override
     public int size() {
-        return 0;
+        return currentIndex;
     }
 
     @Override
     public boolean isEmpty() {
-        return false;
+        return currentIndex == 0;
+    }
+
+    public void addElementToArray(T value, int index) {
+        sizeCheck();
+        arrayList[index] = value;
+        currentIndex++;
+    }
+
+    public void indexCheck(int index) {
+        if (index > currentIndex || index < 0) {
+            throw new ArrayIndexOutOfBoundsException("Index outsize of the Array.");
+        }
+    }
+
+    public void sizeCheck() {
+        if (currentIndex == currentCapacity) {
+            currentCapacity = currentCapacity + (currentCapacity >> 1);
+            Object[] arrayListTemporary = (T[]) new Object[currentCapacity];
+            System.arraycopy(arrayList, 0, (T[]) arrayListTemporary, 0, currentIndex);
+            arrayList = (T[]) arrayListTemporary;
+        }
     }
 }
+
