@@ -19,8 +19,8 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (size + 1 > elementData.length) {
-            ensureCapacity();
+        if (size == elementData.length) {
+            resize();
         }
         elementData[size] = value;
         size++;
@@ -28,8 +28,12 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (size + 1 > elementData.length) {
-            ensureCapacity();
+        if (size == elementData.length) {
+            resize();
+        }
+        if (index > size) {
+            throw new ArrayIndexOutOfBoundsException(
+                    "Index [" + index + "] is out of size [" + size + "]");
         }
         System.arraycopy(elementData, index, elementData, index + 1, size - index);
         elementData[index] = value;
@@ -45,7 +49,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index < size) {
+        if (isValidIndex(index)) {
             return elementData[index];
         } else {
             throw new ArrayIndexOutOfBoundsException(
@@ -55,11 +59,12 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void set(T value, int index) {
-        if (index >= size) {
+        if (isValidIndex(index)) {
+            elementData[index] = value;
+        } else {
             throw new ArrayIndexOutOfBoundsException(
                     "Index [" + index + "] is out of size [" + size + "]");
         }
-        elementData[index] = value;
     }
 
     @Override
@@ -73,7 +78,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T t) {
-        for (int i = 0; i <= size; i++) {
+        for (int i = 0; i < size; i++) {
             if (t == elementData[i] || (elementData[i] != null && elementData[i].equals(t))) {
                 remove(i);
                 return t;
@@ -89,15 +94,16 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public boolean isEmpty() {
-        if (size > 0) {
-            return false;
-        }
-        return true;
+        return size == 0;
     }
 
-    private void ensureCapacity() {
+    private void resize() {
         T[] oldData = elementData;
         elementData = (T[]) new Object[oldData.length * 3 / 2 + 1];
         System.arraycopy(oldData, 0, elementData, 0, oldData.length);
+    }
+
+    private boolean isValidIndex(int index) {
+        return index > -1 && index < size;
     }
 }
