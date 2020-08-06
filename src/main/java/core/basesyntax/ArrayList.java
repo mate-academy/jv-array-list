@@ -10,12 +10,12 @@ public class ArrayList<T> implements List<T> {
 
     private static final int DEFAULT_CAPACITY = 10;
 
-    private Object[] elementData;
+    private T[] elementData;
 
     private int size;
 
     public ArrayList() {
-        elementData = new Object[DEFAULT_CAPACITY];
+        elementData = (T[]) new Object[DEFAULT_CAPACITY];
         size = 0;
     }
 
@@ -47,19 +47,15 @@ public class ArrayList<T> implements List<T> {
         if (size + list.size() > elementData.length) {
             elementData = grow(size + list.size());
         }
-        // К сожалению, тут нет возможности осуществить быстрое копирование
-        // с помощью System.arraysCopy так как наш кастомный лист не имеет метода toArray()
-        // и нам в любом случае придется перебирать его по одному элементу.
         for (int i = 0; i < list.size(); i++) {
             elementData[size++] = list.get(i);
         }
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public T get(int index) {
         checkIndex(index);
-        return (T) elementData[index];
+        return elementData[index];
     }
 
     @Override
@@ -69,10 +65,9 @@ public class ArrayList<T> implements List<T> {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public T remove(int index) {
         checkIndex(index);
-        T removed = (T) elementData[index];
+        T removed = elementData[index];
         System.arraycopy(elementData, index + 1, elementData, index, size - index);
         elementData[--size] = null;
         return removed;
@@ -105,9 +100,9 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private Object[] grow(int minCapacity) {
+    private T[] grow(int minCapacity) {
         int newCapacity = Math.max(preferredNewCapacity(), minCapacity);
-        Object[] newElementData = new Object[newCapacity];
+        T[] newElementData = (T[]) new Object[newCapacity];
         System.arraycopy(elementData, 0, newElementData, 0, size);
         return newElementData;
     }
