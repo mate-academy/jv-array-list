@@ -9,20 +9,11 @@ import java.util.Objects;
  */
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    private int size = DEFAULT_CAPACITY;
     private int currentSize;
     private T[] elementData;
 
     public ArrayList() {
-        elementData = (T[]) new Object[size];
-    }
-
-    private T[] resizeTheArray(T[] array) {
-        int newSize = (size * 3) / 2 + 1;
-        T[] resultArray = (T[]) new Object[newSize];
-        System.arraycopy(array, 0, resultArray, 0, size);
-        size = newSize;
-        return resultArray;
+        elementData = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
     @Override
@@ -32,12 +23,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (currentSize >= size) {
-            elementData = resizeTheArray(elementData);
-        }
+        checkSize();
         System.arraycopy(elementData, index, elementData, index + 1, currentSize - index);
         elementData[index] = value;
         currentSize++;
+    }
+
+    private void checkSize() {
+        if (currentSize >= elementData.length) {
+            int newSize = elementData.length * 3 / 2;
+            T[] resultArray = (T[]) new Object[newSize];
+            System.arraycopy(elementData, 0, resultArray, 0, elementData.length);
+            elementData = resultArray;
+        }
     }
 
     @Override
@@ -49,35 +47,25 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
+        isIndexExist(index);
+        return elementData[index];
+    }
+
+    private void isIndexExist(int index) {
         if (index < 0 || index >= currentSize) {
-            throw new ArrayIndexOutOfBoundsException();
+            throw new ArrayIndexOutOfBoundsException("Given index does not exist in this list!");
         }
-        for (int i = 0; i < currentSize; i++) {
-            if (i == index) {
-                return elementData[i];
-            }
-        }
-        return null;
     }
 
     @Override
     public void set(T value, int index) {
-        if (index < 0 || index >= currentSize) {
-            throw new ArrayIndexOutOfBoundsException();
-        }
-        for (int i = 0; i < currentSize; i++) {
-            if (index == i) {
-                elementData[i] = value;
-                return;
-            }
-        }
+        isIndexExist(index);
+        elementData[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index < 0 || index >= currentSize) {
-            throw new ArrayIndexOutOfBoundsException();
-        }
+        isIndexExist(index);
         final T cup = elementData[index];
         if (currentSize - 1 - index >= 0) {
             System.arraycopy(elementData, index + 1, elementData, index, currentSize - 1 - index);
@@ -94,7 +82,7 @@ public class ArrayList<T> implements List<T> {
                 return remove(i);
             }
         }
-        throw new NoSuchElementException();
+        throw new NoSuchElementException("Element with given value does not exist in this List!");
     }
 
     @Override
