@@ -31,8 +31,8 @@ public class ArrayList<T> implements List<T> {
             add(value);
             return;
         }
-        ensureCapacity(size);
         checkIndex(index);
+        ensureCapacity(size);
         System.arraycopy(elements, index, elements, index + 1, size - index);
         elements[index] = value;
         size++;
