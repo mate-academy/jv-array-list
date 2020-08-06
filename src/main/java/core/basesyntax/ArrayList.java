@@ -9,37 +9,34 @@ import java.util.NoSuchElementException;
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private Object[] elementData;
-    private int capacity;
-    private int size = 0;
+    private int size;
 
     public ArrayList() {
-        capacity = DEFAULT_CAPACITY;
-        elementData = new Object[capacity];
+        elementData = new Object[DEFAULT_CAPACITY];
     }
 
     public ArrayList(int capacity) {
-        this.capacity = capacity;
         elementData = new Object[capacity];
     }
 
     private void ensureCapacity(int size) {
-        if (size > elementData.length) {
-            capacity = (capacity * 3) / 2 + 1;
-            Object[] newArray = new Object[capacity];
-            System.arraycopy(elementData, 0, newArray, 0, size - 1);
+        while (size + 1 > elementData.length) {
+            int newCapacity = (elementData.length * 3) / 2 + 1;
+            Object[] newArray = new Object[newCapacity];
+            System.arraycopy(elementData, 0, newArray, 0, size);
             elementData = newArray;
         }
     }
 
     @Override
     public void add(T value) {
-        ensureCapacity(size + 1);
+        ensureCapacity(size);
         elementData[size++] = value;
     }
 
     @Override
     public void add(T value, int index) {
-        ensureCapacity(size + 1);
+        ensureCapacity(size);
         System.arraycopy(elementData, index, elementData, index + 1, size - index);
         elementData[index] = value;
         size++;
@@ -58,17 +55,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
+        checkArrayIndexOutOfBoundsException(index);
+        return (T) elementData[index];
+    }
+
+    private void checkArrayIndexOutOfBoundsException(int index) {
         if (index < 0 || index >= size) {
             throw new ArrayIndexOutOfBoundsException("Index is not exists");
         }
-        return (T) elementData[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayIndexOutOfBoundsException("Index is not exists");
-        }
+        checkArrayIndexOutOfBoundsException(index);
         elementData[index] = value;
     }
 
@@ -87,11 +86,8 @@ public class ArrayList<T> implements List<T> {
             if (t == null && elementData[i] == null || elementData[i].equals(t)) {
                 return remove(i);
             }
-            if (i == size - 1) {
-                throw new NoSuchElementException("Element is not exists");
-            }
         }
-        return null;
+        throw new NoSuchElementException("Element is not exists");
     }
 
     @Override
