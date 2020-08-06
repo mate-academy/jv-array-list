@@ -9,26 +9,28 @@ import java.util.NoSuchElementException;
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private int counter;
+    private int currentCapacity;
     private T[] values;
 
     public ArrayList() {
         values = (T[]) new Object[DEFAULT_CAPACITY];
         counter = 0;
+        currentCapacity = DEFAULT_CAPACITY;
     }
 
     @Override
     public void add(T value) {
-        resize();
+        checkCapacity();
         values[counter] = value;
         counter++;
     }
 
     @Override
     public void add(T value, int index) {
-        if (index < 0) {
+        if (index < 0 || index > counter) {
             throw new ArrayIndexOutOfBoundsException("This index is out of bounds.");
         }
-        resize();
+        checkCapacity();
         System.arraycopy(values, index, values, index + 1, counter - index);
         counter++;
         values[index] = value;
@@ -43,35 +45,31 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index >= counter || index < 0) {
-            throw new ArrayIndexOutOfBoundsException("This index is out of bounds.");
-        }
+        checkIndex(index);
         return values[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index >= counter) {
-            throw new ArrayIndexOutOfBoundsException("This index is out of bounds.");
-        }
+        checkIndex(index);
         values[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index >= counter || index < 0) {
-            throw new ArrayIndexOutOfBoundsException("This index is out of bounds.");
-        }
+        checkIndex(index);
         T removedItem = values[index];
-        for (int i = index; i < counter - 1; i++) {
-            values[i] = values[i + 1];
-        }
+        System.arraycopy(values,index + 1, values, index, counter - index);
         counter--;
         return removedItem;
     }
 
     @Override
     public T remove(T t) {
+        if (t == null) {
+            counter--;
+            return null;
+        }
         for (int i = 0; i < counter; i++) {
             if (values[i] == t || t != null && values[i].equals(t)) {
                 return remove(i);
@@ -90,11 +88,18 @@ public class ArrayList<T> implements List<T> {
         return counter == 0;
     }
 
-    private void resize() {
-        if (counter >= DEFAULT_CAPACITY) {
-            Object[] newValues = new Object[counter * 3 / 2 + 1];
+    private void checkCapacity() {
+        if (counter >= currentCapacity) {
+            currentCapacity = counter * 3 / 2 + 1;
+            Object[] newValues = new Object[currentCapacity];
             System.arraycopy(values, 0, newValues, 0, counter);
             values = (T[]) newValues;
+        }
+    }
+
+    private void checkIndex(int index) {
+        if (index >= counter) {
+            throw new ArrayIndexOutOfBoundsException("This index is out of bounds.");
         }
     }
 }
