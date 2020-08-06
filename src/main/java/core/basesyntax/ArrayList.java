@@ -19,7 +19,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value) {
         if (arrayList.length == mySize) {
-            makeBigger(mySize * 3 / 2);
+            makeBigger(SIZE);
         }
         arrayList[mySize] = value;
         mySize++;
@@ -72,8 +72,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T t) {
-        int i;
-        for (i = 0; i < mySize; i++) {
+        for (int i = 0; i < mySize; i++) {
             T result;
             if (t == arrayList[i] || arrayList[i] != null && arrayList[i].equals(t)) {
                 result = arrayList[i];
@@ -81,10 +80,7 @@ public class ArrayList<T> implements List<T> {
                 return result;
             }
         }
-        if (i == mySize) {
-            throw new NoSuchElementException();
-        }
-        return null;
+        throw new NoSuchElementException();
     }
 
     @Override
