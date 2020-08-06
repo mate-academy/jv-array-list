@@ -15,7 +15,7 @@ public class ArrayList<T> implements List<T> {
     private int currentSize;
     private T[] values;
 
-    ArrayList() {
+    public ArrayList() {
         values = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
