@@ -19,7 +19,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value) {
         if (arrayList.length == mySize) {
-            makeBigger(SIZE);
+            makeBigger(arrayList.length);
         }
         arrayList[mySize] = value;
         mySize++;
@@ -31,7 +31,7 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayIndexOutOfBoundsException();
         }
         if (arrayList.length <= index) {
-            makeBigger(SIZE);
+            makeBigger(arrayList.length);
         } else {
             System.arraycopy(arrayList, index, arrayList, index + 1, arrayList.length - index - 1);
         }
@@ -41,9 +41,6 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        if (list.size() > arrayList.length - mySize) {
-            makeBigger(list.size());
-        }
         for (int i = 0; i < list.size(); i++) {
             add(list.get(i));
         }
@@ -94,7 +91,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void makeBigger(int size) {
-        T[] tempArray = (T[]) new Object[size];
+        T[] tempArray = (T[]) new Object[size * 3 / 2];
         System.arraycopy(arrayList, 0, tempArray, 0, mySize);
         arrayList = tempArray;
     }
