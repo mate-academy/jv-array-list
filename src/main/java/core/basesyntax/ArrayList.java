@@ -98,17 +98,13 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void checkIndex(int index) {
-        if (index >= 0 && index < size && index != size) {
-            return;
-        } else {
+        if (index < 0 || index >= size) {
             throw new ArrayIndexOutOfBoundsException("Index " + index + " is wrong!");
         }
     }
 
     private void checkIndexAdd(int index) {
-        if (index >= 0 && index < elementData.length) {
-            return;
-        } else {
+        if (index < 0 || index > size) {
             throw new ArrayIndexOutOfBoundsException("Index " + index + " is wrong!");
         }
     }
