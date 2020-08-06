@@ -27,10 +27,11 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         if (index > currentSize || index < 0) {
-            throw new ArrayIndexOutOfBoundsException("");
+            throw new ArrayIndexOutOfBoundsException("Index " + index
+                    + " out of bounds of " + currentSize);
         }
         if (storage.length == currentSize) {
-            resize();
+            storage = resize();
         }
         System.arraycopy(storage, index, storage, index + 1, currentSize - index);
         storage[index] = value;
@@ -95,7 +96,7 @@ public class ArrayList<T> implements List<T> {
     private void outOfBoundsCheck(int index) {
         if (index >= currentSize || index < 0) {
             throw new ArrayIndexOutOfBoundsException("Index " + index
-                    + " out of bounds of " + storage.length);
+                    + " out of bounds of " + currentSize);
         }
     }
 }
