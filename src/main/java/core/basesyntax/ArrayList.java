@@ -24,12 +24,10 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index > currentIndex) {
-            throw new ArrayIndexOutOfBoundsException(" Index above the size of Array");
-        }
-        sizeCheck(index);
+        indexCheck(index);
+        sizeCheck();
         if (index < currentIndex) {
-            System.arraycopy(arrayList, index, arrayList, index + 1, currentIndex + 1);
+            arrayCopy(index, arrayList, index + 1, currentIndex + 1);
         }
         addElementToArray(value, index);
     }
@@ -37,31 +35,27 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void addAll(List<T> list) {
         for (int i = 0; i < list.size(); i++) {
-            addElementToArray(list.get(i), currentIndex);
+            add(list.get(i));
         }
     }
 
     @Override
     public T get(int index) {
-        if (index >= currentIndex) {
-            throw new ArrayIndexOutOfBoundsException(("No element with index"));
-        }
+        indexCheck(index + 1);
         return arrayList[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (currentIndex <= index) {
-            throw new ArrayIndexOutOfBoundsException("Index above Array size");
-        }
-        sizeCheck(index);
+        indexCheck(index + 1);
+        sizeCheck();
         arrayList[index] = value;
     }
 
     @Override
     public T remove(int index) {
         T removedElement = get(index);
-        System.arraycopy(arrayList, index + 1, arrayList, index, currentIndex - 1);
+        arrayCopy(index + 1, arrayList, index, currentIndex - 1);
         currentIndex--;
         return removedElement;
     }
@@ -87,22 +81,28 @@ public class ArrayList<T> implements List<T> {
     }
 
     public void addElementToArray(T value, int index) {
-        sizeCheck(index);
+        sizeCheck();
         arrayList[index] = value;
         currentIndex++;
     }
 
-    public void increaseCapacity() {
-        currentCapacity = currentCapacity + (currentCapacity >> 1);
-        Object[] arrayListTemporary = (T[]) new Object[currentCapacity];
-        System.arraycopy(arrayList, 0, arrayListTemporary, 0, currentIndex);
-        arrayList = (T[]) arrayListTemporary;
+    public void indexCheck(int index) {
+        if (index > currentIndex) {
+            throw new ArrayIndexOutOfBoundsException("Index above the size of Array.");
+        }
     }
 
-    public void sizeCheck(int sizeForTest) {
-        if (sizeForTest == currentCapacity) {
-            increaseCapacity();
+    public void sizeCheck() {
+        if (currentIndex == currentCapacity) {
+            currentCapacity = currentCapacity + (currentCapacity >> 1);
+            Object[] arrayListTemporary = (T[]) new Object[currentCapacity];
+            arrayCopy(0, (T[]) arrayListTemporary, 0, currentIndex);
+            arrayList = (T[]) arrayListTemporary;
         }
+    }
+
+    public void arrayCopy(int indexFrom, T[] arrayDest, int indexTo, int indexLength) {
+        System.arraycopy(arrayList, indexFrom, arrayDest, indexTo, indexLength);
     }
 }
 
