@@ -7,104 +7,90 @@ import java.util.NoSuchElementException;
  * реалізації ArrayList (default capacity, newCapacity...)</p>
  */
 public class ArrayList<T> implements List<T> {
-
     private static final int DEFAULT_CAPACITY = 16;
 
-    private T[] arrayList;
-    private int filledWithElements = 0;
+    private T[] storedData;
+    private int filledWithElements;
 
     public ArrayList() {
-        arrayList = (T[]) new Object[DEFAULT_CAPACITY];
+        storedData = (T[]) new Object[DEFAULT_CAPACITY];
+        filledWithElements = 0;
     }
 
     public ArrayList(int initialCapacity) {
-        arrayList = (T[]) new Object[initialCapacity];
+        storedData = (T[]) new Object[initialCapacity];
+        filledWithElements = 0;
     }
 
-    public void resize(int newLength) {
-        T[] newArrayList = (T[]) new Object[newLength];
-        System.arraycopy(arrayList, 0, newArrayList, 0, filledWithElements);
-        arrayList = newArrayList;
+    public void resizeIfNecessary() {
+        if (filledWithElements == storedData.length) {
+            T[] newArrayList = (T[]) new Object[(int) (storedData.length * 1.5)];
+            System.arraycopy(storedData, 0, newArrayList, 0, filledWithElements);
+            storedData = newArrayList;
+        }
+    }
+
+    public void checkBounds(int index) {
+        if (index < 0 || index >= filledWithElements) {
+            throw new ArrayIndexOutOfBoundsException();
+        }
     }
 
     @Override
     public void add(T value) {
-        if (filledWithElements == arrayList.length) {
-            resize((int) (arrayList.length * 1.5));
-        }
-        arrayList[filledWithElements++] = value;
+        resizeIfNecessary();
+        storedData[filledWithElements++] = value;
     }
 
     @Override
     public void add(T value, int index) {
-        if (index < 0 || index > filledWithElements) {
-            throw new ArrayIndexOutOfBoundsException();
-        } else if (filledWithElements == arrayList.length) {
-            resize((int) (arrayList.length * 1.5));
+        if (index == filledWithElements) {
+            add(value);
+            return;
         }
-        System.arraycopy(arrayList, index, arrayList, index + 1, filledWithElements - index);
-        arrayList[index] = value;
+        checkBounds(index);
+        resizeIfNecessary();
+        System.arraycopy(storedData, index, storedData, index + 1, filledWithElements - index);
+        storedData[index] = value;
         filledWithElements++;
     }
 
     @Override
     public void addAll(List<T> list) {
-        while (arrayList.length < filledWithElements + list.size()) {
-            resize((int) (arrayList.length * 1.5));
-        }
         for (int i = 0; i < list.size(); i++) {
-            arrayList[filledWithElements] = list.get(i);
-            filledWithElements++;
+            add(list.get(i));
         }
     }
 
     @Override
     public T get(int index) {
-        if (index < 0 || index >= filledWithElements) {
-            throw new ArrayIndexOutOfBoundsException();
-        } else {
-            return arrayList[index];
-        }
+        checkBounds(index);
+        return storedData[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index < 0 || index >= filledWithElements) {
-            throw new ArrayIndexOutOfBoundsException();
-        } else {
-            arrayList[index] = value;
-        }
+        checkBounds(index);
+        storedData[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index < 0 || index >= filledWithElements) {
-            throw new ArrayIndexOutOfBoundsException();
-        }
-        T elementToRemove = arrayList[index];
-        System.arraycopy(arrayList, index + 1, arrayList, index, filledWithElements - index - 1);
-        filledWithElements--;
+        checkBounds(index);
+        T elementToRemove = storedData[index];
+        System.arraycopy(storedData, index + 1, storedData, index, filledWithElements - index - 1);
+        storedData[filledWithElements--] = null;
         return elementToRemove;
     }
 
     @Override
     public T remove(T t) {
-        int i;
-        boolean flag = false;
-        for (i = 0; i < filledWithElements; i++) {
-            if (flag == true) {
-                arrayList[i - 1] = arrayList[i];
-            } else if (arrayList[i] == t || (arrayList[i] != null && arrayList[i].equals(t))) {
-                flag = true;
+        for (int i = 0; i < filledWithElements; i++) {
+            if (storedData[i] == t || (storedData[i] != null && storedData[i].equals(t))) {
+                return remove(i);
             }
         }
-        if (flag == true) {
-            arrayList[filledWithElements] = null;
-            filledWithElements--;
-            return t;
-        } else {
-            throw new NoSuchElementException();
-        }
+        throw new NoSuchElementException();
     }
 
     @Override
