@@ -15,19 +15,20 @@ public class ArrayList<T> implements List<T> {
         arrayElements = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
-    public T[] newArrayOfElements() {
-        T[] newArrayElements = arrayElements;
+    public T[] resize() {
+        T[] oldArrayElements = arrayElements;
         arrayElements = (T[]) new Object[arrayElements.length + (arrayElements.length >> 1)];
-        System.arraycopy(newArrayElements, 0, arrayElements, 0, newArrayElements.length);
+        System.arraycopy(oldArrayElements, 0, arrayElements, 0, oldArrayElements.length);
         return arrayElements;
     }
 
     @Override
     public void add(T value) {
         if (size > arrayElements.length - 1) {
-            newArrayOfElements();
+            resize();
         }
-        arrayElements[size++] = value;
+        arrayElements[size] = value;
+        size++;
     }
 
     @Override
@@ -36,7 +37,7 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayIndexOutOfBoundsException("The index is not correct");
         }
         if (size > arrayElements.length) {
-            newArrayOfElements();
+            resize();
         }
         System.arraycopy(arrayElements, index, arrayElements, index + 1, size - index);
         arrayElements[index] = value;
@@ -46,11 +47,10 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void addAll(List<T> list) {
         if (size > arrayElements.length) {
-            newArrayOfElements();
+            resize();
         }
         for (int i = 0; i < list.size(); i++) {
-            arrayElements[size] = list.get(i);
-            size++;
+            add(list.get(i));
         }
     }
 
@@ -71,7 +71,7 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         indexChecking(index);
         T temp = arrayElements[index];
-        System.arraycopy(arrayElements, index + 1, arrayElements, index, size - index);
+        System.arraycopy(arrayElements, index + 1, arrayElements, index, size - index - 1);
         size--;
         return temp;
     }
