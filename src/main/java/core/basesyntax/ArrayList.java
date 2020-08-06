@@ -31,9 +31,7 @@ public class ArrayList<T> implements List<T> {
             add(value);
             return;
         }
-        if (index > size || index < 0) {
-            throw new ArrayIndexOutOfBoundsException("Wrong index!");
-        }
+        checkIndex(index);
         if (size == elementData.length) {
             elementData = resize();
         }
