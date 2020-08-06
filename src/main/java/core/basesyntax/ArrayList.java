@@ -22,11 +22,17 @@ public class ArrayList<T> implements List<T> {
         filledSize = 0;
     }
 
-    public void sizeCheck() {
+    private void sizeCheck() {
         if (filledSize == array.length) {
             T[] newArray = (T[]) new Object[(int) (array.length * 1.5)];
             System.arraycopy(array, 0, newArray, 0, filledSize);
             array = newArray;
+        }
+    }
+
+    private void exceptionCheck(int index) {
+        if (index >= filledSize || index < 0) {
+            throw new ArrayIndexOutOfBoundsException("Index is out of array size.");
         }
     }
 
@@ -58,32 +64,23 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index >= filledSize || index < 0) {
-            throw new ArrayIndexOutOfBoundsException();
-        } else {
-            return array[index];
-        }
+        exceptionCheck(index);
+        return array[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index > filledSize - 1 || index < 0) {
-            throw new ArrayIndexOutOfBoundsException();
-        } else {
-            array[index] = value;
-        }
+        exceptionCheck(index);
+        array[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index > filledSize - 1 || index < 0) {
-            throw new ArrayIndexOutOfBoundsException();
-        } else {
-            T temp = array[index];
-            System.arraycopy(array, index + 1, array, index, filledSize - index - 1);
-            filledSize--;
-            return temp;
-        }
+        exceptionCheck(index);
+        T temp = array[index];
+        System.arraycopy(array, index + 1, array, index, filledSize - index - 1);
+        filledSize--;
+        return temp;
     }
 
     @Override
@@ -93,7 +90,7 @@ public class ArrayList<T> implements List<T> {
                 return remove(i);
             }
         }
-        throw new NoSuchElementException();
+        throw new NoSuchElementException("There is no such element in array.");
     }
 
     @Override
