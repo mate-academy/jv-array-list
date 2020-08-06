@@ -16,27 +16,6 @@ public class ArrayList<T> implements List<T> {
         size = 0;
     }
 
-    public boolean checkCapacity() {
-        return (size == list.length);
-    }
-
-    private void resize() {
-        Object[] newList = new Object[list.length + (list.length / 2)];
-        System.arraycopy(list, 0, newList, 0, list.length);
-        list = newList;
-    }
-
-    private void trimArray(int index) {
-        System.arraycopy(list, index + 1, list, index, list.length - size);
-        size--;
-    }
-
-    private void checkIndexBounds(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayIndexOutOfBoundsException("Given index is out of bounds!");
-        }
-    }
-
     @Override
     public void add(T value) {
         if (checkCapacity()) {
@@ -101,5 +80,26 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    public boolean checkCapacity() {
+        return (size == list.length);
+    }
+
+    private void resize() {
+        Object[] newList = new Object[list.length + (list.length / 2)];
+        System.arraycopy(list, 0, newList, 0, list.length);
+        list = newList;
+    }
+
+    private void trimArray(int index) {
+        System.arraycopy(list, index + 1, list, index, list.length - size);
+        size--;
+    }
+
+    private void checkIndexBounds(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayIndexOutOfBoundsException("Given index is out of bounds!");
+        }
     }
 }
