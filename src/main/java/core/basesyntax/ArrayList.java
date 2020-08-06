@@ -52,27 +52,21 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (checkIndex(index)) {
-            return elementData[index];
-        }
-        throw new ArrayIndexOutOfBoundsException("Wrong parameter!");
+        checkIndex(index);
+        return elementData[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (checkIndex(index)) {
-            elementData[index] = value;
-            return;
-        }
-        throw new ArrayIndexOutOfBoundsException("Wrong index!");
+        checkIndex(index);
+        elementData[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (checkIndex(index)) {
-            return editArrayAndReturnObj(index);
-        }
-        throw new ArrayIndexOutOfBoundsException("Wrong index!");
+        checkIndex(index);
+        return editArrayAndReturnObj(index);
+
     }
 
     @Override
@@ -118,6 +112,9 @@ public class ArrayList<T> implements List<T> {
     }
 
     private boolean checkIndex(int index) {
-        return index < size & index >= 0;
+        if (index >= size || index < 0) {
+            throw new ArrayIndexOutOfBoundsException("Wrong parameter!");
+        }
+        return true;
     }
 }
