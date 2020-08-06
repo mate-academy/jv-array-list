@@ -8,7 +8,6 @@ import java.util.NoSuchElementException;
  */
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    private static final int ONE_ELEMENT = 1;
     private int size;
     private T[] elementData;
 
@@ -26,21 +25,6 @@ public class ArrayList<T> implements List<T> {
         } else {
             throw new RuntimeException("Number of sheet elements is incorrect");
         }
-    }
-
-    public void checkingIndex(int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayIndexOutOfBoundsException("Out of bounds search index");
-        }
-    }
-
-    public void ensureCapacity() {
-        if (elementData.length - 1 - size >= ONE_ELEMENT) {
-            return;
-        }
-        T[] newArrayData = (T[]) new Object[elementData.length + (elementData.length >> 1)];
-        System.arraycopy(elementData, 0, newArrayData, 0, size);
-        elementData = newArrayData;
     }
 
     @Override
@@ -103,6 +87,21 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public boolean isEmpty() {
-        return size == 0 ? true : false;
+        return size == 0;
+    }
+
+    private void checkingIndex(int index) {
+        if (index >= size || index < 0) {
+            throw new ArrayIndexOutOfBoundsException("Out of bounds search index");
+        }
+    }
+
+    private void ensureCapacity() {
+        if (elementData.length > size) {
+            return;
+        }
+        T[] newArrayData = (T[]) new Object[elementData.length + (elementData.length >> 1)];
+        System.arraycopy(elementData, 0, newArrayData, 0, size);
+        elementData = newArrayData;
     }
 }
