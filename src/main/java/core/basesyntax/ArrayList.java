@@ -16,22 +16,6 @@ public class ArrayList<T> implements List<T> {
         elementData = (T[]) new Object[capacity];
     }
 
-    private void ensureCapacity(int minCapacity) {
-        if (minCapacity > elementData.length) {
-            int newCapacity = (minCapacity * 3) / 2 + 1;
-            Object[] oldData = elementData;
-            elementData = (T[]) new Object[newCapacity];
-            System.arraycopy(oldData, 0, elementData, 0, size);
-        }
-    }
-
-    private boolean checkIndex(int index) {
-        if (index >= size) {
-            throw new ArrayIndexOutOfBoundsException("Wrong index of array");
-        }
-        return true;
-    }
-
     @Override
     public void add(T value) {
         ensureCapacity(size + 1);
@@ -103,5 +87,21 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private void ensureCapacity(int minCapacity) {
+        if (minCapacity > elementData.length) {
+            int newCapacity = (minCapacity * 3) / 2 + 1;
+            Object[] oldData = elementData;
+            elementData = (T[]) new Object[newCapacity];
+            System.arraycopy(oldData, 0, elementData, 0, size);
+        }
+    }
+
+    private boolean checkIndex(int index) {
+        if (index >= size) {
+            throw new ArrayIndexOutOfBoundsException("Wrong index of array");
+        }
+        return true;
     }
 }
