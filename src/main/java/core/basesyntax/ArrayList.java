@@ -16,13 +16,6 @@ public class ArrayList<T> implements List<T> {
         size = 0;
     }
 
-    private T[] resize(int newLength) {
-        T[] newArray = (T[]) new Object[newLength];
-
-        System.arraycopy(array, 0, newArray, 0, size);
-        return newArray;
-    }
-
     @Override
     public void add(T value) {
         int newLength = (int) (size * 1.5);
@@ -144,5 +137,12 @@ public class ArrayList<T> implements List<T> {
         System.arraycopy(array,0, newArray, 0, index);
         System.arraycopy(array, index + 1, newArray, index, size - index);
         array = newArray;
+    }
+
+    private T[] resize(int newLength) {
+        T[] newArray = (T[]) new Object[newLength];
+
+        System.arraycopy(array, 0, newArray, 0, size);
+        return newArray;
     }
 }
