@@ -15,12 +15,12 @@ public class ArrayList<T> implements List<T> {
     private Object[] elementData;
 
     public ArrayList() {
-        this.elementData = (T[]) new Object[DEFAULT_CAPACITY];
+        elementData = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
     public ArrayList(int initialCapacity) {
         if (initialCapacity >= 0) {
-            this.elementData = (T[]) new Object[initialCapacity];
+            elementData = (T[]) new Object[initialCapacity];
         } else {
             throw new IllegalArgumentException("Illegal argument " + initialCapacity);
         }
@@ -44,9 +44,6 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void addAll(List<T> list) {
         checkCapacity();
-        if (size + list.size() > elementData.length) {
-            elementData = grow(size + list.size());
-        }
         for (int i = 0; i < list.size(); i++) {
             add(list.get(i));
         }
@@ -75,7 +72,6 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T t) {
-        T removedElement = t;
         for (int i = 0; i < size; i++) {
             if (t == elementData[i] || t != null
                     && t.equals(elementData[i])) {
@@ -99,11 +95,10 @@ public class ArrayList<T> implements List<T> {
         if (size == elementData.length) {
             grow(elementData.length);
         }
-        return;
     }
 
     private void checkIndex(int index) {
-        if (index >= 0 && index < size) {
+        if (index >= 0 && index < size && index != size) {
             return;
         } else {
             throw new ArrayIndexOutOfBoundsException("Index " + index + " is wrong!");
