@@ -18,26 +18,10 @@ public class ArrayList<T> implements List<T> {
         array = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
-    private void changeSize() {
-        if (size + 1 >= array.length * THRESHOLD) {
-            int newSize = (int) (array.length * 1.5);
-            T[] tmpArray = (T[]) new Object[newSize];
-            System.arraycopy(array, 0, tmpArray, 0, size);
-            array = tmpArray;
-        }
-    }
-
-    private void checkIndex(int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayIndexOutOfBoundsException("This index is not correct");
-        }
-    }
-
     @Override
     public void add(T value) {
         changeSize();
-        array[size] = value;
-        ++size;
+        array[size++] = value;
     }
 
     @Override
@@ -100,5 +84,20 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private void checkIndex(int index) {
+        if (index >= size || index < 0) {
+            throw new ArrayIndexOutOfBoundsException("This index is not correct");
+        }
+    }
+
+    private void changeSize() {
+        if (size + 1 >= array.length * THRESHOLD) {
+            int newSize = (int) (array.length * 1.5);
+            T[] tmpArray = (T[]) new Object[newSize];
+            System.arraycopy(array, 0, tmpArray, 0, size);
+            array = tmpArray;
+        }
     }
 }
