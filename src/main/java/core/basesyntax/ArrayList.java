@@ -76,15 +76,13 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T t) {
-        for (int i = 0; i < values.length; i++) {
+        for (int i = 0; i < arraySize; i++) {
             if (values[i] == t || t != null && t.equals(values[i])) {
-                int numMoved = arraySize - i - 1;
-                System.arraycopy(values, i + 1, values, i, numMoved);
-                values[--arraySize] = null;
+                remove(i);
                 return t;
             }
         }
-        throw new NoSuchElementException();
+        throw new NoSuchElementException("this element does not exist");
     }
 
     @Override
