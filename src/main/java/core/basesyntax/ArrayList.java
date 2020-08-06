@@ -27,7 +27,7 @@ public class ArrayList<T> implements List<T> {
     public void add(T value, int index) {
         checkConditions(index, mySize + 1);
         checkSize(index);
-        resizeArray(index, index + 1, index);
+        resizeArray(index, index + 1);
         arrayList[index] = value;
         mySize++;
     }
@@ -55,7 +55,7 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         checkConditions(index, mySize);
         T result = arrayList[index];
-        resizeArray(index + 1, index, index);
+        resizeArray(index + 1, index);
         mySize--;
         return result;
     }
@@ -97,9 +97,9 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private void resizeArray(int firstBegin, int secondBegin, int index) {
-        System.arraycopy(arrayList, firstBegin,
-                arrayList, secondBegin, arrayList.length - index - 1);
+    private void resizeArray(int firstBegin, int secondBegin) {
+        System.arraycopy(arrayList, firstBegin, arrayList, secondBegin,
+                arrayList.length - Math.min(firstBegin,secondBegin) - 1);
     }
 }
 
