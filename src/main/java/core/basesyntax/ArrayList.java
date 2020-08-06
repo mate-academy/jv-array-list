@@ -12,13 +12,13 @@ public class ArrayList<T> implements List<T> {
     private Object[] base;
 
     public ArrayList() {
-        base = new Object[0];
+        base = new Object[10];
         size = 0;
     }
 
     @Override
     public void add(T value) {
-        setCapacity();
+        setCapacity(1);
         base[size] = value;
         size++;
     }
@@ -27,7 +27,7 @@ public class ArrayList<T> implements List<T> {
     public void add(T value, int index) {
         checkIndex(index, size);
         if (base.length <= index) {
-            setCapacity();
+            setCapacity(1);
         } else {
             System.arraycopy(base, index, base, index + 1, base.length - index - 1);
         }
@@ -45,7 +45,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        setCapacity();
+        setCapacity(1);
         checkIndex(index, size - 1);
         return (T) base[index];
     }
@@ -67,17 +67,13 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T t) {
-        int i = 0;
-        for (i = 0; i < size; i++) {
+        for (int i = 0; i < size; i++) {
             if ((t != null && base[i].equals(t)) || (t == base[i])) {
                 remove(i);
                 return t;
             }
         }
-        if (i == size) {
-            throw new NoSuchElementException();
-        }
-        return t;
+        throw new NoSuchElementException();
     }
 
     @Override
@@ -90,14 +86,7 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void setCapacity() {
-        setCapacity(1);
-    }
-
     private void setCapacity(int space) {
-        if (base.length == 0) {
-            base = new Object[10];
-        }
         if (space + size > base.length) {
             int newCapacity = (base.length / 2) + base.length;
             Object[] tempBase = new Object[newCapacity];
