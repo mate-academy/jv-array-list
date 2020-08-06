@@ -20,18 +20,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (size == elements.length) {
-            resize();
-        }
+        ensureCapacity(size);
         elements[size] = value;
         size++;
     }
 
     @Override
     public void add(T value, int index) {
-        if (index >= elements.length) {
-            resize();
+        if (index == size) {
+            add(value);
+            return;
         }
+        ensureCapacity(size);
+        checkIndex(index);
         System.arraycopy(elements, index, elements, index + 1, size - index);
         elements[index] = value;
         size++;
@@ -60,7 +61,7 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         checkIndex(index);
         T element = (T) elements[index];
-        System.arraycopy(elements, index + 1, elements, index, size - index);
+        System.arraycopy(elements, index + 1, elements, index, size - index - 1);
         size--;
         return element;
     }
@@ -91,9 +92,11 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private void resize() {
-        Object[] newArray = new Object[elements.length + (elements.length / 2 + 1)];
-        System.arraycopy(elements, 0, newArray, 0, elements.length);
-        elements = newArray;
+    private void ensureCapacity(int currentSize) {
+        if (currentSize >= elements.length) {
+            Object[] newArray = new Object[elements.length + (elements.length / 2 + 1)];
+            System.arraycopy(elements, 0, newArray, 0, elements.length);
+            elements = newArray;
+        }
     }
 }
