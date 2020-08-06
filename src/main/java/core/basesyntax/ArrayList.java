@@ -27,7 +27,7 @@ public class ArrayList<T> implements List<T> {
         indexCheck(index);
         sizeCheck();
         if (index < currentIndex) {
-            arrayCopy(index, arrayList, index + 1, currentIndex + 1);
+            System.arraycopy(arrayList, index, arrayList, index + 1, currentIndex + 1);
         }
         addElementToArray(value, index);
     }
@@ -55,7 +55,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         T removedElement = get(index);
-        arrayCopy(index + 1, arrayList, index, currentIndex - 1);
+        System.arraycopy(arrayList, index + 1, arrayList, index, currentIndex - 1);
         currentIndex--;
         return removedElement;
     }
@@ -96,13 +96,9 @@ public class ArrayList<T> implements List<T> {
         if (currentIndex == currentCapacity) {
             currentCapacity = currentCapacity + (currentCapacity >> 1);
             Object[] arrayListTemporary = (T[]) new Object[currentCapacity];
-            arrayCopy(0, (T[]) arrayListTemporary, 0, currentIndex);
+            System.arraycopy(arrayList, 0, (T[]) arrayListTemporary, 0, currentIndex);
             arrayList = (T[]) arrayListTemporary;
         }
-    }
-
-    public void arrayCopy(int indexFrom, T[] arrayDest, int indexTo, int indexLength) {
-        System.arraycopy(arrayList, indexFrom, arrayDest, indexTo, indexLength);
     }
 }
 
