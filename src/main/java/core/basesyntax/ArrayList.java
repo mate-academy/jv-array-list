@@ -34,25 +34,25 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    public T[] ensureCapacity() {
+    public void ensureCapacity() {
         if (elementData.length - 1 - size >= ONE_ELEMENT) {
-            return elementData;
+            return;
         }
         T[] newArrayData = (T[]) new Object[elementData.length + (elementData.length >> 1)];
         System.arraycopy(elementData, 0, newArrayData, 0, size);
-        return newArrayData;
+        elementData = newArrayData;
     }
 
     @Override
     public void add(T value) {
-        elementData = ensureCapacity();
+        ensureCapacity();
         elementData[size] = value;
         size++;
     }
 
     @Override
     public void add(T value, int index) {
-        elementData = ensureCapacity();
+        ensureCapacity();
         System.arraycopy(elementData, index, elementData, index + 1, size - index);
         elementData[index] = value;
         size++;
@@ -81,7 +81,7 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         checkingIndex(index);
         T removed = (T) elementData[index];
-        System.arraycopy(elementData, index + 1, elementData, index, size - index);
+        System.arraycopy(elementData, index + 1, elementData, index, size - index - 1);
         elementData[--size] = null;
         return removed;
     }
