@@ -7,13 +7,13 @@ import java.util.NoSuchElementException;
  * реалізації ArrayList (default capacity, newCapacity...)</p>
  */
 public class ArrayList<T> implements List<T> {
-    private static final int SIZE = 10;
+    private static final int DEFAULT_SIZE = 10;
     private int mySize;
     private T[] arrayList;
 
     public ArrayList() {
         mySize = 0;
-        arrayList = (T[]) new Object[SIZE];
+        arrayList = (T[]) new Object[DEFAULT_SIZE];
     }
 
     @Override
