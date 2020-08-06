@@ -17,7 +17,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void growArray() {
-        Object[] newArray = new Object[elements.length + elements.length / 2 + 1];
+        Object[] newArray = new Object[elements.length + elements.length / 2];
         System.arraycopy(elements, 0, newArray, 0, elements.length);
         elements = newArray;
     }
