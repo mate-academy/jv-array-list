@@ -18,23 +18,16 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (arrayList.length == mySize) {
-            makeBigger(arrayList.length);
-        }
+        checkSize(arrayList.length);
         arrayList[mySize] = value;
         mySize++;
     }
 
     @Override
     public void add(T value, int index) {
-        if (index < 0 || index > mySize) {
-            throw new ArrayIndexOutOfBoundsException();
-        }
-        if (arrayList.length <= index) {
-            makeBigger(arrayList.length);
-        } else {
-            System.arraycopy(arrayList, index, arrayList, index + 1, arrayList.length - index - 1);
-        }
+        checkConditions(index, mySize + 1);
+        checkSize(index);
+        System.arraycopy(arrayList, index, arrayList, index + 1, arrayList.length - index - 1);
         arrayList[index] = value;
         mySize++;
     }
@@ -48,19 +41,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        checkConditions(index);
+        checkConditions(index, mySize);
         return arrayList[index];
     }
 
     @Override
     public void set(T value, int index) {
-        checkConditions(index);
+        checkConditions(index, mySize);
         arrayList[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        checkConditions(index);
+        checkConditions(index, mySize);
         T result = arrayList[index];
         System.arraycopy(arrayList, index + 1, arrayList, index, arrayList.length - index - 1);
         mySize--;
@@ -90,14 +83,16 @@ public class ArrayList<T> implements List<T> {
         return mySize == 0;
     }
 
-    private void makeBigger(int size) {
-        T[] tempArray = (T[]) new Object[size * 3 / 2];
-        System.arraycopy(arrayList, 0, tempArray, 0, mySize);
-        arrayList = tempArray;
+    private void checkSize(int check) {
+        if (check == mySize) {
+            T[] tempArray = (T[]) new Object[arrayList.length * 3 / 2];
+            System.arraycopy(arrayList, 0, tempArray, 0, mySize);
+            arrayList = tempArray;
+        }
     }
 
-    private void checkConditions(int index) {
-        if (index < 0 || index >= mySize) {
+    private void checkConditions(int index, int check) {
+        if (index < 0 || index >= check) {
             throw new ArrayIndexOutOfBoundsException();
         }
     }
