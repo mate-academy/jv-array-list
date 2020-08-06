@@ -11,7 +11,6 @@ public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private Object[] elementData;
     private int size;
-    private int index;
 
     public ArrayList() {
         elementData = new Object[DEFAULT_CAPACITY];
@@ -20,22 +19,15 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (index == elementData.length) {
-            resize();
-        }
-        elementData[index] = value;
-        index++;
-        size++;
+        add(value, size);
     }
 
     @Override
     public void add(T value, int index) {
-        if (index == elementData.length) {
-            resize();
-        }
-        System.arraycopy(elementData, index, elementData, index + 1, this.index - index);
+        checkIndexToAdd(index);
+        resize();
+        System.arraycopy(elementData, index, elementData, index + 1, size - index);
         elementData[index] = value;
-        this.index++;
         size++;
     }
 
@@ -63,22 +55,20 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
-        T value = (T) elementData[index];
-        System.arraycopy(elementData, index + 1,
-                elementData, index, size - (index + 1));
-        size--;
-        return value;
+        T element = (T) elementData[index];
+        System.arraycopy(elementData, index + 1, elementData, index, size - index - 1);
+        elementData[--size] = null;
+        return element;
     }
 
     @Override
     public T remove(T t) {
         for (int i = 0; i < size; i++) {
-            if (Objects.equals(elementData[i], t)) {
-                remove(i);
-                return t;
+            if (Objects.equals(t, elementData[i])) {
+                return remove(i);
             }
         }
-        throw new NoSuchElementException();
+        throw new NoSuchElementException("There is no such element!");
     }
 
     @Override
@@ -92,14 +82,22 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void resize() {
-        Object[] newArray = new Object[elementData.length + elementData.length / 2 + 1];
-        System.arraycopy(elementData, 0, newArray, 0, elementData.length);
-        elementData = newArray;
+        if (size == elementData.length) {
+            Object[] newArray = new Object[elementData.length + (elementData.length >> 1)];
+            System.arraycopy(elementData, 0, newArray, 0, size);
+            elementData = newArray;
+        }
+    }
+
+    private void checkIndexToAdd(int index) {
+        if (index > size || index < 0) {
+            throw new ArrayIndexOutOfBoundsException();
+        }
     }
 
     private void checkIndex(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayIndexOutOfBoundsException(index);
+        if (index >= size || index < 0) {
+            throw new ArrayIndexOutOfBoundsException();
         }
     }
 }
