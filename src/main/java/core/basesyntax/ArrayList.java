@@ -9,34 +9,31 @@ import java.util.NoSuchElementException;
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private Object[] list;
-    private int index;
     private int size;
 
     public ArrayList() {
         list = new Object[DEFAULT_CAPACITY];
         size = 0;
-        index = 0;
     }
 
     public boolean checkCapacity() {
-        return (index >= list.length);
+        return (size == list.length);
     }
 
-    public void resize() {
+    private void resize() {
         Object[] newList = new Object[list.length + (list.length / 2)];
-        System.arraycopy(list, 0, newList, 0, this.index);
+        System.arraycopy(list, 0, newList, 0, list.length);
         list = newList;
     }
 
-    public void trimArray(int index) {
-        System.arraycopy(list, index + 1, list, index, this.index - index);
+    private void trimArray(int index) {
+        System.arraycopy(list, index + 1, list, index, list.length - size);
         size--;
-        this.index--;
     }
 
     private void checkIndexBounds(int index) {
-        if (0 > index || index >= this.index) {
-            throw new ArrayIndexOutOfBoundsException();
+        if (index < 0 || index >= size) {
+            throw new ArrayIndexOutOfBoundsException("Given index is out of bounds!");
         }
     }
 
@@ -45,8 +42,7 @@ public class ArrayList<T> implements List<T> {
         if (checkCapacity()) {
             resize();
         }
-        list[index] = value;
-        index++;
+        list[size] = value;
         size++;
     }
 
@@ -55,9 +51,8 @@ public class ArrayList<T> implements List<T> {
         if (checkCapacity()) {
             resize();
         }
-        System.arraycopy(list, index, list, index + 1, this.index - index);
+        System.arraycopy(list, index, list, index + 1, size - index);
         list[index] = value;
-        this.index++;
         size++;
     }
 
