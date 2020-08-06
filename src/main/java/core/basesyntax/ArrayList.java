@@ -12,8 +12,8 @@ public class ArrayList<T> implements List<T> {
     private Object[] elements;
 
     public ArrayList() {
-        this.size = 0;
-        this.elements = new Object[START_CAPACITY];
+        size = 0;
+        elements = new Object[START_CAPACITY];
     }
 
     @Override
@@ -27,6 +27,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
+        indexValidation(index);
         if (elements.length == size) {
             growCapacity();
         }
@@ -47,12 +48,14 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         indexValidation(index);
+        indexCheckMaxValue(index);
         return (T) elements[index];
     }
 
     @Override
     public void set(T value, int index) {
         indexValidation(index);
+        indexCheckMaxValue(index);
         elements[index] = value;
     }
 
@@ -67,19 +70,14 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T t) {
         T deleted = null;
+        int oldSize = size;
         for (int index = 0; index < size; index++) {
-            if (t == null) {
-                size--;
-                return null;
-            }
-            if (elements[index] != null && t.equals(elements[index])) {
-                deleted = (T) elements[index];
-                System.arraycopy(elements, index + 1, elements, index, size - index - 1);
-                size--;
+            if (t == null ? elements[index] == t : elements[index].equals(t)) {
+                deleted = remove(index);
                 break;
             }
         }
-        if (deleted == null) {
+        if (oldSize == size) {
             throw new NoSuchElementException();
         }
         return deleted;
@@ -96,15 +94,21 @@ public class ArrayList<T> implements List<T> {
     }
 
     public Object[] growCapacity() {
-        int newCapacity = size + 1 + (int) Math.ceil((double) size / 2);
+        int newCapacity = size + (size >> 1) + 1;
         Object[] grownCapacity = new Object[newCapacity];
-        System.arraycopy(elements, 0, grownCapacity,0, elements.length);
+        System.arraycopy(elements, 0, grownCapacity,0, size);
         return elements = grownCapacity;
     }
 
-    public void indexValidation(int index) {
+    public void indexCheckMaxValue(int index) {
         if (index > size - 1) {
-            throw new ArrayIndexOutOfBoundsException();
+            throw new ArrayIndexOutOfBoundsException("Index is out of range.");
+        }
+    }
+
+    public void indexValidation(int index) {
+        if (index < 0 || index > size) {
+            throw new ArrayIndexOutOfBoundsException("Index is out of range.");
         }
     }
 }
