@@ -79,7 +79,7 @@ public class ArrayList<T> implements List<T> {
         checkBounds(index);
         T elementToRemove = storedData[index];
         System.arraycopy(storedData, index + 1, storedData, index, filledWithElements - index - 1);
-        storedData[filledWithElements--] = null;
+        storedData[--filledWithElements] = null;
         return elementToRemove;
     }
 
