@@ -31,10 +31,7 @@ public class ArrayList<T> implements List<T> {
             add(value);
             return;
         }
-        if (index >= size || index < 0) {
-            checkIndex(index);
-        }
-
+        checkIndex(index);
         System.arraycopy(arrayGeneric, index, arrayGeneric, index + 1, size - index);
         arrayGeneric[index] = value;
         size++;
@@ -42,9 +39,6 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        if (size + list.size() >= arrayGeneric.length) {
-            arrayGeneric = resize();
-        }
         for (int i = 0; i < list.size(); i++) {
             add(list.get(i));
         }
