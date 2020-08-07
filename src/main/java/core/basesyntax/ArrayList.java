@@ -27,7 +27,6 @@ public class ArrayList<T> implements List<T> {
     public void add(T value, int index) {
         checkIndex(index, size);
         if (base.length <= index) {
-            setCapacity(1);
         } else {
             System.arraycopy(base, index, base, index + 1, base.length - index - 1);
         }
