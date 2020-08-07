@@ -77,7 +77,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     @Override
-    public T remove(T t) {
+    public T remove(T t) throws NoSuchElementException {
         int i = 0;
         for (; i < size; i++) {
             if (Objects.equals(elementData[i], t)) {
