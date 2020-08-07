@@ -8,12 +8,13 @@ import java.util.NoSuchElementException;
  */
 
 public class ArrayList<T> implements List<T> {
-    private static final int CAPASITY = 10;
+    private static final int CAPACITY = 10;
     private T[] arrayGeneric;
+
     private int size;
 
     public ArrayList() {
-        arrayGeneric = (T[]) new Object[CAPASITY];
+        arrayGeneric = (T[]) new Object[CAPACITY];
     }
 
     @Override
@@ -30,14 +31,10 @@ public class ArrayList<T> implements List<T> {
             add(value);
             return;
         }
-        if (index > size || index < 0) {
-            throw new ArrayIndexOutOfBoundsException(
-                    "This index is not suitable for the given array");
+        if (index >= size || index < 0) {
+            checkIndex(index);
         }
 
-        if (size == arrayGeneric.length) {
-            arrayGeneric = resize();
-        }
         System.arraycopy(arrayGeneric, index, arrayGeneric, index + 1, size - index);
         arrayGeneric[index] = value;
         size++;
