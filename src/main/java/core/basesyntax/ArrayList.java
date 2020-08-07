@@ -8,12 +8,12 @@ import java.util.NoSuchElementException;
  */
 public class ArrayList<T> implements List<T> {
 
-    private static final int initSize = 10;
+    private static final int INIT_SIZE = 10;
     private T[] strArray;
     private int pointer;
 
     public ArrayList() {
-        strArray = (T[]) new Object[initSize];
+        strArray = (T[]) new Object[INIT_SIZE];
         pointer = 0;
     }
 
@@ -25,10 +25,10 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        ensureCapacity();
         wrongIndexCheckForAdd(index);
+        ensureCapacity();
+        System.arraycopy(strArray, index, strArray, index + 1, pointer - index);
         pointer++;
-        System.arraycopy(strArray, index, strArray, index + 1, size() - 1 - index);
         strArray[index] = value;
     }
 
@@ -54,7 +54,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         wrongIndexCheck(index);
-        int numMoved = size() - index - 1;
+        int numMoved = pointer - index - 1;
         T removed = strArray[index];
         System.arraycopy(strArray, index + 1, strArray, index, numMoved);
         pointer--;
