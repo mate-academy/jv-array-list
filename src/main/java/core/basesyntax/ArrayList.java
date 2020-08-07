@@ -26,10 +26,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         checkIndex(index, size);
-        if (base.length <= index) {
-        } else {
-            System.arraycopy(base, index, base, index + 1, base.length - index - 1);
-        }
+        System.arraycopy(base, index, base, index + 1, base.length - index - 1);
         base[index] = value;
         size++;
     }
