@@ -28,12 +28,12 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (size == elementData.length) {
-            resize();
-        }
         if (index > size) {
             throw new ArrayIndexOutOfBoundsException(
                     "Index [" + index + "] is out of size [" + size + "]");
+        }
+        if (size == elementData.length) {
+            resize();
         }
         System.arraycopy(elementData, index, elementData, index + 1, size - index);
         elementData[index] = value;
