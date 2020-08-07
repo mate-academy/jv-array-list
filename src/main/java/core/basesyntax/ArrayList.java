@@ -63,16 +63,12 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T t) {
-        int indexObjectDelete = -1;
         for (int i = 0; i < size; i++) {
             if (t != null ? t.equals(items[i]) : items[i] == null) {
-                indexObjectDelete = i;
+                return remove(i);
             }
         }
-        if (indexObjectDelete == -1) {
-            throw new NoSuchElementException("No element with this value exists");
-        }
-        return remove(indexObjectDelete);
+        throw new NoSuchElementException("No element with this value exists");
     }
 
     @Override
