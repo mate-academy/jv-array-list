@@ -26,14 +26,17 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         checkIndex(index, size);
-        System.arraycopy(base, index, base, index + 1, base.length - index - 1);
+        if (base.length <= index) {
+            setCapacity(1);
+        } else {
+            System.arraycopy(base, index, base, index + 1, base.length - index - 1);
+        }
         base[index] = value;
         size++;
     }
 
     @Override
     public void addAll(List<T> list) {
-        setCapacity(list.size());
         for (int i = 0; i < list.size(); i++) {
             add(list.get(i));
         }
