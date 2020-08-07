@@ -59,9 +59,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void addAll(List<T> list) {
         for (int i = 0; i < list.size(); i++) {
-            ensureCapacity(size + 1);
-            elementData[size] = list.get(i);
-            size++;
+            add(list.get(i));
         }
     }
 
