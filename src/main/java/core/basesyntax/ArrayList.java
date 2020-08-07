@@ -12,94 +12,94 @@ import java.util.Objects;
 public class ArrayList<T> implements List<T> {
 
     private static final int DEFAULT_CAPACITY = 10;
-    private Object[] result;
-    private int count;
+    private Object[] elementData;
+    private int size;
 
     public ArrayList() {
-        this.result = new Object[DEFAULT_CAPACITY];
-        this.count = 0;
+        elementData = new Object[DEFAULT_CAPACITY];
+        size = 0;
     }
 
     @Override
     public void add(T value) {
-        if (count >= result.length) {
-            result = Arrays.copyOf(result, (result.length * 3) / 2);
+        if (size >= elementData.length) {
+            elementData = Arrays.copyOf(elementData, (elementData.length * 3) / 2);
         }
-        result[count] = value;
-        count++;
+        elementData[size] = value;
+        size++;
     }
 
     @Override
     public void add(T value, int index) {
-        if (index == count) {
+        if (index == size) {
             add(value);
         } else {
             indexCheck(index);
-            if (count >= result.length) {
-                result = Arrays.copyOf(result, (result.length * 3) / 2);
+            if (size >= elementData.length) {
+                elementData = Arrays.copyOf(elementData, (elementData.length * 3) / 2);
             }
-            System.arraycopy(result, index, result, index + 1, count - index);
-            result[index] = value;
-            count++;
+            System.arraycopy(elementData, index, elementData, index + 1, size - index);
+            elementData[index] = value;
+            size++;
         }
     }
 
     @Override
     public void addAll(List<T> list) {
-        if (count + list.size() >= result.length) {
-            result = Arrays.copyOf(result, (result.length * 3) / 2);
+        if (size + list.size() >= elementData.length) {
+            elementData = Arrays.copyOf(elementData, (elementData.length * 3) / 2);
         }
         int i;
         for (i = 0; i < list.size(); i++) {
-            result[count++] = list.get(i);
+            add(list.get(i));
         }
     }
 
     @Override
     public T get(int index) {
         indexCheck(index);
-        return (T) result[index];
+        return (T) elementData[index];
     }
 
     @Override
     public void set(T value, int index) {
         indexCheck(index);
-        result[index] = value;
+        elementData[index] = value;
     }
 
     @Override
     public T remove(int index) {
         indexCheck(index);
-        T temp = (T) result[index];
-        System.arraycopy(result, index + 1, result, index, count - index);
-        result[--count] = null;
+        T temp = (T) elementData[index];
+        System.arraycopy(elementData, index + 1, elementData, index, size - index - 1);
+        elementData[--size] = null;
         return temp;
     }
 
     @Override
     public T remove(T t) {
         int i = 0;
-        for (; i < count; i++) {
-            if (Objects.equals(result[i], t)) {
+        for (; i < size; i++) {
+            if (Objects.equals(elementData[i], t)) {
                 return remove(i);
             }
         }
-        throw new NoSuchElementException();
+        throw new NoSuchElementException("Element does not exist!!!");
     }
 
     @Override
     public int size() {
-        return count;
+        return size;
     }
 
     @Override
     public boolean isEmpty() {
-        return count == 0;
+        return size == 0;
     }
 
     public void indexCheck(int index) {
-        if (index >= count || index < 0) {
-            throw new ArrayIndexOutOfBoundsException();
+        if (index >= size || index < 0) {
+            throw new ArrayIndexOutOfBoundsException("Wrong index input!!!");
         }
     }
 }
