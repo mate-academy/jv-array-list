@@ -8,12 +8,12 @@ import java.util.NoSuchElementException;
  */
 public class ArrayList<T> implements List<T> {
 
-    private final int INIT_SIZE = 10;
+    private final int initSize = 10;
     private T[] strArray;
     private int pointer = 0;
 
     public ArrayList() {
-        strArray = (T[]) new Object[INIT_SIZE];
+        strArray = (T[]) new Object[initSize];
     }
 
     @Override
@@ -96,7 +96,9 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void wrongIndexCheck(int index) {
-        if (index < 0 || index >= pointer) throw new ArrayIndexOutOfBoundsException("Index is out of array.");
+        if (index < 0 || index >= pointer) {
+            throw new ArrayIndexOutOfBoundsException("Index is out of array.");
+        }
     }
 
     private boolean isEquals(T value, int i) {
