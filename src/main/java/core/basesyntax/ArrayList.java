@@ -25,7 +25,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        checkIndex(index);
+        checkIndexForAdd(index);
         if (size == elementData.length) {
             grow();
         }
@@ -43,21 +43,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        checkIndexWithEquel(index);
+        checkIndex(index);
         return elementData[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayIndexOutOfBoundsException("Your ArrayIndex are out of bounds");
-        }
+        checkIndex(index);
         elementData[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        checkIndexWithEquel(index);
+        checkIndex(index);
         T temp = elementData[index];
         System.arraycopy(elementData, index + 1, elementData, index, size - index - 1);
         elementData[--size] = null;
@@ -90,13 +88,13 @@ public class ArrayList<T> implements List<T> {
         elementData = newElementData;
     }
 
-    private void checkIndex(int index) {
+    private void checkIndexForAdd(int index) {
         if (index < 0 || index > size) {
             throw new ArrayIndexOutOfBoundsException("Your ArrayIndex are out of bounds");
         }
     }
 
-    private void checkIndexWithEquel(int index) {
+    private void checkIndex(int index) {
         if (index < 0 || index >= size) {
             throw new ArrayIndexOutOfBoundsException("Your ArrayIndex are out of bounds");
         }
