@@ -10,8 +10,12 @@ public class ArrayList<T> implements List<T> {
 
     private static final int INITIAL_SIZE = 10;
 
-    private Object[] array = new Object[INITIAL_SIZE];
+    private Object[] array;
     private int numberOfElements;
+
+    public ArrayList(){
+        array = new Object[INITIAL_SIZE];
+    }
 
     @Override
     public void add(T value) {
@@ -53,19 +57,16 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         exceptionCheck(index);
         Object removedElement = array[index];
-        System.arraycopy(array, index + 1, array, index, numberOfElements - index);
+        System.arraycopy(array, index + 1, array, index, numberOfElements - index - 1);
         numberOfElements--;
         return (T) removedElement;
     }
 
     @Override
     public T remove(T t) {
-        Object removedElement;
         for (int i = 0; i < numberOfElements; i++) {
             if (array[i] == null ? array[i] == t : array[i].equals(t)) {
-                removedElement = array[i];
-                remove(i);
-                return (T) removedElement;
+                return (T) remove(i);
             }
         }
         throw new NoSuchElementException("There is no elements with this value");
@@ -78,12 +79,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public boolean isEmpty() {
-        for (int i = 0; i < numberOfElements; i++) {
-            if (array[i] != null) {
-                return false;
-            }
-        }
-        return true;
+        return numberOfElements == 0;
     }
 
     private void resize(int newLength) {
