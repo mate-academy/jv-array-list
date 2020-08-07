@@ -28,9 +28,9 @@ public class ArrayList<T> implements List<T> {
         if (index == items.length) {
             items = grow();
         }
-        size += 1;
-        System.arraycopy(items, index, items, index + 1, items.length - index - 1);
+        System.arraycopy(items, index, items, index + 1, size - index);
         items[index] = value;
+        size += 1;
     }
 
     @Override
