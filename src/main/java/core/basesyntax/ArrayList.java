@@ -25,7 +25,7 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayIndexOutOfBoundsException();
         }
         checkWhetherResize();
-        System.arraycopy(array, index, array, index + 1, numberOfElements - 1);
+        System.arraycopy(array, index, array, index + 1, numberOfElements - index);
         numberOfElements++;
         array[index] = value;
     }
@@ -53,7 +53,7 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         exceptionCheck(index);
         Object removedElement = array[index];
-        System.arraycopy(array, index + 1, array, index, numberOfElements - 1);
+        System.arraycopy(array, index + 1, array, index, numberOfElements - index);
         numberOfElements--;
         return (T) removedElement;
     }
