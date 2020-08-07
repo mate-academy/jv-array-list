@@ -13,7 +13,7 @@ public class ArrayList<T> implements List<T> {
     private int size;
 
     public ArrayList() {
-        this.elementData = new Object[DEFAULT_CARPACITY];
+        elementData = new Object[DEFAULT_CARPACITY];
 
     }
 
@@ -27,13 +27,13 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         if (index < 0 || index > size) {
-            throw new ArrayIndexOutOfBoundsException();
+            throw new ArrayIndexOutOfBoundsException("Index doesn't exist");
         }
-        sizeChecking();
         if (index == size) {
             add(value);
             return;
         }
+        sizeChecking();
         System.arraycopy(elementData, index, elementData, index + 1, size - index);
         size++;
         elementData[index] = value;
@@ -63,7 +63,6 @@ public class ArrayList<T> implements List<T> {
         indexChecking(index);
         T[] tempArray = (T[]) elementData;
         final T removedValue = tempArray[index];
-        System.arraycopy(tempArray, 0, elementData, 0, index);
         System.arraycopy(tempArray, index + 1, elementData, index, tempArray.length - 1 - index);
         size--;
         return removedValue;
@@ -89,26 +88,21 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private int increaseCarpasity(T[] array, int size) {
+    private int increaseCarpasity(T[] array) {
         int oldCrpacity = elementData.length;
-        int minCarpacity = 0;
         int newCarpacity = 0;
-        if (size <= 1) {
-            return minCarpacity = size + 1;
-        }
         return newCarpacity = (int) (array.length * 1.5);
     }
 
-    private boolean indexChecking(int index) {
+    private void indexChecking(int index) {
         if (index < 0 || index >= size) {
-            throw new ArrayIndexOutOfBoundsException();
+            throw new ArrayIndexOutOfBoundsException("Index doesn't exist");
         }
-        return true;
     }
 
     private void sizeChecking() {
         if (size == elementData.length) {
-            int newCarpacity = increaseCarpasity((T[]) elementData, size);
+            int newCarpacity = increaseCarpasity((T[]) elementData);
             T[] tempArray = (T[]) new Object[newCarpacity];
             System.arraycopy((T[]) elementData, 0, tempArray, 0, size);
             elementData = tempArray;
