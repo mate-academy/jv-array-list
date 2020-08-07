@@ -7,7 +7,6 @@ import java.util.NoSuchElementException;
  * реалізації ArrayList (default capacity, newCapacity...)</p>
  */
 public class ArrayList<T> implements List<T> {
-
     private static final int DEFAULT_CAPACITY = 10;
     private Object[] elementsStorage;
     private int size;
@@ -25,23 +24,25 @@ public class ArrayList<T> implements List<T> {
 
     private void indexCheck(int index) {
         if (index < 0 || index >= size) {
-            throw new ArrayIndexOutOfBoundsException();
+            throw new ArrayIndexOutOfBoundsException("Index is out of bound!");
+        }
+    }
+
+    private void sizeCheck() {
+        if (elementsStorage.length == size) {
+            grow();
         }
     }
 
     @Override
     public void add(T value) {
-        if (elementsStorage.length == size) {
-            grow();
-        }
+        sizeCheck();
         elementsStorage[size++] = value;
     }
 
     @Override
     public void add(T value, int index) {
-        if (size == elementsStorage.length) {
-            grow();
-        }
+        sizeCheck();
         System.arraycopy(elementsStorage, index, elementsStorage, index + 1, size - index);
         elementsStorage[index] = value;
         size++;
@@ -83,7 +84,7 @@ public class ArrayList<T> implements List<T> {
                 return remove(i);
             }
         }
-        throw new NoSuchElementException();
+        throw new NoSuchElementException("There is not such element!");
     }
 
     @Override
