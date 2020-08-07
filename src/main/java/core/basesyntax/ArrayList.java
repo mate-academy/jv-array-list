@@ -10,14 +10,17 @@ import java.util.NoSuchElementException;
 public class ArrayList<T> implements List<T> {
 
     private static final int INITIAL_CAPACITY = 10;
-    private int size = 0;
-    private T[] arrayList = (T[]) new Object[INITIAL_CAPACITY];
+    private int size;
+    private T[] arrayList;
+
+    public ArrayList() {
+        arrayList = (T[]) new Object[INITIAL_CAPACITY];
+        size = 0;
+    }
 
     @Override
     public void add(T value) {
-        if (size == arrayList.length - 1) {
-            resize();
-        }
+        resize();
         arrayList[size++] = value;
     }
 
@@ -28,9 +31,7 @@ public class ArrayList<T> implements List<T> {
                     + size);
         }
 
-        if (size == arrayList.length - 1) {
-            resize();
-        }
+        resize();
         System.arraycopy(arrayList, index, arrayList, index + 1, size - index);
 
         arrayList[index] = value;
@@ -70,16 +71,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T t) {
         for (int i = 0; i < size; i++) {
-            if (t == null) {
-                System.arraycopy(arrayList, i + 1, arrayList, i, size - i);
-                size--;
-                return null;
-            }
-            if (t.equals(arrayList[i])) {
-                T removedItem = arrayList[i];
-                System.arraycopy(arrayList, i + 1, arrayList, i, size - i);
-                size--;
-                return removedItem;
+            if (t == arrayList[i] || arrayList[i] != null && arrayList[i].equals(t)) {
+                return remove(i);
             }
         }
         throw new NoSuchElementException("No such element");
@@ -96,7 +89,9 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void resize() {
-        arrayList = Arrays.copyOf(arrayList, arrayList.length * 3 / 2 + 1);
+        if (size == arrayList.length) {
+            arrayList = Arrays.copyOf(arrayList, arrayList.length * 3 / 2 + 1);
+        }
     }
 
     private void indexCheck(int index) {
