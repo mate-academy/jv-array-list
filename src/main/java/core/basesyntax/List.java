@@ -8,8 +8,6 @@ public interface List<T> {
 
     void addAll(List<T> list);
 
-    void addAll(List<T> list, Object value);
-
     T get(int index);
 
     void set(T value, int index);
