@@ -18,7 +18,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        setCapacity(1);
+        setCapacity();
         base[size] = value;
         size++;
     }
@@ -27,7 +27,7 @@ public class ArrayList<T> implements List<T> {
     public void add(T value, int index) {
         checkIndex(index, size);
         if (base.length <= index) {
-            setCapacity(1);
+            setCapacity();
         } else {
             System.arraycopy(base, index, base, index + 1, base.length - index - 1);
         }
@@ -44,7 +44,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        setCapacity(1);
+        setCapacity();
         checkIndex(index, size - 1);
         return (T) base[index];
     }
@@ -85,8 +85,8 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void setCapacity(int space) {
-        if (space + size > base.length) {
+    private void setCapacity() {
+        if (1 + size > base.length) {
             int newCapacity = (base.length / 2) + base.length;
             Object[] tempBase = new Object[newCapacity];
             System.arraycopy(base, 0, tempBase, 0, base.length);
