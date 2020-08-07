@@ -14,7 +14,7 @@ public class ArrayList<T> implements List<T> {
     private int size;
 
     public ArrayList() {
-        values = (T[])new Object[DEFAULT_CAPACITY];
+        values = (T[]) new Object[DEFAULT_CAPACITY];
         size = 0;
     }
 
@@ -58,11 +58,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         isValid(index);
-        T[] arr = (T[])new Object[values.length];
-        System.arraycopy(values, 0, arr, 0, index);
-        System.arraycopy(values, index + 1, arr, index, size - 1 - index);
         T element = values[index];
-        values = arr;
+        System.arraycopy(values, index + 1, values, index, size - index);
         size--;
         return element;
     }
@@ -71,10 +68,7 @@ public class ArrayList<T> implements List<T> {
     public T remove(T t) {
         for (int i = 0; i < size; i++) {
             if (Objects.equals(t, values[i])) {
-                T[] arr = (T[])new Object[values.length];
-                System.arraycopy(values, 0, arr, 0, i);
-                System.arraycopy(values, i + 1, arr, i, size - i - 1);
-                values = arr;
+                System.arraycopy(values, i + 1, values, i, size - i);
                 size--;
                 return t;
             }
