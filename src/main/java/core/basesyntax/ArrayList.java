@@ -12,19 +12,18 @@ public class ArrayList<T> implements List<T> {
         numberOfElements = 0;
     }
 
-    public T[] grow() {
-        T[] arrayT = (T[]) new Object[elementData.length * 2];
+    private T[] grow() {
+        T[] arrayT = (T[]) new Object[(elementData.length * 3) / 2 + 1];
         System.arraycopy(elementData, 0, arrayT, 0, numberOfElements);
         return arrayT;
 
     }
 
-    public boolean checkIndex(int index) {
+    private boolean checkIndex(int index) {
         if (index < 0 || index >= numberOfElements) {
             throw new ArrayIndexOutOfBoundsException();
-        } else {
-            return true;
         }
+        return true;
     }
 
     @Override
@@ -92,10 +91,7 @@ public class ArrayList<T> implements List<T> {
         }
         if (index != -1) {
             T value = (T) elementData[index];
-            System.arraycopy(elementData, index + 1, elementData, index,
-                    numberOfElements - (index + 1));
-            numberOfElements--;
-            return value;
+            return value = remove(index);
         }
         throw new NoSuchElementException("Element not found!");
     }
