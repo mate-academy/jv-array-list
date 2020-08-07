@@ -87,11 +87,8 @@ public class ArrayList<T> implements List<T> {
             if (elementData[i] == t
                     || elementData[i] != null && elementData[i].equals(t)) {
                 index = i;
+                return t = remove(i);
             }
-        }
-        if (index != -1) {
-            T value = (T) elementData[index];
-            return value = remove(index);
         }
         throw new NoSuchElementException("Element not found!");
     }
