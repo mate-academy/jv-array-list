@@ -8,12 +8,13 @@ import java.util.NoSuchElementException;
  */
 public class ArrayList<T> implements List<T> {
 
-    private final int initSize = 10;
+    private static final int initSize = 10;
     private T[] strArray;
-    private int pointer = 0;
+    private int pointer;
 
     public ArrayList() {
         strArray = (T[]) new Object[initSize];
+        pointer = 0;
     }
 
     @Override
@@ -25,9 +26,9 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         ensureCapacity();
+        wrongIndexCheckForAdd(index);
         pointer++;
-        wrongIndexCheck(index);
-        System.arraycopy(strArray, index, strArray, index + 1, strArray.length - 1 - index);
+        System.arraycopy(strArray, index, strArray, index + 1, size() - 1 - index);
         strArray[index] = value;
     }
 
@@ -47,15 +48,13 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void set(T value, int index) {
         wrongIndexCheck(index);
-        ensureCapacity();
         strArray[index] = value;
     }
 
     @Override
     public T remove(int index) {
         wrongIndexCheck(index);
-        ensureCapacity();
-        int numMoved = strArray.length - index - 1;
+        int numMoved = size() - index - 1;
         T removed = strArray[index];
         System.arraycopy(strArray, index + 1, strArray, index, numMoved);
         pointer--;
@@ -64,14 +63,9 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T t) {
-        for (int i = 0; i < strArray.length; i++) {
+        for (int i = 0; i < size(); i++) {
             if (isEquals(t, i)) {
-                ensureCapacity();
-                T removed = strArray[i];
-                int numMoved = strArray.length - i - 1;
-                System.arraycopy(strArray, i + 1, strArray, i, numMoved);
-                pointer--;
-                return removed;
+                return remove(i);
             }
         }
         throw new NoSuchElementException("No such element");
@@ -88,7 +82,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void ensureCapacity() {
-        if (pointer + 1 == strArray.length) {
+        if (pointer == strArray.length) {
             T[] newArray = (T[]) new Object[strArray.length + strArray.length / 2];
             System.arraycopy(strArray, 0, newArray, 0, pointer);
             strArray = newArray;
@@ -97,6 +91,12 @@ public class ArrayList<T> implements List<T> {
 
     private void wrongIndexCheck(int index) {
         if (index < 0 || index >= pointer) {
+            throw new ArrayIndexOutOfBoundsException("Index is out of array.");
+        }
+    }
+
+    private void wrongIndexCheckForAdd(int index) {
+        if (index < 0 || index > pointer) {
             throw new ArrayIndexOutOfBoundsException("Index is out of array.");
         }
     }
