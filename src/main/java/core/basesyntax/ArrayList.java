@@ -32,7 +32,7 @@ public class ArrayList<T> implements List<T> {
 
     public void checkBounds(int index) {
         if (index < 0 || index >= filledWithElements) {
-            throw new ArrayIndexOutOfBoundsException();
+            throw new ArrayIndexOutOfBoundsException("Index is out of bond oa an array");
         }
     }
 
@@ -90,7 +90,7 @@ public class ArrayList<T> implements List<T> {
                 return remove(i);
             }
         }
-        throw new NoSuchElementException();
+        throw new NoSuchElementException("Such an element is not present in array");
     }
 
     @Override
