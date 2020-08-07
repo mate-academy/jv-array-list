@@ -91,14 +91,14 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    public T[] resize() {
+    private T[] resize() {
         T[] currentArray = (T[]) new Object[(arrayGeneric.length * 3) / 2 + 1];
         System.arraycopy(arrayGeneric, 0, currentArray, 0, size);
         return currentArray;
     }
 
-    public int findRemoveElement(T element) {
-        for (int i = 0; i < arrayGeneric.length; i++) {
+    private int findRemoveElement(T element) {
+        for (int i = 0; i < size; i++) {
             if (arrayGeneric[i] == element || arrayGeneric[i] != null
                     && arrayGeneric[i].equals(element)) {
                 return i;
@@ -107,14 +107,14 @@ public class ArrayList<T> implements List<T> {
         return -1;
     }
 
-    public T editArray(int index) {
+    private T editArray(int index) {
         T element = arrayGeneric[index];
         System.arraycopy(arrayGeneric, index + 1, arrayGeneric, index, size - (index + 1));
         arrayGeneric[--size] = null;
         return element;
     }
 
-    public boolean checkIndex(int index) {
+    private boolean checkIndex(int index) {
         if (index >= size || index < 0) {
             throw new ArrayIndexOutOfBoundsException(
                     "This index is not suitable for the given array");
