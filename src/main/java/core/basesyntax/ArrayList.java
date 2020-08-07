@@ -43,7 +43,6 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        checkCapacity();
         for (int i = 0; i < list.size(); i++) {
             add(list.get(i));
         }
@@ -91,9 +90,9 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    public void checkCapacity() {
+    private void checkCapacity() {
         if (size == elementData.length) {
-            grow(elementData.length);
+            grow();
         }
     }
 
@@ -109,8 +108,8 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private Object[] grow(int currentCapacity) {
-        int oldCapacity = currentCapacity;
+    private Object[] grow() {
+        int oldCapacity = elementData.length;
         int newCapacity = oldCapacity + (oldCapacity >> 1);
         elementData = Arrays.copyOf(elementData, newCapacity);
         return elementData;
