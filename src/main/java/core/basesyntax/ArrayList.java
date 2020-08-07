@@ -72,10 +72,7 @@ public class ArrayList<T> implements List<T> {
                 return remove(index);
             }
         }
-        if (true) {
-            throw new NoSuchElementException("The element is not found");
-        }
-        return null;
+        throw new NoSuchElementException("The element is not found");
     }
 
     @Override
