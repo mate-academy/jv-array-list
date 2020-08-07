@@ -58,8 +58,8 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        for (int i = 0; i < list.size(); i++) {
-            add(list.get(i));
+        for (int index = 0; index < list.size(); index++) {
+            add(list.get(index));
         }
     }
 
