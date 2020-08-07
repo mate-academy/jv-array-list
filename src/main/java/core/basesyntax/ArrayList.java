@@ -16,25 +16,6 @@ public class ArrayList<T> implements List<T> {
         array = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
-    private void check(int index) {
-        if (index >= currentAmount) {
-            throw new ArrayIndexOutOfBoundsException("No such index exists");
-        }
-    }
-
-    private void checkCapacity(int amount) {
-        if (array.length <= currentAmount + amount) {
-            int biggerLength = Math.max((array.length + (array.length >> 1)), amount);
-            T[] biggerArray = (T[]) new Object[biggerLength];
-            System.arraycopy(array, 0, biggerArray, 0, currentAmount);
-            array = biggerArray;
-        }
-    }
-
-    private int newLength() {
-        return array.length >> 1;
-    }
-
     @Override
     public void add(T value) {
         checkCapacity(newLength());
@@ -77,20 +58,14 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         check(index);
-        T removedObject = array[index];
-        currentAmount--;
-        System.arraycopy(array, index + 1, array, index, currentAmount);
-        return removedObject;
+        return removeObject(index);
     }
 
     @Override
     public T remove(T t) {
         for (int index = 0; index < currentAmount; index++) {
             if (t != null && t.equals(array[index]) || t == array[index]) {
-                T removedObject = array[index];
-                currentAmount--;
-                System.arraycopy(array, index + 1, array, index, currentAmount);
-                return removedObject;
+                return removeObject(index);
             }
         }
         throw new NoSuchElementException("No such element exists");
@@ -104,5 +79,31 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return currentAmount == 0;
+    }
+
+    private void check(int index) {
+        if (index >= currentAmount) {
+            throw new ArrayIndexOutOfBoundsException("No such index exists");
+        }
+    }
+
+    private void checkCapacity(int amount) {
+        if (array.length <= currentAmount + amount) {
+            int biggerLength = Math.max((array.length + (array.length >> 1)), amount);
+            T[] biggerArray = (T[]) new Object[biggerLength];
+            System.arraycopy(array, 0, biggerArray, 0, currentAmount);
+            array = biggerArray;
+        }
+    }
+
+    private int newLength() {
+        return array.length >> 1;
+    }
+
+    private T removeObject(int index) {
+        T removedObject = array[index];
+        currentAmount--;
+        System.arraycopy(array, index + 1, array, index, currentAmount);
+        return removedObject;
     }
 }
