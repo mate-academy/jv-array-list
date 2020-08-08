@@ -20,7 +20,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        extend();
+        checkCapacity();
         values[size] = value;
         size++;
     }
@@ -28,9 +28,9 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         if (index < 0 || index > size) {
-            throw new ArrayIndexOutOfBoundsException();
+            throw new ArrayIndexOutOfBoundsException("Элемента с таким индексом нет в списке!");
         }
-        extend();
+        checkCapacity();
         System.arraycopy(values, index, values, index + 1, size - index);
         values[index] = value;
         size++;
@@ -59,7 +59,7 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         isValid(index);
         T element = values[index];
-        System.arraycopy(values, index + 1, values, index, size - index);
+        System.arraycopy(values, index + 1, values, index, size - index - 1);
         size--;
         return element;
     }
@@ -68,12 +68,11 @@ public class ArrayList<T> implements List<T> {
     public T remove(T t) {
         for (int i = 0; i < size; i++) {
             if (Objects.equals(t, values[i])) {
-                System.arraycopy(values, i + 1, values, i, size - i);
-                size--;
+                remove(i);
                 return t;
             }
         }
-        throw new NoSuchElementException();
+        throw new NoSuchElementException("Такого элемента нет в списке!");
     }
 
     @Override
@@ -88,16 +87,15 @@ public class ArrayList<T> implements List<T> {
 
     private void isValid(int index) {
         if (index < 0 || index >= size) {
-            throw new ArrayIndexOutOfBoundsException();
+            throw new ArrayIndexOutOfBoundsException("Элемента с таким индексом нет в списке!");
         }
     }
 
-    private void extend() {
+    private void checkCapacity() {
         if (size == values.length) {
-            T[] extendedValues = (T[]) new Object[(int) Math.ceil(values.length * 2)];
+            T[] extendedValues = (T[]) new Object[(int) Math.ceil(values.length * 1.5)];
             System.arraycopy(values, 0, extendedValues, 0, size);
             values = extendedValues;
         }
     }
-
 }
