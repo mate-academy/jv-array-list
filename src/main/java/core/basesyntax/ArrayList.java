@@ -46,9 +46,6 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        if (size + list.size() >= elementData.length) {
-            elementData = Arrays.copyOf(elementData, (elementData.length * 3) / 2);
-        }
         int i;
         for (i = 0; i < list.size(); i++) {
             add(list.get(i));
@@ -68,7 +65,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     @Override
-    public T remove(int index) {
+    public T remove(int index) throws RuntimeException{
         indexCheck(index);
         T temp = (T) elementData[index];
         System.arraycopy(elementData, index + 1, elementData, index, size - index - 1);
@@ -77,9 +74,8 @@ public class ArrayList<T> implements List<T> {
     }
 
     @Override
-    public T remove(T t) throws NoSuchElementException {
-        int i = 0;
-        for (; i < size; i++) {
+    public T remove(T t) throws RuntimeException {
+        for (int i = 0; i < size; i++) {
             if (Objects.equals(elementData[i], t)) {
                 return remove(i);
             }
@@ -93,11 +89,11 @@ public class ArrayList<T> implements List<T> {
     }
 
     @Override
-    public boolean isEmpty() {
+    public boolean isEmpty() throws RuntimeException {
         return size == 0;
     }
 
-    public void indexCheck(int index) throws ArrayIndexOutOfBoundsException {
+    public void indexCheck(int index) throws RuntimeException {
         if (index >= size || index < 0) {
             throw new ArrayIndexOutOfBoundsException("Wrong index input!!!");
         }
