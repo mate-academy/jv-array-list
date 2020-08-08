@@ -46,8 +46,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        int i;
-        for (i = 0; i < list.size(); i++) {
+        for (int i = 0; i < list.size(); i++) {
             add(list.get(i));
         }
     }
@@ -65,7 +64,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     @Override
-    public T remove(int index) throws RuntimeException{
+    public T remove(int index) {
         indexCheck(index);
         T temp = (T) elementData[index];
         System.arraycopy(elementData, index + 1, elementData, index, size - index - 1);
@@ -74,7 +73,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     @Override
-    public T remove(T t) throws RuntimeException {
+    public T remove(T t) {
         for (int i = 0; i < size; i++) {
             if (Objects.equals(elementData[i], t)) {
                 return remove(i);
