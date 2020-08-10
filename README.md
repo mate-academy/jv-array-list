@@ -1,3 +1,5 @@
 # jv-array-list
-Реалізувати свій ArrayList який імплементує інтерфейс List. Дотриматися основних вимог щодо
-реалізації ArrayList (default capacity, newCapacity...)
+
+Create your own ArrayList class which implements List interface. Override the methods required.   
+Follow the main principles of the ArrayList implementation (default capacity etc.).
+
