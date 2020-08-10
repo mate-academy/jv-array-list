@@ -28,7 +28,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         if (index < 0 || index > size) {
-            throw new ArrayIndexOutOfBoundsException("Элемента с таким индексом нет в списке!");
+            throw new ArrayIndexOutOfBoundsException("No element with such index int the list!");
         }
         checkCapacity();
         System.arraycopy(values, index, values, index + 1, size - index);
@@ -72,7 +72,7 @@ public class ArrayList<T> implements List<T> {
                 return t;
             }
         }
-        throw new NoSuchElementException("Такого элемента нет в списке!");
+        throw new NoSuchElementException("No such element in the list");
     }
 
     @Override
@@ -87,7 +87,7 @@ public class ArrayList<T> implements List<T> {
 
     private void isValid(int index) {
         if (index < 0 || index >= size) {
-            throw new ArrayIndexOutOfBoundsException("Элемента с таким индексом нет в списке!");
+            throw new ArrayIndexOutOfBoundsException("No element with such index in the list!");
         }
     }
 
