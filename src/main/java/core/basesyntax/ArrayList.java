@@ -19,7 +19,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void resize() {
-        Object[] resizedValues = new Object[(int) Math.ceil(this.values.length  * 1.5)];
+        Object[] resizedValues = new Object[(int) Math.ceil(this.values.length * 1.5)];
         System.arraycopy(this.values, 0, resizedValues, 0, this.values.length);
         this.values = resizedValues;
     }
@@ -44,10 +44,11 @@ public class ArrayList<T> implements List<T> {
             }
             size++;
             values[index] = value;
-        } else if (index <= size - 1 ) {
+        } else if (index <= size - 1) {
             resize();
             size++;
-            System.arraycopy(this.values, index, this.values, index + 1, this.values.length - index - 1);
+            System.arraycopy(
+                    this.values, index, this.values, index + 1, this.values.length - index - 1);
             values[index] = value;
         }
         validIndex(index);
@@ -80,7 +81,8 @@ public class ArrayList<T> implements List<T> {
             return (T) values[index];
         } else {
             Object item = values[index];
-            System.arraycopy(this.values, index + 1, this.values, index, this.values.length - index - 1);
+            System.arraycopy(
+                    this.values, index + 1, this.values, index, this.values.length - index - 1);
             size--;
             return (T) item;
         }
