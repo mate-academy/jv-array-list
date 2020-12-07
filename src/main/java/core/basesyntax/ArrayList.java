@@ -24,7 +24,7 @@ public class ArrayList<T> implements List<T> {
         this.values = resizedValues;
     }
 
-    private void validIndex(int index) {
+    private void isValidIndex(int index) {
         if (index >= this.size) {
             throw new ArrayIndexOutOfBoundsException(
                     "Index " + index + " out of bounds for capacity " + this.values.length);
@@ -51,7 +51,7 @@ public class ArrayList<T> implements List<T> {
                     this.values, index, this.values, index + 1, this.values.length - index - 1);
             values[index] = value;
         }
-        validIndex(index);
+        isValidIndex(index);
     }
 
     @Override
@@ -63,19 +63,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        validIndex(index);
+        isValidIndex(index);
         return (T) values[index];
     }
 
     @Override
     public void set(T value, int index) {
-        validIndex(index);
+        isValidIndex(index);
         values[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        validIndex(index);
+        isValidIndex(index);
         if (index == this.size - 1) {
             size--;
             return (T) values[index];
