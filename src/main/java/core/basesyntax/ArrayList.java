@@ -18,6 +18,14 @@ public class ArrayList<T> implements List<T> {
         things = newArray;
     }
 
+    private T[] toArray(List<T> list) {
+        T[] array = (T[]) new Object[list.size()];
+        for (int i = 0; i < array.length; i++) {
+            array[i] = list.get(i);
+        }
+        return array;
+    }
+
     @Override
     public void add(T value) {
         if (size == things.length) {
@@ -43,9 +51,11 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        for (int i = 0; i < list.size(); i++) {
-            add(list.get(i));
+        while (things.length < size + list.size()) {
+            resizing();
         }
+        System.arraycopy(toArray(list), 0, things, size, list.size());
+        size += list.size();
     }
 
     @Override
