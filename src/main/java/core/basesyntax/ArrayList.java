@@ -74,10 +74,13 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
+        if (element == null) {
+            return null;
+        }
         int index = getIndex(element);
         if (index == -1) {
             throw new NoSuchElementException("The "
-                    + element.toString() + "wasn't found in the list!");
+                    + element.toString() + " wasn't found in the list!");
         }
         return index == -1 ? null : remove(index);
     }
@@ -113,7 +116,7 @@ public class ArrayList<T> implements List<T> {
         if (array.length == LIST_MAX_SIZE) {
             throw new ArrayStoreException("List size reached maximum");
         }
-        int newLength = Math.min((array.length >> 1), LIST_MAX_SIZE);
+        int newLength = Math.min((array.length >> 1) + array.length, LIST_MAX_SIZE);
         array = Arrays.copyOf(array, newLength);
     }
     /*
