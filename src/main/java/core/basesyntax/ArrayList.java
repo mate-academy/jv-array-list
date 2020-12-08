@@ -25,6 +25,13 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         indexValidation(index);
+        if(array.length <= size + 1) {
+            expandArray();
+        }
+        T[] newArray = Arrays.copyOfRange(array, 0, index - 1);
+        newArray[index] = value;
+        System.arraycopy(array, index, newArray, index + 1, size - index);
+        array = newArray;
         size += 1;
     }
 
