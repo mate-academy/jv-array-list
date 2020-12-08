@@ -110,8 +110,4 @@ public class ArrayList<T> implements List<T> {
         int newLength = Math.min((array.length >> 1) + array.length, LIST_MAX_SIZE);
         array = Arrays.copyOf(array, newLength);
     }
-    /*
-    returns index of the specific element in the list
-    if no such element returns -1
-     */
 }
