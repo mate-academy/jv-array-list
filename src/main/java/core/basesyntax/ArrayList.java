@@ -4,15 +4,14 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int ARRAY_SIZE = 10;
-    private static final int MAX_ARRAY_SIZE = Integer.MAX_VALUE;
     private Object[] array = new Object[ARRAY_SIZE];
     private int counter = 0;
 
     private void resize(int minSize) {
         int newSize = minSize + (minSize >> 1);
-        if (newSize - MAX_ARRAY_SIZE >= 0) {
+        if (newSize <= 0) {
             throw new ArrayIndexOutOfBoundsException("Array is out of integer bounds and "
-                    + "I didn't implemented hugeCapacity() yet");
+                    + "require hugeCapacity() implementation. It's can't be bigger right now!");
         }
         Object[] oldArray = array;
         array = new Object[newSize];
