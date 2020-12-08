@@ -43,7 +43,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void set(T value, int index) {
-        indexValidation(index);
+        T element = get(index);
     }
 
     @Override
@@ -58,9 +58,8 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        int index = 0;
-
-        return remove(index);
+        int index = getIndex(element);
+        return index == -1 ? null : remove(index);
     }
 
     @Override
@@ -88,15 +87,17 @@ public class ArrayList<T> implements List<T> {
         array = Arrays.copyOf(array, newLength);
     }
 
+    /*
+    returns index of the specific element in the list
+    if no such element returns -1
+     */
     public int getIndex(T element) {
-        int index = 0;
-        for (T value : array) {
-            if (value.equals(element)) {
-                break;
+        for (int i = 0; i < size; i++) {
+            if (!array[i].equals(element)) {
+                continue;
             }
-            index += 1;
-            continue;
+            return i;
         }
-        return index;
+        return -1;
     }
 }
