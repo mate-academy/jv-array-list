@@ -48,12 +48,22 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         indexValidation(index);
-        return null;
+        T removed = array[index];
+
+        return removed;
     }
 
     @Override
-    public T remove(T t) {
-        return null;
+    public T remove(T element) {
+        int index = 0;
+        for (T value : array) {
+            if (value.equals(element)) {
+                break;
+            }
+            index += 1;
+            continue;
+        }
+        return remove(index);
     }
 
     @Override
