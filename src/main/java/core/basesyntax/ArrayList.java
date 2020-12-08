@@ -3,18 +3,15 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    private static final int ARRAY_SIZE = 8;
+    private static final int ARRAY_SIZE = 10;
     private static final int MAX_ARRAY_SIZE = Integer.MAX_VALUE;
     private Object[] array = new Object[ARRAY_SIZE];
     private int counter = 0;
 
     private void resize(int minSize) {
-        if (minSize < 0) {
-            throw new OutOfMemoryError();
-        }
-        int newSize = minSize + (minSize >> 2);
+        int newSize = minSize + (minSize >> 1);
         if (newSize - MAX_ARRAY_SIZE >= 0) {
-            throw new RuntimeException("Array is out of integer bounds and "
+            throw new ArrayIndexOutOfBoundsException("Array is out of integer bounds and "
                     + "I didn't implemented hugeCapacity() yet");
         }
         Object[] oldArray = array;
@@ -96,6 +93,6 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public boolean isEmpty() {
-        return counter <= 0;
+        return counter == 0;
     }
 }
