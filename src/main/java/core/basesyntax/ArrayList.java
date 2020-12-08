@@ -25,6 +25,13 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         indexValidation(index);
+        if (array.length <= size + 1) {
+            expandArray();
+        }
+        T[] newArray = Arrays.copyOfRange(array, 0, index - 1);
+        newArray[index] = value;
+        System.arraycopy(array, index, newArray, index + 1, size - index);
+        array = newArray;
         size += 1;
     }
 
@@ -80,6 +87,16 @@ public class ArrayList<T> implements List<T> {
         return array[0] == null;
     }
 
+    public int getIndex(T element) {
+        for (int i = 0; i < size; i++) {
+            if (!array[i].equals(element)) {
+                continue;
+            }
+            return i;
+        }
+        return -1;
+    }
+
     private void indexValidation(int index) {
         if (index >= size) {
             throw new IndexOutOfBoundsException("Index " + index
@@ -94,18 +111,8 @@ public class ArrayList<T> implements List<T> {
         int newLength = Math.min((array.length >> 1), LIST_MAX_SIZE);
         array = Arrays.copyOf(array, newLength);
     }
-
     /*
     returns index of the specific element in the list
     if no such element returns -1
      */
-    public int getIndex(T element) {
-        for (int i = 0; i < size; i++) {
-            if (!array[i].equals(element)) {
-                continue;
-            }
-            return i;
-        }
-        return -1;
-    }
 }
