@@ -4,6 +4,7 @@ import java.util.Arrays;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_LENGTH = 10;
+    private static final int LIST_MAX_SIZE = Integer.MAX_VALUE - 8;
     private int size = 0;
     private T[] array;
 
@@ -72,6 +73,10 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void expandArray() {
-        array = Arrays.copyOf(array, (int) (array.length * 1.5));
+        if (array.length == LIST_MAX_SIZE) {
+            throw new ArrayStoreException("List size reached maximum");
+        }
+        int newLength = Math.min((array.length >> 1), LIST_MAX_SIZE);
+        array = Arrays.copyOf(array, newLength);
     }
 }
