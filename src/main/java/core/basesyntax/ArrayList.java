@@ -74,9 +74,6 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        if (element == null) {
-            return null;
-        }
         int index = getIndex(element);
         if (index == -1) {
             throw new NoSuchElementException("The "
@@ -97,10 +94,9 @@ public class ArrayList<T> implements List<T> {
 
     public int getIndex(T element) {
         for (int i = 0; i < size; i++) {
-            if (!array[i].equals(element)) {
-                continue;
+            if (array[i] == element || array[i].equals(element)) {
+                return i;
             }
-            return i;
         }
         return -1;
     }
