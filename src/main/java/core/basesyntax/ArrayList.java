@@ -11,7 +11,14 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
+        if (size == array.length) {
+            expandArray();
+        }
+        array[size] = value;
+        size += 1;
+    }
 
+    private void expandArray() {
     }
 
     @Override
@@ -21,7 +28,9 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
+        for (T value : list) {
 
+        }
     }
 
     @Override
@@ -46,7 +55,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public int size() {
-        return CURRENT_SIZE;
+        return size;
     }
 
     @Override
