@@ -55,12 +55,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void set(T value, int index) {
         indexValidation(index);
-        int indexValue = getIndex(value);
-        if (indexValue != -1) {
-            T elementAtIndex = get(index);
-            array[index] = value;
-            array[indexValue] = elementAtIndex;
-        }
+        array[index] = value;
     }
 
     @Override
