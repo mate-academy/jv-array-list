@@ -5,20 +5,17 @@ import java.util.NoSuchElementException;
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private static final Object[] EMPTY_DATA = {};
-    private static final int ZERO = 0;
-    private static final int ONE = 1;
     private T[] elements;
     private int size;
 
     public ArrayList() {
         this.elements = (T[]) new Object[DEFAULT_CAPACITY];
-        this.size = ZERO;
     }
 
     @Override
     public void add(T value) {
         if (elements.length == size) {
-            grow(size + ONE);
+            grow(size + 1);
         }
         elements[size] = value;
         size++;
@@ -28,9 +25,9 @@ public class ArrayList<T> implements List<T> {
     public void add(T value, int index) {
         rangeCheckForAdd(index);
         if (elements.length == size) {
-            grow(size + ONE);
+            grow(size + 1);
         }
-        System.arraycopy(elements, index, elements, index + ONE, size - index);
+        System.arraycopy(elements, index, elements, index + 1, size - index);
         elements[index] = value;
         size++;
     }
@@ -38,10 +35,10 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void addAll(List<T> list) {
         T[] listElements = (T[]) new Object[list.size()];
-        for (int i = ZERO; i < list.size(); i++) {
+        for (int i = 0; i < list.size(); i++) {
             listElements[i] = list.get(i);
         }
-        System.arraycopy(listElements, ZERO, elements, size, listElements.length);
+        System.arraycopy(listElements, 0, elements, size, listElements.length);
         size += listElements.length;
         ;
     }
@@ -71,7 +68,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T t) {
-        for (int i = ZERO; i < size; i++) {
+        for (int i = 0; i < size; i++) {
             if (t == null) {
                 size--;
                 return null;
@@ -90,7 +87,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public boolean isEmpty() {
-        if (size == ZERO) {
+        if (size == 0) {
             return true;
         }
         return false;
@@ -98,12 +95,12 @@ public class ArrayList<T> implements List<T> {
 
     private T[] grow(int minCapacity) {
         int oldCapacity = elements.length;
-        if (oldCapacity > ZERO || elements != EMPTY_DATA) {
-            int newCapacity = oldCapacity + (oldCapacity >> ONE);
+        if (oldCapacity > 0 || elements != EMPTY_DATA) {
+            int newCapacity = oldCapacity + (oldCapacity >> 1);
             T[] newElements = (T[]) new Object[size];
-            System.arraycopy(elements, ZERO, newElements, ZERO, size);
+            System.arraycopy(elements, 0, newElements, 0, size);
             elements = (T[]) new Object[newCapacity];
-            System.arraycopy(newElements, ZERO, elements, ZERO, size);
+            System.arraycopy(newElements, 0, elements, 0, size);
         } else {
             return elements = (T[]) new Object[Math.max(DEFAULT_CAPACITY, minCapacity)];
         }
@@ -111,14 +108,14 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void rangeCheckForAdd(int index) {
-        if (index > size || index < ZERO) {
+        if (index > size || index < 0) {
             throw new ArrayIndexOutOfBoundsException("Your index is more than size "
                     + "or index is less than 0");
         }
     }
 
     private void rangeCheckForGet(int index) {
-        if (index >= size || index < ZERO) {
+        if (index >= size || index < 0) {
             throw new ArrayIndexOutOfBoundsException("Your index is more than size "
                     + "or index is less than 0");
         }
@@ -126,7 +123,7 @@ public class ArrayList<T> implements List<T> {
 
     private void fastRemove(T[] array, int index) {
         if (--size > index) {
-            System.arraycopy(array, index + ONE, array, index, size - index);
+            System.arraycopy(array, index + 1, array, index, size - index);
         }
         rangeCheckForAdd(size);
         array[size] = null;
