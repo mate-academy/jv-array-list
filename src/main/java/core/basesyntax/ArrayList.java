@@ -5,11 +5,12 @@ import java.util.Arrays;
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_LENGTH = 10;
     private static final int LIST_MAX_SIZE = Integer.MAX_VALUE - 8;
-    private int size = 0;
+    private int size;
     private T[] array;
 
     public ArrayList() {
         this.array = (T[]) new Object[DEFAULT_LENGTH];
+        size = 0;
     }
 
     @Override
