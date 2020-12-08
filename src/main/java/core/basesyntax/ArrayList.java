@@ -1,6 +1,7 @@
 package core.basesyntax;
 
 import java.util.Arrays;
+import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_LENGTH = 10;
@@ -37,7 +38,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        for (int i = 1; i < list.size(); i++) {
+        for (int i = 0; i < list.size(); i++) {
             add(list.get(i));
         }
     }
@@ -53,6 +54,7 @@ public class ArrayList<T> implements List<T> {
      */
     @Override
     public void set(T value, int index) {
+        indexValidation(index);
         int indexValue = getIndex(value);
         if (indexValue != -1) {
             T elementAtIndex = get(index);
@@ -73,6 +75,10 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         int index = getIndex(element);
+        if (index == -1) {
+            throw new NoSuchElementException("The "
+                    + element.toString() + "wasn't found in the list!");
+        }
         return index == -1 ? null : remove(index);
     }
 
@@ -97,8 +103,8 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void indexValidation(int index) {
-        if (index >= size) {
-            throw new IndexOutOfBoundsException("Index " + index
+        if (index >= size || index < 0) {
+            throw new ArrayIndexOutOfBoundsException("Index " + index
                     + " is out of the range of list size " + size);
         }
     }
