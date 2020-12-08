@@ -25,6 +25,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         indexValidation(index);
+        size += 1;
     }
 
     @Override
@@ -50,19 +51,15 @@ public class ArrayList<T> implements List<T> {
         indexValidation(index);
         T removed = array[index];
 
+
+        size -= 1;
         return removed;
     }
 
     @Override
     public T remove(T element) {
         int index = 0;
-        for (T value : array) {
-            if (value.equals(element)) {
-                break;
-            }
-            index += 1;
-            continue;
-        }
+
         return remove(index);
     }
 
@@ -89,5 +86,17 @@ public class ArrayList<T> implements List<T> {
         }
         int newLength = Math.min((array.length >> 1), LIST_MAX_SIZE);
         array = Arrays.copyOf(array, newLength);
+    }
+
+    public int getIndex(T element) {
+        int index = 0;
+        for (T value : array) {
+            if (value.equals(element)) {
+                break;
+            }
+            index += 1;
+            continue;
+        }
+        return index;
     }
 }
