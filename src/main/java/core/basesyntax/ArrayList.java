@@ -1,5 +1,7 @@
 package core.basesyntax;
 
+import java.util.Arrays;
+
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_LENGTH = 10;
     private int size = 0;
@@ -70,5 +72,6 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void expandArray() {
+        array = Arrays.copyOf(array, (int) (array.length * 1.5));
     }
 }
