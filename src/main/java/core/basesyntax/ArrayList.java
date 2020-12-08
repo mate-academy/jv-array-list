@@ -18,12 +18,9 @@ public class ArrayList<T> implements List<T> {
         size += 1;
     }
 
-    private void expandArray() {
-    }
-
     @Override
     public void add(T value, int index) {
-
+        indexValidation(index);
     }
 
     @Override
@@ -41,7 +38,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void set(T value, int index) {
-
+        indexValidation(index);
     }
 
     @Override
@@ -70,5 +67,8 @@ public class ArrayList<T> implements List<T> {
             throw new IndexOutOfBoundsException("Index " + index
                     + " is out of the range of list size " + size);
         }
+    }
+
+    private void expandArray() {
     }
 }
