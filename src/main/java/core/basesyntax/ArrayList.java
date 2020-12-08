@@ -41,6 +41,9 @@ public class ArrayList<T> implements List<T> {
         return array[index];
     }
 
+    /*
+    if value wasn't found in list then no actions provided
+     */
     @Override
     public void set(T value, int index) {
         int indexValue = getIndex(value);
