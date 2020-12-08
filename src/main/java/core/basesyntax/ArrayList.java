@@ -89,7 +89,7 @@ public class ArrayList<T> implements List<T> {
 
     public int getIndex(T element) {
         for (int i = 0; i < size; i++) {
-            if (array[i] == element || array[i].equals(element)) {
+            if (array[i] == element || array[i] != null && array[i].equals(element)) {
                 return i;
             }
         }
