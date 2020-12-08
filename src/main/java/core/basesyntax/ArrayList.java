@@ -28,8 +28,8 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        for (T value : list) {
-
+        for (int i = 1; i < list.size(); i++) {
+            add(list.get(i));
         }
     }
 
