@@ -35,7 +35,11 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        return null;
+        if (index >= size) {
+            throw new IndexOutOfBoundsException("Index " + index
+            + " is out of the range of list size " + size);
+        }
+        return array[index];
     }
 
     @Override
@@ -60,6 +64,6 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public boolean isEmpty() {
-        return false;
+        return array[0] == null;
     }
 }
