@@ -12,22 +12,10 @@ public class ArrayList<T> implements List<T> {
         size = 0;
     }
 
-    private int newCapacity(int oldCapacity) {
-        return (int) (oldCapacity * 1.5);
-    }
-
-    private T[] grow() {
-        return Arrays.copyOf(elementData, newCapacity(size));
-    }
-
-    private boolean isIndexValid(int index) {
-        return index >= 0 && index < size;
-    }
-
     @Override
     public void add(T value) {
         if (size == elementData.length) {
-            grow();
+            elementData = grow();
         }
         elementData[size] = value;
         size++;
@@ -36,7 +24,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         if (size == elementData.length) {
-            grow();
+            elementData = grow();
         }
         if (index == size) {
             add(value);
@@ -48,7 +36,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void addAll(List<T> list) {
         while (list.size() + size > elementData.length) {
-            grow();
+            elementData = grow();
         }
         for (int i = 0; i < list.size(); i++) {
             add(list.get(i));
@@ -86,7 +74,11 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T t) {
-        return null;
+        if (!isIndexValid(getIndex(t))) {
+            return t;
+        }
+        remove(getIndex(t));
+        return t;
     }
 
     @Override
@@ -97,5 +89,28 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private int newCapacity(int oldCapacity) {
+        return (int) (oldCapacity * 1.5);
+    }
+
+    private T[] grow() {
+        return Arrays.copyOf(elementData, newCapacity(size));
+    }
+
+    private boolean isIndexValid(int index) {
+        return index >= 0 && index < size;
+    }
+
+    private int getIndex(T value) {
+        int index = 0;
+        for(T element: elementData) {
+            if (value == element || value != null && value.equals(element)) {
+                return index;
+            }
+            index++;
+        }
+        return -1;
     }
 }
