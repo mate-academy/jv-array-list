@@ -92,7 +92,7 @@ public class ArrayList<T> implements List<T> {
 
     private static void checkIndex(int index, int length) {
         if (index < 0 || index >= length) {
-            throw new ArrayIndexOutOfBoundsException(String.format("Index %d incorrect.", index));
+            throw new  ArrayIndexOutOfBoundsException(String.format("Index %d incorrect.", index));
         }
     }
 }
