@@ -43,12 +43,20 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-
+        while (list.size() + size > elementData.length) {
+            grow();
+        }
+        for (int i = 0; i < list.size(); i++) {
+            add(list.get(i));
+        }
     }
 
     @Override
     public T get(int index) {
-        return null;
+        if (index >= size) {
+            throw new RuntimeException("Index out of size");
+        }
+        return elementData[index];
     }
 
     @Override
