@@ -18,8 +18,7 @@ public class ArrayList<T> implements List<T> {
         if (size == array.length) {
             expandArray();
         }
-        array[size] = value;
-        size += 1;
+        array[size++] = value;
     }
 
     @Override
