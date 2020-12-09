@@ -54,13 +54,14 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         if (index >= size) {
-            throw new RuntimeException("Index out of size");
+            throw new ArrayIndexOutOfBoundsException();
         }
         return elementData[index];
     }
 
     @Override
     public void set(T value, int index) {
+
 
     }
 
