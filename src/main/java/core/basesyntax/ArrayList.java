@@ -1,6 +1,5 @@
 package core.basesyntax;
 
-import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
@@ -104,6 +103,8 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayStoreException("List size reached maximum");
         }
         int newLength = Math.min((array.length >> 1) + array.length, LIST_MAX_SIZE);
-        array = Arrays.copyOf(array, newLength);
+        T[] newArray = (T[]) new Object[newLength];
+        System.arraycopy(array, 0, newArray, 0, array.length);
+        array = newArray;
     }
 }
