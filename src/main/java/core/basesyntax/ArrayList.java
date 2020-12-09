@@ -68,10 +68,7 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayIndexOutOfBoundsException();
         }
         T removedElement = get(index);
-        for (int i = 0; i + index + 1 < size; i++) {
-            elementData[index + i] = elementData [index + i + 1];
-        }
-        size--;
+        arrayShift(index);
         return removedElement;
     }
 
@@ -123,5 +120,12 @@ public class ArrayList<T> implements List<T> {
         }
         elementData[index] = value;
         size++;
+    }
+
+    private void arrayShift(int index) {
+        for (int i = 0; i + index + 1 < size; i++) {
+            elementData[index + i] = elementData [index + i + 1];
+        }
+        size--;
     }
 }
