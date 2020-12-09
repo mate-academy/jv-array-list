@@ -1,7 +1,6 @@
 package core.basesyntax;
 
 import java.util.Arrays;
-import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
@@ -76,7 +75,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T t) {
         if (!isIndexValid(getIndex(t))) {
-            throw new NoSuchElementException();
+            return t;
         }
         remove(getIndex(t));
         return t;
