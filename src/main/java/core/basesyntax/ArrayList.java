@@ -70,7 +70,7 @@ public class ArrayList<T> implements List<T> {
             throw new NoSuchElementException("The "
                     + element.toString() + " wasn't found in the list!");
         }
-        return index == -1 ? null : remove(index);
+        return remove(index);
     }
 
     @Override
