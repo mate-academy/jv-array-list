@@ -1,49 +1,89 @@
 package core.basesyntax;
 
+import java.util.Arrays;
+import java.util.NoSuchElementException;
+
 public class ArrayList<T> implements List<T> {
+    private static final int ARRAY_CAPACITY = 10;
+    private int size = 0;
+    private T[] data = (T[]) new Object[ARRAY_CAPACITY];
 
     @Override
     public void add(T value) {
-
+        if (size == data.length) {
+            increaseCapacity();
+        }
+        data[size] = value;
+        size++;
     }
 
     @Override
     public void add(T value, int index) {
-
+        if (size == data.length) {
+            increaseCapacity();
+        }
+        System.arraycopy(data, index, data, index + 1, size - index);
+        data[index] = value;
+        size++;
     }
 
     @Override
     public void addAll(List<T> list) {
-
+        for (int i = 0; i < list.size(); i++) {
+            this.add(list.get(i));
+        }
     }
 
     @Override
     public T get(int index) {
-        return null;
+        chekIsIndexExist(index);
+        return data[index];
     }
 
     @Override
     public void set(T value, int index) {
-
+        chekIsIndexExist(index);
+        data[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        return null;
+        chekIsIndexExist(index);
+        T removedValueByIndex = data[index];
+        System.arraycopy(data, index + 1, data, index,size - index);
+        size--;
+        return removedValueByIndex;
     }
 
     @Override
     public T remove(T t) {
-        return null;
+        int indexOfRemovedValue = Arrays.asList(data).indexOf(t);
+        if (indexOfRemovedValue < 0) {
+            throw new NoSuchElementException("Value not finded! Try another value!");
+        }
+        return remove(indexOfRemovedValue);
     }
 
     @Override
     public int size() {
-        return 0;
+        return size;
     }
 
     @Override
     public boolean isEmpty() {
-        return false;
+        return size == 0;
     }
+
+    public void increaseCapacity() {
+        T[] newData = (T[]) new Object[(int) (data.length * 1.5)];
+        System.arraycopy(data, 0, newData, 0, size);
+        data = newData;
+    }
+
+    public void chekIsIndexExist(int index) {
+        if (size <= index || index < 0) {
+            throw new ArrayIndexOutOfBoundsException("Index not exist. Choose another index.");
+        }
+    }
+
 }
