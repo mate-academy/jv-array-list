@@ -11,7 +11,6 @@ public class ArrayList<T> implements List<T> {
 
     public ArrayList() {
         this.array = (T[]) new Object[DEFAULT_LENGTH];
-        size = 0;
     }
 
     @Override
