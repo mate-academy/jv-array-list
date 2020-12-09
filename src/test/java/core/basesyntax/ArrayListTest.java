@@ -187,9 +187,11 @@ public class ArrayListTest {
         cats.add(thirdCat);
         Assert.assertEquals("Test failed! Size of array should be " + 3 + "but it is "
                 + cats.size(), 3, cats.size());
+        cats.add(fourthCat);
         Cat actualResult = cats.remove(fourthCat);
         Assert.assertEquals("Test failed! Returned value should be " + actualResult.toString(),
                 fourthCat, actualResult);
+        Cat actualR = cats.remove(secondCat);
         Assert.assertEquals("Test failed! Size of array should be " + 2 + "but it is "
                 + cats.size(), 2, cats.size());
     }
