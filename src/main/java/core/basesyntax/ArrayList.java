@@ -17,8 +17,7 @@ public class ArrayList<T> implements List<T> {
         if (size == elementData.length) {
             grow();
         }
-        elementData[size] = value;
-        size++;
+        elementData[size++] = value;
     }
 
     @Override
@@ -58,27 +57,20 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(int index) {
-        rangeCheck(index);
+        checkIndex(index);
         T result = elementData[index];
         System.arraycopy(elementData, index + 1,
                 elementData, index, size - index);
-        size -= 1;
+        size--;
         return result;
     }
 
     @Override
     public T remove(T t) {
-        if (t == null) {
-            for (int i = 0; i < size; i++) {
-                if (elementData[i] == null) {
-                    return remove(i);
-                }
-            }
-        } else {
-            for (int i = 0; i < size; i++) {
-                if (t.equals(elementData[i])) {
-                    return remove(i);
-                }
+        for (int i = 0; i < size; i++) {
+            if ((t == null && elementData[i] == null)
+                    || (t != null && t.equals(elementData[i]))) {
+                return remove(i);
             }
         }
         throw new NoSuchElementException("There is no such element!");
