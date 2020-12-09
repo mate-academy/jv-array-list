@@ -4,8 +4,12 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int ARRAY_SIZE = 10;
-    private Object[] array = new Object[ARRAY_SIZE];
+    private Object[] array;
     private int counter = 0;
+
+    public ArrayList() {
+        array = new Object[ARRAY_SIZE];
+    }
 
     private void resize(int minSize) {
         int newSize = minSize + (minSize >> 1);
