@@ -28,10 +28,8 @@ public class ArrayList<T> implements List<T> {
             expandArray();
         }
         indexValidation(index);
-        T[] newArray = Arrays.copyOf(array, array.length);
-        newArray[index] = value;
-        System.arraycopy(array, index, newArray, index + 1, size - index);
-        array = newArray;
+        System.arraycopy(array, index, array, index + 1, size - index);
+        array[index] = value;
     }
 
     @Override
