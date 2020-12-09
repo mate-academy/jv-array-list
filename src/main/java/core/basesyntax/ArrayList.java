@@ -20,6 +20,10 @@ public class ArrayList<T> implements List<T> {
         return Arrays.copyOf(elementData, newCapacity(size));
     }
 
+    private boolean isIndexValid(int index) {
+        return index >= 0 && index < size;
+    }
+
     @Override
     public void add(T value) {
         if (size == elementData.length) {
@@ -53,7 +57,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index >= size) {
+        if (isIndexValid(index)) {
             throw new ArrayIndexOutOfBoundsException();
         }
         return elementData[index];
@@ -61,8 +65,10 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void set(T value, int index) {
-
-
+        if (isIndexValid(index)) {
+            throw new ArrayIndexOutOfBoundsException();
+        }
+        elementData[index] = value;
     }
 
     @Override
