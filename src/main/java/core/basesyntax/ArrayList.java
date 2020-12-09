@@ -44,9 +44,6 @@ public class ArrayList<T> implements List<T> {
         return array[index];
     }
 
-    /*
-    if value wasn't found in list then no actions provided
-     */
     @Override
     public void set(T value, int index) {
         indexValidation(index);
@@ -79,7 +76,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public boolean isEmpty() {
-        return array[0] == null;
+        return array[0] == null || size == 0;
     }
 
     public int getIndex(T element) {
