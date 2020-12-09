@@ -18,8 +18,8 @@ public class ArrayList<T> implements List<T> {
         list = newList;
     }
 
-    private void arrayIndexOutOfBoundException(int index) {
-        if (index >= size) {
+    private void checkIndex(int index) {
+        if (index >= size || index < 0) {
             throw new ArrayIndexOutOfBoundsException("Incorrect index");
         }
     }
@@ -39,13 +39,10 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (size == list.length) {
-            isListFull();
-        }
+        isListFull();
         System.arraycopy(list, index, list, index + 1, size - index);
         list[index] = value;
         size++;
-        arrayIndexOutOfBoundException(index);
     }
 
     @Override
@@ -57,43 +54,36 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        arrayIndexOutOfBoundException(index);
+        checkIndex(index);
         return list[index];
     }
 
     @Override
     public void set(T value, int index) {
-        arrayIndexOutOfBoundException(index);
+        checkIndex(index);
         if (index < size) {
             list[index] = value;
-        } else {
-            add(value);
         }
     }
 
     @Override
     public T remove(int index) {
-        arrayIndexOutOfBoundException(index);
-        T remove = get(index);
+        checkIndex(index);
+        T removedElement = get(index);
         System.arraycopy(list, index + 1, list, index, size - index);
         size--;
-        return remove;
+        return removedElement;
     }
 
     @Override
     public T remove(T t) {
-        int index = -1;
-        if (t == null) {
-            size--;
-            return null;
-        }
         for (int i = 0; i < size; i++) {
-            if ((t.equals(list[i]) || t == list[i])) {
-                index = i;
+            if (t == null) {
+                size--;
+                return null;
+            } else if (t.equals(list[i])) {
+                return remove(i);
             }
-        }
-        if (index != -1) {
-            return remove(index);
         }
         throw new NoSuchElementException("Element isn't found");
     }
