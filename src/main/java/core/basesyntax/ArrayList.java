@@ -23,13 +23,16 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
+        if (!isIndexValid(index) && index != size) {
+            throw new ArrayIndexOutOfBoundsException();
+        }
         if (size == elementData.length) {
             elementData = grow();
         }
         if (index == size) {
             add(value);
         } else {
-            System.arraycopy(elementData, index, elementData, index + 1, size - index);
+            addElementInMiddle(value, index);
         }
     }
 
@@ -112,5 +115,13 @@ public class ArrayList<T> implements List<T> {
             index++;
         }
         return -1;
+    }
+
+    private void addElementInMiddle(T value, int index) {
+        for (int i = size; i > index; i--) {
+            elementData[i] = elementData[i - 1];
+        }
+        elementData[index] = value;
+        size++;
     }
 }
