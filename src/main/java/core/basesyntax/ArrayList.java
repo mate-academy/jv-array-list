@@ -31,7 +31,14 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-
+        if (size == elementData.length) {
+            grow();
+        }
+        if (index == size) {
+            add(value);
+        } else {
+            System.arraycopy(elementData, index, elementData, index + 1, size - index);
+        }
     }
 
     @Override
