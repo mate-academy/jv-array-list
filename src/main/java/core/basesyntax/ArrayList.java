@@ -21,6 +21,9 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
+        if (index > size()) {
+            throw new ArrayIndexOutOfBoundsException("Out of bounds for index: " + index);
+        }
         resizeIfRequire(index);
         System.arraycopy(array, index, array, index + 1, counter - index);
         array[index] = value;
@@ -29,7 +32,6 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        resizeIfRequire(list.size() + array.length);
         for (int i = 0; i < list.size(); i++) {
             add(list.get(i));
         }
@@ -84,11 +86,14 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void resizeIfRequire(int minSize) {
+        if (minSize < 0) {
+            throw new ArrayIndexOutOfBoundsException("Out of bounds for index: " + minSize);
+        }
         if (counter == array.length) {
             int newSize = minSize + (minSize >> 1);
             if (newSize <= 0) {
                 throw new ArrayIndexOutOfBoundsException("Array is out of integer bounds and "
-                        + "require hugeCapacity() implementation. It's can't be bigger right now!");
+                    + "require hugeCapacity() implementation. It's can't be bigger right now!");
             }
             Object[] oldArray = array;
             array = new Object[newSize];
