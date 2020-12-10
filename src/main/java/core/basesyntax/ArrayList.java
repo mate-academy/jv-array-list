@@ -35,15 +35,12 @@ public class ArrayList<T> implements List<T> {
 
     private void grow() {
         Object[] newArray = new Object[(int) (arraylist.length * INCREASE_ARRAY)];
-        System.arraycopy(arraylist,0,newArray,0,size);
+        System.arraycopy(arraylist, 0, newArray, 0, size);
         arraylist = newArray;
     }
 
     @Override
     public void addAll(List<T> list) {
-        if (!list.isEmpty() && (size() + list.size() > arraylist.length)) {
-            grow();
-        }
         for (int j = 0; j < list.size(); j++) {
             add(list.get(j));
         }
@@ -77,7 +74,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     private int getElementIndex(T t) {
-        for (int i = 0; i < size(); i++) {
+        for (int i = 0; i < size; i++) {
             if (arraylist[i] != null && arraylist[i].equals(t) || t == arraylist[i]) {
                 return i;
             }
@@ -92,11 +89,11 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public boolean isEmpty() {
-        return size() == 0;
+        return size == 0;
     }
 
     private void indexCheck(int index) {
-        if (size() <= index || index < 0) {
+        if (size <= index || index < 0) {
             throw new ArrayIndexOutOfBoundsException("Index is out of bound");
         }
     }
