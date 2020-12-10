@@ -84,8 +84,7 @@ public class ArrayList<T> implements List<T> {
     public T remove(T t) {
         for (int i = 0; i < size; i++) {
             if (array[i] == t || (array[i] != null && array[i].equals(t))) {
-                remove(i);
-                return t;
+                return remove(i);
             }
         }
         throw new NoSuchElementException("Remove element failed. No such element in array");
