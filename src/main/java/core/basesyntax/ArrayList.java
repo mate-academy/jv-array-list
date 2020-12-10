@@ -24,6 +24,7 @@ public class ArrayList<T> implements List<T> {
         if (index == size) {
             grow();
         }
+        checkAddIndex(index);
         System.arraycopy(array, index, array, index + 1, size - index);
         array[index] = value;
         size++;
@@ -31,9 +32,9 @@ public class ArrayList<T> implements List<T> {
 
     private void grow() {
         capacity = capacity + capacity / 2;
-        Object[] tmp = new Object[capacity];
-        System.arraycopy(array, 0, tmp, 0, size);
-        array = tmp;
+        Object[] newArray = new Object[capacity];
+        System.arraycopy(array, 0, newArray, 0, size);
+        array = newArray;
     }
 
     @Override
@@ -45,25 +46,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index > size - 1) {
-            throw new ArrayIndexOutOfBoundsException();
-        }
+        checkIndex(index);
         return (T) array[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index > size - 1) {
-            throw new ArrayIndexOutOfBoundsException();
-        }
+        checkIndex(index);
         array[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index > size - 1 || index < 0) {
-            throw new ArrayIndexOutOfBoundsException();
-        }
+        checkIndex(index);
         T removed = get(index);
         System.arraycopy(array, index + 1, array, index, size - index - 1);
         size--;
@@ -72,14 +67,12 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T t) {
-        T element;
         for (int i = 0; i < size; i++) {
             if (array[i] == null && t == null || array[i] != null && array[i].equals(t)) {
-                element = remove(i);
-                return element;
+                return remove(i);
             }
         }
-        throw new NoSuchElementException();
+        throw new NoSuchElementException("Can't remove non-existent element");
     }
 
     @Override
@@ -90,5 +83,17 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private void checkAddIndex(int index) {
+        if (index > size || index < 0) {
+            throw new ArrayIndexOutOfBoundsException("Please, enter the correct index");
+        }
+    }
+
+    private void checkIndex(int index) {
+        if (index >= size || index < 0) {
+            throw new ArrayIndexOutOfBoundsException("Please, enter the correct index");
+        }
     }
 }
