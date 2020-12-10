@@ -13,24 +13,10 @@ public class ArrayList<T> implements List<T> {
         this.size = 0;
     }
 
-    private void resizing() {
-        T[] newArray = (T[]) new Object[(int) (values.length * INCREMENT_BY_HALF)];
-        System.arraycopy(values,0, newArray, 0, size);
-        values = newArray;
-    }
-
-    private T[] toArray(List<T> list) {
-        T[] array = (T[]) new Object[list.size()];
-        for (int i = 0; i < array.length; i++) {
-            array[i] = list.get(i);
-        }
-        return array;
-    }
-
     @Override
     public void add(T value) {
         if (size == values.length) {
-            resizing();
+            resize();
         }
         values[size] = value;
         size++;
@@ -39,12 +25,15 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         if (size == values.length) {
-            resizing();
+            resize();
         }
-        System.arraycopy(values, index, values, index + 1, size - index);
         if (index == size) {
             add(value);
+            return;
+        } else if (index > size || index < 0) {
+            throw new ArrayIndexOutOfBoundsException();
         } else {
+            System.arraycopy(values, index, values, index + 1, size - index);
             set(value, index);
             size++;
         }
@@ -52,33 +41,28 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        System.arraycopy(toArray(list), 0, values, size, list.size());
-        size += list.size();
+        for (int i = 0; i < list.size(); i++) {
+            add(list.get(i));
+        }
     }
 
     @Override
     public T get(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayIndexOutOfBoundsException("Incorrect index");
-        }
+        checkIndex(index);
         return values[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayIndexOutOfBoundsException("Incorrect index");
-        }
+        checkIndex(index);
         values[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayIndexOutOfBoundsException("Incorrect index");
-        }
+        checkIndex(index);
         T result = values[index];
-        System.arraycopy(values, index + 1, values, index, size - index);
+        System.arraycopy(values, index + 1, values, index, size - index - 1);
         values[--size] = null;
         return result;
     }
@@ -88,18 +72,15 @@ public class ArrayList<T> implements List<T> {
         int index = -1;
         T value = null;
         for (int i = 0; i < size; i++) {
-            if (values[i] == t || values[i].equals(t)) {
+            if (values[i] == t || (values[i] != null && values[i].equals(t))) {
                 index = i;
                 value = values[i];
-                break;
+                System.arraycopy(values, index + 1, values, index, size - index);
+                size--;
+                return value;
             }
         }
-        if (index == -1) {
-            throw new NoSuchElementException("Can't find element with same value");
-        }
-        System.arraycopy(values, index + 1, values, index, size - index);
-        size--;
-        return value;
+        throw new NoSuchElementException("Can't find element with same value");
     }
 
     @Override
@@ -110,5 +91,17 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private void resize() {
+        T[] newArray = (T[]) new Object[(int) (values.length * INCREMENT_BY_HALF)];
+        System.arraycopy(values, 0, newArray, 0, size);
+        values = newArray;
+    }
+
+    private void checkIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayIndexOutOfBoundsException("Incorrect index");
+        }
     }
 }
