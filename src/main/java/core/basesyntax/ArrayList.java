@@ -15,7 +15,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (size >= arrayList.length) {
+        if (size == arrayList.length) {
             resizeArrayList();
         }
         arrayList[size] = value;
@@ -44,17 +44,13 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayIndexOutOfBoundsException("Index out of array size");
-        }
+        indexOutOfSize(index);
         return (T) arrayList[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayIndexOutOfBoundsException("Index out of array size");
-        }
+        indexOutOfSize(index);
         arrayList[index] = value;
     }
 
@@ -69,9 +65,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T t) {
         int index = indexOf(t);
-        if (index == -1) {
-            throw new NoSuchElementException("Can't remove element");
-        }
+        indexOutOfSize(index);
         return remove(index);
     }
 
@@ -82,7 +76,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public boolean isEmpty() {
-        return size > 0 ? false : true;
+        return size == 0;
     }
 
     private Object[] resizeArrayList() {
@@ -114,12 +108,20 @@ public class ArrayList<T> implements List<T> {
     }
 
     private int indexOf(T t) {
-        int index = -1;
         for (int i = 0; i < size; i++) {
             if (t != null ? t.equals(arrayList[i]) : arrayList[i] == t) {
-                index = i;
+                return i;
             }
         }
-        return index;
+        return -1;
+    }
+
+    private void indexOutOfSize(int index) {
+        if (index == -1) {
+            throw new NoSuchElementException("Can't remove element");
+        }
+        if (index < 0 || index >= size) {
+            throw new ArrayIndexOutOfBoundsException("Index out of array size");
+        }
     }
 }
