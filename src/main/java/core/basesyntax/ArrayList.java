@@ -117,9 +117,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void arrayShift(int index) {
-        for (int i = 0; i + index + 1 < size; i++) {
-            elementData[index + i] = elementData [index + i + 1];
-        }
+        System.arraycopy(elementData, index + 1, elementData, index, size - index - 1);
         size--;
     }
 }
