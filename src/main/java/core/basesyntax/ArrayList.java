@@ -47,19 +47,19 @@ public class ArrayList<T> implements List<T> {
     }
 
     @Override
-    public T get(int index) throws ArrayIndexOutOfBoundsException {
+    public T get(int index) {
         indexCheck(index);
         return (T) data[index];
     }
 
     @Override
-    public void set(T value, int index) throws ArrayIndexOutOfBoundsException {
+    public void set(T value, int index) {
         indexCheck(index);
         data[index] = value;
     }
 
     @Override
-    public T remove(int index) throws ArrayIndexOutOfBoundsException {
+    public T remove(int index) {
         indexCheck(index);
         T value = (T) data[index];
         System.arraycopy(data, index + 1, data, index, size - index + 1);
@@ -71,7 +71,6 @@ public class ArrayList<T> implements List<T> {
     public T remove(T t) {
         for (int i = 0; i < size; i++) {
             if (data[i] != null && data[i].equals(t) || data[i] == null && t == null) {
-                T value = (T) data[i];
                 return remove(i);
             }
         }
@@ -89,7 +88,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void indexCheck(int i) {
-        if (i >= size) {
+        if (i >= size || i < 0) {
             throw new ArrayIndexOutOfBoundsException();
         }
     }
