@@ -30,8 +30,8 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index > size || index < 0) {
-            throw new ArrayIndexOutOfBoundsException();
+        if (index < 0 || index > size) {
+            throw new ArrayIndexOutOfBoundsException("Wrong index input!");
         }
         if (index == size) {
             add(value);
@@ -51,25 +51,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayIndexOutOfBoundsException();
-        }
+        checkIndex(index);
         return array[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayIndexOutOfBoundsException();
-        }
+        checkIndex(index);
         array[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayIndexOutOfBoundsException("Can't remove element with index: " + index);
-        }
+        checkIndex(index);
         Object object = array[index];
         System.arraycopy(array, index + 1, array, index, size - (index + 1));
         size--;
@@ -80,11 +74,9 @@ public class ArrayList<T> implements List<T> {
     public T remove(T t) {
         for (int i = 0; i < size; i++) {
             if (t == null || t.equals(array[i])) {
-                T object = (T) new Object();
-                object = t;
                 System.arraycopy(array, i + 1, array, i, size - (i + 1));
                 size--;
-                return object;
+                return t;
             }
         }
         throw new NoSuchElementException("Can't find requested element");
@@ -98,5 +90,11 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    public void checkIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayIndexOutOfBoundsException("Wrong index input!");
+        }
     }
 }
