@@ -21,27 +21,12 @@ public class ArrayList<T> implements List<T> {
     
     @Override
     public void add(T value, int index) {
-        checkIndex(index);
-        if (index >= elements.length) {
+        checkAddIndex(index);
+        if (size == elements.length) {
             grow();
-            add(value, index);
-        } else if (index < size) {
-            if (size + 1 > elements.length) {
-                grow();
-            }
-            T[] firstSubArray = Arrays.copyOfRange(elements, 0, index + 1);
-            T[] secondSubArray = Arrays.copyOfRange(elements, index, elements.length - 1);
-            firstSubArray[firstSubArray.length - 1] = value;
-            T[] resultArray = Arrays.copyOf(firstSubArray,
-                    firstSubArray.length + secondSubArray.length);
-            System.arraycopy(secondSubArray, 0, resultArray,
-                    firstSubArray.length, secondSubArray.length);
-            elements = resultArray;
-            size++;
-        } else {
-            elements[index] = value;
-            size++;
         }
+        System.arraycopy(elements, 0, elements, index, ++size - index);
+        elements[index] = value;
     }
     
     @Override
@@ -53,27 +38,21 @@ public class ArrayList<T> implements List<T> {
     
     @Override
     public T get(int index) {
-        checkGetIndex(index);
+        checkIndex(index);
         return elements[index];
     }
     
     @Override
     public void set(T value, int index) {
-        checkGetIndex(index);
+        checkIndex(index);
         elements[index] = value;
     }
     
     @Override
     public T remove(int index) {
         checkIndex(index);
-        T[] firstSubArray = Arrays.copyOfRange(elements, 0, index);
-        T[] secondSubArray = Arrays.copyOfRange(elements, index + 1, elements.length);
-        T[] resultArray = Arrays.copyOf(firstSubArray,
-                firstSubArray.length + secondSubArray.length + 1);
-        System.arraycopy(secondSubArray, 0, resultArray,
-                firstSubArray.length, secondSubArray.length);
         T oldElement = get(index);
-        elements = resultArray;
+        System.arraycopy(elements, index + 1, elements, index, size - index);
         size--;
         return oldElement;
     }
@@ -82,9 +61,7 @@ public class ArrayList<T> implements List<T> {
     public T remove(T t) {
         for (int i = 0; i < size; i++) {
             if (elements[i] == t || (elements[i] != null && elements[i].equals(t))) {
-                T removedElement = get(i);
-                remove(i);
-                return removedElement;
+                return remove(i);
             }
         }
         throw new NoSuchElementException("Element \"" + t + "\" not found.");
@@ -104,13 +81,13 @@ public class ArrayList<T> implements List<T> {
         elements = Arrays.copyOf(elements, (int) (elements.length * 1.5));
     }
     
-    private void checkIndex(int index) {
+    private void checkAddIndex(int index) {
         if (index > size || index < 0) {
             throw new ArrayIndexOutOfBoundsException("Index: " + index + ", Size: " + size);
         }
     }
     
-    private void checkGetIndex(int index) {
+    private void checkIndex(int index) {
         if (index >= size || index < 0) {
             throw new ArrayIndexOutOfBoundsException("Index: " + index + ", Size: " + size);
         }
