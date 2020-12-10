@@ -29,16 +29,13 @@ public class ArrayList<T> implements List<T> {
         if (size == values.length) {
             resize();
         }
-        if (index == size) {
-            values[index] = value;
-            size++;
-        } else {
+        if (index != size) {
             isValidIndex(index);
             System.arraycopy(
                     values, index, values, index + 1, size - index);
-            values[index] = value;
-            size++;
         }
+        values[index] = value;
+        size++;
     }
 
     private void resize() {
