@@ -5,18 +5,18 @@ import java.util.NoSuchElementException;
 public class ArrayList<T> implements List<T> {
     private static final int SIZE_ARRAY = 10;
     private static final double COEFFICIENT_SIZE_ARRAY = 1.5;
-    private T[] value;
+    private T[] values;
     private int size;
 
     public ArrayList() {
-        this.value = (T[]) new Object[SIZE_ARRAY];
+        values = (T[]) new Object[SIZE_ARRAY];
         this.size = 0;
     }
 
     @Override
     public void add(T value) {
         widenArray();
-        this.value[size] = value;
+        values[size] = value;
         size++;
     }
 
@@ -24,8 +24,8 @@ public class ArrayList<T> implements List<T> {
     public void add(T value, int index) {
         checkIndex(index);
         widenArray();
-        System.arraycopy(this.value, index, this.value, index + 1, size - index);
-        this.value[index] = value;
+        System.arraycopy(this.values, index, this.values, index + 1, size - index);
+        this.values[index] = value;
         size++;
     }
 
@@ -38,25 +38,25 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index > size - 1 || index < 0) { // if we use a method checkIndex => +1 error;
+        if (index >= size || index < 0) {
             throw new ArrayIndexOutOfBoundsException("Houston we have a BUG!");
         }
-        return value[index];
+        return values[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index > size - 1 || index < 0) { // if we use a method checkIndex => +1 error;
+        if (index >= size || index < 0) {
             throw new ArrayIndexOutOfBoundsException("Houston we have a BUG!");
         }
-        this.value[index] = value;
+        this.values[index] = value;
     }
 
     @Override
     public T remove(int index) {
         checkIndex(index);
-        T oldValue = (T) value[index];
-        System.arraycopy(this.value, index + 1, this.value, index, size - index - 1);
+        T oldValue = (T) values[index];
+        System.arraycopy(this.values, index + 1, this.values, index, size - index - 1);
         size--;
         return oldValue;
     }
@@ -64,7 +64,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T t) {
         for (int i = 0; i < size; i++) {
-            if (this.value[i] == t || t != null && t.equals(this.value[i])) {
+            if (this.values[i] == t || t != null && t.equals(this.values[i])) {
                 return remove(i);
             }
         }
@@ -82,10 +82,10 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void widenArray() {
-        if (this.value.length == size) {
-            T[] newArray = (T[]) new Object[(int) (value.length * COEFFICIENT_SIZE_ARRAY)];
-            System.arraycopy(this.value,0, newArray, 0, size);
-            this.value = newArray;
+        if (values.length == size) {
+            T[] newArray = (T[]) new Object[(int) (values.length * COEFFICIENT_SIZE_ARRAY)];
+            System.arraycopy(this.values, 0, newArray, 0, size);
+            values = newArray;
         }
     }
 
