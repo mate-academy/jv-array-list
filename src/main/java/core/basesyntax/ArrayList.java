@@ -3,12 +3,12 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    private final static int SIZE = 10;
+    private static final int SIZE = 10;
     private Object [] array;
     private int currentSize;
 
     public ArrayList() {
-        this.array =  new Object[SIZE];
+        this.array = new Object[SIZE];
         this.currentSize = 0;
     }
 
@@ -68,7 +68,7 @@ public class ArrayList<T> implements List<T> {
 
         checkingIndex(index);
 
-        Object oldValue  = array[index];
+        Object oldValue = array[index];
         System.arraycopy(array, index + 1, array,
                 index, oldLength - (index + 1));
 
