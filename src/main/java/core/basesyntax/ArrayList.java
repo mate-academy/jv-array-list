@@ -1,49 +1,106 @@
 package core.basesyntax;
 
+import java.util.Arrays;
+import java.util.NoSuchElementException;
+
 public class ArrayList<T> implements List<T> {
+
+    private static final int DEFAULT_CAPACITY = 10;
+    private static final double DEFAULT_RESIZE = 1.5;
+
+    private T[] elementData;
+    private int size;
+
+    public ArrayList() {
+        elementData = (T[]) new Object[DEFAULT_CAPACITY];
+        size = 0;
+    }
+
+    public ArrayList(int initialCapacity) {
+        elementData = (T[]) new Object[initialCapacity];
+        size = 0;
+    }
 
     @Override
     public void add(T value) {
-
+        add(value, size);
     }
 
     @Override
     public void add(T value, int index) {
-
+        if (elementData.length == size) {
+            madeLongerAgain();
+            elementData[index] = value;
+            size++;
+        } else if (index < size) {
+            madeLongerAgain();
+            size++;
+            System.arraycopy(elementData, index, elementData, index + 1,
+                    elementData.length - index - 1);
+            elementData[index] = value;
+        } else {
+            elementData[index] = value;
+            size = size + 1;
+        }
+        isValid(index);
     }
 
     @Override
     public void addAll(List<T> list) {
-
+        for (int i = 0; i < list.size(); i++) {
+            this.add(list.get(i));
+        }
     }
 
     @Override
     public T get(int index) {
-        return null;
+        isValid(index);
+        return (T) elementData[index];
     }
 
     @Override
     public void set(T value, int index) {
-
+        isValid(index);
+        elementData[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        return null;
+        isValid(index);
+        T remove = elementData[index];
+        System.arraycopy(elementData, index + 1, elementData, index, size - index - 1);
+        size--;
+        return remove;
     }
 
     @Override
     public T remove(T t) {
-        return null;
+        for (int i = 0; i < size; i++) {
+            if (elementData[i] == null || elementData[i].equals(t)) {
+                return remove(i);
+            }
+        }
+        throw new NoSuchElementException("Don't have " + t + " in array");
     }
 
     @Override
     public int size() {
-        return 0;
+        return size;
     }
 
     @Override
     public boolean isEmpty() {
-        return false;
+        return size == 0;
+    }
+
+    private void isValid(int index) {
+        if (index >= size) {
+            throw new ArrayIndexOutOfBoundsException("Index " + index
+                    + " is out of the range of list size " + size);
+        }
+    }
+
+    private void madeLongerAgain() {
+        elementData = Arrays.copyOf(elementData, (int) (elementData.length * DEFAULT_RESIZE));
     }
 }
