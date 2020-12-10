@@ -32,7 +32,7 @@ public class ArrayList<T> implements List<T> {
             }
             size++;
             values[index] = value;
-        } else if (isValidIndex(index) && index <= size - 1) {
+        } else if (isValidIndex(index) && index < size) {
             resize();
             size++;
             System.arraycopy(
@@ -104,7 +104,7 @@ public class ArrayList<T> implements List<T> {
     private boolean isValidIndex(int index) {
         if (index >= this.size || index < 0) {
             throw new ArrayIndexOutOfBoundsException(
-                    "Index " + index + " out of bounds for capacity " + this.values.length);
+                    "Index " + index + " out of bounds for size " + size);
         }
         return true;
     }
