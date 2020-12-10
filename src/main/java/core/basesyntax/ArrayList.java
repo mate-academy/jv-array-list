@@ -50,9 +50,9 @@ public class ArrayList<T> implements List<T> {
     public T get(int index) {
         if (isIndexOutOfArray(index)) {
             throw new ArrayIndexOutOfBoundsException();
-        } else {
-            return elementData[index];
         }
+        return elementData[index];
+
     }
 
     @Override
