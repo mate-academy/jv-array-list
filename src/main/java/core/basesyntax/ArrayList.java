@@ -5,11 +5,12 @@ import java.util.NoSuchElementException;
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private static final double MULTIPLE_CONSTANT = 1.5;
-    private int size = 0;
+    private int size;
     private T[] array;
 
     public ArrayList() {
-        this.array = (T[]) new Object[DEFAULT_CAPACITY];
+        array = (T[]) new Object[DEFAULT_CAPACITY];
+        size = 0;
     }
 
     public void grow() {
@@ -31,9 +32,10 @@ public class ArrayList<T> implements List<T> {
     public void add(T value, int index) {
         if (index > size || index < 0) {
             throw new ArrayIndexOutOfBoundsException();
-        } else if (index == size) {
+        }
+        if (index == size) {
             add(value);
-        } else if (index < size) {
+        } else {
             System.arraycopy(array, index, array, index + 1, size - index);
             array[index] = value;
             size++;
@@ -65,8 +67,8 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(int index) {
-        if (index < 0 || index > size) {
-            throw new ArrayIndexOutOfBoundsException();
+        if (index < 0 || index >= size) {
+            throw new ArrayIndexOutOfBoundsException("Can't remove element with index: " + index);
         }
         Object object = array[index];
         System.arraycopy(array, index + 1, array, index, size - (index + 1));
@@ -76,12 +78,8 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T t) {
-        for (int i = 0; i < array.length; i++) {
-            if (t == null) {
-                size--;
-                return null;
-            }
-            if (t.equals(array[i])) {
+        for (int i = 0; i < size; i++) {
+            if (t == null || t.equals(array[i])) {
                 T object = (T) new Object();
                 object = t;
                 System.arraycopy(array, i + 1, array, i, size - (i + 1));
@@ -89,7 +87,7 @@ public class ArrayList<T> implements List<T> {
                 return object;
             }
         }
-        throw new NoSuchElementException();
+        throw new NoSuchElementException("Can't find requested element");
     }
 
     @Override
