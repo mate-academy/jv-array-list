@@ -9,8 +9,8 @@ public class ArrayList<T> implements List<T> {
     private int size;
 
     public ArrayList() {
-        this.values = (T[]) new Object[DEFAULT_CAPACITY];
-        this.size = 0;
+        values = (T[]) new Object[DEFAULT_CAPACITY];
+        size = 0;
     }
 
     @Override
@@ -30,13 +30,11 @@ public class ArrayList<T> implements List<T> {
         if (index == size) {
             add(value);
             return;
-        } else if (index > size || index < 0) {
-            throw new ArrayIndexOutOfBoundsException();
-        } else {
-            System.arraycopy(values, index, values, index + 1, size - index);
-            set(value, index);
-            size++;
         }
+        checkIndex(index);
+        System.arraycopy(values, index, values, index + 1, size - index);
+        values[index] = value;
+        size++;
     }
 
     @Override
@@ -73,11 +71,7 @@ public class ArrayList<T> implements List<T> {
         T value = null;
         for (int i = 0; i < size; i++) {
             if (values[i] == t || (values[i] != null && values[i].equals(t))) {
-                index = i;
-                value = values[i];
-                System.arraycopy(values, index + 1, values, index, size - index);
-                size--;
-                return value;
+                return remove(i);
             }
         }
         throw new NoSuchElementException("Can't find element with same value");
