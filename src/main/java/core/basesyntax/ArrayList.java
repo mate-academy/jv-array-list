@@ -19,6 +19,13 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
+    private void indexEqualsToSizeCheck(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayIndexOutOfBoundsException("Can't access invalid index, list size is: "
+                    + size + ", your index is: " + index);
+        }
+    }
+
     private void capacityCheck() {
         if (size == elementData.length) {
             grow();
@@ -42,7 +49,7 @@ public class ArrayList<T> implements List<T> {
     public void add(T value, int index) {
         capacityCheck();
         indexCheck(index);
-        System.arraycopy(elementData,index,elementData, index + 1, size - index);
+        System.arraycopy(elementData, index, elementData, index + 1, size - index);
         elementData[index] = value;
         size++;
     }
@@ -56,29 +63,23 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayIndexOutOfBoundsException("Can't get invalid index, list size is: "
-                    + size + ", your index is: " + index);
-        }
+        indexEqualsToSizeCheck(index);
         return (T) elementData[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayIndexOutOfBoundsException("Can't set invalid index, list size is: "
-                    + size + ", your index is: " + index);
-        }
+        indexEqualsToSizeCheck(index);
         elementData[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        indexCheck(index);
-        T local = (T) elementData[index];
+        indexEqualsToSizeCheck(index);
+        T removedValue = (T) elementData[index];
         System.arraycopy(elementData, index + 1, elementData, index, size - index);
         size--;
-        return local;
+        return removedValue;
     }
 
     @Override
