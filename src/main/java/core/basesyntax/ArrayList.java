@@ -23,10 +23,11 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
+        if (index > size || index < 0) {
+            throw new ArrayIndexOutOfBoundsException("Incorrect index - " + index);
+        }
         if (size == elementData.length) {
             enlargeCapacity();
-        } else if (index > size || index < 0) {
-            throw new ArrayIndexOutOfBoundsException("Incorrect index - " + index);
         }
         System.arraycopy(elementData, index, elementData, index + 1, size - index);
         elementData[index] = value;
@@ -91,10 +92,8 @@ public class ArrayList<T> implements List<T> {
 
     private int findElement(T elementToFind) {
         for (int i = 0; i < size; i++) {
-            if (elementData[i] == null && elementToFind != null) {
-                continue;
-            }
-            if (elementData[i] == elementToFind || elementData[i].equals(elementToFind)) {
+            if (elementData[i] == elementToFind
+                    || elementData[i] != null && elementData[i].equals(elementToFind)) {
                 return i;
             }
         }
