@@ -23,8 +23,8 @@ public class ArrayList<T> implements List<T> {
     public void add(T value, int index) {
         checkIndex(index);
         widenArray();
-        System.arraycopy(this.values, index, this.values, index + 1, size - index);
-        this.values[index] = value;
+        System.arraycopy(values, index, values, index + 1, size - index);
+        values[index] = value;
         size++;
     }
 
@@ -48,7 +48,7 @@ public class ArrayList<T> implements List<T> {
         if (index >= size || index < 0) {
             throw new ArrayIndexOutOfBoundsException("Houston we have a BUG!");
         }
-        this.values[index] = value;
+        values[index] = value;
     }
 
     @Override
@@ -72,7 +72,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public int size() {
-        return this.size;
+        return size;
     }
 
     @Override
