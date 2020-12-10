@@ -95,12 +95,10 @@ public class ArrayList<T> implements List<T> {
     }
 
     private int getIndex(T value) {
-        int index = 0;
-        for (T element: elementData) {
-            if (value == element || value != null && value.equals(element)) {
-                return index;
+        for (int i = 0; i < size; i++) {
+            if (value == elementData[i] || value != null && value.equals(elementData[i])) {
+                return i;
             }
-            index++;
         }
         return -1;
     }
