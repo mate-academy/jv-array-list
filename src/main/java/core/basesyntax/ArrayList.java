@@ -6,10 +6,11 @@ public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private static final double MULTIPLAYER = 1.5;
     private Object[] data;
-    private int size = 0;
+    private int size;
 
     public ArrayList() {
         data = new Object[DEFAULT_CAPACITY];
+        size = 0;
     }
 
     public ArrayList(int capacity) {
@@ -27,9 +28,7 @@ public class ArrayList<T> implements List<T> {
         if (data.length == size) {
             expand();
         }
-        if (size > index) {
-            System.arraycopy(data, index, data, index + 1, size - index);
-        }
+        System.arraycopy(data, index, data, index + 1, size - index);
         data[index] = value;
         size++;
     }
@@ -90,7 +89,7 @@ public class ArrayList<T> implements List<T> {
         System.arraycopy(array, 0, data, 0, array.length);
     }
 
-    private static void checkIndex(int index, int length) {
+    private void checkIndex(int index, int length) {
         if (index < 0 || index >= length) {
             throw new ArrayIndexOutOfBoundsException(String.format("Index %d incorrect.", index));
         }
