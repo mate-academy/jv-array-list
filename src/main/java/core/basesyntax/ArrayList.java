@@ -61,15 +61,13 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void set(T value, int index) {
         checkIndex(index);
-        if (index < size) {
-            list[index] = value;
-        }
+        list[index] = value;
     }
 
     @Override
     public T remove(int index) {
         checkIndex(index);
-        T removedElement = get(index);
+        T removedElement = list[index];
         System.arraycopy(list, index + 1, list, index, size - index);
         size--;
         return removedElement;
@@ -78,10 +76,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T t) {
         for (int i = 0; i < size; i++) {
-            if (t == null) {
-                size--;
-                return null;
-            } else if (t.equals(list[i])) {
+            if (t == list[i] || (t != null && t.equals(list[i]))) {
                 return remove(i);
             }
         }
