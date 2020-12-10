@@ -15,7 +15,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value) {
         if (elements.length == size) {
-            grow(size + 1);
+            grow();
         }
         elements[size] = value;
         size++;
@@ -25,7 +25,7 @@ public class ArrayList<T> implements List<T> {
     public void add(T value, int index) {
         rangeCheckForAdd(index);
         if (elements.length == size) {
-            grow(size + 1);
+            grow();
         }
         System.arraycopy(elements, index, elements, index + 1, size - index);
         elements[index] = value;
@@ -40,7 +40,6 @@ public class ArrayList<T> implements List<T> {
         }
         System.arraycopy(listElements, 0, elements, size, listElements.length);
         size += listElements.length;
-        ;
     }
 
     @Override
@@ -51,7 +50,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void set(T value, int index) {
-        if (index >= size) {
+        if (index >= size || index < 0) {
             throw new ArrayIndexOutOfBoundsException("Insert impossible");
         }
         elements[index] = value;
@@ -69,11 +68,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T t) {
         for (int i = 0; i < size; i++) {
-            if (t == null) {
-                size--;
-                return null;
-            }
-            if (t.equals(elements[i])) {
+            if (t == null && elements[i] == null
+                    || t != null && t.equals(elements[i])) {
                 return remove(i);
             }
         }
@@ -87,24 +83,17 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public boolean isEmpty() {
-        if (size == 0) {
-            return true;
-        }
-        return false;
+        return size == 0;
     }
 
-    private T[] grow(int minCapacity) {
+    private void grow() {
         int oldCapacity = elements.length;
         if (oldCapacity > 0 || elements != EMPTY_DATA) {
             int newCapacity = oldCapacity + (oldCapacity >> 1);
-            T[] newElements = (T[]) new Object[size];
+            T[] newElements = (T[]) new Object[newCapacity];
             System.arraycopy(elements, 0, newElements, 0, size);
-            elements = (T[]) new Object[newCapacity];
-            System.arraycopy(newElements, 0, elements, 0, size);
-        } else {
-            return elements = (T[]) new Object[Math.max(DEFAULT_CAPACITY, minCapacity)];
+            elements = newElements;
         }
-        return elements;
     }
 
     private void rangeCheckForAdd(int index) {
