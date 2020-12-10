@@ -3,43 +3,43 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    private static Object[] ARRAY;
+    private Object[] array;
     private int capacity = 10;
     private int size = 0;
 
     public ArrayList() {
-        ARRAY = new Object[capacity];
+        array = new Object[capacity];
     }
 
     @Override
     public void add(T value) {
         if (size == capacity) {
-            ARRAY = grow();
+            grow();
         }
-        ARRAY[size++] = value;
+        array[size++] = value;
     }
 
     @Override
     public void add(T value, int index) {
         if (index == size) {
-            ARRAY = grow();
+            grow();
         }
-        System.arraycopy(ARRAY, index, ARRAY, index + 1, size - index);
-        ARRAY[index] = value;
+        System.arraycopy(array, index, array, index + 1, size - index);
+        array[index] = value;
         size++;
     }
 
-    private Object[] grow() {
+    private void grow() {
         capacity = capacity + capacity / 2;
-        Object[] newArray = new Object[capacity];
-        System.arraycopy(ARRAY, 0, newArray, 0, size);
-        return newArray;
+        Object[] tmp = new Object[capacity];
+        System.arraycopy(array, 0, tmp, 0, size);
+        array = tmp;
     }
 
     @Override
     public void addAll(List<T> list) {
-        while (!list.isEmpty()) {
-            add(list.remove(0));
+        for (int i = 0; i < list.size(); i++) {
+            add(list.get(i));
         }
     }
 
@@ -48,7 +48,7 @@ public class ArrayList<T> implements List<T> {
         if (index > size - 1) {
             throw new ArrayIndexOutOfBoundsException();
         }
-        return (T) ARRAY[index];
+        return (T) array[index];
     }
 
     @Override
@@ -56,31 +56,30 @@ public class ArrayList<T> implements List<T> {
         if (index > size - 1) {
             throw new ArrayIndexOutOfBoundsException();
         }
-        ARRAY[index] = value;
+        array[index] = value;
     }
 
     @Override
     public T remove(int index) {
+        if (index > size - 1 || index < 0) {
+            throw new ArrayIndexOutOfBoundsException();
+        }
         T removed = get(index);
-        System.arraycopy(ARRAY, index + 1, ARRAY, index, size - index - 1);
+        System.arraycopy(array, index + 1, array, index, size - index - 1);
         size--;
         return removed;
     }
 
     @Override
     public T remove(T t) {
-        T element = null;
-        int count = 0;
+        T element;
         for (int i = 0; i < size; i++) {
-            if (ARRAY[i] == null && t == null || ARRAY[i] != null && ARRAY[i].equals(t)) {
+            if (array[i] == null && t == null || array[i] != null && array[i].equals(t)) {
                 element = remove(i);
-                count++;
+                return element;
             }
         }
-        if (count == 0) {
-            throw new NoSuchElementException();
-        }
-        return element;
+        throw new NoSuchElementException();
     }
 
     @Override
