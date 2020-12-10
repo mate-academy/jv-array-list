@@ -75,9 +75,7 @@ public class ArrayList<T> implements List<T> {
         for (int i = 0; i < size; i++) {
             if (data[i] != null && data[i].equals(t) || data[i] == null && t == null) {
                 T value = (T) data[i];
-                System.arraycopy(data, i + 1, data, i, size - i + 1);
-                size--;
-                return value;
+                remove(i);
             }
         }
         throw new NoSuchElementException();
