@@ -24,7 +24,7 @@ public class ArrayList<T> implements List<T> {
         if (index == counter) {
             add(value);
         } else {
-            indexValidator(index);
+            validateIndex(index);
             growIfRequire();
             System.arraycopy(array, index, array, index + 1, counter - index);
             array[index] = value;
@@ -41,19 +41,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        indexValidator(index);
+        validateIndex(index);
         return (T) array[index];
     }
 
     @Override
     public void set(T value, int index) {
-        indexValidator(index);
+        validateIndex(index);
         array[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        indexValidator(index);
+        validateIndex(index);
         T oldValue = get(index);
         System.arraycopy(array, index + 1, array, index, counter - index - 1);
         counter = counter - 1;
@@ -96,7 +96,7 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private void indexValidator(int index) {
+    private void validateIndex(int index) {
         if (index < 0 || index >= counter) {
             throw new ArrayIndexOutOfBoundsException("Out of bounds for index: " + index);
         }
