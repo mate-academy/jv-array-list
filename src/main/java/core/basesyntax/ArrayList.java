@@ -19,19 +19,6 @@ public class ArrayList<T> implements List<T> {
         this.size = 0;
     }
 
-    private void resize() {
-        T[] resizedValues = (T[]) new Object[(int) Math.ceil(values.length * RESIZE_COEFFICIENT)];
-        System.arraycopy(this.values, 0, resizedValues, 0, this.values.length);
-        this.values = resizedValues;
-    }
-
-    private void isValidIndex(int index) {
-        if (index >= this.size) {
-            throw new ArrayIndexOutOfBoundsException(
-                    "Index " + index + " out of bounds for capacity " + this.values.length);
-        }
-    }
-
     @Override
     public void add(T value) {
         add(value, size);
@@ -45,14 +32,19 @@ public class ArrayList<T> implements List<T> {
             }
             size++;
             values[index] = value;
-        } else if (index <= size - 1) {
+        } else if (isValidIndex(index) && index <= size - 1) {
             resize();
             size++;
             System.arraycopy(
                     this.values, index, this.values, index + 1, this.values.length - index - 1);
             values[index] = value;
         }
-        isValidIndex(index);
+    }
+
+    private void resize() {
+        T[] resizedValues = (T[]) new Object[(int) Math.ceil(values.length * RESIZE_COEFFICIENT)];
+        System.arraycopy(this.values, 0, resizedValues, 0, this.values.length);
+        this.values = resizedValues;
     }
 
     @Override
@@ -81,11 +73,11 @@ public class ArrayList<T> implements List<T> {
             size--;
             return (T) values[index];
         } else {
-            Object item = values[index];
+            T item = values[index];
             System.arraycopy(
                     this.values, index + 1, this.values, index, this.values.length - index - 1);
             size--;
-            return (T) item;
+            return item;
         }
     }
 
@@ -107,5 +99,13 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return this.size == 0;
+    }
+
+    private boolean isValidIndex(int index) {
+        if (index >= this.size || index < 0) {
+            throw new ArrayIndexOutOfBoundsException(
+                    "Index " + index + " out of bounds for capacity " + this.values.length);
+        }
+        return true;
     }
 }
