@@ -95,10 +95,9 @@ public class ArrayList<T> implements List<T> {
         return size() == 0;
     }
 
-    private void indexCheck(int i) {
-        if (size() <= i || i < 0) {
+    private void indexCheck(int index) {
+        if (size() <= index || index < 0) {
             throw new ArrayIndexOutOfBoundsException("Index is out of bound");
-
         }
     }
 
