@@ -7,16 +7,17 @@ public class ArrayList<T> implements List<T> {
     private static final int LENGTH_ARRAY = 10;
     private static final double LENGTH_GROW = 1.5;
     private T[] array;
-    private int size = 0;
+    private int size;
 
     public ArrayList() {
         array = (T[]) new Object[LENGTH_ARRAY];
+        size = 0;
     }
 
     @Override
     public void add(T value) {
         if (size() >= array.length) {
-            array = grow();
+            grow();
         }
         array[size()] = value;
         size++;
@@ -24,9 +25,9 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index == size() || isIndexOfBound(index)) {
+        if (index == size || isIndexOfBounds(index)) {
             if (size() == array.length) {
-                array = grow();
+                grow();
             }
             System.arraycopy(array, index, array, index + 1, size() - index);
             array[index] = value;
@@ -43,7 +44,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (isIndexOfBound(index)) {
+        if (isIndexOfBounds(index)) {
             return array[index];
         }
         return null;
@@ -51,7 +52,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void set(T value, int index) {
-        if (isIndexOfBound(index)) {
+        if (isIndexOfBounds(index)) {
             array[index] = value;
         }
     }
@@ -59,7 +60,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         T value = null;
-        if (isIndexOfBound(index)) {
+        if (isIndexOfBounds(index)) {
             value = array[index];
             System.arraycopy(array, index + 1, array, index, size() - index - 1);
             size--;
@@ -69,7 +70,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T t) {
-        for (int index = 0; index < size(); index++) {
+        for (int index = 0; index < size; index++) {
             if (array[index] == t || (array[index] != null && array[index].equals(t))) {
                 System.arraycopy(array, index + 1, array, index, size() - index - 1);
                 size--;
@@ -89,12 +90,12 @@ public class ArrayList<T> implements List<T> {
         return size() == 0;
     }
 
-    private T[] grow() {
-        return Arrays.copyOf(array, (int) (size() * LENGTH_GROW));
+    private void grow() {
+        array = Arrays.copyOf(array, (int) (size() * LENGTH_GROW));
     }
 
-    private boolean isIndexOfBound(int index) {
-        if (index >= 0 && index < size()) {
+    private boolean isIndexOfBounds(int index) {
+        if (index >= 0 && index < size) {
             return true;
         }
         throw new ArrayIndexOutOfBoundsException("ArrayList doesn't have this index " + index);
