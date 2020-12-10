@@ -10,13 +10,13 @@ public class ArrayList<T> implements List<T> {
     private T[] values;
 
     public ArrayList() {
-        this.values = (T[]) new Object[DEFAULT_CAPACITY];
-        this.size = 0;
+        values = (T[]) new Object[DEFAULT_CAPACITY];
+        size = 0;
     }
 
     public ArrayList(int initialCapacity) {
-        this.values = (T[]) new Object[initialCapacity];
-        this.size = 0;
+        values = (T[]) new Object[initialCapacity];
+        size = 0;
     }
 
     @Override
@@ -26,25 +26,24 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index == size) {
-            if (size == this.values.length) {
-                resize();
-            }
-            size++;
-            values[index] = value;
-        } else if (isValidIndex(index) && index < size) {
+        if (size == values.length) {
             resize();
-            size++;
-            System.arraycopy(
-                    this.values, index, this.values, index + 1, this.values.length - index - 1);
+        }
+        if (index == size) {
             values[index] = value;
+            size++;
+        } else if (isValidIndex(index)) {
+            System.arraycopy(
+                    values, index, values, index + 1, size - index);
+            values[index] = value;
+            size++;
         }
     }
 
     private void resize() {
         T[] resizedValues = (T[]) new Object[(int) Math.ceil(values.length * RESIZE_COEFFICIENT)];
-        System.arraycopy(this.values, 0, resizedValues, 0, this.values.length);
-        this.values = resizedValues;
+        System.arraycopy(values, 0, resizedValues, 0, values.length);
+        values = resizedValues;
     }
 
     @Override
@@ -69,21 +68,16 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         isValidIndex(index);
-        if (index == this.size - 1) {
-            size--;
-            return (T) values[index];
-        } else {
-            T item = values[index];
-            System.arraycopy(
-                    this.values, index + 1, this.values, index, this.values.length - index - 1);
-            size--;
-            return item;
-        }
+        T item = values[index];
+        System.arraycopy(
+                values, index + 1, values, index, values.length - index - 1);
+        size--;
+        return item;
     }
 
     @Override
     public T remove(T t) {
-        for (int i = 0; i < this.size; i++) {
+        for (int i = 0; i < size; i++) {
             if (values[i] == null || values[i].equals(t)) {
                 return remove(i);
             }
@@ -93,16 +87,16 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public int size() {
-        return this.size;
+        return size;
     }
 
     @Override
     public boolean isEmpty() {
-        return this.size == 0;
+        return size == 0;
     }
 
     private boolean isValidIndex(int index) {
-        if (index >= this.size || index < 0) {
+        if (index >= size || index < 0) {
             throw new ArrayIndexOutOfBoundsException(
                     "Index " + index + " out of bounds for size " + size);
         }
