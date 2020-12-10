@@ -27,7 +27,7 @@ public class ArrayList<T> implements List<T> {
         if (!isIndexValid(index) && index != size) {
             throw new ArrayIndexOutOfBoundsException();
         }
-            addElementInMiddle(value, index);
+        addElementInMiddle(value, index);
     }
 
     @Override
