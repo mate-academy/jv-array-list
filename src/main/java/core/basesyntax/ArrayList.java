@@ -4,12 +4,12 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int SIZE = 10;
-    private Object [] array;
+    private Object[] array;
     private int currentSize;
 
     public ArrayList() {
-        this.array = new Object[SIZE];
-        this.currentSize = 0;
+        array = new Object[SIZE];
+        currentSize = 0;
     }
 
     @Override
@@ -38,9 +38,6 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        if (array.length + list.size() > 10) {
-            grow();
-        }
         for (int i = 0; i < list.size(); i++) {
             add(list.get(i));
         }
@@ -48,29 +45,23 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index >= currentSize) {
-            throw new ArrayIndexOutOfBoundsException();
-        }
+        checkingIndex(index);
         return (T) array[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index >= currentSize) {
-            throw new ArrayIndexOutOfBoundsException();
-        }
+        checkingIndex(index);
         array[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        int oldLength = currentSize;
-
         checkingIndex(index);
 
         Object oldValue = array[index];
         System.arraycopy(array, index + 1, array,
-                index, oldLength - (index + 1));
+                index, currentSize - (index + 1));
 
         currentSize--;
         return (T) oldValue;
@@ -78,7 +69,6 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T t) {
-
         for (int i = 0; i < currentSize; i++) {
             if (t == array[i] || array[i] != null && array[i].equals(t)) {
                 return remove(i);
@@ -104,8 +94,8 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void checkingIndex(int index) {
-        if (index > array.length) {
-            throw new IndexOutOfBoundsException("Index more then array size");
+        if (index >= currentSize || index < 0) {
+            throw new ArrayIndexOutOfBoundsException();
         }
     }
 }
