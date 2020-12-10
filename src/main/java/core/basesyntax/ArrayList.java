@@ -8,8 +8,8 @@ public class ArrayList<T> implements List<T> {
     private int sizeOfFilledArray;
 
     public ArrayList() {
-        this.array = (T[]) new Object[DEFAULT_ARRAY_CAPACITY];
-        this.sizeOfFilledArray = 0;
+        array = (T[]) new Object[DEFAULT_ARRAY_CAPACITY];
+        sizeOfFilledArray = 0;
     }
 
     public void growCapacity() {
