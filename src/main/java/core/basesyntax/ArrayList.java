@@ -93,7 +93,7 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private void indexCheck(int index){
+    private void indexCheck(int index) {
         if (index >= size || index < 0) {
             throw new ArrayIndexOutOfBoundsException("Incorrect index");
         }
