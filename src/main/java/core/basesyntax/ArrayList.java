@@ -1,49 +1,101 @@
 package core.basesyntax;
 
+import java.util.NoSuchElementException;
+
 public class ArrayList<T> implements List<T> {
+    private static final int CAPACITY = 10;
+    private static final double COEFFICIENT = 0.5;
+    private T[] array;
+    private int size;
+
+    public ArrayList() {
+        array = (T[]) new Object[CAPACITY];
+        size = 0;
+    }
 
     @Override
     public void add(T value) {
-
+        if (size == array.length) {
+            array = resize(array);
+        }
+        array[size] = value;
+        size++;
     }
 
     @Override
     public void add(T value, int index) {
-
+        indexCheckForAdd(index);
+        if (size == array.length) {
+            array = resize(array);
+        }
+        System.arraycopy(array, index, array, index + 1, size - index);
+        array[index] = value;
+        size++;
     }
 
     @Override
     public void addAll(List<T> list) {
-
+        for (int i = 0; i < list.size(); i++) {
+            add(list.get(i));
+        }
     }
 
     @Override
     public T get(int index) {
-        return null;
+        indexCheckForGetAndSetAndRemove(index);
+        return array[index];
     }
 
     @Override
     public void set(T value, int index) {
-
+        indexCheckForGetAndSetAndRemove(index);
+        array[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        return null;
+        indexCheckForGetAndSetAndRemove(index);
+        T result = array[index];
+        System.arraycopy(array, index + 1, array, index, size - index - 1);
+        size--;
+        return result;
     }
 
     @Override
     public T remove(T t) {
-        return null;
+        for (int i = 0; i < size; i++) {
+            if (array[i] == t || (array[i] != null && array[i].equals(t))) {
+                return remove(i);
+            }
+        }
+        throw new NoSuchElementException("Value not found");
     }
 
     @Override
     public int size() {
-        return 0;
+        return size;
     }
 
     @Override
     public boolean isEmpty() {
-        return false;
+        return size == 0;
+    }
+
+    private T[] resize(T[] array) {
+        T[] newArray = (T[]) new Object[(int) (array.length * COEFFICIENT) + array.length];
+        System.arraycopy(array, 0, newArray, 0, array.length);
+        return newArray;
+    }
+
+    private void indexCheckForAdd(int index) {
+        if (index < 0 || index > size) {
+            throw new ArrayIndexOutOfBoundsException("The index " + index + " is invalid");
+        }
+    }
+
+    private void indexCheckForGetAndSetAndRemove(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayIndexOutOfBoundsException("The index " + index + " is invalid");
+        }
     }
 }
