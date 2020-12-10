@@ -8,12 +8,12 @@ public class ArrayList<T> implements List<T> {
     private int size;
 
     public ArrayList() {
-        this.elementData = new Object[LENGTH];
+        elementData = new Object[LENGTH];
         size = 0;
     }
 
     private void indexCheck(int index) {
-        if ((index > size || index < 0)) {
+        if (index > size || index < 0) {
             throw new ArrayIndexOutOfBoundsException("Index is out of bounds. Should be in "
                     + "between 0 and " + size + ", but was: " + index);
         }
@@ -35,8 +35,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value) {
         capacityCheck();
-        elementData[size] = value;
-        size++;
+        elementData[size++] = value;
     }
 
     @Override
@@ -50,7 +49,6 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        capacityCheck();
         for (int i = 0; i < list.size(); i++) {
             add(list.get(i));
         }
@@ -58,7 +56,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index < 0 || index > size - 1) {
+        if (index < 0 || index >= size) {
             throw new ArrayIndexOutOfBoundsException("Can't get invalid index, list size is: "
                     + size + ", your index is: " + index);
         }
@@ -67,7 +65,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void set(T value, int index) {
-        if (index < 0 || index > size - 1) {
+        if (index < 0 || index >= size) {
             throw new ArrayIndexOutOfBoundsException("Can't set invalid index, list size is: "
                     + size + ", your index is: " + index);
         }
@@ -77,20 +75,16 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         indexCheck(index);
-        T removedElement = get(index);
+        T local = (T) elementData[index];
         System.arraycopy(elementData, index + 1, elementData, index, size - index);
         size--;
-        return removedElement;
+        return local;
     }
 
     @Override
     public T remove(T t) {
         for (int i = 0; i < size; i++) {
-            if (t == null) {
-                size--;
-                return null;
-            }
-            if (t.equals(elementData[i])) {
+            if (t == null && elementData[i] == null || t != null && t.equals(elementData[i])) {
                 return remove(i);
             }
         }
