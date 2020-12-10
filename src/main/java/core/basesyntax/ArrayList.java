@@ -15,6 +15,7 @@ public class ArrayList<T> implements List<T> {
 
     public ArrayList(int capacity) {
         data = new Object[capacity];
+        size = 0;
     }
 
     @Override
