@@ -12,33 +12,6 @@ public class ArrayList<T> implements List<T> {
         size = 0;
     }
 
-    private void indexCheck(int index) {
-        if (index > size || index < 0) {
-            throw new ArrayIndexOutOfBoundsException("Index is out of bounds. Should be in "
-                    + "between 0 and " + size + ", but was: " + index);
-        }
-    }
-
-    private void indexEqualsToSizeCheck(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayIndexOutOfBoundsException("Can't access invalid index, list size is: "
-                    + size + ", your index is: " + index);
-        }
-    }
-
-    private void capacityCheck() {
-        if (size == elementData.length) {
-            grow();
-        }
-    }
-
-    private void grow() {
-        Object[] newElementData = (new Object[(int) (elementData.length
-                + (elementData.length >> 1))]);
-        System.arraycopy(elementData, 0, newElementData, 0, size);
-        elementData = newElementData;
-    }
-
     @Override
     public void add(T value) {
         capacityCheck();
@@ -100,5 +73,32 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return (size == 0);
+    }
+
+    private void indexCheck(int index) {
+        if (index > size || index < 0) {
+            throw new ArrayIndexOutOfBoundsException("Index is out of bounds. Should be in "
+                    + "between 0 and " + size + ", but was: " + index);
+        }
+    }
+
+    private void indexEqualsToSizeCheck(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayIndexOutOfBoundsException("Can't access invalid index, list size is: "
+                    + size + ", your index is: " + index);
+        }
+    }
+
+    private void capacityCheck() {
+        if (size == elementData.length) {
+            grow();
+        }
+    }
+
+    private void grow() {
+        Object[] newElementData = (new Object[(int) (elementData.length
+                + (elementData.length >> 1))]);
+        System.arraycopy(elementData, 0, newElementData, 0, size);
+        elementData = newElementData;
     }
 }
