@@ -8,7 +8,7 @@ public interface List<T> {
 
     void addAll(List<T> list);
 
-    T get(int index);
+    T get(int index) throws ArrayIndexOutOfBoundsException;
 
     void set(T value, int index);
 
