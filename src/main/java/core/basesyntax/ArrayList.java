@@ -65,7 +65,7 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         indexCheck(index);
         T returnValue = (T) arraylist[index];
-        System.arraycopy(arraylist,index + 1,arraylist,index,size - index - 1);
+        System.arraycopy(arraylist, index + 1, arraylist, index, size - index - 1);
         size--;
         return returnValue;
     }
@@ -92,7 +92,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public boolean isEmpty() {
-        return size() == 0 ? true : false;
+        return size() == 0;
     }
 
     private void indexCheck(int i) {
