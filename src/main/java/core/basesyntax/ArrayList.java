@@ -47,32 +47,25 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (isIndexInvalid(index)) {
+        if (isIndexInvalid(index) || index >= size) {
             throw new ArrayIndexOutOfBoundsException();
         }
 
-        if (index < size) {
-            return values[index];
-        }
-        throw new ArrayIndexOutOfBoundsException();
+        return values[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (isIndexInvalid(index)) {
+        if (isIndexInvalid(index) || index >= size) {
             throw new ArrayIndexOutOfBoundsException();
         }
 
-        if (index < size) {
-            values[index] = value;
-        } else {
-            throw new ArrayIndexOutOfBoundsException();
-        }
+        values[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (isIndexInvalid(index)) {
+        if (isIndexInvalid(index) || index >= size) {
             throw new ArrayIndexOutOfBoundsException();
         }
         T oldValue = values[index];
