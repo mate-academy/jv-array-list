@@ -23,6 +23,9 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
+        if (index < 0 || index > size) {
+            throw new ArrayIndexOutOfBoundsException("Incorrect index");
+        }
         if (array.length == size) {
             grow();
         }
@@ -33,46 +36,34 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        if (array.length < size + list.size()) {
-            grow();
-        }
         addition(list);
     }
 
     @Override
     public T get(int index) {
-        if (index < size) {
-            return array[index];
-        } else {
-            throw new ArrayIndexOutOfBoundsException("Incorrect index");
-        }
+        indexCheck(index);
+        return array[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index < size) {
-            array[index] = value;
-        } else {
-            throw new ArrayIndexOutOfBoundsException("Incorrect index");
-        }
+        indexCheck(index);
+        array[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        T tmp = array[index];
+        indexCheck(index);
+        T returnedValue = array[index];
         System.arraycopy(array, index + 1, array, index, size - index - 1);
         size--;
-        return tmp;
+        return returnedValue;
     }
 
     @Override
     public T remove(T t) {
         for (int i = 0; i < size; i++) {
-            if (t == null) {
-                size--;
-                return null;
-            }
-            if (array[i].equals(t)) {
+            if (array[i] == null || array[i].equals(t)) {
                 return remove(i);
             }
         }
@@ -99,6 +90,12 @@ public class ArrayList<T> implements List<T> {
     private void addition(List<T> list) {
         for (int i = 0; i < list.size(); i++) {
             add(list.get(i));
+        }
+    }
+
+    private void indexCheck(int index){
+        if (index >= size || index < 0) {
+            throw new ArrayIndexOutOfBoundsException("Incorrect index");
         }
     }
 }
