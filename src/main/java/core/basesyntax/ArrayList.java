@@ -8,15 +8,8 @@ public class ArrayList<T> implements List<T> {
     private int sizeOfFilledArray;
 
     public ArrayList() {
-        this.array = (T[]) new Object[DEFAULT_ARRAY_CAPACITY];
-        this.sizeOfFilledArray = 0;
-    }
-
-    public void growCapacity() {
-        T[] newArray = (T[]) new Object[sizeOfFilledArray + DEFAULT_ARRAY_CAPACITY / 2];
-        System.arraycopy(array,0, newArray,0, array.length);
-        array = newArray;
-
+        array = (T[]) new Object[DEFAULT_ARRAY_CAPACITY];
+        sizeOfFilledArray = 0;
     }
 
     @Override
@@ -30,7 +23,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        indexValidationCheckAdd(index);
+        checkIndexForAdd(index);
         if (sizeOfFilledArray == array.length) {
             growCapacity();
         }
@@ -52,19 +45,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        indexCheck(index);
+        checkIndex(index);
         return array[index];
     }
 
     @Override
     public void set(T value, int index) {
-        indexCheck(index);
+        checkIndex(index);
         array[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        indexCheck(index);
+        checkIndex(index);
         T temp = array[index];
         System.arraycopy(array, index + 1, array, index, sizeOfFilledArray - index - 1);
         sizeOfFilledArray--;
@@ -83,21 +76,27 @@ public class ArrayList<T> implements List<T> {
 
     @Override
         public int size() {
-        return this.sizeOfFilledArray;
+        return sizeOfFilledArray;
     }
 
     @Override
         public boolean isEmpty() {
-        return this.sizeOfFilledArray == 0;
+        return sizeOfFilledArray == 0;
     }
 
-    public void indexValidationCheckAdd(int index) {
+    private void growCapacity() {
+        T[] newArray = (T[]) new Object[(int) (sizeOfFilledArray * 1.5)];
+        System.arraycopy(array, 0, newArray, 0, array.length);
+        array = newArray;
+    }
+
+    private void checkIndexForAdd(int index) {
         if (index > sizeOfFilledArray || index < 0) {
             throw new ArrayIndexOutOfBoundsException();
         }
     }
 
-    public void indexCheck(int index) {
+    private void checkIndex(int index) {
         if (index >= sizeOfFilledArray || index < 0) {
             throw new ArrayIndexOutOfBoundsException();
         }
