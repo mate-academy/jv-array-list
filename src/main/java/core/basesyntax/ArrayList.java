@@ -3,13 +3,18 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    private int size = 10;
-    private Object [] array = new Object[size];
-    private int currentSize = 0;
+    private final static int SIZE = 10;
+    private Object [] array;
+    private int currentSize;
+
+    public ArrayList() {
+        this.array =  new Object[SIZE];
+        this.currentSize = 0;
+    }
 
     @Override
     public void add(T value) {
-        if (currentSize + 1 > array.length) {
+        if (currentSize == array.length) {
             grow();
         }
         array[currentSize] = value;
@@ -18,15 +23,14 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index > array.length) {
-            return;
+        if (index > currentSize || index < 0) {
+            throw new ArrayIndexOutOfBoundsException("Incorrect index ");
         }
-        int oldLength = currentSize;
-        if (currentSize + 1 > array.length) {
+        if (currentSize == array.length) {
             grow();
         }
         System.arraycopy(array, index, array,
-                index + 1, oldLength - index);
+                index + 1, currentSize - index);
         array[index] = value;
         currentSize++;
 
@@ -64,21 +68,20 @@ public class ArrayList<T> implements List<T> {
 
         checkingIndex(index);
 
-        Object lookingObj = array[index];
+        Object oldValue  = array[index];
         System.arraycopy(array, index + 1, array,
                 index, oldLength - (index + 1));
 
         currentSize--;
-        return (T) lookingObj;
+        return (T) oldValue;
     }
 
     @Override
     public T remove(T t) {
-        int indexT = 0;
+
         for (int i = 0; i < currentSize; i++) {
             if (t == array[i] || array[i] != null && array[i].equals(t)) {
-                indexT = i;
-                return remove(indexT);
+                return remove(i);
             }
         }
         throw new NoSuchElementException("not find ");
@@ -91,20 +94,11 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public boolean isEmpty() {
-        int counterNull = 0;
-        for (int i = 0; i < array.length; i++) {
-            if (array[i] == null) {
-                counterNull++;
-            }
-        }
-        if (counterNull == array.length - 1) {
-            return true;
-        }
         return currentSize == 0;
     }
 
     private void grow() {
-        Object [] currentArray = array;
+        Object[] currentArray = array;
         array = new Object[(int) (array.length * 1.5)];
         System.arraycopy(currentArray, 0, array, 0, currentArray.length);
     }
