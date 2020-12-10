@@ -24,15 +24,12 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         if (index <= size && index >= 0) {
-            Object[] buffer = new Object[size - index];
-            System.arraycopy(data, index, buffer, 0, size() - index);
-            size -= size - index;
-            if (size + buffer.length > data.length) {
+            if (size == data.length) {
                 grow();
             }
+            System.arraycopy(data, index, data, index + 1, size - index);
             data[index] = value;
-            System.arraycopy(buffer, 0, data, index + 1, buffer.length);
-            size += buffer.length + 1;
+            size++;
         } else {
             throw new ArrayIndexOutOfBoundsException();
         }
