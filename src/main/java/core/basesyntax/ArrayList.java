@@ -7,20 +7,20 @@ public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private static final double RESIZE_COEFFICIENT = 1.5;
     private int size;
-    private Object[] values;
+    private T[] values;
 
     public ArrayList() {
-        this.values = new Object[DEFAULT_CAPACITY];
+        this.values = (T[]) new Object[DEFAULT_CAPACITY];
         this.size = 0;
     }
 
     public ArrayList(int initialCapacity) {
-        this.values = new Object[initialCapacity];
+        this.values = (T[]) new Object[initialCapacity];
         this.size = 0;
     }
 
     private void resize() {
-        Object[] resizedValues = new Object[(int) Math.ceil(this.values.length * RESIZE_COEFFICIENT)];
+        T[] resizedValues = (T[]) new Object[(int) Math.ceil(values.length * RESIZE_COEFFICIENT)];
         System.arraycopy(this.values, 0, resizedValues, 0, this.values.length);
         this.values = resizedValues;
     }
