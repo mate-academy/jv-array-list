@@ -27,14 +27,7 @@ public class ArrayList<T> implements List<T> {
         if (!isIndexValid(index) && index != size) {
             throw new ArrayIndexOutOfBoundsException();
         }
-        if (size == elementData.length) {
-            elementData = grow();
-        }
-        if (index == size) {
-            add(value);
-        } else {
             addElementInMiddle(value, index);
-        }
     }
 
     @Override
@@ -75,10 +68,11 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T t) {
-        if (!isIndexValid(getIndex(t))) {
+        int index = getIndex(t);
+        if (!isIndexValid(index)) {
             throw new NoSuchElementException();
         }
-        remove(getIndex(t));
+        remove(index);
         return t;
     }
 
@@ -92,12 +86,8 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private int newCapacity(int oldCapacity) {
-        return (int) (oldCapacity * 1.5);
-    }
-
     private T[] grow() {
-        return Arrays.copyOf(elementData, newCapacity(size));
+        return Arrays.copyOf(elementData, (int) (elementData.length * 1.5));
     }
 
     private boolean isIndexValid(int index) {
@@ -116,11 +106,18 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void addElementInMiddle(T value, int index) {
-        for (int i = size; i > index; i--) {
-            elementData[i] = elementData[i - 1];
+        if (size == elementData.length) {
+            elementData = grow();
         }
-        elementData[index] = value;
-        size++;
+        if (index == size) {
+            add(value);
+        } else {
+            for (int i = size; i > index; i--) {
+                elementData[i] = elementData[i - 1];
+            }
+            elementData[index] = value;
+            size++;
+        }
     }
 
     private void arrayShift(int index) {
