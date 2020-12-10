@@ -5,20 +5,20 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    private T[] arrayList;
+    private T[] elements;
     private int size;
 
     public ArrayList() {
-        arrayList = (T[]) new Object[DEFAULT_CAPACITY];
+        elements = (T[]) new Object[DEFAULT_CAPACITY];
         size = 0;
     }
 
-    private T[] grow() {
-        return Arrays.copyOf(arrayList, arrayList.length + arrayList.length / 2);
+    private void grow() {
+        elements = Arrays.copyOf(elements, elements.length + elements.length / 2);
     }
 
     private boolean isIndexValid(int index) {
-        if (index >= 0 && index <= size) {
+        if (index >= 0 && index < size) {
             return true;
         }
         throw new ArrayIndexOutOfBoundsException("Wrong index. The index must be between"
@@ -27,21 +27,24 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (size == arrayList.length - 1) {
-            arrayList = grow();
+        if (size == elements.length - 1) {
+            grow();
         }
-        arrayList[size] = value;
+        elements[size] = value;
         size++;
     }
 
     @Override
     public void add(T value, int index) {
-        isIndexValid(index);
-        if (size == arrayList.length) {
-            arrayList = grow();
+        if (index < 0 ^ index > size) {
+            throw new ArrayIndexOutOfBoundsException("Wrong index. The index must be between"
+                    + " 0 and size: " + size);
         }
-        System.arraycopy(arrayList, index, arrayList, index + 1, size - index);
-        arrayList[index] = value;
+        if (size == elements.length - 1) {
+            grow();
+        }
+        System.arraycopy(elements, index, elements, index + 1, size - index);
+        elements[index] = value;
         size++;
 
     }
@@ -55,21 +58,21 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        isIndexValid(index + 1);
-        return arrayList[index];
+        isIndexValid(index);
+        return elements[index];
     }
 
     @Override
     public void set(T value, int index) {
-        isIndexValid(index + 1);
-        arrayList[index] = value;
+        isIndexValid(index);
+        elements[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        isIndexValid(index + 1);
-        T removeValue = arrayList[index];
-        System.arraycopy(arrayList, index + 1, arrayList, index, size - index - 1);
+        isIndexValid(index);
+        T removeValue = elements[index];
+        System.arraycopy(elements, index + 1, elements, index, size - index - 1);
         size--;
         return removeValue;
     }
@@ -77,9 +80,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T t) {
         for (int i = 0; i < size; i++) {
-            if ((t == arrayList[i]) || (arrayList[i] != null && arrayList[i].equals(t))) {
-                T val = remove(i);
-                return val;
+            if ((t == elements[i]) || (elements[i] != null && elements[i].equals(t))) {
+                return remove(i);
             }
         }
         throw new NoSuchElementException("List doesn't have this value");
