@@ -71,7 +71,7 @@ public class ArrayListTest {
         arrayList.addAll(newArrayList);
         Assert.assertEquals("Test failed! Size of array should be " + 5 + "but it is "
                 + arrayList.size(), 5, arrayList.size());
-        Assert.assertEquals("Academy", arrayList.get(3));
+        Assert. assertEquals("Academy", arrayList.get(3));
         Assert.assertEquals("Kiev", arrayList.get(4));
     }
 
