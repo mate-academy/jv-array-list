@@ -9,8 +9,8 @@ public class ArrayList<T> implements List<T> {
     private int size;
 
     public ArrayList() {
-        this.array = (T[]) new Object[CAPACITY];
-        this.size = 0;
+        array = (T[]) new Object[CAPACITY];
+        size = 0;
     }
 
     @Override
@@ -24,8 +24,8 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        indexCheckForAddAndRemove(index);
-        if (size + 1 == array.length) {
+        indexCheckForAdd(index);
+        if (size == array.length) {
             array = resize(array);
         }
         System.arraycopy(array, index, array, index + 1, size - index);
@@ -42,19 +42,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        indexCheckForGet(index);
+        indexCheckForGetAndSetAndRemove(index);
         return array[index];
     }
 
     @Override
     public void set(T value, int index) {
-        indexCheckForSet(index);
+        indexCheckForGetAndSetAndRemove(index);
         array[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        indexCheckForAddAndRemove(index);
+        indexCheckForGetAndSetAndRemove(index);
         T result = array[index];
         System.arraycopy(array, index + 1, array, index, size - index - 1);
         size--;
@@ -87,19 +87,13 @@ public class ArrayList<T> implements List<T> {
         return newArray;
     }
 
-    private void indexCheckForAddAndRemove(int index) {
+    private void indexCheckForAdd(int index) {
         if (index < 0 || index > size) {
             throw new ArrayIndexOutOfBoundsException("The index " + index + " is invalid");
         }
     }
 
-    private void indexCheckForGet(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayIndexOutOfBoundsException("The index " + index + " is invalid");
-        }
-    }
-
-    private void indexCheckForSet(int index) {
+    private void indexCheckForGetAndSetAndRemove(int index) {
         if (index < 0 || index >= size) {
             throw new ArrayIndexOutOfBoundsException("The index " + index + " is invalid");
         }
