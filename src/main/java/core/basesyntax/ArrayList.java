@@ -27,7 +27,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (size == elements.length - 1) {
+        if (size == elements.length) {
             grow();
         }
         elements[size] = value;
@@ -40,7 +40,7 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayIndexOutOfBoundsException("Wrong index. The index must be between"
                     + " 0 and size: " + size);
         }
-        if (size == elements.length - 1) {
+        if (size == elements.length) {
             grow();
         }
         System.arraycopy(elements, index, elements, index + 1, size - index);
