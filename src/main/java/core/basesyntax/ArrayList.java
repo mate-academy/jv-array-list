@@ -110,7 +110,7 @@ public class ArrayList<T> implements List<T> {
         array[index - 1] = array[index];
     }
 
-    private T[] grow() {
-        return array = Arrays.copyOf(array, (int) (array.length * 1.5));
+    private void grow() {
+         array = Arrays.copyOf(array, (int) (array.length * 1.5));
     }
 }
