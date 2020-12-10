@@ -75,7 +75,7 @@ public class ArrayList<T> implements List<T> {
         for (int i = 0; i < size; i++) {
             if (data[i] != null && data[i].equals(t) || data[i] == null && t == null) {
                 T value = (T) data[i];
-                remove(i);
+                return remove(i);
             }
         }
         throw new NoSuchElementException();
@@ -98,8 +98,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void grow() {
-        Object[] oldList = new Object[data.length];
-        System.arraycopy(data, 0, oldList, 0, size);
+        Object[] oldList = data;
         data = new Object[data.length * (data.length / 2)];
         System.arraycopy(oldList, 0, data, 0, oldList.length);
     }
