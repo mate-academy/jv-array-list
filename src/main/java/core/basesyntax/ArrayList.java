@@ -20,7 +20,6 @@ public class ArrayList<T> implements List<T> {
         Object[] newArray = new Object[array.length + (array.length >> 1)];
         System.arraycopy(array, 0, newArray, 0, array.length);
         array = (T[]) newArray;
-
     }
 
     @Override
