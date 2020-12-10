@@ -5,37 +5,23 @@ import java.util.NoSuchElementException;
 public class ArrayList<T> implements List<T> {
     private static final int ARRAY_SIZE = 10;
     private Object[] array;
-    private int counter = 0;
+    private int counter;
 
     public ArrayList() {
         array = new Object[ARRAY_SIZE];
-    }
-
-    private void resize(int minSize) {
-        int newSize = minSize + (minSize >> 1);
-        if (newSize <= 0) {
-            throw new ArrayIndexOutOfBoundsException("Array is out of integer bounds and "
-                    + "require hugeCapacity() implementation. It's can't be bigger right now!");
-        }
-        Object[] oldArray = array;
-        array = new Object[newSize];
-        System.arraycopy(oldArray, 0, array,0, counter);
+        counter = 0;
     }
 
     @Override
     public void add(T value) {
-        if (counter >= array.length - 1) {
-            resize(counter);
-        }
+        resizeIfRequire(counter);
         array[counter] = value;
         counter = counter + 1;
     }
 
     @Override
     public void add(T value, int index) {
-        if (counter >= array.length - 1) {
-            resize(counter);
-        }
+        resizeIfRequire(index);
         System.arraycopy(array, index, array, index + 1, counter - index);
         array[index] = value;
         counter = counter + 1;
@@ -43,9 +29,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        if (list.size() > array.length) {
-            resize(list.size());
-        }
+        resizeIfRequire(list.size() + array.length);
         for (int i = 0; i < list.size(); i++) {
             add(list.get(i));
         }
@@ -97,5 +81,18 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return counter == 0;
+    }
+
+    private void resizeIfRequire(int minSize) {
+        if (counter == array.length) {
+            int newSize = minSize + (minSize >> 1);
+            if (newSize <= 0) {
+                throw new ArrayIndexOutOfBoundsException("Array is out of integer bounds and "
+                        + "require hugeCapacity() implementation. It's can't be bigger right now!");
+            }
+            Object[] oldArray = array;
+            array = new Object[newSize];
+            System.arraycopy(oldArray, 0, array, 0, counter);
+        }
     }
 }
