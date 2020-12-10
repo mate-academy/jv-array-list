@@ -4,7 +4,6 @@ import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-
     private static final int DEFAULT_CAPACITY = 10;
     private static final double DEFAULT_RESIZE = 1.5;
 
@@ -29,18 +28,18 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         if (elementData.length == size) {
-            lengthen();
+            grow();
             elementData[index] = value;
             size++;
         } else if (index < size) {
-            lengthen();
+            grow();
             size++;
             System.arraycopy(elementData, index, elementData, index + 1,
-                    elementData.length - index - 1);
+                    size - index);
             elementData[index] = value;
         } else {
             elementData[index] = value;
-            size = size + 1;
+            size++;
         }
         isValid(index);
     }
@@ -100,7 +99,7 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private void lengthen() {
+    private void grow() {
         elementData = Arrays.copyOf(elementData, (int) (elementData.length * DEFAULT_RESIZE));
     }
 }
