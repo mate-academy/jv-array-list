@@ -27,7 +27,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (elementData.length == size) {
+        if (elementData.length == size && size == index) {
             grow();
             elementData[index] = value;
             size++;
@@ -93,7 +93,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void isValid(int index) {
-        if (index >= size) {
+        if (index >= size || index < 0) {
             throw new ArrayIndexOutOfBoundsException("Index " + index
                     + " is out of the range of list size " + size);
         }
