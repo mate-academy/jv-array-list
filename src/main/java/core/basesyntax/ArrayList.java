@@ -15,24 +15,23 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value) {
         if (array.length == size) {
-         grow();
+            grow();
         }
         array[size++] = value;
     }
 
     @Override
     public void add(T value, int index) {
+        if (!(checkIndex(index) || index == size)) {
+            throw new ArrayIndexOutOfBoundsException("Add element failed. Index out of bounds");
+        }
         if (index == size) {
             add(value);
-        } else if (index < 0 || index > size) {
-            throw new ArrayIndexOutOfBoundsException("Add element failed. Index out of bounds");
         } else {
             if (size == array.length) {
-                array = grow();
+                grow();
             }
-            for (int i = size - 1; i >= index; i--) {
-                moveRight(i);
-            }
+            System.arraycopy(array, index, array, index + 1, size - index);
             array[index] = value;
             size++;
         }
@@ -49,35 +48,31 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index < size && index >= 0) {
-            return array[index];
+        if (!checkIndex(index)) {
+            throw new ArrayIndexOutOfBoundsException("Getting element failed. Index out of bounds");
         }
-        throw new ArrayIndexOutOfBoundsException("Getting element failed. Index out of bounds");
+        return array[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index < size && index >= 0) {
-            array[index] = value;
-        } else {
+        if (!checkIndex(index)) {
             throw new ArrayIndexOutOfBoundsException("Set element failed. Index out of bounds");
         }
+        array[index] = value;
     }
 
     @Override
     public T remove(int index) {
         T temp;
-        if (index < size && index >= 0) {
-            temp = array[index];
-            for (int i = index + 1; i < size; i++) {
-                moveLeft(i);
-            }
-            array[size - 1] = null;
-            size--;
-            return temp;
-        } else {
+        if (!checkIndex(index)) {
             throw new ArrayIndexOutOfBoundsException("Remove element failed. Index out of bounds");
         }
+        temp = array[index];
+        System.arraycopy(array, index + 1, array, index, size - index);
+        array[size - 1] = null;
+        size--;
+        return temp;
     }
 
     @Override
@@ -100,15 +95,11 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void moveRight(int index) {
-        array[index + 1] = array[index];
-    }
-
-    private void moveLeft(int index) {
-        array[index - 1] = array[index];
-    }
-
     private void grow() {
-         array = Arrays.copyOf(array, (int) (array.length * 1.5));
+        array = Arrays.copyOf(array, (int) (array.length * 1.5));
+    }
+
+    private boolean checkIndex(int index) {
+        return index < size && index >= 0;
     }
 }
