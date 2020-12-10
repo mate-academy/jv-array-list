@@ -12,6 +12,10 @@ public class ArrayList<T> implements List<T> {
         this.size = 0;
     }
 
+    private boolean isInvalidIndex(int index) {
+        return (index >= size || index < 0);
+    }
+
     private void resize() {
         T[] resizedArray = (T[]) new Object[(elements.length + (elements.length >> 1))];
         System.arraycopy(elements, 0, resizedArray, 0, size);
@@ -23,26 +27,20 @@ public class ArrayList<T> implements List<T> {
         if (size == elements.length) {
             resize();
         }
-        elements[size] = value;
-        size++;
+        elements[size++] = value;
     }
 
     @Override
     public void add(T value, int index) {
         if (index > size || index < 0) {
             throw new ArrayIndexOutOfBoundsException(index + " is out of bounds");
-        } else if (size == elements.length) {
-            resize();
-        } else {
-            System.arraycopy(elements, index, elements, index + 1, size - index);
-            if (index == size) {
-                add(value);
-            } else {
-                set(value, index);
-                size++;
-            }
         }
-
+        if (size == elements.length) {
+            resize();
+        }
+        System.arraycopy(elements, index, elements, index + 1, size - index);
+        elements[index] = value;
+        size++;
     }
 
     @Override
@@ -54,41 +52,36 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index >= size || index < 0) {
+        if (isInvalidIndex(index)) {
             throw new ArrayIndexOutOfBoundsException(index + " is out of bounds");
-        } else {
-            return elements[index];
         }
+        return elements[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index >= size || index < 0) {
+        if (isInvalidIndex(index)) {
             throw new ArrayIndexOutOfBoundsException(index + " is out of bounds");
-        } else {
-            elements[index] = value;
         }
+        elements[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index >= size || index < 0) {
+        if (isInvalidIndex(index)) {
             throw new ArrayIndexOutOfBoundsException(index + " is out of bounds");
-        } else {
-            T target = elements[index];
-            System.arraycopy(elements, index + 1, elements, index, size - index);
-            size--;
-            return target;
         }
+        T target = elements[index];
+        System.arraycopy(elements, index + 1, elements, index, size - index);
+        size--;
+        return target;
     }
 
     @Override
     public T remove(T t) {
         for (int i = 0; i < size(); i++) {
             if (elements[i] == t || elements[i] != null && elements[i].equals(t)) {
-                System.arraycopy(elements,i + 1, elements, i,size - i);
-                size--;
-                return t;
+                return remove(i);
             }
         }
         throw new NoSuchElementException(t + " element is not in the List");
