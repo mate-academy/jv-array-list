@@ -32,7 +32,8 @@ public class ArrayList<T> implements List<T> {
         if (index == size) {
             values[index] = value;
             size++;
-        } else if (isValidIndex(index)) {
+        } else {
+            isValidIndex(index);
             System.arraycopy(
                     values, index, values, index + 1, size - index);
             values[index] = value;
@@ -70,7 +71,7 @@ public class ArrayList<T> implements List<T> {
         isValidIndex(index);
         T item = values[index];
         System.arraycopy(
-                values, index + 1, values, index, values.length - index - 1);
+                values, index + 1, values, index, size - index - 1);
         size--;
         return item;
     }
@@ -78,7 +79,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T t) {
         for (int i = 0; i < size; i++) {
-            if (values[i] == null || values[i].equals(t)) {
+            if ((t == null && values[i] == null) || values[i].equals(t)) {
                 return remove(i);
             }
         }
@@ -95,11 +96,10 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private boolean isValidIndex(int index) {
+    private void isValidIndex(int index) {
         if (index >= size || index < 0) {
             throw new ArrayIndexOutOfBoundsException(
                     "Index " + index + " out of bounds for size " + size);
         }
-        return true;
     }
 }
