@@ -5,11 +5,12 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    Object [] elements;
-    private int size = 0;
+    private Object [] elements;
+    private int size;
 
     public ArrayList() {
         this.elements = new Object[DEFAULT_CAPACITY];
+        size = 0;
     }
 
     @Override
@@ -23,9 +24,7 @@ public class ArrayList<T> implements List<T> {
         if (elements.length == size) {
             increaseArraySize();
         }
-        for (int i = size; i > index; i--) {
-            elements[i] = elements[i - 1];
-        }
+        System.arraycopy(elements, index, elements, index + 1, size - index);
         elements[index] = value;
         size++;
     }
@@ -36,7 +35,7 @@ public class ArrayList<T> implements List<T> {
         for (int i = 0; i < listData.length; i++) {
             listData[i] = list.get(i);
         }
-        System.arraycopy(listData,0, elements,size, listData.length);
+        System.arraycopy(listData, 0, elements, size, listData.length);
         size += listData.length;
     }
 
@@ -56,32 +55,20 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         checkRange(index);
         T removed = (T) elements[index];
-        for (int i = index; i < size; i++) {
-            elements[i] = elements[i + 1];
-        }
-        size--;
+        int numMoved = size - index - 1;
+        System.arraycopy(elements, index + 1, elements, index, numMoved);
+        elements[size--] = null;
         return removed;
     }
 
     @Override
     public T remove(T t) {
-        int index = getIndexElement(t);
-
-        if (index == -1) {
-            return null;
+        int index = getExistingIndex(t);
+        if (index >= 0) {
+            return remove(index);
+        } else {
+            throw new NoSuchElementException("Element: " + t + " doesn't exists");
         }
-        if (isExist(t)) {
-            throw new NoSuchElementException("Such element: " + t
-                                                + " doesn't contain in this list.");
-        }
-        T removed = (T) elements[index];
-        for (int i = index; i < size; i++) {
-            if (elements[i] != null && elements[i].equals(removed)) {
-                elements[i] = elements[i + 1];
-            }
-        }
-        size--;
-        return removed;
     }
 
     @Override
@@ -99,21 +86,6 @@ public class ArrayList<T> implements List<T> {
         elements = Arrays.copyOf(elements, newSize);
     }
 
-    private int getIndexElement(T t) {
-        int index = 0;
-        for (int k = 0; k < elements.length; k++) {
-            if (t == null) {
-                size--;
-                return -1;
-            }
-            if (t.equals(elements[k])) {
-                index = k;
-                break;
-            }
-        }
-        return index;
-    }
-
     private void checkRange(int index) {
         if (index > size || index < 0) {
             throw new ArrayIndexOutOfBoundsException("This " + index
@@ -128,13 +100,13 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private boolean isExist(T value) {
-        int count = 0;
+    private int getExistingIndex(T value) {
+        int index = 0;
         for (int i = 0; i < elements.length; i++) {
-            if (value.equals(elements[i])) {
-                count++;
+            if (value == elements[i] || (elements[i] != null && elements[i].equals(value))) {
+                return index = i;
             }
         }
-        return count == 0;
+        return -1;
     }
 }
