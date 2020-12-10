@@ -9,13 +9,13 @@ public class ArrayList<T> implements List<T> {
     private int size;
 
     public ArrayList() {
-        this.defaultArray = (T[]) new Object[LENGTH];
-        this.size = 0;
+        defaultArray = (T[]) new Object[LENGTH];
+        size = 0;
     }
 
     @Override
     public void add(T value) {
-        defaultFull();
+        checkCapacity();
         defaultArray[size] = value;
         size++;
     }
@@ -23,9 +23,9 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         if (index > size || index < 0) {
-            throw new ArrayIndexOutOfBoundsException("Can't add element with this index");
+            throw new ArrayIndexOutOfBoundsException("Wrong index: index out of bound");
         }
-        defaultFull();
+        checkCapacity();
         System.arraycopy(defaultArray, index, defaultArray, index + 1, size - index);
         defaultArray[index] = value;
         size++;
@@ -40,25 +40,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayIndexOutOfBoundsException("Can't get element with this index");
-        }
+        checkIndex(index);
         return defaultArray[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayIndexOutOfBoundsException("Can't set element with this index");
-        }
+        checkIndex(index);
         defaultArray[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayIndexOutOfBoundsException("Can't remove element with this index");
-        }
+        checkIndex(index);
         T removeElement = defaultArray[index];
         System.arraycopy(defaultArray, index + 1, defaultArray, index, size - index - 1);
         defaultArray [--size] = null;
@@ -69,13 +63,10 @@ public class ArrayList<T> implements List<T> {
     public T remove(T t) {
         for (int i = 0; i < size; i++) {
             if ((t == defaultArray[i]) || (t != null) && (t.equals(defaultArray[i]))) {
-                remove(i);
-                break;
-            } else if (i == size - 1) {
-                throw new NoSuchElementException("This element don't exist in this collection");
+                return remove(i);
             }
         }
-        return t;
+        throw new NoSuchElementException("This element don't exist in this collection");
     }
 
     @Override
@@ -88,11 +79,17 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void defaultFull() {
+    private void checkCapacity() {
         if (size >= defaultArray.length) {
             T[] largeArray = (T[]) new Object [(int)(defaultArray.length * 1.5)];
             System.arraycopy(defaultArray, 0, largeArray, 0, size);
             defaultArray = largeArray;
+        }
+    }
+
+    private void checkIndex(int index) {
+        if (index >= size || index < 0) {
+            throw new ArrayIndexOutOfBoundsException("Wrong index: index out of bound");
         }
     }
 }
