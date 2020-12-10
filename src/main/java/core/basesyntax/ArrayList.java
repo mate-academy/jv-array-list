@@ -10,7 +10,7 @@ public class ArrayList<T> implements List<T> {
 
     public ArrayList() {
         values = (T[]) new Object[SIZE_ARRAY];
-        this.size = 0;
+        size = 0;
     }
 
     @Override
@@ -56,7 +56,7 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         checkIndex(index);
         T oldValue = (T) values[index];
-        System.arraycopy(this.values, index + 1, this.values, index, size - index - 1);
+        System.arraycopy(values, index + 1, values, index, size - index - 1);
         size--;
         return oldValue;
     }
@@ -64,7 +64,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T t) {
         for (int i = 0; i < size; i++) {
-            if (this.values[i] == t || t != null && t.equals(this.values[i])) {
+            if (values[i] == t || t != null && t.equals(values[i])) {
                 return remove(i);
             }
         }
@@ -84,13 +84,13 @@ public class ArrayList<T> implements List<T> {
     private void widenArray() {
         if (values.length == size) {
             T[] newArray = (T[]) new Object[(int) (values.length * COEFFICIENT_SIZE_ARRAY)];
-            System.arraycopy(this.values, 0, newArray, 0, size);
+            System.arraycopy(values, 0, newArray, 0, size);
             values = newArray;
         }
     }
 
     private void checkIndex(int index) {
-        if (index > this.size || index < 0) {
+        if (index > size || index < 0) {
             throw new ArrayIndexOutOfBoundsException("Houston we have a BUG!");
         }
     }
