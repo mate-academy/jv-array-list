@@ -12,8 +12,12 @@ public class ArrayList<T> implements List<T> {
         size = 0;
     }
 
+    private boolean isAvailable(int index) {
+        return index >= 0 && index < size;
+    }
+
     private void grow() {
-        Object[] newArray = new Object[array.length * 3 / 2];
+        Object[] newArray = new Object[array.length + (array.length >> 1)];
         System.arraycopy(array, 0, newArray, 0, array.length);
         array = (T[]) newArray;
 
@@ -26,79 +30,72 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
+        if (!(index >= 0 && index <= size)) {
+            throw new ArrayIndexOutOfBoundsException("Array Index Out of bound " + index);
+        }
+        if (size == array.length) {
+            grow();
+        }
+
         if (index == size) {
-            if (size == array.length) {
-                grow();
-            }
             array[size] = value;
             size++;
         } else if (index <= size - 1) {
             size++;
-            if (size == array.length) {
-                grow();
-            }
             System.arraycopy(array, index, array, index + 1,
                     array.length - index - 1);
             array[index] = value;
-        } else {
-            throw new ArrayIndexOutOfBoundsException("Array Index Out of bound " + index);
         }
     }
 
     @Override
     public void addAll(List<T> list) {
         for (int i = 0; i < list.size(); i++) {
-            this.add(list.get(i));
+            add(list.get(i));
         }
     }
 
     @Override
     public T get(int index) {
-        if (index >= 0 && index < size) {
+        if (isAvailable(index)) {
             return array[index];
-        } else {
-            throw new ArrayIndexOutOfBoundsException("Array Index Out of bound " + index);
         }
+        throw new ArrayIndexOutOfBoundsException("Array Index Out of bound " + index);
     }
 
     @Override
     public void set(T value, int index) {
-        if (index >= 0 && index < size) {
+        if (isAvailable(index)) {
             array[index] = value;
-        } else {
-            throw new ArrayIndexOutOfBoundsException("Array Index Out of bound " + index);
+            return;
         }
+        throw new ArrayIndexOutOfBoundsException("Array Index Out of bound " + index);
     }
 
     @Override
     public T remove(int index) {
-        if (index >= 0 && index < size) {
+        if (isAvailable(index)) {
             T delete = array[index];
             System.arraycopy(array, index + 1, array, index, size - index - 1);
             size--;
             return delete;
-        } else {
-            throw new ArrayIndexOutOfBoundsException("Array Index Out of bound " + index);
         }
+        throw new ArrayIndexOutOfBoundsException("Array Index Out of bound " + index);
     }
 
     @Override
     public T remove(T t) {
-        T oldValue = t;
         int index = -1;
         for (int i = 0; i < size; i++) {
             if (array[i] == t || (array[i] != null && array[i].equals(t))) {
                 index = i;
-                oldValue = array[i];
                 break;
             }
         }
         if (index != -1) {
-            remove(index);
-        } else {
-            throw new NoSuchElementException("No such Element " + t);
+            return remove(index);
         }
-        return oldValue;
+        throw new NoSuchElementException("No such Element " + t);
     }
 
     @Override
