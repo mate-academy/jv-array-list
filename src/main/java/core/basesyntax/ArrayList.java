@@ -63,11 +63,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T t) {
         for (int i = 0; i < counter; i++) {
-            if (array[i] == null || array[i].equals(t)) {
-                T oldValue = get(i);
-                System.arraycopy(array, i + 1, array, i, counter - i - 1);
-                counter = counter - 1;
-                return oldValue;
+            if (array[i] == t || (array[i] != null && array[i].equals(t))) {
+                return remove(i);
             }
         }
         throw new NoSuchElementException("No such object in ArrayList");
