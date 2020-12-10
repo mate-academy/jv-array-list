@@ -31,7 +31,7 @@ public class ArrayList<T> implements List<T> {
             grow();
             elementData[index] = value;
             size++;
-        } else if (index < size) {
+        } else if ((index < size) && (index > 0)) {
             grow();
             size++;
             System.arraycopy(elementData, index, elementData, index + 1,
