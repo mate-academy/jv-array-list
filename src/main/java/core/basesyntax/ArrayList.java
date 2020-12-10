@@ -6,12 +6,17 @@ public class ArrayList<T> implements List<T> {
 
     public static final int DEFAULT_CAPACITY = 10;
 
-    private T[] values = (T[]) new Object[DEFAULT_CAPACITY];
-    private int size = 0;
+    private T[] values;
+    private int size;
+
+    public ArrayList() {
+        values = (T[]) new Object[DEFAULT_CAPACITY];
+        size = 0;
+    }
 
     @Override
     public void add(T value) {
-        if (!isHaveSpace()) {
+        if (!isSpaceAvailable()) {
             grow();
         }
         values[size] = value;
@@ -20,8 +25,12 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (!isHaveSpace()) {
+        if (!isSpaceAvailable()) {
             grow();
+        }
+
+        if (isIndexInvalid(index) || index > size) {
+            throw new ArrayIndexOutOfBoundsException();
         }
 
         System.arraycopy(values, index, values, index + 1, size - index);
@@ -38,6 +47,10 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
+        if (isIndexInvalid(index)) {
+            throw new ArrayIndexOutOfBoundsException();
+        }
+
         if (index < size) {
             return values[index];
         }
@@ -46,6 +59,10 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void set(T value, int index) {
+        if (isIndexInvalid(index)) {
+            throw new ArrayIndexOutOfBoundsException();
+        }
+
         if (index < size) {
             values[index] = value;
         } else {
@@ -55,10 +72,10 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(int index) {
-        T oldValue = values[index];
-        if (size == 0) {
-            return oldValue;
+        if (isIndexInvalid(index)) {
+            throw new ArrayIndexOutOfBoundsException();
         }
+        T oldValue = values[index];
         System.arraycopy(values, index + 1, values, index, size - index - 1);
         size--;
         return oldValue;
@@ -66,7 +83,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T t) {
-        for (int i = 0; i < values.length; i++) {
+        for (int i = 0; i < size; i++) {
             if (values[i] == null ? values[i] == t : values[i].equals(t)) {
                 remove(i);
                 return t;
@@ -85,8 +102,12 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private boolean isHaveSpace() {
+    private boolean isSpaceAvailable() {
         return values.length > size;
+    }
+
+    private boolean isIndexInvalid(int index) {
+        return index < 0;
     }
 
     private void grow() {
