@@ -75,7 +75,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     @Override
-        public int size() {
+    public int size() {
         return sizeOfFilledArray;
     }
 
