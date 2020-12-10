@@ -58,10 +58,9 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         if (isValidIndex(index)) {
-            final T temp = get(index);
+            T temp = get(index);
             System.arraycopy(items, index + 1, items, index, size - index - 1);
-            size--;
-            items[size] = null;
+            items[size--] = null;
             return temp;
         }
         throw new ArrayIndexOutOfBoundsException("Can`t remove element, no such index");
@@ -70,7 +69,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T t) {
         for (int i = 0; i < size; i++) {
-            if (t == null && items[i] == null || items[i].equals(t)) {
+            if (items[i] == t || (items[i] != null && items[i].equals(t))) {
                 return remove(i);
             }
         }
@@ -88,7 +87,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void ensureCapacity() {
-        if (items.length < size + 1) {
+        if (items.length == size) {
             Object[] temp = items;
             items = new Object[size * 3 / 2 + 1];
             System.arraycopy(temp, 0, items, 0, temp.length);
