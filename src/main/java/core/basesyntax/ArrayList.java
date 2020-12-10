@@ -18,13 +18,6 @@ public class ArrayList<T> implements List<T> {
         size = 0;
     }
 
-    private T[] letGrow() {
-        T[] growLength = (T[]) new Object[(int)Math.ceil(values.length * ARRAY_INCREASE)];
-        System.arraycopy(values, 0, growLength, 0, values.length);
-        values = growLength;
-        return values;
-    }
-
     @Override
     public void add(T value) {
         add(value, size);
@@ -36,7 +29,7 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayIndexOutOfBoundsException("Index " + index + " out of bouns exception");
         }
         if (size == values.length) {
-            letGrow();
+            grow();
         }
         System.arraycopy(values, index, values, index + 1, size - index);
         values[index] = value;
@@ -96,5 +89,12 @@ public class ArrayList<T> implements List<T> {
         if (index >= size || index < 0) {
             throw new ArrayIndexOutOfBoundsException("Index " + index + " out of bouns exception");
         }
+    }
+
+    private T[] grow() {
+        T[] growLength = (T[]) new Object[(int) Math.ceil(values.length * ARRAY_INCREASE)];
+        System.arraycopy(values, 0, growLength, 0, values.length);
+        values = growLength;
+        return values;
     }
 }
