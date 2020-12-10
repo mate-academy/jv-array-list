@@ -5,29 +5,28 @@ import java.util.NoSuchElementException;
 public class ArrayList<T> implements List<T> {
     private static final int CAPACITY = 10;
     private static final double COEFFICIENT = 0.5;
-    private Object[] array = new Object[CAPACITY];
-    private int size = 0;
+    private T[] array;
+    private int size;
+
+    public ArrayList() {
+        this.array = (T[]) new Object[CAPACITY];
+        this.size = 0;
+    }
 
     @Override
     public void add(T value) {
-        if (size < array.length) {
-            array[size] = value;
-            size++;
-            return;
+        if (size == array.length) {
+            array = resize(array);
         }
-        Object[] oldArray = new Object[array.length];
-        System.arraycopy(array, 0, oldArray, 0, array.length);
-        array = new Object[(int) (array.length * COEFFICIENT) + array.length];
-        System.arraycopy(oldArray, 0, array, 0, oldArray.length);
         array[size] = value;
         size++;
     }
 
     @Override
     public void add(T value, int index) {
-        if (index > size) {
-            throw new ArrayIndexOutOfBoundsException("We can't add value on this position because "
-                    + "index > size" + index + " > " + size);
+        indexCheckForAddAndRemove(index);
+        if (size + 1 == array.length) {
+            array = resize(array);
         }
         System.arraycopy(array, index, array, index + 1, size - index);
         array[index] = value;
@@ -43,42 +42,33 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index >= size) {
-            throw new ArrayIndexOutOfBoundsException("This element didn't exists" + index);
-        }
-        return (T) array[index];
+        indexCheckForGet(index);
+        return array[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index < size) {
-            array[index] = value;
-            return;
-        }
-        throw new ArrayIndexOutOfBoundsException("We can't add value on this position because "
-                + "index > size" + index + " > " + size);
+        indexCheckForSet(index);
+        array[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index > size) {
-            throw new ArrayIndexOutOfBoundsException("We can't add value on this position because "
-                    + "index > size" + index + " > " + size);
-        }
-        T result = (T) array[index];
-        System.arraycopy(array, index + 1, array, index, size - index);
+        indexCheckForAddAndRemove(index);
+        T result = array[index];
+        System.arraycopy(array, index + 1, array, index, size - index - 1);
         size--;
         return result;
     }
 
     @Override
     public T remove(T t) {
-        for (int i = 0; i < array.length; i++) {
+        for (int i = 0; i < size; i++) {
             if (array[i] == t || (array[i] != null && array[i].equals(t))) {
-                return (T) remove(i);
+                return remove(i);
             }
         }
-        throw new NoSuchElementException("Value don't found");
+        throw new NoSuchElementException("Value not found");
     }
 
     @Override
@@ -89,5 +79,29 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private T[] resize(T[] array) {
+        T[] newArray = (T[]) new Object[(int) (array.length * COEFFICIENT) + array.length];
+        System.arraycopy(array, 0, newArray, 0, array.length);
+        return newArray;
+    }
+
+    private void indexCheckForAddAndRemove(int index) {
+        if (index < 0 || index > size) {
+            throw new ArrayIndexOutOfBoundsException("The index " + index + " is invalid");
+        }
+    }
+
+    private void indexCheckForGet(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayIndexOutOfBoundsException("The index " + index + " is invalid");
+        }
+    }
+
+    private void indexCheckForSet(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayIndexOutOfBoundsException("The index " + index + " is invalid");
+        }
     }
 }
