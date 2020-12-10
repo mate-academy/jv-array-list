@@ -56,7 +56,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         isValidIndex(index);
-        return (T) values[index];
+        return values[index];
     }
 
     @Override
