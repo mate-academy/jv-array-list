@@ -23,7 +23,7 @@ public class ArrayList<T> implements List<T> {
             System.arraycopy(items, index, items, index + 1, size - index - 1);
             items[index] = value;
         } else {
-            throw new ArrayIndexOutOfBoundsException();
+            throw new ArrayIndexOutOfBoundsException("Can`t add element to non existing index");
         }
     }
 
@@ -39,7 +39,7 @@ public class ArrayList<T> implements List<T> {
         if (isValidIndex(index)) {
             return (T) items[index];
         }
-        throw new ArrayIndexOutOfBoundsException();
+        throw new ArrayIndexOutOfBoundsException("Can`t get element, no such index");
     }
 
     @Override
@@ -47,7 +47,7 @@ public class ArrayList<T> implements List<T> {
         if (isValidIndex(index)) {
             items[index] = value;
         } else {
-            throw new ArrayIndexOutOfBoundsException();
+            throw new ArrayIndexOutOfBoundsException("Can`t set element, no such index");
         }
     }
 
@@ -60,7 +60,7 @@ public class ArrayList<T> implements List<T> {
             items[size] = null;
             return temp;
         }
-        throw new ArrayIndexOutOfBoundsException();
+        throw new ArrayIndexOutOfBoundsException("Can`t remove element, no such index");
     }
 
     @Override
@@ -72,7 +72,7 @@ public class ArrayList<T> implements List<T> {
                 }
             }
         }
-        throw new NoSuchElementException();
+        throw new NoSuchElementException("Can`t find such element in array");
     }
 
     @Override
