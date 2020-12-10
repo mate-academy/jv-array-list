@@ -29,11 +29,11 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         if (elementData.length == size) {
-            madeLongerAgain();
+            lengthen();
             elementData[index] = value;
             size++;
         } else if (index < size) {
-            madeLongerAgain();
+            lengthen();
             size++;
             System.arraycopy(elementData, index, elementData, index + 1,
                     elementData.length - index - 1);
@@ -100,7 +100,7 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private void madeLongerAgain() {
+    private void lengthen() {
         elementData = Arrays.copyOf(elementData, (int) (elementData.length * DEFAULT_RESIZE));
     }
 }
