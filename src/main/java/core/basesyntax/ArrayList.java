@@ -36,7 +36,9 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        addition(list);
+        for (int i = 0; i < list.size(); i++) {
+            add(list.get(i));
+        }
     }
 
     @Override
@@ -63,7 +65,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T t) {
         for (int i = 0; i < size; i++) {
-            if (array[i] == null || array[i].equals(t)) {
+            if (array[i] == t || array[i] != null && array[i].equals(t)) {
                 return remove(i);
             }
         }
@@ -85,12 +87,6 @@ public class ArrayList<T> implements List<T> {
         T[] newArray = (T[]) new Object[newLength];
         System.arraycopy(array, 0, newArray, 0, array.length);
         array = newArray;
-    }
-
-    private void addition(List<T> list) {
-        for (int i = 0; i < list.size(); i++) {
-            add(list.get(i));
-        }
     }
 
     private void indexCheck(int index) {
