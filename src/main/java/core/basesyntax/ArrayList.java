@@ -11,6 +11,11 @@ public class ArrayList<T> implements List<T> {
         this.elements = (T[]) new Object[ARRAY_CAPACITY];
     }
 
+    public ArrayList(T[] elements, int size) {
+        this.elements = elements;
+        this.size = size;
+    }
+
     @Override
     public void add(T value) {
         elements[size] = value;
@@ -43,41 +48,32 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index >= 0 && index < size) {
-            return elements[index];
-        }
-        throw new ArrayIndexOutOfBoundsException("Wrong index!");
+        exception(index);
+        return elements[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index >= 0 && index < size) {
-            elements[index] = value;
-            return;
-        }
-        throw new ArrayIndexOutOfBoundsException("Wrong index!");
+        exception(index);
+        elements[index] = value;
+        return;
     }
 
     @Override
     public T remove(int index) {
-        if (index >= 0 && index < size) {
-            T deletedElement = elements[index];
-            System.arraycopy(elements, index + 1, elements, index, size - index - 1);
-            size--;
-            return deletedElement;
-        }
-        throw new ArrayIndexOutOfBoundsException();
+        exception(index);
+        T deletedElement = elements[index];
+        System.arraycopy(elements, index + 1, elements, index, size - index - 1);
+        size--;
+        return deletedElement;
     }
 
     @Override
     public T remove(T t) {
-        T returnElement = (T) new Object();
-        for (int i = 0; i < elements.length; i++) {
+        for (int i = 0; i < size; i++) {
             if (t == elements[i]
                     || ((t != null && elements[i] != null) && t.equals(elements[i]))) {
-                returnElement = elements[i];
-                remove(i);
-                return returnElement;
+                return remove(i);
             }
         }
         throw new NoSuchElementException();
@@ -90,17 +86,18 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public boolean isEmpty() {
-        if (size > 0) {
-            return false;
-        }
-        return true;
+        return size <= 0;
     }
 
     private void grow() {
         T[] newElements = (T[]) new Object[(int) (elements.length * 1.5)];
-        for (int i = 0; i < size; i++) {
-            newElements[i] = elements[i];
-        }
+        System.arraycopy(elements, 0, newElements, 0, size);
         elements = newElements;
+    }
+
+    private void exception(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayIndexOutOfBoundsException();
+        }
     }
 }
