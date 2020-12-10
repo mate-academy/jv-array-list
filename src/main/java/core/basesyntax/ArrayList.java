@@ -66,9 +66,8 @@ public class ArrayList<T> implements List<T> {
         int index = getExistingIndex(t);
         if (index >= 0) {
             return remove(index);
-        } else {
-            throw new NoSuchElementException("Element: " + t + " doesn't exists");
         }
+        throw new NoSuchElementException("Element: " + t + " doesn't exists");
     }
 
     @Override
