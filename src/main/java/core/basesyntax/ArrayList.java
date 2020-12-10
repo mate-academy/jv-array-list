@@ -26,7 +26,7 @@ public class ArrayList<T> implements List<T> {
         if (index == size) {
             add(value);
         } else if (index < 0 || index > size) {
-            throw new ArrayIndexOutOfBoundsException();
+            throw new ArrayIndexOutOfBoundsException("Add element failed. Index out of bounds");
         } else {
             if (size == array.length) {
                 array = grow();
@@ -53,7 +53,7 @@ public class ArrayList<T> implements List<T> {
         if (index < size && index >= 0) {
             return array[index];
         }
-        throw new ArrayIndexOutOfBoundsException();
+        throw new ArrayIndexOutOfBoundsException("Getting element failed. Index out of bounds");
     }
 
     @Override
@@ -61,7 +61,7 @@ public class ArrayList<T> implements List<T> {
         if (index < size && index >= 0) {
             array[index] = value;
         } else {
-            throw new ArrayIndexOutOfBoundsException();
+            throw new ArrayIndexOutOfBoundsException("Set element failed. Index out of bounds");
         }
     }
 
@@ -75,10 +75,10 @@ public class ArrayList<T> implements List<T> {
             }
             array[size - 1] = null;
             size--;
+            return temp;
         } else {
-            throw new ArrayIndexOutOfBoundsException();
+            throw new ArrayIndexOutOfBoundsException("Remove element failed. Index out of bounds");
         }
-        return temp;
     }
 
     @Override
@@ -89,7 +89,7 @@ public class ArrayList<T> implements List<T> {
                 return t;
             }
         }
-        throw new NoSuchElementException();
+        throw new NoSuchElementException("Remove element failed. No such element in array");
     }
 
     @Override
