@@ -5,8 +5,13 @@ import java.util.NoSuchElementException;
 public class ArrayList<T> implements List<T> {
     private static final int INITIAL_LENGTH = 10;
 
-    private T[] elementData = (T[]) new Object[INITIAL_LENGTH];
-    private int size = 0;
+    private T[] elementData;
+    private int size;
+
+    public ArrayList() {
+        this.elementData = (T[]) new Object[INITIAL_LENGTH];
+        this.size = 0;
+    }
 
     @Override
     public void add(T value) {
@@ -21,16 +26,17 @@ public class ArrayList<T> implements List<T> {
     public void add(T value, int index) {
         if (index == size) {
             add(value);
-        } else if (isIndexOutOfArray(index)) {
-            throw new ArrayIndexOutOfBoundsException();
-        } else {
-            if (!checkCapacity()) {
-                resize();
-            }
-            System.arraycopy(elementData, index, elementData, index + 1, size - index);
-            elementData[index] = value;
-            size++;
+            return;
         }
+        if (isIndexOutOfArray(index)) {
+            throw new ArrayIndexOutOfBoundsException();
+        }
+        if (!checkCapacity()) {
+            resize();
+        }
+        System.arraycopy(elementData, index, elementData, index + 1, size - index);
+        elementData[index] = value;
+        size++;
     }
 
     @Override
@@ -53,21 +59,19 @@ public class ArrayList<T> implements List<T> {
     public void set(T value, int index) {
         if (isIndexOutOfArray(index)) {
             throw new ArrayIndexOutOfBoundsException();
-        } else {
-            elementData[index] = value;
         }
+        elementData[index] = value;
     }
 
     @Override
     public T remove(int index) {
         if (isIndexOutOfArray(index)) {
             throw new ArrayIndexOutOfBoundsException();
-        } else {
-            T output = elementData[index];
-            System.arraycopy(elementData, index + 1, elementData, index, size - index - 1);
-            size--;
-            return output;
         }
+        T output = elementData[index];
+        System.arraycopy(elementData, index + 1, elementData, index, size - index - 1);
+        size--;
+        return output;
     }
 
     @Override
