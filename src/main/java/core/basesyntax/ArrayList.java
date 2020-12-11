@@ -9,8 +9,8 @@ public class ArrayList<T> implements List<T> {
     private int size;
 
     public ArrayList() {
-        this.elementData = (T[]) new Object[INITIAL_LENGTH];
-        this.size = 0;
+        elementData = (T[]) new Object[INITIAL_LENGTH];
+        size = 0;
     }
 
     @Override
