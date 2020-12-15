@@ -33,7 +33,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     @Override
-    public T remove(T t) {
+    public T remove(T element) {
         return null;
     }
 
