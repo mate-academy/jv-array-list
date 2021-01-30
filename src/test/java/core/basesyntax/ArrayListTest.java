@@ -16,12 +16,12 @@ public class ArrayListTest {
         arrayList.add("Mate");
         Assert.assertEquals("Test failed! Size of array should be " + 4 + "but it is "
                 + arrayList.size(), 4, arrayList.size());
-        Assert.assertEquals("Test failed! Can't correct add element",
+        Assert.assertEquals("Test failed! Element is not added correctly",
                 "Test", arrayList.get(0));
-        Assert.assertNull("Test failed! Can't correct add element", arrayList.get(1));
-        Assert.assertEquals("Test failed! Can't correct add element",
+        Assert.assertNull("Test failed! Element is not added correctly", arrayList.get(1));
+        Assert.assertEquals("Test failed! Element is not added correctly",
                 "for", arrayList.get(2));
-        Assert.assertEquals("Test failed! Can't correct add element",
+        Assert.assertEquals("Test failed! Element is not added correctly",
                 "Mate", arrayList.get(3));
     }
 
@@ -35,7 +35,7 @@ public class ArrayListTest {
                 + arrayList.size(), 3, arrayList.size());
         arrayList.add("Academy", 1);
         Assert.assertEquals("Test", arrayList.get(0));
-        Assert.assertEquals("Test failed! Can't correct add element by index " + 1,
+        Assert.assertEquals("Test failed! Can't correctly add element by index " + 1,
                 "Academy", arrayList.get(1));
         Assert.assertEquals("for", arrayList.get(2));
         Assert.assertEquals("Mate", arrayList.get(3));
@@ -43,9 +43,14 @@ public class ArrayListTest {
         Assert.assertEquals("Test failed! Size of array should be " + 5 + "but it is "
                 + arrayList.size(), 5, arrayList.size());
         Assert.assertNull(arrayList.get(0));
+        arrayList.add("value", 5);
+        Assert.assertEquals("Test failed! Can't correctly add element by index " + 5,
+                "value", arrayList.get(5));
+        Assert.assertEquals("Test failed! Size of array should be " + 6 + "but it is "
+                + arrayList.size(), 6, arrayList.size());
     }
 
-    @Test(expected = ArrayIndexOutOfBoundsException.class)
+    @Test(expected = ArrayListIndexOutOfBoundsException.class)
     public void addElementInTheNonExistentPosition() {
         ArrayList<String> arrayList = new ArrayList<>();
         arrayList.add("First");
@@ -70,7 +75,7 @@ public class ArrayListTest {
         Assert.assertEquals("Kiev", arrayList.get(4));
     }
 
-    @Test(expected = ArrayIndexOutOfBoundsException.class)
+    @Test(expected = ArrayListIndexOutOfBoundsException.class)
     public void addElementInTheNegativePosition() {
         ArrayList<String> arrayList = new ArrayList<>();
         arrayList.add("String");
@@ -117,7 +122,7 @@ public class ArrayListTest {
 
     }
 
-    @Test(expected = ArrayIndexOutOfBoundsException.class)
+    @Test(expected = ArrayListIndexOutOfBoundsException.class)
     public void removeElementFromArrayListByNonExistentIndex() {
         ArrayList<String> arrayList = new ArrayList<>();
         arrayList.add("String");
@@ -126,7 +131,7 @@ public class ArrayListTest {
         arrayList.remove(5);
     }
 
-    @Test(expected = ArrayIndexOutOfBoundsException.class)
+    @Test(expected = ArrayListIndexOutOfBoundsException.class)
     public void removeElementFromArrayListByNegativeIndex() {
         ArrayList<String> arrayList = new ArrayList<>();
         arrayList.add("String");
@@ -136,28 +141,29 @@ public class ArrayListTest {
     @Test
     public void removeElementFromArrayListByValue() {
         ArrayList<String> arrayList = new ArrayList<>();
+        arrayList.add(null);
         arrayList.add("String");
         arrayList.add("Java");
         arrayList.add("Private");
         arrayList.add(null);
-        Assert.assertEquals(4, arrayList.size());
+        Assert.assertEquals(5, arrayList.size());
         String actualResult = arrayList.remove("Java");
         Assert.assertEquals("Test failed! Returned value should be " + actualResult,
                 "Java", actualResult);
         Assert.assertEquals("Test failed! Size of array after removed element should be "
-                + 3 + "but it is " + arrayList.size(), 3, arrayList.size());
-        Assert.assertEquals("Test failed! Can't remove element by value ",
-                "Private", arrayList.get(1));
+                + 4 + "but it is " + arrayList.size(), 4, arrayList.size());
+        Assert.assertEquals("Test failed! Remove was incorrect",
+                "Private", arrayList.get(2));
         actualResult = arrayList.remove("String");
         Assert.assertEquals("Test failed! Returned value should be " + actualResult,
                 "String", actualResult);
-        Assert.assertEquals(2, arrayList.size());
-        Assert.assertEquals("Test failed! Can't remove element by index ",
-                "Private", arrayList.get(0));
+        Assert.assertEquals(3, arrayList.size());
+        Assert.assertEquals("Test failed! Remove was incorrect",
+                "Private", arrayList.get(1));
         actualResult = arrayList.remove(null);
         Assert.assertNull("Test failed! Returned value should be null", actualResult);
         Assert.assertEquals("Test failed! Size of array after removed element should be "
-                + 1 + "but it is " + arrayList.size(), 1, arrayList.size());
+                + 2 + "but it is " + arrayList.size(), 2, arrayList.size());
 
     }
 
@@ -208,7 +214,7 @@ public class ArrayListTest {
 
     }
 
-    @Test(expected = ArrayIndexOutOfBoundsException.class)
+    @Test(expected = ArrayListIndexOutOfBoundsException.class)
     public void setValueInTheNonExistentPosition() {
         ArrayList<String> arrayList = new ArrayList<>();
         arrayList.add("First");
@@ -216,7 +222,7 @@ public class ArrayListTest {
         arrayList.set("Third", 2);
     }
 
-    @Test(expected = ArrayIndexOutOfBoundsException.class)
+    @Test(expected = ArrayListIndexOutOfBoundsException.class)
     public void setValueInTheNegativePosition() {
         ArrayList<String> arrayList = new ArrayList<>();
         arrayList.add("First");
@@ -236,7 +242,7 @@ public class ArrayListTest {
         Assert.assertNull(actualResult);
     }
 
-    @Test(expected = ArrayIndexOutOfBoundsException.class)
+    @Test(expected = ArrayListIndexOutOfBoundsException.class)
     public void getElementByNonExistedIndex() {
         ArrayList<String> arrayList = new ArrayList<>();
         arrayList.add("First");
@@ -245,7 +251,7 @@ public class ArrayListTest {
         arrayList.get(3);
     }
 
-    @Test(expected = ArrayIndexOutOfBoundsException.class)
+    @Test(expected = ArrayListIndexOutOfBoundsException.class)
     public void getElementByNegativeIndex() {
         ArrayList<String> arrayList = new ArrayList<>();
         arrayList.add("First");
