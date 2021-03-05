@@ -7,12 +7,11 @@ public class ArrayList<T> implements List<T> {
     private static final int MAX_ITEMS_NUMBER = 10;
     private Object[] items = new Object[MAX_ITEMS_NUMBER];
     private int size = 0;
-    private final int rateGrow = MAX_ITEMS_NUMBER / 2;
 
     @Override
     public void add(T value) {
         if (size == items.length) {
-            grow(items.length + rateGrow);
+            grow((int) (items.length * 1.5));
         }
         items[size] = value;
         size++;
@@ -21,7 +20,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         if (size == items.length) {
-            grow(items.length + rateGrow);
+            grow((int) (items.length * 1.5));
         }
         if (index > size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("");
@@ -62,25 +61,22 @@ public class ArrayList<T> implements List<T> {
         if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException("");
         }
-        Object[] addArray = new Object[size - 1];
+        // TODO: remove the `addArray`
         T removeElem;
         removeElem = (T) items[index];
-        System.arraycopy(items, 0, addArray, 0, index);
-        System.arraycopy(items, index + 1, addArray, index, size - index - 1);
-        items = addArray;
+        System.arraycopy(items, 0, items, 0, index);
+        System.arraycopy(items, index + 1, items, index, size - index - 1);
         size--;
         return removeElem;
     }
 
     @Override
     public T remove(T element) {
-        Object[] addArray = new Object[size - 1];
         int indexOfElem = -1;
         for (int i = 0; i < items.length; i++) {
-            if (items[i] == null && element == null) {
-                indexOfElem = i;
-            }
-            if (items[i] != null && items[i].equals(element)) {
+            // TODO: collapse these if statements
+            if (items[i] == null && element == null || items[i] != null
+                    && items[i].equals(element)) {
                 indexOfElem = i;
                 break;
             }
@@ -88,10 +84,7 @@ public class ArrayList<T> implements List<T> {
         if (indexOfElem == -1) {
             throw new NoSuchElementException("There there is no such element present");
         }
-        System.arraycopy(items, 0, addArray, 0, indexOfElem);
-        System.arraycopy(items, indexOfElem + 1, addArray, indexOfElem,
-                size - indexOfElem - 1);
-        items = addArray;
+        System.arraycopy(items, indexOfElem + 1, items, indexOfElem, size - indexOfElem - 1);
         size--;
         return element;
     }
@@ -103,7 +96,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public boolean isEmpty() {
-        return items.length == 0 || size == 0;
+        return size == 0;
     }
 
     private void grow(int newLength) {
@@ -117,7 +110,6 @@ public class ArrayList<T> implements List<T> {
         return "ArrayList {"
                 + "items = " + Arrays.toString(items)
                 + ", positionOnArray = " + size
-                + ", rateGrow = " + rateGrow
                 + '}';
     }
 }
