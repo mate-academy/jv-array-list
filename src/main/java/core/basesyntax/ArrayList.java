@@ -40,9 +40,6 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        while (size + list.size() > content.length) {
-            content = resizeArray();
-        }
         for (int i = 0; i < list.size(); i++) {
             add(list.get(i));
         }
