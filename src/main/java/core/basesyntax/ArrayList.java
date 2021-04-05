@@ -6,7 +6,7 @@ public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private static final int DEFAULT_SIZE = 0;
     private static final String EXCEPTION_MESSAGE = "index passed to the method is invalid";
-    private static final String NO_SUCH_ELEMENT_MESSAGE = "index passed to the method is invalid";
+    private static final String NO_SUCH_ELEMENT_MESSAGE = "there is no such element";
     private int size;
     private T[] content;
 
