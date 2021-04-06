@@ -20,16 +20,12 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        try {
-            if (size == elementData.length) {
-                elementData = grow();
-            }
-            System.arraycopy(elementData, index, elementData, index + 1, size - index);
-            elementData[index] = value;
-            size++;
-        } catch (IndexOutOfBoundsException e) {
-            throw new ArrayListIndexOutOfBoundsException("Index out of bounds[" + index + "]");
+        if (size == elementData.length) {
+            elementData = grow();
         }
+        System.arraycopy(elementData, index, elementData, index + 1, size - index);
+        elementData[index] = value;
+        size++;
     }
 
     @Override
@@ -42,7 +38,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("No such element");
+            throw new ArrayListIndexOutOfBoundsException("Invalid index");
         }
         return elementData[index];
     }
@@ -50,7 +46,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void set(T value, int index) {
         if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("No such element");
+            throw new ArrayListIndexOutOfBoundsException("Invalid index");
         }
         elementData[index] = value;
     }
@@ -58,7 +54,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("No such element");
+            throw new ArrayListIndexOutOfBoundsException("Invalid index");
         }
 
         T removedValue = elementData[index];
