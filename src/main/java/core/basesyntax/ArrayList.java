@@ -1,5 +1,4 @@
 package core.basesyntax;
-//import java.util.ArrayList;
 
 import java.util.Arrays;
 import java.util.Iterator;
@@ -11,7 +10,6 @@ public class ArrayList<T> implements List<T> {
     private T[] container;
 
     public ArrayList() {
-        size = 0;
         container = (T[]) new Object[INITIAL_CAPACITY];
     }
 
@@ -26,15 +24,12 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         checkIndex(index, size, "Trying to add at non existing index");
-        if (size == container.length - 1) {
+        if (size == container.length) {
             grow();
         }
-        T[] tempContainer = (T[]) new Object[container.length];
-        System.arraycopy(container, 0, tempContainer, 0, index);
-        tempContainer[index] = value;
+        System.arraycopy(container, index, container, index + 1, size - index);
+        container[index] = value;
         size++;
-        System.arraycopy(container, index, tempContainer, index + 1, size - index);
-        container = tempContainer;
     }
 
     @Override
@@ -59,11 +54,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         checkIndex(index, size - 1, "Trying to remove at nonexistent or minus index");
-        T[] tempContainer = (T[]) new Object[container.length];
-        System.arraycopy(container, 0, tempContainer, 0, index);
-        System.arraycopy(container, index + 1, tempContainer, index, container.length - size);
         T element = container[index];
-        container = tempContainer;
+        System.arraycopy(container, index + 1, container, index, size - index - 1);
         size--;
         return element;
     }
@@ -90,14 +82,8 @@ public class ArrayList<T> implements List<T> {
 
     private int findIndex(T element) {
         for (int i = 0; i < size; i++) {
-            if (container[i] == null) {
-                if (container[i] == element) {
-                    return i;
-                }
-            } else {
-                if (container[i].equals(element)) {
-                    return i;
-                }
+            if (container[i] == element || container[i] != null && container[i].equals(element)) {
+                return i;
             }
         }
         throw new NoSuchElementException("The element wasn't found in container");
