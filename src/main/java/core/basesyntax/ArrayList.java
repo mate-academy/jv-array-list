@@ -34,21 +34,16 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        final Object[] tempArray = new Object[list.size()];
         for (int i = 0; i < list.size(); i++) {
-            tempArray[i] = list.get(i);
+            add(list.get(i));
         }
-        if (tempArray.length > (elementData.length - size)) {
-            growBy(tempArray.length);
-        }
-        System.arraycopy(tempArray, 0, elementData, size, tempArray.length);
-        size += tempArray.length;
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public T get(int index) {
         checkIndex(index, false);
-        return elementData(index);
+        return (T) elementData[index];
     }
 
     @Override
@@ -82,32 +77,19 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    @SuppressWarnings("unchecked")
-    private T elementData(int index) {
-        return (T) elementData[index];
-    }
-
     private void grow() {
-        growBy(0);
-    }
-
-    private void growBy(int size) {
-        final int defaultCapacity = elementData.length + elementData.length / 2;
-        final int newCapacity = elementData.length + size;
         final Object[] oldData = elementData;
-        elementData = new Object[Math.max(defaultCapacity, newCapacity)];
+        elementData = new Object[size * 3 / 2];
         System.arraycopy(oldData, 0, elementData, 0, this.size);
     }
 
     private T removeElement(int index) {
-        final int newSize = size - 1;
         @SuppressWarnings("unchecked")
         final T oldElement = (T) elementData[index];
-        if (newSize > index) {
-            System.arraycopy(elementData, index + 1, elementData, index, newSize - index);
+        if (size - 1 > index) {
+            System.arraycopy(elementData, index + 1, elementData, index, size - 1 - index);
         }
-        elementData[newSize] = null;
-        size = newSize;
+        elementData[size--] = null;
         return oldElement;
     }
 
@@ -123,7 +105,8 @@ public class ArrayList<T> implements List<T> {
 
     private int getIndexOfElement(T element) {
         for (int i = 0; i < size; i++) {
-            T arrayElement = elementData(i);
+            @SuppressWarnings("unchecked")
+            T arrayElement = (T) elementData[i];
             if (safeObjCompare(element, arrayElement)) {
                 return i;
             }
