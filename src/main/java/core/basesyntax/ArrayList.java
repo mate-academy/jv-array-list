@@ -28,8 +28,9 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        indexCheckForAdd(index);
-        ensureCapacity(size + 1);
+        int maxAvailableSize = size + 1;
+        indexCheck(index, maxAvailableSize);
+        ensureCapacity(maxAvailableSize);
         System.arraycopy(dataArray, index, dataArray, index + 1, size - index);
         dataArray[index] = value;
         size++;
@@ -45,19 +46,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        indexCheck(index);
+        indexCheck(index, size);
         return (T) dataArray[index];
     }
 
     @Override
     public void set(T value, int index) {
-        indexCheck(index);
+        indexCheck(index, size);
         dataArray[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        indexCheck(index);
+        indexCheck(index, size);
         T removedValue = (T) dataArray[index];
         fastRemove(index);
         return removedValue;
@@ -65,20 +66,11 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        if (element == null) {
-            for (int i = 0; i < size; i++) {
-                if (dataArray[i] == null) {
-                    fastRemove(i);
-                    return null;
-                }
-            }
-        } else {
-            for (int i = 0; i < size; i++) {
-                if (element.equals(dataArray[i])) {
-                    T removedValue = (T) dataArray[i];
-                    fastRemove(i);
-                    return removedValue;
-                }
+        for (int i = 0; i < size; i++) {
+            if (element == dataArray[i] || (dataArray[i] != null && element.equals(dataArray[i]))) {
+                T removedValue = (T) dataArray[i];
+                fastRemove(i);
+                return removedValue;
             }
         }
         throw new NoSuchElementException("No such element present in the list");
@@ -103,9 +95,10 @@ public class ArrayList<T> implements List<T> {
         return listArray;
     }
 
-    public void ensureCapacity(int minCapacity) {
+    private void ensureCapacity(int minCapacity) {
         if (minCapacity - dataArray.length > 0) {
             int newCapacity = dataArray.length + (dataArray.length >> 1);
+            //For non-negative number A right shift A>>B is the same as A divided by 2 power of B
             if (newCapacity < minCapacity) {
                 newCapacity = minCapacity;
             }
@@ -113,14 +106,8 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private void indexCheckForAdd(int index) {
-        if (index > size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index is out of list range");
-        }
-    }
-
-    private void indexCheck(int index) {
-        if (index >= size || index < 0) {
+    private void indexCheck(int index, int maxAvailableSize) {
+        if (index >= maxAvailableSize || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Index is out of list range");
         }
     }
