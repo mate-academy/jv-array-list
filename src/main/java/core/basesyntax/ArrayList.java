@@ -108,17 +108,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     private boolean equalsItems(T newItem, T itemInList) {
-        if (newItem == itemInList) {
-            return true;
-        }
-        if (newItem == null || itemInList == null) {
-            return false;
-        }
-        if (newItem.getClass().equals(itemInList.getClass())) {
-            T current = (T) newItem;
-            return current.equals(itemInList);
-        }
-        return false;
+        return (newItem == itemInList || newItem != null && newItem.equals(itemInList));
     }
 
     @Override
