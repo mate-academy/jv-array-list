@@ -4,12 +4,13 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    private int capacity = DEFAULT_CAPACITY;
+    private int capacity;
     private int size;
     private Object[] itemsArray;
 
     public ArrayList() {
         itemsArray = new Object[DEFAULT_CAPACITY];
+        capacity = DEFAULT_CAPACITY;
     }
 
     public ArrayList(int capacity) {
@@ -35,9 +36,6 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        if (list.size() > capacity - size) {
-            grow();
-        }
         for (int i = 0; i < list.size(); i++) {
             add(list.get(i));
         }
@@ -66,16 +64,10 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        Object removedElement = null;
         for (int i = 0; i < size; i++) {
-            if (itemsArray[i] != null && itemsArray[i].equals(element)) {
-                removedElement = itemsArray[i];
-                System.arraycopy(itemsArray, i + 1, itemsArray, i, size - i);
-                size--;
-                return (T) removedElement;
-            } else if (element == null && itemsArray[i] == null) {
-                size--;
-                return (T) removedElement;
+            if (itemsArray[i] != null && itemsArray[i].equals(element)
+                    || itemsArray[i] == element) {
+                return remove(i);
             }
         }
         throw new NoSuchElementException("Element not found");
