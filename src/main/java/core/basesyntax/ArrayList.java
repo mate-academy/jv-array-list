@@ -4,7 +4,7 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    private static final String EXCEPTION_MESSAGE = "index passed to the method is invalid";
+    private static final String INDEX_EXCEPTION_MESSAGE = "index passed to the method is invalid";
     private static final String NO_SUCH_ELEMENT_MESSAGE = "there is no such element";
     private int size;
     private T[] content;
@@ -15,20 +15,16 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (size == content.length) {
-            content = resizeArray();
-        }
+        resizeArray();
         content[size] = value;
         size++;
     }
 
     @Override
     public void add(T value, int index) {
-        if (size == content.length) {
-            content = resizeArray();
-        }
+        resizeArray();
         if (index > size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException(EXCEPTION_MESSAGE);
+            throw new ArrayListIndexOutOfBoundsException(INDEX_EXCEPTION_MESSAGE);
         }
         System.arraycopy(content, index, content, index + 1, content.length - index - 1);
         content[index] = value;
@@ -87,13 +83,15 @@ public class ArrayList<T> implements List<T> {
 
     private void indexCheck(int index) {
         if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException(EXCEPTION_MESSAGE);
+            throw new ArrayListIndexOutOfBoundsException(INDEX_EXCEPTION_MESSAGE);
         }
     }
 
-    private T[] resizeArray() {
-        T[] resizedArray = (T[]) new Object[size + (size / 2)];
-        System.arraycopy(content, 0, resizedArray, 0, size);
-        return resizedArray;
+    private void resizeArray() {
+        if (size == content.length) {
+            T[] resizedArray = (T[]) new Object[size + (size / 2)];
+            System.arraycopy(content, 0, resizedArray, 0, size);
+            content = resizedArray;
+        }
     }
 }
