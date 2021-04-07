@@ -45,25 +45,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException(EXCEPTION_MESSAGE);
-        }
+        indexCheck(index);
         return content[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException(EXCEPTION_MESSAGE);
-        }
+        indexCheck(index);
         content[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException(EXCEPTION_MESSAGE);
-        }
+        indexCheck(index);
         T removingItem = content[index];
         System.arraycopy(content, index + 1, content, index, size - index);
         size--;
@@ -89,6 +83,12 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private void indexCheck(int index) {
+        if (index >= size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException(EXCEPTION_MESSAGE);
+        }
     }
 
     private T[] resizeArray() {
