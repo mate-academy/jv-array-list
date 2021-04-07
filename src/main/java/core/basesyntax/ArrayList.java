@@ -37,7 +37,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index < 0 || index >= size) {
+        if (isIndexExist(index)) {
             throw new ArrayListIndexOutOfBoundsException("Invalid index");
         }
         return elementData[index];
@@ -45,7 +45,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void set(T value, int index) {
-        if (index < 0 || index >= size) {
+        if (isIndexExist(index)) {
             throw new ArrayListIndexOutOfBoundsException("Invalid index");
         }
         elementData[index] = value;
@@ -53,7 +53,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(int index) {
-        if (index < 0 || index >= size) {
+        if (isIndexExist(index)) {
             throw new ArrayListIndexOutOfBoundsException("Invalid index");
         }
 
@@ -82,6 +82,10 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private boolean isIndexExist(int index) {
+        return index < 0 || index >= size;
     }
 
     private T[] grow() {
