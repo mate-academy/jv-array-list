@@ -13,25 +13,12 @@ public class ArrayList<T> implements List<T> {
         array = new Object[DEFAULT_CAPACITY];
     }
 
-    private T[] grow() {
-        T[] newArray = (T[]) new Object[size + (size / 2)];
-        System.arraycopy(array, 0, newArray, 0, size);
-        return newArray;
-    }
-
-    private void checkIndex(int index, int size) {
-        if (index > size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException(INVALID_INDEX);
-        }
-    }
-
     @Override
     public void add(T value) {
         if (array.length == size) {
             array = grow();
         }
-        array[size] = value;
-        size++;
+        array[size++] = value;
     }
 
     @Override
@@ -40,8 +27,7 @@ public class ArrayList<T> implements List<T> {
         if (size == array.length) {
             array = grow();
         }
-        System.arraycopy(array, index,
-                array, index + 1, size - index);
+        System.arraycopy(array, index, array, index + 1, size - index);
         array[index] = value;
         size++;
     }
@@ -74,8 +60,7 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         checkIndex(index, size);
         T oldValue = (T) array[index];
-        System.arraycopy(array, index + 1, array,
-                index, size - 1);
+        System.arraycopy(array, index + 1, array, index, size - 1);
         size--;
         return oldValue;
     }
@@ -84,21 +69,12 @@ public class ArrayList<T> implements List<T> {
     public T remove(T element) {
         boolean isElementExist = false;
         int i = 0;
-        if (element == null) {
-            for (; i < size; i++) {
-                if (array[i] == null) {
-                    remove(i);
-                    isElementExist = true;
-                    break;
-                }
-            }
-        } else {
-            for (; i < size; i++) {
-                if (element.equals(array[i])) {
-                    remove(i);
-                    isElementExist = true;
-                    break;
-                }
+        for (; i < size; i++) {
+            if (element == null && array[i] == null
+                    || element.equals(array[i])) {
+                remove(i);
+                isElementExist = true;
+                break;
             }
         }
         if (!isElementExist) {
@@ -115,5 +91,17 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private T[] grow() {
+        T[] newArray = (T[]) new Object[size + (size / 2)];
+        System.arraycopy(array, 0, newArray, 0, size);
+        return newArray;
+    }
+
+    private void checkIndex(int index, int size) {
+        if (index > size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException(INVALID_INDEX);
+        }
     }
 }
