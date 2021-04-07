@@ -6,7 +6,6 @@ public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private static final double EXPAND_MULTIPLIER = 1.5;
     private T[] myArrayList;
-
     private int size = 0;
 
     public ArrayList() {
@@ -18,8 +17,7 @@ public class ArrayList<T> implements List<T> {
         if (size == myArrayList.length) {
             expand();
         }
-        myArrayList[size] = value;
-        size++;
+        myArrayList[size++] = value;
     }
 
     @Override
@@ -59,7 +57,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     @Override
-    public T remove(int index) throws ArrayListIndexOutOfBoundsException {
+    public T remove(int index) {
         if (index >= size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Index out of bound");
         }
