@@ -4,7 +4,6 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int MAX_ITEMS_NUMBER = 10;
-    private static final int FIRST_INDEX_OF_ARRAY = 0;
     private static final String MESSAGE_INDEX_OUT_OF_BOUNDS_EXCEPTION
             = "The index passed to the method is invalid";
     private static final String MESSAGE_NO_SUCH_ELEMENT_EXCEPTION
@@ -13,7 +12,6 @@ public class ArrayList<T> implements List<T> {
     private T[] elementData;
 
     public ArrayList() {
-        capacity = FIRST_INDEX_OF_ARRAY;
         elementData = (T[]) new Object[MAX_ITEMS_NUMBER];
     }
 
@@ -51,7 +49,7 @@ public class ArrayList<T> implements List<T> {
             elementData = resizeArrayForListSize(list);
         }
         T[] arrayFromIncomeList = listToArray(list);
-        System.arraycopy(arrayFromIncomeList, FIRST_INDEX_OF_ARRAY, elementData,
+        System.arraycopy(arrayFromIncomeList, 0, elementData,
                 capacity, arrayFromIncomeList.length);
         capacity += arrayFromIncomeList.length;
     }
@@ -118,6 +116,6 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public boolean isEmpty() {
-        return capacity > 0 ? false : true;
+        return capacity == 0;
     }
 }
