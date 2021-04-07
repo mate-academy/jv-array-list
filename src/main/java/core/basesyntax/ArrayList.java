@@ -15,14 +15,14 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        resizeArray();
+        resizeArrayIfNeeded();
         content[size] = value;
         size++;
     }
 
     @Override
     public void add(T value, int index) {
-        resizeArray();
+        resizeArrayIfNeeded();
         if (index > size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException(INDEX_EXCEPTION_MESSAGE);
         }
@@ -87,7 +87,7 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private void resizeArray() {
+    private void resizeArrayIfNeeded() {
         if (size == content.length) {
             T[] resizedArray = (T[]) new Object[size + (size / 2)];
             System.arraycopy(content, 0, resizedArray, 0, size);
