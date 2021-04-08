@@ -18,9 +18,8 @@ public class ArrayList<T> implements List<T> {
         int newCapacity = minCapacity + (oldCapacity >> 1);
         if (oldCapacity > 0) {
             return elementArray = Arrays.copyOf(elementArray, newCapacity);
-        } else {
-            return elementArray = new Object[Math.max(DEFAULT_CAPACITY, newCapacity)];
         }
+        return elementArray = new Object[Math.max(DEFAULT_CAPACITY, newCapacity)];
     }
 
     private Object[] grow() {
@@ -34,7 +33,9 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        rangeCheck(index);
+        if (index > size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Index out of bound");
+        }
         if (index == elementArray.length) {
             elementArray = grow();
         }
@@ -61,9 +62,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index > size - 1 || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index is out of bounds");
-        }
+        rangeCheck(index);
         return (T) elementArray[index];
     }
 
@@ -77,23 +76,10 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        int newSize;
-        Object oldValue;
-        if ((newSize = size - 1) >= getIndexOfElement(element)) {
-            for (int i = 0; i < elementArray.length; i++) {
-                if (element == null && elementArray[i] == null) {
-                    System.arraycopy(elementArray, i + 1, elementArray, i, newSize);
-                    size = newSize;
-                    return null;
-                } else if (element.equals(elementArray[i])) {
-                    oldValue = elementArray[i];
-                    System.arraycopy(elementArray, i + 1, elementArray, i, newSize);
-                    size = newSize;
-                    return (T) oldValue;
-                }
-            }
+        if (getIndexOfElement(element) < 0) {
+            throw new NoSuchElementException("There is no such element");
         }
-        throw new NoSuchElementException("There is no such element");
+        return remove(getIndexOfElement(element));
     }
 
     @Override
@@ -101,7 +87,7 @@ public class ArrayList<T> implements List<T> {
         rangeCheck(index);
         int newSize;
         Object oldValue = elementArray[index];
-        if ((newSize = size - 1) > index || index > size - 1) {
+        if ((newSize = size - 1) > index) {
             System.arraycopy(elementArray, index + 1, elementArray, index, newSize);
         }
         size = newSize;
@@ -109,10 +95,8 @@ public class ArrayList<T> implements List<T> {
     }
 
     public int getIndexOfElement(T element) {
-        for (int i = 0; i < elementArray.length; i++) {
-            if (element == null && elementArray[i] == null) {
-                return i;
-            } else if (element.equals(elementArray[i])) {
+        for (int i = 0; i < size; i++) {
+            if (element == elementArray[i] || element != null && element.equals(elementArray[i])) {
                 return i;
             }
         }
@@ -129,8 +113,8 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void rangeCheck(int index) throws ArrayListIndexOutOfBoundsException {
-        if (index > size || index < 0) {
+    private void rangeCheck(int index) {
+        if (index >= size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Index goes beyond array bounds");
         }
     }
