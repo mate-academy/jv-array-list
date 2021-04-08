@@ -76,7 +76,8 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         if (index < size && index >= MIN_INDEX_VALUE) {
             T removedElement = (T) objects[index];
-            System.arraycopy(objects, index + DIFFERENCE_IN_SIZES, objects, index, size - index);
+            System.arraycopy(objects, index + DIFFERENCE_IN_SIZES,
+                    objects, index, size - index);
             size--;
             return removedElement;
         } else {
