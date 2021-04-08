@@ -11,22 +11,10 @@ public class ArrayList<T> implements List<T> {
         arrayOfObjects = new Object[DEFAULT_CAPACITY];
     }
 
-    public void grow() {
+    private void grow() {
         Object[] temporaryArray = new Object[(int)(size * 1.5)];
-        for (int i = 0; i < size; i++) {
-            temporaryArray[i] = arrayOfObjects[i];
-        }
+        System.arraycopy(arrayOfObjects,0,temporaryArray,0,arrayOfObjects.length);
         arrayOfObjects = temporaryArray;
-    }
-
-    public int doesTheElementExist(T element) {
-        for (int i = 0; i < size; i++) {
-            if (element == arrayOfObjects[i] || element != null
-                    && element.equals(arrayOfObjects[i])) {
-                return i;
-            }
-        }
-        throw new NoSuchElementException("Element dosen`t exist");
     }
 
     @Override
@@ -42,16 +30,9 @@ public class ArrayList<T> implements List<T> {
         if (index > size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Cant add element to this index");
         }
+        System.arraycopy(arrayOfObjects,index,arrayOfObjects,index + 1,size - 1);
+        arrayOfObjects[index] = value;
         size++;
-        Object[] temporaryArray = new Object[size];
-        for (int i = 0; i < index; i++) {
-            temporaryArray[i] = arrayOfObjects[i];
-        }
-        temporaryArray[index] = value;
-        for (int i = index + 1; i < size; i++) {
-            temporaryArray[i] = arrayOfObjects[i - 1];
-        }
-        arrayOfObjects = temporaryArray;
     }
 
     @Override
@@ -62,40 +43,33 @@ public class ArrayList<T> implements List<T> {
             }
         }
         for (int i = 0; i < list.size(); i++) {
-            arrayOfObjects[size++] = list.get(i);
+            add(list.get(i));
         }
     }
 
     @Override
     public T get(int index) {
+        checkSize(index);
+        return (T) arrayOfObjects[index];
+    }
+
+    private void checkSize(int index) {
         if (index > size - 1 || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Index out of bound");
         }
-        return (T) arrayOfObjects[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index > size - 1 || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index out of bound");
-        }
+        checkSize(index);
         arrayOfObjects[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index > size - 1 || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index out of bound");
-        }
-        Object[] temporaryArray = new Object[size];
-        for (int i = 0; i < index; i++) {
-            temporaryArray[i] = arrayOfObjects[i];
-        }
-        for (int i = index + 1; i < size; i++) {
-            temporaryArray[i - 1] = arrayOfObjects[i];
-        }
+        checkSize(index);
         Object temporaryObject = arrayOfObjects[index];
-        arrayOfObjects = temporaryArray;
+        System.arraycopy(arrayOfObjects,index + 1,arrayOfObjects,index,size - 1);
         size--;
         return (T) temporaryObject;
     }
@@ -103,17 +77,19 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         int index = doesTheElementExist(element);
-        Object[] temporaryArray = new Object[size];
-        for (int i = 0; i < index; i++) {
-            temporaryArray[i] = arrayOfObjects[i];
-        }
-        for (int i = index + 1; i < size; i++) {
-            temporaryArray[i - 1] = arrayOfObjects[i];
-        }
         Object temporaryObject = arrayOfObjects[index];
-        arrayOfObjects = temporaryArray;
-        size--;
+        remove(index);
         return (T) temporaryObject;
+    }
+
+    private int doesTheElementExist(T element) {
+        for (int i = 0; i < size; i++) {
+            if (element == arrayOfObjects[i] || element != null
+                    && element.equals(arrayOfObjects[i])) {
+                return i;
+            }
+        }
+        throw new NoSuchElementException("Element dosen`t exist");
     }
 
     @Override
@@ -123,11 +99,6 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public boolean isEmpty() {
-        for (int i = 1; i < arrayOfObjects.length; i++) {
-            if (arrayOfObjects[i] != null) {
-                return false;
-            }
-        }
-        return true;
+        return size == 0;
     }
 }
