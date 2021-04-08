@@ -9,37 +9,35 @@ public class ArrayList<T> implements List<T> {
     private int size;
 
     public ArrayList() {
-        elementData = (T[]) new Object[DEFAULT_CAPACITY];
+        elementData = new Object[DEFAULT_CAPACITY];
     }
 
     public ArrayList(int setInitialSize) {
-        elementData = (T[]) new Object[setInitialSize];
+        elementData = new Object[setInitialSize];
     }
 
     @Override
     public void add(T value) {
-        if (ensureCapacity()) {
-            elementData[size++] = value;
-        } else {
-            Object[] newArray = (T[]) expand(elementData.length);
+        if (!ensureCapacity()) {
+            Object[] newArray = expand();
             System.arraycopy(elementData, 0, newArray, 0, size);
             elementData = newArray;
-            elementData[size++] = value;
         }
+        elementData[size++] = value;
     }
 
     @Override
     public void add(T value, int index) {
-        indexCheck(index);
-        if (ensureCapacity()) {
-            if (index < size) {
-                System.arraycopy(elementData, index, elementData, index + 1, size - index);
-                elementData[index] = value;
-                size++;
-            } else {
-                elementData[size++] = value;
-            }
+        if (index != size) {
+            indexCheck(index);
         }
+        if (ensureCapacity() && index <= size) {
+            System.arraycopy(elementData, index, elementData, index + 1, size - index);
+            elementData[index] = value;
+            size++;
+            return;
+        }
+        elementData[size++] = value;
     }
 
     @Override
@@ -51,57 +49,51 @@ public class ArrayList<T> implements List<T> {
         if (ensureCapacity()) {
             System.arraycopy(copyOfList, 0, elementData, size, copyOfList.length);
         }
-        Object[] newArray = expand(elementData.length);
+        Object[] newArray = expand();
         System.arraycopy(elementData, 0, newArray, 0, size);
         System.arraycopy(copyOfList, 0, newArray, size, copyOfList.length);
         elementData = newArray;
-        size = copyOfList.length + size;
+        size += copyOfList.length;
     }
 
     @Override
     public T get(int index) {
         indexCheck(index);
-        if (index >= size) {
-            throwException(index);
-        }
         return (T) elementData[index];
     }
 
     @Override
     public void set(T value, int index) {
         indexCheck(index);
-        if (index == size) {
-            throwException(index);
-        }
         elementData[index] = value;
     }
 
     @Override
     public T remove(int index) {
         indexCheck(index);
-        T element = (T) elementData[index];
+        T elementRemoved = (T) elementData[index];
         int moveNumberOfElements = size - index - 1;
         System.arraycopy(elementData, index + 1, elementData, index, moveNumberOfElements);
         elementData[--size] = null;
-        return element;
+        return elementRemoved;
     }
 
     @Override
     public T remove(T element) {
-        Object endValue = null;
+        T elementRemoved = null;
         for (int i = 0; i < size; i++) {
             if (element == null && elementData[i] == null
                     || element != null && element.equals(elementData[i])) {
-                endValue = remove(i);
-                if (endValue == null) {
-                    return (T) endValue;
+                elementRemoved = remove(i);
+                if (elementRemoved == null) {
+                    return null;
                 }
             }
         }
-        if (endValue == null) {
+        if (elementRemoved == null) {
             throw new NoSuchElementException("Element: " + element + " was not found");
         }
-        return (T) endValue;
+        return elementRemoved;
     }
 
     @Override
@@ -118,18 +110,18 @@ public class ArrayList<T> implements List<T> {
         return this.size < elementData.length;
     }
 
-    private <T> Object[] expand(int currentSize) {
-        return (T[]) new Object[currentSize + (currentSize >> 1)];
+    private <T> Object[] expand() {
+        return (T[]) new Object[elementData.length + (elementData.length >> 1)];
     }
 
     private void indexCheck(int index) {
-        if (index > size || index < 0) {
+        if (index >= size || index < 0) {
             throwException(index);
         }
     }
 
     private void throwException(int index) {
-        throw new ArrayListIndexOutOfBoundsException("Index: " + index + ", Size: " + size);
+        throw new ArrayListIndexOutOfBoundsException("For Index: " + index + ", And size: " + size);
     }
 
     @Override
