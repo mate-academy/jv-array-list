@@ -67,20 +67,14 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        boolean isElementExist = false;
-        int i = 0;
-        for (; i < size; i++) {
+        for (int i = 0; i < size; i++) {
             if (element == null && array[i] == null
-                    || element.equals(array[i])) {
+                    || element != null && element.equals(array[i])) {
                 remove(i);
-                isElementExist = true;
-                break;
+                return element;
             }
         }
-        if (!isElementExist) {
-            throw new NoSuchElementException(INVALID_VALUE);
-        }
-        return element;
+        throw new NoSuchElementException(INVALID_VALUE);
     }
 
     @Override
