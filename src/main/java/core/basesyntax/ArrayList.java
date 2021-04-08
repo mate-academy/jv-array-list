@@ -13,17 +13,13 @@ public class ArrayList<T> implements List<T> {
         this.elementArray = EMPTY_LIST;
     }
 
-    private Object[] grow(int minCapacity) {
+    private Object[] grow() {
         int oldCapacity = elementArray.length;
-        int newCapacity = minCapacity + (oldCapacity >> 1);
+        int newCapacity = oldCapacity + (oldCapacity >> 1) + 1;
         if (oldCapacity > 0) {
             return elementArray = Arrays.copyOf(elementArray, newCapacity);
         }
         return elementArray = new Object[Math.max(DEFAULT_CAPACITY, newCapacity)];
-    }
-
-    private Object[] grow() {
-        return grow(size + 1);
     }
 
     @Override
@@ -53,9 +49,6 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void addAll(List<T> list) {
         for (int i = 0; i < list.size(); i++) {
-            if (size + list.size() >= elementArray.length) {
-                grow();
-            }
             add(list.get(i));
         }
     }
@@ -68,9 +61,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void set(T value, int index) {
-        if (index > size - 1 || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index is out of bounds");
-        }
+        rangeCheck(index);
         elementArray[index] = value;
     }
 
@@ -85,12 +76,9 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         rangeCheck(index);
-        int newSize;
         Object oldValue = elementArray[index];
-        if ((newSize = size - 1) > index) {
-            System.arraycopy(elementArray, index + 1, elementArray, index, newSize);
-        }
-        size = newSize;
+        System.arraycopy(elementArray, index + 1, elementArray, index, size - index - 1);
+        size--;
         return (T) oldValue;
     }
 
