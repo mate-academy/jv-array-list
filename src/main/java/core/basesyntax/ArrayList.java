@@ -39,9 +39,11 @@ public class ArrayList<T> implements List<T> {
         arrayOfObjects = null;
         arrayOfObjects = new Object[arrayLength + 1];
         arrayOfObjects[index] = value;
+
         System.arraycopy(tempArrayFirstPart, 0, arrayOfObjects, 0, tempArrayFirstPart.length);
         System.arraycopy(tempArraySecondPart, 0, arrayOfObjects, 
                 index + 1, tempArraySecondPart.length);
+
         size++;
     }
 
@@ -52,8 +54,10 @@ public class ArrayList<T> implements List<T> {
         System.arraycopy(arrayOfObjects, 0, tempArray, 0, size);
         arrayOfObjects = null;
         arrayOfObjects = new Object[tempArray.length + listArray.length];
+
         System.arraycopy(tempArray, 0, arrayOfObjects, 0, tempArray.length);
         System.arraycopy(listArray, 0, arrayOfObjects, tempArray.length, listArray.length);
+
         size = tempArray.length + listArray.length;
     }
 
@@ -79,19 +83,17 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         for (int i = 0; i < size; i++) {
             String element = "";
+
             if (index >= 0) {
                 element = (String) arrayOfObjects[index];
             }
             if (i == index) {
-                int arrayLength = size;
                 Object[] tempArrayFirstPart = new Object[index];
-                Object[] tempArraySecondPart = new Object[arrayLength - index - 1];
+                Object[] tempArraySecondPart = new Object[size - index - 1];
                 System.arraycopy(arrayOfObjects, 0, tempArrayFirstPart, 0, index);
                 System.arraycopy(arrayOfObjects, index + 1,
                         tempArraySecondPart, 0, size - index - 1);
-                arrayOfObjects = null;
-                arrayOfObjects = new Object[arrayLength - 1];
-                size -= 1;
+                resizeForRemove();
                 System.arraycopy(tempArrayFirstPart, 0, arrayOfObjects,
                         0, tempArrayFirstPart.length);
                 System.arraycopy(tempArraySecondPart, 0, arrayOfObjects,
@@ -107,22 +109,27 @@ public class ArrayList<T> implements List<T> {
         for (int i = 0; i < arrayOfObjects.length; i++) {
             if (arrayOfObjects[i] == element
                     || element != null && element.equals(arrayOfObjects[i])) {
-                int arrayLength = size;
                 Object[] tempArrayFirstPart = new Object[i];
-                Object[] tempArraySecondPart = new Object[arrayLength - i - 1];
+                Object[] tempArraySecondPart = new Object[size - i - 1];
+
                 System.arraycopy(arrayOfObjects, 0, tempArrayFirstPart, 0, i);
                 System.arraycopy(arrayOfObjects, i + 1, tempArraySecondPart, 0, size - i - 1);
-                arrayOfObjects = null;
-                arrayOfObjects = new Object[arrayLength - 1];
-                size -= 1;
+                resizeForRemove();
                 System.arraycopy(tempArrayFirstPart, 0, arrayOfObjects,
                         0, tempArrayFirstPart.length);
                 System.arraycopy(tempArraySecondPart, 0, arrayOfObjects,
                         tempArrayFirstPart.length, tempArraySecondPart.length);
+
                 return element;
             }
         }
-        throw new NoSuchElementException();
+        throw new NoSuchElementException("This element doesn't exist");
+    }
+
+    public void resizeForRemove() {
+        arrayOfObjects = null;
+        arrayOfObjects = new Object[size - 1];
+        size -= 1;
     }
 
     @Override
