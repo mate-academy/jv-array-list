@@ -19,41 +19,30 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value) {
         if (!ensureCapacity()) {
-            Object[] newArray = expand();
-            System.arraycopy(elementData, 0, newArray, 0, size);
-            elementData = newArray;
+            elementData = expand();
         }
         elementData[size++] = value;
     }
 
     @Override
     public void add(T value, int index) {
-        if (index != size) {
-            indexCheck(index);
+        if (index == size) {
+            add(value);
+            return;
         }
-        if (ensureCapacity() && index <= size) {
+        indexCheck(index);
+        if (ensureCapacity()) {
             System.arraycopy(elementData, index, elementData, index + 1, size - index);
             elementData[index] = value;
             size++;
-            return;
         }
-        elementData[size++] = value;
     }
 
     @Override
     public void addAll(List<T> list) {
-        Object[] copyOfList = new Object[list.size()];
-        for (int i = 0; i < copyOfList.length; i++) {
-            copyOfList[i] = list.get(i);
+        for (int i = 0; i < list.size(); i++) {
+            add(list.get(i));
         }
-        if (ensureCapacity()) {
-            System.arraycopy(copyOfList, 0, elementData, size, copyOfList.length);
-        }
-        Object[] newArray = expand();
-        System.arraycopy(elementData, 0, newArray, 0, size);
-        System.arraycopy(copyOfList, 0, newArray, size, copyOfList.length);
-        elementData = newArray;
-        size += copyOfList.length;
     }
 
     @Override
@@ -72,28 +61,20 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         indexCheck(index);
         T elementRemoved = (T) elementData[index];
-        int moveNumberOfElements = size - index - 1;
-        System.arraycopy(elementData, index + 1, elementData, index, moveNumberOfElements);
+        System.arraycopy(elementData, index + 1, elementData, index, size - index - 1);
         elementData[--size] = null;
         return elementRemoved;
     }
 
     @Override
     public T remove(T element) {
-        T elementRemoved = null;
         for (int i = 0; i < size; i++) {
-            if (element == null && elementData[i] == null
+            if (element == elementData[i]
                     || element != null && element.equals(elementData[i])) {
-                elementRemoved = remove(i);
-                if (elementRemoved == null) {
-                    return null;
-                }
+                return remove(i);
             }
         }
-        if (elementRemoved == null) {
-            throw new NoSuchElementException("Element: " + element + " was not found");
-        }
-        return elementRemoved;
+        throw new NoSuchElementException("Element: " + element + " was not found");
     }
 
     @Override
@@ -111,17 +92,16 @@ public class ArrayList<T> implements List<T> {
     }
 
     private <T> Object[] expand() {
-        return (T[]) new Object[elementData.length + (elementData.length >> 1)];
+        Object[] newArray = (T[]) new Object[elementData.length + (elementData.length >> 1)];
+        System.arraycopy(elementData, 0, newArray, 0, size);
+        return newArray;
     }
 
     private void indexCheck(int index) {
         if (index >= size || index < 0) {
-            throwException(index);
+            throw new ArrayListIndexOutOfBoundsException("For Index: "
+                    + index + ", And size: " + size);
         }
-    }
-
-    private void throwException(int index) {
-        throw new ArrayListIndexOutOfBoundsException("For Index: " + index + ", And size: " + size);
     }
 
     @Override
