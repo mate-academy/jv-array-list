@@ -11,7 +11,7 @@ public class ArrayList<T> implements List<T> {
         content = (T[]) new Object[DEFAULT_SIZE];
     }
 
-    public void checkIndex(int index) {
+    private void checkIndex(int index) {
         if (index >= size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("is not such element");
         }
@@ -19,13 +19,13 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        resizedArray();
+        ensureArray();
         content[size++] = value;
     }
 
     @Override
     public void add(T value, int index) {
-        resizedArray();
+        ensureArray();
         if (index > size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("index are wrong");
         }
@@ -82,10 +82,10 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    public void resizedArray() {
+    private void ensureArray() {
         if (size == content.length) {
             T[] resizedArray = (T[]) new Object[size + (size / 2)];
-            System.arraycopy(content, 0, resizedArray,0, size);
+            System.arraycopy(content, 0, resizedArray, 0, size);
             content = resizedArray;
         }
     }
