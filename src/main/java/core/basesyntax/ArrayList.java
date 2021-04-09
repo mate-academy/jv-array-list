@@ -68,7 +68,8 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(int index) {
-        acceptIndex(index);T removed = array[index];
+        acceptIndex(index);
+        T removed = array[index];
         System.arraycopy(array, index + INCREMENT, array, index, size - index + INCREMENT);
         size--;
         return removed;
