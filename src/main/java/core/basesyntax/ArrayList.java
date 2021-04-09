@@ -14,33 +14,18 @@ public class ArrayList<T> implements List<T> {
         array = (T[]) new Object[ARRAY_SIZE];
     }
 
-    private void acceptIndex(int index) {
-        if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException(
-                    "Index out of bounds, please check input index");
-        }
-    }
-
-    private void increaseArray() {
-        if (size + INCREMENT > array.length) {
-            T[] newArray = (T[]) new Object[(int) (array.length * COEFFICIENT_INCREASE_ARRAY)];
-            System.arraycopy(array, FIRST_INDEX, newArray, FIRST_INDEX, size);
-            array = newArray;
-        }
-    }
-
     @Override
     public void add(T value) {
-        if (size + INCREMENT > array.length) {
-            increaseArray();
-        }
-        array[size] = value;
-        size++;
+        increaseArray();
+        array[size++] = value;
     }
 
     @Override
     public void add(T value, int index) {
-        acceptIndex(index);
+        if (index < 0 || index > size) {
+            throw new ArrayListIndexOutOfBoundsException(
+                    "Index out of bounds, please check input index");
+        }
         increaseArray();
         System.arraycopy(array, index, array, index + INCREMENT, size - index);
         array[index] = value;
@@ -56,13 +41,13 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        acceptIndex(index + INCREMENT);
+        acceptIndex(index);
         return array[index];
     }
 
     @Override
     public void set(T value, int index) {
-        acceptIndex(index + INCREMENT);
+        acceptIndex(index);
         array[index] = value;
     }
 
@@ -95,5 +80,20 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private void acceptIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException(
+                    "Index out of bounds, please check input index");
+        }
+    }
+
+    private void increaseArray() {
+        if (size == array.length) {
+            T[] newArray = (T[]) new Object[(int) (array.length * COEFFICIENT_INCREASE_ARRAY)];
+            System.arraycopy(array, FIRST_INDEX, newArray, FIRST_INDEX, size);
+            array = newArray;
+        }
     }
 }
