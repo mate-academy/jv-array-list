@@ -13,7 +13,6 @@ public class ArrayList<T> implements List<T> {
     }
 
     private Object[] grow(int minCapacity) {
-
         T[] newElementData = (T[]) new Object[minCapacity];
         System.arraycopy(elementData, 0, newElementData, 0, size);
         elementData = newElementData;
