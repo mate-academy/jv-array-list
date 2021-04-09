@@ -7,11 +7,11 @@ public class ArrayList<T> implements List<T> {
     private static final int FIRST_INDEX = 0;
     private static final int INCREMENT = 1;
     private static final double COEFFICIENT_INCREASE_ARRAY = 1.5;
-    private Object[] array;
+    private T[] array;
     private int size;
 
     public ArrayList() {
-        this.array = new Object[ARRAY_SIZE];
+        array = (T[]) new Object[ARRAY_SIZE];
     }
 
     private void acceptIndex(int index) {
@@ -23,9 +23,9 @@ public class ArrayList<T> implements List<T> {
 
     private void increaseArray() {
         if (size + INCREMENT > array.length) {
-            Object[] newArray = new Object[(int) (array.length * COEFFICIENT_INCREASE_ARRAY)];
+            T[] newArray = (T[]) new Object[(int) (array.length * COEFFICIENT_INCREASE_ARRAY)];
             System.arraycopy(array, FIRST_INDEX, newArray, FIRST_INDEX, size);
-            this.array = newArray;
+            array = newArray;
         }
     }
 
@@ -42,11 +42,8 @@ public class ArrayList<T> implements List<T> {
     public void add(T value, int index) {
         acceptIndex(index);
         increaseArray();
-        Object[] newArray = new Object[array.length];
-        System.arraycopy(array, FIRST_INDEX, newArray, FIRST_INDEX, index);
-        newArray[index] = value;
-        System.arraycopy(array, index, newArray, index + INCREMENT, size - index);
-        this.array = newArray;
+        System.arraycopy(array, index, array, index + INCREMENT, size - index);
+        array[index] = value;
         size++;
     }
 
@@ -60,7 +57,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         acceptIndex(index + INCREMENT);
-        return (T) array[index];
+        return array[index];
     }
 
     @Override
@@ -71,13 +68,9 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(int index) {
-        acceptIndex(index);
-        Object[] newArray = new Object[array.length];
-        T removed = (T) array[index];
-        System.arraycopy(array, FIRST_INDEX, newArray, FIRST_INDEX, index + INCREMENT);
-        System.arraycopy(array, index + INCREMENT, newArray, index, size - index + INCREMENT);
+        acceptIndex(index);T removed = array[index];
+        System.arraycopy(array, index + INCREMENT, array, index, size - index + INCREMENT);
         size--;
-        this.array = newArray;
         return removed;
     }
 
@@ -85,11 +78,8 @@ public class ArrayList<T> implements List<T> {
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
             if (element == null || element.equals(array[i])) {
-                Object[] newArray = new Object[array.length];
-                System.arraycopy(array, FIRST_INDEX, newArray, FIRST_INDEX, i);
-                System.arraycopy(array, i + INCREMENT, newArray, i, size - i);
+                System.arraycopy(array, i + INCREMENT, array, i, size - i);
                 size--;
-                this.array = newArray;
                 return element;
             }
         }
