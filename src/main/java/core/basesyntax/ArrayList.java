@@ -11,22 +11,6 @@ public class ArrayList<T> implements List<T> {
 
     public ArrayList() {
         elementData = (T[]) new Object[CAPASITY];
-        size = 0;
-    }
-
-    private void ensureCapacity() {
-        int newCapacity = (elementData.length * 3 / 2) + 1;
-        T[] newElementData = (T[])new Object[newCapacity];
-        System.arraycopy(elementData, 0, newElementData, 0, size);
-        elementData = newElementData;
-
-    }
-
-    private boolean goodIndex(int index){
-        if (index < size && index >= 0) {
-            return true;
-        }
-        else throw new ArrayListIndexOutOfBoundsException("Index Out Of Bounds Exception");
     }
 
     @Override
@@ -62,13 +46,13 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        goodIndex(index);   // index >= 0,  index < size
+        goodIndex(index); // index >= 0,  index < size
         return elementData[index];
     }
 
     @Override
     public void set(T value, int index) {
-        goodIndex(index);  // index >= 0,  index < size
+        goodIndex(index); // index >= 0,  index < size
         elementData[index] = value;
     }
 
@@ -78,14 +62,13 @@ public class ArrayList<T> implements List<T> {
         int numMoved = size - index - 1; // скільки елементів треба скопіювати
         T removedValue = elementData[index];
         System.arraycopy(elementData, index + 1, elementData, index, numMoved);
-        elementData[size] = null;
-        size--;
+        elementData[--size] = null;
         return removedValue;
     }
 
     @Override
     public T remove(T element) {
-        int indexElementForRemove = ELEMENT_iS_MISSING ;
+        int indexElementForRemove = ELEMENT_iS_MISSING;
         for (int i = 0; i < elementData.length; i++) {
             if (element == elementData[i] || (element != null && element.equals(elementData[i]))) {
                 indexElementForRemove = i;
@@ -108,4 +91,18 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
+    private void ensureCapacity() {
+        int newCapacity = (elementData.length * 3 / 2) + 1;
+        T[] newElementData = (T[])new Object[newCapacity];
+        System.arraycopy(elementData, 0, newElementData, 0, size);
+        elementData = newElementData;
+    }
+
+    private boolean goodIndex(int index) {
+        if (index < size && index >= 0) {
+            return true;
+        } else {
+            throw new ArrayListIndexOutOfBoundsException("Index Out Of Bounds Exception");
+        }
+    }
 }
