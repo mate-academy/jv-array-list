@@ -3,9 +3,7 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-
     private static final int CAPASITY = 10;
-    private static final int ELEMENT_iS_MISSING = -1;
     private int size;
     private T[] elementData;
 
@@ -18,13 +16,12 @@ public class ArrayList<T> implements List<T> {
         if (size + 1 > elementData.length) {
             ensureCapacity();
         }
-        elementData[size] = value;
-        size++;
+        elementData[size++] = value;
     }
 
     @Override
     public void add(T value, int index) {
-        if (index == size || goodIndex(index)) { // index >= 0,  index <= size !!!!
+        if (index == size || checkIndex(index)) { // index >= 0,  index <= size !!!!
             if (size + 1 > elementData.length) {
                 ensureCapacity();
             }
@@ -46,20 +43,20 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        goodIndex(index); // index >= 0,  index < size
+        checkIndex(index); // index >= 0,  index < size
         return elementData[index];
     }
 
     @Override
     public void set(T value, int index) {
-        goodIndex(index); // index >= 0,  index < size
+        checkIndex(index); // index >= 0,  index < size
         elementData[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        goodIndex(index); // index >= 0  index < size
-        int numMoved = size - index - 1; // скільки елементів треба скопіювати
+        checkIndex(index); // index >= 0  index < size
+        int numMoved = size - index - 1;
         T removedValue = elementData[index];
         System.arraycopy(elementData, index + 1, elementData, index, numMoved);
         elementData[--size] = null;
@@ -68,17 +65,12 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        int indexElementForRemove = ELEMENT_iS_MISSING;
         for (int i = 0; i < elementData.length; i++) {
             if (element == elementData[i] || (element != null && element.equals(elementData[i]))) {
-                indexElementForRemove = i;
-                break;
+                return remove(i);
             }
         }
-        if (indexElementForRemove == ELEMENT_iS_MISSING) {
-            throw new NoSuchElementException();
-        }
-        return remove(indexElementForRemove);
+        throw new NoSuchElementException("The element doesn't exist" + element);
     }
 
     @Override
@@ -98,11 +90,12 @@ public class ArrayList<T> implements List<T> {
         elementData = newElementData;
     }
 
-    private boolean goodIndex(int index) {
+    private boolean checkIndex(int index) {
         if (index < size && index >= 0) {
             return true;
         } else {
-            throw new ArrayListIndexOutOfBoundsException("Index Out Of Bounds Exception");
+            throw new ArrayListIndexOutOfBoundsException("Index " + index
+                    + " out of bounds for length " + size);
         }
     }
 }
