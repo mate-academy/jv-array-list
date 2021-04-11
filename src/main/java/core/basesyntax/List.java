@@ -22,4 +22,6 @@ public interface List<T> {
 
     T[] reSize(T[] array);
 
+    void indexCheck(int index);
+
 }
