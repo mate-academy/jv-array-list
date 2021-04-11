@@ -51,8 +51,8 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void set(T value, int index) {
-         checkIndex(index);
-         elementData[index] = value;
+        checkIndex(index);
+        elementData[index] = value;
     }
 
     @Override
@@ -67,7 +67,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if (element == elementData[i] || elementData[i] != null && elementData[i].equals(element)) {
+            if (element == elementData[i] || elementData[i] != null
+                    && elementData[i].equals(element)) {
                 T value = elementData[i];
                 System.arraycopy(elementData,i + 1, elementData, i, size - i - 1);
                 elementData[size--] = null;
