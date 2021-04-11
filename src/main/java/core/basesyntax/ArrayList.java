@@ -3,7 +3,8 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    private T[] elementData = (T[]) new Object[10];
+    private static final int VALUE_ARRAY = 10;
+    private T[] elementData = (T[]) new Object[VALUE_ARRAY];
     private int size;
 
     @Override
@@ -11,7 +12,7 @@ public class ArrayList<T> implements List<T> {
         if (size + 1 < elementData.length) {
             elementData[size++] = value;
         } else {
-            T[] newArray = (T[]) new Object[elementData.length + (elementData.length >> 1)];
+            T[] newArray = (T[]) new Object[changeLength()];
             System.arraycopy(elementData, 0, newArray, 0, size);
             newArray[size++] = value;
             elementData = newArray;
@@ -28,8 +29,7 @@ public class ArrayList<T> implements List<T> {
             elementData[index] = value;
             size++;
             if (index >= elementData.length) {
-                T[] copyElementData = (T[]) new Object[elementData.length
-                        + (elementData.length >> 1)];
+                T[] copyElementData = (T[]) new Object[changeLength()];
                 System.arraycopy(elementData, 0, copyElementData, 0, index - 1);
                 copyElementData[index] = value;
                 System.arraycopy(elementData, index, copyElementData, index + 1, size - index);
@@ -96,5 +96,10 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    public int changeLength() {
+        return elementData.length
+                + (elementData.length >> 1);
     }
 }
