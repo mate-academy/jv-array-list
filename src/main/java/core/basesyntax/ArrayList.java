@@ -38,6 +38,32 @@ public class ArrayList<T> implements List<T> {
         size = s + 1;
     }
 
+    @Override
+    public void addAll(List<T> list) {
+        Object[] arrayForAdd = new Object[list.size()];
+        for (int i = 0; i < list.size(); i++) {
+            arrayForAdd[i] = list.get(i);
+        }
+        int addLength = arrayForAdd.length;
+        Object[] elementData;
+        final int s;
+        if (addLength > (elementData = this.elementData).length - (s = size)) {
+            elementData = grow(s + addLength);
+        }
+        System.arraycopy(arrayForAdd, 0, elementData, s, addLength);
+        size = s + addLength;
+    }
+
+    T elementData(int index) {
+        return (T) elementData[index];
+    }
+
+    @Override
+    public T get(int index) {
+        rangeCheck(index);
+        return elementData(index);
+    }
+
     private Object[] grow(int minCapacity) {
         return elementData = Arrays.copyOf(elementData,
                 newCapacity(minCapacity));
@@ -45,6 +71,20 @@ public class ArrayList<T> implements List<T> {
 
     private Object[] grow() {
         return grow(size + 1);
+    }
+
+    private static int hugeCapacity(int minCapacity) {
+        if (minCapacity < 0) {
+            throw new OutOfMemoryError();
+        }
+        return (minCapacity > MAX_ARRAY_SIZE)
+                ? Integer.MAX_VALUE
+                : MAX_ARRAY_SIZE;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return size == 0;
     }
 
     private int newCapacity(int minCapacity) {
@@ -64,65 +104,24 @@ public class ArrayList<T> implements List<T> {
                 : hugeCapacity(minCapacity);
     }
 
-    private static int hugeCapacity(int minCapacity) {
-        if (minCapacity < 0) {
-            throw new OutOfMemoryError();
-        }
-        return (minCapacity > MAX_ARRAY_SIZE)
-                ? Integer.MAX_VALUE
-                : MAX_ARRAY_SIZE;
-    }
-
     private void rangeCheckForAdd(int index) {
         if (index > size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Negative index");
         }
     }
 
-    @Override
-    public void addAll(List<T> list) {
-        Object[] arrayForAdd = new Object[list.size()];
-        for (int i = 0; i < list.size(); i++) {
-            arrayForAdd[i] = list.get(i);
+    private void rangeCheck(int index) {
+        if (index >= size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Negative index");
         }
-        int addLength = arrayForAdd.length;
-        Object[] elementData;
-        final int s;
-        if (addLength > (elementData = this.elementData).length - (s = size)) {
-            elementData = grow(s + addLength);
-        }
-        System.arraycopy(arrayForAdd, 0, elementData, s, addLength);
-        size = s + addLength;
-    }
-
-    @Override
-    public T get(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Negative index!");
-        }
-        return elementData(index);
-    }
-
-    T elementData(int index) {
-        return (T) elementData[index];
-    }
-
-    @Override
-    public void set(T value, int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Bad index");
-        }
-        elementData[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Bad index");
-        }
+        rangeCheck(index);
         final Object[] es = elementData;
         @SuppressWarnings("unchecked") T oldValue = (T) es[index];
-        fastRemove(es, index);
+        removeElement(es, index);
         return oldValue;
     }
 
@@ -148,14 +147,14 @@ public class ArrayList<T> implements List<T> {
             }
         }
         if (isFound) {
-            fastRemove(es, i);
+            removeElement(es, i);
             return element;
         } else {
             throw new NoSuchElementException("Element doesn`t exist");
         }
     }
 
-    private void fastRemove(Object[] es, int i) {
+    private void removeElement(Object[] es, int i) {
         final int newSize;
         if ((newSize = size - 1) > i) {
             System.arraycopy(es, i + 1, es, i, newSize - i);
@@ -164,12 +163,13 @@ public class ArrayList<T> implements List<T> {
     }
 
     @Override
-    public int size() {
-        return size;
+    public void set(T value, int index) {
+        rangeCheck(index);
+        elementData[index] = value;
     }
 
     @Override
-    public boolean isEmpty() {
-        return size == 0;
+    public int size() {
+        return size;
     }
 }
