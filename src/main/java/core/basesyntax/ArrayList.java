@@ -55,19 +55,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        indexCheck(index);
+        rangeCheck(index);
         return array[index];
     }
 
     @Override
     public void set(T value, int index) {
-        indexCheck(index);
+        rangeCheck(index);
         array[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        indexCheck(index);
+        rangeCheck(index);
         T removedElement = array[index];
         System.arraycopy(array,index + 1, array, index, size - index);
         size--;
@@ -106,7 +106,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     @Override
-    public void indexCheck(int index) {
+    public void rangeCheck(int index) {
         if (index >= size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Index"
                     + index + " out of bounds exception");
