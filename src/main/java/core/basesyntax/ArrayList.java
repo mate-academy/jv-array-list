@@ -22,7 +22,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     private T[] reSizeArray() {
-        T[] extendedArray = (T[]) new Object[size+5];
+        T[] extendedArray = (T[]) new Object[(size * 3) / 2 + 1];
         System.arraycopy(elements, 0, extendedArray, 0, size);
         return extendedArray;
     }
@@ -64,17 +64,16 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index < 0 || index >= size) {
+        if (inCorrectIndex(index)) {
             throw new ArrayListIndexOutOfBoundsException(ARRAY_OUT_OF_BOUND_EX);
         }
-
         return elements[index];
     }
 
     @Override
     public void set(T value, int index) {
 
-        if (index >= size || index < 0) {
+        if (inCorrectIndex(index)) {
             throw new ArrayListIndexOutOfBoundsException(ARRAY_OUT_OF_BOUND_EX);
         }
         elements[index] = value;
@@ -82,7 +81,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(int index) {
-        if (index > size || index < 0) {
+        if (inCorrectIndex(index)) {
             throw new ArrayListIndexOutOfBoundsException(ARRAY_OUT_OF_BOUND_EX);
         }
         T deletedElementByIndex = elements[index];
@@ -110,9 +109,11 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public boolean isEmpty() {
-        if (size == 0) {
-            return true;
-        }
-        return false;
+        return size == 0;
+
+    }
+
+    public boolean inCorrectIndex(int index) {
+        return (index >= size || index < 0);
     }
 }
