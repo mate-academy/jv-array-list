@@ -4,54 +4,83 @@ public class ArrayList<T> implements List<T> {
     public static void main(String[] args) {
         ArrayList<String> arrayList = new ArrayList<>();
         arrayList.add("Test");
-        arrayList.add(null);
         arrayList.add("for");
         arrayList.add("Mate");
-
-        System.out.println(arrayList.size());
+        arrayList.add("Academy", 1);
+        System.out.println("for " + arrayList.get(2));
     }
 
     //    it should have the default capacity, the internal array should grow 1.5 times when it is full, etc.
-    int capacity = 10;
-    T[] array = (T[]) new Object[capacity];
-    int size = 0;
+    int capacity;
+    T[] array;
+    int size;
+
+    public ArrayList() {
+        this.capacity = 10;
+        this.array = (T[]) new Object[capacity];
+        this.size = 0;
+    }
 
     @Override
     public void add(T value) {
-        if (array.length < size) {
-            capacity = capacity + capacity / 2;
+        if (this.size == this.capacity) {
+            this.capacity = this.capacity + this.capacity / 2;
+            T[] copyArray = (T[]) new Object[this.capacity];
+            for (int i = 0; i < this.array.length; i++) {
+                copyArray[i] = this.array[i];
+            }
+            this.array = (T[]) new Object[this.capacity];
+            for (int i = 0; i < copyArray.length; i++) {
+                this.array[i] = copyArray[i];
+            }
         }
-        array[size] = value;
-        size++;
+        this.array[size] = value;
+        this.size++;
     }
 
     @Override
     public void add(T value, int index) {
-        if (array.length < size) {
-            capacity = capacity + capacity / 2;
+        if (index > this.size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Wrong index");
         }
+
+        if (this.size == this.capacity) {
+            this.capacity = this.capacity + this.capacity / 2;
+        }
+
         T[] copyArray = (T[]) new Object[capacity];
         for (int i = 0; i < copyArray.length; i++) {
             if (i < index) {
-                copyArray[i] = array[i];
+                copyArray[i] = this.array[i];
             } else if (i == index) {
                 copyArray[i] = value;
             } else {
-                copyArray[i] = array[i - 1];
+                copyArray[i] = this.array[i - 1];
             }
         }
-        array = copyArray;
-        size++;
+        this.array = copyArray;
+        this.size++;
     }
 
     @Override
     public void addAll(List<T> list) {
-
+        if (this.array.length + list.size() < this.capacity) {
+            this.capacity = this.capacity + this.capacity / 2;
+            for (int i = 0; i < list.size(); i++) {
+                this.array[this.size] = list.get(i);
+                this.size++;
+            }
+        } else {
+            for (int i = 0; i < list.size(); i++) {
+                this.array[this.size] = list.get(i);
+                this.size++;
+            }
+        }
     }
 
     @Override
     public T get(int index) {
-        return array[index];
+        return this.array[index];
     }
 
     @Override
@@ -71,7 +100,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public int size() {
-        return size;
+        return this.size;
     }
 
     @Override
