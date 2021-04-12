@@ -98,6 +98,7 @@ public class ArrayList<T> implements List<T> {
 
     private void grow() {
         T[] copyElementData = (T[]) new Object[changeLength()];
+        System.arraycopy(elementData, 0, copyElementData, 0, elementData.length - 1);
         elementData = copyElementData;
     }
 }
