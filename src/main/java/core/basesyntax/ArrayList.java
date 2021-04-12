@@ -9,13 +9,17 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        grow();
+        if (size == elementData.length) {
+            grow();
+        }
         elementData[size++] = value;
     }
 
     @Override
     public void add(T value, int index) {
-        grow();
+        if (size == elementData.length) {
+            grow();
+        }
         if (index > size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Index: " + index
                     + " out of bound, Size:" + size);
@@ -80,11 +84,9 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void grow() {
-        if (size == elementData.length) {
-            T[] newArray = (T[]) new Object[size + size / 2];
-            System.arraycopy(elementData, 0, newArray, 0, size);
-            elementData = newArray;
-        }
+        T[] newArray = (T[]) new Object[size + size / 2];
+        System.arraycopy(elementData, 0, newArray, 0, size);
+        elementData = newArray;
     }
 
     private void checkIndex(int index) {
