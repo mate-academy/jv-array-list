@@ -3,8 +3,9 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    private static final String ARRAY_OUT_OF_BOUND_EX = "This index is out of the array range...";
-    private static final String NO_SUCH_ELEMENT_EX = "There is no such element...";
+    private static final String ARRAY_OUT_OF_BOUND_MESSAGE = "This index is out "
+            + "of the array range...";
+    private static final String NO_SUCH_ELEMENT_MESSAGE = "There is no such element...";
     private static final int DEFAULT_CAPACITY = 10;
     private int size = 0;
     private T[] elements;
@@ -13,24 +14,10 @@ public class ArrayList<T> implements List<T> {
         elements = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
-    private T[] listToArray(List<T> list) {
-        T[] listArray = (T[]) new Object[list.size()];
-        for (int i = 0; i < list.size(); i++) {
-            listArray[i] = list.get(i);
-        }
-        return listArray;
-    }
-
-    private T[] reSizeArray() {
-        T[] extendedArray = (T[]) new Object[(size * 3) / 2 + 1];
-        System.arraycopy(elements, 0, extendedArray, 0, size);
-        return extendedArray;
-    }
-
     @Override
     public void add(T value) {
         if (size == elements.length) {
-            elements = reSizeArray();
+            elements = resizeArray();
         }
         elements[size] = value;
         size++;
@@ -38,12 +25,11 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-
         if (size == elements.length) {
-            elements = reSizeArray();
+            elements = resizeArray();
         }
         if (index > size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException(ARRAY_OUT_OF_BOUND_EX);
+            throw new ArrayListIndexOutOfBoundsException(ARRAY_OUT_OF_BOUND_MESSAGE);
         }
         System.arraycopy(elements, index, elements, index + 1, size - index);
         elements[index] = value;
@@ -53,37 +39,26 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        if (size + list.size() > elements.length) {
-            elements = reSizeArray();
+        for (int i = 0; i < list.size(); i++) {
+            add(list.get(i));
         }
-        T[] arrayFromList = listToArray(list);
-        System.arraycopy(arrayFromList, 0, elements,
-                size, arrayFromList.length);
-        size += arrayFromList.length;
     }
 
     @Override
     public T get(int index) {
-        if (inCorrectIndex(index)) {
-            throw new ArrayListIndexOutOfBoundsException(ARRAY_OUT_OF_BOUND_EX);
-        }
+        checkIndex(index);
         return elements[index];
     }
 
     @Override
     public void set(T value, int index) {
-
-        if (inCorrectIndex(index)) {
-            throw new ArrayListIndexOutOfBoundsException(ARRAY_OUT_OF_BOUND_EX);
-        }
+        checkIndex(index);
         elements[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (inCorrectIndex(index)) {
-            throw new ArrayListIndexOutOfBoundsException(ARRAY_OUT_OF_BOUND_EX);
-        }
+        checkIndex(index);
         T deletedElementByIndex = elements[index];
         int numberOfElements = elements.length - (index + 1);
         System.arraycopy(elements, index + 1, elements, index, numberOfElements);
@@ -99,7 +74,7 @@ public class ArrayList<T> implements List<T> {
                 return remove(i);
             }
         }
-        throw new NoSuchElementException(NO_SUCH_ELEMENT_EX);
+        throw new NoSuchElementException(NO_SUCH_ELEMENT_MESSAGE);
     }
 
     @Override
@@ -110,10 +85,17 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
-
     }
 
-    public boolean inCorrectIndex(int index) {
-        return (index >= size || index < 0);
+    private void checkIndex(int index) {
+        if (index >= size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException(ARRAY_OUT_OF_BOUND_MESSAGE);
+        }
+    }
+
+    private T[] resizeArray() {
+        T[] extendedArray = (T[]) new Object[(size * 3) / 2];
+        System.arraycopy(elements, 0, extendedArray, 0, size);
+        return extendedArray;
     }
 }
