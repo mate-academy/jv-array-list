@@ -36,21 +36,9 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        Object[] addedArray = new Object[list.size()];
         for (int i = 0; i < list.size(); i++) {
-            addedArray[i] = list.get(i);
+            add(list.get(i));
         }
-        int extraLength = addedArray.length;
-        if (elementData.length - extraLength >= 0) {
-            System.arraycopy(addedArray, 0, elementData, size, extraLength);
-            size += extraLength;
-            return;
-        }
-        Object[] concatenatedArray = new Object[elementData.length + extraLength];
-        System.arraycopy(elementData, 0, concatenatedArray, 0, size);
-        System.arraycopy(addedArray, 0, concatenatedArray, size, extraLength);
-        elementData = concatenatedArray;
-        size += extraLength;
     }
 
     @Override
@@ -102,9 +90,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void removeElement(Object[] elementData, int index) {
-        if (size - 1 > index) {
-            System.arraycopy(elementData, index + 1, elementData, index, size - 1 - index);
-        }
+        System.arraycopy(elementData, index + 1, elementData, index, size - 1 - index);
         elementData[--size] = null;
     }
 
