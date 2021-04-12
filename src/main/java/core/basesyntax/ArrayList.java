@@ -16,7 +16,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        ensureCapacity(size + 1);
+        ensureCapacity();
         elementData[size++] = value;
     }
 
@@ -27,7 +27,7 @@ public class ArrayList<T> implements List<T> {
             return;
         }
         checkIndex(index);
-        ensureCapacity(size + 1);
+        ensureCapacity();
         System.arraycopy(elementData, index, elementData, index + 1, size - index);
         elementData[index] = value;
         size++;
@@ -69,10 +69,7 @@ public class ArrayList<T> implements List<T> {
         for (int i = 0; i < size; i++) {
             if (element == elementData[i] || elementData[i] != null
                     && elementData[i].equals(element)) {
-                T value = elementData[i];
-                System.arraycopy(elementData,i + 1, elementData, i, size - i - 1);
-                elementData[size--] = null;
-                return value;
+                return remove(i);
             }
         }
         throw new NoSuchElementException("Element not found");
@@ -88,16 +85,15 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void ensureCapacity(int index) {
-        if (index < capacity) {
+    private void ensureCapacity() {
+        if (size < capacity) {
             return;
         }
-        T[] tempData = (T[]) new Object[capacity];
-        System.arraycopy(elementData,0, tempData, 0, size);
         int newCapacity = capacity << 1;
         if (newCapacity > MAX_CAPACITY) {
             newCapacity = MAX_CAPACITY;
         }
+        T[] tempData = elementData;
         elementData = (T[]) new Object[newCapacity];
         System.arraycopy(tempData,0, elementData, 0, size);
         capacity = newCapacity;
