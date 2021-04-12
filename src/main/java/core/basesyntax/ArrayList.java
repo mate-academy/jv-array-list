@@ -10,9 +10,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value) {
         if (size + 1 >= elementData.length) {
-            T[] newArray = (T[]) new Object[changeLength()];
-            System.arraycopy(elementData, 0, newArray, 0, size);
-            elementData = newArray;
+          grow();
         }
         elementData[size++] = value;
     }
@@ -98,7 +96,7 @@ public class ArrayList<T> implements List<T> {
 
     private void grow() {
         T[] copyElementData = (T[]) new Object[changeLength()];
-        System.arraycopy(elementData, 0, copyElementData, 0, elementData.length - 1);
+        System.arraycopy(elementData, 0, copyElementData, 0, elementData.length);
         elementData = copyElementData;
     }
 }
