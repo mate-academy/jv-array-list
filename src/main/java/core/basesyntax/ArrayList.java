@@ -3,20 +3,18 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    private static final int VALUE_ARRAY = 10;
-    private T[] elementData = (T[]) new Object[VALUE_ARRAY];
+    private static final int DEFAULT_CAPACITY = 10;
+    private T[] elementData = (T[]) new Object[DEFAULT_CAPACITY];
     private int size;
 
     @Override
     public void add(T value) {
-        if (size + 1 < elementData.length) {
-            elementData[size++] = value;
-        } else {
+        if (size + 1 >= elementData.length) {
             T[] newArray = (T[]) new Object[changeLength()];
             System.arraycopy(elementData, 0, newArray, 0, size);
-            newArray[size++] = value;
             elementData = newArray;
         }
+        elementData[size++] = value;
     }
 
     @Override
@@ -24,21 +22,16 @@ public class ArrayList<T> implements List<T> {
         if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException("Wrong index");
         }
-        if (index < elementData.length) {
-            System.arraycopy(elementData, index, elementData, index + 1, size - index);
-            elementData[index] = value;
-            size++;
-            if (index >= elementData.length) {
-                T[] copyElementData = (T[]) new Object[changeLength()];
-                System.arraycopy(elementData, 0, copyElementData, 0, index - 1);
-                copyElementData[index] = value;
-                System.arraycopy(elementData, index, copyElementData, index + 1, size - index);
-                size++;
-                elementData = copyElementData;
-            }
-        } else {
+        if (index == size) {
             add(value);
+            return;
         }
+        if (size == elementData.length) {
+            grow(value,index);
+        }
+        System.arraycopy(elementData, index, elementData, index + 1, size - index);
+        elementData[index] = value;
+        size++;
     }
 
     @Override
@@ -73,7 +66,7 @@ public class ArrayList<T> implements List<T> {
         removeElement = elementData[index];
         int needNumberCopy = size - index - 1;
         System.arraycopy(elementData, index + 1, elementData, index, needNumberCopy);
-        elementData[--size] = null;
+        size--;
         return (T) removeElement;
     }
 
@@ -98,8 +91,15 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    public int changeLength() {
+    private int changeLength() {
         return elementData.length
                 + (elementData.length >> 1);
+    }
+
+    private void grow(T value, int index) {
+        T[] copyElementData = (T[]) new Object[changeLength()];
+        System.arraycopy(elementData, 0, copyElementData, 0, index - 1);
+        copyElementData[index] = value;
+        elementData = copyElementData;
     }
 }
