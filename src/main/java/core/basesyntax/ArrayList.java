@@ -24,13 +24,8 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayListIndexOutOfBoundsException("Index out of bound");
         }
         checkSize();
-        if (index != size) {
-            System.arraycopy(arrayOfObjects, index, arrayOfObjects, index + 1, size);
-            arrayOfObjects[index] = value;
-        } else {
-            arrayOfObjects[index] = value;
-        }
-
+        System.arraycopy(arrayOfObjects, index, arrayOfObjects, index + 1, size - index);
+        arrayOfObjects[index] = value;
         size++;
     }
 
@@ -86,7 +81,7 @@ public class ArrayList<T> implements List<T> {
 
     private void growCapacity() {
         Object[] tempArray = new Object[size + size / 2];
-        System.arraycopy(arrayOfObjects,0,tempArray,0,arrayOfObjects.length);
+        System.arraycopy(arrayOfObjects, 0, tempArray, 0, arrayOfObjects.length);
         arrayOfObjects = tempArray;
     }
 
