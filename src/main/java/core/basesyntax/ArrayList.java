@@ -13,18 +13,18 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        expandingArray();
+        checkArraySize();
         array[size] = value;
         size++;
     }
 
     @Override
     public void add(T value, int index) {
-        expandingArray();
+        checkArraySize();
         if (index > size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Such index doesn't exist");
         }
-        System.arraycopy(array, index, array, index + 1, size - index);
+        System.arraycopy(array, index, array, index + 1, size - 1);
         array[index] = value;
         size++;
     }
@@ -38,19 +38,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        indexException(index);
+        checkIndex(index);
         return array[index];
     }
 
     @Override
     public void set(T value, int index) {
-        indexException(index);
+        checkIndex(index);
         array[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        indexException(index);
+        checkIndex(index);
         T deletedIndex = array[index];
         System.arraycopy(array, index + 1, array, index, size - index);
         size--;
@@ -77,7 +77,7 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void expandingArray() {
+    private void checkArraySize() {
         if (size == array.length) {
             T[] newArray = (T[]) new Object[size + size / 2];
             System.arraycopy(array, 0, newArray, 0, size);
@@ -85,7 +85,7 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private void indexException(int index) {
+    private void checkIndex(int index) {
         if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException("Index does not exist");
         }
