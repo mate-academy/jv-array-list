@@ -13,10 +13,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (size == arrayOfObjects.length) {
-            growCapacity();
-        }
-
+        checkSize();
         arrayOfObjects[size] = value;
         size++;
     }
@@ -26,15 +23,13 @@ public class ArrayList<T> implements List<T> {
         if (index > size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Index out of bound");
         }
-
-        int arrayLength = arrayOfObjects.length;
-        Object[] tempo = new Object[arrayLength + 1];
-        System.arraycopy(arrayOfObjects, 0, tempo, 0, arrayLength);
-        arrayOfObjects = new Object[arrayLength + 1];
-        arrayOfObjects[index] = value;
-        System.arraycopy(tempo, 0, arrayOfObjects, 0, index);
-        System.arraycopy(tempo, index, arrayOfObjects,
-                index + 1, size - index);
+        checkSize();
+        if (index != size) {
+            System.arraycopy(arrayOfObjects, index, arrayOfObjects, index + 1, size);
+            arrayOfObjects[index] = value;
+        } else {
+            arrayOfObjects[index] = value;
+        }
 
         size++;
     }
@@ -48,38 +43,23 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index < size && index >= 0) {
-            return (T) arrayOfObjects[index];
-        } else {
-            throw new ArrayListIndexOutOfBoundsException("This index doesn't exist");
-        }
+        checkIndex(index);
+        return (T) arrayOfObjects[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index < size && index >= 0) {
-            arrayOfObjects[index] = value;
-        } else {
-            throw new ArrayListIndexOutOfBoundsException("This index doesn't exist");
-        }
+        checkIndex(index);
+        arrayOfObjects[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        Object objectByIndex;
-        if (index >= 0 && index < size) {
-            objectByIndex = arrayOfObjects[index];
-            Object[] temp = new Object[size];
-            System.arraycopy(arrayOfObjects, 0, temp, 0, size);
-            arrayOfObjects = new Object[size - 1];
-            System.arraycopy(temp, 0, arrayOfObjects,
-                    0, index);
-            System.arraycopy(temp, index + 1, arrayOfObjects,
-                    index, size - index - 1);
-            size--;
-            return (T) objectByIndex;
-        }
-        throw new ArrayListIndexOutOfBoundsException("This index doesn't exist");
+        checkIndex(index);
+        Object objectByIndex = arrayOfObjects[index];
+        System.arraycopy(arrayOfObjects, index + 1, arrayOfObjects, index, size - index);
+        size--;
+        return (T) objectByIndex;
     }
 
     @Override
@@ -107,7 +87,18 @@ public class ArrayList<T> implements List<T> {
     private void growCapacity() {
         Object[] tempArray = new Object[size + size / 2];
         System.arraycopy(arrayOfObjects,0,tempArray,0,arrayOfObjects.length);
-        arrayOfObjects = new Object[tempArray.length];
-        System.arraycopy(tempArray,0,arrayOfObjects,0,tempArray.length);
+        arrayOfObjects = tempArray;
+    }
+
+    private void checkIndex(int index) {
+        if (!(index >= 0 && index < size)) {
+            throw new ArrayListIndexOutOfBoundsException("This index doesn't exist");
+        }
+    }
+
+    private void checkSize() {
+        if (size == arrayOfObjects.length) {
+            growCapacity();
+        }
     }
 }
