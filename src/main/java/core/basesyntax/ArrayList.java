@@ -4,17 +4,14 @@ import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
+    private static final int DEFAULT_ARRAY_CAPACITY = 10;
     private T[] objectsArray = (T[]) new Object[]{};
     private int size;
 
-    private Object[] grow() {
-        int defaultCapacity = 10;
+    private void grow() {
         int oldCapacity = objectsArray.length;
         int newCapacity = oldCapacity + (oldCapacity >> 1);
-        if (oldCapacity > 0) {
-            return objectsArray = Arrays.copyOf(objectsArray, newCapacity);
-        }
-        return objectsArray = (T[]) new Object[Math.max(defaultCapacity, newCapacity)];
+        objectsArray = Arrays.copyOf(objectsArray, Math.max(DEFAULT_ARRAY_CAPACITY, newCapacity));
     }
 
     private void indexInBoundsCheck(int index) {
@@ -43,16 +40,12 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayListIndexOutOfBoundsException("Index out of bound");
         }
         if (index == objectsArray.length) {
-            objectsArray = (T[]) grow();
+            grow();
         }
         if (index < size) {
-            Object[] buffer = new Object[size - index];
-            System.arraycopy(objectsArray, index, buffer, 0, size - index);
-            objectsArray[index] = value;
-            System.arraycopy(buffer, 0, objectsArray, index + 1, buffer.length);
-        } else {
-            objectsArray[index] = value;
+            System.arraycopy(objectsArray, index, objectsArray, index + 1, size - index);
         }
+        objectsArray[index] = value;
         size++;
     }
 
@@ -66,7 +59,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         indexInBoundsCheck(index);
-        return (T) objectsArray[index];
+        return objectsArray[index];
     }
 
     @Override
@@ -86,11 +79,11 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         indexInBoundsCheck(index);
-        Object oldElement = objectsArray[index];
+        T oldElement = objectsArray[index];
         System.arraycopy(objectsArray, index + 1, objectsArray,
-                index, size - index - 1);
+                index, size - index);
         size--;
-        return (T) oldElement;
+        return oldElement;
     }
 
     @Override
