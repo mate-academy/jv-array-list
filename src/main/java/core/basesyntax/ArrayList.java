@@ -24,7 +24,7 @@ public class ArrayList<T> implements List<T> {
         if (index > size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Such index doesn't exist");
         }
-        System.arraycopy(array, index, array, index + 1, size - 1);
+        System.arraycopy(array, index, array, index + 1, size - index);
         array[index] = value;
         size++;
     }
@@ -52,7 +52,7 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         checkIndex(index);
         T deletedIndex = array[index];
-        System.arraycopy(array, index + 1, array, index, size - index);
+        System.arraycopy(array, index + 1, array, index, size - (index + 1));
         size--;
         return deletedIndex;
     }
