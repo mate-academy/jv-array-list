@@ -24,7 +24,7 @@ public class ArrayList<T> implements List<T> {
                     + index + " out of bounds exception.");
         }
         if (size == array.length) {
-            array = reSize(array);
+            array = resize(array);
         }
         System.arraycopy(array, index, array, index + 1, size - index);
         array[index] = value;
@@ -54,7 +54,7 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         rangeCheck(index);
         T removedElement = array[index];
-        System.arraycopy(array, index + 1, array, index, size - index + 1);
+        System.arraycopy(array, index + 1, array, index, size);
         size--;
         return removedElement;
     }
@@ -79,7 +79,7 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private T[] reSize(T[] array) {
+    private T[] resize(T[] array) {
         T[] reSizeArray = (T[]) new Object[(int) (array.length * MULTIPLICATION)];
         System.arraycopy(array, 0, reSizeArray, 0, array.length);
         return reSizeArray;
