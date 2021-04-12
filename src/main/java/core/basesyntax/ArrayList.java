@@ -12,20 +12,13 @@ public class ArrayList<T> implements List<T> {
         elementData = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
-    private Object[] grow(int minCapacity) {
-        T[] newElementData = (T[]) new Object[minCapacity];
+    private void grow() {
+        T[] newElementData = (T[]) new Object[(int) (elementData.length * CAPACITY_MULTIPLIER)];
         System.arraycopy(elementData, 0, newElementData, 0, size);
         elementData = newElementData;
-        return elementData;
     }
 
-    public void ensureCapacity(int capacity) {
-        while (capacity > elementData.length) {
-            grow((int) (elementData.length * CAPACITY_MULTIPLIER));
-        }
-    }
-
-    private void checkingIndex(int index) {
+    private void checkIndex(int index) {
         if (index >= size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Index Out Of Bounds");
         }
@@ -33,7 +26,9 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        ensureCapacity(size + 1);
+        while (size >= elementData.length) {
+            grow();
+        }
         elementData[size] = value;
         size++;
     }
@@ -43,7 +38,9 @@ public class ArrayList<T> implements List<T> {
         if (index > size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Index Out Of Bounds");
         }
-        ensureCapacity(size + 1);
+        while (size + 1 > elementData.length) {
+            grow();
+        }
         System.arraycopy(elementData, index, elementData, index + 1, size - index);
         elementData[index] = value;
         size++;
@@ -58,19 +55,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        checkingIndex(index);
+        checkIndex(index);
         return elementData[index];
     }
 
     @Override
     public void set(T value, int index) {
-        checkingIndex(index);
+        checkIndex(index);
         elementData[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        checkingIndex(index);
+        checkIndex(index);
         T newElementData = elementData[index];
         System.arraycopy(elementData, index + 1, elementData, index, size - index);
         size--;
