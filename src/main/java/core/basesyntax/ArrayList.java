@@ -7,6 +7,9 @@ public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private static final Object[] DEFAULTCAPACITY_EMPTY_ELEMENTDATA = {};
     private static final int MAX_ARRAY_SIZE = Integer.MAX_VALUE - 8;
+    private static final String MESSAGE_INDEX_ERROR = "Index outside the size of the list";
+    private static final String MESSAGE_NO_SUCH_ELEMENT_ERROR = "Element doesn`t exist";
+
     private Object[] elementData = new Object[DEFAULT_CAPACITY];
     private int size;
 
@@ -106,13 +109,13 @@ public class ArrayList<T> implements List<T> {
 
     private void rangeCheckForAdd(int index) {
         if (index > size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Negative index");
+            throw new ArrayListIndexOutOfBoundsException(MESSAGE_INDEX_ERROR);
         }
     }
 
     private void rangeCheck(int index) {
         if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Negative index");
+            throw new ArrayListIndexOutOfBoundsException(MESSAGE_INDEX_ERROR);
         }
     }
 
@@ -120,7 +123,7 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         rangeCheck(index);
         final Object[] es = elementData;
-        @SuppressWarnings("unchecked") T oldValue = (T) es[index];
+        T oldValue = (T) es[index];
         removeElement(es, index);
         return oldValue;
     }
@@ -130,28 +133,22 @@ public class ArrayList<T> implements List<T> {
         final Object[] es = elementData;
         final int size = this.size;
         int i = 0;
-        boolean isFound = false;
         if (element == null) {
             for (; i < size; i++) {
                 if (es[i] == null) {
-                    isFound = true;
-                    break;
+                    removeElement(es, i);
+                    return null;
                 }
             }
         } else {
             for (; i < size; i++) {
                 if (element.equals(es[i])) {
-                    isFound = true;
-                    break;
+                    removeElement(es, i);
+                    return element;
                 }
             }
         }
-        if (isFound) {
-            removeElement(es, i);
-            return element;
-        } else {
-            throw new NoSuchElementException("Element doesn`t exist");
-        }
+        throw new NoSuchElementException(MESSAGE_NO_SUCH_ELEMENT_ERROR);
     }
 
     private void removeElement(Object[] es, int i) {
