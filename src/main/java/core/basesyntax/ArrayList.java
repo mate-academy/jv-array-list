@@ -5,8 +5,12 @@ import java.util.NoSuchElementException;
 public class ArrayList<T> implements List<T> {
     private static final int MAX_SIZE = 10;
     private static final String MESSAGE = "Index not exists";
-    private T[] values = (T[]) new Object[MAX_SIZE];
-    private int size = 0;
+    private T[] values;
+    private int size;
+
+    public ArrayList() {
+        values = (T[]) new Object[MAX_SIZE];
+    }
 
     @Override
     public void add(T value) {
@@ -29,9 +33,6 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        if (list == null || list.isEmpty()) {
-            return;
-        }
         for (int i = 0; i < list.size(); i++) {
             add(list.get(i));
         }
@@ -79,7 +80,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void grow() {
-        final T[] data = values;
+        T[] data = values;
         values = (T[]) new Object[size * 3 / 2];
         System.arraycopy(data, 0, values, 0, size);
     }
