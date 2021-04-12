@@ -10,7 +10,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value) {
         if (size + 1 >= elementData.length) {
-          grow();
+            grow();
         }
         elementData[size++] = value;
     }
