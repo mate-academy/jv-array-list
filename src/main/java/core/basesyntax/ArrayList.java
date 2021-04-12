@@ -8,32 +8,21 @@ import java.util.Objects;
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_SIZE = 10;
     private static final String DEFAULT_EXCEPTION_MESSAGE = "Illegal argument";
-    private Object[] objectArray;
+    private T[] objectArray;
     private int size;
 
     public ArrayList() {
-        this.objectArray = new Object[DEFAULT_SIZE];
-    }
-
-    public ArrayList(int ownCapacity) {
-        if (ownCapacity > 0) {
-            this.objectArray = new Object[ownCapacity];
-        } else if (ownCapacity == 0) {
-            this.objectArray = new Object[]{};
-        } else {
-            throw new IllegalArgumentException(DEFAULT_EXCEPTION_MESSAGE
-                    + ownCapacity);
-        }
+        this.objectArray = (T[]) new Object[DEFAULT_SIZE];
     }
 
     public ArrayList(Collection<? extends T> e) {
-        objectArray = e.toArray();
+        objectArray = (T[]) e.toArray();
     }
 
     @Override
     public void add(T value) {
         if (size == objectArray.length) {
-            objectArray = grow(size);
+            grow();
         }
         objectArray[size] = value;
         size++;
@@ -44,16 +33,14 @@ public class ArrayList<T> implements List<T> {
         if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException(DEFAULT_EXCEPTION_MESSAGE
                     + index);
-        } else if (index == objectArray.length) {
-            objectArray = grow(index);
-            objectArray[index] = value;
-            size++;
-        } else {
-            System.arraycopy(objectArray, index,
-                    objectArray, index + 1, size - index);
-            objectArray[index] = value;
-            size++;
         }
+        if (size == objectArray.length) {
+            grow();
+        }
+        System.arraycopy(objectArray, index,
+                objectArray, index + 1, size - index);
+        objectArray[index] = value;
+        size++;
     }
 
     @Override
@@ -63,17 +50,14 @@ public class ArrayList<T> implements List<T> {
         if (collectionSize == 0) {
             return;
         } else if (collectionSize > objectArray.length - size) {
-            objectArray = grow(collectionSize + size);
+            grow();
         }
         System.arraycopy(newObject, 0, objectArray, size, collectionSize);
         size += collectionSize;
     }
 
-    private Object[] grow(int index) {
-        if (index >= objectArray.length) {
-            objectArray = Arrays.copyOf(objectArray, (int) (index * 1.5));
-        }
-        return objectArray;
+    private void grow() {
+        objectArray = Arrays.copyOf(objectArray, (int) (size * 1.5));
     }
 
     public Object[] toArray() {
