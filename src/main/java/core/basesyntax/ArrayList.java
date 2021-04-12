@@ -63,7 +63,7 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         rangeCheck(index);
         T removedElement = array[index];
-        System.arraycopy(array, index + 1, array, index, size - index + 1);
+        System.arraycopy(array, index + 1, array, index, size - index);
         size--;
         return removedElement;
     }
@@ -90,7 +90,7 @@ public class ArrayList<T> implements List<T> {
 
     private T[] reSize(T[] array) {
         T[] reSizeArray = (T[]) new Object[(int) (array.length * SIZE_MULTIPLICATION)];
-        System.arraycopy(array, 0, reSizeArray,0, array.length);
+        System.arraycopy(array, 0, reSizeArray, 0, array.length);
         return reSizeArray;
     }
 
