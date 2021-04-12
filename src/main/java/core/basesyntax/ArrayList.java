@@ -1,19 +1,12 @@
 package core.basesyntax;
 
-public class ArrayList<T> implements List<T> {
-    public static void main(String[] args) {
-        ArrayList<String> arrayList = new ArrayList<>();
-        arrayList.add("Test");
-        arrayList.add("for");
-        arrayList.add("Mate");
-        arrayList.add("Academy", 1);
-        System.out.println("for " + arrayList.get(2));
-    }
+import java.util.NoSuchElementException;
+import java.util.Objects;
 
-    //    it should have the default capacity, the internal array should grow 1.5 times when it is full, etc.
-    int capacity;
-    T[] array;
-    int size;
+public class ArrayList<T> implements List<T> {
+    private int capacity;
+    private T[] array;
+    private int size;
 
     public ArrayList() {
         this.capacity = 10;
@@ -25,24 +18,19 @@ public class ArrayList<T> implements List<T> {
     public void add(T value) {
         if (this.size == this.capacity) {
             this.capacity = this.capacity + this.capacity / 2;
-            T[] copyArray = (T[]) new Object[this.capacity];
-            for (int i = 0; i < this.array.length; i++) {
-                copyArray[i] = this.array[i];
-            }
-            this.array = (T[]) new Object[this.capacity];
-            for (int i = 0; i < copyArray.length; i++) {
-                this.array[i] = copyArray[i];
-            }
+
         }
+        T[] copyArray = (T[]) new Object[this.capacity];
+        System.arraycopy(this.array, 0, copyArray, 0, this.array.length);
+        this.array = (T[]) new Object[this.capacity];
+        System.arraycopy(copyArray, 0, this.array, 0, copyArray.length);
         this.array[size] = value;
         this.size++;
     }
 
     @Override
     public void add(T value, int index) {
-        if (index > this.size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Wrong index");
-        }
+        isIndexCorrect(index, index > this.size);
 
         if (this.size == this.capacity) {
             this.capacity = this.capacity + this.capacity / 2;
@@ -80,22 +68,33 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
+        isIndexCorrect(index, index >= this.size);
         return this.array[index];
     }
 
     @Override
     public void set(T value, int index) {
-
+        isIndexCorrect(index, index >= this.size);
+        this.array[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        return null;
+        isIndexCorrect(index, index > this.size);
+        T removedElement = this.array[index];
+        System.arraycopy(array, index + 1, array, index, this.size - index);
+        this.size--;
+        return removedElement;
     }
 
     @Override
     public T remove(T element) {
-        return null;
+        for (int i = 0; i < this.size; i++) {
+            if (Objects.equals(element, array[i])) {
+                return this.remove(i);
+            }
+        }
+        throw new NoSuchElementException("No such element here");
     }
 
     @Override
@@ -105,6 +104,15 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public boolean isEmpty() {
-        return false;
+        if (this.size > 0) {
+            return false;
+        }
+        return true;
+    }
+
+    private void isIndexCorrect(int index, boolean b) {
+        if (b || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Wrong index");
+        }
     }
 }
