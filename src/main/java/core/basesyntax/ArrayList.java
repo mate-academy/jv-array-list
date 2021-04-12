@@ -35,7 +35,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        while ((size + list.size()) == elements.length) {
+        while ((size + list.size()) < elements.length) {
             extendArray();
         }
         for (int i = 0; i < list.size(); i++) {
