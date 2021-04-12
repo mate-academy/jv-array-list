@@ -14,7 +14,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        resize();
+        checkSize();
         array[size++] = value;
     }
 
@@ -23,8 +23,7 @@ public class ArrayList<T> implements List<T> {
         if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException("Not correct index " + index);
         }
-        resize();
-
+        checkSize();
         System.arraycopy(array, index, array, index + 1, size - index);
         array[index] = value;
         size++;
@@ -52,22 +51,21 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
-        T remove = array[index];
-        System.arraycopy(array,index + 1,array, index, size - index);
+        T removedElement = array[index];
+        System.arraycopy(array, index + 1, array, index, size - index);
         size--;
-        return remove;
+        return removedElement;
     }
 
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
             if (element == array[i] || element != null && element.equals(array[i])) {
-                System.arraycopy(array,i + 1,array, i, size - i);
-                size--;
-                return element;
+                return remove(i);
             }
         }
-        throw new NoSuchElementException("Index out of size");
+        throw new NoSuchElementException("The element being requested does not exist,"
+                + " please write correct element");
     }
 
     @Override
@@ -80,7 +78,7 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void resize() {
+    private void checkSize() {
         if (size == array.length) {
             T[] newArray = (T[]) new Object[(int) (array.length * INDEX_TO_INCREASE_THE_SIZE)];
             System.arraycopy(array, 0, newArray, 0, size);
@@ -92,6 +90,5 @@ public class ArrayList<T> implements List<T> {
         if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException("Not correct index " + index);
         }
-
     }
 }
