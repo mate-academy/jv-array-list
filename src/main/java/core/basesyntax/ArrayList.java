@@ -23,9 +23,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index < 0 || index > sizeOfList) {
-            throw new ArrayListIndexOutOfBoundsException("Index out of bound Exception");
-        }
+        checkIndex(index, sizeOfList + 1);
         if (sizeOfList == arrayList.length) {
             listCreator();
         }
@@ -64,19 +62,13 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        int indexOfArray = -1;
         for (int i = 0; i < sizeOfList; i++) {
             if ((arrayList[i] == element) || arrayList[i] != null
                     && arrayList[i].equals(element)) {
-                indexOfArray = i;
-                break;
+                return remove(i);
             }
         }
-        
-        if (indexOfArray == -1) {
-            throw new NoSuchElementException("No Such Element");
-        }
-        return remove(indexOfArray);
+        throw new NoSuchElementException("No Such Element");
     }
 
     @Override
