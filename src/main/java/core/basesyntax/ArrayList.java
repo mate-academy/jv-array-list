@@ -49,7 +49,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         indexCheck(index);
-        return (T) elements[index];
+        return elements[index];
     }
 
     @Override
@@ -73,13 +73,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if (elements[i] == null && element == null) {
-                remove(i);
-                return element;
-            } else if (elements[i] == null) {
-                continue;
-            }
-            if (elements[i].equals(element)) {
+            if (elements[i] == element || (elements[i] != null && elements[i].equals(element))) {
                 remove(i);
                 return element;
             }
