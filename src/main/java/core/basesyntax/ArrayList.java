@@ -27,7 +27,7 @@ public class ArrayList<T> implements List<T> {
             return;
         }
         if (size == elementData.length) {
-            grow(value,index);
+            grow();
         }
         System.arraycopy(elementData, index, elementData, index + 1, size - index);
         elementData[index] = value;
@@ -96,10 +96,8 @@ public class ArrayList<T> implements List<T> {
                 + (elementData.length >> 1);
     }
 
-    private void grow(T value, int index) {
+    private void grow() {
         T[] copyElementData = (T[]) new Object[changeLength()];
-        System.arraycopy(elementData, 0, copyElementData, 0, index - 1);
-        copyElementData[index] = value;
         elementData = copyElementData;
     }
 }
