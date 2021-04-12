@@ -14,30 +14,25 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        try {
-            if (size == array.length) {
-                array = reSize(array);
-            }
-            array[size] = value;
-            size++;
-        } catch (NullPointerException e) {
-            throw new RuntimeException("Value" + value + " doesn't exist" + e);
+        if (size == array.length) {
+            array = reSize(array);
         }
+        array[size] = value;
+        size++;
     }
 
     @Override
     public void add(T value, int index) {
-        try {
-            if (size == array.length) {
-                array = reSize(array);
-            }
-            System.arraycopy(array, index, array, index + 1, size - index + 1);
-            array[index] = value;
-            size++;
-        } catch (IndexOutOfBoundsException e) {
-            throw new ArrayListIndexOutOfBoundsException("Array index"
-                    + index + " if out of bounds exception" + e);
+        if (index > size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Index"
+                    + index + " out of bounds exception");
         }
+        if (size == array.length) {
+            array = reSize(array);
+        }
+        System.arraycopy(array, index, array, index + 1, size - index);
+        array[index] = value;
+        size++;
     }
 
     @Override
@@ -63,7 +58,7 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         rangeCheck(index);
         T removedElement = array[index];
-        System.arraycopy(array, index + 1, array, index, size - index);
+        System.arraycopy(array, index + 1, array, index, size - index + 1);
         size--;
         return removedElement;
     }
