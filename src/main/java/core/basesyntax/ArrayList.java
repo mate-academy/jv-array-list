@@ -43,19 +43,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        checkIndex(index); // index >= 0,  index < size
+        checkIndex(index);
         return elementData[index];
     }
 
     @Override
     public void set(T value, int index) {
-        checkIndex(index); // index >= 0,  index < size
+        checkIndex(index);
         elementData[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        checkIndex(index); // index >= 0  index < size
+        checkIndex(index);
         int numMoved = size - index - 1;
         T removedValue = elementData[index];
         System.arraycopy(elementData, index + 1, elementData, index, numMoved);
