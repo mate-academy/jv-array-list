@@ -4,17 +4,16 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    private Object[] array;
+    private T[] array;
     private int size;
-    private int capacity = DEFAULT_CAPACITY;
 
     public ArrayList() {
-        array = new Object[DEFAULT_CAPACITY];
+        array = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
     @Override
     public void add(T value) {
-        if (capacity == size) {
+        if (array.length == size) {
             grow();
         }
         array[size] = value;
@@ -26,7 +25,7 @@ public class ArrayList<T> implements List<T> {
         if (index > size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException(size);
         }
-        if (capacity == size) {
+        if (array.length == size) {
             grow();
         }
         size++;
@@ -46,7 +45,7 @@ public class ArrayList<T> implements List<T> {
         if (index >= size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException(size - 1);
         }
-        return (T) array[index];
+        return array[index];
     }
 
     @Override
@@ -62,7 +61,7 @@ public class ArrayList<T> implements List<T> {
         if (index >= size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException(size - 1);
         }
-        T removedValue = (T)array[index];
+        T removedValue = array[index];
         System.arraycopy(array, index + 1, array, index, size - (index + 1));
         size--;
         return removedValue;
@@ -89,9 +88,9 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void grow() {
-        capacity *= 1.5;
+        int capacity = (int)(array.length * 1.5);
         Object[] newArray = new Object[capacity];
         System.arraycopy(array, 0, newArray, 0, size);
-        array = newArray;
+        array = (T[])newArray;
     }
 }
