@@ -4,8 +4,12 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    private T[] elementData = (T[]) new Object[DEFAULT_CAPACITY];
+    private T[] elementData;
     private int size;
+
+    public ArrayList() {
+        this.elementData = (T[]) new Object[DEFAULT_CAPACITY];
+    }
 
     @Override
     public void add(T value) {
@@ -18,7 +22,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         if (index > size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index out of bound");
+            throw new
+                    ArrayListIndexOutOfBoundsException("Index is out of bounds of this ArrayList");
         }
         if (elementData.length == size) {
             elementData = grow();
@@ -86,7 +91,8 @@ public class ArrayList<T> implements List<T> {
 
     private void checkIndex(int index) {
         if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index out of bound");
+            throw new
+                    ArrayListIndexOutOfBoundsException("Index is out of bounds of this ArrayList");
         }
     }
 }
