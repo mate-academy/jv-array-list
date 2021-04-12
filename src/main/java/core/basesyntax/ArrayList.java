@@ -43,25 +43,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index >= sizeOfList || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index out of bound Exception");
-        }
+        checkIndex(index,sizeOfList);
         return arrayList[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index >= sizeOfList || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index out of bound Exception");
-        }
+        checkIndex(index,sizeOfList);
         arrayList[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index >= sizeOfList || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index out of bound Exception");
-        }
+        checkIndex(index, sizeOfList);
         T removedElement = arrayList[index];
         System.arraycopy(arrayList, index + 1, arrayList, index, sizeOfList - index - 1);
         sizeOfList--;
@@ -75,13 +69,13 @@ public class ArrayList<T> implements List<T> {
             if ((arrayList[i] == element) || arrayList[i] != null
                     && arrayList[i].equals(element)) {
                 indexOfArray = i;
+                break;
             }
         }
         
         if (indexOfArray == -1) {
             throw new NoSuchElementException("No Such Element");
         }
-   
         return remove(indexOfArray);
     }
 
@@ -95,9 +89,15 @@ public class ArrayList<T> implements List<T> {
         return sizeOfList == 0;
     }
 
-    public void listCreator() {
+    private void listCreator() {
         T[] newList = (T[]) new Object[(int) (arrayList.length * GROWING_VALUE)];
         System.arraycopy(arrayList, 0, newList, 0, arrayList.length);
         arrayList = newList;
+    }
+
+    private void checkIndex(int index, int maxEvailableSize) {
+        if (index >= maxEvailableSize || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Index out of bound Exception");
+        }
     }
 }
