@@ -34,18 +34,9 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        if (list == null || list.isEmpty()) {
-            return;
-        }
-        Object[] listArray = new Object[list.size()];
-
         for (int i = 0; i < list.size(); i++) {
-            listArray[i] = list.get(i);
-        }
-        for (int i = 0; i < listArray.length; i++) {
             add((T)list.get(i));
         }
-
     }
 
     @Override
@@ -65,8 +56,7 @@ public class ArrayList<T> implements List<T> {
         checkIndex(index);
         final T value = (T) array[index];
         System.arraycopy(array, index + 1, array, index, currentSize - index);
-        array[currentSize] = null;
-        currentSize--;
+        array[--currentSize] = null;
         return value;
     }
 
@@ -74,7 +64,7 @@ public class ArrayList<T> implements List<T> {
     public T remove(T element) {
         for (int i = 0; i < currentSize; i++) {
             if (element == array[i] || element != null && element.equals(array[i])) {
-                return this.remove(i);
+                return remove(i);
             }
         }
         throw new NoSuchElementException("No such element here");
