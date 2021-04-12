@@ -5,11 +5,11 @@ import java.util.NoSuchElementException;
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private static final double SIZE_MULTIPLICATION = 1.5;
-    private int arrayLength = DEFAULT_CAPACITY;
-    private T[] array = (T[]) new Object[DEFAULT_CAPACITY];
+    private T[] array;
     private int size;
 
     public ArrayList() {
+        array = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
     @Override
@@ -28,7 +28,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         try {
-            if (size == arrayLength) {
+            if (size == array.length) {
                 array = reSize(array);
             }
             System.arraycopy(array, index, array, index + 1, size - index + 1);
@@ -42,12 +42,6 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        if (list == null) {
-            throw new NullPointerException("ArrayList doesn't exist");
-        }
-        if (list.size() > array.length) {
-            array = reSize(array);
-        }
         for (int i = 0; i < list.size(); i++) {
             add(list.get(i));
         }
@@ -69,7 +63,7 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         rangeCheck(index);
         T removedElement = array[index];
-        System.arraycopy(array,index + 1, array, index, size - index);
+        System.arraycopy(array, index + 1, array, index, size - index + 1);
         size--;
         return removedElement;
     }
@@ -78,10 +72,7 @@ public class ArrayList<T> implements List<T> {
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
             if (array[i] == element || (array[i] != null && array[i].equals(element))) {
-                T removedElement = array[i];
-                System.arraycopy(array, i + 1, array, i, size - i);
-                size--;
-                return removedElement;
+                return remove(i);
             }
         }
         throw new NoSuchElementException("Element doesn't exist");
@@ -97,19 +88,17 @@ public class ArrayList<T> implements List<T> {
         return size <= 0;
     }
 
-    @Override
-    public T[] reSize(T[] array) {
-        arrayLength = (int) (arrayLength * SIZE_MULTIPLICATION);
-        T[] reSizeArray = (T[]) new Object[arrayLength];
-        System.arraycopy(array,0, reSizeArray,0,array.length);
+    private T[] reSize(T[] array) {
+        T[] reSizeArray = (T[]) new Object[(int) (array.length * SIZE_MULTIPLICATION)];
+        System.arraycopy(array, 0, reSizeArray,0, array.length);
         return reSizeArray;
     }
 
-    @Override
-    public void rangeCheck(int index) {
+    private void rangeCheck(int index) {
         if (index >= size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Index"
                     + index + " out of bounds exception");
         }
     }
 }
+

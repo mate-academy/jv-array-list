@@ -20,8 +20,4 @@ public interface List<T> {
 
     boolean isEmpty();
 
-    T[] reSize(T[] array);
-
-    void rangeCheck(int index);
-
 }
