@@ -8,27 +8,6 @@ public class ArrayList<T> implements List<T> {
     private T[] objectsArray = (T[]) new Object[]{};
     private int size;
 
-    private void grow() {
-        int oldCapacity = objectsArray.length;
-        int newCapacity = oldCapacity + (oldCapacity >> 1);
-        objectsArray = Arrays.copyOf(objectsArray, Math.max(DEFAULT_ARRAY_CAPACITY, newCapacity));
-    }
-
-    private void indexInBoundsCheck(int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index is out of bounds");
-        }
-    }
-
-    public int getIndexFromArrayOfRequiredElement(T element) {
-        for (int i = 0; i < size; i++) {
-            if (element == objectsArray[i] || element != null && element.equals(objectsArray[i])) {
-                return i;
-            }
-        }
-        return -1;
-    }
-
     @Override
     public void add(T value) {
         add(value, size);
@@ -70,10 +49,10 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        if (getIndexFromArrayOfRequiredElement(element) == -1) {
+        if (getElementIndex(element) == -1) {
             throw new NoSuchElementException("Element does not exist.");
         }
-        return remove(getIndexFromArrayOfRequiredElement(element));
+        return remove(getElementIndex(element));
     }
 
     @Override
@@ -94,5 +73,26 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private void grow() {
+        int oldCapacity = objectsArray.length;
+        int newCapacity = oldCapacity + (oldCapacity >> 1);
+        objectsArray = Arrays.copyOf(objectsArray, Math.max(DEFAULT_ARRAY_CAPACITY, newCapacity));
+    }
+
+    private void indexInBoundsCheck(int index) {
+        if (index >= size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Index is out of bounds");
+        }
+    }
+
+    private int getElementIndex(T element) {
+        for (int i = 0; i < size; i++) {
+            if (element == objectsArray[i] || element != null && element.equals(objectsArray[i])) {
+                return i;
+            }
+        }
+        return -1;
     }
 }
