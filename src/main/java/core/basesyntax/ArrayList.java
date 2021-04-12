@@ -82,7 +82,7 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    public void resizeArray() {
+    private void resizeArray() {
         T[] tempArray = (T[]) new Object[(int) (size * MULTIPLIER)];
         System.arraycopy(elementData, 0, tempArray, 0, size);
         elementData = tempArray;
