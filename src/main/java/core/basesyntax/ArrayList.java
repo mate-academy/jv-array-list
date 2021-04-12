@@ -5,7 +5,6 @@ import java.util.NoSuchElementException;
 public class ArrayList<T> implements List<T> {
     private static final int INITIAL_CAPACITY = 10;
     private T[] elements;
-    private int currentCapacity;
     private int size;
 
     public ArrayList() {
@@ -14,11 +13,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if ((size + 1) < currentCapacity) {
-            elements[size] = value;
-            size++;
-        }
-        if ((size + 1) >= currentCapacity) {
+        if (size == elements.length) {
             extendArray();
         }
         elements[size] = value;
@@ -40,7 +35,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        while ((size + list.size()) < currentCapacity) {
+        while ((size + list.size()) == elements.length) {
             extendArray();
         }
         for (int i = 0; i < list.size(); i++) {
@@ -87,10 +82,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public boolean isEmpty() {
-        if (size == 0) {
-            return true;
-        }
-        return false;
+        return size == 0;
     }
 
     private void extendArray() {
