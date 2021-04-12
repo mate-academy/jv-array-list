@@ -4,28 +4,27 @@ import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    private static final int DEFAULT_ARRAY_CAPACITY = 10;
-    private static final Object[] EMPTY_ARRAY = {};
-    private Object[] objectsArray = EMPTY_ARRAY;
-    private int capacity;
+    private T[] objectsArray = (T[]) new Object[]{};
+    private int size;
 
     private Object[] grow() {
+        int defaultCapacity = 10;
         int oldCapacity = objectsArray.length;
-        int newCapacity = oldCapacity + (oldCapacity >> 1) + 1;
+        int newCapacity = oldCapacity + (oldCapacity >> 1);
         if (oldCapacity > 0) {
             return objectsArray = Arrays.copyOf(objectsArray, newCapacity);
         }
-        return objectsArray = new Object[Math.max(DEFAULT_ARRAY_CAPACITY, newCapacity)];
+        return objectsArray = (T[]) new Object[Math.max(defaultCapacity, newCapacity)];
     }
 
     private void indexInBoundsCheck(int index) {
-        if (index >= capacity || index < 0) {
+        if (index >= size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Index is out of bounds");
         }
     }
 
     public int getIndexFromArrayOfRequiredElement(T element) {
-        for (int i = 0; i < capacity; i++) {
+        for (int i = 0; i < size; i++) {
             if (element == objectsArray[i] || element != null && element.equals(objectsArray[i])) {
                 return i;
             }
@@ -35,26 +34,26 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        add(value, capacity);
+        add(value, size);
     }
 
     @Override
     public void add(T value, int index) {
-        if (index > capacity || index < 0) {
+        if (index > size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Index out of bound");
         }
         if (index == objectsArray.length) {
-            objectsArray = grow();
+            objectsArray = (T[]) grow();
         }
-        if (index < capacity) {
-            Object[] buffer = new Object[capacity - index];
-            System.arraycopy(objectsArray, index, buffer, 0, capacity - index);
+        if (index < size) {
+            Object[] buffer = new Object[size - index];
+            System.arraycopy(objectsArray, index, buffer, 0, size - index);
             objectsArray[index] = value;
             System.arraycopy(buffer, 0, objectsArray, index + 1, buffer.length);
         } else {
             objectsArray[index] = value;
         }
-        capacity++;
+        size++;
     }
 
     @Override
@@ -89,18 +88,18 @@ public class ArrayList<T> implements List<T> {
         indexInBoundsCheck(index);
         Object oldElement = objectsArray[index];
         System.arraycopy(objectsArray, index + 1, objectsArray,
-                index, capacity - index - 1);
-        capacity--;
+                index, size - index - 1);
+        size--;
         return (T) oldElement;
     }
 
     @Override
     public int size() {
-        return capacity;
+        return size;
     }
 
     @Override
     public boolean isEmpty() {
-        return capacity == 0;
+        return size == 0;
     }
 }
