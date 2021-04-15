@@ -7,6 +7,7 @@ public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_ARRAY_CAPACITY = 10;
     private T[] objectsArray = (T[]) new Object[]{};
     private int size;
+
     @Override
     public void add(T value) {
         add(value, size);
