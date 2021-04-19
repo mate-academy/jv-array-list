@@ -6,7 +6,6 @@ import org.junit.Test;
 import java.util.NoSuchElementException;
 
 public class ArrayListTest {
-
     @Test
     public void addElementToArrayList() {
         ArrayList<String> arrayList = new ArrayList<>();
@@ -49,6 +48,7 @@ public class ArrayListTest {
         Assert.assertEquals("Test failed! Size of array should be " + 6 + "but it is "
                 + arrayList.size(), 6, arrayList.size());
     }
+
 
     @Test(expected = ArrayListIndexOutOfBoundsException.class)
     public void addElementInTheNonExistentPosition() {
@@ -119,7 +119,28 @@ public class ArrayListTest {
                 "Private", actualResult);
         Assert.assertEquals(1, arrayList.size());
         Assert.assertNull("Test failed! Can't remove element by index ", arrayList.get(0));
+    }
 
+    @Test
+    public void removeElementFromFullArrayListByIndex() {
+        ArrayList<Integer> arrayList = new ArrayList<>();
+        arrayList.add(0);
+        arrayList.add(1);
+        arrayList.add(2);
+        arrayList.add(3);
+        arrayList.add(4);
+        arrayList.add(5);
+        arrayList.add(6);
+        arrayList.add(7);
+        arrayList.add(8);
+        arrayList.add(9);
+        Assert.assertEquals(10, arrayList.size());
+        Integer actualResult = arrayList.remove(9);
+        Assert.assertEquals(String.format("Test failed! Returned value should be %d, "
+                + "but was %d\n", 9, actualResult), 9, actualResult.longValue());
+        int actualSize = arrayList.size();
+        Assert.assertEquals(String.format("Test failed! Size of array after removing element "
+                + "should be %d, but it is %d\n", 9, actualSize), 9, actualSize);
     }
 
     @Test(expected = ArrayListIndexOutOfBoundsException.class)
@@ -215,7 +236,6 @@ public class ArrayListTest {
                 + arrayList.size(), 2, arrayList.size());
         Assert.assertNull("Test failed! Can't set value by special position",
                 arrayList.get(0));
-
     }
 
     @Test(expected = ArrayListIndexOutOfBoundsException.class)
