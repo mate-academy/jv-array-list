@@ -1,97 +1,87 @@
 package core.basesyntax;
 
 import java.util.NoSuchElementException;
-import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
+    public static final int DEFAULT_CAPACITY = 10;
     private int capacity;
     private T[] array;
     private int size;
 
     public ArrayList() {
-        this.capacity = 10;
-        this.array = (T[]) new Object[capacity];
-        this.size = 0;
+        grow(DEFAULT_CAPACITY);
+        array = (T[]) new Object[capacity];
+        size = 0;
     }
 
     @Override
     public void add(T value) {
-        if (this.size == this.capacity) {
-            this.capacity = this.capacity + this.capacity / 2;
-
+        if (size == capacity) {
+            grow(capacity + capacity / 2);
         }
-        T[] copyArray = (T[]) new Object[this.capacity];
-        System.arraycopy(this.array, 0, copyArray, 0, this.array.length);
-        this.array = (T[]) new Object[this.capacity];
-        System.arraycopy(copyArray, 0, this.array, 0, copyArray.length);
-        this.array[size] = value;
-        this.size++;
+        T[] copyArray = (T[]) new Object[capacity];
+        System.arraycopy(array, 0, copyArray, 0, array.length);
+        array = (T[]) new Object[capacity];
+        System.arraycopy(copyArray, 0, array, 0, copyArray.length);
+        array[size] = value;
+        size++;
     }
 
     @Override
     public void add(T value, int index) {
-        isIndexCorrect(index, index > this.size);
+        isIndexCorrect(index, index > size);
 
-        if (this.size == this.capacity) {
-            this.capacity = this.capacity + this.capacity / 2;
+        if (size == capacity) {
+            grow(capacity + capacity / 2);
         }
 
         T[] copyArray = (T[]) new Object[capacity];
         for (int i = 0; i < copyArray.length; i++) {
             if (i < index) {
-                copyArray[i] = this.array[i];
+                copyArray[i] = array[i];
             } else if (i == index) {
                 copyArray[i] = value;
             } else {
-                copyArray[i] = this.array[i - 1];
+                copyArray[i] = array[i - 1];
             }
         }
-        this.array = copyArray;
-        this.size++;
+        array = copyArray;
+        size++;
     }
 
     @Override
     public void addAll(List<T> list) {
-        if (this.array.length + list.size() < this.capacity) {
-            this.capacity = this.capacity + this.capacity / 2;
-            for (int i = 0; i < list.size(); i++) {
-                this.array[this.size] = list.get(i);
-                this.size++;
-            }
-        } else {
-            for (int i = 0; i < list.size(); i++) {
-                this.array[this.size] = list.get(i);
-                this.size++;
-            }
+        for (int i = 0; i < list.size(); i++) {
+            add(list.get(i));
         }
     }
 
     @Override
     public T get(int index) {
-        isIndexCorrect(index, index >= this.size);
-        return this.array[index];
+        isIndexCorrect(index, index >= size);
+        return array[index];
     }
 
     @Override
     public void set(T value, int index) {
-        isIndexCorrect(index, index >= this.size);
-        this.array[index] = value;
+        isIndexCorrect(index, index >= size);
+        array[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        isIndexCorrect(index, index > this.size);
-        T removedElement = this.array[index];
-        System.arraycopy(array, index + 1, array, index, this.size - index);
-        this.size--;
+        isIndexCorrect(index, index > size);
+        T removedElement = array[index];
+        System.arraycopy(array, index + 1, array, index, size - index);
+        size--;
         return removedElement;
     }
 
     @Override
     public T remove(T element) {
-        for (int i = 0; i < this.size; i++) {
-            if (Objects.equals(element, array[i])) {
-                return this.remove(i);
+        for (int i = 0; i < size; i++) {
+            if (element == array[i] || element != null && element.equals(array[i])) {
+                return remove(i);
             }
         }
         throw new NoSuchElementException("No such element here");
@@ -99,20 +89,21 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public int size() {
-        return this.size;
+        return size;
     }
 
     @Override
     public boolean isEmpty() {
-        if (this.size > 0) {
-            return false;
-        }
-        return true;
+        return size == 0;
     }
 
-    private void isIndexCorrect(int index, boolean b) {
-        if (b || index < 0) {
+    private void isIndexCorrect(int index, boolean indexLessThanArraySize) {
+        if (indexLessThanArraySize || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Wrong index");
         }
+    }
+
+    private void grow(int i) {
+        capacity = i;
     }
 }
