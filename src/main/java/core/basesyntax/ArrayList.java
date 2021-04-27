@@ -9,20 +9,14 @@ public class ArrayList<T> implements List<T> {
     private int size;
 
     public ArrayList() {
-        grow(DEFAULT_CAPACITY);
+        capacity = DEFAULT_CAPACITY;
         array = (T[]) new Object[capacity];
         size = 0;
     }
 
     @Override
     public void add(T value) {
-        if (size == capacity) {
-            grow(capacity + capacity / 2);
-        }
-        T[] copyArray = (T[]) new Object[capacity];
-        System.arraycopy(array, 0, copyArray, 0, array.length);
-        array = (T[]) new Object[capacity];
-        System.arraycopy(copyArray, 0, array, 0, copyArray.length);
+        grow();
         array[size] = value;
         size++;
     }
@@ -30,22 +24,9 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         isIndexCorrect(index, index > size);
-
-        if (size == capacity) {
-            grow(capacity + capacity / 2);
-        }
-
-        T[] copyArray = (T[]) new Object[capacity];
-        for (int i = 0; i < copyArray.length; i++) {
-            if (i < index) {
-                copyArray[i] = array[i];
-            } else if (i == index) {
-                copyArray[i] = value;
-            } else {
-                copyArray[i] = array[i - 1];
-            }
-        }
-        array = copyArray;
+        grow();
+        System.arraycopy(array, index, array, index + 1, size - index);
+        array[index] = value;
         size++;
     }
 
@@ -103,7 +84,12 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private void grow(int i) {
-        capacity = i;
+    private void grow() {
+        if (size == capacity) {
+            capacity = capacity + capacity / 2;
+        }
+        T[] copyArray = (T[]) new Object[capacity];
+        System.arraycopy(array, 0, copyArray, 0, array.length);
+        array = copyArray;
     }
 }
