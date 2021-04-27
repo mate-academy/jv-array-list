@@ -53,7 +53,9 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         isIndexCorrect(index, index > size);
         T removedElement = array[index];
-        System.arraycopy(array, index + 1, array, index, size - index);
+        if (size - 1 - index >= 0) {
+            System.arraycopy(array, index + 1, array, index, size - 1 - index);
+        }
         size--;
         return removedElement;
     }
