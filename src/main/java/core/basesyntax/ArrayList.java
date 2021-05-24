@@ -20,7 +20,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (!(isValid(index) || (index == size))) {
+        if (index < 0 || index > size) {
             throw new core.basesyntax.ArrayListIndexOutOfBoundsException("Wrong index");
         }
         System.arraycopy(array, index, array, index + 1, size - index);
@@ -37,30 +37,23 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (isValid(index)) {
-            return array[index];
-        }
-        throw new core.basesyntax.ArrayListIndexOutOfBoundsException("Wrong index!");
+        indexValidation(index);
+        return array[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (isValid(index)) {
-            array[index] = value;
-        }
-        throw new core.basesyntax.ArrayListIndexOutOfBoundsException("Wrong index!");
-
+        indexValidation(index);
+        array[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (isValid(index)) {
-            T result = array[index];
-            System.arraycopy(array, index + 1, array, index, size - index - 1);
-            size--;
-            return result;
-        }
-        throw new core.basesyntax.ArrayListIndexOutOfBoundsException("Wrong index!");
+        indexValidation(index);
+        T result = array[index];
+        System.arraycopy(array, index + 1, array, index, size - index - 1);
+        size--;
+        return result;
     }
 
     @Override
@@ -88,7 +81,9 @@ public class ArrayList<T> implements List<T> {
                 + (array.length >> 2));
     }
 
-    private boolean isValid(int index) {
-        return index >= 0 && index < size;
+    private void indexValidation(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Wrong index");
+        }
     }
 }
