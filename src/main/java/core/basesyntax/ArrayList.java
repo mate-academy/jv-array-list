@@ -74,9 +74,7 @@ public class ArrayList<T> implements List<T> {
     public T remove(T element) {
         for (int index = 0; index < size; index++) {
             if (Objects.equals(array[index], element)) {
-                System.arraycopy(array, index + 1, array, index, size - index);
-                size--;
-                return element;
+                return remove(i);
             }
         }
         throw new NoSuchElementException("NoSuchElement");
