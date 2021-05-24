@@ -47,9 +47,8 @@ public class ArrayList<T> implements List<T> {
     public void set(T value, int index) {
         if (isValid(index)) {
             array[index] = value;
-        } else {
-            throw new core.basesyntax.ArrayListIndexOutOfBoundsException("Wrong index!");
         }
+        throw new core.basesyntax.ArrayListIndexOutOfBoundsException("Wrong index!");
 
     }
 
