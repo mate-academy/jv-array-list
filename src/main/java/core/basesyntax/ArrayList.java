@@ -3,27 +3,21 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    private final int startLength = 10;
-    private T[] list = (T[]) (new Object[startLength]);
+    private static final int DEFAULT_CAPACITY = 10;
+    private T[] list = (T[]) (new Object[DEFAULT_CAPACITY]);
     private int arraySize = 0;
 
     @Override
     public void add(T value) {
-        list[arraySize] = value;
-        arraySize++;
+        list[arraySize++] = value;
         sizeControl();
     }
 
     @Override
     public void add(T value, int index) {
-        if (index <= size() && index >= 0) {
-            T temp = list[index];
+        if (index <= arraySize && index >= 0) {
+            System.arraycopy(list, index, list, index + 1, arraySize - index);
             list[index] = value;
-            for (int i = (index + 1); i < list.length; i++) {
-                value = list[i];
-                list[i] = temp;
-                temp = value;
-            }
             arraySize++;
             sizeControl();
         } else {
@@ -54,9 +48,7 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         indexError(index);
         T removeValue = list[index];
-        for (int i = index; i < (list.length - 1); i++) {
-            list[i] = list[i + 1];
-        }
+        System.arraycopy(list, index + 1, list, index, arraySize - index);
         arraySize--;
         return removeValue;
     }
@@ -64,17 +56,11 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T value) {
         for (int i = 0; i < arraySize; i++) {
-            if (value != null && value.equals(list[i])) {
-                T removeValue = list[i];
-                remove(i);
-                return removeValue;
-            }
-            if (value == null && value == list[i]) {
-                remove(i);
-                return null;
+            if (value == list[i] || value != null && value.equals(list[i])) {
+                return remove(i);
             }
         }
-        throw new NoSuchElementException("No found!!!");
+        throw new NoSuchElementException("No found value: " + value);
     }
 
     @Override
@@ -90,19 +76,14 @@ public class ArrayList<T> implements List<T> {
     private void sizeControl() {
         if (arraySize == list.length) {
             T[] temp = (T[]) new Object[list.length + list.length / 2];
-            for (int i = 0; i < list.length; i++) {
-                temp[i] = list[i];
-            }
+            System.arraycopy(list, 0, temp, 0, arraySize);
             list = temp;
         }
     }
 
     private void indexError(int index) {
-        if (index >= arraySize) {
-            throw new ArrayListIndexOutOfBoundsException("Index error!!!");
-        }
-        if (index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index is negative!!!");
+        if (index >= arraySize || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("index " + index + " no found!!!");
         }
     }
 }
