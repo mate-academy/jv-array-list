@@ -83,7 +83,7 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    public void checkSize(int size) {
+    private void checkSize(int size) {
         if (size >= MAXIMUM_CAPACITY) {
             increaseCapacity();
         }
