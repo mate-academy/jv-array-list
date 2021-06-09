@@ -15,89 +15,59 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (isFull()) {
-            increaseCapacity();
-        }
+        checkSize(size);
         array[size] = value;
         size++;
     }
 
     @Override
     public void add(T value, int index) {
-        if (index > size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Your index is out of Bounds; "
-                    + "index: " + index + " size: " + size);
+        if (index == size) {
+            add(value);
+            return;
         }
-        if (size + 1 >= MAXIMUM_CAPACITY) {
-            increaseCapacity();
-        }
-        @SuppressWarnings("unchecked") T[] partOfArray = (T[]) new Object[size - index + 1];
-        System.arraycopy(array, index, partOfArray, 0, size - index + 1);
+        validateIndex(index);
+        checkSize(size + 1);
+
+        System.arraycopy(array, index, array, index + 1, size - index);
         array[index] = value;
-        System.arraycopy(partOfArray, 0, array, index + 1, partOfArray.length);
         size++;
     }
 
     @Override
     public void addAll(List<T> list) {
-        @SuppressWarnings("unchecked") T[] arrayToAdd = (T[]) new Object[list.size()];
-        for (int i = 0; i < list.size(); i++) {
-            arrayToAdd[i] = list.get(i);
+        for (int index = 0; index < list.size(); index++) {
+            add(list.get(index));
         }
-        if (size + list.size() >= MAXIMUM_CAPACITY) {
-            increaseCapacity();
-        }
-        System.arraycopy(arrayToAdd, 0, array, size, arrayToAdd.length);
-        size += list.size();
     }
 
     @Override
     public T get(int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Your index is out of Bounds; "
-                    + "index: " + index + " size: " + size);
-        }
+        validateIndex(index);
         return array[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Your index is out of Bounds; "
-                    + "index: " + index + " size: " + size);
-        }
-        if (size + 1 == MAXIMUM_CAPACITY) {
-            increaseCapacity();
-        }
+        validateIndex(index);
         array[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Your index is out of Bounds; "
-                    + "index: " + index + " size: " + size);
-        }
+        validateIndex(index);
         T value = array[index];
-        if (index + 1 == MAXIMUM_CAPACITY) {
-          array[index] = null;
-        } else {
-            System.arraycopy(array, index + 1, array, index, size);
-        }
+        System.arraycopy(array, index + 1, array, index, size - index - 1);
         size--;
         return value;
     }
 
     @Override
     public T remove(T element) {
-        T value;
         for (int index = 0; index < size; index++) {
             if (array[index] == element
                     || (array[index] != null && array[index].equals(element))) {
-                value = array[index];
-                System.arraycopy(array, index + 1, array, index, size);
-                size--;
-                return value;
+                return remove(index);
             }
         }
         throw new NoSuchElementException("No such element in ArrayList");
@@ -113,8 +83,10 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    public boolean isFull() {
-        return size == MAXIMUM_CAPACITY;
+    public void checkSize(int size) {
+        if (size >= MAXIMUM_CAPACITY) {
+            increaseCapacity();
+        }
     }
 
     private void increaseCapacity() {
@@ -122,5 +94,12 @@ public class ArrayList<T> implements List<T> {
         @SuppressWarnings("unchecked") T[] newArray = (T[]) new Object[MAXIMUM_CAPACITY];
         System.arraycopy(array, 0, newArray, 0, array.length);
         array = newArray;
+    }
+
+    private void validateIndex(int index) {
+        if (index >= size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Your index is out of Bounds; "
+                    + "index: " + index + " size: " + size);
+        }
     }
 }
