@@ -18,4 +18,6 @@ public interface List<E> {
     int size();
 
     boolean isEmpty();
+
+    int indexOf(E element);
 }
