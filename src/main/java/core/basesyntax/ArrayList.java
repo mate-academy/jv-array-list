@@ -4,6 +4,7 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
+    private static final double MULTIPLIED_VALUE = 1.5;
     private int sizeOfArray;
     private T[] values;
 
@@ -53,7 +54,7 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         checkIndex(index);
         T oldValue = values[index];
-        System.arraycopy(values, index + 1, values, index, values.length - (index + 1));
+        System.arraycopy(values, index + 1, values, index, sizeOfArray - (index + 1));
         sizeOfArray--;
         return oldValue;
     }
@@ -62,10 +63,7 @@ public class ArrayList<T> implements List<T> {
     public T remove(T element) {
         for (int i = 0; i < sizeOfArray; i++) {
             if (values[i] == element || values[i] != null && values[i].equals(element)) {
-                T oldValue = values[i];
-                System.arraycopy(values, i + 1, values, i, values.length - (i + 1));
-                sizeOfArray--;
-                return oldValue;
+                return remove(i);
             }
         }
         throw new NoSuchElementException("Element with value " + element + " does not exist");
@@ -83,9 +81,8 @@ public class ArrayList<T> implements List<T> {
 
     private void checkCapacity() {
         if (sizeOfArray == values.length) {
-            T[] oldArray = (T[]) new Object[sizeOfArray];
-            System.arraycopy(values, 0, oldArray, 0, values.length);
-            values = (T[]) new Object[(int) (sizeOfArray * 1.5)];
+            T[] oldArray = values;
+            values = (T[]) new Object[(int) (sizeOfArray * MULTIPLIED_VALUE)];
             System.arraycopy(oldArray, 0, values, 0, oldArray.length);
         }
     }
