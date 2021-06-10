@@ -131,6 +131,6 @@ public class ArrayList<E> implements List<E> {
 
     @Override
     public boolean isEmpty() {
-        return (size == 0);
+        return size == 0;
     }
 }
