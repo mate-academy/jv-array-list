@@ -5,7 +5,7 @@ import java.util.NoSuchElementException;
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private T[] elementData;
-    private int size = 0;
+    private int size;
 
     public ArrayList() {
         elementData = (T[]) new Object[DEFAULT_CAPACITY];
@@ -17,17 +17,17 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        checkAndGrow();
+        checkCapacity();
         elementData[size] = value;
         size++;
     }
 
     @Override
     public void add(T value, int index) {
-        checkAndGrow();
         if (index > size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Invalid index " + index);
         }
+        checkCapacity();
         System.arraycopy(elementData, index, elementData, index + 1, size - index);
         elementData[index] = value;
         size++;
@@ -82,9 +82,9 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void checkAndGrow() {
+    private void checkCapacity() {
         if (size == elementData.length) {
-            T[] newArray = (T[]) new Object[elementData.length + (elementData.length >> 1) + 1];
+            T[] newArray = (T[]) new Object[elementData.length + (elementData.length >> 1)];
             System.arraycopy(elementData, 0, newArray, 0, size);
             elementData = newArray;
         }
