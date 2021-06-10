@@ -1,21 +1,23 @@
 package core.basesyntax;
 
-public interface List<T> {
-    void add(T value);
+public interface List<E> {
+    void add(E value);
 
-    void add(T value, int index);
+    void add(E value, int index);
 
-    void addAll(List<T> list);
+    void addAll(List<E> list);
 
-    T get(int index);
+    E get(int index);
 
-    void set(T value, int index);
+    void set(E value, int index);
 
-    T remove(int index);
+    E remove(int index);
 
-    T remove(T element);
+    E remove(E element);
 
     int size();
 
     boolean isEmpty();
+
+    int indexOf(E element);
 }
