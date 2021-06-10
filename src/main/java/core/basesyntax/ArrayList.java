@@ -38,7 +38,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void addAll(List<T> list) {
         for (int i = 0; i < list.size(); i++) {
-            add((T) list.get(i));
+            add(list.get(i));
         }
     }
 
@@ -56,9 +56,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("The index is invalid!");
-        }
+        checkIndex(index + 1);
         T returnValue = (T) arrayList[index];
         System.arraycopy(arrayList, index + 1,
                 arrayList, index,
