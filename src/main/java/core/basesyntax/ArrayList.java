@@ -83,6 +83,9 @@ public class ArrayList<E> implements List<E> {
     }
 
     private void grow() {
+        if (capacity > 1400000000) {
+            throw new RuntimeException("So big capacity!");
+        }
         E[] valuesBuffer = objects;
         capacity = capacity + (capacity >> 1);
         objects = (E[]) new Object[capacity];
