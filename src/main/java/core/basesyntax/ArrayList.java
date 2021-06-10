@@ -25,10 +25,10 @@ public class ArrayList<T> implements List<T> {
                     + " index is incorrect " + index);
         }
         if (index == size) {
-            checkAndGrow();
             add(value);
             return;
         }
+        checkAndGrow();
         moveForward(index);
         list[index] = value;
     }
