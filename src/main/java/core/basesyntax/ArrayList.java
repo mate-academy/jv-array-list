@@ -6,7 +6,7 @@ import java.util.NoSuchElementException;
 public class ArrayList<T> implements List<T> {
 
     private static final int DEFAULT_CAPACITY = 10;
-    private Object[] storage;
+    private T[] storage;
     private int size;
 
     public ArrayList() {
@@ -41,39 +41,33 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        checkForAdd(index);
-        return (T) storage[index];
+        indexValidation(index);
+        return storage[index];
     }
 
     @Override
     public void set(T value, int index) {
-        checkForAdd(index);
+        indexValidation(index);
         storage[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        checkForAdd(index);
-        T oldValue = (T) storage[index];
-        if (size - 1 > index) {
-            System.arraycopy(storage, index + 1, storage, index, size - index);
-        }
+        indexValidation(index);
+        T oldValue = storage[index];
+        System.arraycopy(storage, index + 1, storage, index, size - index);
         size--;
         return oldValue;
     }
 
     @Override
     public T remove(T element) {
-        T oldValue;
         for (int i = 0; i < size; i++) {
             if (storage[i] == element || storage[i] != null && storage[i].equals(element)) {
-                oldValue = element;
-                System.arraycopy(storage, i + 1, storage, i, size - i);
-                size--;
-                return oldValue;
+                return remove(i);
             }
         }
-        throw new NoSuchElementException();
+        throw new NoSuchElementException("Element was not found");
     }
 
     @Override
@@ -87,12 +81,13 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void grow() {
-        int oldCapacity = storage.length;
-        int newCapacity = oldCapacity + oldCapacity / 2;
-        storage = Arrays.copyOf(storage, newCapacity);
+        int newCapacity = storage.length + storage.length / 2;
+        T[] newStorage = (T[]) new Object[newCapacity];
+        System.arraycopy(storage, 0, newStorage, 0, size);
+        storage = newStorage;
     }
 
-    private void checkForAdd(int index) {
+    private void indexValidation(int index) {
         if (index >= size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Invalid index");
         }
