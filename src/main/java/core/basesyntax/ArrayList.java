@@ -6,16 +6,13 @@ public class ArrayList<E> implements List<E> {
     private static final int DEFAULT_CAPACITY = 10;
     private E[] objects;
     private int size;
-    private int capacity;
 
     public ArrayList() {
         objects = (E[]) new Object[DEFAULT_CAPACITY];
-        capacity = DEFAULT_CAPACITY;
     }
 
     public ArrayList(int capacity) {
         objects = (E[]) new Object[capacity];
-        this.capacity = capacity;
     }
 
     @Override
@@ -25,7 +22,7 @@ public class ArrayList<E> implements List<E> {
 
     @Override
     public void add(E value, int index) {
-        if (size == capacity) {
+        if (size == objects.length) {
             grow();
         }
         if (index > size || index < 0) {
@@ -109,8 +106,8 @@ public class ArrayList<E> implements List<E> {
 
     private void grow() {
         E[] valuesBuffer = objects;
-        capacity = capacity + (capacity >> 1);
-        objects = (E[]) new Object[capacity];
+  
+        objects = (E[]) new Object[objects.length + (objects.length >> 1)];
         System.arraycopy(valuesBuffer, 0, objects, 0,valuesBuffer.length);
     }
 
