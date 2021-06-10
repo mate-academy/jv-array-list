@@ -10,6 +10,7 @@ public class ArrayList<T> implements List<T> {
 
     @SuppressWarnings("unchecked")
     public ArrayList() {
+        size = 0;
         array = (T[]) new Object[MAXIMUM_CAPACITY];
     }
 
