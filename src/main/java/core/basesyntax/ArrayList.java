@@ -22,7 +22,7 @@ public class ArrayList<T> implements List<T> {
     public void add(T value, int index) {
         if (index > sizeOfArray || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Index: " + index
-                    + " is greater than array size: " + sizeOfArray);
+                    + " is invalid for array size: " + sizeOfArray);
         }
         System.arraycopy(values, index, values, index + 1, sizeOfArray - index);
         values[index] = value;
