@@ -7,7 +7,8 @@ public class ArrayList<T> implements List<T> {
     private int size;
     private transient T[] elementData;
 
-    public ArrayList() { elementData = (T[]) new Object[DEFAULT_CAPACITY];
+    public ArrayList() {
+        elementData = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
     @Override
@@ -51,8 +52,7 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         checkIndex(index);
         final T value = elementData[index];
-        T[] newElementData = elementData;
-        System.arraycopy(newElementData, index + 1, elementData, index, newElementData.length
+        System.arraycopy(elementData, index + 1, elementData, index, size
                 - index - 1);
         size--;
         return value;
@@ -81,7 +81,7 @@ public class ArrayList<T> implements List<T> {
 
     private T[] checkArraySize() {
         if (size == elementData.length) {
-            int newArraySize = (elementData.length) + (elementData.length >> 1);
+            int newArraySize = elementData.length + (elementData.length >> 1);
             T[] newElementData = (T[]) new Object[newArraySize];
             System.arraycopy(elementData, 0, newElementData, 0, elementData.length);
             return newElementData;
