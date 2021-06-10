@@ -15,6 +15,8 @@ public interface List<T> {
 
     T remove(T element);
 
+    Object[] toArray(List<T> list);
+
     int size();
 
     boolean isEmpty();
