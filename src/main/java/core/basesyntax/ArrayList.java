@@ -111,7 +111,7 @@ public class ArrayList<E> implements List<E> {
         System.arraycopy(valuesBuffer, 0, objects, 0,valuesBuffer.length);
     }
 
-    private void indexException() {
+    private void throwIndexException() {
         throw new ArrayListIndexOutOfBoundsException("There is no index like that!");
     }
 }
