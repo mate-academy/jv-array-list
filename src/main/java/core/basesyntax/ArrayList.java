@@ -47,7 +47,7 @@ public class ArrayList<E> implements List<E> {
 
     @Override
     public E get(int index) {
-        if (size == 0 || index >= size || index < 0) {
+        if (index >= size || index < 0) {
             indexException();;
         }
         return objects[index];
@@ -74,18 +74,12 @@ public class ArrayList<E> implements List<E> {
 
     @Override
     public E remove(int index) {
-        if (size == 0 || index > size || index < 0) {
+        if (index >= size || index < 0) {
             indexException();
         }
-        E whatIsRemoved;
-        if (index == size - 1) {
-            whatIsRemoved = get(index);
-            size--;
-            return whatIsRemoved;
-        }
-        whatIsRemoved = objects[index];
+        E whatIsRemoved = get(index);
         for (int t = index; t <= size - 1; t++) {
-            if (t == size) {
+            if (t == size || t + 1 == size) {
                 break;
             }
             objects[t] = objects[t + 1];
