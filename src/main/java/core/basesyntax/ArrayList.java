@@ -4,16 +4,15 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    private int size = 0;
+    private int size;
     private transient T[] elementData;
 
-    public ArrayList() {
-        this.elementData = (T[]) new Object[DEFAULT_CAPACITY];
+    public ArrayList() { elementData = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
     @Override
     public void add(T value) {
-        elementData = expandArray();
+        elementData = checkArraySize();
         elementData[size] = value;
         size++;
     }
@@ -23,7 +22,7 @@ public class ArrayList<T> implements List<T> {
         if (index > size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Index is not within the array");
         }
-        elementData = expandArray();
+        elementData = checkArraySize();
         System.arraycopy(elementData, index, elementData, index + 1, size - index);
         elementData[index] = value;
         size++;
@@ -38,23 +37,21 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        isIndexExist(index);
+        checkIndex(index);
         return elementData[index];
     }
 
     @Override
     public void set(T value, int index) {
-        isIndexExist(index);
+        checkIndex(index);
         elementData[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        isIndexExist(index);
+        checkIndex(index);
         final T value = elementData[index];
         T[] newElementData = elementData;
-        elementData = (T[]) new Object[newElementData.length - 1];
-        System.arraycopy(newElementData, 0, elementData, 0, index);
         System.arraycopy(newElementData, index + 1, elementData, index, newElementData.length
                 - index - 1);
         size--;
@@ -82,7 +79,7 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private T[] expandArray() {
+    private T[] checkArraySize() {
         if (size == elementData.length) {
             int newArraySize = (elementData.length) + (elementData.length >> 1);
             T[] newElementData = (T[]) new Object[newArraySize];
@@ -92,7 +89,7 @@ public class ArrayList<T> implements List<T> {
         return elementData;
     }
 
-    private void isIndexExist(int index) {
+    private void checkIndex(int index) {
         if (index >= size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Index is not within the array");
         }
