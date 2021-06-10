@@ -37,9 +37,8 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        Object[] listArr = toArray(list);
-        for (int i = 0; i < list.size(); i ++) {
-            add((T) listArr[i]);
+        for (int i = 0; i < list.size(); i++) {
+            add((T) list.get(i));
         }
     }
 
@@ -57,7 +56,9 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(int index) {
-        checkIndex(index);
+        if (index >= size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("The index is invalid!");
+        }
         T returnValue = (T) arrayList[index];
         System.arraycopy(arrayList, index + 1,
                 arrayList, index,
@@ -86,13 +87,9 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void ensureCapacity() {
-        if (size + 1 > arrayList.length) {
+        if (size >= arrayList.length) {
             grow();
         }
-    }
-
-    private String getErrorOutOfBoundsMessage(int index) {
-        return "Index: " + index + ", Size: " + size;
     }
 
     private Object[] grow() {
@@ -105,7 +102,7 @@ public class ArrayList<T> implements List<T> {
 
     private void checkIndex(int index) {
         if (index > size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException(getErrorOutOfBoundsMessage(index));
+            throw new ArrayListIndexOutOfBoundsException("The index is invalid!");
         }
     }
 }
