@@ -24,6 +24,7 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayListIndexOutOfBoundsException("Index: " + index
                     + " is invalid for array size: " + sizeOfArray);
         }
+        checkCapacity();
         System.arraycopy(values, index, values, index + 1, sizeOfArray - index);
         values[index] = value;
         sizeOfArray++;
