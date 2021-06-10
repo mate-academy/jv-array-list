@@ -4,32 +4,30 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final double INCREASING_RATE = 1.5;
-    private static int MAXIMUM_CAPACITY = 10;
+    private static final int DEFAULT_CAPACITY = 10;
     private T[] array;
     private int size;
 
     @SuppressWarnings("unchecked")
     public ArrayList() {
-        size = 0;
-        array = (T[]) new Object[MAXIMUM_CAPACITY];
+        array = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
     @Override
     public void add(T value) {
-        checkSize(size);
+        checkSize();
         array[size] = value;
         size++;
     }
 
     @Override
     public void add(T value, int index) {
+        checkIndexForAdd(index);
+        checkSize();
         if (index == size) {
             add(value);
             return;
         }
-        checkIndex(index);
-        checkSize(size + 1);
-
         System.arraycopy(array, index, array, index + 1, size - index);
         array[index] = value;
         size++;
@@ -84,17 +82,24 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void checkSize(int size) {
-        if (size >= MAXIMUM_CAPACITY) {
+    private void checkSize() {
+        if (size + 1 >= array.length) {
             increaseCapacity();
         }
     }
 
     private void increaseCapacity() {
-        MAXIMUM_CAPACITY = (int)(MAXIMUM_CAPACITY * INCREASING_RATE);
-        @SuppressWarnings("unchecked") T[] newArray = (T[]) new Object[MAXIMUM_CAPACITY];
+        int newCapacity = (int)(size * INCREASING_RATE);
+        T[] newArray = (T[]) new Object[newCapacity];
         System.arraycopy(array, 0, newArray, 0, array.length);
         array = newArray;
+    }
+
+    private void checkIndexForAdd(int index) {
+        if (index > size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Your index is out of Bounds; "
+                    + "index: " + index + " size: " + size);
+        }
     }
 
     private void checkIndex(int index) {
