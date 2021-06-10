@@ -1,27 +1,14 @@
 package core.basesyntax;
 
-import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private int size;
-    private int capacity = DEFAULT_CAPACITY;
     private T[] list;
 
     public ArrayList() {
-        list = (T[]) new Object[capacity];
-    }
-
-    public void checkingIndex(int incomingIndex) {
-        if (incomingIndex < 0 || incomingIndex >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Can not find index : " + incomingIndex);
-        }
-    }
-
-    public void growCapacity() {
-        capacity += capacity >> 1;
-        list = Arrays.copyOf(list,capacity);
+        list = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
     @Override
@@ -34,10 +21,10 @@ public class ArrayList<T> implements List<T> {
         if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException("Can not find index : " + index);
         }
-        if (size == capacity) {
+        if (size == list.length) {
             growCapacity();
         }
-        System.arraycopy(list, index, list,index + 1, size - index);
+        System.arraycopy(list, index, list, index + 1, size - index);
         list[index] = value;
         size++;
     }
@@ -88,5 +75,16 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private void checkingIndex(int incomingIndex) {
+        if (incomingIndex < 0 || incomingIndex >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Can not find index : " + incomingIndex);
+        }
+    }
+
+    private void growCapacity() {
+        System.arraycopy(list, 0,
+                list = (T[]) new Object[list.length + (list.length << 1)], 0, size);
     }
 }
