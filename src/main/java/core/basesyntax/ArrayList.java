@@ -28,7 +28,7 @@ public class ArrayList<E> implements List<E> {
         if (index > size || index < 0) {
             throwIndexException();
         }
-        System.arraycopy(objects, index, objects,index + 1, objects.length - index - 1);
+        System.arraycopy(objects, index, objects,index + 1, size - index);
         objects[index] = value;
         size++;
     }
@@ -75,12 +75,6 @@ public class ArrayList<E> implements List<E> {
         E whatIsRemoved = objects[index];
 
         System.arraycopy(objects, index + 1, objects, index, size - index - 1);
-        //for (int t = index; t <= size - 1; t++) {
-        //    if (t == size || t + 1 == size) {
-        //        break;
-        //    }
-        //    objects[t] = objects[t + 1];
-        //}
         size--;
         return whatIsRemoved;
     }
