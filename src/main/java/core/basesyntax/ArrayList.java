@@ -11,6 +11,10 @@ public class ArrayList<T> implements List<T> {
         elementData = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
+    public ArrayList(int capacity) {
+        elementData = (T[]) new Object[capacity];
+    }
+
     @Override
     public void add(T value) {
         checkAndGrow();
@@ -80,7 +84,7 @@ public class ArrayList<T> implements List<T> {
 
     private void checkAndGrow() {
         if (size == elementData.length) {
-            T[] newArray = (T[]) new Object[elementData.length + (elementData.length >> 1)];
+            T[] newArray = (T[]) new Object[elementData.length + (elementData.length >> 1) + 1];
             System.arraycopy(elementData, 0, newArray, 0, size);
             elementData = newArray;
         }
