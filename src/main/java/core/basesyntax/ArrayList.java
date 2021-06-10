@@ -25,6 +25,7 @@ public class ArrayList<T> implements List<T> {
                     + " index is incorrect " + index);
         }
         if (index == size) {
+            checkAndGrow();
             add(value);
             return;
         }
@@ -79,12 +80,6 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void grow() {
-        T[] extendedList = (T[]) new Object[list.length + (list.length >> 1)];
-        System.arraycopy(list, 0, extendedList, 0, size);
-        list = extendedList;
-    }
-
     private void moveBack(int index) {
         System.arraycopy(list, index + 1, list, index, size - index - 1);
         size--;
@@ -93,11 +88,10 @@ public class ArrayList<T> implements List<T> {
     private void moveForward(int index) {
         System.arraycopy(list, index, list, index + 1, size - index);
         size++;
-
     }
 
     private void checkIndex(int index) {
-        if (index > size - 1 || index < 0) {
+        if (index >= size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Can't add element to list,"
                     + " index is incorrect " + index);
         }
@@ -107,5 +101,11 @@ public class ArrayList<T> implements List<T> {
         if (size >= list.length) {
             grow();
         }
+    }
+
+    private void grow() {
+        T[] extendedList = (T[]) new Object[list.length + (list.length >> 1)];
+        System.arraycopy(list, 0, extendedList, 0, size);
+        list = extendedList;
     }
 }
