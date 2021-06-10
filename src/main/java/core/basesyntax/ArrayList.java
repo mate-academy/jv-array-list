@@ -74,7 +74,7 @@ public class ArrayList<E> implements List<E> {
         }
         E whatIsRemoved = objects[index];
 
-        System.arraycopy(objects, index + 1, objects, index, objects.length - index - 1);
+        System.arraycopy(objects, index + 1, objects, index, size - index - 1);
         //for (int t = index; t <= size - 1; t++) {
         //    if (t == size || t + 1 == size) {
         //        break;
