@@ -8,7 +8,7 @@ public class ArrayList<T> implements List<T> {
     private int size;
 
     public ArrayList() {
-        this.elementData = (T[]) new Object[DEFAULT_CAPACITY];
+       elementData = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
     @Override
