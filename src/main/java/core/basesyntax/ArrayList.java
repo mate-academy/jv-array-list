@@ -26,11 +26,9 @@ public class ArrayList<E> implements List<E> {
             grow();
         }
         if (index > size || index < 0) {
-            indexException();;
+            throwIndexException();
         }
-        for (int t = size; t > index; t--) {
-            objects[t] = objects[t - 1];
-        }
+        System.arraycopy(objects, index, objects,index + 1, objects.length - index - 1);
         objects[index] = value;
         size++;
     }
@@ -45,7 +43,7 @@ public class ArrayList<E> implements List<E> {
     @Override
     public E get(int index) {
         if (index >= size || index < 0) {
-            indexException();;
+            throwIndexException();
         }
         return objects[index];
     }
@@ -64,7 +62,7 @@ public class ArrayList<E> implements List<E> {
     @Override
     public void set(E value, int index) {
         if (index >= size || index < 0) {
-            indexException();;
+            throwIndexException();
         }
         objects[index] = value;
     }
@@ -72,15 +70,17 @@ public class ArrayList<E> implements List<E> {
     @Override
     public E remove(int index) {
         if (index >= size || index < 0) {
-            indexException();
+            throwIndexException();
         }
-        E whatIsRemoved = get(index);
-        for (int t = index; t <= size - 1; t++) {
-            if (t == size || t + 1 == size) {
-                break;
-            }
-            objects[t] = objects[t + 1];
-        }
+        E whatIsRemoved = objects[index];
+
+        System.arraycopy(objects, index + 1, objects, index, objects.length - index - 1);
+        //for (int t = index; t <= size - 1; t++) {
+        //    if (t == size || t + 1 == size) {
+        //        break;
+        //    }
+        //    objects[t] = objects[t + 1];
+        //}
         size--;
         return whatIsRemoved;
     }
@@ -108,7 +108,7 @@ public class ArrayList<E> implements List<E> {
         E[] valuesBuffer = objects;
   
         objects = (E[]) new Object[objects.length + (objects.length >> 1)];
-        System.arraycopy(valuesBuffer, 0, objects, 0,valuesBuffer.length);
+        System.arraycopy(valuesBuffer, 0, objects, 0, valuesBuffer.length);
     }
 
     private void throwIndexException() {
