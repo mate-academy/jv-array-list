@@ -50,9 +50,7 @@ public class ArrayList<T> implements List<T> {
         if (index == size) {
             elementData[size] = value;
         } else if ((index < size) && (index >= ZERO_INDEX)) {
-            for (int i = size - 1; i >= index; i--) {
-                elementData[i + 1] = elementData[i];
-            }
+            System.arraycopy(elementData, index, elementData, index + 1, size - index);
             elementData[index] = value;
         }
         size++;
@@ -82,31 +80,23 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         checkIndex(index);
         T result = (T) elementData[index];
-        for (int i = index; i < size - 1; i++) {
-            elementData[i] = elementData[i + 1];
-        }
+        System.arraycopy(elementData, index + 1, elementData, index, size - index - 1);
         size--;
         return result;
     }
 
     @Override
     public T remove(T element) {
-        int koeffReWritten = -1;
         for (int i = 0; i < size; i++) {
             if ((elementData[i] == element) || ((elementData[i] != null)
                     && (elementData[i].equals(element)))) {
-                koeffReWritten = i;
-                break;
+                remove(i);
+                return element;
             }
+
         }
-        if ((koeffReWritten == size - 1) || ((koeffReWritten >= ZERO_INDEX)
-                && (koeffReWritten != -1))) {
-            remove(koeffReWritten);
-            return element;
-        } else {
-            throw new NoSuchElementException("Can’t find the element " + element
+        throw new NoSuchElementException("Can’t find the element " + element
                    + " in the array");
-        }
     }
 
     @Override
