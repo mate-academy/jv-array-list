@@ -15,7 +15,7 @@ public class ArrayList<T> implements List<T> {
 
     private void checkSize(int length) {
         int capacity = elementData.length;
-        while ((size == capacity) || (length + size > capacity)) {
+        while (length + size > capacity) {
             capacity = (int) (capacity * 1.5);
             Object [] inheritElementData = new Object[capacity];
             System.arraycopy(elementData, 0, inheritElementData, 0, size);
