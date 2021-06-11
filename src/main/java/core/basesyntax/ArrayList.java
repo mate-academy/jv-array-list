@@ -6,28 +6,32 @@ public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private static final int ZERO_INDEX = 0;
     private static final int USUALLY_SIZE = 1;
-    private int capacity = DEFAULT_CAPACITY;
     private int size;
-    private Object[] elementData = new Object[DEFAULT_CAPACITY];
+    private Object[] elementData;
 
-    public void checkSize(int length) {
+    public ArrayList() {
+        elementData = new Object[DEFAULT_CAPACITY];
+    }
+
+    private void checkSize(int length) {
+        int capacity = elementData.length;
         while ((size == capacity) || (length + size > capacity)) {
-            capacity = (int) (capacity * 1.5 + 1);
+            capacity = (int) (capacity * 1.5);
             Object [] inheritElementData = new Object[capacity];
             System.arraycopy(elementData, 0, inheritElementData, 0, size);
             elementData = new Object[capacity];
-            System.arraycopy(inheritElementData, 0, elementData, 0, size);
+            elementData = inheritElementData;
         }
     }
 
-    public void checkGetIndex(int index) {
-        if ((index >= size) || (index < ZERO_INDEX)) {
+    private void checkIndex(int index) {
+        if (index >= size || index < ZERO_INDEX) {
             throw new ArrayListIndexOutOfBoundsException("Undefined index");
         }
     }
 
-    public void checkAddRemoveIndex(int index) {
-        if ((index > size) || (index < ZERO_INDEX)) {
+    private void checkAddIndex(int index) {
+        if (index > size || index < ZERO_INDEX) {
             throw new ArrayListIndexOutOfBoundsException("Undefined index");
         }
     }
@@ -41,7 +45,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        checkAddRemoveIndex(index);
+        checkAddIndex(index);
         checkSize(USUALLY_SIZE);
         if (index == size) {
             elementData[size] = value;
@@ -57,36 +61,32 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void addAll(List<T> list) {
         checkSize(list.size());
-        for (int i = size; i < size + list.size(); i++) {
-            elementData[i] = list.get(i - size);
+        for (int i = 0; i < list.size(); i++) {
+            add(list.get(i));
         }
-        size += list.size();
     }
 
     @Override
     public T get(int index) {
-        checkGetIndex(index);
+        checkIndex(index);
         return (T) elementData[index];
     }
 
     @Override
     public void set(T value, int index) {
-        checkGetIndex(index);
+        checkIndex(index);
         elementData[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if ((index >= 0) && (index < size)) {
-            T result = (T) elementData[index];
-            for (int i = index; i < size - 1; i++) {
-                elementData[i] = elementData[i + 1];
-            }
-            size--;
-            return result;
-        } else {
-            throw new ArrayListIndexOutOfBoundsException("Undefined index");
+        checkIndex(index);
+        T result = (T) elementData[index];
+        for (int i = index; i < size - 1; i++) {
+            elementData[i] = elementData[i + 1];
         }
+        size--;
+        return result;
     }
 
     @Override
@@ -116,6 +116,6 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public boolean isEmpty() {
-        return size == ZERO_INDEX;
+        return size == 0;
     }
 }
