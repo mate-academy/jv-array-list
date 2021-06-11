@@ -25,6 +25,9 @@ public class ArrayList<T> implements List<T> {
         if (index > size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Invalid index");
         }
+        if (size == storage.length) {
+            grow();
+        }
         System.arraycopy(storage, index, storage, index + 1, size - index);
         storage[index] = value;
         size++;
