@@ -60,9 +60,7 @@ public class ArrayList<T> implements List<T> {
         for (int i = 0; i < size; i++) {
             if (element == elementData[i] || element != null && element.equals(elementData[i])) {
                 int index = i;
-                T oldElement = (T) elementData[i];
-                System.arraycopy(elementData, index + 1, elementData, index, size - index - 1);
-                size--;
+                T oldElement = remove(index);
                 return oldElement;
             }
         }
@@ -79,12 +77,6 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private Object[] grow() {
-        Object[] newElementData = new Object[elementData.length + (elementData.length >> 1)];
-        System.arraycopy(elementData, 0, newElementData, 0, size);
-        return newElementData;
-    }
-
     private void checkSizeForAdd(int index) {
         if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException("index is invalid");
@@ -95,6 +87,12 @@ public class ArrayList<T> implements List<T> {
         if (size == elementData.length) {
             elementData = grow();
         }
+    }
+
+    private Object[] grow() {
+        Object[] newElementData = new Object[elementData.length + (elementData.length >> 1)];
+        System.arraycopy(elementData, 0, newElementData, 0, size);
+        return newElementData;
     }
 
     private void checkIndex(int index) {
