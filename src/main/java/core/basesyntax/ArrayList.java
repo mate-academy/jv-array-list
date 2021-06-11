@@ -52,9 +52,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(int index) {
-        if (index > size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("This index is incorrect");
-        }
+        checkIndex(index);
         T removedElement = myList[index];
         System.arraycopy(myList, index + 1, myList, index, size - 1 - index);
         size--;
