@@ -1,6 +1,5 @@
 package core.basesyntax;
 
-import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
@@ -54,7 +53,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         indexValidation(index);
-        T oldValue = storage[index];
+        final T oldValue = storage[index];
         System.arraycopy(storage, index + 1, storage, index, size - index - 1);
         storage[size - 1] = null;
         size--;
