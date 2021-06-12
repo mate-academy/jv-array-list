@@ -1,9 +1,8 @@
 package core.basesyntax;
 
+import java.util.NoSuchElementException;
 import org.junit.Assert;
 import org.junit.Test;
-
-import java.util.NoSuchElementException;
 
 public class ArrayListTest {
     @Test
@@ -95,6 +94,18 @@ public class ArrayListTest {
     }
 
     @Test
+    public void checkingResizeInAddByIndex() {
+        ArrayList<String> arrayList = new ArrayList<>();
+        for (int i = 0; i < 1000; i++) {
+            arrayList.add("First + " + i, 0);
+            Assert.assertEquals("Test failed! Size of array should be " + (i + 1) + "but it is "
+                    + arrayList.size(), i + 1, arrayList.size());
+            Assert.assertEquals("Test failed! Array can't resize correctly",
+                    "First + " + i, arrayList.get(0));
+        }
+    }
+
+    @Test
     public void removeElementFromArrayListByIndex() {
         ArrayList<String> arrayList = new ArrayList<>();
         arrayList.add("String");
@@ -149,7 +160,7 @@ public class ArrayListTest {
         arrayList.add("String");
         arrayList.add("Java");
         arrayList.add("Private");
-        arrayList.remove(5);
+        arrayList.remove(3);
     }
 
     @Test(expected = ArrayListIndexOutOfBoundsException.class)
