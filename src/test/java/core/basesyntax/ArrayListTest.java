@@ -5,6 +5,8 @@ import org.junit.Assert;
 import org.junit.Test;
 
 public class ArrayListTest {
+    private static final int ELEMENTS_COUNT = 1000;
+
     @Test
     public void addElementToArrayList() {
         ArrayList<String> arrayList = new ArrayList<>();
@@ -84,10 +86,10 @@ public class ArrayListTest {
     @Test
     public void checkingResize() {
         ArrayList<String> arrayList = new ArrayList<>();
-        for (int i = 0; i < 1000; i++) {
+        for (int i = 0; i < ELEMENTS_COUNT; i++) {
             arrayList.add("First + " + i);
         }
-        for (int i = 0; i < 1000; i++) {
+        for (int i = 0; i < ELEMENTS_COUNT; i++) {
             Assert.assertEquals("Test failed! Array can't resize correctly",
                     "First + " + i, arrayList.get(i));
         }
@@ -96,12 +98,14 @@ public class ArrayListTest {
     @Test
     public void checkingResizeInAddByIndex() {
         ArrayList<String> arrayList = new ArrayList<>();
-        for (int i = 0; i < 1000; i++) {
+        for (int i = 0; i < ELEMENTS_COUNT; i++) {
             arrayList.add("First + " + i, 0);
             Assert.assertEquals("Test failed! Size of array should be " + (i + 1) + "but it is "
                     + arrayList.size(), i + 1, arrayList.size());
+        }
+        for (int i = 0; i < ELEMENTS_COUNT; i++) {
             Assert.assertEquals("Test failed! Array can't resize correctly",
-                    "First + " + i, arrayList.get(0));
+                    "First + " + (ELEMENTS_COUNT - i - 1), arrayList.get(i));
         }
     }
 
