@@ -8,11 +8,17 @@ public class ArrayList<T> implements List<T> {
     private int size = 0;
 
     private void resizingCheck() {
-        int oldLength = values.length;
-        if (size >= oldLength) {
+        if (size >= values.length) {
             Object[] tempoBuffer = values;
-            values = new Object[(int)(oldLength * 1.5)];
-            System.arraycopy(tempoBuffer, 0, values, 0, oldLength);
+            values = new Object[(int)(size * 1.5)];
+            System.arraycopy(tempoBuffer, 0, values, 0, size);
+        }
+    }
+
+    private void indexCheck(int index) {
+        if (index >= size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Index " + index
+                    + " is out allowable range");
         }
     }
 
@@ -25,9 +31,8 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index > size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Attempt adding element to index out "
-                    + "of possible range");
+        if (index != 0) {
+            indexCheck(index - 1);
         }
         resizingCheck();
         Object[] tempoBuffer = new Object[size - index];
@@ -46,34 +51,23 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index >= 0 && index < size) {
-            return (T) values[index];
-        }
-        throw new ArrayListIndexOutOfBoundsException("You tried to get index not within "
-                + "existing range");
+        indexCheck(index);
+        return (T) values[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index >= 0 && index < size) {
-            values[index] = value;
-        } else {
-            throw new ArrayListIndexOutOfBoundsException("You tried to set value for index "
-                    + "not within existing range");
-        }
+        indexCheck(index);
+        values[index] = value;
     }
 
     @Override
     public T remove(int index) {
         Object result;
-        if (index >= 0 && index < size) {
-            result = values[index];
-            System.arraycopy(values, index + 1, values, index, size - index - 1);
-            values[size - 1] = null;
-        } else {
-            throw new ArrayListIndexOutOfBoundsException("You tried to set value for index "
-                    + "not within existing range");
-        }
+        indexCheck(index);
+        result = values[index];
+        System.arraycopy(values, index + 1, values, index, size - index - 1);
+        values[size - 1] = null;
         size--;
         return (T) result;
     }
