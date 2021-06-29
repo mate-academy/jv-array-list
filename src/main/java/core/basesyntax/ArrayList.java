@@ -4,23 +4,8 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int INITIAL_SIZE = 10;
-    private Object[] values = new Object[INITIAL_SIZE];
+    private T[] values = (T[]) new Object[INITIAL_SIZE];
     private int size = 0;
-
-    private void resizingCheck() {
-        if (size >= values.length) {
-            Object[] tempoBuffer = values;
-            values = new Object[(int)(size * 1.5)];
-            System.arraycopy(tempoBuffer, 0, values, 0, size);
-        }
-    }
-
-    private void indexCheck(int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index " + index
-                    + " is out allowable range");
-        }
-    }
 
     @Override
     public void add(T value) {
@@ -35,7 +20,7 @@ public class ArrayList<T> implements List<T> {
             indexCheck(index - 1);
         }
         resizingCheck();
-        Object[] tempoBuffer = new Object[size - index];
+        T[] tempoBuffer = (T[]) new Object[size - index];
         System.arraycopy(values, index, tempoBuffer, 0, size - index);
         values[index] = value;
         System.arraycopy(tempoBuffer, 0, values, index + 1, size - index);
@@ -52,7 +37,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         indexCheck(index);
-        return (T) values[index];
+        return values[index];
     }
 
     @Override
@@ -63,30 +48,24 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(int index) {
-        Object result;
         indexCheck(index);
-        result = values[index];
+        final T result = values[index];
         System.arraycopy(values, index + 1, values, index, size - index - 1);
         values[size - 1] = null;
         size--;
-        return (T) result;
+        return result;
     }
 
     @Override
     public T remove(T element) {
-        int index = -1;
         for (int i = 0; i < size; i++) {
             if ((values[i] != null && values[i].equals(element))
                     || (values[i] == null && element == null)) {
-                index = i;
-                break;
+                remove(i);
+                return element;
             }
         }
-        if (index == -1) {
-            throw new NoSuchElementException("Required element not found");
-        }
-        remove(index);
-        return element;
+        throw new NoSuchElementException("Required element not found");
     }
 
     @Override
@@ -97,5 +76,20 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private void resizingCheck() {
+        if (size >= values.length) {
+            T[] tempoBuffer = values;
+            values = (T[]) new Object[(int)(size * 1.5)];
+            System.arraycopy(tempoBuffer, 0, values, 0, size);
+        }
+    }
+
+    private void indexCheck(int index) {
+        if (index >= size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Index " + index
+                    + " is out allowable range");
+        }
     }
 }
