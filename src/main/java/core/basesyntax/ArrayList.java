@@ -9,7 +9,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        resizingCheck();
+        resize();
         values[size] = value;
         size++;
     }
@@ -17,13 +17,11 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         if (index != 0) {
-            indexCheck(index - 1);
+            checkIndex(index - 1);
         }
-        resizingCheck();
-        T[] tempoBuffer = (T[]) new Object[size - index];
-        System.arraycopy(values, index, tempoBuffer, 0, size - index);
+        resize();
+        System.arraycopy(values, index, values, index + 1, size - index);
         values[index] = value;
-        System.arraycopy(tempoBuffer, 0, values, index + 1, size - index);
         size++;
     }
 
@@ -36,19 +34,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        indexCheck(index);
+        checkIndex(index);
         return values[index];
     }
 
     @Override
     public void set(T value, int index) {
-        indexCheck(index);
+        checkIndex(index);
         values[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        indexCheck(index);
+        checkIndex(index);
         final T result = values[index];
         System.arraycopy(values, index + 1, values, index, size - index - 1);
         values[size - 1] = null;
@@ -59,10 +57,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if ((values[i] != null && values[i].equals(element))
-                    || (values[i] == null && element == null)) {
-                remove(i);
-                return element;
+            if ((values[i] != null && values[i].equals(element)) || (values[i] == element)) {
+                return remove(i);
             }
         }
         throw new NoSuchElementException("Required element not found");
@@ -78,7 +74,7 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void resizingCheck() {
+    private void resize() {
         if (size >= values.length) {
             T[] tempoBuffer = values;
             values = (T[]) new Object[(int)(size * 1.5)];
@@ -86,10 +82,10 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private void indexCheck(int index) {
+    private void checkIndex(int index) {
         if (index >= size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Index " + index
-                    + " is out allowable range");
+                    + " is out of allowed range");
         }
     }
 }
