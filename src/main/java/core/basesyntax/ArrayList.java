@@ -9,15 +9,12 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        for (int i = 0; i < array.length; i++) {
-            if (size < array.length) {
-                array[size] = value;
-                size++;
-                return;
-            } else {
-                expandArray();
-                array[size + 1] = value;
-            }
+        if (size < array.length) {
+            array[size++] = value;
+        }
+        if (size == array.length) {
+            expandArray();
+            array[size + 1] = value;
         }
     }
 
@@ -31,11 +28,8 @@ public class ArrayList<T> implements List<T> {
         if (array.length < size + 1) {
             expandArray();
         }
-        Object[] newArray = new Object[array.length];
-        System.arraycopy(array, index, newArray, index + 1, size - index);
+        System.arraycopy(array, index, array, index + 1, size - index);
         array[index] = value;
-        System.arraycopy(array, 0, newArray, 0, index + 1);
-        array = newArray;
         size++;
     }
 
@@ -49,6 +43,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         checkIndex(index);
+        //noinspection unchecked
         return (T) array[index];
     }
 
@@ -69,11 +64,9 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        int index;
         for (int i = 0; i < array.length; i++) {
             if (element == array[i] || array[i] != null && array[i].equals(element)) {
-                index = i;
-                return arrayReduced(index);
+                return arrayReduced(i);
             }
         }
         throw new NoSuchElementException(
@@ -104,6 +97,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     private T arrayReduced(int index) {
+        @SuppressWarnings("unchecked")
         T element = (T) array[index];
         System.arraycopy(array, index + 1, array, index, size - index);
         size--;
