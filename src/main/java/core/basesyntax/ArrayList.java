@@ -9,13 +9,10 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (size < array.length) {
-            array[size++] = value;
-        }
-        if (size == array.length) {
+        if (size >= array.length) {
             expandArray();
-            array[size + 1] = value;
         }
+        array[size++] = value;
     }
 
     @Override
