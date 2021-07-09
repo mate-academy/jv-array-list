@@ -15,11 +15,6 @@ public class ArrayList<T> implements List<T> {
     private void fixArraySizeIfNeeded(int potentialSize) {
         if (array.length < potentialSize) {
             growArray();
-        } else {
-            int arrayPotentialSize = array.length - array.length / 2;
-            if (potentialSize >= DEFAULT_CAPACITY && potentialSize <= arrayPotentialSize) {
-                trimArray(arrayPotentialSize);
-            }
         }
     }
 
@@ -27,11 +22,6 @@ public class ArrayList<T> implements List<T> {
         T[] tempArray = (T[]) new Object[array.length + array.length / 2];
         System.arraycopy(array, 0, tempArray, 0, array.length);
         array = tempArray;
-    }
-
-    private void trimArray(int size) {
-        T[] tempArray = (T[]) new Object[size];
-        System.arraycopy(array, 0, tempArray, 0, array.length);
     }
 
     private void checkForOutOfBoundException(int index) {
