@@ -31,6 +31,19 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
+    private void rebuildArray(boolean addingValue, int index) {
+        //creating sub array to hold the right part of array
+        T[] rightPartArray = (T[]) new Object[size - index + (addingValue ? 0 : -1)];
+        //copying right part of array to sub array for holding
+        System.arraycopy(array, index + (addingValue ? 0 : 1),
+                rightPartArray, 0,
+                rightPartArray.length);
+        //copying sub array data back to array but with the shift
+        System.arraycopy(rightPartArray, 0,
+                array, index + (addingValue ? 1 : 0),
+                rightPartArray.length);
+    }
+
     @Override
     public void add(T value) {
         fixArraySizeIfNeeded(size + 1);
@@ -87,19 +100,6 @@ public class ArrayList<T> implements List<T> {
         //trimming array if need to
         fixArraySizeIfNeeded(size);
         return removedValue;
-    }
-
-    private void rebuildArray(boolean addingValue, int index) {
-        //creating sub array to hold the right part of array
-        T[] rightPartArray = (T[]) new Object[size - index + (addingValue ? 0 : -1)];
-        //copying right part of array to sub array for holding
-        System.arraycopy(array, index + (addingValue ? 0 : 1),
-                rightPartArray, 0,
-                rightPartArray.length);
-        //copying sub array data back to array but with the shift
-        System.arraycopy(rightPartArray, 0,
-                array, index + (addingValue ? 1 : 0),
-                rightPartArray.length);
     }
 
     @Override
