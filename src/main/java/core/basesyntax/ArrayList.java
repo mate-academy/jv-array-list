@@ -31,19 +31,6 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private void rebuildArray(boolean addingValue, int index) {
-        //creating sub array to hold the right part of array
-        T[] rightPartArray = (T[]) new Object[size - index + (addingValue ? 0 : -1)];
-        //copying right part of array to sub array for holding
-        System.arraycopy(array, index + (addingValue ? 0 : 1),
-                rightPartArray, 0,
-                rightPartArray.length);
-        //copying sub array data back to array but with the shift
-        System.arraycopy(rightPartArray, 0,
-                array, index + (addingValue ? 1 : 0),
-                rightPartArray.length);
-    }
-
     @Override
     public void add(T value) {
         fixArraySizeIfNeeded(size + 1);
@@ -59,7 +46,9 @@ public class ArrayList<T> implements List<T> {
         }
         checkForOutOfBoundException(index);
         fixArraySizeIfNeeded(size + 1);
-        rebuildArray(true, index);
+        System.arraycopy(array, index,
+                array, index + 1,
+                size - index);
         //rewriting value on array[index]
         array[index] = value;
         size++;
@@ -90,13 +79,12 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         checkForOutOfBoundException(index);
         T removedValue = array[index];
-        System.out.println("Need to use variable " + removedValue + " because of Travis:"
-                + "Distance between variable 'removedValue' declaration"
-                + " and its first usage is 5, but allowed 3");
-        rebuildArray(false, index);
+        //copying right part of array to sub array for holding
+        System.arraycopy(array, index + 1,
+                array, index,
+                size - index -1);
         //replacing previous last value with the null value
-        array[size - 1] = null;
-        size--;
+        array[--size] = null;
         //trimming array if need to
         fixArraySizeIfNeeded(size);
         return removedValue;
