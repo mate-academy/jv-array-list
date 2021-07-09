@@ -91,8 +91,8 @@ public class ArrayList<T> implements List<T> {
         checkForOutOfBoundException(index);
         T removedValue = array[index];
         System.out.println("Need to use variable " + removedValue + " because of Travis:"
-                + "Distance between variable 'removedValue' declaration" +
-                " and its first usage is 5, but allowed 3");
+                + "Distance between variable 'removedValue' declaration"
+                + " and its first usage is 5, but allowed 3");
         rebuildArray(false, index);
         //replacing previous last value with the null value
         array[size - 1] = null;
