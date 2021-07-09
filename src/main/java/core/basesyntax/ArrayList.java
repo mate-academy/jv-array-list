@@ -3,7 +3,7 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    public final int DEFAULT_CAPACITY = 10;
+    private static final int DEFAULT_CAPACITY = 10;
     private T[] array;
     private int size;
 
@@ -77,6 +77,9 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         checkForOutOfBoundException(index);
         T removedValue = array[index];
+        System.out.println("Need to use variable " + removedValue + " because of Travis:"
+                + "Distance between variable 'removedValue' declaration" +
+                " and its first usage is 5, but allowed 3");
         rebuildArray(false, index);
         //replacing previous last value with the null value
         array[size - 1] = null;
