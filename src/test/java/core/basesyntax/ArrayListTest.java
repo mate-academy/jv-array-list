@@ -104,7 +104,7 @@ public class ArrayListTest {
                     + arrayList.size(), i + 1, arrayList.size());
         }
         for (int i = 0; i < ELEMENTS_COUNT; i++) {
-            Assert.assertEquals("Test failed! Array can't resize correctly",
+             Assert.assertEquals("Test failed! Array can't resize correctly",
                     "First + " + (ELEMENTS_COUNT - i - 1), arrayList.get(i));
         }
     }
@@ -117,7 +117,7 @@ public class ArrayListTest {
         arrayList.add("Java");
         arrayList.add("Private");
         Assert.assertEquals(4, arrayList.size());
-        String actualResult = arrayList.remove(2);
+         String actualResult = arrayList.remove(2);
         Assert.assertEquals("Test failed! Returned value should be " + actualResult,
                 "Java", actualResult);
         Assert.assertEquals("Test failed! Size of array after removed element should be "
