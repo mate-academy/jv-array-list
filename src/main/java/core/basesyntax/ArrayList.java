@@ -3,12 +3,12 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    private static final int MAX_NUMBER = 10;
+    private static final int INITIAL_SIZE = 10;
     private Object[] valueArr;
     private int size;
 
     public ArrayList() {
-        valueArr = new Object[MAX_NUMBER];
+        valueArr = new Object[INITIAL_SIZE];
     }
 
     @Override
@@ -31,7 +31,7 @@ public class ArrayList<T> implements List<T> {
 
     public void resize() {
         if (size == valueArr.length) {
-            Object[] elementData = new Object[valueArr.length * 2];
+            Object[] elementData = new Object[valueArr.length * 3 / 2];
             System.arraycopy(valueArr, 0, elementData, 0, size);
             valueArr = elementData;
         }
@@ -46,25 +46,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index out of bounds ArrayList");
-        }
+        checkIndex(index);
         return (T) valueArr[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index out of bounds ArrayList");
-        }
+        checkIndex(index);
         valueArr[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index out of bounds ArrayList");
-        }
+        checkIndex(index);
         T removeNumber = (T) valueArr[index];
         System.arraycopy(valueArr, index + 1, valueArr, index, size - index - 1);
         size--;
@@ -75,9 +69,7 @@ public class ArrayList<T> implements List<T> {
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
             if (valueArr[i] == element || element != null && element.equals(valueArr[i])) {
-                System.arraycopy(valueArr, i + 1, valueArr, i, size - i - 1);
-                size--;
-                return element;
+                return remove(i);
             }
         }
         throw new NoSuchElementException("No such element exists");
@@ -91,5 +83,11 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private void checkIndex(int index) {
+        if (index >= size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Index out of bounds ArrayList");
+        }
     }
 }
