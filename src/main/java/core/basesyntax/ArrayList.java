@@ -33,7 +33,12 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        checkIndex(index, true);
+        if (index == size) {
+            add(value);
+            return;
+        }
+
+        checkIndex(index);
         resize(size + 1);
 
         T[] newList = (T[]) new Object[(int) (arrayList.length)];
@@ -64,19 +69,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        checkIndex(index, false);
+        checkIndex(index);
         return arrayList[index];
     }
 
     @Override
     public void set(T value, int index) {
-        checkIndex(index, false);
+        checkIndex(index);
         arrayList[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        checkIndex(index, false);
+        checkIndex(index);
         T[] newList = (T[]) new Object[(int) (arrayList.length)];
         // extraction is made in two steps
         // step 1
@@ -134,8 +139,8 @@ public class ArrayList<T> implements List<T> {
         return "ArrayList = " + b.toString();
     }
 
-    private void checkIndex(int index, boolean isAdd) {
-        if (index >= 0 && index < (size + (isAdd ? 1 : 0))) {
+    private void checkIndex(int index) {
+        if (index >= 0 && index < size) {
             return;
         }
         throw new ArrayListIndexOutOfBoundsException("IndexOutOfBounds: " + index
