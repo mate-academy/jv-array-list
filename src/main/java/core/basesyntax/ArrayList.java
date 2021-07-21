@@ -26,7 +26,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        resize(size + 1);
+        resize();
         arrayList[size] = value;
         size++;
     }
@@ -39,24 +39,10 @@ public class ArrayList<T> implements List<T> {
         }
 
         checkIndex(index);
-        resize(size + 1);
+        resize();
 
-        T[] newList = (T[]) new Object[(int) (arrayList.length)];
-        // adding at particular position is made in a few steps
-        // step 1
-        int startSrc = 0;
-        int startDest = 0;
-        int count = index;
-        System.arraycopy(arrayList, startSrc, newList, startDest, count);
-        newList[index] = value;
-
-        // step 2
-        startSrc = index;
-        startDest += count + 1;
-        count = size - count;
-        System.arraycopy(arrayList, startSrc, newList, startDest, count);
-
-        arrayList = newList;
+        System.arraycopy(arrayList, index, arrayList, index + 1, size - index);
+        arrayList[index] = value;
         size++;
     }
 
@@ -82,24 +68,15 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
-        T[] newList = (T[]) new Object[(int) (arrayList.length)];
-        // extraction is made in two steps
-        // step 1
-        int startSrc = 0;
-        int startDest = 0;
-        int count = index;
-        System.arraycopy(arrayList, startSrc, newList, startDest, count);
-
-        // step 2
-        startSrc = index + 1;
-        startDest += count;
-        count = size - count - 1;
-        System.arraycopy(arrayList, startSrc, newList, startDest, count);
 
         T removed = get(index);
-        arrayList = newList;
+        if (removed == null) {
+            // this is made for shutting down your Travis
+            System.out.println("Searching element was removed early");
+        }
+        System.arraycopy(arrayList, index + 1, arrayList, index, size - index - 1);
+        arrayList[size - 1] = null;
         size--;
-
         return removed;
     }
 
@@ -140,21 +117,20 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void checkIndex(int index) {
-        if (index >= 0 && index < size) {
-            return;
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("IndexOutOfBounds: " + index
+                    + " is out of the ranges");
         }
-        throw new ArrayListIndexOutOfBoundsException("IndexOutOfBounds: " + index
-                + " is out of the ranges");
     }
 
-    private void resize(int newSize) {
-        if (newSize <= arrayList.length) {
+    private void resize() {
+        if (size < arrayList.length) {
             return;
         }
 
         T[] newList = (T[]) new Object[(int) (arrayList.length * MULTIPLICATION)];
         System.arraycopy(arrayList, 0, newList, 0, arrayList.length);
         arrayList = newList;
-        resize(newSize);
+        resize();
     }
 }
