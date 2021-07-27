@@ -8,20 +8,28 @@ public class ArrayList<T> implements List<T> {
     private Object[] arrayList = new Object[INITIAL_SIZE];
     private int arraySize;
 
-    public void grow(int size) {
-        int newLength = size + (size >> 1);
-        arrayList = Arrays.copyOf(arrayList, newLength);
+    private void checkIndex(int index) {
+        if (index < 0 || index > arraySize - 1) {
+            throw new ArrayListIndexOutOfBoundsException("No such index");
+        }
+    }
+
+    private void grow() {
+        Object[] arrayCopy = new Object[arrayList.length];
+        System.arraycopy(arrayList, 0, arrayCopy, 0, arrayList.length);
+        Arrays.fill(arrayList, null);
+        int newLength = arrayList.length + (arrayList.length >> 1);
+        arrayList = new Object[newLength];
+        System.arraycopy(arrayCopy, 0, arrayList, 0, arrayCopy.length);
     }
 
     @Override
     public void add(T value) {
-        if (arraySize < arrayList.length) {
-            arrayList[arraySize] = value;
-            arraySize++;
-        } else {
-            grow(arrayList.length);
-            add(value);
+        if (arraySize >= arrayList.length) {
+            grow();
         }
+        arrayList[arraySize] = value;
+        arraySize++;
     }
 
     @Override
@@ -35,7 +43,7 @@ public class ArrayList<T> implements List<T> {
             arrayList[index] = value;
             arraySize++;
         } else {
-            grow(arrayList.length);
+            grow();
             add(value, index);
         }
     }
@@ -50,7 +58,7 @@ public class ArrayList<T> implements List<T> {
                 arraySize++;
             }
         } else {
-            grow(arrayList.length);
+            grow();
             addAll(list);
         }
     }
@@ -58,18 +66,14 @@ public class ArrayList<T> implements List<T> {
     @Override
     @SuppressWarnings("unchecked")
     public T get(int index) {
-        if (index < 0 || index > arraySize - 1) {
-            throw new ArrayListIndexOutOfBoundsException("No such index");
-        }
+        checkIndex(index);
 
         return (T) arrayList[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index < 0 || index > arraySize - 1) {
-            throw new ArrayListIndexOutOfBoundsException("No such index");
-        }
+        checkIndex(index);
         arrayList[index] = value;
     }
 
@@ -77,9 +81,7 @@ public class ArrayList<T> implements List<T> {
     @SuppressWarnings("unchecked")
     public T remove(int index) {
         T result = null;
-        if (index < 0 || index > arraySize - 1) {
-            throw new ArrayListIndexOutOfBoundsException("No such index in the list");
-        }
+        checkIndex(index);
 
         int remainingArray = arraySize - index - 1;
         result = (T) arrayList[index];
@@ -87,42 +89,27 @@ public class ArrayList<T> implements List<T> {
         if (remainingArray > 0) {
             System.arraycopy(arrayList, index + 1, arrayList, index, remainingArray);
         }
-        arrayList[arraySize - 1] = null;
-        arraySize--;
+        arrayList[--arraySize] = null;
         return result;
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public T remove(T element) {
-        T result = null;
-        boolean containsArray = Arrays.asList(arrayList).contains(element);
-        for (int index = 0; index < arraySize; index++) {
-            if (element == null && containsArray) {
-                int remainingArray = arraySize - index - 1;
+        int sizeBeforeRemove = arraySize;
 
-                if (remainingArray > 0) {
-                    System.arraycopy(arrayList, index + 1, arrayList, index, remainingArray);
-                }
-                arrayList[arraySize - 1] = null;
-                arraySize--;
-                return null;
-            } else if (element != null && containsArray) {
-                if (element.equals(arrayList[index])) {
-                    int remainingArray = arraySize - index - 1;
-                    result = (T) arrayList[index];
-                    if (remainingArray > 0) {
-                        System.arraycopy(arrayList, index + 1, arrayList, index, remainingArray);
-                    }
-                    arrayList[arraySize - 1] = null;
-                    arraySize--;
-                    return result;
-                }
-            } else {
-                throw new NoSuchElementException("You've entered the wrong element");
+        for (int index = 0; index < arraySize; index++) {
+            if ((element != null && element.equals(arrayList[index]))
+                    || (element == arrayList[index])) {
+                return remove(index);
             }
         }
-        return result;
+
+        if (sizeBeforeRemove == arraySize) {
+            throw new NoSuchElementException("You've entered the wrong element");
+        }
+
+        return null;
     }
 
     @Override
