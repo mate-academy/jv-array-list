@@ -96,8 +96,6 @@ public class ArrayList<T> implements List<T> {
     @Override
     @SuppressWarnings("unchecked")
     public T remove(T element) {
-        int sizeBeforeRemove = arraySize;
-
         for (int index = 0; index < arraySize; index++) {
             if ((element != null && element.equals(arrayList[index]))
                     || (element == arrayList[index])) {
@@ -105,11 +103,7 @@ public class ArrayList<T> implements List<T> {
             }
         }
 
-        if (sizeBeforeRemove == arraySize) {
-            throw new NoSuchElementException("You've entered the wrong element");
-        }
-
-        return null;
+        throw new NoSuchElementException("You've entered the wrong element");
     }
 
     @Override
