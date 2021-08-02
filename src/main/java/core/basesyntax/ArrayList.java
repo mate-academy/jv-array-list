@@ -19,6 +19,12 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
+    private void checkIndex(int someIndex) {
+        if (someIndex < 0 || someIndex >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Not appropriate index.");
+        }
+    }
+
     @Override
     public void add(T value) {
         checkArraySize();
@@ -41,45 +47,32 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void addAll(List<T> list) {
         for (int i = 0; i < list.size(); i++) {
-            checkArraySize();
-            array[size] = list.get(i);
-            size++;
+            this.add(list.get(i));
         }
-
     }
 
     @Override
     public T get(int index) {
-        if (index >= 0 && index < size) {
-            return (T) array[index];
-        } else {
-            throw new ArrayListIndexOutOfBoundsException("Can't get. Not appropriate index.");
-        }
+        checkIndex(index);
+
+        return (T) array[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index >= 0 && index < size) {
-            array[index] = value;
-        } else {
-            throw new ArrayListIndexOutOfBoundsException("Can't set. Not appropriate index.");
-        }
-
+        checkIndex(index);
+        array[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index >= 0 && index < size) {
-            final T value = (T) array[index];
-            System.arraycopy(array, index + 1, array, index, size - index - 1);
-            size--;
-            array[size] = null;
+        checkIndex(index);
+        final T value = (T) array[index];
+        System.arraycopy(array, index + 1, array, index, size - index - 1);
+        size--;
+        array[size] = null;
 
-            return value;
-        } else {
-            throw new ArrayListIndexOutOfBoundsException("Can't remove. Not appropriate index.");
-        }
-
+        return value;
     }
 
     @Override
