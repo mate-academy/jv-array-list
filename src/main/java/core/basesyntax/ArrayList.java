@@ -3,36 +3,48 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    private final int maxSize = 10;
+    private static final int DEFAULT_SIZE = 10;
     private int size = 0;
     private Object[] array;
 
     public ArrayList() {
-        array = new Object[maxSize];
+        array = new Object[DEFAULT_SIZE];
     }
 
-    private Object[] resize(int newLength) {
-        Object[] newArray = new Object[newLength];
+    private Object[] resize() {
+        int newSize = (int) (array.length * 1.5);
+        Object[] newArray = new Object[newSize];
         System.arraycopy(array, 0, newArray, 0, size);
         return newArray;
+    }
+
+    private void checkIndex(int index) {
+        if (index > size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Invalid index. "
+                    + "Index is out of bounds of array");
+        }
+    }
+
+    private void checkIndexWithEquals(int index) {
+        if (index >= size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Invalid index. "
+                    + "Index is out of bounds of array");
+        }
     }
 
     @Override
     public void add(T value) {
         if (size == array.length - 1) {
-            array = resize((int) (array.length * 1.5));
+            array = resize();
         }
         array[size++] = value;
     }
 
     @Override
     public void add(T value, int index) {
-        if (index > size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("");
-        }
-
+        checkIndex(index);
         if (size == array.length - 1) {
-            array = resize((int) (array.length * 1.5));
+            array = resize();
         }
         System.arraycopy(array, index, array, index + 1,
                 size - index);
@@ -42,33 +54,20 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        if (size == array.length - 1) {
-            array = resize((int) (array.length * 1.5));
-        }
-        Object[] newArray = new Object[list.size()];
         for (int i = 0; i < list.size(); i++) {
-            newArray[i] = list.get(i);
+            add(list.get(i));
         }
-        System.arraycopy(newArray, 0, array, size, newArray.length);
-        size += newArray.length;
     }
 
     @Override
     public T get(int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("");
-        }
+        checkIndexWithEquals(index);
         return (T) array[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("");
-        }
-        if (size == array.length - 1) {
-            array = resize((int) (array.length * 1.5));
-        }
+        checkIndexWithEquals(index);
         if (index < size) {
             array[index] = value;
         }
@@ -76,9 +75,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("");
-        }
+        checkIndexWithEquals(index);
         T removedValue = (T) array[index];
         int newSize = size - 1;
         if (newSize > index) {
@@ -91,36 +88,20 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        T removedValue = null;
-        if (element == null) {
-            for (int i = 0; i < size; i++) {
-                if (array[i] == null) {
-                    removedValue = (T) array[i];
-                    int newSize = size - 1;
-                    if (newSize > i) {
-                        System.arraycopy(array, i + 1, array, i, newSize - i);
-                    }
-                    array[size = newSize] = null;
-                    return removedValue;
-                }
+        T removedElement = null;
+        for (int i = 0; i < size(); i++) {
+            if (element == null && array[i] == null) {
+                removedElement = remove(i);
+                return removedElement;
             }
-        }
-
-        for (int i = 0; i < size; i++) {
             if (array[i] != null && array[i].equals(element)) {
-                removedValue = (T) array[i];
-                int newSize = size - 1;
-                if (newSize > i) {
-                    System.arraycopy(array, i + 1, array, i, newSize - i);
-                }
-                array[size = newSize] = null;
+                removedElement = remove(i);
+                return removedElement;
             }
         }
 
-        if (removedValue == null) {
-            throw new NoSuchElementException("");
-        }
-        return removedValue;
+        throw new NoSuchElementException("Invalid entry element. "
+                + "No such element exists");
     }
 
     @Override
