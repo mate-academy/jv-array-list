@@ -90,13 +90,8 @@ public class ArrayList<T> implements List<T> {
     public T remove(T element) {
         T removedElement = null;
         for (int i = 0; i < size(); i++) {
-            if (element == null && array[i] == null) {
-                removedElement = remove(i);
-                return removedElement;
-            }
-            if (array[i] != null && array[i].equals(element)) {
-                removedElement = remove(i);
-                return removedElement;
+            if (element == array[i] || element != null && element.equals(array[i])) {
+                return remove(i);
             }
         }
 
