@@ -82,14 +82,14 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         if (index < localSize && index >= 0) {
             localSize--;
-            T obj = (T) values[index];
             Object[] newValues = new Object[values.length];
             System.arraycopy(values, 0, newValues, 0, index);
             System.arraycopy(values, index + 1, newValues, index, localSize - index);
+            T obj = (T) values[index];
             values = newValues;
             return obj;
         } else {
-            throw new NoSuchElementException("Error remove by index"
+            throw new ArrayListIndexOutOfBoundsException("Error remove by index"
                     + System.lineSeparator()
                     + "Size = " + localSize
                     + " but index = " + index);
