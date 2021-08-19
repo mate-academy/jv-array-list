@@ -1,5 +1,7 @@
 package core.basesyntax;
 
+import java.util.NoSuchElementException;
+
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_SIZE = 10;
     private int localSize;
@@ -42,10 +44,14 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        values = grow(list.size());
+        if (values.length < localSize + list.size()) {
+            values = grow(list.size());
+        }
         for (int i = localSize, j = 0; j < list.size(); i++, j++) {
             values[i] = list.get(j);
         }
+
+        localSize += list.size();
     }
 
     @Override
@@ -79,10 +85,11 @@ public class ArrayList<T> implements List<T> {
             T obj = (T) values[index];
             Object[] newValues = new Object[values.length];
             System.arraycopy(values, 0, newValues, 0, index);
-            System.arraycopy(values, index + 1, newValues, index, localSize - index - 1);
+            System.arraycopy(values, index + 1, newValues, index, localSize - index);
+            values = newValues;
             return obj;
         } else {
-            throw new ArrayListIndexOutOfBoundsException("Error remove by index"
+            throw new NoSuchElementException("Error remove by index"
                     + System.lineSeparator()
                     + "Size = " + localSize
                     + " but index = " + index);
@@ -93,7 +100,7 @@ public class ArrayList<T> implements List<T> {
     public T remove(T element) {
         int index = getIndex(element);
         if (index == -1) {
-            throw new ArrayListIndexOutOfBoundsException("Error remove by value"
+            throw new NoSuchElementException("Error remove by value"
                     + System.lineSeparator()
                     + "Size = " + localSize
                     + " but index = " + index);
@@ -129,7 +136,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     private Object[] insertAdd(int index) {
-        int rightDistance = localSize - index - 1;
+        int rightDistance = localSize - index;
         int newLength = localSize == values.length ? localSize + DEFAULT_SIZE / 2 : values.length;
         Object[] newValues = new Object[newLength];
         System.arraycopy(values, 0, newValues, 0, index);
