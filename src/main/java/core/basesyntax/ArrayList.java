@@ -29,8 +29,12 @@ public class ArrayList<T> implements List<T> {
     public void add(T value, int index) {
         if (index == localSize) {
             add(value);
-        } else if (index >= 0 && index < localSize) {
-            values = insertAdd(index);
+        } else if (checkIndex(index)) {
+            if (localSize == values.length) { // if there is not enough space
+                values = insertAdd(index);
+            } else {
+                System.arraycopy(values, index, values, index + 1, localSize - index);
+            }
             values[index] = value;
             localSize++;
 
@@ -127,9 +131,6 @@ public class ArrayList<T> implements List<T> {
 
     private Object[] grow(int sizeCollection) {
         int newLength = values.length + DEFAULT_SIZE / 2;
-        while (newLength - localSize < sizeCollection) {
-            newLength += DEFAULT_SIZE / 2;
-        }
         Object[] newValues = new Object[newLength];
         System.arraycopy(values, 0, newValues, 0, localSize);
         return newValues;
@@ -137,7 +138,7 @@ public class ArrayList<T> implements List<T> {
 
     private Object[] insertAdd(int index) {
         int rightDistance = localSize - index;
-        int newLength = localSize == values.length ? localSize + DEFAULT_SIZE / 2 : values.length;
+        int newLength = localSize + DEFAULT_SIZE / 2;
         Object[] newValues = new Object[newLength];
         System.arraycopy(values, 0, newValues, 0, index);
         System.arraycopy(values, index, newValues, index + 1, rightDistance);
