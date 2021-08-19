@@ -6,7 +6,6 @@ public class ArrayList<T> implements List<T> {
     private Object[] array = new Object[10];
     private int size = 0;
 
-
     @Override
     public void add(T value) {
         if (size == array.length) {
@@ -25,7 +24,7 @@ public class ArrayList<T> implements List<T> {
             array = copyArray(array);
         }
         Object[] tempArray = new Object[size + 1];
-        System.arraycopy(array, 0 , tempArray, 0, index);
+        System.arraycopy(array, 0, tempArray, 0, index);
         tempArray[index] = value;
         System.arraycopy(array, index, tempArray, index + 1, size - index);
         size++;
@@ -69,19 +68,18 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayListIndexOutOfBoundsException("Out of Bounds!");
         }
         Object[] tempArray = new Object[size - 1];
-        Object res = array[index];
+        final Object result = array[index];
         System.arraycopy(array, 0, tempArray, 0, index);
-        for (int i )
-        System.arraycopy(array, index +1, tempArray, index, size - index);
+        System.arraycopy(array, index + 1, tempArray, index, size - index - 1);
         array = tempArray;
         size--;
-        return (T) res;
+        return (T) result;
     }
 
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if (element == array || element != null && element.equals((T) array[i])) {
+            if (element == array[i] || element != null && element.equals((T) array[i])) {
                 Object[] tempArray = new Object[size - 1];
                 if (i == 0) {
                     System.arraycopy(array, 1, tempArray, 0, size - 1);
@@ -89,8 +87,9 @@ public class ArrayList<T> implements List<T> {
                     System.arraycopy(array, 0, tempArray, 0, size - 1);
                 } else {
                     System.arraycopy(array, 0, tempArray, 0, i);
-                    System.arraycopy(array, i, tempArray, i + 1, size - i);
+                    System.arraycopy(array, i + 1, tempArray, i, size - i - 1);
                 }
+                array = tempArray;
                 size--;
                 return element;
             }
@@ -108,7 +107,7 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private Object[] copyArray (Object[] oldOne) {
+    private Object[] copyArray(Object[] oldOne) {
         Object[] newOne = new Object[array.length + array.length / 2];
         System.arraycopy(oldOne, 0, newOne, 0, oldOne.length);
         return newOne;
