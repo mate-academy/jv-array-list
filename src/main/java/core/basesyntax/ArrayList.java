@@ -56,7 +56,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index < localSize && index >= 0) {
+        if (checkIndex(index)) {
             return (T) values[index];
         } else {
             throw new ArrayListIndexOutOfBoundsException("Error get"
@@ -68,7 +68,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void set(T value, int index) {
-        if (index < localSize && index >= 0) {
+        if (checkIndex(index)) {
             values[index] = value;
         } else {
             throw new ArrayListIndexOutOfBoundsException("Error set"
@@ -80,7 +80,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(int index) {
-        if (index < localSize && index >= 0) {
+        if (checkIndex(index)) {
             localSize--;
             Object[] newValues = new Object[values.length];
             System.arraycopy(values, 0, newValues, 0, index);
@@ -151,5 +151,9 @@ public class ArrayList<T> implements List<T> {
             }
         }
         return -1;
+    }
+
+    private boolean checkIndex(int index) {
+        return index < localSize && index >= 0;
     }
 }
