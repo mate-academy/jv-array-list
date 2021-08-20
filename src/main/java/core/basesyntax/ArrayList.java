@@ -23,7 +23,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         if (index > size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index");
+            throw new ArrayListIndexOutOfBoundsException("Invalid index, must be 0 < i < size");
         }
         if (index == size) {
             add(value);
@@ -46,24 +46,24 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index");
+        if (checkIndex(index)) {
+            throw new ArrayListIndexOutOfBoundsException("Invalid index, must be 0 < i <= size");
         }
         return elements[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index");
+        if (checkIndex(index)) {
+            throw new ArrayListIndexOutOfBoundsException("Invalid index, must be 0 < i <= size");
         }
         elements[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index");
+        if (checkIndex(index)) {
+            throw new ArrayListIndexOutOfBoundsException("Invalid index, must be 0 < i <= size");
         }
         T element = elements[index];
         for (int i = index; i < size; i++) {
@@ -84,7 +84,7 @@ public class ArrayList<T> implements List<T> {
             }
         }
         if (!isFound) {
-            throw new NoSuchElementException("No such value");
+            throw new NoSuchElementException("No such value was found");
         }
         return element;
     }
@@ -103,5 +103,9 @@ public class ArrayList<T> implements List<T> {
         T[] resizedArr = (T[]) new Object[size + (size / 2)];
         System.arraycopy(elements, 0, resizedArr, 0, elements.length);
         elements = resizedArr;
+    }
+
+    private boolean checkIndex(int index) {
+        return (index >= size || index < 0);
     }
 }
