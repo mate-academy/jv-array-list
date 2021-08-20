@@ -12,9 +12,8 @@ public class ArrayList<T> implements List<T> {
         values = new Object[DEFAULT_SIZE];
     }
 
-    public ArrayList(int newSize) {
-        localSize = newSize;
-        values = new Object[localSize];
+    public ArrayList(int initialCapacity) {
+        values = new Object[initialCapacity];
     }
 
     @Override
