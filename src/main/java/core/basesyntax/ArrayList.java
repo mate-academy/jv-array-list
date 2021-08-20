@@ -28,7 +28,8 @@ public class ArrayList<T> implements List<T> {
     public void add(T value, int index) {
         if (index == localSize) {
             add(value);
-        } else if (checkIndex(index)) {
+        } else {
+            checkIndex(index);
             if (localSize == values.length) { // if there is not enough space
                 values = insertAdd(index);
             } else {
@@ -36,19 +37,14 @@ public class ArrayList<T> implements List<T> {
             }
             values[index] = value;
             localSize++;
-
-        } else {
-            throw new ArrayListIndexOutOfBoundsException("Error add"
-                    + System.lineSeparator()
-                    + "Size = " + localSize
-                    + " but index = " + index);
         }
+
     }
 
     @Override
     public void addAll(List<T> list) {
         if (values.length < localSize + list.size()) {
-            values = grow(list.size());
+            values = grow();
         }
         for (int i = localSize, j = 0; j < list.size(); i++, j++) {
             values[i] = list.get(j);
@@ -59,44 +55,27 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (checkIndex(index)) {
-            return (T) values[index];
-        } else {
-            throw new ArrayListIndexOutOfBoundsException("Error get"
-                    + System.lineSeparator()
-                    + "Size = " + localSize
-                    + " but index = " + index);
-        }
+        checkIndex(index);
+        return (T) values[index];
+
     }
 
     @Override
     public void set(T value, int index) {
-        if (checkIndex(index)) {
-            values[index] = value;
-        } else {
-            throw new ArrayListIndexOutOfBoundsException("Error set"
-                    + System.lineSeparator()
-                    + "Size = " + localSize
-                    + " but index = " + index);
-        }
+        checkIndex(index);
+        values[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (checkIndex(index)) {
-            localSize--;
-            Object[] newValues = new Object[values.length];
-            System.arraycopy(values, 0, newValues, 0, index);
-            System.arraycopy(values, index + 1, newValues, index, localSize - index);
-            T obj = (T) values[index];
-            values = newValues;
-            return obj;
-        } else {
-            throw new ArrayListIndexOutOfBoundsException("Error remove by index"
-                    + System.lineSeparator()
-                    + "Size = " + localSize
-                    + " but index = " + index);
-        }
+        checkIndex(index);
+        localSize--;
+        Object[] newValues = new Object[values.length];
+        System.arraycopy(values, 0, newValues, 0, index);
+        System.arraycopy(values, index + 1, newValues, index, localSize - index);
+        T obj = (T) values[index];
+        values = newValues;
+        return obj;
     }
 
     @Override
@@ -128,7 +107,7 @@ public class ArrayList<T> implements List<T> {
         return newValues;
     }
 
-    private Object[] grow(int sizeCollection) {
+    private Object[] grow() {
         int newLength = values.length + DEFAULT_SIZE / 2;
         Object[] newValues = new Object[newLength];
         System.arraycopy(values, 0, newValues, 0, localSize);
@@ -153,7 +132,13 @@ public class ArrayList<T> implements List<T> {
         return -1;
     }
 
-    private boolean checkIndex(int index) {
-        return index < localSize && index >= 0;
+    private void checkIndex(int index) {
+
+        if (index >= localSize || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Error check index"
+                    + System.lineSeparator()
+                    + "Size = " + localSize
+                    + " but index = " + index);
+        }
     }
 }
