@@ -62,13 +62,10 @@ public class ArrayList<T> implements List<T> {
         for (int i = 0; i < size; i++) {
             if ((elements[i] == element) || (element != null && element.equals(elements[i]))) {
                 remove(i);
-                break;
-            }
-            if (i == size - 1) {
-                throw new NoSuchElementException("No such value was found");
+                return element;
             }
         }
-        return element;
+        throw new NoSuchElementException("No such value was found");
     }
 
     @Override
