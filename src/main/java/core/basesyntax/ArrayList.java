@@ -23,11 +23,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (capacity == size + 1) {
-            makeCapacityBigger();
-        }
-        values[size] = value;
-        size++;
+        add(value, size);
     }
 
     @Override
@@ -85,33 +81,12 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        int removedElementIndex;
-        boolean isFound = false;
-        T deletedValue = null;
         for (int i = 0; i < size; i++) {
             if (Objects.equals(values[i], element)) {
-                isFound = true;
-                removedElementIndex = i;
-                deletedValue = values[i];
-                if (size - 1 - removedElementIndex >= 0) {
-                    System.arraycopy(
-                            values,
-                            removedElementIndex + 1,
-                            values,
-                            removedElementIndex,
-                            size - 1 - removedElementIndex
-                    );
-                }
-                break;
+                return remove(i);
             }
         }
-        if (isFound) {
-            values[size - 1] = null;
-            size--;
-        } else {
-            throw new NoSuchElementException();
-        }
-        return deletedValue;
+        throw new NoSuchElementException();
     }
 
     @Override
