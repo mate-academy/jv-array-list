@@ -4,16 +4,18 @@ import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    private int size = 0;
     private static final int DEFAULT_CAPACITY = 10;
     private static final int NON_ADD_FUNCTION_INDEX = 1;
     private static final int GROW_SIZE_INDEX = 1;
     private static final Object[] DEFAULTCAPACITY_EMPTY_ELEMENTDATA = {};
-    transient Object[] elementData = new Object[10];
+    private transient Object[] elementData = new Object[10];
+    private int size = 0;
 
     @Override
     public void add(T value) {
-        if (size == elementData.length) grow(size + GROW_SIZE_INDEX);
+        if (size == elementData.length) {
+            grow(size + GROW_SIZE_INDEX);
+        }
         elementData[size] = value;
         size++;
     }
@@ -23,8 +25,9 @@ public class ArrayList<T> implements List<T> {
         rangeCheck(index);
         final int s;
         Object[] elementData;
-        if ((s = size) == (elementData = this.elementData).length)
+        if ((s = size) == (elementData = this.elementData).length) {
             elementData = grow(size + GROW_SIZE_INDEX);
+        }
         System.arraycopy(elementData, index,
                 elementData, index + GROW_SIZE_INDEX,
                 s - index);
@@ -38,8 +41,6 @@ public class ArrayList<T> implements List<T> {
         for (int i = 0; i < list.size(); i++) {
             add(list.get(i));
         }
-
-
     }
 
     @Override
@@ -77,7 +78,7 @@ public class ArrayList<T> implements List<T> {
             } else if (elementData[i] == null) {
                 continue;
             }
-            if(elementData[i].equals(element)) {
+            if (elementData[i].equals(element)) {
                 remove(i);
                 return element;
             }
@@ -96,8 +97,9 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void rangeCheck(int index) {
-        if (index > size || index < 0)
+        if (index > size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("This index does not exist");
+        }
     }
 
     private Object[] grow(int minCapacity) {
