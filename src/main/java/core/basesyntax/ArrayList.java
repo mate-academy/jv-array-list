@@ -6,7 +6,7 @@ public class ArrayList<T> implements List<T> {
     private static final int DEF_CAPACITY = 10;
     private int sizeArray;
     private T[] elements;
-    private int capasity;
+    private int arrayCapasity;
 
     public ArrayList(int sizeArray, T[] elements) {
         this.sizeArray = sizeArray;
@@ -14,19 +14,19 @@ public class ArrayList<T> implements List<T> {
     }
 
     public ArrayList() {
-        capasity = DEF_CAPACITY;
-        elements = (T[]) new Object[capasity];
+        arrayCapasity = DEF_CAPACITY;
+        elements = (T[]) new Object[arrayCapasity];
     }
 
     private void grow() {
-        capasity *= 1.5;
-        T[] tempArray = (T[]) new Object[capasity];
+        arrayCapasity *= 1.5;
+        T[] tempArray = (T[]) new Object[arrayCapasity];
         System.arraycopy(elements, 0, tempArray, 0, sizeArray);
         elements = tempArray;
     }
 
     private void checkItem(int index) {
-        if (index < 0 || index > size()) {
+        if (index < 0 || index > sizeArray) {
             throw new ArrayListIndexOutOfBoundsException("Index is invalid");
         }
     }
@@ -42,6 +42,9 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         checkItem(index);
+        if (sizeArray == elements.length) {
+            grow();
+        }
         System.arraycopy(elements, index, elements, index + 1, sizeArray - index);
         elements[index] = value;
         sizeArray++;
@@ -56,33 +59,37 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        checkItem(index);
+        checkItem(index + 1);
         return elements[index];
     }
 
     @Override
     public void set(T value, int index) {
-        checkItem(index);
+        checkItem(index + 1);
         elements[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        checkItem(index);
+        checkItem(index + 1);
         T removeObject = elements[index];
+        System.arraycopy(elements, index + 1, elements, index, sizeArray - index - 1);
         sizeArray--;
-        System.arraycopy(elements, index + 1, elements, index, sizeArray - index);
         return removeObject;
     }
 
     @Override
     public T remove(T element) {
         for (int i = 0; i < sizeArray; i++) {
-            if (element.equals(elements[i])) {
+            if (element == null && elements[i] == null) {
+                remove(i);
+                return null;
+            }
+            if (element != null && element.equals(elements[i])) {
                 return remove(i);
             }
         }
-        throw new NoSuchElementException("Element doesn't exist");
+        throw new NoSuchElementException("Element isn't exist");
     }
 
     @Override
