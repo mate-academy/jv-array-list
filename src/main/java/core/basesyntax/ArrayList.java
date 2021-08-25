@@ -1,81 +1,69 @@
 package core.basesyntax;
 
-import java.util.Arrays;
 import java.util.NoSuchElementException;
-import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_ARRAY_SIZE = 10;
     private T[] arrayList;
-    private int arrayListSize;
+    private int size;
 
-    @SuppressWarnings("unchecked")
     public ArrayList() {
-        this.arrayList = (T[]) new Object[DEFAULT_ARRAY_SIZE];
+        arrayList = (T[]) new Object[DEFAULT_ARRAY_SIZE];
     }
 
     @Override
     public void add(T value) {
-        if (arrayListSize > 0 && arrayListSize == arrayList.length) {
-            grow();
+        if (size == arrayList.length) {
+            grow(value, size);
         }
-        arrayList[arrayListSize] = value;
-        arrayListSize++;
+        arrayList[size] = value;
+        size++;
     }
 
     @Override
     public void add(T value, int index) {
-        if (index < 0 || index > this.arrayListSize) {
-            throw new ArrayListIndexOutOfBoundsException("Index: " + index
-                    + ", Size: " + this.arrayListSize);
+        if (size == 0 && index == 0) {
+            arrayList[size] = value;
+            size++;
+            return;
         }
-
-        if (this.arrayListSize + 1 > arrayList.length) {
-            grow();
-        }
-        expandArrayListByIndex(value, index);
-        this.arrayListSize++;
+        checkIndex(index, "add");
+        grow(value, index);
+        size++;
     }
 
     @Override
-    public void addAll(List<T> list) {
-        for (int i = 0; i <= list.size() - 1; i++) {
-            add(list.get(i));
+    public void addAll(List<T> inputList) {
+        for (int i = 0; i < inputList.size(); i++) {
+            add(inputList.get(i));
         }
     }
 
     @Override
     public T get(int index) {
-        if (index < 0 || index >= this.arrayListSize) {
-            throw new ArrayListIndexOutOfBoundsException("Index: " + index
-                    + ", Size: " + this.arrayListSize);
-        }
-        return this.arrayList[index];
+        checkIndex(index, "get");
+        return arrayList[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index < 0 || index >= this.arrayListSize) {
-            throw new ArrayListIndexOutOfBoundsException("Index: " + index + " doesn't exist!");
-        }
+        checkIndex(index, "set");
         arrayList[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index < 0 || index >= this.arrayListSize) {
-            throw new ArrayListIndexOutOfBoundsException("Index: " + index + " doesn't exist!");
-        }
+        checkIndex(index, "remove");
         T removedElement = arrayList[index];
-        narrowArrayListByIndex(index);
-        arrayListSize--;
+        System.arraycopy(arrayList, index + 1, arrayList, index, size - (index + 1));
+        size--;
         return removedElement;
     }
 
     @Override
     public T remove(T element) {
-        for (int i = 0; i < arrayList.length; i++) {
-            if (Objects.equals(arrayList[i], element)) {
+        for (int i = 0; i < size; i++) {
+            if (isEqual(arrayList[i], element)) {
                 remove(i);
                 return element;
             }
@@ -85,40 +73,44 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public int size() {
-        return arrayListSize;
+        return size;
     }
 
     @Override
     public boolean isEmpty() {
-        return arrayListSize == 0;
+        return size == 0;
     }
 
-    private void grow() {
-        this.arrayList = Arrays.copyOf(arrayList, arrayList.length + (arrayList.length >> 1));
+    private boolean isEqual(T arrElement, T element) {
+        return arrElement == element
+                || (arrElement != null && element != null
+                && arrElement.getClass().equals(element.getClass())
+                && arrElement.equals(element));
     }
 
-    private void expandArrayListByIndex(T value, int index) {
-        @SuppressWarnings("unchecked")
-        T[] newArrayList = (T[]) new Object[arrayList.length];
-        System.arraycopy(arrayList, 0, newArrayList, 0, index);
-        newArrayList[index] = value;
-        T[] tempArray = Arrays.copyOfRange(arrayList, index, this.arrayListSize);
-        for (T tempValue : tempArray) {
-            newArrayList[index + 1] = tempValue;
-            index++;
+    private void grow(T value, int index) {
+        T[] tempArray = (T[]) new Object[size + 1];
+        if (size + 1 > arrayList.length) {
+            tempArray = (T[]) new Object[size + (size >> 1)];
         }
-        arrayList = newArrayList;
+        System.arraycopy(arrayList, 0, tempArray,0, index);
+        tempArray[index] = value;
+        System.arraycopy(arrayList, index, tempArray,index + 1, size - index);
+        arrayList = tempArray;
     }
 
-    private void narrowArrayListByIndex(int index) {
-        @SuppressWarnings("unchecked")
-        T[] newArrayList = (T[]) new Object[arrayList.length];
-        System.arraycopy(arrayList, 0, newArrayList, 0, index);
-        T[] tempArray = Arrays.copyOfRange(arrayList, index, this.arrayListSize);
-        for (int i = 0; i < tempArray.length - 1; i++) {
-            newArrayList[index] = tempArray[i + 1];
-            index++;
+    private void checkIndex(int index, String operation) {
+        if ((operation.equals("get")
+                || operation.equals("set")
+                || operation.equals("remove"))
+                && (index < 0 || index >= size) && size != 0) {
+            throw new ArrayListIndexOutOfBoundsException("Cant " + operation
+                    + " index: " + index
+                    + ", Size: " + size);
         }
-        arrayList = newArrayList;
+        if (operation.equals("add") && (index < 0 || index > size) && size != 0) {
+            throw new ArrayListIndexOutOfBoundsException("Can't add to index: " + index
+                    + ", Size: " + size);
+        }
     }
 }
