@@ -38,12 +38,18 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        return null;
+        if (index >= amountOfElements || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Index is not correct");
+        }
+        return (T) values[index];
     }
 
     @Override
     public void set(T value, int index) {
-
+        if (index >= amountOfElements || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Index is not correct");
+        }
+        values[index] = value;
     }
 
     @Override
@@ -58,12 +64,12 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public int size() {
-        return 0;
+        return amountOfElements;
     }
 
     @Override
     public boolean isEmpty() {
-        return false;
+        return amountOfElements == 0;
     }
 
     private void grow() {
