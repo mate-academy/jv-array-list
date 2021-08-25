@@ -1,5 +1,8 @@
 package core.basesyntax;
 
+import java.util.NoSuchElementException;
+import java.util.Objects;
+
 public class ArrayList<T> implements List<T> {
     private static final int ARRAY_SIZE = 10;
     private Object[] values;
@@ -54,12 +57,23 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(int index) {
-        return null;
+        if (index >= amountOfElements || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Index is not correct");
+        }
+        T removes = (T) values[index];
+        System.arraycopy(values, index + 1, values, index, amountOfElements - index - 1);
+        amountOfElements--;
+        return removes;
     }
 
     @Override
     public T remove(T element) {
-        return null;
+        for (int i = 0; i < amountOfElements; i++) {
+            if (Objects.equals(element, values[i])) {
+                return remove(i);
+            }
+        }
+        throw new NoSuchElementException("No such the element present");
     }
 
     @Override
