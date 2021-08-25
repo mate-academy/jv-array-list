@@ -4,10 +4,8 @@ import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    private static final int DEFAULT_CAPACITY = 10;
     private static final int NON_ADD_FUNCTION_INDEX = 1;
     private static final int GROW_SIZE_INDEX = 1;
-    private static final Object[] DEFAULTCAPACITY_EMPTY_ELEMENTDATA = {};
     private transient Object[] elementData = new Object[10];
     private int size = 0;
 
@@ -23,16 +21,14 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         rangeCheck(index);
-        final int s;
         Object[] elementData;
-        if ((s = size) == (elementData = this.elementData).length) {
+        if (size == (elementData = this.elementData).length) {
             elementData = grow(size + GROW_SIZE_INDEX);
         }
-        System.arraycopy(elementData, index,
-                elementData, index + GROW_SIZE_INDEX,
-                s - index);
+        System.arraycopy(elementData, index, elementData,
+                index + GROW_SIZE_INDEX, size - index);
         elementData[index] = value;
-        size = s + GROW_SIZE_INDEX;
+        size++;
     }
 
     @Override
@@ -60,10 +56,7 @@ public class ArrayList<T> implements List<T> {
         rangeCheck(index + NON_ADD_FUNCTION_INDEX);
         T oldValue = (T) elementData[index];
         Object[] bufferArray = elementData;
-        System.arraycopy(bufferArray,
-                index + GROW_SIZE_INDEX,
-                elementData,
-                index,
+        System.arraycopy(bufferArray, index + GROW_SIZE_INDEX, elementData, index,
                 elementData.length - index - GROW_SIZE_INDEX);
         size--;
         return oldValue;
@@ -72,13 +65,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if (elementData[i] == null && element == null) {
-                remove(i);
-                return null;
-            } else if (elementData[i] == null) {
-                continue;
-            }
-            if (elementData[i].equals(element)) {
+            if (elementData[i] == element || (element != null && element.equals(elementData[i]))) {
                 remove(i);
                 return element;
             }
@@ -104,13 +91,8 @@ public class ArrayList<T> implements List<T> {
 
     private Object[] grow(int minCapacity) {
         int oldCapacity = elementData.length;
-        if (oldCapacity > DEFAULTCAPACITY_EMPTY_ELEMENTDATA.length
-                || elementData != DEFAULTCAPACITY_EMPTY_ELEMENTDATA) {
-            int newCapacity = (int) (oldCapacity * 1.5);
-            return elementData = Arrays.copyOf(elementData, newCapacity);
-        } else {
-            return elementData = new Object[Math.max(DEFAULT_CAPACITY, minCapacity)];
-        }
+        int newCapacity = (int) (oldCapacity * 1.5);
+        return elementData = Arrays.copyOf(elementData, newCapacity);
     }
 
 }
