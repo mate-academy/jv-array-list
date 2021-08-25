@@ -26,7 +26,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void resizeArray() {
-        T[] newArray = (T[]) new Object[size + (size / 2)];
+        T[] newArray = (T[]) new Object[size + size / 2];
         System.arraycopy(array, 0, newArray, 0, array.length);
         array = newArray;
     }
