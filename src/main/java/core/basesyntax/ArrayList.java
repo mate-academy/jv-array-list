@@ -6,6 +6,7 @@ import java.util.NoSuchElementException;
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_ARRAY_LENGTH = 10;
     private static final double GROW_NUMBER = 1.5;
+    private static final int ADJUSTMENT_CHECK_INDEX = 1;
     private T[] array;
     private int size;
 
@@ -16,16 +17,16 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value) {
         if (size == array.length) {
-            reSize();
+            resize();
         }
         array[size++] = value;
     }
 
     @Override
     public void add(T value, int index) {
-        checkIndexForAdd(index, 0);
+        checkIndexForAdd(index);
         if ((index == size) || (size + 1) == array.length) {
-            reSize();
+            resize();
         }
         System.arraycopy(array, index, array, index + 1, size - index);
         array[index] = value;
@@ -34,30 +35,26 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        Object[] inputArray = ((ArrayList) (list)).array;
-        int inputLength = list.size();
-        if (inputLength >= array.length - size) {
-            reSize();
+        for (int i = 0; i < list.size(); i++) {
+            add(list.get(i));
         }
-        System.arraycopy(inputArray, 0, array, size, inputLength);
-        size += inputLength;
     }
 
     @Override
     public T get(int index) {
-        checkIndexForAdd(index, 1);
+        checkIndexForSetGetRemove(index);
         return array[index];
     }
 
     @Override
     public void set(T value, int index) {
-        checkIndexForAdd(index, 1);
+        checkIndexForSetGetRemove(index);
         array[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        checkIndexForAdd(index, 1);
+        checkIndexForSetGetRemove(index);
         return fastRemove(index);
     }
 
@@ -91,8 +88,14 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void checkIndexForAdd(int index, int adjustment) {
-        if (index > size - adjustment || index < 0) {
+    private void checkIndexForAdd(int index) {
+        if (index > size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Invalid index");
+        }
+    }
+
+    private void checkIndexForSetGetRemove(int index) {
+        if (index > size - ADJUSTMENT_CHECK_INDEX || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Invalid index");
         }
     }
@@ -106,7 +109,7 @@ public class ArrayList<T> implements List<T> {
         return elementToRemove;
     }
 
-    private T[] reSize() {
+    private T[] resize() {
         int currentSize = (int) (array.length * GROW_NUMBER);
         array = Arrays.copyOf(array, currentSize);
         return array;
