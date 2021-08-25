@@ -18,7 +18,13 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-
+        if (index > amountOfElements || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Index is not correct");
+        }
+        grow();
+        System.arraycopy(values, index, values, index + 1, amountOfElements - index);
+        values[index] = value;
+        amountOfElements++;
     }
 
     @Override
