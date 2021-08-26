@@ -87,6 +87,7 @@ public class ArrayList<T> implements List<T> {
             values = valuesTemp;
         }
     }
+
     private void indexCheck(int index) {
         if (index >= amountOfElements || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Index is not correct");
