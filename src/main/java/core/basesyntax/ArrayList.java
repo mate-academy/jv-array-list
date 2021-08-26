@@ -24,7 +24,9 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        rangeCheckForAddFunction(index);
+        if (index > size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("This index does not exist");
+        }
         if (size == elementData.length) {
             grow();
         }
@@ -88,12 +90,6 @@ public class ArrayList<T> implements List<T> {
 
     private void rangeCheck(int index) {
         if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("This index does not exist");
-        }
-    }
-
-    private void rangeCheckForAddFunction(int index) {
-        if (index > size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("This index does not exist");
         }
     }
