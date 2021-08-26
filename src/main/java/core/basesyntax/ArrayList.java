@@ -35,8 +35,8 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayListIndexOutOfBoundsException("Can't add element with index " + index);
         }
         checkForGrow();
-        System.arraycopy(elementData, index, elementData
-                , index + 1, elementData.length - 1 - index);
+        System.arraycopy(elementData, index, elementData,
+                 index + 1, elementData.length - 1 - index);
         size++;
         elementData[index] = value;
     }
@@ -75,16 +75,6 @@ public class ArrayList<T> implements List<T> {
         elementData[index] = value;
     }
 
-    @Override
-    public T remove(int index) {
-        checkIndex(index);
-        T removedObject = elementData[index];
-        System.arraycopy(elementData, index + 1, elementData
-                , index, elementData.length - 1 - index);
-        size--;
-        return removedObject;
-    }
-
     private void checkIndex(int index) {
         if (index >= size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Can't find element with index " + index);
@@ -92,12 +82,22 @@ public class ArrayList<T> implements List<T> {
     }
 
     @Override
+    public T remove(int index) {
+        checkIndex(index);
+        T removedObject = elementData[index];
+        System.arraycopy(elementData, index + 1, elementData,
+                 index, elementData.length - 1 - index);
+        size--;
+        return removedObject;
+    }
+
+    @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
             if (elementData[i] == element
                     || (element != null && element.equals(elementData[i]))) {
-                System.arraycopy(elementData, i + 1, elementData
-                        , i, elementData.length - 1 - i);
+                System.arraycopy(elementData, i + 1, elementData,
+                         i, elementData.length - 1 - i);
                 size--;
                 break;
             }
