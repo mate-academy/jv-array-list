@@ -1,6 +1,7 @@
 package core.basesyntax;
 
 public interface List<T> {
+    int INITIAL_SIZE = 10;
     void add(T value);
 
     void add(T value, int index);

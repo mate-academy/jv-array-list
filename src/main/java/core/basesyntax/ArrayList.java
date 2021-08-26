@@ -4,13 +4,12 @@ import java.util.NoSuchElementException;
 import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
-    private static final int ARRAY_SIZE = 10;
     private static final String MESSAGE = "Error! Index must be greater then 0 and less then ";
-    private T[] array;
+    private T[] elements;
     private int size;
 
     public ArrayList() {
-        array = (T[]) new Object[ARRAY_SIZE];
+        elements = (T[]) new Object[INITIAL_SIZE];
     }
 
     private void checkIndex(int index) {
@@ -20,21 +19,21 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void checkSize() {
-        if (size == array.length) {
+        if (size == elements.length) {
             resizeArray();
         }
     }
 
     private void resizeArray() {
         T[] newArray = (T[]) new Object[size + size / 2];
-        System.arraycopy(array, 0, newArray, 0, array.length);
-        array = newArray;
+        System.arraycopy(elements, 0, newArray, 0, elements.length);
+        elements = newArray;
     }
 
     @Override
     public void add(T object) {
         checkSize();
-        array[size] = object;
+        elements[size] = object;
         size++;
     }
 
@@ -44,8 +43,8 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayListIndexOutOfBoundsException(MESSAGE + size);
         }
         checkSize();
-        System.arraycopy(array, index, array, index + 1, size - index);
-        array[index] = object;
+        System.arraycopy(elements, index, elements, index + 1, size - index);
+        elements[index] = object;
         size++;
     }
 
@@ -59,20 +58,20 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         checkIndex(index);
-        return array[index];
+        return elements[index];
     }
 
     @Override
     public void set(T object, int index) {
         checkIndex(index);
-        array[index] = object;
+        elements[index] = object;
     }
 
     @Override
     public T remove(int index) {
         checkIndex(index);
-        T object = array[index];
-        System.arraycopy(array, index + 1, array, index, size - index - 1);
+        T object = elements[index];
+        System.arraycopy(elements, index + 1, elements, index, size - index - 1);
         size--;
         return object;
     }
@@ -80,9 +79,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T object) {
         for (int i = 0; i < size; i++) {
-            if (Objects.equals(object, array[i])) {
-                remove(i);
-                return object;
+            if (Objects.equals(object, elements[i])) {
+                return remove(i);
             }
         }
         throw new NoSuchElementException("Error! Input object wasn't found!");
