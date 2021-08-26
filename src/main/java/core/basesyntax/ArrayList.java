@@ -95,6 +95,10 @@ public class ArrayList<T> implements List<T> {
         if (size + 1 > arrayList.length) {
             tempArray = (T[]) new Object[size + (size >> 1)];
         }
+        copyArrayValues(tempArray, value, index);
+    }
+
+    private void copyArrayValues(T[] tempArray, T value, int index) {
         System.arraycopy(arrayList, 0, tempArray,0, index);
         tempArray[index] = value;
         System.arraycopy(arrayList, index, tempArray,index + 1, size - index);
@@ -102,7 +106,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void checkIndex(int index) {
-        if ((index < 0 || index >= size)) {
+        if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException("Index" + index + "does not exist");
         }
     }
