@@ -4,7 +4,6 @@ import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    private static final int GROW_SIZE_INDEX = 1;
     private static final int DEFAULT_SIZE = 10;
     private transient Object[] elementData;
     private int size = 0;
@@ -30,16 +29,13 @@ public class ArrayList<T> implements List<T> {
         if (size == elementData.length) {
             grow();
         }
-        Object[] elementData = this.elementData;
-        System.arraycopy(elementData, index, this.elementData,
-                index + GROW_SIZE_INDEX, size - index);
+        System.arraycopy(elementData, index, elementData, index + 1, size - index);
         elementData[index] = value;
         size++;
     }
 
     @Override
     public void addAll(List<T> list) {
-        grow();
         for (int i = 0; i < list.size(); i++) {
             add(list.get(i));
         }
@@ -61,8 +57,9 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         rangeCheck(index);
         T oldValue = (T) elementData[index];
-        System.arraycopy(elementData, index + GROW_SIZE_INDEX, elementData, index,
-                elementData.length - index - GROW_SIZE_INDEX);
+        System.arraycopy(elementData, index + 1, elementData, index,
+                size - index - 1);
+        elementData[size - 1] = null;
         size--;
         return oldValue;
     }
