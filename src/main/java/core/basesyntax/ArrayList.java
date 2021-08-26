@@ -57,10 +57,8 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         rangeCheck(index);
         T oldValue = (T) elementData[index];
-        System.arraycopy(elementData, index + 1, elementData, index,
-                size - index - 1);
-        elementData[size - 1] = null;
-        size--;
+        System.arraycopy(elementData, index + 1, elementData, index, size - index - 1);
+        elementData[--size] = null;
         return oldValue;
     }
 
