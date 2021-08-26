@@ -6,7 +6,6 @@ import java.util.NoSuchElementException;
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_ARRAY_LENGTH = 10;
     private static final double GROW_NUMBER = 1.5;
-    private static final int ADJUSTMENT_CHECK_INDEX = 1;
     private T[] array;
     private int size;
 
@@ -24,8 +23,9 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        checkIndexForAdd(index);
-        if ((index == size) || (size + 1) == array.length) {
+        if (index > size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Invalid index");
+        } else if (size == array.length) {
             resize();
         }
         System.arraycopy(array, index, array, index + 1, size - index);
@@ -42,19 +42,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        checkIndexForSetGetRemove(index);
+        checkIndex(index);
         return array[index];
     }
 
     @Override
     public void set(T value, int index) {
-        checkIndexForSetGetRemove(index);
+        checkIndex(index);
         array[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        checkIndexForSetGetRemove(index);
+        checkIndex(index);
         return fastRemove(index);
     }
 
@@ -88,14 +88,8 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void checkIndexForAdd(int index) {
-        if (index > size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index");
-        }
-    }
-
-    private void checkIndexForSetGetRemove(int index) {
-        if (index > size - ADJUSTMENT_CHECK_INDEX || index < 0) {
+    private void checkIndex(int index) {
+        if (index >= size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Invalid index");
         }
     }
