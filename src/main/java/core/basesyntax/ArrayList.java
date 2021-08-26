@@ -6,19 +6,14 @@ import java.util.Objects;
 public class ArrayList<T> implements List<T> {
     private static final String
             INDEX_OUT_OF_BOUND_MESSAGE = "Index is less than 0 and more than last list index.";
-    private static final String COMMA = ",";
-    private static final String LEFT_BRACKET = "[";
-    private static final String RIGHT_BRACKET = "]";
-    private static final int DEFAULT_CAPACITY = 10;
+    private static final int INITIAL_CAPACITY = 10;
     private static final double CAPACITY_GROW_COEFFICIENT = 1.5;
 
     private T[] values;
     private int size;
-    private int capacity;
 
     ArrayList() {
-        this.capacity = DEFAULT_CAPACITY;
-        this.values = (T[]) new Object[capacity];
+        this.values = (T[]) new Object[INITIAL_CAPACITY];
     }
 
     @Override
@@ -29,9 +24,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         if (index <= size && index >= 0) {
-            if (capacity == size + 1) {
-                makeCapacityBigger();
-            }
+            checkSize();
             System.arraycopy(values, index, values, index + 1, size - index);
             values[index] = value;
             size++;
@@ -99,20 +92,16 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void makeCapacityBigger() {
-        capacity = (int) (capacity * CAPACITY_GROW_COEFFICIENT);
-        T[] newValues = (T[]) new Object[capacity];
-        System.arraycopy(values, 0, newValues, 0, values.length);
-        values = newValues;
+    private void checkSize() {
+        if (values.length == size + 1) {
+            makeCapacityBigger();
+        }
     }
 
-    @Override
-    public String toString() {
-        StringBuilder res = new StringBuilder(LEFT_BRACKET);
-        int counter = 0;
-        for (int i = 0; i < size; i++) {
-            res.append(++counter == size ? values[i] : values[i] + COMMA);
-        }
-        return res.append(RIGHT_BRACKET).toString();
+    private void makeCapacityBigger() {
+        int newCapacity = (int) (values.length * CAPACITY_GROW_COEFFICIENT);
+        T[] newValues = (T[]) new Object[newCapacity];
+        System.arraycopy(values, 0, newValues, 0, values.length);
+        values = newValues;
     }
 }
