@@ -64,18 +64,12 @@ public class ArrayList<T> implements List<T> {
             size--;
             return null;
         }
-        boolean foundElement = false;
         for (int i = 0; i <= size; i++) {
             if (element.equals(array[i])) {
-                fastRemove(i);
-                foundElement = true;
-                break;
+                return fastRemove(i);
             }
         }
-        if (!foundElement) {
-            throw new NoSuchElementException("Element not found");
-        }
-        return element;
+        throw new NoSuchElementException("Element not found");
     }
 
     @Override
