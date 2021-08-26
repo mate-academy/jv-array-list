@@ -4,20 +4,18 @@ import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    private static final int DEFAULT_CAPACITY = 10;
+    private static final int INITIAL_CAPACITY = 10;
     private int size = 0;
-    private Object[] data = {};
+    private Object[] elements;
 
     public ArrayList() {
-        data = new Object[DEFAULT_CAPACITY];
+        elements = new Object[INITIAL_CAPACITY];
     }
 
     @Override
     public void add(T value) {
-        if (size == data.length) {
-            ensureCapacity();
-        }
-        data[size++] = value;
+        ensureCapacity();
+        elements[size++] = value;
     }
 
     @Override
@@ -25,11 +23,9 @@ public class ArrayList<T> implements List<T> {
         if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException("Index: " + index + ", Size " + index);
         }
-        if (size >= data.length) {
-            ensureCapacity();
-        }
-        System.arraycopy(data, index, data, index + 1, size - index);
-        data[index] = value;
+        ensureCapacity();
+        System.arraycopy(elements, index, elements, index + 1, size - index);
+        elements[index] = value;
         size++;
     }
 
@@ -38,35 +34,28 @@ public class ArrayList<T> implements List<T> {
         for (int i = 0; i < list.size(); i++) {
             add(list.get(i));
         }
-
     }
 
     @Override
     public T get(int index) {
-        if (!isIn(index)) {
-            throw new ArrayListIndexOutOfBoundsException("Index: " + index + ", Size " + index);
-        }
-        return (T) data[index];
+        checkIndex(index);
+        return (T) elements[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (!isIn(index)) {
-            throw new ArrayListIndexOutOfBoundsException("Index: " + index + ", Size " + index);
-        }
-        data[index] = value;
+        checkIndex(index);
+        elements[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (!isIn(index)) {
-            throw new ArrayListIndexOutOfBoundsException("Index: " + index + ", Size " + index);
-        }
-        Object removedElement = data[index];
-        if (size == data.length) {
-            System.arraycopy(data, index, data, index, size - index);
+        checkIndex(index);
+        T removedElement = (T) elements[index];
+        if (size == elements.length) {
+            System.arraycopy(elements, index, elements, index, size - index);
         } else {
-            System.arraycopy(data, index + 1, data, index, size - index);
+            System.arraycopy(elements, index + 1, elements, index, size - index);
         }
         size--;
         return (T) removedElement;
@@ -74,18 +63,13 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        if (!exist(element)) {
-            throw new NoSuchElementException();
-        }
-        Object removedElement = null;
-        for (int i = 0; i < size(); i++) {
-            if (element == data[i] || (element != null && element.equals(data[i]))) {
-                removedElement = (T) data[i];
-                remove(i);
-                break;
+        for (int i = 0; i < size; i++) {
+            if ((element == (T) elements[i])
+                    || (element != null && element.equals((T) elements[i]))) {
+                return remove(i);
             }
         }
-        return (T) removedElement;
+        throw new NoSuchElementException("This element doesn't exist!");
     }
 
     @Override
@@ -99,22 +83,15 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void ensureCapacity() {
-        int newEnsureCapacity = data.length * 3 / 2 + 1;
-        data = Arrays.copyOf(data, newEnsureCapacity);
-    }
-
-    private boolean exist(T element) {
-        int count = 0;
-        int exist = 0;
-        for (int i = 0; i < data.length; i++) {
-            if ((element == null || element == (T) data[i]) || element.equals((T) data[i])) {
-                count++;
-            }
+        if (size >= elements.length) {
+            int newEnsureCapacity = elements.length * 3 / 2 + 1;
+            elements = Arrays.copyOf(elements, newEnsureCapacity);
         }
-        return count != exist;
     }
 
-    private boolean isIn(int index) {
-        return index >= 0 && index < size;
+    private void checkIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Index: " + index + ", Size " + index);
+        }
     }
 }
