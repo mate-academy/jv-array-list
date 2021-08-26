@@ -23,14 +23,11 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index <= size && index >= 0) {
-            checkSize();
-            System.arraycopy(values, index, values, index + 1, size - index);
-            values[index] = value;
-            size++;
-        } else {
-            throw new ArrayListIndexOutOfBoundsException(INDEX_OUT_OF_BOUND_MESSAGE);
-        }
+        checkIndexForAdd(index);
+        checkSize();
+        System.arraycopy(values, index, values, index + 1, size - index);
+        values[index] = value;
+        size++;
     }
 
     @Override
@@ -44,32 +41,25 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index < size && index >= 0) {
-            return values[index];
-        } else {
-            throw new ArrayListIndexOutOfBoundsException(INDEX_OUT_OF_BOUND_MESSAGE);
-        }
+        checkIndex(index);
+        return values[index];
+
     }
 
     @Override
     public void set(T value, int index) {
-        if (index < size && index >= 0) {
-            values[index] = value;
-        } else {
-            throw new ArrayListIndexOutOfBoundsException(INDEX_OUT_OF_BOUND_MESSAGE);
-        }
+        checkIndex(index);
+        values[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index < size && index >= 0) {
-            final T deletedValue = values[index];
-            values[index] = null;
-            size--;
-            System.arraycopy(values, index + 1, values, index, size - index);
-            return deletedValue;
-        }
-        throw new ArrayListIndexOutOfBoundsException(INDEX_OUT_OF_BOUND_MESSAGE);
+        checkIndex(index);
+        final T deletedValue = values[index];
+        values[index] = null;
+        size--;
+        System.arraycopy(values, index + 1, values, index, size - index);
+        return deletedValue;
     }
 
     @Override
@@ -93,8 +83,20 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void checkSize() {
-        if (values.length == size + 1) {
+        if (values.length == size) {
             makeCapacityBigger();
+        }
+    }
+
+    private void checkIndex(int index) {
+        if (index >= size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException(INDEX_OUT_OF_BOUND_MESSAGE);
+        }
+    }
+
+    private void checkIndexForAdd(int index) {
+        if (index > size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException(INDEX_OUT_OF_BOUND_MESSAGE);
         }
     }
 
