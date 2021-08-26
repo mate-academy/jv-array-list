@@ -9,7 +9,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        checkAdd();
+        checkGrow();
         elements[size] = value;
         size++;
     }
@@ -17,7 +17,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         checkIndexAddRemove(index);
-        checkAdd();
+        checkGrow();
         System.arraycopy(elements, index, elements, index + 1, size - index);
         elements[index] = value;
         size++;
@@ -93,7 +93,7 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private void checkAdd() {
+    private void checkGrow() {
         if (size == capacity) {
             grow();
         }
