@@ -6,16 +6,19 @@ public class ArrayList<T> implements List<T> {
     private static final String BOUNDS_EXCEPTION = "Out of Bounds";
     private static final String NO_ELEMET_EXCEPTION = "No such element exists";
     private static final int MAX_SIZE = 10;
-    private Object[] array = new Object[MAX_SIZE];
+    private T[] array;
     private int size = 0;
+
+    public ArrayList() {
+        array = (T[]) new Object[MAX_SIZE];
+    }
 
     @Override
     public void add(T value) {
         if (size == array.length) {
-            copy(array);
+            grow();
         }
-        array[size] = value;
-        size++;
+        array[size++] = value;
     }
 
     @Override
@@ -24,14 +27,12 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayListIndexOutOfBoundsException(BOUNDS_EXCEPTION);
         }
         if (size == array.length) {
-            copy(array);
+            grow();
         }
-        Object[] newArray = new Object[size + 1];
-        System.arraycopy(array, 0, newArray, 0, index);
-        newArray[index] = value;
-        System.arraycopy(array, index, newArray, index + 1, size - index);
+        T[] newArray = (T[]) new Object[size + 1];
+        System.arraycopy(array, index, array, index + 1, size - index);
+        array[index] = value;
         size++;
-        array = newArray;
     }
 
     @Override
@@ -56,13 +57,10 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
-        Object[] newArray = new Object[size - 1];
-        final Object output = array[index];
-        System.arraycopy(array, 0, newArray, 0, index);
-        System.arraycopy(array, index + 1, newArray, index, size - index - 1);
-        array = newArray;
+        T value = array[index];
+        System.arraycopy(array, index + 1, array, index, size - index - 1);
         size--;
-        return (T) output;
+        return value;
     }
 
     @Override
@@ -85,15 +83,15 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void copy(Object[] inputArray) {
-        Object[] copiedArray = new Object[inputArray.length * 3 / 2];
-        System.arraycopy(inputArray, 0, copiedArray, 0, inputArray.length);
-        array = copiedArray;
-    }
-
     private void checkIndex(int index) {
         if (index >= size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException(BOUNDS_EXCEPTION);
         }
+    }
+
+    private void grow() {
+        T[] copiedArray = (T[]) new Object[array.length * 3 / 2];
+        System.arraycopy(array, 0, copiedArray, 0, array.length);
+        array = copiedArray;
     }
 }
