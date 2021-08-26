@@ -27,7 +27,9 @@ public class ArrayList<T> implements List<T> {
             size++;
             return;
         }
-        checkIndex(index, "add");
+        if ((index < 0 || index > size)) {
+            throw new ArrayListIndexOutOfBoundsException("Index" + index + "does not exist");
+        }
         grow(value, index);
         size++;
     }
@@ -41,22 +43,22 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        checkIndex(index, "get");
+        checkIndex(index);
         return arrayList[index];
     }
 
     @Override
     public void set(T value, int index) {
-        checkIndex(index, "set");
+        checkIndex(index);
         arrayList[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        checkIndex(index, "remove");
+        checkIndex(index);
         T removedElement = arrayList[index];
-        System.arraycopy(arrayList, index + 1, arrayList, index, size - (index + 1));
-        size--;
+        System.arraycopy(arrayList, index + 1, arrayList, index, size - index - 1);
+        arrayList[--size] = null;
         return removedElement;
     }
 
@@ -99,18 +101,9 @@ public class ArrayList<T> implements List<T> {
         arrayList = tempArray;
     }
 
-    private void checkIndex(int index, String operation) {
-        if ((operation.equals("get")
-                || operation.equals("set")
-                || operation.equals("remove"))
-                && (index < 0 || index >= size) && size != 0) {
-            throw new ArrayListIndexOutOfBoundsException("Cant " + operation
-                    + " index: " + index
-                    + ", Size: " + size);
-        }
-        if (operation.equals("add") && (index < 0 || index > size) && size != 0) {
-            throw new ArrayListIndexOutOfBoundsException("Can't add to index: " + index
-                    + ", Size: " + size);
+    private void checkIndex(int index) {
+        if ((index < 0 || index >= size)) {
+            throw new ArrayListIndexOutOfBoundsException("Index" + index + "does not exist");
         }
     }
 }
