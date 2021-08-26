@@ -5,11 +5,12 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int GROW_SIZE_INDEX = 1;
-    private transient Object[] elementData = new Object[10];
+    private static final int DEFAULT_SIZE = 10;
+    private transient Object[] elementData;
     private int size = 0;
 
     public ArrayList() {
-        elementData = (T[]) new Object[10];
+        elementData = (T[]) new Object[DEFAULT_SIZE];
     }
 
     @Override
