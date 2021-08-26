@@ -4,15 +4,18 @@ import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    private static final int NON_ADD_FUNCTION_INDEX = 1;
     private static final int GROW_SIZE_INDEX = 1;
     private transient Object[] elementData = new Object[10];
     private int size = 0;
 
+    public ArrayList() {
+        elementData = (T[]) new Object[10];
+    }
+
     @Override
     public void add(T value) {
         if (size == elementData.length) {
-            grow(size + GROW_SIZE_INDEX);
+            grow();
         }
         elementData[size] = value;
         size++;
@@ -20,12 +23,12 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        rangeCheck(index);
-        Object[] elementData;
-        if (size == (elementData = this.elementData).length) {
-            elementData = grow(size + GROW_SIZE_INDEX);
+        rangeCheckForAddFunction(index);
+        if (size == elementData.length) {
+            grow();
         }
-        System.arraycopy(elementData, index, elementData,
+        Object[] elementData = this.elementData;
+        System.arraycopy(elementData, index, this.elementData,
                 index + GROW_SIZE_INDEX, size - index);
         elementData[index] = value;
         size++;
@@ -33,7 +36,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        grow(list.size() + size);
+        grow();
         for (int i = 0; i < list.size(); i++) {
             add(list.get(i));
         }
@@ -41,22 +44,21 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        rangeCheck(index + NON_ADD_FUNCTION_INDEX);
+        rangeCheck(index);
         return (T) elementData[index];
     }
 
     @Override
     public void set(T value, int index) {
-        rangeCheck(index + NON_ADD_FUNCTION_INDEX);
+        rangeCheck(index);
         elementData[index] = (T) value;
     }
 
     @Override
     public T remove(int index) {
-        rangeCheck(index + NON_ADD_FUNCTION_INDEX);
+        rangeCheck(index);
         T oldValue = (T) elementData[index];
-        Object[] bufferArray = elementData;
-        System.arraycopy(bufferArray, index + GROW_SIZE_INDEX, elementData, index,
+        System.arraycopy(elementData, index + GROW_SIZE_INDEX, elementData, index,
                 elementData.length - index - GROW_SIZE_INDEX);
         size--;
         return oldValue;
@@ -84,15 +86,21 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void rangeCheck(int index) {
+        if (index >= size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("This index does not exist");
+        }
+    }
+
+    private void rangeCheckForAddFunction(int index) {
         if (index > size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("This index does not exist");
         }
     }
 
-    private Object[] grow(int minCapacity) {
+    private void grow() {
         int oldCapacity = elementData.length;
         int newCapacity = (int) (oldCapacity * 1.5);
-        return elementData = Arrays.copyOf(elementData, newCapacity);
+        elementData = Arrays.copyOf(elementData, newCapacity);
     }
 
 }
