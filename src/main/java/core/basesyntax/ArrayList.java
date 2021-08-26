@@ -5,113 +5,105 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 12;
-    private T[] currentArray;
+    private static final double GROW_COEFFICIENT = 1.5;
+    private T[] elementData;
     private int size;
 
     public ArrayList(int initialCapacity) {
-        if (initialCapacity >= 0) {
-            currentArray = (T[]) new Object[initialCapacity > DEFAULT_CAPACITY
-                    ? initialCapacity : DEFAULT_CAPACITY];
-        } else {
+        if (initialCapacity < 0) {
             throw new IllegalArgumentException("Illegal Capacity: "
                     + initialCapacity);
         }
+        elementData = (T[]) new Object[initialCapacity > DEFAULT_CAPACITY
+                ? initialCapacity : DEFAULT_CAPACITY];
     }
 
     public ArrayList() {
-        currentArray = (T[]) new Object[DEFAULT_CAPACITY];
-    }
-
-    private T[] grow() {
-        return currentArray = Arrays.copyOf(currentArray,
-                (int) (currentArray.length * 1.5));
+        elementData = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
     @Override
     public void add(T value) {
-        if (currentArray.length - 1 <= size) {
-            currentArray = grow();
-        }
-        currentArray[size] = value;
+        checkForGrow();
+        elementData[size] = value;
         size++;
     }
 
     @Override
     public void add(T value, int index) {
-        if (index >= 0 && index <= size) {
-            if (currentArray.length - 1 <= size) {
-                currentArray = grow();
-            }
-            for (int i = size; i > index; i--) {
-                currentArray[i] = currentArray[i - 1];
-            }
-            size++;
-            currentArray[index] = value;
-        } else {
+        if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException("Can't add element with index " + index);
         }
+        checkForGrow();
+        System.arraycopy(elementData, index, elementData
+                , index + 1, elementData.length - 1 - index);
+        size++;
+        elementData[index] = value;
+    }
+
+    private void checkForGrow() {
+        if (elementData.length - 1 <= size) {
+            elementData = grow();
+        }
+    }
+
+    private T[] grow() {
+        return elementData = Arrays.copyOf(elementData,
+                (int) (elementData.length * GROW_COEFFICIENT));
     }
 
     @Override
     public void addAll(List<T> list) {
-        while (currentArray.length < size + list.size()) {
-            currentArray = grow();
+        while (elementData.length < size + list.size()) {
+            elementData = grow();
         }
         for (int i = 0; i < list.size(); i++) {
-            currentArray[size + i] = list.get(i);
+            elementData[size + i] = list.get(i);
         }
         size += list.size();
     }
 
     @Override
     public T get(int index) {
-        if (index < size && index >= 0) {
-            return currentArray[index];
-        } else {
-            throw new ArrayListIndexOutOfBoundsException("Can't get element with index " + index);
-        }
+        checkIndex(index);
+        return elementData[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index < size && index >= 0) {
-            currentArray[index] = value;
-        } else {
-            throw new ArrayListIndexOutOfBoundsException("Can't set element with index " + index);
-        }
+        checkIndex(index);
+        elementData[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index < size && index >= 0) {
-            T removedObject = currentArray[index];
-            for (int i = index; i < size; i++) {
-                currentArray[i] = currentArray[i + 1];
-            }
-            currentArray[size - 1] = null;
-            size--;
-            return removedObject;
-        } else {
-            throw new ArrayListIndexOutOfBoundsException("Can't remove element with index " + index);
+        checkIndex(index);
+        T removedObject = elementData[index];
+        System.arraycopy(elementData, index + 1, elementData
+                , index, elementData.length - 1 - index);
+        size--;
+        return removedObject;
+    }
+
+    private void checkIndex(int index) {
+        if (index >= size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Can't find element with index " + index);
         }
     }
 
     @Override
     public T remove(T element) {
-        int index = -1;
         for (int i = 0; i < size; i++) {
-            if (currentArray[i] == element
-                    || (element != null && element.equals(currentArray[i]))) {
-                index = i;
+            if (elementData[i] == element
+                    || (element != null && element.equals(elementData[i]))) {
+                System.arraycopy(elementData, i + 1, elementData
+                        , i, elementData.length - 1 - i);
                 size--;
                 break;
             }
-        }
-        if (index < 0) {
-            throw new NoSuchElementException("Can't remove element " + element);
-        }
-        for (int i = index; i < size; i++) {
-            currentArray[i] = currentArray[i + 1];
+            if (i == size - 1) {
+                throw new NoSuchElementException("Can't remove element " + element);
+            }
         }
         return element;
     }
