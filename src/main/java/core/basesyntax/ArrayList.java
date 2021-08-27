@@ -13,24 +13,18 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (size == arrayList.length) {
-            grow(value, size);
-        }
-        arrayList[size] = value;
+        grow();
+        modifyArrayValues(value, size);
         size++;
     }
 
     @Override
     public void add(T value, int index) {
-        if (size == 0 && index == 0) {
-            arrayList[size] = value;
-            size++;
-            return;
-        }
         if ((index < 0 || index > size)) {
-            throw new ArrayListIndexOutOfBoundsException("Index" + index + "does not exist");
+            throw new ArrayListIndexOutOfBoundsException("Index: " + index + " does not exist");
         }
-        grow(value, index);
+        grow();
+        modifyArrayValues(value, index);
         size++;
     }
 
@@ -90,24 +84,25 @@ public class ArrayList<T> implements List<T> {
                 && arrElement.equals(element));
     }
 
-    private void grow(T value, int index) {
-        T[] tempArray = (T[]) new Object[size + 1];
+    private void grow() {
+        T[] tempArray;
         if (size + 1 > arrayList.length) {
             tempArray = (T[]) new Object[size + (size >> 1)];
+            System.arraycopy(arrayList, 0, tempArray, 0, size);
+            arrayList = tempArray;
         }
-        copyArrayValues(tempArray, value, index);
     }
 
-    private void copyArrayValues(T[] tempArray, T value, int index) {
-        System.arraycopy(arrayList, 0, tempArray,0, index);
-        tempArray[index] = value;
-        System.arraycopy(arrayList, index, tempArray,index + 1, size - index);
-        arrayList = tempArray;
+    private void modifyArrayValues(T value, int index) {
+        T[] tempArray = (T[]) new Object[arrayList.length];
+        System.arraycopy(arrayList, index, tempArray, 0, arrayList.length - index - 1);
+        arrayList[index] = value;
+        System.arraycopy(tempArray, 0, arrayList, index + 1, tempArray.length - index - 1);
     }
 
     private void checkIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index" + index + "does not exist");
+            throw new ArrayListIndexOutOfBoundsException("Index: " + index + " does not exist");
         }
     }
 }
