@@ -27,20 +27,20 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         if (checkForEmpty(value)) {
-            if (index < currentSizeOfArray
-            && index < size && ensureCapacity()) {
-                copyValues(index);
+            if (index > currentSizeOfArray
+            && !indexCapacity(index) && !ensureCapacity()) {
+                grow();
+                arrayCopySet(index);
                 arrayData[index] = value;
                 size++;
-            } else if (index > currentSizeOfArray || index > size){
+            } else if (index > currentSizeOfArray || !indexCapacity(index)){
                 throw new ArrayListIndexOutOfBoundsException("Index are not exist," +
                         " please input right index");
             } else if(index == size && ensureCapacity()) {
                 arrayData[index] = value;
                 size++;
             }
-            grow();
-            copyValues(index);
+            arrayCopySet(index);
             arrayData[index] = value;
             size++;
         }
@@ -59,7 +59,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if(index < size) {
+        if(indexCapacity(index)) {
             return arrayData[index];
         }
         throw new ArrayListIndexOutOfBoundsException("Index are not exist, please input right index");
@@ -67,7 +67,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void set(T value, int index) {
-        if (index >= size) {
+        if (!indexCapacity(index)) {
             throw new ArrayListIndexOutOfBoundsException("Index are not exist, please input right index");
         }
         arrayData[index] = value;
@@ -75,18 +75,34 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(int index) {
-        if (index < size) {
-
+        if (!indexCapacity(index)) {
+            throw new ArrayListIndexOutOfBoundsException("Index are not exist, please input right index");
         }
-        throw new ArrayListIndexOutOfBoundsException("index are not exist, please input right index");
+        if (indexCapacity(index) && ensureCapacity()) {
+            arrayCopyRemove(index);
+            size--;
+        } else if (index == size && ensureCapacity()) {
+            grow();
+            arrayCopyRemove(index);
+            size--;
+        }
+        return arrayData[size];
     }
 
     @Override
     public T remove(T element) {
-        if (index >= size) {
-            throw new NoSuchElementException("Element are not exist");
+        for (int i = 0; i < size; i++) {
+            if ((element == null
+                    && element == arrayData[i])
+                    || element != null && element.equals(arrayData[i])) {
+                if (!ensureCapacity()) {
+                    grow();
+                }
+                arrayCopyRemove(i);
+                size--;
+            }
         }
-        return null;
+        throw new NoSuchElementException("Element are not exist in data");
     }
 
     @Override
@@ -101,11 +117,11 @@ public class ArrayList<T> implements List<T> {
 
     @SuppressWarnings({"unchecked"})
     private void grow() {
-        currentSizeOfArray *= GROW_SIZE;
-        T[] arrayDataTemp = (T[]) new Object[currentSizeOfArray];
+        T[] arrayDataTemp = (T[]) new Object[(int) (currentSizeOfArray * GROW_SIZE)];
         System.arraycopy(arrayData, INITIAL_SRC_POS,
                 arrayDataTemp, INITIAL_SRC_POS, arrayData.length);
         arrayData = arrayDataTemp;
+        currentSizeOfArray = (int) (currentSizeOfArray * GROW_SIZE);
     }
 
     private boolean checkForEmpty(T value) {
@@ -118,11 +134,22 @@ public class ArrayList<T> implements List<T> {
         return true;
     }
 
-    private void copyValues(int index) {
+    private void arrayCopyAdd(int index) {
         System.arraycopy(arrayData, index, arrayData, index++, size - index);
+    }
+
+    private void arrayCopySet(int index) {
+        System.arraycopy(arrayData, index, arrayData, index++, size - index);
+    }
+    private void arrayCopyRemove(int index) {
+        System.arraycopy(arrayData, index, arrayData, index, size - index);
     }
 
     private boolean ensureCapacity() {
         return (size + 1) < currentSizeOfArray;
+    }
+
+    private boolean indexCapacity(int index) {
+        return (index >= 0 && index < size);
     }
 }
