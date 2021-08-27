@@ -5,12 +5,12 @@ import java.util.NoSuchElementException;
 public class ArrayList<T> implements List<T> {
     private static final String BOUNDS_EXCEPTION = "Out of Bounds";
     private static final String NO_ELEMET_EXCEPTION = "No such element exists";
-    private static final int MAX_SIZE = 10;
+    private static final int DEFAULT_SIZE = 10;
     private T[] array;
     private int size = 0;
 
     public ArrayList() {
-        array = (T[]) new Object[MAX_SIZE];
+        array = (T[]) new Object[DEFAULT_SIZE];
     }
 
     @Override
@@ -56,9 +56,10 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
-        T value = array[index];
+        final T value = array[index];
         System.arraycopy(array, index + 1, array, index, size - index - 1);
         size--;
+        array[size] = null;
         return value;
     }
 
@@ -90,7 +91,7 @@ public class ArrayList<T> implements List<T> {
 
     private void grow() {
         T[] copiedArray = (T[]) new Object[array.length * 3 / 2];
-        System.arraycopy(array, 0, copiedArray, 0, array.length);
+        System.arraycopy(array, 0, copiedArray, 0, size);
         array = copiedArray;
     }
 }
