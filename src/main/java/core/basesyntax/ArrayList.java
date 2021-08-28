@@ -18,12 +18,16 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (checkForEmpty(value)) {
+        if (!arrayIsEmpty) {
             if (!ensureCapacity()) {
                 grow();
             }
             arrayData[size] = value;
             size++;
+        } else {
+            arrayData[size] = value;
+            size++;
+            arrayIsEmpty = false;
         }
     }
 
@@ -38,13 +42,12 @@ public class ArrayList<T> implements List<T> {
             size++;
             }
         else if (indexCapacity(index) && ensureCapacity()) {
-            arrayCopySet(index);
+            arrayCopyAdd(index);
             arrayData[index] = value;
             size++;
-        }
-        else if (indexCapacity(index) && !ensureCapacity()) {
+        } else {
             grow();
-            arrayCopySet(index);
+            arrayCopyAdd(index);
             arrayData[index] = value;
             size++;
         }
@@ -86,7 +89,8 @@ public class ArrayList<T> implements List<T> {
         if (indexCapacity(index) && ensureCapacity()) {
             arrayCopyRemove(index);
             size--;
-        } else if (index == size && ensureCapacity()) {
+        } else if ((index == size && !ensureCapacity())
+                 || (indexCapacity(index) && !ensureCapacity())) {
             grow();
             arrayCopyRemove(index);
             size--;
@@ -101,9 +105,6 @@ public class ArrayList<T> implements List<T> {
             if ((element == null
                     && element == arrayData[i])
                     || element != null && element.equals(arrayData[i])) {
-                if (!ensureCapacity()) {
-                    grow();
-                }
                 arrayCopyRemove(i);
                 size--;
                 return element;
@@ -131,17 +132,7 @@ public class ArrayList<T> implements List<T> {
         currentSizeOfArray = (int) (currentSizeOfArray * GROW_SIZE);
     }
 
-    private boolean checkForEmpty(T value) {
-        if (arrayIsEmpty) {
-            arrayData[0] = value;
-            size++;
-            arrayIsEmpty = false;
-            return false;
-        }
-        return true;
-    }
-
-    private void arrayCopySet(int index) {
+    private void arrayCopyAdd(int index) {
         int numberOfCopiedElements = size +1;
             System.arraycopy(arrayData, index, arrayData, ++index, numberOfCopiedElements - index);
     }
