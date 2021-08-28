@@ -1,8 +1,6 @@
 package core.basesyntax;
 
-import java.util.Arrays;
 import java.util.NoSuchElementException;
-import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
@@ -37,9 +35,6 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        if (list.isEmpty()) {
-            return;
-        }
         int newSize = size + list.size();
         if (newSize > elementData.length) {
             elementData = grow(newSize);
@@ -72,21 +67,12 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        boolean elementIsPresent = false;
-        int i = 0;
-        for (; i < size; i++) {
-            if (Objects.equals(elementData[i], element)) {
-                elementIsPresent = true;
-                break;
+        for (int i = 0; i < size; i++) {
+            if (element == elementData[i] || (element != null && element.equals(elementData[i]))) {
+                return remove(i);
             }
         }
-        if (elementIsPresent) {
-            T oldValue = (T) elementData[i];
-            removeElement(i);
-            return oldValue;
-        } else {
-            throw new NoSuchElementException("Element not found!");
-        }
+        throw new NoSuchElementException("Element not found!");
     }
 
     @Override
@@ -108,7 +94,9 @@ public class ArrayList<T> implements List<T> {
     }
 
     private Object[] grow(int minCapacity) {
-        return Arrays.copyOf(elementData, newCapacity(minCapacity));
+        Object[] newElementData = new Object[newCapacity(minCapacity)];
+        System.arraycopy(elementData, 0, newElementData, 0, size);
+        return newElementData;
     }
 
     private void checkIndex(int index, int length) {
