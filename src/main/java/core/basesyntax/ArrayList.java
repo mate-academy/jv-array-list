@@ -4,12 +4,12 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int INITIAL_SIZE = 10;
+    private static final int INITIAL_SRC_POS = 0;
+    private static final double GROW_SIZE = 1.5;
     private boolean arrayIsEmpty = true;
     private T[] arrayData;
     private int size;
     private int currentSizeOfArray = INITIAL_SIZE;
-    private static final int INITIAL_SRC_POS = 0;
-    private static final double GROW_SIZE = 1.5;
 
     @SuppressWarnings({"unchecked"})
     public ArrayList() {
@@ -36,12 +36,10 @@ public class ArrayList<T> implements List<T> {
         if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException("Index are not exist, your index is "
                     + index + " last index is " + size);
-        }
-        else if (index == size && ensureCapacity()) {
+        } else if (index == size && ensureCapacity()) {
             arrayData[index] = value;
             size++;
-            }
-        else if (indexCapacity(index) && ensureCapacity()) {
+        } else if (indexCapacity(index) && ensureCapacity()) {
             arrayCopyAdd(index);
             arrayData[index] = value;
             size++;
@@ -57,7 +55,7 @@ public class ArrayList<T> implements List<T> {
     public void addAll(List<T> list) {
         while (size + list.size() >= currentSizeOfArray) {
             grow();
-            }
+        }
         for (int i = 0; i < list.size(); i++) {
             arrayData[size] = list.get(i);
             size++;
@@ -66,16 +64,18 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if(indexCapacity(index)) {
+        if (indexCapacity(index)) {
             return arrayData[index];
         }
-        throw new ArrayListIndexOutOfBoundsException("Index are not exist, please input right index");
+        throw new ArrayListIndexOutOfBoundsException("Index are not exist,"
+                + " please input right index");
     }
 
     @Override
     public void set(T value, int index) {
         if (!indexCapacity(index)) {
-            throw new ArrayListIndexOutOfBoundsException("Index are not exist, please input right index");
+            throw new ArrayListIndexOutOfBoundsException("Index are not exist,"
+                    + " please input right index");
         }
         arrayData[index] = value;
     }
@@ -83,7 +83,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         if (!indexCapacity(index)) {
-            throw new ArrayListIndexOutOfBoundsException("Index are not exist, please input right index");
+            throw new ArrayListIndexOutOfBoundsException("Index are not exist,"
+                    + " please input right index");
         }
         T value = arrayData[index];
         if (indexCapacity(index) && ensureCapacity()) {
@@ -133,8 +134,8 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void arrayCopyAdd(int index) {
-        int numberOfCopiedElements = size +1;
-            System.arraycopy(arrayData, index, arrayData, ++index, numberOfCopiedElements - index);
+        int numberOfCopiedElements = size + 1;
+        System.arraycopy(arrayData, index, arrayData, ++index, numberOfCopiedElements - index);
     }
 
     private void arrayCopyRemove(int index) {
