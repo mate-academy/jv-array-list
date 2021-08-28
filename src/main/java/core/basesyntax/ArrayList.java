@@ -42,12 +42,10 @@ public class ArrayList<T> implements List<T> {
         } else if (indexCapacity(index) && ensureCapacity()) {
             arrayCopyAdd(index);
             arrayData[index] = value;
-            size++;
         } else {
             grow();
             arrayCopyAdd(index);
             arrayData[index] = value;
-            size++;
         }
     }
 
@@ -82,20 +80,12 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(int index) {
-        if (!indexCapacity(index)) {
+        if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException("Index are not exist,"
                     + " please input right index");
         }
         T value = arrayData[index];
-        if (indexCapacity(index) && ensureCapacity()) {
-            arrayCopyRemove(index);
-            size--;
-        } else if ((index == size && !ensureCapacity())
-                 || (indexCapacity(index) && !ensureCapacity())) {
-            grow();
-            arrayCopyRemove(index);
-            size--;
-        }
+        arrayCopyRemove(index);
         return value;
     }
 
@@ -104,10 +94,9 @@ public class ArrayList<T> implements List<T> {
         int count = 0;
         for (int i = 0; i < size; i++) {
             if ((element == null
-                    && element == arrayData[i])
+                    && arrayData[i] == null)
                     || element != null && element.equals(arrayData[i])) {
                 arrayCopyRemove(i);
-                size--;
                 return element;
             }
         }
@@ -134,12 +123,13 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void arrayCopyAdd(int index) {
-        int numberOfCopiedElements = size + 1;
-        System.arraycopy(arrayData, index, arrayData, ++index, numberOfCopiedElements - index);
+        size++;
+        System.arraycopy(arrayData, index, arrayData, ++index, size - index);
     }
 
     private void arrayCopyRemove(int index) {
         System.arraycopy(arrayData, ++index, arrayData, --index, size - index);
+        size--;
     }
 
     private boolean ensureCapacity() {
