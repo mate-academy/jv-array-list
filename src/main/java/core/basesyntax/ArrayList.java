@@ -39,11 +39,11 @@ public class ArrayList<T> implements List<T> {
         } else if (index == size && ensureCapacity()) {
             arrayData[index] = value;
             size++;
-        } else if (indexCapacity(index) && ensureCapacity()) {
+        } else if (indexCapacity(index) && !ensureCapacity()) {
+            grow();
             arrayCopyAdd(index);
             arrayData[index] = value;
         } else {
-            grow();
             arrayCopyAdd(index);
             arrayData[index] = value;
         }
@@ -62,11 +62,11 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (indexCapacity(index)) {
-            return arrayData[index];
+        if (!indexCapacity(index)) {
+            throw new ArrayListIndexOutOfBoundsException("Index are not exist,"
+                    + " please input right index");
         }
-        throw new ArrayListIndexOutOfBoundsException("Index are not exist,"
-                + " please input right index");
+        return arrayData[index];
     }
 
     @Override
@@ -137,6 +137,6 @@ public class ArrayList<T> implements List<T> {
     }
 
     private boolean indexCapacity(int index) {
-        return ((index >= 0 && index < size));
+        return (index >= 0 && index < size);
     }
 }
