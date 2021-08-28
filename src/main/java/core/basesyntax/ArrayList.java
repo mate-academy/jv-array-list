@@ -19,7 +19,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value) {
         if (!arrayIsEmpty) {
-            if (!ensureCapacity()) {
+            if (ensureCapacity()) {
                 grow();
             }
             arrayData[size] = value;
@@ -36,10 +36,7 @@ public class ArrayList<T> implements List<T> {
         if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException("Index are not exist, your index is "
                     + index + " last index is " + size);
-        } else if (index == size && ensureCapacity()) {
-            arrayData[index] = value;
-            size++;
-        } else if (indexCapacity(index) && !ensureCapacity()) {
+        } else if (indexCapacity(index) && ensureCapacity()) {
             grow();
             arrayCopyAdd(index);
             arrayData[index] = value;
@@ -133,7 +130,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     private boolean ensureCapacity() {
-        return (size + 1) < currentSizeOfArray;
+        return (size + 1) >= currentSizeOfArray;
     }
 
     private boolean indexCapacity(int index) {
