@@ -71,12 +71,12 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayListIndexOutOfBoundsException(String
                     .format(INDEX_OUT_OF_BOUNDS_MESSAGE, index, size));
         }
-        final T returnValue = array[index];
         T[] newArray = (T[]) new Object[array.length];
         System.arraycopy(array, WHOLE_COPY_START_INDEX,
                 newArray, WHOLE_COPY_START_INDEX, index);
         System.arraycopy(array, index + 1, newArray,
                 index, array.length - index - 1);
+        T returnValue = array[index];
         array = newArray;
         size--;
         return returnValue;
