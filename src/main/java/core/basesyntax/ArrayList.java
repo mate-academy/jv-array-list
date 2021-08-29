@@ -33,7 +33,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index < 0 || index > size) {
+        if (indexIsNegative(index) || index > size) {
             throw new ArrayListIndexOutOfBoundsException("Index are not exist, your index is "
                     + index + " last index is " + size);
         } else if (indexCapacity(index) && ensureCapacity()) {
@@ -77,7 +77,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(int index) {
-        if (index < 0 || index >= size) {
+        if (indexIsNegative(index) || index >= size) {
             throw new ArrayListIndexOutOfBoundsException("Index are not exist,"
                     + " please input right index");
         }
@@ -88,7 +88,6 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        int count = 0;
         for (int i = 0; i < size; i++) {
             if ((element == null
                     && arrayData[i] == null)
@@ -135,5 +134,9 @@ public class ArrayList<T> implements List<T> {
 
     private boolean indexCapacity(int index) {
         return (index >= 0 && index < size);
+    }
+
+    private boolean indexIsNegative(int index) {
+        return index < 0;
     }
 }
