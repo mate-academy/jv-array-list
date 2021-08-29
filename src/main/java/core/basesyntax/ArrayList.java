@@ -1,5 +1,7 @@
 package core.basesyntax;
 
+import java.util.NoSuchElementException;
+
 public class ArrayList<T> implements List<T> {
     private static final int INITIAL_ARRAY_SIZE = 10;
     private Object[] arrayList;
@@ -10,7 +12,6 @@ public class ArrayList<T> implements List<T> {
         size = 0;
     }
 
-
     @Override
     public void add(T value) {
         if (size == arrayList.length) {
@@ -20,34 +21,30 @@ public class ArrayList<T> implements List<T> {
         size++;
     }
 
-
-
     @Override
     public void add(T value, int index) {
         System.out.println(" size:" + size + " index: " + index + " value: " + value + " ArrayLength: " + arrayList.length);
-        if (index < 0 || index + 1 > size) throw new ArrayListIndexOutOfBoundsException("Wrong index");
-        if (index + 1 < size) {
-            arrayShift(index, +1);
-            arrayList[index] = value;
+        if (index < 0 || index > size) {
+            throw new ArrayListIndexOutOfBoundsException("Wrong index: " + index);
         }
-        if (index == size) {
-            size++;
-        }
+        if (index < size && index >= 0) arrayShift(index, +1);
+        arrayList[index] = value;
     }
-
-
 
     @Override
     public void addAll(List<T> list) {
-        Object[] newArrayList = new Object[10];
-        System.arraycopy(arrayList, 0, newArrayList, 0, arrayList.length);
-        arrayList = newArrayList;
+        if (size + list.size() > arrayList.length) resize();
+        for (int i = 0; i < list.size(); i++) {
+            arrayList[size + i] = list.get(i);
+        }
+        size += list.size();
+
     }
 
     @Override
     public T get(int index) {
-        if (index < 0 || index + 1 > size) {
-            throw new ArrayListIndexOutOfBoundsException("Wrong index");
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Wrong index: " + index);
         }
         return (T) arrayList[index];
     }
@@ -66,28 +63,32 @@ public class ArrayList<T> implements List<T> {
         if (index < 0 || index + 1 > size) {
             throw new ArrayListIndexOutOfBoundsException("Wrong index");
         }
-        if (index + 1 == size) {
+        if (index + 1 <= size) {
             returnValue = (T) arrayList[index];
             arrayList[index] = null;
+            arrayShift(index, -1);
             size--;
             return returnValue;
+        } else {
+            throw new NoSuchElementException("Removing element wasn't found");
         }
-        //throw  new NoSuchElementException("Value wasn't found");
-        return null;
     }
 
     @Override
     public T remove(T element) {
-        T returnValue;
+        T returnValue = null;
         for (int i = 0; i < size; i++) {
             if (element.equals((T) arrayList[i])) {
                 returnValue = (T) arrayList[i];
-                arrayList[i] = null;
+                arrayShift(i, -1);
                 size--;
-                return returnValue;
             }
         }
-        return null;
+        if (returnValue != null) {
+            return returnValue;
+        } else {
+            throw new NoSuchElementException("Removing element wasn't found");
+        }
     }
 
     @Override
@@ -101,15 +102,16 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void resize() {
-        Object[] newArrayList = new Object[arrayList.length + (int) (arrayList.length * 1.5)];
-        System.arraycopy(arrayList,0,newArrayList,0,arrayList.length);
+        Object[] newArrayList = new Object[(int) (arrayList.length * 1.5)];
+        System.arraycopy(arrayList, 0, newArrayList, 0, arrayList.length);
         arrayList = newArrayList;
     }
 
     private void arrayShift(int index, int value) {
-        Object[] newArrayList = new Object[(int) (arrayList.length * 1.5)];
-        System.arraycopy(arrayList, 0, newArrayList, 0, index + 1);
-        System.arraycopy(arrayList, index, newArrayList, index + value, size - index);
+        Object[] newArrayList = new Object[arrayList.length];
+        value = index + value < 0 ? 0 : value;
+        System.arraycopy(arrayList, 0, newArrayList, 0, index);
+        System.arraycopy(arrayList, index, newArrayList, index + value, size);
         arrayList = newArrayList;
         size += value;
     }
