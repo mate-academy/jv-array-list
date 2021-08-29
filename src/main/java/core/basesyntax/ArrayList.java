@@ -8,7 +8,7 @@ public class ArrayList<T> implements List<T> {
     private static final String INDEX_OUT_OF_BOUNDS_MESSAGE
             = "Index %d out of bounds for length %d";
     private T[] array;
-    private int size;
+    private int size
 
     public ArrayList() {
         this.array = (T[]) new Object[DEFAULT_CAPACITY];
