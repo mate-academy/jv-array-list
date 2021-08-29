@@ -119,13 +119,11 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void arrayCopyAdd(int index) {
-        size++;
-        System.arraycopy(arrayData, index, arrayData, ++index, size - index);
+        System.arraycopy(arrayData, index, arrayData, ++index, ++size - index);
     }
 
     private void arrayCopyRemove(int index) {
-        System.arraycopy(arrayData, ++index, arrayData, --index, size - index);
-        size--;
+        System.arraycopy(arrayData, ++index, arrayData, --index, size-- - index);
     }
 
     private boolean ensureCapacity() {
