@@ -1,11 +1,14 @@
 package core.basesyntax;
 
+import java.util.NoSuchElementException;
+import java.util.Objects;
+
 public class ArrayList<T> implements List<T> {
     public static final int START_CAPACITY = 10;
     public static final String BOUNDS_EXCEPTION = "Out of bounds exception";
     public static final String NO_ELEMENT_EXCEPTION = "Element is not exist";
-    public T[] array;
-    int size;
+    private T[] array;
+    private int size;
 
     public ArrayList() {
         array = (T[]) new Object[START_CAPACITY];
@@ -13,7 +16,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (size == array.length - 1) {
+        if (size == array.length) {
             resize();
         }
         array[size] = value;
@@ -22,7 +25,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index > array.length || index < 0) {
+        if (index > size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException(BOUNDS_EXCEPTION);
         }
         if (size == array.length) {
@@ -35,11 +38,8 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        if (list.size() > array.length) {
-            resize();
-        }
-        for (int i = 0; i < array.length; i++) {
-            array[i] = list.get(i);
+        for (int i = 0; i < list.size(); i++) {
+            add(list.get(i));
         }
     }
 
@@ -59,13 +59,19 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         checkIndex(index);
         T value = array[index];
-
-        return null;
+        System.arraycopy(array,index + 1,array,index, size - index - 1);
+        array[--size] = null;
+        return value;
     }
 
     @Override
     public T remove(T element) {
-        return null;
+        for (int i = 0; i < size; i++) {
+            if (Objects.equals(element, array[i])) {
+                return remove(i);
+            }
+        }
+        throw new NoSuchElementException(NO_ELEMENT_EXCEPTION);
     }
 
     @Override
