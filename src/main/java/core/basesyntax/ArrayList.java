@@ -36,7 +36,7 @@ public class ArrayList<T> implements List<T> {
         if (indexIsNegative(index) || index > size) {
             throw new ArrayListIndexOutOfBoundsException("Index are not exist, your index is "
                     + index + " last index is " + size);
-        } else if (indexCapacity(index) && ensureCapacity()) {
+        } else if (indexIsLegal(index) && ensureCapacity()) {
             grow();
             arrayCopyAdd(index);
             arrayData[index] = value;
@@ -59,7 +59,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (!indexCapacity(index)) {
+        if (!indexIsLegal(index)) {
             throw new ArrayListIndexOutOfBoundsException("Index are not exist,"
                     + " please input right index");
         }
@@ -68,7 +68,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void set(T value, int index) {
-        if (!indexCapacity(index)) {
+        if (!indexIsLegal(index)) {
             throw new ArrayListIndexOutOfBoundsException("Index are not exist,"
                     + " please input right index");
         }
@@ -132,7 +132,7 @@ public class ArrayList<T> implements List<T> {
         return (size + 1) >= currentSizeOfArray;
     }
 
-    private boolean indexCapacity(int index) {
+    private boolean indexIsLegal(int index) {
         return (index >= 0 && index < size);
     }
 
