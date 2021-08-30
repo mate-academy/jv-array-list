@@ -24,7 +24,13 @@ public class ArrayList<T> implements List<T> {
     public void add(T value, int index) {
         resizeArr();
         if (index < size && index >= ZERO_INDEX) {
-            array = addingElementInside(value, index, array);
+            T[] newArray = (T[]) new Object[array.length];
+            System.arraycopy(array, ZERO_INDEX,
+                    newArray, ZERO_INDEX, index);
+            newArray[index] = value;
+            System.arraycopy(array, index, newArray,
+                    index + 1, array.length - index - 1);
+            array = newArray;
             size++;
         } else if (index == size) {
             add(value);
@@ -43,7 +49,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index >= 0 && index < size) {
+        if (index >= ZERO_INDEX && index < size) {
             return array[index];
         }
         throw new ArrayListIndexOutOfBoundsException(String
@@ -52,7 +58,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void set(T value, int index) {
-        if (index >= 0 && index < size) {
+        if (index >= ZERO_INDEX && index < size) {
             array[index] = value;
         } else {
             throw new ArrayListIndexOutOfBoundsException(String
@@ -62,7 +68,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(int index) {
-        if (index >= size || index < 0) {
+        if ( index < ZERO_INDEX || size <= index ) {
             throw new ArrayListIndexOutOfBoundsException(String
                     .format(INDEX_OUT_OF_BOUNDS_MESSAGE, index, size));
         }
