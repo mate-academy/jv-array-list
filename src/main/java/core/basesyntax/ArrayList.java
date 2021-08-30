@@ -7,13 +7,17 @@ public class ArrayList<T> implements List<T> {
     private static final double INCREASE_CAPACITY = 1.5;
     private static final int ARRAYS_ZERO_BORDER = 0;
     private static final int INCREASE_INDEX_FOR_COPY = 1;
-    private T[] elementData = (T[]) new Object[DEFAULT_CAPACITY];
-    private int size = 0;
+    private T[] elementData;
+    private int size;
+
+    public ArrayList() {
+        elementData = (T[]) new Object[DEFAULT_CAPACITY];
+    }
 
     @Override
     public void add(T value) {
         if (elementData.length == size) {
-            elementData = grow();
+            grow();
         }
         elementData[size] = value;
         size++;
@@ -22,64 +26,56 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         if (elementData.length == size) {
-            elementData = grow();
+            grow();
         }
         size++;
-        if (index < size && index >= ARRAYS_ZERO_BORDER) {
+        if (checkIndex(index)) {
             System.arraycopy(elementData, index, elementData,
                     index + INCREASE_INDEX_FOR_COPY,
                     size - (index + INCREASE_INDEX_FOR_COPY));
             elementData[index] = value;
         } else {
-            throw new ArrayListIndexOutOfBoundsException("Index is bigger than arrays size");
+            throw new ArrayListIndexOutOfBoundsException("Index out of bounds array size");
         }
     }
 
     @Override
     public void addAll(List<T> list) {
         if (elementData.length < size + list.size()) {
-            elementData = grow();
+            grow();
         }
         for (int i = 0; i < list.size(); i++) {
-            elementData[size] = list.get(i);
-            size++;
+            add(list.get(i));
         }
-
     }
 
     @Override
     public T get(int index) {
-        if (index < size && index >= ARRAYS_ZERO_BORDER) {
+        if (checkIndex(index)) {
             return elementData[index];
         } else {
-            throw new ArrayListIndexOutOfBoundsException("Index is bigger than arrays size");
+            throw new ArrayListIndexOutOfBoundsException("Index out of bounds array size");
         }
     }
 
     @Override
     public void set(T value, int index) {
-        if (index < size && index >= ARRAYS_ZERO_BORDER) {
+        if (checkIndex(index)) {
             elementData[index] = value;
         } else {
-            throw new ArrayListIndexOutOfBoundsException("Index is bigger than arrays size");
+            throw new ArrayListIndexOutOfBoundsException("Index out of bounds array size");
         }
-
     }
 
     @Override
     public T remove(int index) {
         if (index >= size || index < ARRAYS_ZERO_BORDER) {
-            throw new ArrayListIndexOutOfBoundsException("Index is bigger than arrays size");
+            throw new ArrayListIndexOutOfBoundsException("Index out of bounds array size");
         }
         T oldElement = elementData[index];
-        if (size != elementData.length) {
-            System.arraycopy(elementData, index + INCREASE_INDEX_FOR_COPY,
-                    elementData, index, size - index);
-            size--;
-        } else {
-            elementData[index] = null;
-            size--;
-        }
+        System.arraycopy(elementData, index + INCREASE_INDEX_FOR_COPY,
+                elementData, index, size - index - INCREASE_INDEX_FOR_COPY);
+        size--;
         return oldElement;
     }
 
@@ -105,12 +101,16 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    public T[] grow() {
-        int oldCapacity = elementData.length;
-        int newCapacity = (int) (oldCapacity * INCREASE_CAPACITY);
+    public void grow() {
+
+        int newCapacity = (int) (elementData.length * INCREASE_CAPACITY);
         T[] newElementData = (T[]) new Object[newCapacity];
         System.arraycopy(elementData, ARRAYS_ZERO_BORDER,
-                newElementData, ARRAYS_ZERO_BORDER, oldCapacity);
-        return newElementData;
+                newElementData, ARRAYS_ZERO_BORDER, elementData.length);
+        elementData = newElementData;
+    }
+
+    private boolean checkIndex(int index) {
+        return index < size && index >= ARRAYS_ZERO_BORDER;
     }
 }
