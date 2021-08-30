@@ -22,7 +22,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        checkAddIndex(index);
+        checkIndex(index);
         resize();
         System.arraycopy(array,index,array,index + 1, size - index);
         array[index] = value;
@@ -38,19 +38,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        checkIndex(index);
+        checkIndex(index + 1);
         return (T) array[index];
     }
 
     @Override
     public void set(T value, int index) {
-        checkIndex(index);
+        checkIndex(index + 1);
         array[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        checkIndex(index);
+        checkIndex(index + 1);
         T value = array[index];
         System.arraycopy(array,index + 1,array,index, size - index - 1);
         array[--size] = null;
@@ -87,14 +87,9 @@ public class ArrayList<T> implements List<T> {
     }
 
     public void checkIndex(int checkIndex) {
-        if (checkIndex >= size || checkIndex < 0) {
-            throw new ArrayListIndexOutOfBoundsException(BOUNDS_EXCEPTION);
-        }
-    }
-
-    public void checkAddIndex(int checkIndex) {
         if (checkIndex > size || checkIndex < 0) {
             throw new ArrayListIndexOutOfBoundsException(BOUNDS_EXCEPTION);
         }
     }
+
 }
