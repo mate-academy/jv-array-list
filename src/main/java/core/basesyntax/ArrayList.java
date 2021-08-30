@@ -3,33 +3,27 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    public static final int START_CAPACITY = 10;
+    public static final int DEFAULT_CAPACITY = 10;
     public static final String BOUNDS_EXCEPTION = "Out of bounds exception";
     public static final String NO_ELEMENT_EXCEPTION = "Element is not exist";
     private T[] array;
     private int size;
 
     public ArrayList() {
-        array = (T[]) new Object[START_CAPACITY];
+        array = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
     @Override
     public void add(T value) {
-        if (size == array.length) {
-            resize();
-        }
+        resize();
         array[size] = value;
         size++;
     }
 
     @Override
     public void add(T value, int index) {
-        if (index > size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException(BOUNDS_EXCEPTION);
-        }
-        if (size == array.length) {
-            resize();
-        }
+        checkAddIndex(index);
+        resize();
         System.arraycopy(array,index,array,index + 1, size - index);
         array[index] = value;
         size++;
@@ -84,14 +78,22 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void resize() {
-        int newLength = array.length + (array.length / 2);
-        T[] newArray = (T[]) new Object[newLength];
-        System.arraycopy(array,0,newArray,0,array.length);
-        array = newArray;
+        if (size == array.length) {
+            int newLength = array.length + (array.length / 2);
+            T[] newArray = (T[]) new Object[newLength];
+            System.arraycopy(array, 0, newArray, 0, array.length);
+            array = newArray;
+        }
     }
 
     public void checkIndex(int checkIndex) {
         if (checkIndex >= size || checkIndex < 0) {
+            throw new ArrayListIndexOutOfBoundsException(BOUNDS_EXCEPTION);
+        }
+    }
+
+    public void checkAddIndex(int checkIndex) {
+        if (checkIndex > size || checkIndex < 0) {
             throw new ArrayListIndexOutOfBoundsException(BOUNDS_EXCEPTION);
         }
     }
