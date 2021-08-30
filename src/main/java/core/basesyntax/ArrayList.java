@@ -14,7 +14,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value) {
         grow();
-        modifyArrayValues(value, size);
+        arrayList[size] = value;
         size++;
     }
 
@@ -60,8 +60,7 @@ public class ArrayList<T> implements List<T> {
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
             if (isEqual(arrayList[i], element)) {
-                remove(i);
-                return element;
+                return remove(i);
             }
         }
         throw new NoSuchElementException("Element: " + element + " doesn't exist!");
@@ -85,8 +84,8 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void grow() {
-        T[] tempArray;
         if (size + 1 > arrayList.length) {
+            T[] tempArray;
             tempArray = (T[]) new Object[size + (size >> 1)];
             System.arraycopy(arrayList, 0, tempArray, 0, size);
             arrayList = tempArray;
