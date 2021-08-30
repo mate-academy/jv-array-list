@@ -4,16 +4,15 @@ import java.util.NoSuchElementException;
 import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
-    private static final String
-            INDEX_OUT_OF_BOUND_MESSAGE = "Index is less than 0 and more than last list index.";
+    private static final String INDEX_OUT_OF_BOUND_MESSAGE =
+            "Index is less than 0 and more than last list index.";
     private static final int INITIAL_CAPACITY = 10;
     private static final double CAPACITY_GROW_COEFFICIENT = 1.5;
-
     private T[] values;
     private int size;
 
     ArrayList() {
-        this.values = (T[]) new Object[INITIAL_CAPACITY];
+        values = (T[]) new Object[INITIAL_CAPACITY];
     }
 
     @Override
@@ -27,7 +26,7 @@ public class ArrayList<T> implements List<T> {
         checkSize();
         System.arraycopy(values, index, values, index + 1, size - index);
         values[index] = value;
-        size++;
+            size++;
     }
 
     @Override
