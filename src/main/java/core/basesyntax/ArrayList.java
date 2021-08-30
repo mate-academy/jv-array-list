@@ -14,8 +14,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value) {
         extendCapacityIfNecessary();
-            arrayList[size] = value;
-            size++;
+        arrayList[size] = value;
+        size++;
     }
 
     @Override
@@ -44,29 +44,29 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         checkIndexValidity(index);
-                return arrayList[index];
+        return arrayList[index];
     }
 
     @Override
     public void set(T value, int index) {
         checkIndexValidity(index);
-            arrayList[index] = value;
+        arrayList[index] = value;
     }
 
     @Override
     public T remove(int index) {
         checkIndexValidity(index);
-            final T removedElement = arrayList[index];
-            System.arraycopy(arrayList, index + 1, arrayList, index, size - index - 1);
-            size--;
-            arrayList[size] = null;
-            return removedElement;
+        final T removedElement = arrayList[index];
+        System.arraycopy(arrayList, index + 1, arrayList, index, size - index - 1);
+        size--;
+        arrayList[size] = null;
+        return removedElement;
     }
 
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if (arrayList[i] == element || (arrayList[i] !=null && arrayList[i].equals(element))) {
+            if (arrayList[i] == element || (arrayList[i] != null && arrayList[i].equals(element))) {
                 return remove(i);
             }
         }
@@ -85,7 +85,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void extendCapacityIfNecessary() {
-        if (size == arrayList.length){
+        if (size == arrayList.length) {
             int tempLength = arrayList.length;
             T[] tempArray = (T[]) new Object[tempLength];
             tempArray = arrayList;
@@ -95,7 +95,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void checkIndexValidity(int index) {
-        if (index >=0 && index < size) {
+        if (index >= 0 && index < size) {
             return;
         } else {
             throw new ArrayListIndexOutOfBoundsException("Wrong index.");
