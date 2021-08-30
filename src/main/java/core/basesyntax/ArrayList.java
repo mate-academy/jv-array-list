@@ -5,11 +5,12 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int INITIAL_CAPACITY = 10;
-    private int size = 0;
-    private Object[] elements;
+    private static final int NUMBER_TO_DIVISION = 2;
+    private int size;
+    private T[] elements;
 
     public ArrayList() {
-        elements = new Object[INITIAL_CAPACITY];
+        elements = (T[]) new Object[INITIAL_CAPACITY];
     }
 
     @Override
@@ -52,11 +53,7 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         checkIndex(index);
         T removedElement = (T) elements[index];
-        if (size == elements.length) {
-            System.arraycopy(elements, index, elements, index, size - index);
-        } else {
-            System.arraycopy(elements, index + 1, elements, index, size - index);
-        }
+        System.arraycopy(elements, index + 1, elements, index, size - index - 1);
         size--;
         return (T) removedElement;
     }
@@ -74,7 +71,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public int size() {
-        return this.size;
+        return size;
     }
 
     @Override
@@ -84,7 +81,7 @@ public class ArrayList<T> implements List<T> {
 
     private void ensureCapacity() {
         if (size >= elements.length) {
-            int newEnsureCapacity = elements.length * 3 / 2 + 1;
+            int newEnsureCapacity = elements.length + elements.length / NUMBER_TO_DIVISION;
             elements = Arrays.copyOf(elements, newEnsureCapacity);
         }
     }
