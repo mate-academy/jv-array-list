@@ -7,21 +7,18 @@ public class ArrayList<T> implements List<T> {
     private static final double INCREMENT_CAPACITY = 1.5;
     private int size;
     private T[] elements;
-    private int arrayCapacity;
 
     public ArrayList() {
-        arrayCapacity = INITIAL_CAPACITY;
-        elements = (T[]) new Object[arrayCapacity];
+        elements = (T[]) new Object[INITIAL_CAPACITY];
     }
 
     private void grow() {
-        arrayCapacity *= INCREMENT_CAPACITY;
-        T[] tempArray = (T[]) new Object[arrayCapacity];
+        T[] tempArray = (T[]) new Object[(int) (elements.length * INCREMENT_CAPACITY)];
         System.arraycopy(elements, 0, tempArray, 0, size);
         elements = tempArray;
     }
 
-    private void checkItem(int index) {
+    private void checkArrayBoundary(int index) {
         if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException("Index is invalid");
         }
@@ -29,15 +26,12 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (size == elements.length) {
-            grow();
-        }
         add(value, size);
     }
 
     @Override
     public void add(T value, int index) {
-        checkItem(index);
+        checkArrayBoundary(index);
         if (size == elements.length) {
             grow();
         }
@@ -55,19 +49,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        checkItem(index + 1);
+        checkArrayBoundary(index + 1);
         return elements[index];
     }
 
     @Override
     public void set(T value, int index) {
-        checkItem(index + 1);
+        checkArrayBoundary(index + 1);
         elements[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        checkItem(index + 1);
+        checkArrayBoundary(index + 1);
         T removeObject = elements[index];
         System.arraycopy(elements, index + 1, elements, index, size - index - 1);
         size--;
@@ -77,7 +71,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if ((element == null && elements[i] == null)
+            if ((element == elements[i])
                     || (element != null && element.equals(elements[i]))) {
                 return remove(i);
             }
