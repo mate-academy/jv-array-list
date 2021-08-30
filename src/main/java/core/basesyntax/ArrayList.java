@@ -24,13 +24,11 @@ public class ArrayList<T> implements List<T> {
     public void add(T value, int index) {
         resizeArr();
         if (index < size && index >= ZERO_INDEX) {
-            T[] newArray = (T[]) new Object[array.length];
-            System.arraycopy(array, ZERO_INDEX,
-                    newArray, ZERO_INDEX, index);
-            newArray[index] = value;
-            System.arraycopy(array, index, newArray,
+            System.arraycopy(array, index, array,
                     index + 1, array.length - index - 1);
-            array = newArray;
+            System.arraycopy(array, ZERO_INDEX,
+                    array, ZERO_INDEX, index);
+            array[index] = value;
             size++;
         } else if (index == size) {
             add(value);
@@ -68,7 +66,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(int index) {
-        if ( index < ZERO_INDEX || size <= index ) {
+        if (index < ZERO_INDEX || size <= index) {
             throw new ArrayListIndexOutOfBoundsException(String
                     .format(INDEX_OUT_OF_BOUNDS_MESSAGE, index, size));
         }
@@ -107,16 +105,6 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == ZERO_INDEX;
-    }
-
-    private T[] addingElementInside(T value, int index, T[] oldArray) {
-        T[] newArray = (T[]) new Object[array.length];
-        System.arraycopy(oldArray, ZERO_INDEX,
-                newArray, ZERO_INDEX, index);
-        newArray[index] = value;
-        System.arraycopy(oldArray, index, newArray,
-                index + 1, oldArray.length - index - 1);
-        return newArray;
     }
 
     private void resizeArr() {
