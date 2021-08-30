@@ -1,55 +1,41 @@
 package core.basesyntax;
 
 import java.util.NoSuchElementException;
-import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
-    private static final int STANDARD_CAPACITY = 10;
+    private static final int DEFAULT_CAPACITY = 10;
     private T[] arrayList;
     private int size;
 
     public ArrayList() {
-        arrayList = (T[]) new Object[STANDARD_CAPACITY];
+        arrayList = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
     @Override
     public void add(T value) {
-        if (hasArraySpace()) {
+        extendCapacityIfNecessary();
             arrayList[size] = value;
             size++;
-            return;
-        }
-        extendCapacity();
-        arrayList[size] = value;
-        size++;
     }
 
     @Override
     public void add(T value, int index) {
-        if (!hasArraySpace()) {
-            extendCapacity();
+        extendCapacityIfNecessary();
+        if (index >= 0 && index <= size) {
+            System.arraycopy(arrayList, index, arrayList, index + 1, size - index);
+            arrayList[index] = value;
+            size++;
+        } else {
+            throw new ArrayListIndexOutOfBoundsException("Wrong index.");
         }
-        if (index < 0 || index > arrayList.length || index > size + 1) {
-            throw new ArrayListIndexOutOfBoundsException("Your index does not suit rules");
-        }
-        System.arraycopy(arrayList, index, arrayList, index + 1, size - index);
-        arrayList[index] = value;
-        size++;
-
     }
 
     @Override
     public void addAll(List<T> list) {
         if (list != null) {
-            T[] addArray = (T[]) new Object[list.size()];
             for (int i = 0; i < list.size(); i++) {
-                addArray[i] = list.get(i);
+                add(list.get(i));
             }
-            while (arrayList.length < size + addArray.length) {
-                extendCapacity();
-            }
-            System.arraycopy(addArray, 0, arrayList, size, addArray.length);
-            size = size + addArray.length;
         } else {
             throw new ArrayListIndexOutOfBoundsException("Adding list is null");
         }
@@ -57,46 +43,31 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("An element you"
-                    + " want to get does not exist");
-        }
-        if (size != 0) {
-            return arrayList[index];
-        }
-        return null;
+        checkIndexValidity(index);
+                return arrayList[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("An element you"
-                    + " want to remove does not exist");
-        }
-        arrayList[index] = value;
+        checkIndexValidity(index);
+            arrayList[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("An element you"
-                    + " want to remove does not exist");
-        }
-        final T removedElement = arrayList[index];
-        System.arraycopy(arrayList, index + 1, arrayList, index, size - index - 1);
-        size--;
-        arrayList[size] = null;
-        return removedElement;
+        checkIndexValidity(index);
+            final T removedElement = arrayList[index];
+            System.arraycopy(arrayList, index + 1, arrayList, index, size - index - 1);
+            size--;
+            arrayList[size] = null;
+            return removedElement;
     }
 
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if (Objects.equals(element, arrayList[i])) {
-                System.arraycopy(arrayList, i + 1, arrayList, i, size - i - 1);
-                arrayList[size] = null;
-                size--;
-                return element;
+            if (arrayList[i] == element || (arrayList[i] !=null && arrayList[i].equals(element))) {
+                return remove(i);
             }
         }
         throw new NoSuchElementException("The value you want to remove does not exist");
@@ -113,15 +84,21 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void extendCapacity() {
-        int tempLength = arrayList.length;
-        T[] tempArray = (T[]) new Object[tempLength];
-        tempArray = arrayList;
-        arrayList = (T[]) new Object[(tempLength * 3) / 2 + 1];
-        System.arraycopy(tempArray, 0, arrayList, 0, size);
+    private void extendCapacityIfNecessary() {
+        if (size == arrayList.length){
+            int tempLength = arrayList.length;
+            T[] tempArray = (T[]) new Object[tempLength];
+            tempArray = arrayList;
+            arrayList = (T[]) new Object[(tempLength * 3) / 2 + 1];
+            System.arraycopy(tempArray, 0, arrayList, 0, size);
+        }
     }
 
-    private boolean hasArraySpace() {
-        return size < arrayList.length;
+    private void checkIndexValidity(int index) {
+        if (index >=0 && index < size) {
+            return;
+        } else {
+            throw new ArrayListIndexOutOfBoundsException("Wrong index.");
+        }
     }
 }
