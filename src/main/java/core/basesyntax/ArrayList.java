@@ -54,9 +54,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("h");
-        }
+        chekIndex(index);
         T res = elementData[index];
         System.arraycopy(elementData,index + 1, elementData, index, size - index - 1);
         elementData[--size] = null;
