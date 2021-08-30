@@ -1,33 +1,15 @@
 package core.basesyntax;
 
 import java.util.NoSuchElementException;
-import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
+    private static int INITIAL_SIZE = 10;
     private static final String MESSAGE = "Error! Index must be greater then 0 and less then ";
     private T[] elements;
     private int size;
 
     public ArrayList() {
         elements = (T[]) new Object[INITIAL_SIZE];
-    }
-
-    private void checkIndex(int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException(MESSAGE + size);
-        }
-    }
-
-    private void checkSize() {
-        if (size == elements.length) {
-            resizeArray();
-        }
-    }
-
-    private void resizeArray() {
-        T[] newArray = (T[]) new Object[size + size / 2];
-        System.arraycopy(elements, 0, newArray, 0, elements.length);
-        elements = newArray;
     }
 
     @Override
@@ -70,16 +52,16 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
-        T object = elements[index];
+        T removedObject = elements[index];
         System.arraycopy(elements, index + 1, elements, index, size - index - 1);
         size--;
-        return object;
+        return removedObject;
     }
 
     @Override
     public T remove(T object) {
         for (int i = 0; i < size; i++) {
-            if (Objects.equals(object, elements[i])) {
+            if ((elements[i] == object) || (object != null && object.equals(elements[i]))) {
                 return remove(i);
             }
         }
@@ -94,5 +76,23 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private void checkIndex(int index) {
+        if (index >= size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException(MESSAGE + size);
+        }
+    }
+
+    private void checkSize() {
+        if (size == elements.length) {
+            resizeArray();
+        }
+    }
+
+    private void resizeArray() {
+        T[] newArray = (T[]) new Object[size + size / 2];
+        System.arraycopy(elements, 0, newArray, 0, elements.length);
+        elements = newArray;
     }
 }
