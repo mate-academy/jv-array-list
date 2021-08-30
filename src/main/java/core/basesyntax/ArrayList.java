@@ -5,7 +5,8 @@ import java.util.NoSuchElementException;
 public class ArrayList<T> implements List<T> {
     private static final int INITIAL_CAPACITY = 10;
     private static final double GROW_COEFFICIENT = 1.5;
-    private int currentCapacity = INITIAL_CAPACITY;
+    private static final String ADD = "ADD";
+    private static final String NO_ADD = "noADD";
     private T[] elementData;
     private int size;
 
@@ -15,42 +16,25 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (size == currentCapacity) {
-            resize();
-        }
+        resize();
         elementData[size] = value;
         size++;
     }
 
     @Override
     public void add(T value, int index) {
-        T[] temporaryArray = (T[]) new Object[size];
-        System.arraycopy(elementData, 0, temporaryArray, 0, size);
-        if (size == currentCapacity) {
-            resize();
-        }
         isIndexValid(index, "ADD");
+        resize();
+        System.arraycopy(elementData, index,elementData, index + 1, size - index);
         elementData[index] = value;
-        System.arraycopy(temporaryArray,
-                index,
-                elementData,
-                index + 1,
-                size - index);
         size++;
     }
 
     @Override
     public void addAll(List<T> list) {
-        T[] temporaryArray = (T[]) new Object[list.size()];
-        for (int i = 0; i < temporaryArray.length; i++) {
-            temporaryArray[i] = list.get(i);
+        for (int i = 0; i < list.size(); i++) {
+            add(list.get(i), size);
         }
-        System.arraycopy(temporaryArray,
-                0,
-                elementData,
-                size,
-                list.size());
-        size += list.size();
     }
 
     @Override
@@ -81,24 +65,16 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         int temporaryIndex = -1;
-        T oldRecord = (T) new Object();
         for (int i = 0; i < size; i++) {
             if (elementData[i] == element
                     || (elementData[i] != null
                     && elementData[i].equals(element))) {
                 temporaryIndex = i;
-                oldRecord = elementData[i];
                 break;
             }
         }
         if (temporaryIndex != -1) {
-            System.arraycopy(elementData,
-                    temporaryIndex + 1,
-                    elementData,
-                    temporaryIndex,
-                    size - temporaryIndex - 1);
-            size--;
-            return oldRecord;
+            return remove(temporaryIndex);
         }
         throw new NoSuchElementException("Element not find");
     }
@@ -114,16 +90,18 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void resize() {
-        currentCapacity *= GROW_COEFFICIENT;
-        T[] temporaryArray = (T[]) new Object[size];
-        System.arraycopy(elementData, 0, temporaryArray, 0, size);
-        elementData = (T[]) new Object[currentCapacity];
-        System.arraycopy(temporaryArray, 0, elementData, 0, size);
+        if (size == elementData.length) {
+            System.arraycopy(elementData,
+                    0,
+                    elementData = (T[]) new Object[(int) (elementData.length * GROW_COEFFICIENT)],
+                    0,
+                    size);
+        }
     }
 
     private void isIndexValid(int index, String operation) {
-        if ((operation.equals("ADD") && (index > size || index < 0))
-                || (operation.equals("noADD") && (index < 0 || index >= size))) {
+        if ((operation.equals(ADD) && (index > size || index < 0))
+                || (operation.equals(NO_ADD) && (index < 0 || index >= size))) {
             throw new ArrayListIndexOutOfBoundsException("Invalid index");
         }
     }
