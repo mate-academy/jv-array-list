@@ -40,7 +40,6 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-
     @Override
     public T get(int index) {
         checkIfIndexIsValid(index, size);
