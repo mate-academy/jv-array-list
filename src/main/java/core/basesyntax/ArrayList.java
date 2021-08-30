@@ -70,6 +70,10 @@ public class ArrayList<T> implements List<T> {
         throw new NoSuchElementException();
     }
 
+    private boolean equals(T first, T second) {
+        return (first == second) || (first != null && first.equals(second));
+    }
+
     @Override
     public int size() {
         return size;
