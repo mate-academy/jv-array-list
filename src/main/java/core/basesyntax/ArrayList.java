@@ -1,6 +1,6 @@
 package core.basesyntax;
 
-import java.util.Objects;
+import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
@@ -8,7 +8,7 @@ public class ArrayList<T> implements List<T> {
     private T[] elementData;
 
     public ArrayList() {
-        elementData  = (T[]) new Object[DEFAULT_CAPACITY];
+        elementData = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
     @Override
@@ -55,30 +55,30 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index out of bounds.");
+            throw new ArrayListIndexOutOfBoundsException("h");
         }
-       // int numMoved = size - index - 1;
-        //System.arraycopy(elementData, index, elementData, index + 1, numMoved);
-//        if (size == elementData.length) {
-//            throw new ArrayListIndexOutOfBoundsException("f");
-//        }
-        //elementData[index] = null;
-        size--;
-        return elementData[index];
+        T res = elementData[index];
+        System.arraycopy(elementData,index + 1, elementData, index, size - index - 1);
+        elementData[--size] = null;
+        return res;
     }
 
     @Override
     public T remove(T element) {
-        int index = 0;
+        int index = -1;
         for (int i = 0; i < size; i++) {
-            if (Objects.equals(element, elementData[i])) {
+            if ((element == null || element == (T) elementData[i])
+                    || element.equals((T) elementData[i])) {
                 index = i;
             }
         }
-        int numMoved = size - index - 1;
-        System.arraycopy(elementData, index + 1, elementData, index, numMoved);
-        size--;
-        return elementData[index];
+        if (index == -1) {
+            throw new NoSuchElementException("No such element");
+        }
+        element = elementData[index];
+        System.arraycopy(elementData,index + 1, elementData, index, size - index - 1);
+        elementData[--size] = null;
+        return element;
     }
 
     @Override
