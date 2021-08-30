@@ -4,7 +4,7 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    private static final int WHOLE_COPY_START_INDEX = 0;
+    private static final int ZERO_INDEX = 0;
     private static final String INDEX_OUT_OF_BOUNDS_MESSAGE
             = "Index %d out of bounds for length %d";
     private T[] array;
@@ -27,7 +27,7 @@ public class ArrayList<T> implements List<T> {
         if (size == array.length) {
             array = resizeArr(array);
         }
-        if (index < size && index >= 0) {
+        if (index < size && index >= ZERO_INDEX) {
             array = addingElementInside(value, index, array);
         } else if (index == size) {
             add(value);
@@ -72,8 +72,8 @@ public class ArrayList<T> implements List<T> {
                     .format(INDEX_OUT_OF_BOUNDS_MESSAGE, index, size));
         }
         T[] newArray = (T[]) new Object[array.length];
-        System.arraycopy(array, WHOLE_COPY_START_INDEX,
-                newArray, WHOLE_COPY_START_INDEX, index);
+        System.arraycopy(array, ZERO_INDEX,
+                newArray, ZERO_INDEX, index);
         System.arraycopy(array, index + 1, newArray,
                 index, array.length - index - 1);
         T returnValue = array[index];
@@ -98,7 +98,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public boolean isEmpty() {
-        return size == 0;
+        return size == ZERO_INDEX;
     }
 
     private int indexOf(T value) {
@@ -113,8 +113,8 @@ public class ArrayList<T> implements List<T> {
 
     private T[] addingElementInside(T value, int index, T[] oldArray) {
         T[] newArray = (T[]) new Object[array.length];
-        System.arraycopy(oldArray, WHOLE_COPY_START_INDEX,
-                newArray, WHOLE_COPY_START_INDEX, index);
+        System.arraycopy(oldArray, ZERO_INDEX,
+                newArray, ZERO_INDEX, index);
         newArray[index] = value;
         System.arraycopy(oldArray, index, newArray,
                 index + 1, oldArray.length - index - 1);
@@ -123,8 +123,8 @@ public class ArrayList<T> implements List<T> {
 
     private T[] resizeArr(T[] oldArray) {
         T[] newArray = (T[]) new Object[(int) (oldArray.length * 1.5)];
-        System.arraycopy(oldArray, WHOLE_COPY_START_INDEX,
-                newArray, WHOLE_COPY_START_INDEX, oldArray.length);
+        System.arraycopy(oldArray, ZERO_INDEX,
+                newArray, ZERO_INDEX, oldArray.length);
         return newArray;
     }
 }
