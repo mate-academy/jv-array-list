@@ -6,16 +6,16 @@ public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private static final int GROW_INDEX = DEFAULT_CAPACITY + (DEFAULT_CAPACITY / 2);
     private static final String MESSAGE = "The index is out of Array size.";
-    private Object[] objects;
+    private T[] objects;
     private int size;
 
     public ArrayList() {
-        objects = new Object[DEFAULT_CAPACITY];
+        objects = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
     @Override
     public void add(T value) {
-        checkSize();
+        grow();
         objects[size] = value;
         size++;
     }
@@ -25,7 +25,7 @@ public class ArrayList<T> implements List<T> {
         if (index > size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException(MESSAGE);
         }
-        checkSize();
+        grow();
         System.arraycopy(objects, index, objects, index + 1, size - index);
         objects[index] = value;
         size++;
@@ -39,10 +39,9 @@ public class ArrayList<T> implements List<T> {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public T get(int index) {
         checkIndex(index);
-        return (T) objects[index];
+        return objects[index];
     }
 
     @Override
@@ -52,10 +51,9 @@ public class ArrayList<T> implements List<T> {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public T remove(int index) {
         checkIndex(index);
-        T removedValue = (T) objects[index];
+        T removedValue = objects[index];
         System.arraycopy(objects, index + 1, objects, index, size - index - 1);
         size--;
         return removedValue;
@@ -81,11 +79,11 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void checkSize() {
+    private void grow() {
         if (size == objects.length) {
             Object[] newObjects = new Object[objects.length * GROW_INDEX];
             System.arraycopy(objects, 0, newObjects, 0, size);
-            objects = newObjects;
+            objects = (T[]) newObjects;
         }
     }
 
