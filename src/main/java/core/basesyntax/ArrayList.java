@@ -16,27 +16,22 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (size == array.length) {
-            array = resizeArr(array);
-        }
+        resizeArr();
         array[size++] = value;
     }
 
     @Override
     public void add(T value, int index) {
-        if (size == array.length) {
-            array = resizeArr(array);
-        }
+        resizeArr();
         if (index < size && index >= ZERO_INDEX) {
             array = addingElementInside(value, index, array);
+            size++;
         } else if (index == size) {
             add(value);
-            return;
         } else {
             throw new ArrayListIndexOutOfBoundsException(String
                     .format(INDEX_OUT_OF_BOUNDS_MESSAGE, index, size));
         }
-        size++;
     }
 
     @Override
@@ -84,7 +79,14 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        int indexOfElement = indexOf(element);
+        int indexOfElement = -1;
+        for (int i = 0; i < size; i++) {
+            if ((array[i] == null && element == null)
+                    || (array[i] != null && array[i].equals(element))) {
+                indexOfElement = i;
+                break;
+            }
+        }
         if (indexOfElement == -1) {
             throw new NoSuchElementException();
         }
@@ -101,16 +103,6 @@ public class ArrayList<T> implements List<T> {
         return size == ZERO_INDEX;
     }
 
-    private int indexOf(T value) {
-        for (int i = 0; i < size; i++) {
-            if ((array[i] == null && value == null)
-                    || (array[i] != null && array[i].equals(value))) {
-                return i;
-            }
-        }
-        return -1;
-    }
-
     private T[] addingElementInside(T value, int index, T[] oldArray) {
         T[] newArray = (T[]) new Object[array.length];
         System.arraycopy(oldArray, ZERO_INDEX,
@@ -121,10 +113,12 @@ public class ArrayList<T> implements List<T> {
         return newArray;
     }
 
-    private T[] resizeArr(T[] oldArray) {
-        T[] newArray = (T[]) new Object[(int) (oldArray.length * 1.5)];
-        System.arraycopy(oldArray, ZERO_INDEX,
-                newArray, ZERO_INDEX, oldArray.length);
-        return newArray;
+    private void resizeArr() {
+        if (size == array.length) {
+            T[] newArray = (T[]) new Object[(int) (array.length * 1.5)];
+            System.arraycopy(array, ZERO_INDEX,
+                    newArray, ZERO_INDEX, array.length);
+            array = newArray;
+        }
     }
 }
