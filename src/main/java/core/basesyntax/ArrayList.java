@@ -3,55 +3,47 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    private static final int INITIAL_ARRAY_SIZE = 10;
+    private static final int INITIAL_ARRAY_LENGTH = 10;
+    private static final int INITIAL_ARRAY_SIZE = 0;
     private Object[] arrayList;
-    int size;
+    private int size;
 
     public ArrayList() {
-        arrayList = new Object[INITIAL_ARRAY_SIZE];
-        size = 0;
+        arrayList = new Object[INITIAL_ARRAY_LENGTH];
+        size = INITIAL_ARRAY_SIZE;
     }
 
     @Override
     public void add(T value) {
-        if (size == arrayList.length) {
-            resize();
-        }
-        arrayList[size] = value;
-        size++;
+        sizeUp();
+        arrayList[size - 1] = value;
     }
 
     @Override
     public void add(T value, int index) {
-        System.out.println(" size:" + size + " index: " + index + " value: " + value + " ArrayLength: " + arrayList.length);
-        if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("Wrong index: " + index);
-        }
-        if (index < size && index >= 0) arrayShift(index, +1);
+        sizeUp();
+        checkIndex(index);
+        arrayShift(index, +1);
         arrayList[index] = value;
     }
 
     @Override
     public void addAll(List<T> list) {
-        if (size + list.size() > arrayList.length) resize();
         for (int i = 0; i < list.size(); i++) {
-            arrayList[size + i] = list.get(i);
+            sizeUp();
+            arrayList[size - 1] = list.get(i);
         }
-        size += list.size();
-
     }
 
     @Override
     public T get(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Wrong index: " + index);
-        }
+        checkIndex(index);
         return (T) arrayList[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index < 0 || index + 1 > size) throw new ArrayListIndexOutOfBoundsException("Wrong index");
+        checkIndex(index);
         if (index + 1 <= size) {
             arrayList[index] = value;
         }
@@ -59,20 +51,14 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(int index) {
-        T returnValue;
-        if (index < 0 || index + 1 > size) {
-            throw new ArrayListIndexOutOfBoundsException("Wrong index");
-        }
-        if (index + 1 <= size) {
-            returnValue = (T) arrayList[index];
-            arrayList[index] = null;
-            arrayShift(index, -1);
-            size--;
-            return returnValue;
-        } else {
-            throw new NoSuchElementException("Removing element wasn't found");
-        }
+        checkIndex(index);
+        T returnValue = (T) arrayList[index];
+        arrayList[index] = null;
+        arrayShift(index, -1);
+        sizeDown();
+        return returnValue;
     }
+
 
     @Override
     public T remove(T element) {
@@ -80,7 +66,7 @@ public class ArrayList<T> implements List<T> {
         for (int i = 0; i < size; i++) {
             if (element.equals((T) arrayList[i])) {
                 returnValue = (T) arrayList[i];
-                arrayShift(i, -1);
+                if (size > 1) arrayShift(i, -1);
                 size--;
             }
         }
@@ -109,10 +95,26 @@ public class ArrayList<T> implements List<T> {
 
     private void arrayShift(int index, int value) {
         Object[] newArrayList = new Object[arrayList.length];
-        value = index + value < 0 ? 0 : value;
         System.arraycopy(arrayList, 0, newArrayList, 0, index);
-        System.arraycopy(arrayList, index, newArrayList, index + value, size);
+        if (index + value >= 0) System.arraycopy(arrayList, index, newArrayList, index + value, size - index);
         arrayList = newArrayList;
-        size += value;
+    }
+
+    private void sizeUp() {
+        sizeUpFor(1);
+    }
+
+    private void sizeDown(){
+        sizeUpFor(-1);
+    }
+
+    private void sizeUpFor(int quantity) {
+        size += quantity;
+        if (size == arrayList.length) resize();
+    }
+
+
+    private void checkIndex(int index) {
+        if (index < 0 || index >= size) throw new ArrayListIndexOutOfBoundsException("Wrong index: " + index);
     }
 }
