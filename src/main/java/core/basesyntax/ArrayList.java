@@ -73,9 +73,7 @@ public class ArrayList<T> implements List<T> {
         if (index == -1) {
             throw new NoSuchElementException("No such element");
         }
-        element = elementData[index];
-        remove(index);
-        return element;
+        return remove(index);
     }
 
     @Override
