@@ -3,84 +3,54 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    private static final int INITIAL_SIZE = 10;
     private static final int INITIAL_SRC_POS = 0;
     private static final double GROW_SIZE = 1.5;
-    private boolean arrayIsEmpty = true;
     private T[] arrayData;
     private int size;
-    private int currentSizeOfArray = INITIAL_SIZE;
+    private int fullSizeOfArray = 10;
 
     @SuppressWarnings({"unchecked"})
     public ArrayList() {
-        arrayData = (T[]) new Object[INITIAL_SIZE];
+        arrayData = (T[]) new Object[fullSizeOfArray];
     }
 
     @Override
     public void add(T value) {
-        if (!arrayIsEmpty) {
-            if (ensureCapacity()) {
-                grow();
-            }
-            arrayData[size] = value;
-            size++;
-        } else {
-            arrayData[size] = value;
-            size++;
-            arrayIsEmpty = false;
-        }
+        ensureCapacity();
+        arrayData[size] = value;
+        size++;
     }
 
     @Override
     public void add(T value, int index) {
-        if (indexIsNegative(index) || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("Index are not exist, your index is "
-                    + index + " last index is " + size);
-        } else if (indexIsLegal(index) && ensureCapacity()) {
-            grow();
-            arrayCopyAdd(index);
-            arrayData[index] = value;
-        } else {
-            arrayCopyAdd(index);
-            arrayData[index] = value;
-        }
+        isIndexLegal(index);
+        ensureCapacity();
+        arrayCopyAdd(index);
+        arrayData[index] = value;
     }
 
     @Override
     public void addAll(List<T> list) {
-        while (size + list.size() >= currentSizeOfArray) {
-            grow();
-        }
         for (int i = 0; i < list.size(); i++) {
-            arrayData[size] = list.get(i);
-            size++;
+            add(list.get(i));
         }
     }
 
     @Override
     public T get(int index) {
-        if (!indexIsLegal(index)) {
-            throw new ArrayListIndexOutOfBoundsException("Index are not exist,"
-                    + " please input right index");
-        }
+        isIndexGetLegal(index);
         return arrayData[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (!indexIsLegal(index)) {
-            throw new ArrayListIndexOutOfBoundsException("Index are not exist,"
-                    + " please input right index");
-        }
+        isIndexGetLegal(index);
         arrayData[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (indexIsNegative(index) || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index are not exist,"
-                    + " please input right index");
-        }
+        isIndexGetLegal(index);
         T value = arrayData[index];
         arrayCopyRemove(index);
         return value;
@@ -92,8 +62,7 @@ public class ArrayList<T> implements List<T> {
             if ((element == null
                     && arrayData[i] == null)
                     || element != null && element.equals(arrayData[i])) {
-                arrayCopyRemove(i);
-                return element;
+                return remove(i);
             }
         }
         throw new NoSuchElementException("Element are not exist in data");
@@ -111,11 +80,11 @@ public class ArrayList<T> implements List<T> {
 
     @SuppressWarnings({"unchecked"})
     private void grow() {
-        T[] arrayDataTemp = (T[]) new Object[(int) (currentSizeOfArray * GROW_SIZE)];
+        T[] arrayDataTemp = (T[]) new Object[(int) (fullSizeOfArray * GROW_SIZE)];
         System.arraycopy(arrayData, INITIAL_SRC_POS,
                 arrayDataTemp, INITIAL_SRC_POS, arrayData.length);
         arrayData = arrayDataTemp;
-        currentSizeOfArray = (int) (currentSizeOfArray * GROW_SIZE);
+        fullSizeOfArray = (int) (fullSizeOfArray * GROW_SIZE);
     }
 
     private void arrayCopyAdd(int index) {
@@ -127,14 +96,24 @@ public class ArrayList<T> implements List<T> {
     }
 
     private boolean ensureCapacity() {
-        return (size + 1) >= currentSizeOfArray;
+        if ((size + 1) >= fullSizeOfArray) {
+            grow();
+            return true;
+        }
+        return false;
     }
 
-    private boolean indexIsLegal(int index) {
-        return (index >= 0 && index < size);
+    private boolean isIndexLegal(int index) {
+        if (!(index >= 0 && index <= size)) {
+            throw new ArrayListIndexOutOfBoundsException("index are not exist");
+        }
+        return true;
     }
 
-    private boolean indexIsNegative(int index) {
-        return index < 0;
+    private boolean isIndexGetLegal(int index) {
+        if (!(index >= 0 && index < size)) {
+            throw new ArrayListIndexOutOfBoundsException("index are not exist");
+        }
+        return true;
     }
 }
