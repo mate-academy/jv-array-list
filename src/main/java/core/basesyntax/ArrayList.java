@@ -26,7 +26,7 @@ public class ArrayList<T> implements List<T> {
         checkSize();
         System.arraycopy(values, index, values, index + 1, size - index);
         values[index] = value;
-            size++;
+        size++;
     }
 
     @Override
