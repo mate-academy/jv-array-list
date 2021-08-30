@@ -23,18 +23,17 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         resizeArr();
-        if (index < size && index >= ZERO_INDEX) {
-            System.arraycopy(array, index, array,
-                    index + 1, array.length - index - 1);
-            System.arraycopy(array, ZERO_INDEX,
-                    array, ZERO_INDEX, index);
-            array[index] = value;
-            size++;
-        } else if (index == size) {
-            add(value);
-        } else {
+        if (index > size || index < ZERO_INDEX) {
             throw new ArrayListIndexOutOfBoundsException(String
                     .format(INDEX_OUT_OF_BOUNDS_MESSAGE, index, size));
+        }
+        if (index == size) {
+            add(value);
+        } else {
+            System.arraycopy(array, index, array,
+                    index + 1, array.length - index - 1);
+            array[index] = value;
+            size++;
         }
     }
 
