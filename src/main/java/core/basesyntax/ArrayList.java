@@ -55,18 +55,18 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         chekIndex(index);
-        T res = elementData[index];
+        T removedElement = elementData[index];
         System.arraycopy(elementData,index + 1, elementData, index, size - index - 1);
-        elementData[--size] = null;
-        return res;
+        size--;
+        return removedElement;
     }
 
     @Override
     public T remove(T element) {
         int index = -1;
         for (int i = 0; i < size; i++) {
-            if ((element == null || element == (T) elementData[i])
-                    || element.equals((T) elementData[i])) {
+            if (element == elementData[i] || (element != null
+                    && element.equals(elementData[i]))) {
                 index = i;
             }
         }
@@ -74,8 +74,7 @@ public class ArrayList<T> implements List<T> {
             throw new NoSuchElementException("No such element");
         }
         element = elementData[index];
-        System.arraycopy(elementData,index + 1, elementData, index, size - index - 1);
-        elementData[--size] = null;
+        remove(index);
         return element;
     }
 
