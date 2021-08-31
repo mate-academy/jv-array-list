@@ -1,7 +1,6 @@
 package core.basesyntax;
 
 import java.util.NoSuchElementException;
-import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
     private static final String INDEX_OUT_OF_BOUND_MESSAGE =
@@ -55,6 +54,7 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         checkIndex(index);
         final T deletedValue = values[index];
+        values[index] = null;
         size--;
         System.arraycopy(values, index + 1, values, index, size - index);
         return deletedValue;
@@ -63,15 +63,11 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if (Objects.equals(values[i], element)) {
+            if (equals(values[i], element)) {
                 return remove(i);
             }
         }
         throw new NoSuchElementException();
-    }
-
-    private boolean equals(T first, T second) {
-        return (first == second) || (first != null && first.equals(second));
     }
 
     @Override
@@ -82,6 +78,10 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private boolean equals(T first, T second) {
+        return (first == second) || (first != null && first.equals(second));
     }
 
     private void checkSize() {
