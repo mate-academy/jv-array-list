@@ -78,12 +78,11 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private T[] grow(T[] oldArray) {
+    private void grow(T[] oldArray) {
         if (container.length == size) {
             container = (T[]) new Object[(int) (size * INCREMENT_STEP)];
             System.arraycopy(oldArray, 0, container, 0, oldArray.length);
         }
-        return container;
     }
 
     private void checkIndexForGet(int index) {
