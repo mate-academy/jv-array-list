@@ -59,11 +59,12 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
+        if (element == null) {
+            size--;
+            return null;
+        }
         for (int i = 0; i < size; i++) {
-            if (element == null) {
-                size--;
-                return null;
-            } else if (element.equals(arrayList[i])) {
+            if (element.equals(arrayList[i])) {
                 return remove(i);
             }
         }
