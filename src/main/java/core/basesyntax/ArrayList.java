@@ -4,8 +4,6 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_SIZE = 10;
-    private static final String NO_INDEX_MESSAGE = "Index does not exist: ";
-    private static final String NO_ELEMENT_MESSAGE = "Element does not exist: ";
     private T[] arrayList;
     private int size;
 
@@ -23,7 +21,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException(NO_INDEX_MESSAGE + index);
+            throw new ArrayListIndexOutOfBoundsException("Index does not exist: " + index);
         }
         grow();
         changeArrayValues(value, index);
@@ -65,7 +63,7 @@ public class ArrayList<T> implements List<T> {
                 return remove(i);
             }
         }
-        throw new NoSuchElementException(NO_ELEMENT_MESSAGE + element);
+        throw new NoSuchElementException("Element does not exist: " + element);
     }
 
     @Override
@@ -102,7 +100,7 @@ public class ArrayList<T> implements List<T> {
 
     private void checkIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException(NO_INDEX_MESSAGE + index);
+            throw new ArrayListIndexOutOfBoundsException("Index does not exist: " + index);
         }
     }
 }
