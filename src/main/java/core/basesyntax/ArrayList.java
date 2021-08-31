@@ -6,7 +6,7 @@ public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private static final String BOUNDS_EXCEPTION = "Out of bounds for index ";
     private static final String NO_SUCH_ELEMENT_EXCEPTION = "No such element ";
-    private int size = 0;
+    private int size;
     private T[] values;
 
     @SuppressWarnings("unchecked")
