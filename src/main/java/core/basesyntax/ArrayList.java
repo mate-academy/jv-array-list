@@ -5,10 +5,11 @@ import java.util.NoSuchElementException;
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_SIZE = 10;
     private T[] object;
-    private int size = 0;
+    private int size;
 
     public ArrayList() {
         object = (T[]) new Object[DEFAULT_SIZE];
+        size = 0;
     }
 
     @Override
@@ -62,8 +63,7 @@ public class ArrayList<T> implements List<T> {
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
             if (object[i] == element || object[i] != null && object[i].equals(element)) {
-                remove(i);
-                return element;
+                return remove(i);
             }
         }
         throw new NoSuchElementException("Element not found");
