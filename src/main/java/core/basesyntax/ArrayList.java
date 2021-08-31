@@ -21,11 +21,14 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        areIndexValid(index);
-        provideSize();
-        System.arraycopy(array, index, array, index + 1, size - index);
-        array[index] = value;
-        size++;
+        if (index >= 0 && index <= size) {
+            provideSize();
+            System.arraycopy(array, index, array, index + 1, size - index);
+            array[index] = value;
+            size++;
+        } else {
+            throw new ArrayListIndexOutOfBoundsException(INDEX_EXCEPTION_MESSAGE);
+        }
     }
 
     @Override
@@ -82,13 +85,6 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
-    }
-
-    private boolean areIndexValid(int index) {
-        if (!(index >= 0 && index <= size)) {
-            throw new ArrayListIndexOutOfBoundsException(INDEX_EXCEPTION_MESSAGE);
-        }
-        return true;
     }
 
     private boolean areIndexExist(int index) {
