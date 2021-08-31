@@ -53,7 +53,7 @@ public class ArrayList<T> implements List<T> {
         checkForIndex(index);
         T arrayToBeReturned = array[index];
         System.arraycopy(array, index + 1, array, index, size - index - 1);
-        size--;
+        array[--size] = null;
         return arrayToBeReturned;
     }
 
