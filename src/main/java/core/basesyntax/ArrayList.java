@@ -1,6 +1,5 @@
 package core.basesyntax;
 
-import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
@@ -30,9 +29,7 @@ public class ArrayList<T> implements List<T> {
     public void add(T value, int index) {
         int potentialSize = size + 1;
         if (potentialSize > elementData.length) {
-            ensureCapacity(elementData.length);
-        } else if (size == elementData.length) {
-            ensureCapacity(elementData.length);
+            ensureCapacity();
         }
         indexInBoundsCheck(index, potentialSize);
         System.arraycopy(elementData, index, elementData, index + 1, size - index);
@@ -50,7 +47,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         indexInBoundsCheck(index,size);
-        return (T) elementData[index];
+        return elementData[index];
     }
 
     @Override
@@ -63,10 +60,10 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         indexInBoundsCheck(index, size);
         size--;
-        Object oldObject = elementData[index];
+        T oldObject = elementData[index];
         System.arraycopy(elementData, index + 1, elementData, index,size - index);
         elementData[size] = null;
-        return (T) oldObject;
+        return oldObject;
     }
 
     @Override
@@ -90,8 +87,12 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void ensureCapacity(int minCapacity) {
-        elementData = Arrays.copyOf(elementData, (int)(minCapacity * ARRAY_LENGTH_MULTIPLIER));
+    private void ensureCapacity() {
+        if (size == elementData.length) {
+            T[] biggerArray = (T[]) new Object[(int)(elementData.length * ARRAY_LENGTH_MULTIPLIER)];
+            System.arraycopy(elementData,0, biggerArray,0,size);
+            elementData = biggerArray;
+        }
     }
 
     private void indexInBoundsCheck(int index, int bounds) {
