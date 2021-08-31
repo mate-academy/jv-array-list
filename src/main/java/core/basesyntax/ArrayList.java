@@ -23,10 +23,11 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         capacityCheck();
-        if (index == size || isIndexValid(index)) {
-            for (int i = size; i > index; i--) {
-                values[i] = values[i - 1];
-            }
+        if (index == size) {
+            add(value);
+        } else {
+            isIndexValid(index);
+            System.arraycopy(values, index, values, index + 1, size - index);
             values[index] = value;
             size++;
         }
@@ -41,29 +42,24 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (isIndexValid(index)) {
-            return values[index];
-        }
-        throw new ArrayListIndexOutOfBoundsException(EXEPTION_MASAGE);
+        isIndexValid(index);
+        return values[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (isIndexValid(index)) {
-            values[index] = value;
-        }
+        isIndexValid(index);
+        values[index] = value;
     }
 
     @Override
     public T remove(int index) {
+        isIndexValid(index);
         T removedElement;
-        if (isIndexValid(index)) {
-            removedElement = values[index];
-            System.arraycopy(values, index + 1, values, index, size - 1 - index);
-            size--;
-            return removedElement;
-        }
-        throw new ArrayListIndexOutOfBoundsException(EXEPTION_MASAGE);
+        removedElement = values[index];
+        System.arraycopy(values, index + 1, values, index, size - 1 - index);
+        size--;
+        return removedElement;
     }
 
     @Override
@@ -96,10 +92,8 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private boolean isIndexValid(int index) {
-        if (index < size & index >= 0) {
-            return true;
-        } else {
+    private void isIndexValid(int index) {
+        if (index >= size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException(EXEPTION_MASAGE);
         }
     }
