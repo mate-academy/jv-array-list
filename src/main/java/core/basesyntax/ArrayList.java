@@ -1,6 +1,5 @@
 package core.basesyntax;
 
-import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
@@ -40,7 +39,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         checkIndex(index);
-        return (T) elements[index];
+        return elements[index];
     }
 
     @Override
@@ -52,17 +51,17 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
-        T removedElement = (T) elements[index];
+        T removedElement = elements[index];
         System.arraycopy(elements, index + 1, elements, index, size - index - 1);
         size--;
-        return (T) removedElement;
+        return removedElement;
     }
 
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if ((element == (T) elements[i])
-                    || (element != null && element.equals((T) elements[i]))) {
+            if ((element == elements[i])
+                    || (element != null && element.equals((elements[i])))) {
                 return remove(i);
             }
         }
@@ -81,8 +80,10 @@ public class ArrayList<T> implements List<T> {
 
     private void ensureCapacity() {
         if (size >= elements.length) {
-            int newEnsureCapacity = elements.length + elements.length / NUMBER_TO_DIVISION;
-            elements = Arrays.copyOf(elements, newEnsureCapacity);
+            int newCapacity = elements.length + elements.length / NUMBER_TO_DIVISION;
+            T[] resizeElements = (T[]) new Object[newCapacity];
+            System.arraycopy(elements,0, resizeElements, 0, elements.length);
+            elements = resizeElements;
         }
     }
 
