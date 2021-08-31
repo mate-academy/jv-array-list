@@ -57,7 +57,7 @@ public class ArrayList<T> implements List<T> {
         checkIndex(index);
         int numMoved = size - index - 1;
         T removedOldValue = (T) elementData[index];
-        System.arraycopy(elementData, index+ 1, elementData, index, numMoved);
+        System.arraycopy(elementData, index + 1, elementData, index, numMoved);
         size--;
         return removedOldValue;
     }
