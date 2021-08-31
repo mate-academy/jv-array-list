@@ -27,11 +27,8 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        int potentialSize = size + 1;
-        if (potentialSize > elementData.length) {
-            ensureCapacity();
-        }
-        indexInBoundsCheck(index, potentialSize);
+        indexCheckForAdd(index);
+        ensureCapacity();
         System.arraycopy(elementData, index, elementData, index + 1, size - index);
         elementData[index] = value;
         size++;
@@ -46,19 +43,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        indexInBoundsCheck(index,size);
+        indexCheck(index);
         return elementData[index];
     }
 
     @Override
     public void set(T value, int index) {
-        indexInBoundsCheck(index,size);
+        indexCheck(index);
         elementData[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        indexInBoundsCheck(index, size);
+        indexCheck(index);
         size--;
         T oldObject = elementData[index];
         System.arraycopy(elementData, index + 1, elementData, index,size - index);
@@ -95,8 +92,14 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private void indexInBoundsCheck(int index, int bounds) {
-        if (index < 0 || index >= bounds || bounds < 0) {
+    private void indexCheckForAdd(int index) {
+        if (index < 0 || index > size || size < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Unreacheble index, please check again");
+        }
+    }
+
+    private void indexCheck(int index) {
+        if (index < 0 || index >= size || size < 0) {
             throw new ArrayListIndexOutOfBoundsException("Unreacheble index, please check again");
         }
     }
