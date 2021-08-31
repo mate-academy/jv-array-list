@@ -13,7 +13,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        grow();
+        ensureCapacity();
         elementData[size] = value;
         size++;
     }
@@ -23,7 +23,7 @@ public class ArrayList<T> implements List<T> {
         if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException("Index out of bounds.");
         }
-        grow();
+        ensureCapacity();
         System.arraycopy(elementData, index, elementData, index + 1, size - index);
         elementData[index] = value;
         size++;
@@ -84,13 +84,17 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private void grow() {
+    private void ensureCapacity() {
         if (elementData.length == size) {
-            int oldCapacity = elementData.length;
-            int newCapacity = oldCapacity + (oldCapacity >> 1);
-            T[] newArray = (T[]) new Object[newCapacity];
-            System.arraycopy(elementData, 0, newArray, 0, oldCapacity);
-            elementData = newArray;
+            grow();
         }
+    }
+
+    private void grow() {
+        int oldCapacity = elementData.length;
+        int newCapacity = oldCapacity + (oldCapacity >> 1);
+        T[] newArray = (T[]) new Object[newCapacity];
+        System.arraycopy(elementData, 0, newArray, 0, oldCapacity);
+        elementData = newArray;
     }
 }
