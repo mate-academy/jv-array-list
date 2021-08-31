@@ -7,7 +7,7 @@ public class ArrayList<T> implements List<T> {
     private static final String BOUNDS_EXCEPTION = "Out of Bounds";
     private static final String NO_ELEMENT_EXCEPTION = "No such element exists";
     private T[] array;
-    private int size = 0;
+    private int size;
 
     public ArrayList() {
         array = (T[]) new Object[DEFAULT_SIZE];
@@ -15,9 +15,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (size == array.length) {
-            grow();
-        }
+        grow();
         array[size++] = value;
     }
 
@@ -26,9 +24,7 @@ public class ArrayList<T> implements List<T> {
         if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException(BOUNDS_EXCEPTION);
         }
-        if (size == array.length) {
-            grow();
-        }
+        grow();
         System.arraycopy(array, index, array, index + 1, size - index);
         array[index] = value;
         size++;
@@ -89,8 +85,10 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void grow() {
-        T[] copiedArray = (T[]) new Object[array.length + (array.length >> 1)];
-        System.arraycopy(array, 0, copiedArray, 0, size);
-        array = copiedArray;
+        if (size == array.length) {
+            T[] copiedArray = (T[]) new Object[array.length + (array.length >> 1)];
+            System.arraycopy(array, 0, copiedArray, 0, size);
+            array = copiedArray;
+        }
     }
 }
