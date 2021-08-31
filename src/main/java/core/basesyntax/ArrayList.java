@@ -3,9 +3,8 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    private static int DEFAULT_CAPACITY = 10;
-    private static String EXEPTION_MASAGE = "Invalid index";
-    private int maxCapacity = DEFAULT_CAPACITY;
+    private static final int DEFAULT_CAPACITY = 10;
+    private static final String EXEPTION_MASAGE = "Invalid index";
     private T[] defaultArray;
     private int size;
 
@@ -67,8 +66,8 @@ public class ArrayList<T> implements List<T> {
         T removedElement;
         if (isIndexValid(index)) {
             removedElement = defaultArray[index];
-            for (int i = index; i < size - 1; i++) {
-                defaultArray[i] = defaultArray[i + 1];
+            if (size - 1 - index >= 0) {
+                System.arraycopy(defaultArray, index + 1, defaultArray, index, size - 1 - index);
             }
             size--;
             return removedElement;
@@ -99,9 +98,8 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void capacityCheck() {
-        if (size >= maxCapacity) {
-            maxCapacity = (int) (size * 1.5);
-            T[] tempArray = (T[]) new Object[maxCapacity];
+        if (size >= defaultArray.length) {
+            T[] tempArray = (T[]) new Object[(int) (defaultArray.length * 1.5)];
             System.arraycopy(defaultArray, 0, tempArray, 0, defaultArray.length);
             defaultArray = tempArray;
         }
