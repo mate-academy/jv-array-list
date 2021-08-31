@@ -13,9 +13,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (elementData.length == size) {
-            elementData = grow();
-        }
+        grow();
         elementData[size] = value;
         size++;
     }
@@ -25,9 +23,7 @@ public class ArrayList<T> implements List<T> {
         if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException("Index out of bounds.");
         }
-        if (elementData.length == size) {
-            elementData = grow();
-        }
+        grow();
         System.arraycopy(elementData, index, elementData, index + 1, size - index);
         elementData[index] = value;
         size++;
@@ -63,17 +59,13 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        int index = -1;
         for (int i = 0; i < size; i++) {
             if (element == elementData[i] || (element != null
                     && element.equals(elementData[i]))) {
-                index = i;
+                return remove(i);
             }
         }
-        if (index == -1) {
-            throw new NoSuchElementException("No such element");
-        }
-        return remove(index);
+        throw new NoSuchElementException("No such element");
     }
 
     @Override
@@ -92,11 +84,13 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private T[] grow() {
-        int oldCapacity = elementData.length;
-        int newCapacity = oldCapacity + (oldCapacity >> 1);
-        T[] newArray = (T[]) new Object[newCapacity];
-        System.arraycopy(elementData, 0, newArray, 0, oldCapacity);
-        return newArray;
+    private void grow() {
+        if (elementData.length == size) {
+            int oldCapacity = elementData.length;
+            int newCapacity = oldCapacity + (oldCapacity >> 1);
+            T[] newArray = (T[]) new Object[newCapacity];
+            System.arraycopy(elementData, 0, newArray, 0, oldCapacity);
+            elementData = newArray;
+        }
     }
 }
