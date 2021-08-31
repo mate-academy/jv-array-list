@@ -52,9 +52,9 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         checkIndexForRemoveGetSetMethods(index);
+        size--;
         T removedElement = values[index];
         System.arraycopy(values, index + 1, values, index, values.length - index - 1);
-        size--;
         values[size] = null;
         return removedElement;
     }
