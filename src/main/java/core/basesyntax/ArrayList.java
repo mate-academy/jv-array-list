@@ -3,7 +3,7 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    private static int INITIAL_SIZE = 10;
+    private static final int INITIAL_SIZE = 10;
     private static final String MESSAGE = "Error! Index must be greater then 0 and less then ";
     private T[] elements;
     private int size;
