@@ -8,13 +8,13 @@ public class ArrayList<T> implements List<T> {
     private int size;
 
     public ArrayList() {
-        elementData = (T[])new Object[CAPACITY];
+        elementData = (T[]) new Object[CAPACITY];
     }
 
     @Override
     public void add(T value) {
         if (elementData.length == size) {
-            elementData = grow();
+            ensureCapacity();
         }
         elementData[size] = value;
         size++;
@@ -26,7 +26,7 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayListIndexOutOfBoundsException("There is not enough space in the array");
         }
         if (size == elementData.length) {
-            elementData = grow();
+            ensureCapacity();
         }
         System.arraycopy(elementData, index, elementData, index + 1, size - index);
         elementData[index] = value;
@@ -43,7 +43,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         checkIndex(index);
-        return (T) elementData[index];
+        return elementData[index];
     }
 
     @Override
@@ -81,10 +81,12 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private T[] grow() {
-        T[] grewArray = (T[]) new Object[size + (size / 2)];
-        System.arraycopy(elementData, 0, grewArray, 0, size);
-        return grewArray;
+    private void ensureCapacity() {
+        if (elementData.length == size) {
+            T[] grewArray = (T[]) new Object[size + (size / 2)];
+            System.arraycopy(elementData, 0, grewArray, 0, size);
+            elementData = grewArray;
+        }
     }
 
     private void checkIndex(int index) {
