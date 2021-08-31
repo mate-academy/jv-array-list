@@ -3,12 +3,12 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    private static final int CAPACITY = 10;
+    private static final int INITIAL_CAPACITY = 10;
     private T[] elementData;
     private int size;
 
     public ArrayList() {
-        elementData = (T[]) new Object[CAPACITY];
+        elementData = (T[]) new Object[INITIAL_CAPACITY];
     }
 
     @Override
@@ -23,9 +23,7 @@ public class ArrayList<T> implements List<T> {
         if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException("There is not enough space in the array");
         }
-        if (size == elementData.length) {
-            ensureCapacity();
-        }
+        ensureCapacity();
         System.arraycopy(elementData, index, elementData, index + 1, size - index);
         elementData[index] = value;
         size++;
