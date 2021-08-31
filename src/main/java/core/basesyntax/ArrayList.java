@@ -28,6 +28,7 @@ public class ArrayList<T> implements List<T> {
         System.arraycopy(elementData, index, elementData, index + 1, size - index);
         elementData[index] = value;
         size++;
+
     }
 
     @Override
@@ -54,7 +55,7 @@ public class ArrayList<T> implements List<T> {
         validateIndex(index);
         T removedValue = elementData[index];
         System.arraycopy(elementData, index + 1, elementData, index, size - index - 1);
-        size--;
+        elementData[--size] = null;
         return removedValue;
     }
 
