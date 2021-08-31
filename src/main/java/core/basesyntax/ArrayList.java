@@ -51,10 +51,10 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         checkForIndex(index);
-        T arrays = array[index];
+        T arrayToBeReturned = array[index];
         System.arraycopy(array, index + 1, array, index, size - index - 1);
         size--;
-        return arrays;
+        return arrayToBeReturned;
     }
 
     @Override
@@ -78,20 +78,19 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    public boolean checkForIndex(int index) {
+    private void checkForIndex(int index) {
         if (index > size - 1 || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Invalid index");
         }
-        return true;
     }
 
-    public void increasingAnArray() {
+    private void increasingAnArray() {
         T[] newArray = (T[]) new Object[size + (size / 2)];
         System.arraycopy(array, 0, newArray, 0, array.length);
         array = newArray;
     }
 
-    public void checkSize() {
+    private void checkSize() {
         if (size == array.length) {
             increasingAnArray();
         }
