@@ -4,31 +4,18 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_SIZE = 10;
-    private T[] array;
-    private int size = 0;
+    private static final double GROW_COEFFICIENT = 1.5;
+    private T[] values;
+    private int size;
 
     public ArrayList() {
-        array = (T[]) new Object[DEFAULT_SIZE];
-    }
-
-    private void grow() {
-        T[] arrayCopy = (T[]) new Object[array.length * 3 / 2];
-        System.arraycopy(array, 0, arrayCopy, 0, size);
-        array = arrayCopy;
-    }
-
-    private void testIndex(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index is out of bound");
-        }
+        values = (T[]) new Object[DEFAULT_SIZE];
     }
 
     @Override
     public void add(T value) {
-        if (size == array.length) {
-            grow();
-        }
-        array[size++] = value;
+        ensureCapacity();
+        values[size++] = value;
     }
 
     @Override
@@ -36,11 +23,11 @@ public class ArrayList<T> implements List<T> {
         if (index > size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Element does not exist");
         }
-        if (size == array.length) {
-            grow();
+        if (size == values.length) {
+            ensureCapacity();
         }
-        System.arraycopy(array, index, array, index + 1, size - index);
-        array[index] = value;
+        System.arraycopy(values, index, values, index + 1, size - index);
+        values[index] = value;
         size++;
     }
 
@@ -54,28 +41,28 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         testIndex(index);
-        return (T) array[index];
+        return (T) values[index];
     }
 
     @Override
     public void set(T value, int index) {
         testIndex(index);
-        array[index] = value;
+        values[index] = value;
     }
 
     @Override
     public T remove(int index) {
         testIndex(index);
-        T value = array[index];
-        System.arraycopy(array, index + 1, array, index, size - index - 1);
-        array[--size] = null;
+        T value = values[index];
+        System.arraycopy(values, index + 1, values, index, size - index - 1);
+        values[--size] = null;
         return value;
     }
 
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if (array[i] == element || element != null && element.equals(array[i])) {
+            if (values[i] == element || element != null && element.equals(values[i])) {
                 return remove(i);
             }
         }
@@ -90,5 +77,19 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private void ensureCapacity() {
+        if (size == values.length) {
+            T[] newArray = (T[]) new Object[(int) (values.length * GROW_COEFFICIENT)];
+            System.arraycopy(values, 0, newArray, 0, size);
+            values = newArray;
+        }
+    }
+
+    private void testIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Index is out of bound");
+        }
     }
 }
