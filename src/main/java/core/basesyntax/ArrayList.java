@@ -4,7 +4,7 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    private static final int GROW_INDEX = DEFAULT_CAPACITY + (DEFAULT_CAPACITY / 2);
+    private static final double GROW_INDEX = 1.5;
     private static final String MESSAGE = "The index is out of Array size.";
     private T[] objects;
     private int size;
@@ -81,7 +81,7 @@ public class ArrayList<T> implements List<T> {
 
     private void grow() {
         if (size == objects.length) {
-            Object[] newObjects = new Object[objects.length * GROW_INDEX];
+            Object[] newObjects = new Object[(int) (objects.length * GROW_INDEX)];
             System.arraycopy(objects, 0, newObjects, 0, size);
             objects = (T[]) newObjects;
         }
