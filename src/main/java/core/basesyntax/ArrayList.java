@@ -21,14 +21,11 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index >= 0 && index <= size) {
-            provideSize();
-            System.arraycopy(array, index, array, index + 1, size - index);
-            array[index] = value;
-            size++;
-        } else {
-            throw new ArrayListIndexOutOfBoundsException(INDEX_EXCEPTION_MESSAGE);
-        }
+        areIndexExist(index);
+        provideSize();
+        System.arraycopy(array, index, array, index + 1, size - index);
+        array[index] = value;
+        size++;
     }
 
     @Override
@@ -40,19 +37,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        areIndexExist(index);
+        areIndexExist(index + 1);
         return array[index];
     }
 
     @Override
     public void set(T value, int index) {
-        areIndexExist(index);
+        areIndexExist(index + 1);
         array[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        areIndexExist(index);
+        areIndexExist(index + 1);
         T value = array[index];
         System.arraycopy(array, index + 1, array, index, size - index - 1);
         size--;
@@ -87,11 +84,10 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private boolean areIndexExist(int index) {
-        if (!(index >= 0 && index < size)) {
+    private void areIndexExist(int index) {
+        if (index > size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException(INDEX_EXCEPTION_MESSAGE);
         }
-        return true;
     }
 
     private boolean provideSize() {
