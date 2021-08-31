@@ -89,7 +89,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void grow() {
-        T[] copiedArray = (T[]) new Object[array.length * 3 / 2];
+        T[] copiedArray = (T[]) new Object[array.length + (array.length >> 1)];
         System.arraycopy(array, 0, copiedArray, 0, size);
         array = copiedArray;
     }
