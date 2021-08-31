@@ -6,7 +6,7 @@ public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private static final String BOUNDS_EXCEPTION = "Out of bounds for index ";
     private static final String NO_SUCH_ELEMENT_EXCEPTION = "No such element ";
-    private int currentIndex = 0;
+    private int size = 0;
     private T[] values;
 
     @SuppressWarnings("unchecked")
@@ -17,25 +17,23 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value) {
         growCheck();
-        values[currentIndex] = value;
-        currentIndex++;
+        values[size] = value;
+        size++;
     }
 
     @Override
     public void add(T value, int index) {
-        if (index > currentIndex || index < 0) {
+        if (index > size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException(BOUNDS_EXCEPTION + index);
         }
         growCheck();
-        for (int i = currentIndex; i > index; i--) {
-            values[i] = values[i - 1];
-        }
+        System.arraycopy(values, index, values, index + 1, size - index);
         values[index] = value;
-        currentIndex++;
+        size++;
     }
 
     private void growCheck() {
-        if (currentIndex >= values.length) {
+        if (size == values.length) {
             grow();
         }
     }
@@ -62,7 +60,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void outOfBoundsCheck(int index) {
-        if (index >= currentIndex || index < 0) {
+        if (index >= size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException(BOUNDS_EXCEPTION + index);
         }
     }
@@ -77,10 +75,8 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         outOfBoundsCheck(index);
         T returnValue = values[index];
-        for (int i = index; i < currentIndex - 1; i++) {
-            values[i] = values[i + 1];
-        }
-        currentIndex--;
+        System.arraycopy(values, index + 1, values, index, size - 1 - index);
+        size--;
         return returnValue;
     }
 
@@ -96,11 +92,11 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public int size() {
-        return currentIndex;
+        return size;
     }
 
     @Override
     public boolean isEmpty() {
-        return currentIndex == 0;
+        return size == 0;
     }
 }
