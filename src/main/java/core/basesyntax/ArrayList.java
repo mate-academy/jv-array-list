@@ -5,7 +5,6 @@ import java.util.NoSuchElementException;
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private static final double GROW_ARRAY_SIZE = 1.5;
-
     private static final String INDEX_EXCEPTION = "Index is invalid";
     private static final String VALUE_EXCEPTION = "Is no such element present";
     private T[] elements;
@@ -15,25 +14,9 @@ public class ArrayList<T> implements List<T> {
         elements = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
-    private void grow() {
-        if (size == elements.length) {
-            T[] growArray = (T[]) new Object[(int) (elements.length * GROW_ARRAY_SIZE)];
-            System.arraycopy(elements, 0, growArray, 0, elements.length);
-            elements = growArray;
-        }
-    }
-
-    private void checkIndex(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException(INDEX_EXCEPTION);
-        }
-    }
-
     @Override
     public void add(T value) {
-        if (size == elements.length) {
-            grow();
-        }
+        ensureCapacity();
         elements[size++] = value;
     }
 
@@ -42,7 +25,7 @@ public class ArrayList<T> implements List<T> {
         if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException(INDEX_EXCEPTION);
         }
-        grow();
+        ensureCapacity();
         System.arraycopy(elements, index, elements, index + 1, size - index);
         elements[index] = value;
         size++;
@@ -94,5 +77,19 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private void ensureCapacity() {
+        if (size == elements.length) {
+            T[] growArray = (T[]) new Object[(int) (elements.length * GROW_ARRAY_SIZE)];
+            System.arraycopy(elements, 0, growArray, 0, elements.length);
+            elements = growArray;
+        }
+    }
+
+    private void checkIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException(INDEX_EXCEPTION);
+        }
     }
 }
