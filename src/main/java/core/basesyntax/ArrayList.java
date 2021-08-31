@@ -6,29 +6,29 @@ import java.util.Objects;
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private static final String OUT_OF_BOUNDS_EXCEPTION = "Index out of bounds!";
-    private T[] elementData;
+    private T[] innerArray;
     private int size;
 
     public ArrayList() {
-        elementData = (T[]) new Object[DEFAULT_CAPACITY];
+        innerArray = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
     @Override
     public void add(T value) {
-        if (size == elementData.length) {
+        if (size == innerArray.length) {
             grow();
         }
-        elementData[size++] = value;
+        innerArray[size++] = value;
     }
 
     @Override
     public void add(T value, int index) {
         rangeCheckForAdd(index);
-        if (size == elementData.length) {
+        if (size == innerArray.length) {
             grow();
         }
-        System.arraycopy(elementData, index, elementData, index + 1, size - index);
-        elementData[index] = value;
+        System.arraycopy(innerArray, index, innerArray, index + 1, size - index);
+        innerArray[index] = value;
         size++;
     }
 
@@ -42,20 +42,20 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         checkIndex(index);
-        return elementData[index];
+        return innerArray[index];
     }
 
     @Override
     public void set(T value, int index) {
         checkIndex(index);
-        elementData[index] = value;
+        innerArray[index] = value;
     }
 
     @Override
     public T remove(int index) {
         checkIndex(index);
-        T value = elementData[index];
-        System.arraycopy(elementData, index + 1, elementData, index, size - index - 1);
+        T value = innerArray[index];
+        System.arraycopy(innerArray, index + 1, innerArray, index, size - index - 1);
         size--;
         return value;
     }
@@ -63,7 +63,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if (Objects.equals(element, elementData[i])) {
+            if (element == innerArray[i] || element != null && element.equals(innerArray[i])) {
                 return remove(i);
             }
         }
@@ -81,11 +81,11 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void grow() {
-        int oldCapacity = this.elementData.length;
+        int oldCapacity = this.innerArray.length;
         int newCapacity = oldCapacity + (oldCapacity >> 1);
-        T[] newElementData = (T[]) new Object[newCapacity];
-        System.arraycopy(elementData, 0, newElementData, 0, size);
-        elementData = newElementData;
+        T[] newInnerArray = (T[]) new Object[newCapacity];
+        System.arraycopy(innerArray, 0, newInnerArray, 0, size);
+        innerArray = newInnerArray;
     }
 
     private void checkIndex(int index) {
