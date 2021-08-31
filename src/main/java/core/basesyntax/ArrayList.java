@@ -54,7 +54,7 @@ public class ArrayList<T> implements List<T> {
         T removedElement = container[index];
         System.arraycopy(container, index + ONE_ELEMENT,
                 container, index, size - index - ONE_ELEMENT);
-        size--;
+        container[--size] = null;
         return removedElement;
     }
 
