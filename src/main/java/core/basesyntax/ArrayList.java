@@ -23,9 +23,7 @@ public class ArrayList<T> implements List<T> {
         if (index > size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Element does not exist");
         }
-        if (size == values.length) {
-            ensureCapacity();
-        }
+        ensureCapacity();
         System.arraycopy(values, index, values, index + 1, size - index);
         values[index] = value;
         size++;
@@ -41,7 +39,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         testIndex(index);
-        return (T) values[index];
+        return values[index];
     }
 
     @Override
