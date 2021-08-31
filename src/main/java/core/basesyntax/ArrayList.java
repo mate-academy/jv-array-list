@@ -86,7 +86,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     private T[] resize() {
-        arrayList = Arrays.copyOf(arrayList, (int) (arrayList.length * GROW_SIZE));
+        arrayList = Arrays.copyOf(arrayList, (int) arrayList.length + (arrayList.length >> 1));
         return arrayList;
     }
 
