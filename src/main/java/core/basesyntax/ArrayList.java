@@ -60,8 +60,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if (elements[i] == element || (element != null && elements[i] != null)
-                    && element.equals(elements[i])) {
+            if (elements[i] == element
+                    || (element != null && element.equals(elements[i]))) {
                 return remove(i);
             }
         }
