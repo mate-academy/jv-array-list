@@ -25,7 +25,7 @@ public class ArrayList<T> implements List<T> {
         }
         ensureCapacity();
         System.arraycopy(values, index, values, index + 1, size - index);
-        this.values[index] = value;
+        values[index] = value;
         size++;
     }
 
@@ -45,15 +45,16 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void set(T value, int index) {
         checkIndex(index);
-        this.values[index] = value;
+        values[index] = value;
     }
 
     @Override
     public T remove(int index) {
         checkIndex(index);
-        T element = values[index];
+        final T element = values[index];
         System.arraycopy(values, index + 1, values, index, size - index - 1);
         size--;
+        values[size] = null;
         return element;
     }
 
