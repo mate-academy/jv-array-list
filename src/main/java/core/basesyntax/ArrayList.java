@@ -4,6 +4,8 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
+    private static final String BOUNDS_EXCEPTION = "Out of bounds for index ";
+    private static final String NO_SUCH_ELEMENT_EXCEPTION = "No such element ";
     private int currentIndex = 0;
     private T[] values;
 
@@ -22,7 +24,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         if (index > currentIndex || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Out of bounds");
+            throw new ArrayListIndexOutOfBoundsException(BOUNDS_EXCEPTION + index);
         }
         growCheck();
         for (int i = currentIndex; i > index; i--) {
@@ -61,7 +63,7 @@ public class ArrayList<T> implements List<T> {
 
     private void outOfBoundsCheck(int index) {
         if (index >= currentIndex || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Out of bounds");
+            throw new ArrayListIndexOutOfBoundsException(BOUNDS_EXCEPTION + index);
         }
     }
 
@@ -89,7 +91,7 @@ public class ArrayList<T> implements List<T> {
                 return remove(i);
             }
         }
-        throw new NoSuchElementException("No such element");
+        throw new NoSuchElementException(NO_SUCH_ELEMENT_EXCEPTION + element);
     }
 
     @Override
