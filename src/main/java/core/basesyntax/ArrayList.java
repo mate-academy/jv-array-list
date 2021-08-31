@@ -51,10 +51,10 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         checkForIndex(index);
-        T removeElement = array[index];
+        T  removedElement = array[index];
         System.arraycopy(array, index + 1, array, index, size - index - 1);
         array[--size] = null;
-        return removeElement;
+        return removedElement;
     }
 
     @Override
