@@ -13,7 +13,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        grow();
+        ensureCapacity();
         values[size] = value;
         size++;
     }
@@ -24,23 +24,10 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayListIndexOutOfBoundsException("Index out of bonds exception for index "
                     + index);
         }
-        grow();
+        ensureCapacity();
         System.arraycopy(values, index, values, index + 1, size - index);
         values[index] = value;
         size++;
-    }
-
-    private void grow() {
-        T[] arrayWithNewCapacity = (T[]) new Object[getNewCapacity(values.length)];
-        System.arraycopy(values, 0, arrayWithNewCapacity, 0, values.length);
-        values = arrayWithNewCapacity;
-    }
-
-    private int getNewCapacity(int currentCapacity) {
-        if (size + 1 > currentCapacity) {
-            return currentCapacity + (currentCapacity >> 1);
-        }
-        return currentCapacity;
     }
 
     @Override
@@ -83,13 +70,6 @@ public class ArrayList<T> implements List<T> {
                 + element);
     }
 
-    private void checkIndexForRemoveGetSetMethods(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index out of bonds exception for index "
-                    + index);
-        }
-    }
-
     @Override
     public int size() {
         return size;
@@ -98,5 +78,24 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private void ensureCapacity() {
+        if (size + 1 > values.length) {
+            T[] arrayWithNewCapacity = (T[]) new Object[getNewCapacity(values.length)];
+            System.arraycopy(values, 0, arrayWithNewCapacity, 0, values.length);
+            values = arrayWithNewCapacity;
+        }
+    }
+
+    private int getNewCapacity(int currentCapacity) {
+        return currentCapacity + (currentCapacity >> 1);
+    }
+
+    private void checkIndexForRemoveGetSetMethods(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Index out of bonds exception for index "
+                    + index);
+        }
     }
 }
