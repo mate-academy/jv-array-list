@@ -5,17 +5,16 @@ import java.util.NoSuchElementException;
 public class ArrayList<T> implements List<T> {
     private static final double MULTIPLICATION_INDEX = 1.5d;
     private static final int DEFAULT_CAPACITY = 10;
-
     private T[] elementData;
     private int size;
 
     public ArrayList() {
-        this.elementData = (T[]) new Object[DEFAULT_CAPACITY];
+        elementData = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
     @Override
     public void add(T value) {
-        extractedArray();
+        ensureCapacity();
         elementData[size] = value;
         size++;
     }
@@ -25,11 +24,10 @@ public class ArrayList<T> implements List<T> {
         if (index > size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Index is not exist in Array list");
         }
-        extractedArray();
+        ensureCapacity();
         System.arraycopy(elementData, index, elementData, index + 1, size - index);
         elementData[index] = value;
         size++;
-
     }
 
     @Override
@@ -49,12 +47,6 @@ public class ArrayList<T> implements List<T> {
     public void set(T value, int index) {
         validateIndex(index);
         elementData[index] = value;
-    }
-
-    private void validateIndex(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index is not exist in Array list");
-        }
     }
 
     @Override
@@ -79,20 +71,26 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public int size() {
-        return this.size;
+        return size;
     }
 
     @Override
     public boolean isEmpty() {
-        return size == 0 ? true : false;
+        return size == 0;
     }
 
-    private void extractedArray() {
+    private void ensureCapacity() {
         if (size == elementData.length) {
-            T[] extractedArray = (T[]) new Object[(int) (elementData.length
+            T[] newArray = (T[]) new Object[(int) (elementData.length
                     * MULTIPLICATION_INDEX)];
-            System.arraycopy(elementData, 0, extractedArray, 0, size);
-            elementData = extractedArray;
+            System.arraycopy(elementData, 0, newArray, 0, size);
+            elementData = newArray;
+        }
+    }
+
+    private void validateIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Index is not exist in Array list");
         }
     }
 }
