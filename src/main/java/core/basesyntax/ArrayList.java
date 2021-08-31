@@ -5,23 +5,20 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    private static final Object[] EMPTY_ELEMENTDATA = {};
-    private Object [] elementData;
+    private static final float ARRAY_LENGTH_MULTIPLIER = 1.5f;
+    private T[] elementData;
     private int size;
 
     public ArrayList(int initialCapacity) {
-        if (initialCapacity > 0) {
-            this.elementData = new Object[initialCapacity];
-        } else if (initialCapacity == 0) {
-            this.elementData = EMPTY_ELEMENTDATA;
-        } else {
+        if (initialCapacity <= 0) {
             throw new IllegalArgumentException("Illegal Capacity"
                     + initialCapacity);
         }
+        elementData = (T[]) new Object[initialCapacity];
     }
 
     public ArrayList() {
-        this.elementData = new Object[DEFAULT_CAPACITY];
+        elementData = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
     @Override
@@ -33,25 +30,20 @@ public class ArrayList<T> implements List<T> {
     public void add(T value, int index) {
         int potentialSize = size + 1;
         if (potentialSize > elementData.length) {
-            elementData = grow(elementData.length);
+            ensureCapacity(elementData.length);
+        } else if (size == elementData.length) {
+            ensureCapacity(elementData.length);
         }
         indexInBoundsCheck(index, potentialSize);
         System.arraycopy(elementData, index, elementData, index + 1, size - index);
         elementData[index] = value;
         size++;
-
     }
 
     @Override
     public void addAll(List<T> list) {
-        if ((elementData.length - size) <= list.size()) {
-            grow(elementData.length);
-        }
-        int j = 0;
-        for (int i = size; j < list.size(); i++) {
-            elementData[i] = list.get(j);
-            j++;
-            size++;
+        for (int i = 0; i < list.size(); i++) {
+            add(list.get(i));
         }
     }
 
@@ -70,9 +62,10 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         indexInBoundsCheck(index, size);
+        size--;
         Object oldObject = elementData[index];
-        size = size - 1;
         System.arraycopy(elementData, index + 1, elementData, index,size - index);
+        elementData[size] = null;
         return (T) oldObject;
     }
 
@@ -97,8 +90,8 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private Object[] grow(int minCapacity) {
-        return Arrays.copyOf(elementData, (int)(minCapacity * 1.5));
+    private void ensureCapacity(int minCapacity) {
+        elementData = Arrays.copyOf(elementData, (int)(minCapacity * ARRAY_LENGTH_MULTIPLIER));
     }
 
     private void indexInBoundsCheck(int index, int bounds) {
