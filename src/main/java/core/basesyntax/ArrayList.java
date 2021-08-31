@@ -59,7 +59,7 @@ public class ArrayList<T> implements List<T> {
         T oldElement = elementData[index];
         System.arraycopy(elementData, index + INCREASE_INDEX_FOR_COPY,
                 elementData, index, size - index - INCREASE_INDEX_FOR_COPY);
-        size--;
+        elementData[--size] = null;
         return oldElement;
     }
 
@@ -85,7 +85,7 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    public void ensureCapacity() {
+    private void ensureCapacity() {
         if (elementData.length == size) {
             int newCapacity = (int) (elementData.length * INCREASE_COEFFICIENT);
             T[] newElementData = (T[]) new Object[newCapacity];
