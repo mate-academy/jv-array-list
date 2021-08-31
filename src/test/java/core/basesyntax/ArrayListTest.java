@@ -118,7 +118,8 @@ public class ArrayListTest {
         arrayList.add("Private");
         Assert.assertEquals(4, arrayList.size());
         String actualResult = arrayList.remove(2);
-        Assert.assertEquals("Test failed! Returned value should be " + actualResult,
+        Assert.assertEquals("Test failed! Returned value should be " +
+                        actualResult,
                 "Java", actualResult);
         Assert.assertEquals("Test failed! Size of array after removed element should be "
                 + 3 + "but it is " + arrayList.size(), 3, arrayList.size());
@@ -213,7 +214,9 @@ public class ArrayListTest {
         arrayList.add("String");
         arrayList.add("Java");
         arrayList.add("Private");
-        Assert.assertNull(arrayList.remove("Public"));
+        Assert.assertNull(
+
+                arrayList.remove("Public"));
     }
 
     @Test
