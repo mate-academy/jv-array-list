@@ -11,20 +11,6 @@ public class ArrayList<T> implements List<T> {
         elements = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
-    private void resize() {
-        if (size == elements.length) {
-            T[] newElements = (T[]) new Object[size + size / 2];
-            System.arraycopy(elements, 0, newElements, 0, size);
-            elements = newElements;
-        }
-    }
-
-    private void checkIndex(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index is invalid.");
-        }
-    }
-
     @Override
     public void add(T value) {
         resize();
@@ -35,7 +21,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("Index is invalid.");
+            throw new ArrayListIndexOutOfBoundsException("Index is invalid: " + index);
         }
         resize();
         System.arraycopy(elements, index, elements, index + 1, size - index);
@@ -74,14 +60,12 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if (elements[i] == element
-                    || (element != null && elements[i] != null
-                    && element.getClass().equals(elements[i].getClass())
-                    && element.equals(elements[i]))) {
+            if (elements[i] == element || (element != null && elements[i] != null)
+                    && element.equals(elements[i])) {
                 return remove(i);
             }
         }
-        throw new NoSuchElementException("There is no such element.");
+        throw new NoSuchElementException("There is no such element:" + element);
     }
 
     @Override
@@ -92,5 +76,19 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private void resize() {
+        if (size == elements.length) {
+            T[] newElements = (T[]) new Object[size + size / 2];
+            System.arraycopy(elements, 0, newElements, 0, size);
+            elements = newElements;
+        }
+    }
+
+    private void checkIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Index is invalid: " + index);
+        }
     }
 }
