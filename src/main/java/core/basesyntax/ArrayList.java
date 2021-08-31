@@ -12,18 +12,6 @@ public class ArrayList<T> implements List<T> {
         elements = (T[]) new Object[INITIAL_CAPACITY];
     }
 
-    private void grow() {
-        T[] tempArray = (T[]) new Object[(int) (elements.length * INCREMENT_CAPACITY)];
-        System.arraycopy(elements, 0, tempArray, 0, size);
-        elements = tempArray;
-    }
-
-    private void checkArrayBoundary(int index) {
-        if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("Index is invalid");
-        }
-    }
-
     @Override
     public void add(T value) {
         add(value, size);
@@ -32,9 +20,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         checkArrayBoundary(index);
-        if (size == elements.length) {
-            grow();
-        }
+        checkFillingArray();
         System.arraycopy(elements, index, elements, index + 1, size - index);
         elements[index] = value;
         size++;
@@ -87,5 +73,19 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private void checkFillingArray() {
+        if (size == elements.length) {
+            T[] tempArray = (T[]) new Object[(int) (elements.length * INCREMENT_CAPACITY)];
+            System.arraycopy(elements, 0, tempArray, 0, size);
+            elements = tempArray;
+        }
+    }
+
+    private void checkArrayBoundary(int index) {
+        if (index < 0 || index > size) {
+            throw new ArrayListIndexOutOfBoundsException("Index is invalid");
+        }
     }
 }
