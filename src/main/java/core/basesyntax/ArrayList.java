@@ -50,7 +50,7 @@ public class ArrayList<T> implements List<T> {
         checkArrayBoundary(index + 1);
         T removeObject = elements[index];
         System.arraycopy(elements, index + 1, elements, index, size - index - 1);
-        size--;
+        elements[--size] = null;
         return removeObject;
     }
 
