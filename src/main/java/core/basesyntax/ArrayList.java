@@ -15,9 +15,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (container.length == size) {
-            grow(container);
-        }
+        grow(container);
         container[size] = value;
         size++;
     }
@@ -25,9 +23,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         checkIndexForAdd(index);
-        if (container.length == size) {
-            grow(container);
-        }
+        grow(container);
         System.arraycopy(container, index, container, index + ONE_ELEMENT, size - index);
         container[index] = value;
         size++;
@@ -58,18 +54,14 @@ public class ArrayList<T> implements List<T> {
         T removedElement = container[index];
         System.arraycopy(container, index + ONE_ELEMENT,
                 container, index, size - index - ONE_ELEMENT);
-        container[--size] = null;
+        size--;
         return removedElement;
     }
 
     @Override
     public T remove(T element) {
-        if (element == null) {
-            size--;
-            return null;
-        }
         for (int i = 0; i < size; i++) {
-            if (container[i] != null && container[i].equals(element)) {
+            if ((element == container[i]) || (element != null && element.equals(container[i]))) {
                 return remove(i);
             }
         }
@@ -87,8 +79,10 @@ public class ArrayList<T> implements List<T> {
     }
 
     private T[] grow(T[] oldArray) {
-        container = (T[]) new Object[(int) (size * INCREMENT_STEP)];
-        System.arraycopy(oldArray, 0, container, 0, oldArray.length);
+        if (container.length == size) {
+            container = (T[]) new Object[(int) (size * INCREMENT_STEP)];
+            System.arraycopy(oldArray, 0, container, 0, oldArray.length);
+        }
         return container;
     }
 
