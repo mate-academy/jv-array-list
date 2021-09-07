@@ -3,18 +3,19 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    private int capacity = 10;
+    private static final int DEFAULT_CAPACITY = 10;
     private int elementPosition = 0;
-    private Object[] elementData = new Object[capacity];
+    private T[] elementData;
+
+    public ArrayList() {
+        elementData = (T[]) new Object[DEFAULT_CAPACITY];
+    }
 
     @Override
     public void add(T value) {
 
         if (elementPosition == elementData.length) {
-            int newCapacity = (int) (elementData.length * 1.5);
-            Object[] newElementData = new Object[newCapacity];
-            System.arraycopy(elementData, 0, newElementData, 0, elementPosition);
-            elementData = newElementData;
+            resize();
         }
         elementData[elementPosition] = value;
         elementPosition++;
@@ -26,14 +27,9 @@ public class ArrayList<T> implements List<T> {
         if (index > elementPosition || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("ArrayList index out of bound");
         }
-
         if (elementPosition == elementData.length) {
-            int newCapacity = (int) (elementData.length * 1.5);
-            Object[] newElementData = new Object[newCapacity];
-            System.arraycopy(elementData, 0, newElementData, 0, elementPosition);
-            elementData = newElementData;
+            resize();
         }
-
         System.arraycopy(elementData, index, elementData, index + 1, elementPosition - index);
         elementData[index] = value;
         elementPosition++;
@@ -67,24 +63,21 @@ public class ArrayList<T> implements List<T> {
         if (index < 0 || index >= elementPosition) {
             throw new ArrayListIndexOutOfBoundsException("ArrayListIndexOutOfBoundsException");
         }
-
-        Object elementRemove = get(index);
-        System.arraycopy(elementData, index + 1, elementData, index, elementPosition - 1);
+        Object elementToRemove = get(index);
+        System.arraycopy(elementData, index + 1, elementData, index, elementPosition - 1 - index);
         elementPosition--;
-        return (T) elementRemove;
+        return (T) elementToRemove;
     }
 
     @Override
     public T remove(T element) {
-        int indexRemove = 0;
-        for (int i = 0; i < elementData.length; i++) {
-            if (element != null && element.equals(elementData[i])) {
-                indexRemove = i;
-            } else {
-                throw new NoSuchElementException();
+        for (int i = 0; i < elementPosition; i++) {
+            if (elementData[i] == element || (elementData[i] != null
+                    && elementData[i].equals(element))) {
+                return remove(i);
             }
         }
-        return (T) remove(indexRemove);
+        throw new NoSuchElementException("NoSuchElementException");
     }
 
     @Override
@@ -95,5 +88,12 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return elementPosition == 0;
+    }
+
+    private void resize() {
+        int newCapacity = (int) (elementData.length * 1.5);
+        Object[] newElementData = new Object[newCapacity];
+        System.arraycopy(elementData, 0, newElementData, 0, elementPosition);
+        elementData = (T[]) newElementData;
     }
 }
