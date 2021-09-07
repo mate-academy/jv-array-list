@@ -4,35 +4,34 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    private int elementPosition = 0;
-    private T[] elementData;
+    private static final double SHOULD_GROW_TIMES = 1.5;
+    private int size;
+    private Object[] arrayList;
 
     public ArrayList() {
-        elementData = (T[]) new Object[DEFAULT_CAPACITY];
+        arrayList = new Object[DEFAULT_CAPACITY];
     }
 
     @Override
     public void add(T value) {
-
-        if (elementPosition == elementData.length) {
+        if (size == arrayList.length) {
             resize();
         }
-        elementData[elementPosition] = value;
-        elementPosition++;
-
+        arrayList[size] = value;
+        size++;
     }
 
     @Override
     public void add(T value, int index) {
-        if (index > elementPosition || index < 0) {
+        if (index > size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("ArrayList index out of bound");
         }
-        if (elementPosition == elementData.length) {
+        if (size == arrayList.length) {
             resize();
         }
-        System.arraycopy(elementData, index, elementData, index + 1, elementPosition - index);
-        elementData[index] = value;
-        elementPosition++;
+        System.arraycopy(arrayList, index, arrayList, index + 1, size - index);
+        arrayList[index] = value;
+        size++;
     }
 
     @Override
@@ -44,36 +43,32 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index >= elementPosition || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("ArrayList index out of bound");
-        }
-        return (T) elementData[index];
+        checkBoundsIndex(index);
+        return (T) arrayList[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index >= elementPosition || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("ArrayList index out of bound");
-        }
-        elementData[index] = value;
+        checkBoundsIndex(index);
+        arrayList[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index < 0 || index >= elementPosition) {
+        if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException("ArrayListIndexOutOfBoundsException");
         }
-        Object elementToRemove = get(index);
-        System.arraycopy(elementData, index + 1, elementData, index, elementPosition - 1 - index);
-        elementPosition--;
-        return (T) elementToRemove;
+        T elementToRemove = get(index);
+        System.arraycopy(arrayList, index + 1, arrayList, index, size - 1 - index);
+        size--;
+        return elementToRemove;
     }
 
     @Override
     public T remove(T element) {
-        for (int i = 0; i < elementPosition; i++) {
-            if (elementData[i] == element || (elementData[i] != null
-                    && elementData[i].equals(element))) {
+        for (int i = 0; i < size; i++) {
+            if (arrayList[i] == element || (arrayList[i] != null
+                    && arrayList[i].equals(element))) {
                 return remove(i);
             }
         }
@@ -82,18 +77,24 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public int size() {
-        return elementPosition;
+        return size;
     }
 
     @Override
     public boolean isEmpty() {
-        return elementPosition == 0;
+        return size == 0;
     }
 
     private void resize() {
-        int newCapacity = (int) (elementData.length * 1.5);
+        int newCapacity = (int) (arrayList.length * SHOULD_GROW_TIMES);
         Object[] newElementData = new Object[newCapacity];
-        System.arraycopy(elementData, 0, newElementData, 0, elementPosition);
-        elementData = (T[]) newElementData;
+        System.arraycopy(arrayList, 0, newElementData, 0, size);
+        arrayList = newElementData;
+    }
+
+    private void checkBoundsIndex(int index) {
+        if (index >= size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("ArrayList index out of bound");
+        }
     }
 }
