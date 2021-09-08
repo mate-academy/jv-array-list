@@ -4,7 +4,7 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int INITIAL_SIZE = 10;
-    private static final String EXCEPTION_MESSAGE = "Error! Index must be greater then 0 and less then ";
+    private static final String MESSAGE = "Error! Index must be greater then 0 and less then ";
     private T[] elements;
     private int size;
 
@@ -22,7 +22,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T element, int index) {
         if (index > size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException(EXCEPTION_MESSAGE + size);
+            throw new ArrayListIndexOutOfBoundsException(MESSAGE + size);
         }
         checkSize();
         System.arraycopy(elements, index, elements, index + 1, size - index);
@@ -80,7 +80,7 @@ public class ArrayList<T> implements List<T> {
 
     private void checkIndex(int index) {
         if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException(EXCEPTION_MESSAGE + size);
+            throw new ArrayListIndexOutOfBoundsException(MESSAGE + size);
         }
     }
 
