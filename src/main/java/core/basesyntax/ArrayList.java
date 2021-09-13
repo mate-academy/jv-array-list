@@ -31,33 +31,27 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        Object[] objects = new Object[list.size()];
-        for (int i = 0; i < objects.length; i++) {
-            objects[i] = list.get(i);
+        for (int i = 0; i < list.size(); i++) {
+            elementData[size + i] = list.get(i);
         }
-        if (objects.length > elementData.length - size) {
-            int newCapacity = objects.length + size;
-            elementData = Arrays.copyOf(elementData, newCapacity);
-        }
-        System.arraycopy((T[]) objects, 0, elementData, size, list.size());
         size += list.size();
     }
 
     @Override
     public T get(int index) {
-        throwException(index);
+        checkIndex(index);
         return elementData[index];
     }
 
     @Override
     public void set(T value, int index) {
-        throwException(index);
+        checkIndex(index);
         elementData[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        throwException(index);
+        checkIndex(index);
         int numMoved = size - index - 1;
         T element = elementData[index];
         System.arraycopy(elementData, index + 1, elementData, index, numMoved);
@@ -69,11 +63,7 @@ public class ArrayList<T> implements List<T> {
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
             if (element == elementData[i] || (element != null && element.equals(elementData[i]))) {
-                int numMoved = size - i - 1;
-                T oldElement = elementData[i];
-                System.arraycopy(elementData, i + 1, elementData, i, numMoved);
-                elementData[--size] = null;
-                return oldElement;
+                return remove(i);
             }
         }
         throw new NoSuchElementException("Element doesn't exist");
@@ -96,7 +86,7 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private void throwException(int index) {
+    private void checkIndex(int index) {
         if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException("Invalid index");
         }
