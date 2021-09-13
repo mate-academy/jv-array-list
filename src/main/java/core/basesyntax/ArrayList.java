@@ -39,25 +39,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index out of bounds!");
-        }
+        checkIndex(index);
         return (T) values[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index out of bounds!");
-        }
+        checkIndex(index);
         values[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index out of bounds!");
-        }
+        checkIndex(index);
         Object removedValue = values[index];
         System.arraycopy(values, index + 1, values, index, size - index - 1);
         size--;
@@ -66,19 +60,12 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        T removedValue = null;
-        boolean isFind = false;
         for (int i = 0; i < size; i++) {
-            if (values[i] != null && ((T) values[i]).equals(element) || values[i] == element) {
-                removedValue = remove(i);
-                isFind = true;
-                break;
+            if (values[i] != null && values[i].equals(element) || values[i] == element) {
+                return remove(i);
             }
         }
-        if (!isFind) {
-            throw new NoSuchElementException();
-        }
-        return removedValue;
+        throw new NoSuchElementException();
     }
 
     @Override
@@ -97,6 +84,12 @@ public class ArrayList<T> implements List<T> {
             Object[] newValues = new Object[capacity];
             System.arraycopy(values, 0, newValues, 0, size);
             values = newValues;
+        }
+    }
+
+    private void checkIndex(int index) {
+        if (index >= size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Index out of bounds!");
         }
     }
 }
