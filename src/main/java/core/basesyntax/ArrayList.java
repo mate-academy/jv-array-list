@@ -47,40 +47,29 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index >= 0 && index < size) {
-            return elementData[index];
-        }
-        throw new ArrayListIndexOutOfBoundsException(index + " is invalid index");
+        checkIndex(index);
+        return elementData[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index >= 0 && index < size) {
-            elementData[index] = value;
-        } else {
-            throw new ArrayListIndexOutOfBoundsException(index + " is invalid index");
-        }
+        checkIndex(index);
+        elementData[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index >= 0 && index < size) {
-            for (int i = 0; i < size; i++) {
-                if (index == i) {
-                    T removed = elementData[i];
-                    System.arraycopy(elementData, i + 1, elementData, i, size - (i + 1));
-                    size--;
-                    return removed;
-                }
-            }
-        }
-        throw new ArrayListIndexOutOfBoundsException(index + " is invalid index");
+        checkIndex(index);
+        T removed = elementData[index];
+        System.arraycopy(elementData, index + 1, elementData, index, size - (index + 1));
+        size--;
+        return removed;
     }
 
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if (element == null && elementData[i] == element
+            if (elementData[i] == element
                     || elementData[i] != null && elementData[i].equals(element)) {
                 T removed = elementData[i];
                 System.arraycopy(elementData, i + 1, elementData, i, size - (i + 1));
@@ -107,6 +96,12 @@ public class ArrayList<T> implements List<T> {
             T[] tempElementData = (T[]) new Object[capacity];
             System.arraycopy(elementData, 0, tempElementData, 0, size);
             elementData = tempElementData;
+        }
+    }
+
+    private void checkIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException(index + " is invalid index");
         }
     }
 }
