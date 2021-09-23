@@ -10,42 +10,28 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        for (int i = 0; i < size; i++) {
-            if (elementData.length == size) {
-                elementData = Arrays.copyOf(elementData,
-                        elementData.length + (elementData.length >> 1));
-            }
-        }
+        resize(size);
         elementData[size] = value;
         size += 1;
     }
 
     @Override
     public void add(T value, int index) {
+        int indexDesPos = index + 1;
         if (index == size) {
-            checkLastIndex(index);
-        } else {
-            checkIndex(index);
+            indexDesPos = index;
         }
-        if (size + 1 >= elementData.length) {
-            elementData = Arrays.copyOf(elementData,elementData.length + (elementData.length >> 1));
-        }
-        for (int i = size; i >= index; i--) {
-            elementData[i + 1] = elementData[i];
-        }
+        size += 1;
+        resize(size);
+        checkIndex(index);
+        System.arraycopy(elementData,index,elementData,indexDesPos,size - indexDesPos);
         elementData[index] = value;
-        size = size + 1;
     }
 
     @Override
     public void addAll(List<T> list) {
-        int oldSize = size;
-        size += list.size();
-        while (size > elementData.length) {
-            elementData = Arrays.copyOf(elementData,elementData.length + (elementData.length >> 1));
-        }
-        for (int i = oldSize; i < size; i++) {
-            elementData[i] = list.get(i - oldSize);
+        for (int i = 0; i < list.size(); i++) {
+            add(list.get(i));
         }
     }
 
@@ -66,33 +52,19 @@ public class ArrayList<T> implements List<T> {
         checkIndex(index);
         Object oldValue = elementData[index];
         size = size - 1;
-        for (int i = index; i < size; i++) {
-            elementData[i] = elementData[i + 1];
-        }
+        System.arraycopy(elementData,index + 1,elementData,index,size - index);
         return (T) oldValue;
     }
 
     @Override
     public T remove(T element) {
-        Object oldValue = null;
-        int pos = -1;
         for (int i = 0; i < elementData.length; i++) {
             if (elementData[i] == element
                     || (elementData[i] != null && elementData[i].equals(element))) {
-                oldValue = elementData[i];
-                pos = i;
-                break;
+                return remove(i);
             }
         }
-        if (pos != -1) {
-            for (int i = pos; i < size; i++) {
-                elementData[i] = elementData[i + 1];
-            }
-            size -= 1;
-        } else {
-            throw new NoSuchElementException();
-        }
-        return (T) oldValue;
+        throw new NoSuchElementException();
     }
 
     @Override
@@ -111,9 +83,9 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private void checkLastIndex(int index) {
-        if (index > size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("index is out of range");
+    private void resize(int size) {
+        if (size >= elementData.length) {
+            elementData = Arrays.copyOf(elementData,elementData.length + (elementData.length >> 1));
         }
     }
 }
