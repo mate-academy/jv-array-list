@@ -10,20 +10,20 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        resize(size);
+        resize();
         elementData[size] = value;
-        size += 1;
+        size++;
     }
 
     @Override
     public void add(T value, int index) {
+        size++;
+        checkIndex(index);
+        resize();
         int indexDesPos = index + 1;
-        if (index == size) {
+        if (index == size - 1) {
             indexDesPos = index;
         }
-        size += 1;
-        resize(size);
-        checkIndex(index);
         System.arraycopy(elementData,index,elementData,indexDesPos,size - indexDesPos);
         elementData[index] = value;
     }
@@ -51,7 +51,7 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         checkIndex(index);
         Object oldValue = elementData[index];
-        size = size - 1;
+        size--;
         System.arraycopy(elementData,index + 1,elementData,index,size - index);
         return (T) oldValue;
     }
@@ -83,7 +83,7 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private void resize(int size) {
+    private void resize() {
         if (size >= elementData.length) {
             elementData = Arrays.copyOf(elementData,elementData.length + (elementData.length >> 1));
         }
