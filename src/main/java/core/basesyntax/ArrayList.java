@@ -1,6 +1,5 @@
 package core.basesyntax;
 
-import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
@@ -78,12 +77,14 @@ public class ArrayList<T> implements List<T> {
     }
 
     public void resizeArray() {
-        if (size == array.length - 1) {
-            array = Arrays.copyOf(array, array.length + 10);
+        if (size == array.length) {
+            Object[] boofer = new Object[array.length + (array.length >> 1)];
+            System.arraycopy(array, 0, boofer, 0, size);
+            array = boofer;
         }
     }
 
-    public void verificationOfIndex(int index) {
+    private void verificationOfIndex(int index) {
         if (size <= index || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Illegal index value. "
                     + "No such index or index less than 0");
