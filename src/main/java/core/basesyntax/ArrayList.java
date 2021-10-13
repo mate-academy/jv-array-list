@@ -16,12 +16,10 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         checkIndex(index);
-        if (index == array.length || size + 1 == array.length) {
+        if (size == array.length) {
             array = grow();
-            copyArray(index);
-        } else if (index < size) {
-            copyArray(index);
         }
+        copyArray(index);
         array[index] = value;
         size++;
     }
@@ -40,9 +38,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        Object[] arr = new Object[list.size()];
         for (int i = 0; i < list.size(); i++) {
-            arr[i] = list.get(i);
             add(list.get(i));
         }
     }
@@ -81,20 +77,13 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        T oldValue = null;
-        int isElement = 0;
         for (int i = 0; i < size + 1; i++) {
             if ((array[i] != null && array[i].equals(element)
-                    || (array[i] == null && array[i] == element))) {
-                oldValue = remove(i);
-                isElement++;
-                break;
+                    || (array[i] == element))) {
+                return remove(i);
             }
         }
-        if (isElement == 0) {
-            throw new NoSuchElementException("");
-        }
-        return oldValue;
+        throw new NoSuchElementException("");
     }
 
     private void shiftDown(Object[] temp, int index) {
