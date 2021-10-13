@@ -15,21 +15,27 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("");
-        }
+        checkIndex(index);
         if (index == array.length || size + 1 == array.length) {
             array = grow();
-            System.arraycopy(array, index,
-                    array, index + 1,
-                    size - index);
+            copyArray(index);
         } else if (index < size) {
-            System.arraycopy(array, index,
-                    array, index + 1,
-                    size - index);
+            copyArray(index);
         }
         array[index] = value;
         size++;
+    }
+
+    private void checkIndex(int index) {
+        if (index < 0 || index > size) {
+            throw new ArrayListIndexOutOfBoundsException("Index " + index + " is out of bounds");
+        }
+    }
+
+    private void copyArray(int index) {
+        System.arraycopy(array, index,
+                array, index + 1,
+                size - index);
     }
 
     @Override
@@ -37,7 +43,7 @@ public class ArrayList<T> implements List<T> {
         Object[] arr = new Object[list.size()];
         for (int i = 0; i < list.size(); i++) {
             arr[i] = list.get(i);
-            add((T) arr[i], size);
+            add(list.get(i));
         }
     }
 
@@ -51,16 +57,13 @@ public class ArrayList<T> implements List<T> {
     public T get(int index) {
         if (index >= 0 && index < size) {
             return (T) array [index];
-        } else {
-            throw new ArrayListIndexOutOfBoundsException("Index " + index + " is not valid");
         }
+        throw new ArrayListIndexOutOfBoundsException("Index " + index + " is not valid");
     }
 
     @Override
     public void set(T value, int index) {
-        if (index < 0 || index >= size()) {
-            throw new ArrayListIndexOutOfBoundsException("Index " + index + " is not valid");
-        }
+        checkIndex(index + 1);
         T oldValue;
         oldValue = value;
         array[index] = oldValue;
@@ -69,9 +72,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(int index) {
-        if (index < 0 || index > size - 1) {
-            throw new ArrayListIndexOutOfBoundsException("Index " + index + " is not valid");
-        }
+        checkIndex(index + 1);
         final Object[] temp = array;
         T oldValue = (T) temp[index];
         shiftDown(temp, index);
@@ -80,24 +81,12 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        final Object[] temp = array;
         T oldValue = null;
         int isElement = 0;
         for (int i = 0; i < size + 1; i++) {
-            if (temp[i] != null) {
-                if (!temp[i].equals(element)) {
-                    continue;
-                }
-                oldValue = (T) temp[i];
-                shiftDown(temp, i);
-                isElement++;
-                break;
-            } else {
-                if (temp[i] != element) {
-                    continue;
-                }
-                oldValue = (T) temp[i];
-                shiftDown(temp, i);
+            if ((array[i] != null && array[i].equals(element)
+                    || (array[i] == null && array[i] == element))) {
+                oldValue = remove(i);
                 isElement++;
                 break;
             }
@@ -129,7 +118,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public boolean isEmpty() {
-        return size() == 0;
+        return size == 0;
     }
 
 }
