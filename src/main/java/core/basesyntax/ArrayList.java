@@ -4,7 +4,7 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     public static final int DEFAULT_CAPACITY = 10;
-    public static final String MESSAGE = "Incorrect index";
+    public static final String MESSAGE = "Incorrect index.";
     private T[] elementData;
     private int size;
 
