@@ -75,7 +75,7 @@ public class ArrayList<T> implements List<T> {
                 return remove(i);
             }
         }
-        throw new NoSuchElementException("Value does not exist");
+        throw new NoSuchElementException("Value does not exist.");
     }
 
     @Override
