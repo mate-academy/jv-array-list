@@ -3,8 +3,8 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    private static final int DEFAULT_CAPACITY = 10;
     public static final String MESSAGE = "Index does not exist";
+    private static final int DEFAULT_CAPACITY = 10;
     private T[] values;
     private int size;
 
