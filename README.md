@@ -8,4 +8,4 @@ Throw custom `ArrayListIndexOutOfBoundsException` in case the index passed to an
 Throw `NoSuchElementException` in `remove(T element)` if there is no such element present.
 #### [Try to avoid these common mistakes while solving task](https://mate-academy.github.io/jv-program-common-mistakes/java-core/collections/array-list.html)
 
-PS: This task will be checked and approved automatically by github, mentor won't review it.
+**PS: This task will be checked and approved automatically by github, mentor won't review it.**
