@@ -4,12 +4,12 @@ import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    private static final int MAX_SIZE = 10;
+    private static final int DEFAULT_SIZE = 10;
     private int size;
     private T[] values;
 
     public ArrayList() {
-        values = (T[]) new Object[MAX_SIZE];
+        values = (T[]) new Object[DEFAULT_SIZE];
     }
 
     @Override
