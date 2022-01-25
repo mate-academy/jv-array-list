@@ -59,8 +59,7 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         if (checkIndexIsCorrect(index)) {
             T objectRemoved = values[index];
-            System.arraycopy(values, index + 1, values, index, size - index - 1);
-            values[size--] = null;
+            copyAndRemove(index);
             return objectRemoved;
         } else {
             throw new ArrayListIndexOutOfBoundsException("Sorry this index is not exit");
@@ -71,10 +70,8 @@ public class ArrayList<T> implements List<T> {
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
             if (values[i] == element || values[i] != null && values[i].equals(element)) {
-                T objectRemoved = values[i];
-                System.arraycopy(values, i + 1, values, i, size - i - 1);
-                values[size--] = null;
-                return objectRemoved;
+                copyAndRemove(i);
+                return element;
             }
         }
         throw new NoSuchElementException("Sorry this value does not exit");
@@ -96,5 +93,10 @@ public class ArrayList<T> implements List<T> {
 
     private boolean checkIndexIsCorrect(int index) {
         return index < size & index >= 0;
+    }
+
+    private void copyAndRemove(int index) {
+        System.arraycopy(values, index + 1, values, index, size - index - 1);
+        values[size--] = null;
     }
 }
