@@ -6,7 +6,7 @@ import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
     private Object[] elements;
-    private static final int DEFAULT_CAPACITY = 10;
+    private final int defaultCapacity = 10;
     private int size;
 
     public ArrayList() {
@@ -16,18 +16,9 @@ public class ArrayList<T> implements List<T> {
 
     private Object[] grow() {
         if (size == 0) {
-            return new Object[DEFAULT_CAPACITY];
+            return new Object[defaultCapacity];
         }
         return Arrays.copyOf(elements, elements.length * 3 / 2);
-    }
-
-    @Override
-    public void add(T value) {
-        if (size == elements.length) {
-            elements = grow();
-        }
-        elements[size] = value;
-        size ++;
     }
 
     private boolean isValidIndexCheck(int index) {
@@ -45,6 +36,15 @@ public class ArrayList<T> implements List<T> {
     }
 
     @Override
+    public void add(T value) {
+        if (size == elements.length) {
+            elements = grow();
+        }
+        elements[size] = value;
+        size++;
+    }
+
+    @Override
     public void add(T value, int index) {
         indexCheck(index);
         if (index == size) {
@@ -57,12 +57,12 @@ public class ArrayList<T> implements List<T> {
         }
         System.arraycopy(elements, index, elements, index + 1, size - index);
         elements[index] = value;
-        size ++;
+        size++;
     }
 
     @Override
     public void addAll(List<T> list) {
-        for(int i = 0; i < list.size(); i++) {
+        for (int i = 0; i < list.size(); i++) {
             add(list.get(i));
         }
     }
@@ -74,7 +74,6 @@ public class ArrayList<T> implements List<T> {
     private String indexPositionOutOfBoundMassage(int index) {
         return "index: " + index + " length: " + elements.length;
     }
-
 
     private void indexPositionCheck(int index) {
         if (!isValidIndexPositionCheck(index)) {
