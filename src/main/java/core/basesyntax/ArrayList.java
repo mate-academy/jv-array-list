@@ -58,6 +58,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         if (checkIndexIsCorrect(index)) {
+            resize();
             T objectRemoved = values[index];
             copyAndRemove(index);
             return objectRemoved;
@@ -88,7 +89,9 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void resize() {
-        values = Arrays.copyOf(values, values.length + 10);
+        if (size == values.length) {
+            values = Arrays.copyOf(values, size * 3 / 2);
+        }
     }
 
     private boolean checkIndexIsCorrect(int index) {
