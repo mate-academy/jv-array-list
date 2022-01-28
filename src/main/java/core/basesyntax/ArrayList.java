@@ -23,13 +23,16 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        checkIndex(index);
         if (size == data.length) {
             grow();
         }
-        System.arraycopy(data, index, data, index + 1, size - index);
-        data[index] = value;
-        size++;
+        if (index >= 0 && index <= size) {
+            System.arraycopy(data, index, data, index + 1, size - index);
+            data[index] = value;
+            size++;
+        } else {
+            throw new ArrayListIndexOutOfBoundsException("Index is invalid.");
+        }
     }
 
     @Override
@@ -95,7 +98,8 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void checkIndex(int index) {
-        if (index < 0 || index >= size) {
+        if (index < 0 || (index > size - 1 && index != 0)
+                || (index == size && index > data.length)) {
             throw new ArrayListIndexOutOfBoundsException("Index is invalid.");
         }
     }
