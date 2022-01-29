@@ -14,46 +14,29 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (size == elementData.length) {
-            elementData = Arrays.copyOf(elementData, elementData.length * 3 / 2);
-        }
+        checkLength();
         elementData[size] = value;
         size = size + 1;
     }
 
     @Override
     public void add(T value, int index) {
-        if (index > size || index < 0) {
+        if (index <= size && index >= 0) {
+            final int s = size;
+            checkLength();
+            System.arraycopy(elementData, index, elementData, index + 1, s - index);
+            elementData[index] = value;
+            size = s + 1;
+        } else {
             throw new ArrayListIndexOutOfBoundsException("Index out of list's bound!!! Index: "
                     + index + ", Size: " + size);
         }
-        final int s;
-        if ((s = size) == elementData.length) {
-            elementData = Arrays.copyOf(elementData, elementData.length * 3 / 2);
-        }
-        System.arraycopy(elementData, index, elementData, index + 1, s - index);
-        elementData[index] = value;
-        size = s + 1;
     }
 
     @Override
     public void addAll(List<T> list) {
-        if (size + list.size() < elementData.length) {
-            for (int i = 0; i < list.size(); i++) {
-                elementData[size] = list.get(i);
-                size++;
-            }
-        } else {
-            int newSize = elementData.length;
-            do {
-                newSize += BASE_SIZE;
-            } while (newSize > size + list.size());
-            Object[] tmpArr = Arrays.copyOf(elementData, newSize);
-            for (int i = 0; i < list.size(); i++) {
-                tmpArr[size + i] = list.get(i);
-            }
-            elementData = tmpArr;
-            size += list.size();
+        for (int i = 0; i < list.size(); i++) {
+            add(list.get(i));
         }
     }
 
@@ -106,6 +89,12 @@ public class ArrayList<T> implements List<T> {
         if (index >= size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Index out of list's bound!!! Index: "
                     + index + ", Size: " + size);
+        }
+    }
+
+    private void checkLength() {
+        if (size == elementData.length) {
+            elementData = Arrays.copyOf(elementData, elementData.length * 3 / 2);
         }
     }
 }
