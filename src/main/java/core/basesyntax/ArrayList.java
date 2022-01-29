@@ -42,25 +42,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Wrong index");
-        }
+        checkSize(index);
         return (T) elements[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Wrong index");
-        }
+        checkSize(index);
         elements[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Wrong index");
-        }
+        checkSize(index);
         T removed = (T) elements[index];
         System.arraycopy(elements, index + 1, elements, index, size - index - 1);
         size--;
@@ -86,7 +80,7 @@ public class ArrayList<T> implements List<T> {
                 return removed;
             }
         }
-        throw new NoSuchElementException("asd");
+        throw new NoSuchElementException("No such element");
     }
 
     @Override
@@ -104,6 +98,12 @@ public class ArrayList<T> implements List<T> {
             Object[] newArray = new Object[(int)(elements.length * 1.5)];
             System.arraycopy(elements, 0, newArray, 0, size);
             elements = newArray;
+        }
+    }
+
+    public void checkSize(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Wrong index");
         }
     }
 }
