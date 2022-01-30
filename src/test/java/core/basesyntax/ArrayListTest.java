@@ -208,7 +208,7 @@ public class ArrayListTest {
     }
 
     @Test(expected = NoSuchElementException.class)
-    public void removeElementFromArrayListByNonExistentValue() {
+    public void removeElementFromArrayListByNonExistentValue()  {
         ArrayList<String> arrayList = new ArrayList<>();
         arrayList.add("String");
         arrayList.add("Java");
