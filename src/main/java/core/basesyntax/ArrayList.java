@@ -1,5 +1,6 @@
 package core.basesyntax;
 
+import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
@@ -16,9 +17,7 @@ public class ArrayList<T> implements List<T> {
 
     private void grow() {
         capacity += capacity / 2;
-        T[] temp = (T[]) new Object[capacity];
-        System.arraycopy(dataArray, ARRAY_START_INDEX, temp, 0, dataArray.length);
-        dataArray = temp;
+        dataArray = Arrays.copyOf(dataArray, capacity);
     }
 
     private void movePartToRightFrom(int index) {
@@ -27,7 +26,7 @@ public class ArrayList<T> implements List<T> {
         }
         T[] temp = (T[]) new Object[capacity];
         System.arraycopy(dataArray, ARRAY_START_INDEX, temp, ARRAY_START_INDEX, index);
-        System.arraycopy(dataArray, index, temp, (index + 1), (dataArray.length - index));
+        System.arraycopy(dataArray, index, temp, (index + 1), (dataArray.length - index - 1));
         dataArray = temp;
     }
 
@@ -36,6 +35,7 @@ public class ArrayList<T> implements List<T> {
         System.arraycopy(dataArray, ARRAY_START_INDEX, temp, ARRAY_START_INDEX, index);
         System.arraycopy(dataArray, index + 1, temp, index, (dataArray.length - index - 1));
         dataArray = temp;
+        actualSizeOfDataArray--;
     }
 
     private boolean isCapacityFull() {
@@ -49,12 +49,12 @@ public class ArrayList<T> implements List<T> {
         if (index > actualSizeOfDataArray) {
             throw new ArrayListIndexOutOfBoundsException("Index is out of bounds of the dataArray");
         }
-        return index > 0 && index <= actualSizeOfDataArray;
+        return index >= 0 && index <= actualSizeOfDataArray;
     }
 
     @Override
     public void add(T value) {
-        if(isCapacityFull()) {
+        if (isCapacityFull()) {
             grow();
         }
         dataArray[actualSizeOfDataArray] = value;
@@ -67,6 +67,7 @@ public class ArrayList<T> implements List<T> {
             if (index < actualSizeOfDataArray) {
                 movePartToRightFrom(index);
                 dataArray[index] = value;
+                actualSizeOfDataArray++;
             }
             if (index == actualSizeOfDataArray) {
                 add(value);
@@ -83,7 +84,12 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if(isIndexCorrect(index)) {
+        if (isIndexCorrect(index)) {
+            if (index == actualSizeOfDataArray) {
+                throw new ArrayListIndexOutOfBoundsException(
+                        "cannot get value by non existent index"
+                );
+            }
             return dataArray[index];
         }
         return null;
@@ -96,8 +102,9 @@ public class ArrayList<T> implements List<T> {
                 dataArray[index] = value;
             }
             if (index == actualSizeOfDataArray) {
-                throw new ArrayListIndexOutOfBoundsException("cannot change non existing variable in a list," +
-                        " use add() method for this operation");
+                throw new ArrayListIndexOutOfBoundsException(
+                        "cannot change non existing variable in a list,"
+                                + " use add() method for this operation");
             }
         }
     }
@@ -111,21 +118,23 @@ public class ArrayList<T> implements List<T> {
                 movePartToLeftFrom(index);
                 return result;
             }
-            if (index == actualSizeOfDataArray) {
-                throw new NoSuchElementException("cannot remove non existing variable in a list");
+            if (index >= actualSizeOfDataArray) {
+                throw new ArrayListIndexOutOfBoundsException(
+                        "cannot remove non existing variable by index in a list"
+                );
             }
         }
-        return null;
+        throw new NoSuchElementException("custom");
     }
 
     @Override
     public T remove(T element) {
         for (int i = 0; i < dataArray.length; i++) {
-            if (dataArray[i].equals(element)) {
+            if (dataArray[i] == element || element != null && element.equals(dataArray[i])) {
                 return remove(i);
             }
         }
-        throw new NoSuchElementException("cannot remove non existing variable in a list");
+        throw new NoSuchElementException("cannot remove non existing variable by value in a list");
     }
 
     @Override

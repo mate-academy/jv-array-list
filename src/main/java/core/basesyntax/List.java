@@ -1,7 +1,5 @@
 package core.basesyntax;
 
-import java.util.NoSuchElementException;
-
 public interface List<T> {
     void add(T value);
 
