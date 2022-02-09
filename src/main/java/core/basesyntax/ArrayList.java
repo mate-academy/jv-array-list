@@ -86,7 +86,7 @@ public class ArrayList<T> implements List<T> {
 
     private void increaseArraySize() {
         T[] temporaryArray = defaultArray;
-        defaultArray = (T[]) new Object[defaultArray.length + defaultArray.length * 3 / 2];
+        defaultArray = (T[]) new Object[defaultArray.length * 3 / 2];
         System.arraycopy(temporaryArray, 0, defaultArray, 0, size);
     }
 
