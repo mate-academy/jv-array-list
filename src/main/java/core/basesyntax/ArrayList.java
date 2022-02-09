@@ -44,36 +44,40 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index <= 0 && index >= size) {
+        if (index >= 0 && index < size) {
+            return array[index];
+        } else {
             throw new ArrayListIndexOutOfBoundsException("Invalid index" + index);
         }
-        return array[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index <= 0 && index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index" + index);
+        if (index >= 0 && index < size) {
+            array[index] = value;
+        } else {
+            throw new ArrayListIndexOutOfBoundsException("Invalid index " + index);
         }
-        array[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index <= 0 && index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index" + index);
+        if (index >= 0 && index < size) {
+            T removedElement = array[index];
+            System.arraycopy(array, index + 1, array, index, size - index - 1);
+            size--;
+            return removedElement;
+        } else {
+            throw new ArrayListIndexOutOfBoundsException("Invalid index " + index);
         }
-        T removedElement = array[index];
-        System.arraycopy(array, index + 1, array, index, size - index - 1);
-        size--;
-        return removedElement;
     }
 
     @Override
     public T remove(T element) {
         for (int i = 0; i <= size; i++) {
-            if (element != null && element.equals(array[i])) {
+            if (element == null || element.equals(array[i])) {
                 System.arraycopy(array, i + 1, array, i, size - i - 1);
+                size--;
                 return element;
             }
         }
