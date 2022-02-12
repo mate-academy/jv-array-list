@@ -1,7 +1,8 @@
 package core.basesyntax;
 
-import java.util.NoSuchElementException;
 import static java.util.Arrays.copyOf;
+
+import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
@@ -33,8 +34,8 @@ public class ArrayList<T> implements List<T> {
             defaultArray[index] = value;
             size++;
         } else {
-            throw new ArrayListIndexOutOfBoundsException
-                    ("ArrayList " + index + " OutOfBoundsException");
+            throw new ArrayListIndexOutOfBoundsException("ArrayList "
+                    + index + " OutOfBoundsException");
         }
     }
 
@@ -51,8 +52,8 @@ public class ArrayList<T> implements List<T> {
         if (index < size && index >= 0) {
             return defaultArray[index];
         } else {
-            throw new ArrayListIndexOutOfBoundsException
-                    ("ArrayList " + index + " OutOfBoundsException");
+            throw new ArrayListIndexOutOfBoundsException("ArrayList "
+                    + index + " OutOfBoundsException");
         }
     }
 
@@ -61,8 +62,8 @@ public class ArrayList<T> implements List<T> {
         if (index < size && index >= 0) {
             defaultArray[index] = value;
         } else {
-            throw new ArrayListIndexOutOfBoundsException
-                    ("ArrayList " + index + " OutOfBoundsException");
+            throw new ArrayListIndexOutOfBoundsException("ArrayList "
+                    + index + " OutOfBoundsException");
         }
     }
 
@@ -74,20 +75,20 @@ public class ArrayList<T> implements List<T> {
             size--;
             return removedElement;
         } else {
-            throw new ArrayListIndexOutOfBoundsException
-                    ("ArrayList " + index + " OutOfBoundsException");
+            throw new ArrayListIndexOutOfBoundsException("ArrayList "
+                    + index + " OutOfBoundsException");
         }
     }
 
     @Override
     public T remove(T element) {
-            for (int i = 0; i < size; i++) {
-                if (element == defaultArray[i]
-                        || (element != null && element.equals(defaultArray[i]))) {
-                    return remove(i);
-                }
+        for (int i = 0; i < size; i++) {
+            if (element == defaultArray[i]
+                    || (element != null && element.equals(defaultArray[i]))) {
+                return remove(i);
             }
-            throw new NoSuchElementException("Element " + element + " doesn`t exist");
+        }
+        throw new NoSuchElementException("Element " + element + " doesn`t exist");
     }
 
     @Override
