@@ -12,10 +12,14 @@ public class ArrayList<T> implements List<T> {
     public void add(T value) {
         objects[size++] = value;
         if (size == objects.length) {
-            int newCapacity = objects.length + (objects.length >> 1);
-            Object[] objectsNew = Arrays.copyOf(objects, newCapacity);
-            objects = objectsNew;
+            increaseCapacity();
         }
+    }
+
+    public void increaseCapacity() {
+        int newCapacity = objects.length + (objects.length >> 1);
+        Object[] objectsNew = Arrays.copyOf(objects, newCapacity);
+        objects = objectsNew;
     }
 
     @Override
@@ -23,11 +27,11 @@ public class ArrayList<T> implements List<T> {
         if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException("The specified index does not exist");
         }
-        Object[] objectsNew = new Object[objects.length + 1];
-        System.arraycopy(objects, 0, objectsNew, 0, index);
-        System.arraycopy(objects, index, objectsNew, index + 1, objects.length - index);
-        objectsNew[index] = value;
-        objects = objectsNew;
+        if (size == objects.length) {
+            increaseCapacity();
+        }
+        System.arraycopy(objects, index, objects, index + 1, size - index);
+        objects[index] = value;
         size++;
     }
 
@@ -62,11 +66,8 @@ public class ArrayList<T> implements List<T> {
         if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException("The specified index does not exist");
         }
-        Object[] objectsNew = new Object[objects.length - 1];
-        System.arraycopy(objects, 0, objectsNew, 0, index);
-        System.arraycopy(objects, index + 1, objectsNew, index, objects.length - index - 1);
         T value = (T) objects[index];
-        objects = objectsNew;
+        System.arraycopy(objects, index + 1, objects, index, size - index - 1);
         size--;
         return value;
     }
@@ -87,10 +88,7 @@ public class ArrayList<T> implements List<T> {
             throw new NoSuchElementException("The specified element does not exist");
         }
         if (isPresent) {
-            Object[] objectsNew = new Object[objects.length - 1];
-            System.arraycopy(objects, 0, objectsNew, 0, index);
-            System.arraycopy(objects, index + 1, objectsNew, index, objects.length - index - 1);
-            objects = objectsNew;
+            System.arraycopy(objects, index + 1, objects, index, size - index);
             size--;
         }
         return element;
