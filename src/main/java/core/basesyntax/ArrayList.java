@@ -16,12 +16,6 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    public void increaseCapacity() {
-        int newCapacity = objects.length + (objects.length >> 1);
-        Object[] objectsNew = Arrays.copyOf(objects, newCapacity);
-        objects = objectsNew;
-    }
-
     @Override
     public void add(T value, int index) {
         if (index < 0 || index > size) {
@@ -105,5 +99,11 @@ public class ArrayList<T> implements List<T> {
             return false;
         }
         return true;
+    }
+
+    public void increaseCapacity() {
+        int newCapacity = objects.length + (objects.length >> 1);
+        Object[] objectsNew = Arrays.copyOf(objects, newCapacity);
+        objects = objectsNew;
     }
 }
