@@ -95,10 +95,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public boolean isEmpty() {
-        if (size > 0) {
-            return false;
-        }
-        return true;
+        return size == 0;
     }
 
     public void increaseCapacity() {
