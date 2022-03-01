@@ -53,7 +53,7 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         checkIndex(index);
         T removedElement = list[index];
-        System.arraycopy(list, index + 1, list, index, size - index -1);
+        System.arraycopy(list, index + 1, list, index, size - index - 1);
         list[--size] = null;
         return removedElement;
     }
