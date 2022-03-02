@@ -1,48 +1,96 @@
 package core.basesyntax;
 
+import java.util.NoSuchElementException;
+
 public class ArrayList<T> implements List<T> {
+    private static final int DEFAULT_CAPACITY = 10;
+    private T[] arrayList = (T[]) new Object[DEFAULT_CAPACITY];
+    private int size;
+
+    public void resize() {
+        if (size == arrayList.length) {
+            arrayList = (T[]) new Object[(int) (size * 1.5)];
+        }
+    }
+
     @Override
     public void add(T value) {
-
+        resize();
+        arrayList[size] = value;
+        size++;
     }
 
     @Override
     public void add(T value, int index) {
-
+        if (index < size && index >= 0) {
+            resize();
+            System.arraycopy(arrayList, index, arrayList, index + 1, size - index);
+            arrayList[index] = value;
+            size++;
+        } else {
+            throw new ArrayListIndexOutOfBoundsException("ArrayList "
+                    + index + " OutOfBoundsException");
+        }
     }
 
     @Override
     public void addAll(List<T> list) {
-
+        for (int i = 0; i < list.size(); i++) {
+            resize();
+            arrayList[size++] = list.get(i);
+        }
     }
 
     @Override
     public T get(int index) {
-        return null;
+        if (index < size && index >= 0) {
+            return arrayList[index];
+        } else {
+            throw new ArrayListIndexOutOfBoundsException("ArrayList "
+                    + index + " OutOfBoundsException");
+        }
     }
 
     @Override
     public void set(T value, int index) {
-
+        if (index < size && index >= 0) {
+            arrayList[index] = value;
+        } else {
+            throw new ArrayListIndexOutOfBoundsException("ArrayList "
+                    + index + " OutOfBoundsException");
+        }
     }
 
     @Override
     public T remove(int index) {
-        return null;
+        if (index < size && index >= 0) {
+            T removedElement = arrayList[index];
+            System.arraycopy(arrayList, index + 1, arrayList, index, size - index - 1);
+            size--;
+            return removedElement;
+        } else {
+            throw new ArrayListIndexOutOfBoundsException("ArrayList "
+                    + index + " OutOfBoundsException");
+        }
     }
 
     @Override
     public T remove(T element) {
-        return null;
+        for (int i = 0; i < size; i++) {
+            if (element == arrayList[i] || (element != null && element.equals(arrayList[i]))) {
+                return remove(i);
+            }
+        }
+        throw new NoSuchElementException("Element " + element + " doesn`t exist");
     }
 
     @Override
     public int size() {
-        return 0;
+        return size;
     }
 
     @Override
     public boolean isEmpty() {
-        return false;
+        return size == 0;
     }
 }
