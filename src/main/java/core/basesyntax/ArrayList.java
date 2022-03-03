@@ -9,7 +9,9 @@ public class ArrayList<T> implements List<T> {
 
     public void resize() {
         if (size == arrayList.length) {
-            arrayList = (T[]) new Object[(int) (size * 1.5)];
+            T[] arrayNewList = (T[]) new Object[(int) (size * 1.5)];
+            System.arraycopy(arrayList, 0, arrayNewList, 0, size);
+            arrayList = arrayNewList;
         }
     }
 
@@ -22,7 +24,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index < size && index >= 0) {
+        if (index <= size && index >= 0) {
             resize();
             System.arraycopy(arrayList, index, arrayList, index + 1, size - index);
             arrayList[index] = value;
@@ -36,8 +38,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void addAll(List<T> list) {
         for (int i = 0; i < list.size(); i++) {
-            resize();
-            arrayList[size++] = list.get(i);
+            add(list.get(i));
         }
     }
 
