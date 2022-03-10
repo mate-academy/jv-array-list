@@ -2,24 +2,23 @@ package core.basesyntax;
 
 import java.util.Arrays;
 import java.util.NoSuchElementException;
-import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private int size;
-    private T [] arrayList = (T[]) new Object[DEFAULT_CAPACITY];
+    private T [] array = (T[]) new Object[DEFAULT_CAPACITY];
 
     public void resize() {
-        if (arrayList.length == size) {
-            int newSize = (int)(arrayList.length * 1.5);
-            arrayList = Arrays.copyOf(arrayList, newSize);
+        if (array.length == size) {
+            int newSize = (int)(array.length * 1.5);
+            array = Arrays.copyOf(array, newSize);
         }
     }
 
     @Override
     public void add(T value) {
         resize();
-        arrayList[size] = value;
+        array[size] = value;
         size++;
     }
 
@@ -30,8 +29,8 @@ public class ArrayList<T> implements List<T> {
         } else if (index + 1 < size) {
             resize();
         }
-        System.arraycopy(arrayList, index, arrayList, index + 1, size - index);
-        arrayList[index] = value;
+        System.arraycopy(array, index, array, index + 1, size - index);
+        array[index] = value;
         size++;
     }
 
@@ -39,7 +38,7 @@ public class ArrayList<T> implements List<T> {
     public void addAll(List<T> list) {
         for (int i = 0; i < list.size(); i++) {
             resize();
-            arrayList[size] = list.get(i);
+            array[size] = list.get(i);
             size++;
         }
     }
@@ -49,7 +48,7 @@ public class ArrayList<T> implements List<T> {
         if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException("The index is not valid. ");
         }
-        return arrayList[index];
+        return array[index];
     }
 
     @Override
@@ -57,7 +56,7 @@ public class ArrayList<T> implements List<T> {
         if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException("The index is not valid. ");
         }
-        arrayList[index] = value;
+        array[index] = value;
     }
 
     @Override
@@ -66,9 +65,9 @@ public class ArrayList<T> implements List<T> {
         if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException("The index is not valid. ");
         }
-        indexOld = arrayList[index];
-        System.arraycopy(arrayList, index + 1, arrayList, index, size - index - 1);
-        arrayList[size - 1] = null;
+        indexOld = array[index];
+        System.arraycopy(array, index + 1, array, index, size - index - 1);
+        array[size - 1] = null;
         size--;
         return indexOld;
     }
@@ -76,11 +75,11 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         T indexOld;
-        for (int i = 0; i < arrayList.length; i++) {
-            if (Objects.equals(arrayList[i], element)) {
-                indexOld = arrayList[i];
-                System.arraycopy(arrayList, i + 1, arrayList, i, size - i - 1);
-                arrayList[size - 1] = null;
+        for (int i = 0; i < array.length; i++) {
+            if ((array[i] == element) || (array[i] != null && array[i].equals(element))) {
+                indexOld = array[i];
+                System.arraycopy(array, i + 1, array, i, size - i - 1);
+                array[size - 1] = null;
                 size--;
                 return indexOld;
             }
