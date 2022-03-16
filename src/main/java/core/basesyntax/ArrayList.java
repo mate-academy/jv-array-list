@@ -29,7 +29,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     @Override
-    public void add(T value, int index) throws  ArrayListIndexOutOfBoundsException {
+    public void add(T value, int index) throws ArrayListIndexOutOfBoundsException {
         if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException("Index is invalid");
         }
@@ -77,7 +77,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     @Override
-    public T remove(T element) throws  NoSuchElementException {
+    public T remove(T element) throws NoSuchElementException {
         for (int i = 0; i < data.length; i++) {
             if (Objects.equals(data[i], element)) {
                 return remove(i);
