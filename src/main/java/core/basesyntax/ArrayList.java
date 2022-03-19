@@ -37,7 +37,9 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        System.arraycopy(list, 0, array, size - 1, size + list.size());
+        for (int i = 0; i < list.size(); i++) {
+            add(list.get(i));
+        }
     }
 
     @Override
@@ -75,16 +77,12 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        T removeElement = null;
         for (int i = 0; i < size; i++) {
-            if (element.equals(array[i])) {
-                removeElement = (T) array[i];
-                System.arraycopy(array, i, array, i + 1, size - 1);
-            } else {
-                throw new NoSuchElementException();
+            if (element == array[i] || (element != null && element.equals(array[i]))) {
+                return remove(i);
             }
         }
-        return removeElement;
+        throw new NoSuchElementException("Object = " + element + " doesn`t exist");
     }
 
     @Override
@@ -105,23 +103,7 @@ public class ArrayList<T> implements List<T> {
         if (array.length == size) {
             Object[] newArray = new Object[array.length + (array.length / 2)];
             System.arraycopy(array, 0, newArray, 0, size);
-            /** OR
-             * for (int i = 0; i < ; i++) {
-             * }
-             */
             array = newArray;
         }
-    }
-
-    private int getCurentIndex(T value) {
-        if (value == null) {
-            return -1;
-        }
-        for (int i = 0; i < size; i++) {
-            if (value == array[i]) {
-                return i;
-            }
-        }
-        return size;
     }
 }
