@@ -19,14 +19,9 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index >= 0 && index < (size + 1)) {
+        if (index >= 0 && index <= size) {
             resizeArray();
             System.arraycopy(array, index, array, index + 1, size - index);
-            /** OR
-             * for (int i = size; i > index; i--) {
-             *      array[i] = array[i - 1];
-             * }
-             * */
             array[index] = value;
             size++;
         } else {
