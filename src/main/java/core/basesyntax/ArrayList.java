@@ -5,16 +5,16 @@ import java.util.NoSuchElementException;
 
 @SuppressWarnings("unchecked")
 public class ArrayList<T> implements List<T> {
-    private int size = 0;
-    private static final int MAX_ITEMS_NUMBER = 16;
+    private static final int ITEMS_NUMBER = 16;
     private T[] elements;
+    private int size = 0;
 
     public ArrayList() {
-        elements = (T[]) new Object[MAX_ITEMS_NUMBER];
+        elements = (T[]) new Object[ITEMS_NUMBER];
     }
 
     public void resize() {
-        if (elements.length <= size || size >= MAX_ITEMS_NUMBER) {
+        if (elements.length <= size || size >= ITEMS_NUMBER) {
             elements = Arrays.copyOf(elements, size * 3 / 2);
         }
     }
@@ -79,7 +79,7 @@ public class ArrayList<T> implements List<T> {
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
             if (elements[i] == element || (element != null && element.equals(elements[i]))) {
-               return remove(i);
+                return remove(i);
             }
         }
         throw new NoSuchElementException("There isn't present element");
