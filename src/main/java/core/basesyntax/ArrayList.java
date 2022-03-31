@@ -12,42 +12,12 @@ public class ArrayList<T> implements List<T> {
         arrayListData = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
-
-
-    private T[] grow() {
-        return grow(size + 1);
-    }
-
-    private T[] grow(int minCapacity) {
-        return arrayListData = Arrays.copyOf(arrayListData,
-                newCapacity(minCapacity));
-    }
-
-    private int newCapacity(int minCapacity) {
-        int oldCapacity = arrayListData.length;
-        int newCapacity = oldCapacity + (oldCapacity >> 1);
-        return newCapacity;
-
-    }
-
-    private void add(T value, T[] arrayListData, int s) {
-        if (s == arrayListData.length)
-            arrayListData = grow();
-        arrayListData[s] = value;
-        size = s + 1;
-    }
-
     @Override
-    public void add(T value) {
-
-        if (size < arrayListData.length) {
-            add(value, arrayListData, size);
-        } else if (size > arrayListData.length && size < Integer.MAX_VALUE - 8) {
-            grow();
-            add(value, arrayListData, size);
+    public void add(T e) {
+        if (size == arrayListData.length) {
+            ensureCapacity();
         }
-
-
+        arrayListData[size++] = e;
     }
 
     @Override
@@ -59,7 +29,9 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-
+        for (int i = 0; i < list.size(); i++) {
+            add(list.get(i));
+        }
     }
 
     @Override
@@ -76,9 +48,6 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(int index) {
-        if (index > size) {
-            throw new NoSuchElementException("index");
-        }
         checkIndex(index);
         T removedElement = arrayListData[index];
         for (int i = 0; i < size - 1; i++) {
@@ -120,5 +89,10 @@ public class ArrayList<T> implements List<T> {
     private void checkIndex(int index) {
         if (size < index || index < 0)
         throw new ArrayListIndexOutOfBoundsException("Checked index is wrong");
+    }
+
+    private void ensureCapacity() {
+        int increasedCapacity = arrayListData.length + (arrayListData.length >> 1);
+        arrayListData = Arrays.copyOf(arrayListData, increasedCapacity);
     }
 }
