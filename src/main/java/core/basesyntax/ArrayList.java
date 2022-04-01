@@ -1,11 +1,10 @@
 package core.basesyntax;
 
-import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    T [] arrayListData;
+    private T [] arrayListData;
     private int size = 0;
 
     public ArrayList() {
@@ -17,14 +16,23 @@ public class ArrayList<T> implements List<T> {
         if (size == arrayListData.length) {
             ensureCapacity();
         }
-        arrayListData[size++] = e;
+        arrayListData[size] = e;
+        size++;
     }
 
     @Override
     public void add(T value, int index) {
+        if (index == size) {
+            add(value);
+            return;
+        }
         checkIndex(index);
+        if (size == arrayListData.length) {
+            ensureCapacity();
+        }
+        System.arraycopy(arrayListData, index, arrayListData, index + 1, size - index);
         arrayListData[index] = value;
-
+        size++;
     }
 
     @Override
@@ -50,31 +58,20 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         checkIndex(index);
         T removedElement = arrayListData[index];
-        for (int i = 0; i < size - 1; i++) {
-            arrayListData[i] = arrayListData[i + 1];
-        }
-        size--;
+        System.arraycopy(arrayListData, index + 1, arrayListData, index, size - index - 1);
+        arrayListData[--size] = null;
         return removedElement;
     }
 
     @Override
     public T remove(T element) {
-        T removedElement = null;
-        int startPoint = 0;
-        int initialSize = size;
         for (int i = 0; i < size; i++) {
-            if (arrayListData[i] != null && arrayListData[i].equals(element)) {
-                removedElement = arrayListData[i];
-                startPoint = i;
+            if ((arrayListData[i] != null && arrayListData[i].equals(element))
+                        || arrayListData[i] == element) {
+                return remove(i);
             }
         }
-            if (size - 1 - startPoint >= 0)
-                System.arraycopy(arrayListData, startPoint + 1,
-                        arrayListData, startPoint, size - 1 - startPoint);
-            size--;
-        if (initialSize == size) {throw new NoSuchElementException("value");}
-        return removedElement;
-
+        throw new NoSuchElementException("No such element");
     }
 
     @Override
@@ -86,13 +83,16 @@ public class ArrayList<T> implements List<T> {
     public boolean isEmpty() {
         return size == 0;
     }
+
     private void checkIndex(int index) {
-        if (size < index || index < 0)
-        throw new ArrayListIndexOutOfBoundsException("Checked index is wrong");
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Checked index is wrong");
+        }
     }
 
     private void ensureCapacity() {
-        int increasedCapacity = arrayListData.length + (arrayListData.length >> 1);
-        arrayListData = Arrays.copyOf(arrayListData, increasedCapacity);
+        T [] newArray = (T[]) new Object[arrayListData.length + (arrayListData.length >> 1)];
+        System.arraycopy(arrayListData, 0, newArray, 0, arrayListData.length);
+        arrayListData = newArray;
     }
 }
