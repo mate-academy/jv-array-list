@@ -12,11 +12,8 @@ public class ArrayList<T> implements List<T> {
         if (counterElement == list.length) {
             growList();
         }
-        for (int i = counterElement; i < list.length; i++) {
-            list[i] = value;
-            counterElement++;
-            break;
-        }
+        list[counterElement] = value;
+        counterElement++;
     }
 
     @Override
@@ -24,42 +21,19 @@ public class ArrayList<T> implements List<T> {
         if (counterElement == list.length) {
             growList();
         }
-        if (index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("index position is less then 0");
-        } else if (index == counterElement && counterElement < list.length) {
-            list[index] = value;
-            counterElement++;
-        } else if (index > counterElement) {
-            throw new ArrayListIndexOutOfBoundsException("can't find the index");
-        } else if (index < counterElement && counterElement < list.length) {
-            for (int i = 0; i < counterElement; i++) {
-                if (index == i) {
-                    Object temp = list[i];
-                    list[i] = value;
-                    for (int j = index + 1; j < list.length; j++) {
-                        Object temp2 = list[j];
-                        list[j] = temp;
-                        temp = temp2;
-                    }
-                    counterElement++;
-                    break;
-                }
-            }
+        if (index < 0 || index > counterElement) {
+            throw new ArrayListIndexOutOfBoundsException("index position is wrong");
+        } else if (index <= counterElement && counterElement < list.length) {
+            System.arraycopy(list, index, list, index + 1, counterElement - index);
         }
+        list[index] = value;
+        counterElement++;
     }
 
     @Override
     public void addAll(List<T> list) {
-        if (this.list.length < this.list.length + list.size()) {
-            Object[] temp = new Object[this.list.length + list.size()];
-            for (int i = 0; i < counterElement; i++) {
-                temp[i] = this.list[i];
-            }
-            for (int i = 0; i < list.size(); i++) {
-                temp[counterElement] = list.get(i);
-                counterElement++;
-            }
-            this.list = temp;
+        for (int i = 0; i < list.size(); i++) {
+            add(list.get(i));
         }
     }
 
@@ -114,8 +88,6 @@ public class ArrayList<T> implements List<T> {
                 System.arraycopy(list, rmIndex + 1, list, rmIndex, counterElement - rmIndex + 1);
                 counterElement--;
                 return element;
-            } else if (element != null) {
-                continue;
             }
         }
         throw new NoSuchElementException("this element not found");
