@@ -18,14 +18,6 @@ public class ArrayList<T> implements List<T> {
         return updatedData;
     }
 
-    /*
-    private void validateIndex(int index, int thisSize) {
-        if (index < 0 || index >= thisSize) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index");
-        }
-    }
-     */
-
     @Override
     public void add(T value) {
         if (size == elementData.length) {
