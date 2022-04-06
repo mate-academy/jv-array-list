@@ -13,7 +13,6 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-
         if (size == values.length) {
             T[] valuesExtended = values;
             values = (T[]) new Object[(int) (values.length * 1.5)];
@@ -37,7 +36,8 @@ public class ArrayList<T> implements List<T> {
                     values, index + 1, size - index);
             values[index] = value;
         } else {
-            throw new ArrayListIndexOutOfBoundsException("Can not add element. Index is out of bounds");
+            throw new ArrayListIndexOutOfBoundsException(
+                    "Can not add element. Index is out of bounds");
         }
     }
 
@@ -53,7 +53,8 @@ public class ArrayList<T> implements List<T> {
         if (index < size && index >= 0) {
             return values[index];
         } else {
-            throw new ArrayListIndexOutOfBoundsException("Can not get element. Index is out of bounds");
+            throw new ArrayListIndexOutOfBoundsException(
+                    "Can not get element. Index is out of bounds");
         }
     }
 
@@ -63,18 +64,18 @@ public class ArrayList<T> implements List<T> {
         if (index < size && index >= 0) {
             values[index] = value;
         } else {
-            throw new ArrayListIndexOutOfBoundsException("Can not set element. Index is out of bounds");
+            throw new ArrayListIndexOutOfBoundsException(
+                    "Can not set element. Index is out of bounds");
         }
     }
 
     @Override
     public T remove(int index) {
         if (index < size && index >= 0) {
-            T objectRemoved = values[index];
+            T removedElement = values[index];
             System.arraycopy(values, index + 1, values, index, size - index - 1);
-            values[size - 1] = null;
-            size--;;
-            return objectRemoved;
+            size--;
+            return removedElement;
         } else {
             throw new ArrayListIndexOutOfBoundsException("There is no such element present");
         }
