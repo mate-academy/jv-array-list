@@ -28,10 +28,12 @@ public class ArrayList<T> implements List<T> {
         tempArray = newTempArray;
     }
 
-    // TODO check
+    // checked
     @Override
     public void add(T value, int index) {
-        IndexCheck(index + 1);   // need to be corrected, because index=-1  --- doesn't work correctly
+        if (index < 0 || index > size) {
+            throw new ArrayListIndexOutOfBoundsException("Wrong index. Index should be: 0 <= index <= " + size);
+        }
         if (size == tempArray.length) {
             grow();
         }
@@ -71,7 +73,7 @@ public class ArrayList<T> implements List<T> {
     private void IndexCheck(int index) {
         if (index >= 0 && index < size) {
             return;
-        } throw new ArrayListIndexOutOfBoundsException("Wrong index");
+        } throw new ArrayListIndexOutOfBoundsException("Wrong index. Index should be: 0 <= index < " + size);
     }
 
     // TODO
