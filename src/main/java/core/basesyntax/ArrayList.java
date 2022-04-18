@@ -1,7 +1,7 @@
 package core.basesyntax;
 
-import java.sql.Struct;
 import java.util.Arrays;
+import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
@@ -10,6 +10,21 @@ public class ArrayList<T> implements List<T> {
 
     public ArrayList() {
         tempArray = (T[]) new Object[DEFAULT_CAPACITY];
+    }
+
+    private void grow() {
+        int newLength = (int) (tempArray.length * 1.5);
+        T[] newTempArray = (T[]) new Object[newLength];
+        System.arraycopy(tempArray,0, newTempArray, 0, size);
+        tempArray = newTempArray;
+    }
+
+    private void indexCheck(int index) {
+        if (index >= 0 && index < size) {
+            return;
+        }
+        throw new ArrayListIndexOutOfBoundsException("Wrong index. Index should be: 0 <= index < "
+            + size);
     }
 
     @Override
@@ -21,18 +36,11 @@ public class ArrayList<T> implements List<T> {
         size++;
     }
 
-    private void grow () {
-        int newLength = (int) (tempArray.length * 1.5);
-        T[] newTempArray = (T[]) new Object[newLength];
-        System.arraycopy(tempArray,0, newTempArray, 0, size);
-        tempArray = newTempArray;
-    }
-
-    // checked
     @Override
     public void add(T value, int index) {
         if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("Wrong index. Index should be: 0 <= index <= " + size);
+            throw new ArrayListIndexOutOfBoundsException("Wrong index. Should be: 0 <= index <= "
+                + size);
         }
         if (size == tempArray.length) {
             grow();
@@ -42,44 +50,57 @@ public class ArrayList<T> implements List<T> {
         size++;
     }
 
-    // TODO
     @Override
     public void addAll(List<T> list) {
-
+        if (list == null || list.isEmpty()) {
+            throw new NullPointerException("Provided List is empty.");
+        }
+        while (tempArray.length < (size + list.size())) {
+            grow();
+        }
+        for (int i = 0; i < list.size(); i++) {
+            tempArray[size] = list.get(i);
+            size++;
+        }
     }
 
     @Override
     public T get(int index) {
-        IndexCheck(index);
+        indexCheck(index);
         return tempArray[index];
     }
 
-    // TODO check
     @Override
     public void set(T value, int index) {
-        IndexCheck(index);
-        tempArray[index] = value;
-        size++;
+        indexCheck(index);
+        if (index == size) {
+            tempArray[index] = value;
+            size++;
+        } else {
+            tempArray[index] = value;
+        }
     }
 
-    // TODO
     @Override
     public T remove(int index) {
-        IndexCheck(index);
-
-        return null;
+        indexCheck(index);
+        T oldValue = tempArray[index];
+        System.arraycopy(tempArray, index + 1, tempArray, index, (size - index - 1));
+        tempArray[--size] = null;
+        return oldValue;
     }
 
-    private void IndexCheck(int index) {
-        if (index >= 0 && index < size) {
-            return;
-        } throw new ArrayListIndexOutOfBoundsException("Wrong index. Index should be: 0 <= index < " + size);
-    }
-
-    // TODO
     @Override
     public T remove(T element) {
-        return null;
+        for (int i = 0; i < tempArray.length; i++) {
+            if (tempArray[i] == element || (tempArray[i] != null && tempArray[i].equals(element))) {
+                T oldValue = tempArray[i];
+                System.arraycopy(tempArray, i + 1, tempArray, i, (size - i - 1));
+                tempArray[--size] = null;
+                return oldValue;
+            }
+        }
+        throw new NoSuchElementException();
     }
 
     @Override
@@ -94,8 +115,9 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public String toString() {
-        return "ArrayList{" +
-                "tempArray=" + Arrays.toString(tempArray) +
-                '}';
+        return "ArrayList{"
+                + "tempArray="
+                + Arrays.toString(tempArray)
+                + '}';
     }
 }
