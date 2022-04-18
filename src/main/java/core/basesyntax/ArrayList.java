@@ -1,38 +1,23 @@
 package core.basesyntax;
 
-import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    private T[] tempArray;
+    private static final int GROW_COEFFICIENT = 10;
+    private T[] data;
     private int size;
 
     public ArrayList() {
-        tempArray = (T[]) new Object[DEFAULT_CAPACITY];
-    }
-
-    private void grow() {
-        int newLength = (int) (tempArray.length * 1.5);
-        T[] newTempArray = (T[]) new Object[newLength];
-        System.arraycopy(tempArray,0, newTempArray, 0, size);
-        tempArray = newTempArray;
-    }
-
-    private void indexCheck(int index) {
-        if (index >= 0 && index < size) {
-            return;
-        }
-        throw new ArrayListIndexOutOfBoundsException("Wrong index. Index should be: 0 <= index < "
-            + size);
+        data = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
     @Override
     public void add(T value) {
-        if (size == tempArray.length) {
+        if (size == data.length) {
             grow();
         }
-        tempArray[size] = value;
+        data[size] = value;
         size++;
     }
 
@@ -42,24 +27,24 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayListIndexOutOfBoundsException("Wrong index. Should be: 0 <= index <= "
                 + size);
         }
-        if (size == tempArray.length) {
+        if (size == data.length) {
             grow();
         }
-        System.arraycopy(tempArray, index, tempArray, (index + 1), (size - index));
-        tempArray[index] = value;
+        System.arraycopy(data, index, data, (index + 1), (size - index));
+        data[index] = value;
         size++;
     }
 
     @Override
     public void addAll(List<T> list) {
         if (list == null || list.isEmpty()) {
-            throw new NullPointerException("Provided List is empty.");
+            throw new RuntimeException("Provided List is empty.");
         }
-        while (tempArray.length < (size + list.size())) {
+        while (data.length < (size + list.size())) {
             grow();
         }
         for (int i = 0; i < list.size(); i++) {
-            tempArray[size] = list.get(i);
+            data[size] = list.get(i);
             size++;
         }
     }
@@ -67,37 +52,34 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         indexCheck(index);
-        return tempArray[index];
+        return data[index];
     }
 
     @Override
     public void set(T value, int index) {
         indexCheck(index);
         if (index == size) {
-            tempArray[index] = value;
+            data[index] = value;
             size++;
         } else {
-            tempArray[index] = value;
+            data[index] = value;
         }
     }
 
     @Override
     public T remove(int index) {
         indexCheck(index);
-        T oldValue = tempArray[index];
-        System.arraycopy(tempArray, index + 1, tempArray, index, (size - index - 1));
-        tempArray[--size] = null;
+        T oldValue = data[index];
+        System.arraycopy(data, index + 1, data, index, (size - index - 1));
+        data[--size] = null;
         return oldValue;
     }
 
     @Override
     public T remove(T element) {
-        for (int i = 0; i < tempArray.length; i++) {
-            if (tempArray[i] == element || (tempArray[i] != null && tempArray[i].equals(element))) {
-                T oldValue = tempArray[i];
-                System.arraycopy(tempArray, i + 1, tempArray, i, (size - i - 1));
-                tempArray[--size] = null;
-                return oldValue;
+        for (int i = 0; i < data.length; i++) {
+            if (data[i] == element || (data[i] != null && data[i].equals(element))) {
+                return remove(i);
             }
         }
         throw new NoSuchElementException();
@@ -113,11 +95,18 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    @Override
-    public String toString() {
-        return "ArrayList{"
-                + "tempArray="
-                + Arrays.toString(tempArray)
-                + '}';
+    private void grow() {
+        int newLength = (int) (data.length * GROW_COEFFICIENT);
+        T[] newTempArray = (T[]) new Object[newLength];
+        System.arraycopy(data,0, newTempArray, 0, size);
+        data = newTempArray;
+    }
+
+    private void indexCheck(int index) {
+        if (index >= 0 && index < size) {
+            return;
+        }
+        throw new ArrayListIndexOutOfBoundsException("Wrong index. Index should be: 0 <= index < "
+                + size);
     }
 }
