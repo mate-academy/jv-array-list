@@ -3,18 +3,14 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
+    private static final double HALF = 0.5;
     private static final int DEFAULT_CAPACITY = 10;
-    private static final Object[] EMPTY_ELEMENTDATA = {};
     private Object[] elementData;
     private int size;
 
     public ArrayList(int size) {
         if (size > 0) {
             this.elementData = new Object[size];
-            this.size = 0;
-        } else if (size == 0) {
-            this.elementData = EMPTY_ELEMENTDATA;
-            this.size = 0;
         } else {
             throw new IllegalArgumentException("Illegal Capacity: " + size);
         }
@@ -22,7 +18,6 @@ public class ArrayList<T> implements List<T> {
 
     public ArrayList() {
         this.elementData = new Object[DEFAULT_CAPACITY];
-        size = 0;
     }
 
     @Override
@@ -39,35 +34,12 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayListIndexOutOfBoundsException("index " + index + "size " + size);
         }
         indexInRange(index, elementData.length - 1);
-        Object[] oldElemData = elementData;
-        Object[] newElemData = new Object[elementData.length + 1];
-        System.arraycopy(oldElemData, 0, newElemData, 0, index);
-        newElemData[index] = value;
-        System.arraycopy(oldElemData, index, newElemData, index + 1, size - index);
+        if (size == elementData.length) {
+            grow();
+        }
+        System.arraycopy(elementData, index, elementData, index + 1, size - index);
+        elementData[index] = value;
         size++;
-        elementData = newElemData;
-        return;
-    }
-
-    private void indexInRange(int index, int end) {
-        if (index == 0) {
-            return;
-        }
-        if (index < 0 || index > end) {
-            throw new ArrayListIndexOutOfBoundsException("index " + index + "size " + size);
-        }
-    }
-
-    private void grow() {
-        int newSize = (int) (elementData.length + (elementData.length * 0.5));
-        grow(newSize);
-    }
-
-    private void grow(int count) {
-        int newSize = elementData.length + count;
-        Object[] tmp = new Object[newSize];
-        System.arraycopy(elementData, 0, tmp, 0, elementData.length);
-        elementData = tmp;
     }
 
     @Override
@@ -95,13 +67,9 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         indexInRange(index, size - 1);
         final T oldValue = (T) elementData[index];
-        Object[] newArr = new Object[elementData.length];
-        System.arraycopy(elementData, 0, newArr, 0, index);
-        if (index != size - 1) {
-            System.arraycopy(elementData, index + 1, newArr, index, elementData.length - index - 1);
-        }
+        System.arraycopy(elementData, index + 1, elementData, index,
+                elementData.length - index - 1);
         size--;
-        elementData = newArr;
         return oldValue;
     }
 
@@ -109,15 +77,8 @@ public class ArrayList<T> implements List<T> {
     public T remove(T element) {
         int index = -1;
         for (int i = 0; i < size; i++) {
-            if (elementData[i] == null) {
-                if (element == null) {
-                    index = i;
-                    break;
-                } else {
-                    continue;
-                }
-            }
-            if (elementData[i].equals(element)) {
+            if (elementData[i] == element || elementData[i] != null
+                    && elementData[i].equals(element)) {
                 index = i;
                 break;
             }
@@ -138,5 +99,23 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private void indexInRange(int index, int end) {
+        if (index < 0 || index > end) {
+            throw new ArrayListIndexOutOfBoundsException("index " + index + "size " + size);
+        }
+    }
+
+    private void grow() {
+        int newSize = (int) (elementData.length + (elementData.length * HALF));
+        grow(newSize);
+    }
+
+    private void grow(int count) {
+        int newSize = elementData.length + count;
+        Object[] tmp = new Object[newSize];
+        System.arraycopy(elementData, 0, tmp, 0, elementData.length);
+        elementData = tmp;
     }
 }
