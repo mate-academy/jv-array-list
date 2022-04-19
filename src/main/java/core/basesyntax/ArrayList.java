@@ -62,8 +62,8 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayListIndexOutOfBoundsException(INDEX_EXCEPTION_TEXT);
         }
         T[] modifyItems = (T[]) new Object[size];
+        System.arraycopy(items, 0, modifyItems, 0, index);
         if (index + 1 != size) {
-            System.arraycopy(items, 0, modifyItems, 0, index);
             System.arraycopy(items, index + 1, modifyItems, index, size - index);
         }
         T removedElement = items[index];
