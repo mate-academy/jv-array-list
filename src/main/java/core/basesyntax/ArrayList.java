@@ -14,9 +14,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (size == data.length) {
-            grow();
-        }
+        grow();
         data[size] = value;
         size++;
     }
@@ -27,9 +25,7 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayListIndexOutOfBoundsException("Wrong index. Should be: 0 <= index <= "
                 + size);
         }
-        if (size == data.length) {
-            grow();
-        }
+        grow();
         System.arraycopy(data, index, data, (index + 1), (size - index));
         data[index] = value;
         size++;
@@ -40,12 +36,8 @@ public class ArrayList<T> implements List<T> {
         if (list == null || list.isEmpty()) {
             throw new RuntimeException("Provided List is empty.");
         }
-        while (data.length < (size + list.size())) {
-            grow();
-        }
         for (int i = 0; i < list.size(); i++) {
-            data[size] = list.get(i);
-            size++;
+            add(list.get(i));
         }
     }
 
@@ -96,10 +88,12 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void grow() {
-        int newLength = (int) (data.length * GROW_COEFFICIENT);
-        T[] newTempArray = (T[]) new Object[newLength];
-        System.arraycopy(data,0, newTempArray, 0, size);
-        data = newTempArray;
+        if (size == data.length) {
+            int newLength = (int) (data.length * GROW_COEFFICIENT);
+            T[] newTempArray = (T[]) new Object[newLength];
+            System.arraycopy(data, 0, newTempArray, 0, size);
+            data = newTempArray;
+        }
     }
 
     private void indexCheck(int index) {
