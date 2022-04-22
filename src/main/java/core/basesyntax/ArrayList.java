@@ -1,32 +1,26 @@
 package core.basesyntax;
 
-import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int CAPACITY_OF_ELEMENT_DATA = 10;
     private T[] elementData;
-    private int size;
+    private int size = 0;
 
     public ArrayList() {
         elementData = (T[]) new Object[CAPACITY_OF_ELEMENT_DATA];
-        size = 0;
     }
 
     @Override
     public void add(T value) {
-        if (size >= elementData.length) {
-            elementData = increaseSizeArray(elementData);
-        }
+        increaseSizeArray();
         elementData[size] = value;
         size++;
     }
 
     @Override
     public void add(T value, int index) {
-        if (size >= elementData.length) {
-            elementData = increaseSizeArray(elementData);
-        }
+        increaseSizeArray();
         if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException("Yuo can't add "
                     + "element by this index");
@@ -46,61 +40,36 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("You can't use this "
-                    + "index");
-        }
-        return elementData[index];
+        return elementData[checkIndex(index)];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("You can't set value "
-                    + "to this position");
-        } else {
-            elementData[index] = value;
-        }
+        elementData[checkIndex(index)] = value;
     }
 
     @Override
     public T remove(int index) {
         T temp = null;
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Element by this "
-                    + "index doesn't exist");
-        } else {
-            temp = elementData[index];
-            elementData[index] = null;
-            moveElementsAfterRemove(index);
-            size--;
-        }
+        temp = elementData[checkIndex(index)];
+        elementData[index] = null;
+        moveElementsAfterRemove(index);
+        size--;
         return temp;
     }
 
     @Override
     public T remove(T element) {
-        if (element == null) {
-            for (int i = 0; i < elementData.length; i++) {
-                if (elementData[i] == null) {
-                    moveElementsAfterRemove(i);
-                    size--;
-                    return null;
-                }
-            }
-        }
         for (int i = 0; i < elementData.length; i++) {
-            if (elementData[i] != null && elementData[i].equals(element)) {
+            if ((element == null && elementData[i] == null)
+                    || (elementData[i] != null
+                    && elementData[i].equals(element))) {
                 moveElementsAfterRemove(i);
                 size--;
                 return element;
             }
         }
-        try {
-            throw new NoSuchFieldException();
-        } catch (NoSuchFieldException e) {
-            throw new NoSuchElementException();
-        }
+        throw new NoSuchElementException();
     }
 
     @Override
@@ -113,9 +82,22 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private T[] increaseSizeArray(T[] elementData) {
-        return Arrays.copyOf(elementData, (elementData.length
-                + elementData.length / 2));
+    private int checkIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("You can't use this "
+                    + "index");
+        }
+        return index;
+    }
+
+    private void increaseSizeArray() {
+        if (size >= elementData.length) {
+            T[] temp = (T[]) new Object[elementData.length
+                    + elementData.length / 2];
+            System.arraycopy(elementData, 0, temp, 0,
+                    elementData.length);
+            elementData = temp;
+        }
     }
 
     private void moveElementsAfterRemove(int index) {
