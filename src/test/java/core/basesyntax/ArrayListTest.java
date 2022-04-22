@@ -100,7 +100,7 @@ public class ArrayListTest {
         ArrayList<String> arrayList = new ArrayList<>();
         for (int i = 0; i < ELEMENTS_COUNT; i++) {
             arrayList.add("First + " + i, 0);
-            Assert.assertEquals("Test failed! Size of array should be " + (i + 1) + "but it is "
+             Assert.assertEquals("Test failed! Size of array should be " + (i + 1) + "but it is "
                     + arrayList.size(), i + 1, arrayList.size());
         }
         for (int i = 0; i < ELEMENTS_COUNT; i++) {
@@ -198,7 +198,7 @@ public class ArrayListTest {
         actualSize = arrayList.size();
         Assert.assertEquals(String.format("Test failed! Size of array after removing element "
                 + "should be %d, but it is %d\n", 4, actualSize), 4, actualSize);
-        Assert.assertEquals("Test failed! Remove was incorrect",
+        Assert.  assertEquals("Test failed! Remove was incorrect",
                 "Private", arrayList.get(2));
         actualResult = arrayList.remove(null);
         Assert.assertNull("Test failed! Returned value should be null", actualResult);
