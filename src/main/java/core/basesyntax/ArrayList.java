@@ -3,7 +3,6 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 
-@SuppressWarnings("unchecked")
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private static final double GROW_COEFFICIENT = 1.5;
@@ -11,88 +10,56 @@ public class ArrayList<T> implements List<T> {
     private int size;
 
     public ArrayList() {
-        objects = new Object[CAPACITY];
-    }
-
-    public ArrayList(List<T> list) {
-        objects = new Object[CAPACITY];
-        if (list.size() <= CAPACITY) {
-            copyListToArrayListAndResize(list);
-            return;
-        }
-        do {
-            expandObjectsArray(objects);
-        } while (list.size() <= CAPACITY);
-        copyListToArrayListAndResize(list);
+        objects = new Object[DEFAULT_CAPACITY];
     }
 
     @Override
     public void add(T value) {
-        if (size < CAPACITY) {
-            objects[size] = value;
-            size++;
-            return;
+        if (size == objects.length) {
+            resize();
         }
-        expandObjectsArray(objects);
         objects[size] = value;
         size++;
     }
 
     @Override
     public void add(T value, int index) {
-        checkIndex(index, 1);
-        if (index == size) {
-            add(value);
-            return;
+        if (index != 0) {
+            checkIndex(index - 1);
         }
-        if (size + 1 <= CAPACITY) {
-            copyArrayToObjectsAndResizeArrayList(
-                    objects, index, index + 1, size - index, 1);
-            objects[index] = value;
-            return;
+        if (size == objects.length) {
+            resize();
         }
-        expandObjectsArray(objects);
-        copyArrayToObjectsAndResizeArrayList(
-                objects, index, index + 1, size - index, 1);
+        System.arraycopy(objects, index, objects, index + 1, size - index);
         objects[index] = value;
+        size++;
     }
 
     @Override
     public void addAll(List<T> list) {
-        ArrayList<T> arrList = new ArrayList<>(list);
-        if (size + arrList.size <= CAPACITY) {
-            copyArrayToObjectsAndResizeArrayList(
-                    arrList.objects, 0, size, arrList.size, arrList.size);
-            return;
+        for (int i = 0; i < list.size(); i++) {
+            this.add(list.get(i));
         }
-        do {
-            expandObjectsArray(objects);
-        } while (size + arrList.size <= CAPACITY);
-        copyArrayToObjectsAndResizeArrayList(
-                arrList.objects, 0, size, arrList.size, arrList.size);
     }
 
     @Override
     public T get(int index) {
-        checkIndex(index, 0);
+        checkIndex(index);
         return (T) objects[index];
     }
 
     @Override
     public void set(T value, int index) {
-        checkIndex(index, 0);
-        if (objects[index] == value) {
-            return;
-        }
+        checkIndex(index);
         objects[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        checkIndex(index, 0);
+        checkIndex(index);
         T element = (T) objects[index];
-        copyArrayToObjectsAndResizeArrayList(
-                objects, index + 1, index, size - index - 1, -1);
+        System.arraycopy(objects, index + 1, objects, index, size - index - 1);
+        size--;
         return element;
     }
 
@@ -100,8 +67,8 @@ public class ArrayList<T> implements List<T> {
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
             if (Objects.equals(objects[i], element)) {
-                copyArrayToObjectsAndResizeArrayList(
-                        objects, i + 1, i, size - i - 1, -1);
+                System.arraycopy(objects, i + 1, objects, i, size - i - 1);
+                size--;
                 return element;
             }
         }
@@ -118,31 +85,16 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void checkIndex(int index, int correctionFactor) {
-        if (index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("The index has to be positive");
-        } else if (index >= size + correctionFactor) {
-            throw new ArrayListIndexOutOfBoundsException("The index is out of range");
+    private void checkIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Invalid index");
         }
     }
 
     private void resize() {
-        CAPACITY *= CAPACITY_EXPAND_FACTOR;
-        Object[] newObjects = new Object[CAPACITY];
+        int newCapacity = (int) (objects.length * GROW_COEFFICIENT);
+        Object[] newObjects = new Object[newCapacity];
         System.arraycopy(objects, 0, newObjects, 0, objects.length);
-        this.objects = newObjects;
-    }
-
-    private void copyListToArrayListAndResize(List<T> list) {
-        for (int i = 0; i < list.size(); i++) {
-            objects[i] = list.get(i);
-        }
-        size = list.size();
-    }
-
-    private void copyArrayToObjectsAndResizeArrayList(
-            Object[] src, int srcPos, int destPos, int length, int deltaSize) {
-        System.arraycopy(src, srcPos, objects, destPos, length);
-        size += deltaSize;
+        objects = newObjects;
     }
 }
