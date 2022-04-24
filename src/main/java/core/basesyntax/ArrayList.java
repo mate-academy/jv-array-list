@@ -5,20 +5,19 @@ import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
     private static final double INCREASE_COEFFICIENT = 1.5;
+    private static final int DEFAULT_CAPACITY = 10;
     private int capacity;
     private int size;
     private Object[] array;
 
     public ArrayList() {
-        capacity = 10;
+        capacity = DEFAULT_CAPACITY;
         array = new Object[capacity];
     }
 
     @Override
     public void add(T value) {
-        if (capacity - 1 == size) {
-            array = resizeArray();
-        }
+        resizeArray();
         array[size] = value;
         size++;
     }
@@ -27,46 +26,34 @@ public class ArrayList<T> implements List<T> {
     public void add(T value, int index) {
         if (index > size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Index is out of bounds of the Array");
-        } else if (capacity - 1 == size) {
-            array = resizeArray();
         }
-        array = arrayPlusElement(value, index);
+        arrayPlusElement(value, index);
     }
 
     @Override
     public void addAll(List<T> list) {
-        while (capacity - 1 < list.size() + size) {
-            array = resizeArray();
-        }
         for (int i = 0; i < list.size(); i++) {
-            array[size + i] = list.get(i);
+            add(list.get(i));
         }
-        size = size + list.size();
     }
 
     @Override
     public T get(int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index is out of bounds of the Array");
-        }
+        throwIndexOutOfBoundsException(index);
         return (T) array[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index is out of bounds of the Array");
-        }
+        throwIndexOutOfBoundsException(index);
         array[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index is out of bounds of the Array");
-        }
+        throwIndexOutOfBoundsException(index);
         T indexValue = (T) array[index];
-        array = arrayMinusElement(index);
+        arrayMinusElement(index);
         return indexValue;
     }
 
@@ -74,11 +61,11 @@ public class ArrayList<T> implements List<T> {
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
             if (Objects.equals(element, array[i])) {
-                array = arrayMinusElement(i);
+                arrayMinusElement(i);
                 return (T) element;
             }
         }
-        throw new NoSuchElementException("No such Element in Array");
+        throw new NoSuchElementException("No such Element in Array " + element);
     }
 
     @Override
@@ -91,27 +78,31 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private Object[] resizeArray() {
-        capacity = (int) (capacity * INCREASE_COEFFICIENT);
-        Object[] newArray = new Object[capacity];
-        System.arraycopy(array, 0, newArray, 0, size);
-        return newArray;
+    private void resizeArray() {
+        if (capacity - 1 == size) {
+            capacity = (int) (capacity * INCREASE_COEFFICIENT);
+            Object[] newArray = new Object[capacity];
+            System.arraycopy(array, 0, newArray, 0, size);
+            array = newArray;
+        }
     }
 
-    private Object[] arrayMinusElement(int index) {
-        Object[] newArray = new Object[capacity];
-        System.arraycopy(array, 0, newArray, 0, index);
-        System.arraycopy(array, index + 1, newArray, index, size - index - 1);
+    private void arrayMinusElement(int index) {
+        System.arraycopy(array, 0, array, 0, index);
+        System.arraycopy(array, index + 1, array, index, size - index - 1);
         size--;
-        return newArray;
     }
 
-    private Object[] arrayPlusElement(T value, int index) {
-        Object[] newArray = new Object[capacity];
-        System.arraycopy(array, 0, newArray, 0, index);
-        newArray[index] = value;
-        System.arraycopy(array, index, newArray, index + 1, size - index);
+    private void arrayPlusElement(T value, int index) {
+        resizeArray();
+        System.arraycopy(array, index, array, index + 1, size - index);
+        array[index] = value;
         size++;
-        return newArray;
+    }
+
+    private void throwIndexOutOfBoundsException(int index) {
+        if (index >= size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Index is out of bounds of the Array");
+        }
     }
 }
