@@ -126,7 +126,7 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private void expandObjectsArray(Object[] objects) {
+    private void resize() {
         CAPACITY *= CAPACITY_EXPAND_FACTOR;
         Object[] newObjects = new Object[CAPACITY];
         System.arraycopy(objects, 0, newObjects, 0, objects.length);
