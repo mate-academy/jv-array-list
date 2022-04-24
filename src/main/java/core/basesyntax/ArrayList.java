@@ -6,13 +6,11 @@ import java.util.Objects;
 public class ArrayList<T> implements List<T> {
     private static final double INCREASE_COEFFICIENT = 1.5;
     private static final int DEFAULT_CAPACITY = 10;
-    private int capacity;
     private int size;
     private Object[] array;
 
     public ArrayList() {
-        capacity = DEFAULT_CAPACITY;
-        array = new Object[capacity];
+        array = new Object[DEFAULT_CAPACITY];
     }
 
     @Override
@@ -79,9 +77,8 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void resizeArray() {
-        if (capacity - 1 == size) {
-            capacity = (int) (capacity * INCREASE_COEFFICIENT);
-            Object[] newArray = new Object[capacity];
+        if (size == array.length - 1) {
+            Object[] newArray = new Object[(int) (array.length * INCREASE_COEFFICIENT)];
             System.arraycopy(array, 0, newArray, 0, size);
             array = newArray;
         }
