@@ -21,10 +21,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         increaseSizeArray();
-        if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("Yuo can't add "
-                    + "element by this index");
-        }
+        checkForNegativeIndex(index);
         System.arraycopy(elementData, index, elementData,
                 index + 1, size - index);
         elementData[index] = value;
@@ -40,18 +37,21 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        return elementData[checkIndex(index)];
+        checkIndex(index);
+        return elementData[index];
     }
 
     @Override
     public void set(T value, int index) {
-        elementData[checkIndex(index)] = value;
+        checkIndex(index);
+        elementData[index] = value;
     }
 
     @Override
     public T remove(int index) {
         T temp = null;
-        temp = elementData[checkIndex(index)];
+        checkIndex(index);
+        temp = elementData[index];
         elementData[index] = null;
         moveElementsAfterRemove(index);
         size--;
@@ -82,12 +82,18 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private int checkIndex(int index) {
+    private void checkForNegativeIndex(int index) {
+        if (index < 0 || index > size) {
+            throw new ArrayListIndexOutOfBoundsException("Yuo can't add "
+                    + "element by this index");
+        }
+    }
+
+    private void checkIndex(int index) {
         if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException("You can't use this "
                     + "index");
         }
-        return index;
     }
 
     private void increaseSizeArray() {
