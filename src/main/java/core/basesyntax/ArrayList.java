@@ -53,7 +53,8 @@ public class ArrayList<T> implements List<T> {
         checkIndex(index);
         temp = elementData[index];
         elementData[index] = null;
-        moveElementsAfterRemove(index);
+        System.arraycopy(elementData, index + 1, elementData, index,
+                elementData.length - 1 - index);
         size--;
         return temp;
     }
@@ -64,7 +65,8 @@ public class ArrayList<T> implements List<T> {
             if ((element == null && elementData[i] == null)
                     || (elementData[i] != null
                     && elementData[i].equals(element))) {
-                moveElementsAfterRemove(i);
+                System.arraycopy(elementData, i + 1, elementData, i,
+                        elementData.length - 1 - i);
                 size--;
                 return element;
             }
@@ -103,13 +105,6 @@ public class ArrayList<T> implements List<T> {
             System.arraycopy(elementData, 0, temp, 0,
                     elementData.length);
             elementData = temp;
-        }
-    }
-
-    private void moveElementsAfterRemove(int index) {
-        if (elementData.length - 1 - index >= 0) {
-            System.arraycopy(elementData, index + 1, elementData, index,
-                    elementData.length - 1 - index);
         }
     }
 }
