@@ -4,16 +4,18 @@ import java.util.NoSuchElementException;
 import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
+    private static final int START_LENGTH = 10;
     private T[] array;
     private int size;
 
     public ArrayList() {
-        array = (T[]) new Object[10];
+        array = (T[]) new Object[START_LENGTH];
     }
+
     @Override
     public void add(T value) {
         if (!enoughSpace()) {
-             grow();
+            grow();
         }
         array[size] = value;
         size++;
@@ -27,14 +29,12 @@ public class ArrayList<T> implements List<T> {
         if (!enoughSpace()) {
             grow();
         }
-        if (index == size ) {
-            array[size] = value;
-        } else {
+        if (index != size) {
             for (int i = size - 1; i >= index; i--) {
                 array[i + 1] = array[i];
             }
-            array[index] = value;
         }
+        array[index] = value;
         size++;
     }
 
@@ -82,7 +82,7 @@ public class ArrayList<T> implements List<T> {
                 return remove(i);
             }
         }
-    throw new NoSuchElementException("The element to delete was not found");
+        throw new NoSuchElementException("The element to delete was not found");
     }
 
     @Override
@@ -96,14 +96,19 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void grow() {
-        array = (T[]) new Object[(int) Math.round(array.length * 1.5)];
+        T[] oldArray = array;
+        array = (T[]) new Object[(int) (oldArray.length * 1.5) + 1];
+        System.arraycopy(oldArray, 0, array, 0, oldArray.length);
     }
+
     private boolean enoughSpace() {
         return size < array.length;
     }
+
     private boolean correctIndexForGet(int index) {
         return index < size && index >= 0;
     }
+
     private boolean correctIndexForAdd(int index) {
         return index <= size && index >= 0;
     }
