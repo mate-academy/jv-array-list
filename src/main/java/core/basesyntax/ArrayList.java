@@ -1,40 +1,31 @@
 package core.basesyntax;
 
 import java.util.NoSuchElementException;
-import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
     private static final int START_LENGTH = 10;
-    private T[] array;
+    private T[] data;
     private int size;
 
     public ArrayList() {
-        array = (T[]) new Object[START_LENGTH];
+        data = (T[]) new Object[START_LENGTH];
     }
 
     @Override
     public void add(T value) {
-        if (!enoughSpace()) {
-            grow();
-        }
-        array[size] = value;
+        growIfNeeded();
+        data[size] = value;
         size++;
     }
 
     @Override
     public void add(T value, int index) {
-        if (!correctIndexForAdd(index)) {
-            throw new ArrayListIndexOutOfBoundsException("Cant add element at such index");
-        }
-        if (!enoughSpace()) {
-            grow();
-        }
+        checkIndexForAdd(index);
+        growIfNeeded();
         if (index != size) {
-            for (int i = size - 1; i >= index; i--) {
-                array[i + 1] = array[i];
-            }
+            System.arraycopy(data, index, data, index + 1, size - index);
         }
-        array[index] = value;
+        data[index] = value;
         size++;
     }
 
@@ -47,29 +38,24 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (!correctIndexForGet(index)) {
-            throw new ArrayListIndexOutOfBoundsException("Cant get element with such index");
-        }
-        return array[index];
+        checkIndexForGet(index);
+        return data[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (!correctIndexForAdd(index)) {
-            throw new ArrayListIndexOutOfBoundsException("Cant set element with such index");
-        }
-        remove(index);
-        add(value, index);
+        checkIndexForGet(index);
+        data[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (!correctIndexForGet(index)) {
-            throw new ArrayListIndexOutOfBoundsException("Cant remove element with at index");
-        }
-        T removedValue = array[index];
-        for (int i = index; i < size - 1; i++) {
-            array[i] = array[i + 1];
+        checkIndexForGet(index);
+        T removedValue = data[index];
+        if (index == size - 1) {
+            data[index] = null;
+        } else {
+            System.arraycopy(data, index + 1, data, index, size - index);
         }
         size--;
         return removedValue;
@@ -78,11 +64,11 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if (Objects.equals(array[i],(element))) {
+            if (data[i] == element || (data[i] != null && data[i].equals(element))) {
                 return remove(i);
             }
         }
-        throw new NoSuchElementException("The element to delete was not found");
+        throw new NoSuchElementException("The element to delete wasn`t found. Element: " + element);
     }
 
     @Override
@@ -95,21 +81,23 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void grow() {
-        T[] oldArray = array;
-        array = (T[]) new Object[(int) (oldArray.length * 1.5) + 1];
-        System.arraycopy(oldArray, 0, array, 0, oldArray.length);
+    private void growIfNeeded() {
+        if (size == data.length) {
+            T[] oldArray = data;
+            data = (T[]) new Object[(int) (oldArray.length * 1.5) + 1];
+            System.arraycopy(oldArray, 0, data, 0, oldArray.length);
+        }
     }
 
-    private boolean enoughSpace() {
-        return size < array.length;
+    private void checkIndexForGet(int index) {
+        if (index >= size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("No existing element with index " + index);
+        }
     }
 
-    private boolean correctIndexForGet(int index) {
-        return index < size && index >= 0;
-    }
-
-    private boolean correctIndexForAdd(int index) {
-        return index <= size && index >= 0;
+    private void checkIndexForAdd(int index) {
+        if (index > size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Cant add element at index: " + index);
+        }
     }
 }
