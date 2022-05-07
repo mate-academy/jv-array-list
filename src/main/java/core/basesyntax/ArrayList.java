@@ -20,7 +20,7 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    public void resize() {
+    private void resize() {
         if (arrayList.length == size) {
             arrayList = Arrays.copyOf(arrayList, (int) (size * 1.5));
         }
