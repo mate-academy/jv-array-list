@@ -4,21 +4,18 @@ import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    private static final int STORAGE_DEFAULT_CAPACITY = 10;
-    private static final Object[] DEFAULTCAPACITY_EMPTY_ELEMENTSDATA = {};
-    private Object[] elementsData;
+    private static final int DEFAULT_CAPACITY = 10;
+    private Object[] elements;
     private int size;
 
     public ArrayList() {
-        this.elementsData = new Object[STORAGE_DEFAULT_CAPACITY];
+        this.elements = new Object[DEFAULT_CAPACITY];
     }
 
     @Override
     public void add(T value) {
-        if (size == elementsData.length) {
-            elementsData = grow();
-        }
-        elementsData[size] = value;
+        grow();
+        elements[size] = value;
         size++;
     }
 
@@ -27,13 +24,11 @@ public class ArrayList<T> implements List<T> {
         if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException("Invalid index entered.");
         }
-        if (size == elementsData.length || size + 1 == elementsData.length) {
-            grow();
-        }
+        grow();
         if (index < size) {
-            System.arraycopy(elementsData, index, elementsData, index + 1, size + 1);
+            System.arraycopy(elements, index, elements, index + 1, size + 1);
         }
-        elementsData[index] = value;
+        elements[index] = value;
         size++;
     }
 
@@ -46,23 +41,27 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        indexCheck(index);
-        return (T) elementsData[index];
+        checkIndex(index);
+        return (T) elements[index];
     }
 
     @Override
     public void set(T value, int index) {
-        indexCheck(index);
-        elementsData[index] = value;
+        checkIndex(index);
+        elements[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        indexCheck(index);
-        final T removedElement = (T) elementsData[index];
-        elementsData[index] = null;
+        checkIndex(index);
+        final T removedElement = (T) elements[index];
+        elements[index] = null;
         if (index != size - 1) {
-            arrayOffset(index);
+            if (index == 0) {
+                System.arraycopy(elements, index + 1, elements, index, size - 1);
+            } else {
+                System.arraycopy(elements, index, elements, index - 1, size - 1);
+            }
         }
         size--;
         return removedElement;
@@ -71,11 +70,15 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if (elementsData[i] == element
-                    || elementsData[i] != null
-                    && elementsData[i].equals(element)) {
-                elementsData[i] = null;
-                arrayOffset(i);
+            if (elements[i] == element
+                    || elements[i] != null
+                    && elements[i].equals(element)) {
+                elements[i] = null;
+                if (i == 0) {
+                    System.arraycopy(elements, i + 1, elements, i, size - 1);
+                } else {
+                    System.arraycopy(elements, i, elements, i - 1, size - 1);
+                }
                 size--;
                 return element;
             }
@@ -93,38 +96,16 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private Object[] grow() {
-        return grow(size + 1);
-    }
-
-    private Object[] grow(int minCapacity) {
-        return elementsData = Arrays.copyOf(elementsData, newCapacity(minCapacity));
-    }
-
-    private int newCapacity(int minCapacity) {
-        int oldCapacity = elementsData.length;
+    private void grow() {
+        if (size + 1 < elements.length) {
+            return;
+        }
+        int oldCapacity = elements.length;
         int newCapacity = oldCapacity + (oldCapacity >> 1);
-        if (newCapacity - minCapacity <= 0) {
-            if (elementsData == DEFAULTCAPACITY_EMPTY_ELEMENTSDATA) {
-                return Math.max(STORAGE_DEFAULT_CAPACITY, minCapacity);
-            }
-            if (minCapacity < 0) {
-                throw new OutOfMemoryError();
-            }
-            return minCapacity;
-        }
-        return newCapacity;
+        elements = Arrays.copyOf(elements, newCapacity);
     }
 
-    private void arrayOffset(int index) {
-        if (index == 0) {
-            System.arraycopy(elementsData, index + 1, elementsData, index, size - 1);
-        } else {
-            System.arraycopy(elementsData, index, elementsData, index - 1, size - 1);
-        }
-    }
-
-    private void indexCheck(int index) {
+    private void checkIndex(int index) {
         if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException("Invalid index entered.");
         }
