@@ -1,6 +1,5 @@
 package core.basesyntax;
 
-import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
@@ -26,7 +25,7 @@ public class ArrayList<T> implements List<T> {
         }
         grow();
         if (index < size) {
-            System.arraycopy(elements, index, elements, index + 1, size + 1);
+            System.arraycopy(elements, index, elements, index + 1, size);
         }
         elements[index] = value;
         size++;
@@ -54,14 +53,9 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
-        final T removedElement = (T) elements[index];
-        elements[index] = null;
+        T removedElement = (T) elements[index];
         if (index != size - 1) {
-            if (index == 0) {
-                System.arraycopy(elements, index + 1, elements, index, size - 1);
-            } else {
-                System.arraycopy(elements, index, elements, index - 1, size - 1);
-            }
+            System.arraycopy(elements, index + 1, elements, index, size - 1);
         }
         size--;
         return removedElement;
@@ -73,14 +67,7 @@ public class ArrayList<T> implements List<T> {
             if (elements[i] == element
                     || elements[i] != null
                     && elements[i].equals(element)) {
-                elements[i] = null;
-                if (i == 0) {
-                    System.arraycopy(elements, i + 1, elements, i, size - 1);
-                } else {
-                    System.arraycopy(elements, i, elements, i - 1, size - 1);
-                }
-                size--;
-                return element;
+                return remove(i);
             }
         }
         throw new NoSuchElementException("No such element in ArrayList.");
@@ -97,12 +84,13 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void grow() {
-        if (size + 1 < elements.length) {
-            return;
+        if (size == elements.length) {
+            int oldCapacity = elements.length;
+            int newCapacity = oldCapacity + (oldCapacity >> 1);
+            Object[] incrementedElements = new Object[newCapacity];
+            System.arraycopy(elements, 0, incrementedElements, 0, size);
+            elements = incrementedElements;
         }
-        int oldCapacity = elements.length;
-        int newCapacity = oldCapacity + (oldCapacity >> 1);
-        elements = Arrays.copyOf(elements, newCapacity);
     }
 
     private void checkIndex(int index) {
@@ -111,4 +99,3 @@ public class ArrayList<T> implements List<T> {
         }
     }
 }
-
