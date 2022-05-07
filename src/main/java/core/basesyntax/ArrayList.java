@@ -90,9 +90,7 @@ public class ArrayList<T> implements List<T> {
                     || (currentObject != null
                     && element != null
                     && currentObject.equals(element))) {
-                popped = currentObject;
-                ArrayList.this.remove(i);
-                return popped;
+                return remove(i);
             }
         }
         if (popped == null) {
