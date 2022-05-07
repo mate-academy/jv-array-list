@@ -14,7 +14,7 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    public void checkIndexRemoveSet(int index) {
+    private void checkIndex(int index) {
         if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException("Invalid index");
         }
