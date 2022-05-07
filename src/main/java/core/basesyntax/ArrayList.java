@@ -1,48 +1,113 @@
 package core.basesyntax;
 
+import java.util.Arrays;
+import java.util.NoSuchElementException;
+
 public class ArrayList<T> implements List<T> {
+    public static final int DEFAULT_ARRAY_SIZE = 10;
+    private Object[] arrayList = new Object[DEFAULT_ARRAY_SIZE];
+    private int size = 0;
+
+    public void checkIndexAdd(int index) {
+        if (index < 0 || index > size) {
+            throw new ArrayListIndexOutOfBoundsException("Invalid index");
+        }
+    }
+
+    public void checkIndexRemoveSet(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Invalid index");
+        }
+    }
+
+    public void resize() {
+        if (arrayList.length == size) {
+            arrayList = Arrays.copyOf(arrayList, (int) (size * 1.5));
+        }
+    }
+
     @Override
     public void add(T value) {
-
+        resize();
+        arrayList[size] = value;
+        size++;
     }
 
     @Override
     public void add(T value, int index) {
-
+        checkIndexAdd(index);
+        for (int i = size; i > index; i--) {
+            resize();
+            arrayList[i] = arrayList[i - 1];
+        }
+        arrayList[index] = value;
+        size++;
     }
 
     @Override
     public void addAll(List<T> list) {
-
+        for (int i = 0; i < list.size(); i++) {
+            arrayList[size] = list.get(i);
+            size++;
+        }
     }
 
     @Override
     public T get(int index) {
-        return null;
+        checkIndexRemoveSet(index);
+        return (T) arrayList[index];
     }
 
     @Override
     public void set(T value, int index) {
-
+        checkIndexRemoveSet(index);
+        arrayList[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        return null;
+        checkIndexRemoveSet(index);
+        T popped = (T) arrayList[index];
+        if (index == size - 1) {
+            arrayList[index] = null;
+            size--;
+            return popped;
+        }
+        for (int i = index; i < size; i++) {
+            arrayList[i] = arrayList[i + 1];
+        }
+        arrayList[size] = null;
+        size--;
+        return popped;
     }
 
     @Override
     public T remove(T element) {
-        return null;
+        T popped = null;
+        for (int i = 0; i < size; i++) {
+            T currentObject = (T) arrayList[i];
+            if (currentObject == element
+                    || (currentObject != null
+                    && element != null
+                    && currentObject.equals(element))) {
+                popped = currentObject;
+                ArrayList.this.remove(i);
+                return popped;
+            }
+        }
+        if (popped == null) {
+            throw new NoSuchElementException("Element is not in the List");
+        }
+        return popped;
     }
 
     @Override
     public int size() {
-        return 0;
+        return size;
     }
 
     @Override
     public boolean isEmpty() {
-        return false;
+        return size == 0;
     }
 }
