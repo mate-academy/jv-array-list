@@ -7,20 +7,6 @@ public class ArrayList<T> implements List<T> {
     private Object[] elements = new Object[DEFAULT_CAPACITY];
     private int size;
 
-    private void checkIndex(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index");
-        }
-    }
-
-    private void resize() {
-        if (elements.length == size) {
-            Object[] dummyList = new Object[(int) (size * 1.5)];
-            System.arraycopy(elements, 0, dummyList, 0, elements.length);
-            elements = dummyList;
-        }
-    }
-
     @Override
     public void add(T value) {
         resize();
@@ -35,7 +21,6 @@ public class ArrayList<T> implements List<T> {
         }
         resize();
         System.arraycopy(elements, index, elements, index + 1, elements.length - index - 1);
-        resize();
         elements[index] = value;
         size++;
     }
@@ -43,7 +28,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void addAll(List<T> list) {
         for (int i = 0; i < list.size(); i++) {
-            ArrayList.this.add(list.get(i));
+            add(list.get(i));
         }
     }
 
@@ -96,5 +81,19 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private void checkIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Invalid index");
+        }
+    }
+
+    private void resize() {
+        if (elements.length == size) {
+            Object[] updatedElements = new Object[(int) (size * 1.5)];
+            System.arraycopy(elements, 0, updatedElements, 0, elements.length);
+            elements = updatedElements;
+        }
     }
 }
