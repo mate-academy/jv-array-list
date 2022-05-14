@@ -5,7 +5,7 @@ import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    private T[] elements  = (T[]) new Object[DEFAULT_CAPACITY];
+    private T[] elements = (T[]) new Object[DEFAULT_CAPACITY];
     private int size;
 
     public void resize() {
@@ -63,7 +63,7 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         checkIndex(index + 1);
         T removeElement = elements[index];
-        int numberOfElements  = size - index - 1;
+        int numberOfElements = size - index - 1;
         System.arraycopy(elements, index + 1, elements, index, numberOfElements);
         size--;
         return removeElement;
