@@ -1,26 +1,27 @@
 package core.basesyntax;
 
-import java.util.Arrays;
 import java.util.NoSuchElementException;
-import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_SIZE = 10;
     private T[] values;
-    private int size = 0;
+    private int size;
 
     public ArrayList() {
         values = (T[]) new Object[DEFAULT_SIZE];
     }
 
-    public void resizeArray() {
+    private void resizeArray() {
         int newSize = (size + (size >> 1));
-        values = Arrays.copyOf(values, newSize);
+        T[] resizeElement = (T[]) new Object[newSize];
+        System.arraycopy(values, 0, resizeElement, 0, values.length);
+        values = resizeElement;
     }
 
-    public void checkIndex(int index) throws ArrayListIndexOutOfBoundsException {
+    private void checkIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("This index doesn't exist");
+            throw new ArrayListIndexOutOfBoundsException("Index " + index
+                    + " doesn't exist in list of size " + size);
         }
     }
 
@@ -31,7 +32,6 @@ public class ArrayList<T> implements List<T> {
         }
         values[size] = value;
         size++;
-
     }
 
     @Override
@@ -81,16 +81,18 @@ public class ArrayList<T> implements List<T> {
     }
 
     @Override
-    public T remove(T element) throws NoSuchElementException {
-        for (int l = 0; l <= size; l++) {
-            if (Objects.equals(values[l], element)) {
-                size--;
-                System.arraycopy(values, l + 1, values, l, size - l);
-                return element;
+    public T remove(T element) {
+        int index = -1;
+        for (int l = 0; l < size; l++) {
+            if (element == values[l] || element != null && element.equals(values[l])) {
+                index = l;
+                return remove(l);
             }
         }
-        throw new NoSuchElementException("There is no valid value in array");
-
+        if (index == -1) {
+            throw new NoSuchElementException("There is no such value in array " + element);
+        }
+        return element;
     }
 
     @Override
