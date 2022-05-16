@@ -1,28 +1,12 @@
 package core.basesyntax;
 
 import java.util.NoSuchElementException;
-import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
+    private static final double UP_SIZE_CAPACITY = 1.5;
     private T[] elements = (T[]) new Object[DEFAULT_CAPACITY];
     private int size;
-
-    public void resize() {
-        if (size >= elements.length) {
-            int resize = (int) (elements.length * 1.5);
-            T[] resizeElement = (T[]) new Object[resize];
-            System.arraycopy(elements, 0, resizeElement, 0, elements.length);
-            elements = resizeElement;
-        }
-    }
-
-    public void checkIndex(int index) {
-        if (index > size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index: " + index + ", Size: " + size);
-
-        }
-    }
 
     @Override
     public void add(T value) {
@@ -72,7 +56,10 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < elements.length; i++) {
-            if (Objects.equals(element, elements[i])) {
+            if (element == null && elements[i] == null) {
+                return remove(i);
+            }
+            if (element != null && element.equals(elements[i])) {
                 return remove(i);
             }
         }
@@ -88,5 +75,21 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private void resize() {
+        if (size >= elements.length) {
+            int resize = (int) (elements.length + (elements.length * UP_SIZE_CAPACITY));
+            T[] resizeElement = (T[]) new Object[resize];
+            System.arraycopy(elements, 0, resizeElement, 0, elements.length);
+            elements = resizeElement;
+        }
+    }
+
+    private void checkIndex(int index) {
+        if (index > size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Index: " + index + ", Size: " + size);
+
+        }
     }
 }
