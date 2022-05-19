@@ -8,46 +8,21 @@ public class ArrayList<T> implements List<T> {
     private int size;
 
     public ArrayList() {
-        this.elementData = new Object[DEFAULT_CAPACITY];
+        elementData = new Object[DEFAULT_CAPACITY];
     }
 
     public ArrayList(int initialCapacity) {
         if (initialCapacity >= 0) {
-            this.elementData = new Object[initialCapacity];
+            elementData = new Object[initialCapacity];
         } else {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("You cannot create an ArrayList with "
+                    + initialCapacity + " size");
         }
-    }
-
-    private void isElementExist(T element) {
-        for (int i = 0; i < elementData.length; i++) {
-            if (element == elementData[i] || (element != null && element.equals(elementData[i]))) {
-                return;
-            }
-        }
-        throw new NoSuchElementException("Element " + element + " not find");
-    }
-
-    private int isIndexExist(int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Element can't be found! "
-                    + "Number of elements in array = " + size
-                    + ". Total size of array = " + elementData.length);
-        }
-        return index;
-    }
-
-    private Object[] increaseCapacity() {
-        Object[] temp = new Object[(elementData.length * 2)];
-        System.arraycopy(elementData, 0, temp, 0, elementData.length);
-        return temp;
     }
 
     @Override
     public void add(T value) {
-        if (size == elementData.length) {
-            elementData = increaseCapacity();
-        }
+        increaseCapacity();
         elementData[size] = value;
         size++;
     }
@@ -55,9 +30,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         if (index >= 0 && index <= size) {
-            if (size == elementData.length) {
-                elementData = increaseCapacity();
-            }
+            increaseCapacity();
             System.arraycopy(elementData, index, elementData, index + 1, size - index);
             elementData[index] = value;
             size++;
@@ -77,37 +50,35 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        isIndexExist(index);
+        checkIndex(index);
         return (T) elementData[index];
     }
 
     @Override
     public void set(T value, int index) {
-        isIndexExist(index);
+        checkIndex(index);
         elementData[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        isIndexExist(index);
-        Object[] temp = elementData;
-        elementData = new Object[temp.length - 1];
-        final Object value = temp[index];
-        System.arraycopy(temp, 0, elementData, 0, index);
-        System.arraycopy(temp, index + 1, elementData, index, temp.length - index - 1);
+        checkIndex(index);
+        final Object result = elementData[index];
+        System.arraycopy(elementData, 0, elementData, 0, index);
+        System.arraycopy(elementData, index + 1, elementData,
+                         index, elementData.length - index - 1);
         size--;
-        return (T) value;
+        return (T) result;
     }
 
     @Override
     public T remove(T element) {
-        isElementExist(element);
         for (int i = 0; i < elementData.length; i++) {
             if (element == elementData[i] || (element != null && element.equals(elementData[i]))) {
                 return remove(i);
             }
         }
-        return null;
+        throw new NoSuchElementException("There is no element for this " + element);
     }
 
     @Override
@@ -118,5 +89,30 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return this.size == 0;
+    }
+
+    private void isElementExist(T element) {
+        for (int i = 0; i < elementData.length; i++) {
+            if (element == elementData[i] || (element != null && element.equals(elementData[i]))) {
+                return;
+            }
+        }
+        throw new NoSuchElementException("Element " + element + " not find");
+    }
+
+    private void checkIndex(int index) {
+        if (index >= size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Element can't be found! "
+                    + "Number of elements in array = " + size
+                    + ". Total size of array = " + elementData.length);
+        }
+    }
+
+    private void increaseCapacity() {
+        if (size == elementData.length) {
+            Object[] temp = new Object[(elementData.length * 2)];
+            System.arraycopy(elementData, 0, temp, 0, elementData.length);
+            elementData = temp;
+        }
     }
 }

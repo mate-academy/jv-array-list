@@ -282,7 +282,7 @@ public class ArrayListTest {
     }
 
     @Test(expected = ArrayListIndexOutOfBoundsException.class)
-    public void ÍÍgetElementByNonExistedIndex() {
+    public void getElementByNonExistedIndex() {
         ArrayList<String> arrayList = new ArrayList<>();
         arrayList.add("First");
         arrayList.add("Second");
