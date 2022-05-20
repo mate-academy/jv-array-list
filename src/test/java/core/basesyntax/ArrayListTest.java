@@ -213,6 +213,7 @@ public class ArrayListTest {
         arrayList.add("String");
         arrayList.add("Java");
         arrayList.add("Private");
+        arrayList.remove("Public");
         Assert.assertNull(arrayList.remove("Public"));
     }
 
