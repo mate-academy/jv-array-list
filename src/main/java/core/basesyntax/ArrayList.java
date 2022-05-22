@@ -17,13 +17,15 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void setData(T value, int index) {
-
+        if (isNeedGrow()) {
+            grow(this.data.length);
+        }
         data[index] = value;
         size++;
     }
 
     private void checkIndex(int index) {
-        if (index > size - 1 || index < 0) {
+        if (index > size - 1 || index < 0) { //
             throw new ArrayListIndexOutOfBoundsException("Out of bounds exception");
         }
     }
@@ -32,27 +34,32 @@ public class ArrayList<T> implements List<T> {
         return size == newCapacity;
     }
 
-    private void grow(){
-        newCapacity = (int)((this.data.length) * GROWTH_RATE);
+    private Object[] trimToSize(Object[] objects) {
+        System.arraycopy(objects, 0, data, 0, size);
+        return objects;
+    }
+
+    private void grow(int capacity) {
+        newCapacity = (int) ((capacity) * GROWTH_RATE);
         Object[] data = new Object[newCapacity];
         System.arraycopy(this.data, 0, data, 0, this.data.length);
         this.data = data;
     }
 
-    private void decrease(int index) {
-        Object[] data = new Object[this.data.length]; // !!! need fix
+    private void copyDataWithDecreaseLength(int index) {
+        Object[] data = new Object[this.data.length];
         System.arraycopy(this.data, 0, data, 0, index);
-        System.arraycopy(this.data, index + 1, data, index , size -1); // ? need fix
-        this.data = data;
+        System.arraycopy(this.data, index + 1, data, index, size - 1 - index);
+        this.data = trimToSize(data);
     }
 
-    private void increase(int index) {
+    private void copyDataWithIncreaseLength(int index) {
         if (size + 1 == newCapacity) {
-            grow();
+            grow(this.data.length);
         }
         Object[] data = new Object[this.data.length];
         System.arraycopy(this.data, 0, data, 0, index);
-        System.arraycopy(this.data, index, data, index + 1 , size + 1 - index); // ?
+        System.arraycopy(this.data, index, data, index + 1, size + 1 - index); // ?
         this.data = data;
     }
 
@@ -61,9 +68,6 @@ public class ArrayList<T> implements List<T> {
         if (size == 0) {
             setData(value, size);
             return;
-        }
-        if (isNeedGrow()) {
-            grow();
         }
         setData(value, size);
     }
@@ -74,17 +78,23 @@ public class ArrayList<T> implements List<T> {
             setData(value, size);
             return;
         }
-        checkIndex(index);
-        if (isNeedGrow()) {
-            grow();
+        if (index == size) {
+            checkIndex(index - 1);
+        } else {
+            checkIndex(index);
         }
-        increase(index);
+        copyDataWithIncreaseLength(index);
         setData(value, index);
     }
 
     @Override
     public void addAll(List<T> list) {
-
+        if (list.size() > list.size() + size - 1) {
+            grow(list.size() + size - 1);
+        }
+        for (int i = 0; i < list.size(); i++) {
+            setData(list.get(i), size);
+        }
     }
 
     @Override
@@ -103,16 +113,16 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         checkIndex(index);
         Object element = data[index];
-        decrease(index);
+        copyDataWithDecreaseLength(index);
         size--;
-        return (T)element;
+        return (T) element;
     }
 
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
             if (Objects.equals(data[i], element)) {
-                decrease(i);
+                copyDataWithDecreaseLength(i);
                 size--;
                 return element;
             }
