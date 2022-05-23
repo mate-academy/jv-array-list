@@ -71,8 +71,9 @@ public class ArrayList<T> implements List<T> {
 
         @SuppressWarnings("unchecked") T oldValue = (T) es[index];
         final int newSize;
-        if ((newSize = size - 1) > index)
+        if ((newSize = size - 1) > index) {
             System.arraycopy(es, index + 1, es, index, newSize - index);
+        }
         es[size = newSize] = null;
         return oldValue;
     }
@@ -104,9 +105,8 @@ public class ArrayList<T> implements List<T> {
     private Object[] grow(int minCapacity) {
         int oldCapacity = elements.length;
         if (oldCapacity > 0 || elements != DEFAULT_ELEMENTS) {
-            int newCapacity = newLength(oldCapacity,
-                    minCapacity - oldCapacity, /* minimum growth */
-                    oldCapacity >> 1           /* preferred growth */);
+            int newCapacity = newLength(oldCapacity, minCapacity - oldCapacity,
+                    oldCapacity >> 1);
             return elements = Arrays.copyOf(elements, newCapacity);
         } else {
             return elements = new Object[Math.max(DEFAULT_CAPACITY, minCapacity)];
@@ -136,9 +136,9 @@ public class ArrayList<T> implements List<T> {
     private void checkIndex(int index, int size) {
         if (index > size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException(
-                    "Index passed to the method is negative or " +
-                            "bigger than size of ArrayList. " +
-                            "Index: " + index + ", Size: " + size);
+                    "Index passed to the method is negative or "
+                            + "bigger than size of ArrayList. "
+                            + "Index: " + index + ", Size: " + size);
         }
     }
 
