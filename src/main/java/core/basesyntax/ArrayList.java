@@ -64,7 +64,6 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         checkIndex(index);
         final Object result = elementData[index];
-        System.arraycopy(elementData, 0, elementData, 0, index);
         System.arraycopy(elementData, index + 1, elementData,
                          index, elementData.length - index - 1);
         size--;
@@ -83,21 +82,12 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public int size() {
-        return this.size;
+        return size;
     }
 
     @Override
     public boolean isEmpty() {
-        return this.size == 0;
-    }
-
-    private void isElementExist(T element) {
-        for (int i = 0; i < elementData.length; i++) {
-            if (element == elementData[i] || (element != null && element.equals(elementData[i]))) {
-                return;
-            }
-        }
-        throw new NoSuchElementException("Element " + element + " not find");
+        return size == 0;
     }
 
     private void checkIndex(int index) {
