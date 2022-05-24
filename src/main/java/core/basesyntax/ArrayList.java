@@ -1,6 +1,5 @@
 package core.basesyntax;
 
-import java.util.Arrays;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 
@@ -17,7 +16,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value) {
         if (size == elementData.length) {
-            elementData = grow();
+            grow();
         }
         elementData[size] = value;
         size++;
@@ -27,7 +26,7 @@ public class ArrayList<T> implements List<T> {
     public void add(T value, int index) {
         rangeCheckForAdd(index);
         if (size == elementData.length) {
-            elementData = grow();
+            grow();
         }
         System.arraycopy(elementData, index, elementData, index + 1, size - index);
         elementData[index] = value;
@@ -61,7 +60,7 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         checkIndexInArray(index);
         T oldValue = get(index);
-        fastRemove(elementData, index);
+        removeElementByIndex(elementData, index);
         size--;
         return oldValue;
     }
@@ -85,24 +84,13 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    @Override
-    public String toString() {
-        StringBuilder s = new StringBuilder();
-        for (int i = 0; i < size; i++) {
-            if (i != 0) {
-                s.append(", ");
-            }
-            s.append(elementData[i]);
-        }
-        return String.format("[%s] (%d)", s, size());
+    private void grow() {
+        Object[] newElementData = new Object[elementData.length * GROW_BY];
+        System.arraycopy(elementData, 0, newElementData,0, elementData.length);
+        elementData = newElementData;
     }
 
-    private Object[] grow() {
-        int newCapacity = elementData.length * GROW_BY;
-        return Arrays.copyOf(elementData, newCapacity);
-    }
-
-    private void fastRemove(Object[] data, int index) {
+    private void removeElementByIndex(Object[] data, int index) {
         final int newSize;
         if ((newSize = size - 1) > index) {
             System.arraycopy(data, index + 1, data, index, newSize - index);
