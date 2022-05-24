@@ -20,9 +20,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index > this.size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Can`t add element with index: " + index);
-        }
+        checkIndex(index, true);
         grow();
         System.arraycopy(elements, index, elements, index + 1, size - index);
         elements[index] = value;
@@ -38,26 +36,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index >= this.size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Can`t get element with index: " + index);
-        }
+        checkIndex(index, false);
         return (T) elements[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index >= this.size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Can`t set element with index: " + index);
-        }
+        checkIndex(index, false);
         elements[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index >= this.size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Can`t remove element with index: "
-                    + index);
-        }
+        checkIndex(index, false);
         T out = (T) elements[index];
         System.arraycopy(elements, index + 1, elements, index, --size - index);
         return out;
@@ -97,5 +88,16 @@ public class ArrayList<T> implements List<T> {
             }
         }
         return -1;
+    }
+
+    private void checkIndex(int index,boolean isAdd) {
+        if ((isAdd ? index > this.size : index >= this.size) || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Can`t "
+                    + new Throwable()
+                    .getStackTrace()[1]
+                    .getMethodName()
+                    + " element with index: "
+                    + index);
+        }
     }
 }
