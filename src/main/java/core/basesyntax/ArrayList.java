@@ -27,7 +27,6 @@ public class ArrayList<T> implements List<T> {
         System.arraycopy(elements, index, elements, index + 1, size - index);
         elements[index] = value;
         size++;
-
     }
 
     @Override
@@ -35,7 +34,6 @@ public class ArrayList<T> implements List<T> {
         for (int i = 0; i < list.size(); i++) {
             add(list.get(i));
         }
-
     }
 
     @Override
@@ -48,7 +46,6 @@ public class ArrayList<T> implements List<T> {
     public void set(T value, int index) {
         checkIndex(index);
         elements[index] = value;
-
     }
 
     @Override
@@ -58,18 +55,17 @@ public class ArrayList<T> implements List<T> {
         if (index != size - 1) {
             System.arraycopy(elements, index + 1, elements, index, size - 1);
         }
-        size--;
+        elements[--size] = null;
         return removedElement;
     }
 
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if (element == null && elements[i] == null || elements[i] != null
+            if (element == elements[i] || elements[i] != null
                     && elements[i].equals(element)) {
                 return remove(i);
             }
-
         }
         throw new NoSuchElementException("No such element in list");
     }
@@ -88,7 +84,6 @@ public class ArrayList<T> implements List<T> {
         if (index >= size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Index out of bounds");
         }
-
     }
 
     public void grow() {
