@@ -1,8 +1,6 @@
 package core.basesyntax;
 
-import java.util.Arrays;
 import java.util.NoSuchElementException;
-import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
     private static final int START_VALUE = 10;
@@ -25,7 +23,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         if (index != 0) {
-            range(index - 1);
+            checkIndex(index - 1);
         }
         if (size == arrayData.length) {
             arrayData = resizeArray();
@@ -46,19 +44,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        range(index);
+        checkIndex(index);
         return (T) arrayData[index];
     }
 
     @Override
     public void set(T value, int index) {
-        range(index);
+        checkIndex(index);
         arrayData[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        range(index);
+        checkIndex(index);
         T element = (T) arrayData[index];
         System.arraycopy(arrayData, index + 1,
                 arrayData, index,
@@ -70,11 +68,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if (Objects.equals(arrayData[i], element)) {
-                System.arraycopy(arrayData, i + 1,
-                        arrayData, i,size - i - 1);
-                size--;
-                return element;
+            if (arrayData[i] == element || (arrayData[i] != null && arrayData[i].equals(element))) {
+                return remove(i);
             }
         }
         throw new NoSuchElementException("There is no such element " + element);
@@ -92,14 +87,13 @@ public class ArrayList<T> implements List<T> {
 
     private Object[] resizeArray() {
         int oldCap = arrayData.length;
-        if (oldCap > 0) {
-            int newCap = oldCap + oldCap / 2;
-            arrayData = Arrays.copyOf(arrayData, newCap);
-        }
-        return arrayData;
+        int newCap = oldCap + oldCap / 2;
+        Object[] arrayTemp = new Object[newCap];
+        System.arraycopy(arrayData, 0, arrayTemp, 0, oldCap);
+        return arrayTemp;
     }
 
-    private void range(int index) {
+    private void checkIndex(int index) {
         if (index >= size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Incorrect index :" + index);
         }
