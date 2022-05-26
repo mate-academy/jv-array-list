@@ -4,7 +4,7 @@ import java.util.NoSuchElementException;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class ArrayListTest {
+public class    ArrayListTest {
     private static final int ELEMENTS_COUNT = 1000;
 
     @Test
