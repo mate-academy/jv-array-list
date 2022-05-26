@@ -63,8 +63,10 @@ public class ArrayList<T> implements List<T> {
         T current = values[index];
         if (index < (size - 1)) {
             System.arraycopy(values,index + 1, values, index, values.length - index - 1);
+            size--;
+        } else {
+            values[--size] = null;
         }
-        values[--size] = null;
         return current;
     }
 
