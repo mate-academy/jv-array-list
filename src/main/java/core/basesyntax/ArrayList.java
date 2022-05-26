@@ -100,8 +100,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index: "
-                    + index + ", Size: " + size);
+            throw new ArrayListIndexOutOfBoundsException("Index: " + index + ", Size: " + size);
         }
         final T removedItem = (T) objArray[index];
         int sizeOfTempArr = size - index - 1;
