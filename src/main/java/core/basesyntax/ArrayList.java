@@ -3,9 +3,9 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    private static final int ARRAY_SIZE = 10;
+    private static final int DEFAULT_CAPACITY = 10;
     private int size;
-    private Object[] elementData = new Object[ARRAY_SIZE];
+    private Object[] elementData = new Object[DEFAULT_CAPACITY];
 
     @Override
     public void add(T value) {
