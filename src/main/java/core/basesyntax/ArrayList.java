@@ -2,13 +2,16 @@ package core.basesyntax;
 
 import java.util.Arrays;
 import java.util.NoSuchElementException;
-import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
-    public static final int LOWER_BOUND = 0;
-    public static final int MIN_ARRAYS_LENGTH = 10;
-    private T[] arrays = (T[]) new Object[MIN_ARRAYS_LENGTH];
+    private static final int LOWER_BOUND = 0;
+    private static final int MIN_ARRAYS_LENGTH = 10;
+    private T[] arrays;
     private int size;
+
+    public ArrayList() {
+        this.arrays = (T[]) new Object[MIN_ARRAYS_LENGTH];
+    }
 
     @Override
     public void add(T value) {
@@ -57,7 +60,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if (Objects.equals(arrays[i], element)) {
+            if (arrays[i] == element || arrays[i] != null && arrays[i].equals(element)) {
                 return remove(i);
             }
         }
