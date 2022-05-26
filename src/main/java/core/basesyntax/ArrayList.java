@@ -68,7 +68,7 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
 
         if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index doesn't exist.");
+            throw new ArrayListIndexOutOfBoundsException("Index doesn't exist. ");
         }
         final T oldValue = dataValue[index];
         System.arraycopy(dataValue, index + 1, dataValue, index, size - index - 1);
