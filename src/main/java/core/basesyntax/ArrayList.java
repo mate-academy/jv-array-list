@@ -30,10 +30,9 @@ public class ArrayList<T> implements List<T> {
             return;
         }
         growCapacityIfNeed(size);
-        T[] current = (T[]) new Object[size - index];
-        System.arraycopy(values, index, current, 0, current.length);
+        T[] current = values;
+        System.arraycopy(current, index, values, index + 1, current.length - index - 1);
         values[index] = value;
-        System.arraycopy(current, 0, values, index + 1, current.length);
         size++;
     }
 
