@@ -3,15 +3,9 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    public static final int ARRAY_SIZE = 10;
+    private static final int ARRAY_SIZE = 10;
     private int size;
     private Object[] elementData = new Object[ARRAY_SIZE];
-
-    private void correctIndexCheck(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Wrong index");
-        }
-    }
 
     @Override
     public void add(T value) {
@@ -40,29 +34,23 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        correctIndexCheck(index);
+        checkIndex(index);
         return (T) elementData[index];
     }
 
     @Override
     public void set(T value, int index) {
-        correctIndexCheck(index);
+        checkIndex(index);
         elementData[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        correctIndexCheck(index);
-        T t = (T) elementData[index];
-        for (int i = 0; i < size; i++) {
-            if (index == size - 1) {
-                elementData[index] = null;
-            } else if (i == index) {
-                System.arraycopy(elementData, index + 1, elementData, index, size - index);
-            }
-        }
+        checkIndex(index);
+        T value = (T) elementData[index];
+        System.arraycopy(elementData, index + 1, elementData, index, size - index - 1);
         size--;
-        return t;
+        return value;
     }
 
     @Override
@@ -76,12 +64,6 @@ public class ArrayList<T> implements List<T> {
         throw new NoSuchElementException("No such element");
     }
 
-    public void grow() {
-        Object[] newElementData = new Object[(int) (elementData.length * 1.5)];
-        System.arraycopy(elementData, 0, newElementData, 0, size);
-        elementData = newElementData;
-    }
-
     @Override
     public int size() {
         return size;
@@ -90,5 +72,17 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private void grow() {
+        Object[] newElementData = new Object[(int) (elementData.length * 1.5)];
+        System.arraycopy(elementData, 0, newElementData, 0, size);
+        elementData = newElementData;
+    }
+
+    private void checkIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Wrong index");
+        }
     }
 }
