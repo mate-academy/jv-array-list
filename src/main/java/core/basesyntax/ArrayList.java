@@ -40,9 +40,8 @@ public class ArrayList<T> implements List<T> {
     public void addAll(List<T> list) {
         int topBound = size + list.size();
         growCapacityIfNeed(topBound);
-        for (int i = size, j = 0; i < topBound; i++, j++) {
-            values[i] = list.get(j);
-            size++;
+        for (int i = 0; i < list.size(); i++) {
+            this.add(list.get(i));
         }
     }
 
