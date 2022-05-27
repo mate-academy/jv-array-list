@@ -30,7 +30,7 @@ public class ArrayList<T> implements List<T> {
         int s;
         Object[] elementData;
         if ((s = size) == (elementData = this.elements).length) {
-            elementData = grow(size + 1);
+            elementData = grow();
         }
         if (index == 0) {
             System.arraycopy(elementData, 0, elementData, 1, s);
@@ -94,35 +94,13 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private Object[] grow(int minCapacity) {
+    private Object[] grow() {
         int oldCapacity = elements.length;
-        if (oldCapacity > 0 || !Arrays.equals(elements, new Object[0])) {
-            int newCapacity = newLength(oldCapacity, minCapacity - oldCapacity,
-                    oldCapacity >> 1);
+        if (oldCapacity > 0) {
+            int newCapacity = (int) (oldCapacity * 1.5);
             return elements = Arrays.copyOf(elements, newCapacity);
-        } else {
-            return elements = new Object[Math.max(DEFAULT_CAPACITY, minCapacity)];
         }
-    }
-
-    private int newLength(int oldLength, int minGrowth, int prefGrowth) {
-        int prefLength = oldLength + Math.max(minGrowth, prefGrowth);
-        if (0 < prefLength && prefLength <= 2147483640) {
-            return prefLength;
-        } else {
-            return hugeLength(oldLength, minGrowth);
-        }
-    }
-
-    private int hugeLength(int oldLength, int minGrowth) {
-        int minLength = oldLength + minGrowth;
-        if (minLength < 0) {
-            throw new OutOfMemoryError(
-                    "Required array length " + oldLength + " + "
-                            + minGrowth + " is too large");
-        } else {
-            return Math.max(minLength, 2147483640);
-        }
+        return elements = new Object[DEFAULT_CAPACITY];
     }
 
     private void checkIndex(int index) {
