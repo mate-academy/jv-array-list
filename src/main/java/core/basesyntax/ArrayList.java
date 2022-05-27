@@ -64,22 +64,19 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
-        Object[] es = elements;
-        T oldValue = (T) es[index];
-        int newSize;
-        if ((newSize = size - 1) > index) {
-            System.arraycopy(es, index + 1, es, index, newSize - index);
-        }
-        es[size = newSize] = null;
-        return oldValue;
+        T removedElement = (T) elements[index];
+        int numberOfElements = size - index - 1;
+        System.arraycopy(elements, index + 1, elements, index, numberOfElements);
+        size--;
+        return removedElement;
     }
 
     @Override
     public T remove(T element) {
         Object[] es = elements;
         for (int i = 0; i < size; i++) {
-            if (Objects.equals(element, (T) es[i])
-                    || (element != null && element.equals((T) es[i]))) {
+            if (Objects.equals(element, es[i])
+                    || (element != null && element.equals(es[i]))) {
                 remove(i);
                 return element;
             }
