@@ -4,10 +4,7 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    private int currentCapacity = DEFAULT_CAPACITY;
     private int size = 0;
-    private int currentPosition = 0;
-
     private Object[] objArray;
 
     public ArrayList() {
@@ -17,12 +14,9 @@ public class ArrayList<T> implements List<T> {
     private Object[] grow() {
         int oldCapacity = objArray.length;
         int newCapacity = oldCapacity + (oldCapacity >> 1);
-        currentCapacity = newCapacity;
-        Object[] growed = new Object[newCapacity];
-        for (int i = 0; i < oldCapacity; i++) {
-            growed[i] = objArray[i];
-        }
-        return growed;
+        Object[] grown = new Object[newCapacity];
+        System.arraycopy(objArray, 0, grown, 0, size);
+        return grown;
     }
 
     private Object[] toArray(List<T> list) {
@@ -34,6 +28,12 @@ public class ArrayList<T> implements List<T> {
         return listToArr;
     }
 
+    private void checkIndex (int index) {
+        if (index >= size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Index: " + index + ", Size: " + size);
+        }
+    }
+
     @Override
     public void add(T value) {
         add(value, size);
@@ -41,7 +41,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (size == currentCapacity) {
+        if (size == objArray.length) {
             objArray = grow();
         }
         if (index > size || index < 0) {
@@ -49,16 +49,10 @@ public class ArrayList<T> implements List<T> {
         }
         if (index < size) {
             int sizeOfTempArr = size - index;
-            int switchTemp = -1;
             Object[] temporary = new Object[sizeOfTempArr];
-            for (int i = index; i < size; i++) {
-                temporary[++switchTemp] = objArray[i];
-            }
+            System.arraycopy(objArray, index, temporary, 0, sizeOfTempArr);
             objArray[index] = value;
-            switchTemp = -1;
-            for (int i = index + 1; i <= size; i++) {
-                objArray[i] = temporary[++switchTemp];
-            }
+            System.arraycopy(temporary, 0, objArray, index + 1, sizeOfTempArr);
             size++;
             return;
         }
@@ -69,12 +63,6 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void addAll(List<T> list) {
         Object[] fromList = toArray(list);
-        int listLength = fromList.length;
-        int freeSpaceInObjArr = currentCapacity - size;
-        /*while (freeSpaceInObjArr < listLength) {
-            grow();
-            freeSpaceInObjArr = currentCapacity - size;
-        }*/
         for (Object obj : fromList) {
             add((T) obj);
         }
@@ -82,60 +70,37 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index: " + index + ", Size: " + size);
-        }
+        checkIndex(index);
         return (T) objArray[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index: " + index + ", Size: " + size);
-        }
+        checkIndex(index);
         objArray[index] = value;
 
     }
 
     @Override
     public T remove(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index: " + index + ", Size: " + size);
-        }
+        checkIndex(index);
         final T removedItem = (T) objArray[index];
         int sizeOfTempArr = size - index - 1;
-        int switchTemp = -1;
         Object[] temporary = new Object[sizeOfTempArr];
-        for (int i = index + 1; i < size; i++) {
-            temporary[++switchTemp] = objArray[i];
-        }
-        switchTemp = -1;
-        for (int i = index; i <= size - 2; i++) {
-            objArray[i] = temporary[++switchTemp];
-        }
-        size--;
-        objArray[size] = null;
+        System.arraycopy(objArray, index + 1, temporary, 0, sizeOfTempArr);
+        System.arraycopy(temporary, 0, objArray, index, sizeOfTempArr);
+        objArray[--size] = null;
         return removedItem;
     }
 
     @Override
     public T remove(T element) {
-        int index = -1;
-        for (int i = 0; i < objArray.length; i++) {
-            if (element != null && objArray[i] == null
-                    || element == null && objArray[i] != null) {
-                continue;
-            }
-            if ((element == null && objArray[i] == null)
-                    || objArray[i].equals(element)) {
-                index = i;
-                break;
+        for (int i = 0; i < size; i++) {
+            if (element == objArray[i] || element != null && element.equals(objArray[i])) {
+                return remove(i);
             }
         }
-        if (index == -1) {
-            throw new NoSuchElementException("There no such element in array");
-        }
-        return remove(index);
+        throw new NoSuchElementException("There no such element in array");
     }
 
     @Override
