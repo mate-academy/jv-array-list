@@ -14,7 +14,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value) {
         if (sizeArray == objectArray.length) {
-            newCapacity();
+            resizeArray();
         }
         objectArray[sizeArray] = value;
         sizeArray++;
@@ -28,7 +28,7 @@ public class ArrayList<T> implements List<T> {
         }
         checkIndex(index);
         if (sizeArray == objectArray.length) {
-            newCapacity();
+            resizeArray();
         }
         System.arraycopy(objectArray, index, objectArray, index + 1, sizeArray - index);
         objectArray[index] = value;
@@ -84,15 +84,15 @@ public class ArrayList<T> implements List<T> {
         return sizeArray == 0;
     }
 
-    public void newCapacity() {
+    private void resizeArray() {
         T[] newArray = (T[]) new Object[objectArray.length + (objectArray.length >> 1)];
         System.arraycopy(objectArray, 0, newArray, 0, objectArray.length);
         objectArray = newArray;
-    }
+        }
 
-    public void checkIndex(int index) {
+    private void checkIndex(int index) {
         if (index < 0 || index >= sizeArray) {
-            throw new ArrayListIndexOutOfBoundsException("Index is wrong");
+            throw new ArrayListIndexOutOfBoundsException("Index does not exist");
         }
     }
 }
