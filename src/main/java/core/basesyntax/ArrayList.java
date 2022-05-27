@@ -28,7 +28,7 @@ public class ArrayList<T> implements List<T> {
         return listToArr;
     }
 
-    private void checkIndex (int index) {
+    private void checkIndex(int index) {
         if (index >= size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Index: " + index + ", Size: " + size);
         }
