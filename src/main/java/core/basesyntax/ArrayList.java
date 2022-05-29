@@ -35,7 +35,6 @@ public class ArrayList<T> implements List<T> {
         if (index == 0) {
             System.arraycopy(elementData, 0, elementData, 1, s);
         } else {
-            System.arraycopy(elementData, 0, elementData, 0, index);
             System.arraycopy(elementData, index, elementData, index + 1, s - index);
         }
         elementData[index] = value;
@@ -73,10 +72,9 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        Object[] es = elements;
         for (int i = 0; i < size; i++) {
-            if (Objects.equals(element, es[i])
-                    || (element != null && element.equals(es[i]))) {
+            if (Objects.equals(element, elements[i])
+                    || (element != null && element.equals(elements[i]))) {
                 remove(i);
                 return element;
             }
@@ -98,7 +96,9 @@ public class ArrayList<T> implements List<T> {
         int oldCapacity = elements.length;
         if (oldCapacity > 0) {
             int newCapacity = (int) (oldCapacity * 1.5);
-            return elements = Arrays.copyOf(elements, newCapacity);
+            Object[] newArray = new Object[newCapacity];
+            System.arraycopy(elements, 0, newArray, 0, oldCapacity);
+            return elements = newArray;
         }
         return elements = new Object[DEFAULT_CAPACITY];
     }
