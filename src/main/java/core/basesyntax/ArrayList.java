@@ -7,27 +7,26 @@ public class ArrayList<T> implements List<T> {
     private static final int FIRST_INDEX = 0;
     private static final int NEXT_INDEX = 1;
     private int size;
-    private Object[] array;
+    private Object[] values;
 
     {
-        array = new Object[DEFAULT_LENGTH];
-        size = 0;
+        values = new Object[DEFAULT_LENGTH];
     }
 
     @Override
     public void add(T value) {
         checkCapacity();
-        array[size()] = value;
+        values[size()] = value;
         size++;
     }
 
     @Override
     public void add(T value, int index) {
-        checkIndex(index, true);
         checkCapacity();
-        System.arraycopy(array, index, array, index + NEXT_INDEX, size - index);
-        array[index] = value;
         size++;
+        checkIndex(index);
+        System.arraycopy(values, index, values, index + NEXT_INDEX, size - index - 1);
+        values[index] = value;
     }
 
     @Override
@@ -39,24 +38,24 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        checkIndex(index, false);
-        return (T) array[index];
+        checkIndex(index);
+        return (T) values[index];
     }
 
     @Override
     public void set(T value, int index) {
-        checkIndex(index, false);
-        array[index] = value;
+        checkIndex(index);
+        values[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        checkIndex(index, false);
-        Object element = array[index];
-        if (index == array.length - 1) {
-            array[index] = null;
+        checkIndex(index);
+        Object element = values[index];
+        if (index == values.length - 1) {
+            values[index] = null;
         } else {
-            System.arraycopy(array, index + NEXT_INDEX, array, index, size - index);
+            System.arraycopy(values, index + NEXT_INDEX, values, index, size - index);
         }
         size--;
         return (T) element;
@@ -79,30 +78,26 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void checkCapacity() {
-        if (array.length == size) {
+        if (values.length == size) {
             grow();
         }
     }
 
     private void grow() {
         Object[] tmpArray = new Object[size + (size >> 1)];
-        System.arraycopy(array, FIRST_INDEX, tmpArray, FIRST_INDEX, size);
-        array = tmpArray;
+        System.arraycopy(values, FIRST_INDEX, tmpArray, FIRST_INDEX, size);
+        values = tmpArray;
     }
 
-    private void checkIndex(int index, boolean forAdd) {
-        if (forAdd) {
-            if (index > size || index < FIRST_INDEX) {
-                throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
-            }
-        } else if (index >= size || index < FIRST_INDEX) {
+    private void checkIndex(int index) {
+        if (index >= size || index < FIRST_INDEX) {
             throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
         }
     }
 
     private int indexOf(T element) {
-        for (int index = 0; index < array.length; index++) {
-            if (elementsEquals(array[index], element)) {
+        for (int index = 0; index < values.length; index++) {
+            if (elementsEquals(values[index], element)) {
                 return index;
             }
         }
@@ -110,8 +105,6 @@ public class ArrayList<T> implements List<T> {
     }
 
     private boolean elementsEquals(Object element1, Object element2) {
-        return element1 == null && element2 == null
-                || element1 != null && element1.equals(element2);
+        return element1 == element2 || element1 != null && element1.equals(element2);
     }
-
 }
