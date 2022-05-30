@@ -18,11 +18,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("Cannot add value "
-                    + value + " with index "
-                    + index);
-        }
+        addException(value, index);
         grow();
         System.arraycopy(elementData, index, elementData, index + 1, size - index);
         elementData[index] = value;
@@ -38,26 +34,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Cannot give value from index: " + index);
-        }
+        getException(index);
         return (T) elementData[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Cannot set index: " + index);
-        }
+        setException(index);
         elementData[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Cannot remove element by index: "
-                    + index);
-        }
+        removeException(index);
         T removedElement = (T) elementData[index];
         System.arraycopy(elementData, index + 1, elementData, index, --size - index);
         return removedElement;
@@ -97,6 +86,33 @@ public class ArrayList<T> implements List<T> {
             Object[] newElementsData = new Object[elementData.length + (elementData.length >> 1)];
             System.arraycopy(elementData, 0, newElementsData, 0, elementData.length);
             elementData = newElementsData;
+        }
+    }
+
+    private void addException(T value, int index) {
+        if (index < 0 || index > size) {
+            throw new ArrayListIndexOutOfBoundsException("Cannot add value "
+                    + value + " with index "
+                    + index);
+        }
+    }
+
+    private void getException(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Cannot give value from index: " + index);
+        }
+    }
+
+    private void setException(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Cannot set index: " + index);
+        }
+    }
+
+    private void removeException(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Cannot remove element by index: "
+                    + index);
         }
     }
 }
