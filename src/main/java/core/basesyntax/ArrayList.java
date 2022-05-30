@@ -3,11 +3,11 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    private T[] data;
+    private Object[] data;
     private int size;
 
     public ArrayList() {
-        this.data = (T[]) new Object[10];
+        this.data = new Object[10];
         this.size = 0;
     }
 
@@ -21,8 +21,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         checkIndexInBounds(index, 0, size);
-        final T[] half1 = (T[]) new Object[index];
-        final T[] half2 = (T[]) new Object[data.length - index];
+        final Object[] half1 = new Object[index];
+        final Object[] half2 = new Object[data.length - index];
         System.arraycopy(data, 0, half1, 0, index);
         System.arraycopy(data, index, half2, 0, data.length - index);
         data = (T[]) new Object[data.length + 1];
@@ -46,7 +46,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         checkIndexInBounds(index, 0, size - 1);
-        return data[index];
+        return (T) data[index];
     }
 
     @Override
@@ -58,12 +58,12 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         checkIndexInBounds(index, 0, size - 1);
-        final T[] half1 = (T[]) new Object[index];
-        final T[] half2 = (T[]) new Object[data.length - index - 1];
-        final T oldValue = data[index];
+        final Object[] half1 = new Object[index];
+        final Object[] half2 = new Object[data.length - index - 1];
+        final T oldValue = (T) data[index];
         System.arraycopy(data, 0, half1, 0, index);
         System.arraycopy(data, index + 1, half2, 0, data.length - index - 1);
-        data = (T[]) new Object[data.length - 1];
+        data = new Object[data.length - 1];
         if (half1.length == 0) {
             System.arraycopy(half2, 0, data, 0, half2.length);
             size--;
@@ -114,9 +114,9 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void increase() {
-        final T[] buffer = (T[]) new Object[data.length];
+        final Object[] buffer = new Object[data.length];
         System.arraycopy(data, 0, buffer, 0, data.length);
-        data = (T[]) new Object[data.length + 1];
+        data = new Object[data.length + 1];
         for (int j = 0; j < buffer.length; j++) {
             data[j] = buffer[j];
         }
