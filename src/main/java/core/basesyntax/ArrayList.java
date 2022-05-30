@@ -64,7 +64,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        int index = indexOf(element);
+        int index = indexOfElement(element);
         return remove(index);
     }
 
@@ -100,7 +100,7 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private int indexOf(T element) {
+    private int indexOfElement(T element) {
         for (int index = 0; index < array.length; index++) {
             if (elementsEquals(array[index], element)) {
                 return index;
