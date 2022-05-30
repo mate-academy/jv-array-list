@@ -17,9 +17,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         size++;
-        if (size == newArray.length) {
-            increaseSize();
-        }
+        increaseSize();
         if (index < size && index >= 0) {
             System.arraycopy(newArray, index, newArray, index + 1, size - index);
             newArray[index] = value;
@@ -30,7 +28,6 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        increaseSize();
         for (int i = 0; i < list.size(); i++) {
             add(list.get(i));
         }
@@ -38,7 +35,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index < size && index >= 0) {
+        if (checkIndexSize(index)) {
             return (T) newArray[index];
         }
         return getArrayException(index);
@@ -52,7 +49,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(int index) {
-        if (index < size && index >= 0) {
+        if (checkIndexSize(index)) {
             final Object removed = newArray[index];
             System.arraycopy(newArray, index + 1, newArray, index, size - index - 1);
             newArray[size - 1] = null;
@@ -80,6 +77,10 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private boolean checkIndexSize(int index) {
+        return index < size && index >= 0;
     }
 
     private T getArrayException(int index) {
