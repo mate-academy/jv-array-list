@@ -6,18 +6,20 @@ public class Main {
         ArrayList<String> values = new ArrayList<>();
         values.add("test");
         values.add("and");
-
-
-        System.out.println(values);
-        System.out.println(values.size());
+        values.add("this");
 
 
         ArrayList<String> strings = new ArrayList<>();
         strings.add("Hi!");
         strings.add("mates");
         strings.add("good");
+
+        System.out.println(values);
         System.out.println(strings);
-        System.out.println(strings.size());
+
+
+
+
 
 
     }

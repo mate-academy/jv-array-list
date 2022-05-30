@@ -4,14 +4,12 @@ import java.util.Arrays;
 
 public class ArrayList<T> implements List<T> {
 
-    private static Object[] elementData;
-    private static Object[] bufferedData;
+    private Object[] elementData = new Object[SIZE];
+    private Object[] bufferedData = new Object[SIZE];
     private static int s;
     private static int SIZE = 10;
 
     public ArrayList() {
-        elementData = new Object[SIZE];
-        bufferedData = new Object[SIZE];
         s = 0;
     }
 
@@ -23,37 +21,26 @@ public class ArrayList<T> implements List<T> {
         return Arrays.toString(bufferedData);
     }
     private void grow() {
+        if (s == elementData.length) {
             SIZE *= 1.5;
             bufferedData = new Object[SIZE];
             System.arraycopy(elementData, 0, bufferedData, 0, elementData.length);
             elementData = new Object[SIZE];
             System.arraycopy(bufferedData, 0, elementData, 0, elementData.length);
             bufferedData = new Object[SIZE];
+        }
     }
 
     @Override
     public void add(T value) {
-        if (isEmpty()) {
-            elementData = new Object[SIZE];
-            bufferedData = new Object[SIZE];
-
-        }
-        if (s == elementData.length) {
-            grow();
-        }
+        grow();
         elementData[s] = value;
         s++;
     }
 
     @Override
     public void add(T value, int index) {
-        if (isEmpty()) {
-            elementData = new Object[SIZE];
-            bufferedData = new Object[SIZE];
-        }
-        if (s == elementData.length) {
-            grow();
-        }
+        grow();
         System.arraycopy(elementData, index, bufferedData, 0, elementData.length - index);
         elementData[index] = value;
         System.arraycopy(bufferedData, 0, elementData, index + 1, elementData.length - index - 1);
@@ -63,19 +50,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        if (isEmpty()) {
-            elementData = new Object[SIZE];
-            bufferedData = new Object[SIZE];
-        }
-        for (int i = 0; i < list.size(); i++) {
-            if (s == elementData.length) {
-                grow();
-            }
-            if (list.get(i) != null) {
-                elementData[s] = list.get(i);
-                s++;
-            }
-        }
+
     }
 
     @Override
