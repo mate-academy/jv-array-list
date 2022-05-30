@@ -6,7 +6,6 @@ public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_LENGTH = 10;
     private static final int FIRST_INDEX = 0;
     private static final int NEXT_INDEX = 1;
-    private static final int NOT_FOUND = -1;
     private int size;
     private Object[] array;
 
