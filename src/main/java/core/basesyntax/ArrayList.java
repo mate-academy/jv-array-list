@@ -7,7 +7,6 @@ public class ArrayList<T> implements List<T> {
     private static final int FIRST_INDEX_OF_ARRAY = 0;
     private static final int NEXT_ELEMENT = 1;
     private Object [] arrayList;
-    private Object [] newArrayList;
     private int size;
 
     {
@@ -30,14 +29,11 @@ public class ArrayList<T> implements List<T> {
             arrayList[index] = value;
             size++;
         } else {
-            int el = size - index;
-            newArrayList = new Object[arrayList.length];
-            System.arraycopy(arrayList, FIRST_INDEX_OF_ARRAY, newArrayList,
-                    FIRST_INDEX_OF_ARRAY, index);
-            System.arraycopy(arrayList, index, newArrayList, index + NEXT_ELEMENT, el);
-            newArrayList[index] = value;
+            int elementsAfterIndex = size - index;
+            System.arraycopy(arrayList, index, arrayList, index + NEXT_ELEMENT, elementsAfterIndex);
+            arrayList[index] = value;
             size++;
-            arrayList = newArrayList;
+
         }
     }
 
@@ -63,21 +59,18 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
-        Object deletedObject = arrayList[index];
-        int countEl = size - (index + NEXT_ELEMENT);
+        Object deletedElement = arrayList[index];
+        int nextElementsAfterIndex = size - (index + NEXT_ELEMENT);
         System.arraycopy(arrayList,index + NEXT_ELEMENT,arrayList,
-                index,countEl);
+                index,nextElementsAfterIndex);
         size--;
-        return (T)deletedObject;
+        return (T)deletedElement;
     }
 
     @Override
     public T remove(T element) {
-        int index = findByElement(arrayList,element);
-        int countEl = size - (index + NEXT_ELEMENT);
-        System.arraycopy(arrayList,index + NEXT_ELEMENT,arrayList,
-                index,countEl);
-        size--;
+        int indexOfElement = findByElement(arrayList,element);
+        remove(indexOfElement);
         return element;
     }
 
@@ -113,14 +106,14 @@ public class ArrayList<T> implements List<T> {
     }
 
     private Object[] biggerCapacity(Object [] arrayList) {
-        newArrayList = new Object[arrayList.length + arrayList.length / 2];
+        Object [] newArrayList = new Object[arrayList.length + arrayList.length / 2];
         System.arraycopy(arrayList,FIRST_INDEX_OF_ARRAY, newArrayList, FIRST_INDEX_OF_ARRAY, size);
         arrayList = newArrayList;
         return arrayList;
     }
 
     private void addingIndexCheck(int index) {
-        if (index < 0 || index > size || index > size + 1) {
+        if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException("Invalid index");
         }
     }
