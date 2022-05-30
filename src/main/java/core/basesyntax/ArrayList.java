@@ -34,7 +34,7 @@ public class ArrayList<T> implements List<T> {
     public void addAll(List<T> list) {
         for (int i = 0; i < list.size(); i++) {
             sizeCheck();
-            this.add(list.get(i));
+            add(list.get(i));
         }
     }
 
