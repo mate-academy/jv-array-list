@@ -4,7 +4,7 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    private Object[] newArray = (T[]) new Object[DEFAULT_CAPACITY];
+    private Object[] newArray = new Object[DEFAULT_CAPACITY];
     private int size = 0;
 
     @Override
