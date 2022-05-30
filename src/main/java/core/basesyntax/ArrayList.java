@@ -11,7 +11,6 @@ public class ArrayList<T> implements List<T> {
 
     {
         arrayList = new Object[DEFAULT_SIZE_OF_ARRAY];
-        size = 0;
     }
 
     @Override
@@ -61,10 +60,10 @@ public class ArrayList<T> implements List<T> {
         checkIndex(index);
         Object deletedElement = arrayList[index];
         int nextElementsAfterIndex = size - (index + NEXT_ELEMENT);
-        System.arraycopy(arrayList,index + NEXT_ELEMENT,arrayList,
+        System.arraycopy(arrayList, index + NEXT_ELEMENT, arrayList,
                 index,nextElementsAfterIndex);
         size--;
-        return (T)deletedElement;
+        return (T) deletedElement;
     }
 
     @Override
@@ -107,7 +106,7 @@ public class ArrayList<T> implements List<T> {
 
     private Object[] biggerCapacity(Object [] arrayList) {
         Object [] newArrayList = new Object[arrayList.length + arrayList.length / 2];
-        System.arraycopy(arrayList,FIRST_INDEX_OF_ARRAY, newArrayList, FIRST_INDEX_OF_ARRAY, size);
+        System.arraycopy(arrayList, FIRST_INDEX_OF_ARRAY, newArrayList, FIRST_INDEX_OF_ARRAY, size);
         arrayList = newArrayList;
         return arrayList;
     }
