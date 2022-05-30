@@ -6,9 +6,14 @@ public class ArrayList<T> implements List<T> {
 
     private static Object[] elementData;
     private static Object[] bufferedData;
-    private static int s = 0;
+    private static int s;
     private static int SIZE = 10;
 
+    public ArrayList() {
+        elementData = new Object[SIZE];
+        bufferedData = new Object[SIZE];
+        s = 0;
+    }
 
     @Override
     public String toString() {
