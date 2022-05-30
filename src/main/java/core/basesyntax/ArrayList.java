@@ -18,7 +18,7 @@ public class ArrayList<T> implements List<T> {
     public void add(T value, int index) {
         size++;
         increaseSize();
-        if (index < size && index >= 0) {
+        if (checkIndexSize(index)) {
             System.arraycopy(newArray, index, newArray, index + 1, size - index);
             newArray[index] = value;
         } else {
