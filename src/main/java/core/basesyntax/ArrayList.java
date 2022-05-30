@@ -1,7 +1,6 @@
 package core.basesyntax;
 
 import java.util.NoSuchElementException;
-import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
@@ -82,7 +81,8 @@ public class ArrayList<T> implements List<T> {
     private int findElement(T element) {
         int remElement = -1;
         for (int i = 0; i < size; i++) {
-            if (Objects.equals(elementData[i], element)) {
+            if (elementData[i] == element
+                    || elementData[i] != null && elementData[i].equals(element)) {
                 remElement = i;
             }
         }
