@@ -3,30 +3,24 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    private T[] data = (T[]) new Object[0];
-    private int size = data.length;
+    private T[] data;
+    private int size;
 
-    private void increase() {
-        final T[] buffer = (T[]) new Object[data.length];
-        System.arraycopy(data, 0, buffer, 0, data.length);
-        data = (T[]) new Object[data.length + 1];
-        for (int j = 0; j < buffer.length; j++) {
-            data[j] = buffer[j];
-        }
+    public ArrayList() {
+        this.data = (T[]) new Object[10];
+        this.size = 0;
     }
 
     @Override
     public void add(T value) {
         increase();
-        data[data.length - 1] = value;
+        data[size] = value;
         size++;
     }
 
     @Override
     public void add(T value, int index) {
-        if (index < 0 || index > data.length) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index");
-        }
+        checkIndexInBounds(index, 0, size);
         final T[] half1 = (T[]) new Object[index];
         final T[] half2 = (T[]) new Object[data.length - index];
         System.arraycopy(data, 0, half1, 0, index);
@@ -51,25 +45,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index < 0 || index >= data.length) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index");
-        }
+        checkIndexInBounds(index, 0, size - 1);
         return data[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index < 0 || index >= data.length) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index");
-        }
+        checkIndexInBounds(index, 0, size - 1);
         data[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index < 0 || index >= data.length) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index");
-        }
+        checkIndexInBounds(index, 0, size - 1);
         final T[] half1 = (T[]) new Object[index];
         final T[] half2 = (T[]) new Object[data.length - index - 1];
         final T oldValue = data[index];
@@ -123,5 +111,20 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private void increase() {
+        final T[] buffer = (T[]) new Object[data.length];
+        System.arraycopy(data, 0, buffer, 0, data.length);
+        data = (T[]) new Object[data.length + 1];
+        for (int j = 0; j < buffer.length; j++) {
+            data[j] = buffer[j];
+        }
+    }
+
+    private void checkIndexInBounds(int index, int lowerBound, int upperBound) {
+        if (index < lowerBound || index > upperBound) {
+            throw new ArrayListIndexOutOfBoundsException("Invalid index");
+        }
     }
 }
