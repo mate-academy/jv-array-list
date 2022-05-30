@@ -4,7 +4,7 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    private T[] newArray = (T[]) new Object[DEFAULT_CAPACITY];
+    private Object[] newArray = (T[]) new Object[DEFAULT_CAPACITY];
     private int size = 0;
 
     @Override
@@ -34,7 +34,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         checkIndexSize(index);
-        return newArray[index];
+        return (T) newArray[index];
     }
 
     @Override
@@ -46,7 +46,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         checkIndexSize(index);
-        final T removed = newArray[index];
+        final T removed = (T) newArray[index];
         System.arraycopy(newArray, index + 1, newArray, index, size - index - 1);
         newArray[size - 1] = null;
         size--;
