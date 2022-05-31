@@ -67,8 +67,7 @@ public class ArrayList<T> implements List<T> {
         for (int i = 0; i < size; i++) {
             if (element == null && elements[i] == null
                     || (element != null && element.equals(elements[i]))) {
-                remove(i);
-                return element;
+                return remove(i);
             }
         }
         throw new NoSuchElementException("There is no such element.");
