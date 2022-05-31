@@ -4,23 +4,26 @@ import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    private static int SIZE = 10;
-    private Object[] elementData = new Object[SIZE];
-    private Object[] bufferedData = new Object[SIZE];
+    private static final int INITIAL_SIZE = 10;
+    private static final double SIZE_GROWTH = 1.5;
+    private Object[] elementData;
     private int sizeCounter;
+
+    public ArrayList() {
+        this.elementData = new Object[INITIAL_SIZE];
+    }
 
     private void grow() {
         if (sizeCounter == elementData.length - 1) {
-            SIZE *= 1.5;
-            bufferedData = new Object[SIZE];
+            int newSize = (int) (elementData.length * SIZE_GROWTH);
+            Object[] bufferedData = new Object[newSize];
             System.arraycopy(elementData, 0, bufferedData, 0, elementData.length);
-            elementData = new Object[SIZE];
+            elementData = new Object[newSize];
             System.arraycopy(bufferedData, 0, elementData, 0, elementData.length);
-            bufferedData = new Object[SIZE];
         }
     }
 
-    public void indexChecking(int index) {
+    private void indexChecking(int index) {
         if (index < 0 || index >= sizeCounter) {
             throw new ArrayListIndexOutOfBoundsException("Incorrect index");
         }
@@ -39,11 +42,11 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayListIndexOutOfBoundsException("Incorrect index");
         }
         grow();
+        Object[] bufferedData = new Object[elementData.length];
         System.arraycopy(elementData, index, bufferedData, 0, elementData.length - index);
         elementData[index] = value;
         System.arraycopy(bufferedData, 0, elementData, index + 1, elementData.length - index - 1);
         sizeCounter++;
-        bufferedData = new Object[SIZE];
     }
 
     @Override
