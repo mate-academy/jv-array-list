@@ -56,7 +56,7 @@ public class ArrayList<T> implements List<T> {
         checkIndexInBounds(index);
         final T oldValue = (T) values[index];
         size--;
-        System.arraycopy(values, index + 1, values, index, size - index - 1);
+        System.arraycopy(values, index + 1, values, index, size - index);
         return oldValue;
     }
 
