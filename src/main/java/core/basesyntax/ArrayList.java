@@ -3,11 +3,12 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
+    private static final int INITIAL_SIZE = 10;
     private Object[] data;
     private int size;
 
     public ArrayList() {
-        this.data = new Object[10];
+        this.data = new Object[INITIAL_SIZE];
         this.size = 0;
     }
 
@@ -21,11 +22,12 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         checkIndexInBounds(index, 0, size);
+        increase();
         final Object[] half1 = new Object[index];
-        final Object[] half2 = new Object[data.length - index];
+        final Object[] half2 = new Object[size - index];
         System.arraycopy(data, 0, half1, 0, index);
-        System.arraycopy(data, index, half2, 0, data.length - index);
-        data = (T[]) new Object[data.length + 1];
+        System.arraycopy(data, index, half2, 0, size - index);
+        data = (T[]) new Object[data.length];
         for (int i = 0; i < half1.length; i++) {
             data[i] = half1[i];
         }
@@ -70,7 +72,7 @@ public class ArrayList<T> implements List<T> {
             return oldValue;
         }
         if (half2.length == 0) {
-            System.arraycopy(half1, 0, data, 0, half2.length);
+            System.arraycopy(half1, 0, data, 0, half1.length);
             size--;
             return oldValue;
         }
@@ -114,11 +116,13 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void increase() {
-        final Object[] buffer = new Object[data.length];
-        System.arraycopy(data, 0, buffer, 0, data.length);
-        data = new Object[data.length + 1];
-        for (int j = 0; j < buffer.length; j++) {
-            data[j] = buffer[j];
+        if (size == data.length) {
+            final Object[] buffer = new Object[data.length];
+            System.arraycopy(data, 0, buffer, 0, data.length);
+            data = new Object[data.length * 3 / 2];
+            for (int j = 0; j < buffer.length; j++) {
+                data[j] = buffer[j];
+            }
         }
     }
 
