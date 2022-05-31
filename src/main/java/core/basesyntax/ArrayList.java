@@ -19,8 +19,8 @@ public class ArrayList<T> implements List<T> {
 
     private void exception(int index) {
         if (index < 0 || index >= size()) {
-            throw new ArrayListIndexOutOfBoundsException("Index  " + index + " is not " +
-                    "correct for size" + size);
+            throw new ArrayListIndexOutOfBoundsException("Index  " + index + " is not "
+                    + "correct for size" + size);
         }
     }
 
