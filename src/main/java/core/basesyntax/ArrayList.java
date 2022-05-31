@@ -1,7 +1,6 @@
 package core.basesyntax;
 
 import java.util.NoSuchElementException;
-import java.util.Objects;
 
 @SuppressWarnings("unchecked")
 public class ArrayList<T> implements List<T> {
@@ -68,7 +67,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if (Objects.equals(element, elements[i])
+            if (element == null && elements[i] == null
                     || (element != null && element.equals(elements[i]))) {
                 remove(i);
                 return element;
