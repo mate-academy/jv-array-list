@@ -18,7 +18,6 @@ public class ArrayList<T> implements List<T> {
         size++;
     }
 
-
     @Override
     public void add(T value, int index) {
         if (index < 0 || index > size) {
