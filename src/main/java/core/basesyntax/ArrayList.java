@@ -11,36 +11,20 @@ public class ArrayList<T> implements List<T> {
         elements = (T[]) new Object[MAX_START_LENGTH];
     }
 
-    private void grow() {
-        T[] newArray = (T[]) new Object[elements.length + elements.length / 2];
-        System.arraycopy(elements, 0, newArray, 0, size);
-        elements = newArray;
-    }
-
-    private void exception(int index) {
-        if (index < 0 || index >= size()) {
-            throw new ArrayListIndexOutOfBoundsException("Index  " + index + " is not "
-                    + "correct for size" + size);
-        }
-    }
-
     @Override
     public void add(T value) {
-        if (elements.length == size) {
-            grow();
-        }
+        grow();
         elements[size] = value;
         size++;
     }
+
 
     @Override
     public void add(T value, int index) {
         if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException("Index is not correct ");
         }
-        if (elements.length == size) {
-            grow();
-        }
+        grow();
         System.arraycopy(elements, index, elements, index + 1, size - index);
         elements[index] = value;
         size++;
@@ -63,13 +47,13 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void set(T value, int index) {
-        exception(index);
+        checkIndex(index);
         elements[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        exception(index);
+        checkIndex(index);
         T oldObjects = (T) elements[index];
         System.arraycopy(elements, index + 1, elements, index, size - index - 1);
         size--;
@@ -97,5 +81,20 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private void grow() {
+        if (elements.length == size) {
+            T[] newArray = (T[]) new Object[elements.length + elements.length / 2];
+            System.arraycopy(elements, 0, newArray, 0, size);
+            elements = newArray;
+        }
+    }
+
+    private void checkIndex(int index) {
+        if (index < 0 || index >= size()) {
+            throw new ArrayListIndexOutOfBoundsException("Index  " + index + " is not "
+                    + "correct for size" + size);
+        }
     }
 }
