@@ -6,11 +6,11 @@ import java.util.NoSuchElementException;
 public class ArrayList<T> implements List<T> {
     private static final int INITIAL_SIZE = 10;
     private static final double SIZE_GROWTH = 1.5;
-    private Object[] elementData;
+    private T[] elementData;
     private int sizeCounter;
 
     public ArrayList() {
-        this.elementData = new Object[INITIAL_SIZE];
+        this.elementData = (T[]) new Object[INITIAL_SIZE];
     }
 
     private void grow() {
@@ -18,7 +18,7 @@ public class ArrayList<T> implements List<T> {
             int newSize = (int) (elementData.length * SIZE_GROWTH);
             Object[] bufferedData = new Object[newSize];
             System.arraycopy(elementData, 0, bufferedData, 0, elementData.length);
-            elementData = new Object[newSize];
+            elementData = (T[])new Object[newSize];
             System.arraycopy(bufferedData, 0, elementData, 0, elementData.length);
         }
     }
