@@ -7,8 +7,12 @@ public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private static final int SHIFT = 1;
     private static final int START = 0;
-    private Object[] elementData = new Object[DEFAULT_CAPACITY];
+    private Object[] elementData;
     private int size;
+
+    public ArrayList() {
+        this.elementData = new Object[DEFAULT_CAPACITY];
+    }
 
     @Override
     public void add(T value) {
@@ -22,7 +26,10 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        indexValidationForAdd(index);
+        indexValidation(index, size + 1);
+        /*if (index == size) {
+            add(value);
+        }*/
         if (size < elementData.length) {
             insert(value, index, new Object[elementData.length]);
         } else {
@@ -40,19 +47,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        indexValidation(index);
+        indexValidation(index, size);
         return (T) elementData[index];
     }
 
     @Override
     public void set(T value, int index) {
-        indexValidation(index);
+        indexValidation(index, size);
         elementData[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        indexValidation(index);
+        indexValidation(index, size);
         T removed = (T) elementData[index];
         System.arraycopy(elementData, index + SHIFT,
                 elementData, index, size - index - SHIFT);
@@ -97,15 +104,10 @@ public class ArrayList<T> implements List<T> {
         elementData = newElementData;
     }
 
-    private void indexValidation(int index) {
-        if (index < START || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index provided");
-        }
-    }
-
-    private void indexValidationForAdd(int index) {
-        if (index < START || index > size) {
+    private void indexValidation(int index, int limit) {
+        if (index < START || index >= limit) {
             throw new ArrayListIndexOutOfBoundsException("Invalid index provided");
         }
     }
 }
+//List <Integer> i = ArrayList<>
