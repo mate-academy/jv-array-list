@@ -3,11 +3,12 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
+    private static final int START_CAPACITY = 10;
     private T[] values;
-    private int size = 0;
+    private int size;
 
     public ArrayList() {
-        values = (T[]) new Object[10];
+        values = (T[]) new Object[START_CAPACITY];
     }
 
     private void isWrongIndex(int index)
