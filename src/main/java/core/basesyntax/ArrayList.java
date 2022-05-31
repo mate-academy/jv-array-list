@@ -4,24 +4,24 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    private Object[] elementData;
-    private int size = 0;
+    private Object[] values;
+    private int size;
 
     public ArrayList() {
-        elementData = new Object[DEFAULT_CAPACITY];
+        values = new Object[DEFAULT_CAPACITY];
     }
 
     public void add(T value) {
         grow();
-        elementData[size++] = value;
+        values[size++] = value;
     }
 
     @Override
     public void add(T value, int index) {
         addException(value, index);
         grow();
-        System.arraycopy(elementData, index, elementData, index + 1, size - index);
-        elementData[index] = value;
+        System.arraycopy(values, index, values, index + 1, size - index);
+        values[index] = value;
         size++;
     }
 
@@ -35,20 +35,20 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         getException(index);
-        return (T) elementData[index];
+        return (T) values[index];
     }
 
     @Override
     public void set(T value, int index) {
         setException(index);
-        elementData[index] = value;
+        values[index] = value;
     }
 
     @Override
     public T remove(int index) {
         removeException(index);
-        T removedElement = (T) elementData[index];
-        System.arraycopy(elementData, index + 1, elementData, index, --size - index);
+        T removedElement = (T) values[index];
+        System.arraycopy(values, index + 1, values, index, --size - index);
         return removedElement;
     }
 
@@ -70,8 +70,8 @@ public class ArrayList<T> implements List<T> {
     private int findElement(T element) {
         int remElement = -1;
         for (int i = 0; i < size; i++) {
-            if (elementData[i] == element
-                    || elementData[i] != null && elementData[i].equals(element)) {
+            if (values[i] == element
+                    || values[i] != null && values[i].equals(element)) {
                 remElement = i;
             }
         }
@@ -82,10 +82,10 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void grow() {
-        if (elementData.length <= size) {
-            Object[] newElementsData = new Object[elementData.length + (elementData.length >> 1)];
-            System.arraycopy(elementData, 0, newElementsData, 0, elementData.length);
-            elementData = newElementsData;
+        if (values.length <= size) {
+            Object[] newElementsData = new Object[values.length + (values.length >> 1)];
+            System.arraycopy(values, 0, newElementsData, 0, values.length);
+            values = newElementsData;
         }
     }
 
