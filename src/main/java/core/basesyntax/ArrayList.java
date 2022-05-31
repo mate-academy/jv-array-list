@@ -19,7 +19,6 @@ public class ArrayList<T> implements List<T> {
             T[] bufferedData = (T[])new Object[newSize];
             System.arraycopy(elementData, 0, bufferedData, 0, elementData.length);
             elementData = bufferedData;
-            System.arraycopy(bufferedData, 0, elementData, 0, elementData.length);
         }
     }
 
