@@ -4,12 +4,12 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int INITIAL_SIZE = 10;
+    private static final double INCREASE_COEFFICIENT = 1.5;
     private Object[] data;
     private int size;
 
     public ArrayList() {
         this.data = new Object[INITIAL_SIZE];
-        this.size = 0;
     }
 
     @Override
@@ -83,7 +83,7 @@ public class ArrayList<T> implements List<T> {
 
     private void increase() {
         if (size == data.length) {
-            final Object[] buffer = new Object[data.length * 3 / 2];
+            final Object[] buffer = new Object[(int) (data.length * INCREASE_COEFFICIENT)];
             System.arraycopy(data, 0, buffer, 0, data.length);
             data = buffer;
         }
