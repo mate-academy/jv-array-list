@@ -4,26 +4,13 @@ import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-
+    private static int SIZE = 10;
     private Object[] elementData = new Object[SIZE];
     private Object[] bufferedData = new Object[SIZE];
-    private int s;
-    private static final int START_ITERATOR = 0;
-    private static int SIZE = 10;
+    private int sizeCounter;
 
-    public ArrayList() {
-        s = START_ITERATOR;
-    }
-
-    @Override
-    public String toString() {
-        return Arrays.toString(elementData);
-    }
-    public String buffer() {
-        return Arrays.toString(bufferedData);
-    }
     private void grow() {
-        if (s == elementData.length - 1) {
+        if (sizeCounter == elementData.length - 1) {
             SIZE *= 1.5;
             bufferedData = new Object[SIZE];
             System.arraycopy(elementData, 0, bufferedData, 0, elementData.length);
@@ -33,23 +20,29 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    @Override
-    public void add(T value) {
-        grow();
-        elementData[s] = value;
-        s++;
+    public void indexChecking(int index) {
+        if (index < 0 || index >= sizeCounter) {
+            throw new ArrayListIndexOutOfBoundsException("Incorrect index");
+        }
     }
 
     @Override
-    public void add(T value, int index) throws ArrayListIndexOutOfBoundsException {
-        if (index > s || index < 0) {
+    public void add(T value) {
+        grow();
+        elementData[sizeCounter] = value;
+        sizeCounter++;
+    }
+
+    @Override
+    public void add(T value, int index) {
+        if (index > sizeCounter || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Incorrect index");
         }
         grow();
         System.arraycopy(elementData, index, bufferedData, 0, elementData.length - index);
         elementData[index] = value;
         System.arraycopy(bufferedData, 0, elementData, index + 1, elementData.length - index - 1);
-        s++;
+        sizeCounter++;
         bufferedData = new Object[SIZE];
     }
 
@@ -65,33 +58,28 @@ public class ArrayList<T> implements List<T> {
     }
 
     @Override
-    public T get(int index) throws ArrayListIndexOutOfBoundsException {
-        if (index > s - 1) {
-            throw new ArrayListIndexOutOfBoundsException("Incorrect index");
-        } try {
-            return (T) elementData[index];
-        } catch (ArrayIndexOutOfBoundsException e) {
-            throw new ArrayListIndexOutOfBoundsException("Incorrect value");
-        }
+    public T get(int index) {
+        indexChecking(index);
+        return (T) elementData[index];
     }
 
     @Override
-    public void set(T value, int index) throws ArrayListIndexOutOfBoundsException {
-        if (index > s - 1 || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Incorrect index");
-        }
+    public void set(T value, int index) {
+        indexChecking(index);
         elementData[index] = value;
     }
 
     @Override
-    public T remove(int index) throws ArrayListIndexOutOfBoundsException {
-        if (index > s - 1 || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index out of range");
-        }
+    public T remove(int index) {
+        indexChecking(index);
         T oldValue = (T)elementData[index];
         try {
-            System.arraycopy(elementData, index + 1, elementData, index, elementData.length - index - 1);
-            s--;
+            System.arraycopy(elementData,
+                    index + 1,
+                    elementData,
+                    index,
+                    elementData.length - index - 1);
+            sizeCounter--;
         } catch (NoSuchElementException e) {
             throw new NoSuchElementException("Index is incorrect");
         }
@@ -99,20 +87,21 @@ public class ArrayList<T> implements List<T> {
     }
 
     @Override
-    public T remove(T element) throws NoSuchElementException {
-        if (Arrays.asList(elementData).indexOf(element) > s - 1 || Arrays.asList(elementData).indexOf(element) < 0) {
+    public T remove(T element) {
+        int indexOfElement = Arrays.asList(elementData).indexOf(element);
+        if (indexOfElement > sizeCounter - 1 || indexOfElement < 0) {
             throw new NoSuchElementException("Index out of range");
         }
-        return remove(Arrays.asList(elementData).indexOf(element));
+        return remove(indexOfElement);
     }
 
     @Override
     public int size() {
-        return s;
+        return sizeCounter;
     }
 
     @Override
     public boolean isEmpty() {
-        return s == 0;
+        return sizeCounter == 0;
     }
 }
