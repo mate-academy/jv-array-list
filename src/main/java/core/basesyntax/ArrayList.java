@@ -7,34 +7,26 @@ public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private static final int SHIFT = 1;
     private static final int START = 0;
+
     private Object[] elementData;
+    private int capacity = DEFAULT_CAPACITY;
     private int size;
 
     public ArrayList() {
-        this.elementData = new Object[DEFAULT_CAPACITY];
+        this.elementData = new Object[capacity];
     }
 
     @Override
     public void add(T value) {
-        if (size < elementData.length) {
-            elementData[size] = value;
-        } else {
-            insert(value, size, expand());
-        }
-        size++;
+        add(value, size);
     }
 
     @Override
     public void add(T value, int index) {
         indexValidation(index, size + 1);
-        /*if (index == size) {
-            add(value);
-        }*/
-        if (size < elementData.length) {
-            insert(value, index, new Object[elementData.length]);
-        } else {
-            insert(value, index, expand());
-        }
+        ensureCapacity();
+        System.arraycopy(elementData, index, elementData, index + SHIFT, size - index);
+        elementData[index] = value;
         size++;
     }
 
@@ -92,16 +84,13 @@ public class ArrayList<T> implements List<T> {
         return size == START;
     }
 
-    private Object[] expand() {
-        int newCapacity = elementData.length + (elementData.length >> 1);
-        return new Object[newCapacity];
-    }
-
-    private void insert(T value, int index, Object[] newElementData) {
-        System.arraycopy(elementData, START, newElementData, START, index);
-        newElementData[index] = value;
-        System.arraycopy(elementData, index, newElementData, index + SHIFT, size - index);
-        elementData = newElementData;
+    private void ensureCapacity() {
+        if (size == capacity) {
+            capacity *= 1.5;
+            Object[] newElementData = new Object[capacity];
+            System.arraycopy(elementData, START, newElementData, START, size);
+            elementData = newElementData;
+        }
     }
 
     private void indexValidation(int index, int limit) {
@@ -110,4 +99,3 @@ public class ArrayList<T> implements List<T> {
         }
     }
 }
-//List <Integer> i = ArrayList<>
