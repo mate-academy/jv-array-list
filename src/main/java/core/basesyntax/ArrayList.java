@@ -5,24 +5,31 @@ import java.util.NoSuchElementException;
 public class ArrayList<T> implements List<T> {
     private static int MAX_START_LENGTH = 10;
     private int size;
-    private T[] objects;
+    private T[] elements;
 
     public ArrayList() {
-        objects = (T[]) new Object[MAX_START_LENGTH];
+        elements = (T[]) new Object[MAX_START_LENGTH];
     }
 
-    private void upgradeObjectArray() {
-        T[] newLength = (T[]) new Object[objects.length + objects.length / 2];
-        System.arraycopy(objects, 0, newLength, 0, size);
-        objects = newLength;
+    private void grow() {
+        T[] newArray = (T[]) new Object[elements.length + elements.length / 2];
+        System.arraycopy(elements, 0, newArray, 0, size);
+        elements = newArray;
+    }
+
+    private void exception(int index) {
+        if (index < 0 || index >= size()) {
+            throw new ArrayListIndexOutOfBoundsException("Index  " + index + " is not " +
+                    "correct for size" + size);
+        }
     }
 
     @Override
     public void add(T value) {
-        if (objects.length == size) {
-            upgradeObjectArray();
+        if (elements.length == size) {
+            grow();
         }
-        objects[size] = value;
+        elements[size] = value;
         size++;
     }
 
@@ -31,11 +38,11 @@ public class ArrayList<T> implements List<T> {
         if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException("Index is not correct ");
         }
-        if (objects.length == size) {
-            upgradeObjectArray();
+        if (elements.length == size) {
+            grow();
         }
-        System.arraycopy(objects, index, objects, index + 1, size - index);
-        objects[index] = value;
+        System.arraycopy(elements, index, elements, index + 1, size - index);
+        elements[index] = value;
         size++;
     }
 
@@ -51,24 +58,20 @@ public class ArrayList<T> implements List<T> {
         if (index >= size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Default index");
         }
-        return (T) objects[index];
+        return (T) elements[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index < 0 || index >= size()) {
-            throw new ArrayListIndexOutOfBoundsException("Index  is not correct");
-        }
-        objects[index] = value;
+        exception(index);
+        elements[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index < 0 || index >= size()) {
-            throw new ArrayListIndexOutOfBoundsException("Index is not correct ");
-        }
-        T oldObjects = (T) objects[index];
-        System.arraycopy(objects, index + 1, objects, index, size - index - 1);
+        exception(index);
+        T oldObjects = (T) elements[index];
+        System.arraycopy(elements, index + 1, elements, index, size - index - 1);
         size--;
         return oldObjects;
     }
@@ -76,9 +79,9 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if ((objects[i] != null && objects[i].equals(element))
-                    || objects[i] == element) {
-                System.arraycopy(objects, i + 1, objects, i, size - i - 1);
+            if ((elements[i] != null && elements[i].equals(element))
+                    || elements[i] == element) {
+                System.arraycopy(elements, i + 1, elements, i, size - i - 1);
                 size--;
                 return element;
             }
