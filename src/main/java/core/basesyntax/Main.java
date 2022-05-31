@@ -3,23 +3,25 @@ import java.util.Arrays;
 
 public class Main {
     public static void main(String[] args) {
-        ArrayList<String> values = new ArrayList<>();
-        values.add("test");
-        values.add("and");
-        values.add("this");
+        ArrayList<String> arrayList = new ArrayList<>();
+        arrayList.add("Test");
+        arrayList.add("for");
+        arrayList.add("my");
+        arrayList.add("darling");
+        arrayList.add("Mate");
+        arrayList.add("Academy");
 
 
-        ArrayList<String> strings = new ArrayList<>();
-        strings.add("Hi!");
-        strings.add("mates");
-        strings.add("good");
+        ArrayList<String> newArrayList = new ArrayList<>();
+        newArrayList.add("Academy");
+        newArrayList.add("Kiev");
+        newArrayList.add("Ukraine");
+        newArrayList.add("Welcome");
 
-        System.out.println(values);
-        System.out.println(strings);
-
-
-
-
+        arrayList.addAll(newArrayList);
+        System.out.println(arrayList);
+        System.out.println(arrayList.size());
+//        System.out.println(newArrayList);
 
 
     }
