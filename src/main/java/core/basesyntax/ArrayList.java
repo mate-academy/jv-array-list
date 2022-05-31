@@ -21,20 +21,14 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        checkIndexInBounds(index, 0, size);
+        if (index == size) {
+            add(value);
+            return;
+        }
+        checkIndexInBounds(index);
         increase();
-        final Object[] half1 = new Object[index];
-        final Object[] half2 = new Object[size - index];
-        System.arraycopy(data, 0, half1, 0, index);
-        System.arraycopy(data, index, half2, 0, size - index);
-        data = (T[]) new Object[data.length];
-        for (int i = 0; i < half1.length; i++) {
-            data[i] = half1[i];
-        }
+        System.arraycopy(data, index, data, index + 1, size - index);
         data[index] = value;
-        for (int i = 0; i < half2.length; i++) {
-            data[i + index + 1] = half2[i];
-        }
         size++;
     }
 
@@ -47,57 +41,29 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        checkIndexInBounds(index, 0, size - 1);
+        checkIndexInBounds(index);
         return (T) data[index];
     }
 
     @Override
     public void set(T value, int index) {
-        checkIndexInBounds(index, 0, size - 1);
+        checkIndexInBounds(index);
         data[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        checkIndexInBounds(index, 0, size - 1);
-        final Object[] half1 = new Object[index];
-        final Object[] half2 = new Object[data.length - index - 1];
+        checkIndexInBounds(index);
         final T oldValue = (T) data[index];
-        System.arraycopy(data, 0, half1, 0, index);
-        System.arraycopy(data, index + 1, half2, 0, data.length - index - 1);
-        data = new Object[data.length - 1];
-        if (half1.length == 0) {
-            System.arraycopy(half2, 0, data, 0, half2.length);
-            size--;
-            return oldValue;
-        }
-        if (half2.length == 0) {
-            System.arraycopy(half1, 0, data, 0, half1.length);
-            size--;
-            return oldValue;
-        }
-        for (int i = 0; i < half1.length; i++) {
-            data[i] = half1[i];
-        }
-        for (int i = 0; i < half2.length; i++) {
-            data[i + index] = half2[i];
-        }
+        System.arraycopy(data, index + 1, data, index, size - index - 1);
         size--;
         return oldValue;
     }
 
     @Override
     public T remove(T element) {
-        if (element == null) { // here is how i played the nullpointerexception safe)
-            for (int i = 0; i < data.length; i++) {
-                if (data[i] == null) {
-                    remove(i);
-                    return element;
-                }
-            }
-        }
         for (int i = 0; i < data.length; i++) {
-            if (element.equals(data[i])) {
+            if (element == data[i] || element != null && element.equals(data[i])) {
                 remove(i);
                 return element;
             }
@@ -117,18 +83,15 @@ public class ArrayList<T> implements List<T> {
 
     private void increase() {
         if (size == data.length) {
-            final Object[] buffer = new Object[data.length];
+            final Object[] buffer = new Object[data.length * 3 / 2];
             System.arraycopy(data, 0, buffer, 0, data.length);
-            data = new Object[data.length * 3 / 2];
-            for (int j = 0; j < buffer.length; j++) {
-                data[j] = buffer[j];
-            }
+            data = buffer;
         }
     }
 
-    private void checkIndexInBounds(int index, int lowerBound, int upperBound) {
-        if (index < lowerBound || index > upperBound) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index");
+    private void checkIndexInBounds(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
         }
     }
 }
