@@ -29,7 +29,8 @@ public class ArrayList<T> implements List<T> {
         int s;
         Object[] elementData;
         if ((s = size) == (elementData = this.elements).length) {
-            elementData = grow();
+            grow();
+            elementData = elements;
         }
         if (index == 0) {
             System.arraycopy(elementData, 0, elementData, 1, s);
@@ -91,15 +92,17 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private Object[] grow() {
+//    private Object[] grow() {
+    private void grow() {
         int oldCapacity = elements.length;
         if (oldCapacity > 0) {
             int newCapacity = (int) (oldCapacity * 1.5);
             Object[] newArray = new Object[newCapacity];
             System.arraycopy(elements, 0, newArray, 0, oldCapacity);
-            return elements = newArray;
+            elements = newArray;
+            return;
         }
-        return elements = new Object[DEFAULT_CAPACITY];
+        elements = new Object[DEFAULT_CAPACITY];
     }
 
     private void checkIndex(int index) {
