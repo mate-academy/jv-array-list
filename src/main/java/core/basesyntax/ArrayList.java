@@ -100,8 +100,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void checkIndex(int index) {
-        int localSize = (size == 0) ? 0 : (size - 1);
-        if (index > localSize || index < 0) {
+        if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException(
                     "Index passed to the method is negative or "
                             + "bigger than size of ArrayList. "
