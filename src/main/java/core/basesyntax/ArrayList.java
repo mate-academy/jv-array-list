@@ -88,14 +88,10 @@ public class ArrayList<T> implements List<T> {
 
     private void grow() {
         int oldCapacity = elements.length;
-        if (oldCapacity > 0) {
-            int newCapacity = (int) (oldCapacity * 1.5);
-            Object[] newArray = new Object[newCapacity];
-            System.arraycopy(elements, 0, newArray, 0, oldCapacity);
-            elements = newArray;
-            return;
-        }
-        elements = new Object[DEFAULT_CAPACITY];
+        int newCapacity = (int) (oldCapacity * 1.5);
+        Object[] newArray = new Object[newCapacity];
+        System.arraycopy(elements, 0, newArray, 0, oldCapacity);
+        elements = newArray;
     }
 
     private void checkIndex(int index) {
