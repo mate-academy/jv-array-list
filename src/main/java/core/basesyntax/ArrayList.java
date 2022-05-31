@@ -5,17 +5,17 @@ import java.util.NoSuchElementException;
 public class ArrayList<T> implements List<T> {
     private static final int INITIAL_SIZE = 10;
     private static final double INCREASE_COEFFICIENT = 1.5;
-    private Object[] data;
+    private Object[] values;
     private int size;
 
     public ArrayList() {
-        this.data = new Object[INITIAL_SIZE];
+        values = new Object[INITIAL_SIZE];
     }
 
     @Override
     public void add(T value) {
         increase();
-        data[size] = value;
+        values[size] = value;
         size++;
     }
 
@@ -27,8 +27,8 @@ public class ArrayList<T> implements List<T> {
         }
         checkIndexInBounds(index);
         increase();
-        System.arraycopy(data, index, data, index + 1, size - index);
-        data[index] = value;
+        System.arraycopy(values, index, values, index + 1, size - index);
+        values[index] = value;
         size++;
     }
 
@@ -42,28 +42,28 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         checkIndexInBounds(index);
-        return (T) data[index];
+        return (T) values[index];
     }
 
     @Override
     public void set(T value, int index) {
         checkIndexInBounds(index);
-        data[index] = value;
+        values[index] = value;
     }
 
     @Override
     public T remove(int index) {
         checkIndexInBounds(index);
-        final T oldValue = (T) data[index];
-        System.arraycopy(data, index + 1, data, index, size - index - 1);
+        final T oldValue = (T) values[index];
         size--;
+        System.arraycopy(values, index + 1, values, index, size - index - 1);
         return oldValue;
     }
 
     @Override
     public T remove(T element) {
-        for (int i = 0; i < data.length; i++) {
-            if (element == data[i] || element != null && element.equals(data[i])) {
+        for (int i = 0; i < values.length; i++) {
+            if (element == values[i] || element != null && element.equals(values[i])) {
                 remove(i);
                 return element;
             }
@@ -82,10 +82,10 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void increase() {
-        if (size == data.length) {
-            final Object[] buffer = new Object[(int) (data.length * INCREASE_COEFFICIENT)];
-            System.arraycopy(data, 0, buffer, 0, data.length);
-            data = buffer;
+        if (size == values.length) {
+            final Object[] buffer = new Object[(int) (values.length * INCREASE_COEFFICIENT)];
+            System.arraycopy(values, 0, buffer, 0, values.length);
+            values = buffer;
         }
     }
 
