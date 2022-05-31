@@ -86,7 +86,6 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-//    private Object[] grow() {
     private void grow() {
         int oldCapacity = elements.length;
         if (oldCapacity > 0) {
