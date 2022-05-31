@@ -25,13 +25,11 @@ public class ArrayList<T> implements List<T> {
                             + "bigger than size of ArrayList. "
                             + "Index: " + index + ", Size: " + size);
         }
-        Object[] elementData;
-        if (size == (elementData = this.elements).length) {
+        if (size == elements.length) {
             grow();
-            elementData = elements;
         }
-        System.arraycopy(elementData, index, elementData, index + 1, size - index);
-        elementData[index] = value;
+        System.arraycopy(elements, index, elements, index + 1, size - index);
+        elements[index] = value;
         size++;
     }
 
