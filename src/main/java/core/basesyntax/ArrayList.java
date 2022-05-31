@@ -8,7 +8,7 @@ public class ArrayList<T> implements List<T> {
     private static final int SHIFT = 1;
     private static final int START = 0;
     private Object[] elementData = new Object[DEFAULT_CAPACITY];
-    private int size = START;
+    private int size;
 
     @Override
     public void add(T value) {
@@ -22,9 +22,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index < START || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index provided");
-        }
+        indexValidationForAdd(index);
         if (size < elementData.length) {
             insert(value, index, new Object[elementData.length]);
         } else {
@@ -101,6 +99,12 @@ public class ArrayList<T> implements List<T> {
 
     private void indexValidation(int index) {
         if (index < START || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Invalid index provided");
+        }
+    }
+
+    private void indexValidationForAdd(int index) {
+        if (index < START || index > size) {
             throw new ArrayListIndexOutOfBoundsException("Invalid index provided");
         }
     }
