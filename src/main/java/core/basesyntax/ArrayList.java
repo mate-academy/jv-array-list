@@ -16,9 +16,9 @@ public class ArrayList<T> implements List<T> {
     private void grow() {
         if (sizeCounter == elementData.length - 1) {
             int newSize = (int) (elementData.length * SIZE_GROWTH);
-            Object[] bufferedData = new Object[newSize];
+            T[] bufferedData = (T[])new Object[newSize];
             System.arraycopy(elementData, 0, bufferedData, 0, elementData.length);
-            elementData = (T[])new Object[newSize];
+            elementData = bufferedData;
             System.arraycopy(bufferedData, 0, elementData, 0, elementData.length);
         }
     }
