@@ -16,7 +16,7 @@ public class ArrayList<T> implements List<T> {
         if (size == arrayOfObjects.length) {
             arrayOfObjects = increaseCapacity();
         }
-        arrayOfObjects[size] = value;
+        arrayOfObjects[size++] = value;
         size++;
     }
 
