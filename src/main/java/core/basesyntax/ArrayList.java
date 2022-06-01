@@ -4,19 +4,19 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    private Object[] data;
+    private Object[] values;
     private int size;
 
     public ArrayList() {
-        data = new Object[DEFAULT_CAPACITY];
+        values = new Object[DEFAULT_CAPACITY];
     }
 
     @Override
     public void add(T value) {
-        if (size == data.length) {
+        if (size == values.length) {
             resize();
         }
-        data[size] = value;
+        values[size] = value;
         size++;
     }
 
@@ -27,11 +27,11 @@ public class ArrayList<T> implements List<T> {
             return;
         }
         checkIndex(index);
-        if (size == data.length) {
+        if (size == values.length) {
             resize();
         }
-        System.arraycopy(data, index, data, index + 1, size - index);
-        data[index] = value;
+        System.arraycopy(values, index, values, index + 1, size - index);
+        values[index] = value;
         size++;
     }
 
@@ -45,28 +45,28 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         checkIndex(index);
-        return (T) data[index];
+        return (T) values[index];
     }
 
     @Override
     public void set(T value, int index) {
         checkIndex(index);
-        data[index] = value;
+        values[index] = value;
     }
 
     @Override
     public T remove(int index) {
         checkIndex(index);
-        T deleteElement = (T) data[index];
-        System.arraycopy(data, index + 1, data, index, size - index - 1);
-        data[--size] = null;
+        T deleteElement = (T) values[index];
+        System.arraycopy(values, index + 1, values, index, size - index - 1);
+        values[--size] = null;
         return deleteElement;
     }
 
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if (data[i] == element || (data[i] != null && data[i].equals(element))) {
+            if (values[i] == element || (values[i] != null && values[i].equals(element))) {
                 return remove(i);
             }
         }
@@ -85,8 +85,8 @@ public class ArrayList<T> implements List<T> {
 
     private void resize() {
         Object[] newArray = new Object[size + (size >> 1)];
-        System.arraycopy(data, 0, newArray, 0, size);
-        data = newArray;
+        System.arraycopy(values, 0, newArray, 0, size);
+        values = newArray;
     }
 
     private void checkIndex(int index) {
