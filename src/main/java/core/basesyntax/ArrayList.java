@@ -17,7 +17,6 @@ public class ArrayList<T> implements List<T> {
             arrayOfObjects = increaseCapacity();
         }
         arrayOfObjects[size++] = value;
-        size++;
     }
 
     @Override
