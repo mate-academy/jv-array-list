@@ -4,6 +4,7 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int INITIAL_CAPACITY = 10;
+    private static final double INCREASE_CAPACITY_STEP = 1.5;
     private T[] objects;
     private int size;
 
@@ -60,13 +61,9 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T value) {
-        T element;
         for (int j = 0; j < size(); j++) {
             if (objects[j] == value || objects[j] != null && objects[j].equals(value)) {
-                element = objects[j];
-                System.arraycopy(objects,j + 1, objects,j, objects.length - j - 1);
-                size--;
-                return element;
+                return remove(j);
             }
         }
         throw new NoSuchElementException("No such value: " + value);
@@ -85,9 +82,9 @@ public class ArrayList<T> implements List<T> {
     private void grow() {
         if (size == objects.length) {
             T[] arraySours = objects;
-            objects = (T[])new Object[arraySours.length + 5];
-            System.arraycopy(arraySours,0,objects,0,objects.length - 5);
-
+            objects = (T[])new Object[(int)
+                    (Math.round(objects.length * INCREASE_CAPACITY_STEP))];
+            System.arraycopy(arraySours,0,objects,0,arraySours.length);
         }
     }
 
@@ -97,5 +94,4 @@ public class ArrayList<T> implements List<T> {
                     + index);
         }
     }
-
 }
