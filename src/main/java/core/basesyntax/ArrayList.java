@@ -1,15 +1,14 @@
 package core.basesyntax;
 
 import java.util.NoSuchElementException;
-import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
-    private static final int DEFAULT_LENGTH = 10;
+    private static final int INITIAL_LENGTH = 10;
     private int size;
     private Object[] values;
 
     public ArrayList() {
-        values = new Object[DEFAULT_LENGTH];
+        values = new Object[INITIAL_LENGTH];
     }
 
     @Override
@@ -62,7 +61,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        int index = getIndexValue(element);
+        int index = getIndexByValue(element);
         T removedValue = (T) values[index];
         System.arraycopy(values, index + 1, values, index, size - index);
         size--;
@@ -81,11 +80,11 @@ public class ArrayList<T> implements List<T> {
 
     private void checkLength() {
         if (values.length == size) {
-            getScaledArray();
+            scaleArray();
         }
     }
 
-    private void getScaledArray() {
+    private void scaleArray() {
         Object[] copyArray = new Object[values.length + (values.length >> 1)];
         System.arraycopy(values, 0, copyArray, 0, size);
         values = copyArray;
@@ -93,13 +92,14 @@ public class ArrayList<T> implements List<T> {
 
     private void checkValidIndex(int index) {
         if (index >= size() || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index " + index + " is invalid");
+            throw new ArrayListIndexOutOfBoundsException(
+                    "Index " + index + " is invalid for size " + size);
         }
     }
 
-    private int getIndexValue(T value) {
+    private int getIndexByValue(T value) {
         for (int i = 0; i < values.length; i++) {
-            if (Objects.equals(values[i], value)) {
+            if (values[i] == value || values[i] != null && values[i].equals(value)) {
                 return i;
             }
         }
