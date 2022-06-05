@@ -3,45 +3,36 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-
     private static final int DEFAULT_CAPACITY = 10;
-    private int arraySize = DEFAULT_CAPACITY;
-    private T[] dataValue;
     private int size;
+    private T[] elements;
 
     public ArrayList() {
-        dataValue = (T[]) new Object[DEFAULT_CAPACITY];
-    }
-
-    public ArrayList(int newCapacity) {
-        dataValue = (T[]) new Object[newCapacity];
+        elements = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
     @Override
     public void add(T value) {
         resize();
-        dataValue[size] = value;
+        elements[size] = value;
         size++;
     }
 
     @Override
     public void add(T value, int index) {
-        if (index >= 0 & index <= size) {
-            resize();
-            System.arraycopy(dataValue, index, dataValue, index + 1, size - index);
-            dataValue[index] = value;
-            size++;
-        } else {
+        if (index > size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Index isn't valid.");
         }
+        size++;
+        resize();
+        System.arraycopy(elements, index, elements, index + 1, size - index);
+        elements[index] = value;
     }
 
     @Override
     public void addAll(List<T> list) {
         for (int i = 0; i < list.size(); i++) {
-            resize();
-            dataValue[size] = list.get(i);
-            size++;
+            add(list.get(i));
         }
     }
 
@@ -49,7 +40,7 @@ public class ArrayList<T> implements List<T> {
     public T get(int index) {
 
         if (index < size && index >= 0) {
-            return dataValue[index];
+            return elements[index];
         } else {
             throw new ArrayListIndexOutOfBoundsException("Index doesn't exist.");
         }
@@ -60,7 +51,7 @@ public class ArrayList<T> implements List<T> {
         if (index >= size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Index doesn't exist.");
         }
-        dataValue[index] = value;
+        elements[index] = value;
 
     }
 
@@ -68,28 +59,23 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
 
         if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index doesn't exist. ");
+            throw new ArrayListIndexOutOfBoundsException("Index doesn't exist.");
         }
-        final T oldValue = dataValue[index];
-        System.arraycopy(dataValue, index + 1, dataValue, index, size - index - 1);
-        dataValue[size - 1] = null;
+        final T removeObj = elements[index];
+        System.arraycopy(elements, index + 1, elements, index, size - index - 1);
+        elements[size - 1] = null;
         size--;
-        resize();
-        return oldValue;
+        return removeObj;
     }
 
     @Override
     public T remove(T element) {
-        int index = indexOf(element);
-        if (index >= 0) {
-            System.arraycopy(dataValue, index + 1, dataValue, index, size - index - 1);
-            dataValue[size--] = null;
-            return element;
+        for (int i = 0; i < size(); i++) {
+            if (elements[i] != null && elements[i].equals(element) || elements[i] == element) {
+                return remove(i);
+            }
         }
-        if (index == -1) {
-            throw new NoSuchElementException("There isn't such element.");
-        }
-        return null;
+        throw new NoSuchElementException("There is no such element present");
     }
 
     @Override
@@ -103,19 +89,10 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void resize() {
-        if (size >= arraySize) {
-            T[] newValues = (T[]) new Object[size * 3 / 2 + 1];
-            System.arraycopy(dataValue, 0, newValues, 0, size);
-            dataValue = newValues;
+        if (size >= DEFAULT_CAPACITY) {
+            T[] newValues = (T[]) new Object[size * 3 / 2];
+            System.arraycopy(elements, 0, newValues, 0, size);
+            elements = newValues;
         }
-    }
-
-    public int indexOf(T valu) {
-        for (int i = 0; i < size; i++) {
-            if (dataValue[i] == valu || dataValue[i] != null && dataValue[i].equals(valu)) {
-                return i;
-            }
-        }
-        return -1;
     }
 }
