@@ -4,6 +4,8 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
+    private static final int ARRAY_MULTIPLIER = 3;
+    private static final int DIVIDER = 2;
     private int size;
     private T[] elements;
 
@@ -38,29 +40,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-
-        if (index < size && index >= 0) {
-            return elements[index];
-        } else {
-            throw new ArrayListIndexOutOfBoundsException("Index doesn't exist.");
-        }
+        getAudit(index);
+        return elements[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index doesn't exist.");
-        }
+        getAudit(index);
         elements[index] = value;
-
     }
 
     @Override
     public T remove(int index) {
-
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index doesn't exist.");
-        }
+        getAudit(index);
         final T removeObj = elements[index];
         System.arraycopy(elements, index + 1, elements, index, size - index - 1);
         elements[size - 1] = null;
@@ -90,9 +82,15 @@ public class ArrayList<T> implements List<T> {
 
     private void resize() {
         if (size >= DEFAULT_CAPACITY) {
-            T[] newValues = (T[]) new Object[size * 3 / 2];
+            T[] newValues = (T[]) new Object[size * ARRAY_MULTIPLIER / DIVIDER];
             System.arraycopy(elements, 0, newValues, 0, size);
             elements = newValues;
+        }
+    }
+
+    private void getAudit(int index) {
+        if (index >= size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Index doesn't exist.");
         }
     }
 }
