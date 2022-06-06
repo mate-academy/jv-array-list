@@ -45,31 +45,18 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         checkIndex(index);
-        if (index == size) {
-            throw new ArrayListIndexOutOfBoundsException("You have passed incorrect index,"
-                    + "index must be smaller then size, actual index == size");
-        }
         return storage[index];
     }
 
     @Override
     public void set(T value, int index) {
         checkIndex(index);
-        if (index < size) {
-            storage[index] = value;
-            return;
-        }
-        throw new ArrayListIndexOutOfBoundsException("You have passed incorrect index,"
-                + "index must be smaller then size, actual index == size");
+        storage[index] = value;
     }
 
     @Override
     public T remove(int index) {
         checkIndex(index);
-        if (index == size) {
-            throw new ArrayListIndexOutOfBoundsException("You have passed incorrect index,"
-                    + "index must be smaller then size, actual index == size");
-        }
         T removed = storage[index];
         copy(index, REMOVE_ID);
         size--;
@@ -103,10 +90,9 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void resize() {
-        T[] temporary = (T[]) new Object[currentCapacity];
-        System.arraycopy(storage, 0, temporary, 0, size);
-        storage = (T[]) new Object[(int) (currentCapacity * 1.5)];
-        System.arraycopy(temporary, 0, storage, 0, currentCapacity);
+        T[] temporary = (T[]) new Object[(int) (currentCapacity * 1.5)];
+        System.arraycopy(storage, 0, temporary, 0, currentCapacity);
+        storage = temporary;
         currentCapacity = (int) (currentCapacity * 1.5);
     }
 
@@ -123,6 +109,10 @@ public class ArrayList<T> implements List<T> {
         if (index > size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("You have passed incorrect index,"
                     + " index < 0 OR index > size");
+        }
+        if (index == size) {
+            throw new ArrayListIndexOutOfBoundsException("You have passed incorrect index,"
+                    + "index must be smaller then size, actual index == size");
         }
     }
 }
