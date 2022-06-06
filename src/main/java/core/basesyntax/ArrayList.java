@@ -45,18 +45,21 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         checkIndex(index);
+        checkElement(index);
         return storage[index];
     }
 
     @Override
     public void set(T value, int index) {
         checkIndex(index);
+        checkElement(index);
         storage[index] = value;
     }
 
     @Override
     public T remove(int index) {
         checkIndex(index);
+        checkElement(index);
         T removed = storage[index];
         copy(index, REMOVE_ID);
         size--;
@@ -110,6 +113,9 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayListIndexOutOfBoundsException("You have passed incorrect index,"
                     + " index < 0 OR index > size");
         }
+    }
+
+    private void checkElement(int index) {
         if (index == size) {
             throw new ArrayListIndexOutOfBoundsException("You have passed incorrect index,"
                     + "index must be smaller then size, actual index == size");
