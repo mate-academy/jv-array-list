@@ -13,14 +13,14 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        resize((int)(elements.length * 1.5));
+        resize();
         elements[size++] = value;
     }
 
     @Override
     public void add(T value, int index) {
         verifyIndexOutOfBounds(index, size);
-        resize((int)(elements.length * 1.5));
+        resize();
         if (size - index >= 0) {
             System.arraycopy(elements, index, elements, index + 1,
                     size - index);
@@ -31,11 +31,9 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        resize(list.size());
         for (int i = 0; i < list.size(); i++) {
-            elements[size + i] = list.get(i);
+            add(list.get(i));
         }
-        size += list.size();
     }
 
     @Override
@@ -83,9 +81,9 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void resize(int newSize) {
+    private void resize() {
         if (size == elements.length) {
-            T[] newElements = (T[]) new Object[newSize];
+            T[] newElements = (T[]) new Object[(int)(elements.length * 1.5)];
             System.arraycopy(elements, 0, newElements, 0, size);
             elements = newElements;
         }
