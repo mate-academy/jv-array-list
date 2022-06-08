@@ -1,6 +1,7 @@
 package core.basesyntax;
 
 import java.util.NoSuchElementException;
+import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
     private T[] elementData;
@@ -24,8 +25,8 @@ public class ArrayList<T> implements List<T> {
         } catch (IndexOutOfBoundsException e) {
             throw new ArrayListIndexOutOfBoundsException("Can't add element to this index");
         }
-            elementData[index] = value;
-            size++;
+        elementData[index] = value;
+        size++;
     }
 
     @Override
@@ -46,7 +47,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void set(T value, int index) {
         if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Can't replace the element on the specified position");
+            throw new ArrayListIndexOutOfBoundsException(
+                    "Can't replace the element on the specified position");
         }
         elementData[index] = value;
     }
@@ -54,9 +56,9 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         try {
-        T removedElement = elementData[index];
-        removeElement(index);
-        return removedElement;
+            T removedElement = elementData[index];
+            removeElement(index);
+            return removedElement;
         } catch (ArrayIndexOutOfBoundsException e) {
             throw new ArrayListIndexOutOfBoundsException("There isn't element on this index");
         }
@@ -66,7 +68,7 @@ public class ArrayList<T> implements List<T> {
     public T remove(T element) {
         int index = 0;
         try {
-            while (elementData[index] != element) {
+            while (!(Objects.equals(elementData[index], element))) {
                 index++;
             }
         } catch (ArrayIndexOutOfBoundsException e) {
