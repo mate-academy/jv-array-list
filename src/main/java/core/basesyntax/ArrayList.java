@@ -4,27 +4,23 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int INITIAL_CAPACITY = 10;
-    private int capacity;
     private int size;
     private T[] elements;
 
     public ArrayList() {
         elements = (T[]) new Object[INITIAL_CAPACITY];
-        capacity = INITIAL_CAPACITY;
     }
 
     @Override
     public void add(T value) {
-        increaseCapacity(capacity * 15);
+        resize((int)(elements.length * 1.5));
         elements[size++] = value;
     }
 
     @Override
     public void add(T value, int index) {
-        if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("index Out Of Bounds");
-        }
-        increaseCapacity(capacity * 15);
+        verifyIndexOutOfBounds(index, size);
+        resize((int)(elements.length * 1.5));
         if (size - index >= 0) {
             System.arraycopy(elements, index, elements, index + 1,
                     size - index);
@@ -35,7 +31,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        increaseCapacity(list.size());
+        resize(list.size());
         for (int i = 0; i < list.size(); i++) {
             elements[size + i] = list.get(i);
         }
@@ -44,25 +40,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index < 0 || index > size - 1) {
-            throw new ArrayListIndexOutOfBoundsException("index Out Of Bounds");
-        }
+        verifyIndexOutOfBounds(index, size - 1);
         return elements[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index < 0 || index > size - 1) {
-            throw new ArrayListIndexOutOfBoundsException("index Out Of Bounds");
-        }
+        verifyIndexOutOfBounds(index, size - 1);
         elements[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index < 0 || index > size - 1) {
-            throw new ArrayListIndexOutOfBoundsException("index Out Of Bounds");
-        }
+        verifyIndexOutOfBounds(index, size - 1);
         final T deletedValue = elements[index];
         if (size - 1 - index >= 0) {
             System.arraycopy(elements, index + 1, elements,
@@ -93,14 +83,18 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void increaseCapacity(int newSize) {
-        if (size == capacity) {
-            capacity = newSize;
-            T[] newElements = (T[]) new Object[capacity];
-            if (size >= 0) {
-                System.arraycopy(elements, 0, newElements, 0, size);
-            }
+    private void resize(int newSize) {
+        if (size == elements.length) {
+            T[] newElements = (T[]) new Object[newSize];
+            System.arraycopy(elements, 0, newElements, 0, size);
             elements = newElements;
+        }
+    }
+
+    private void verifyIndexOutOfBounds(int index, int lastAllowedIndex)
+            throws ArrayListIndexOutOfBoundsException {
+        if (index < 0 || index > lastAllowedIndex) {
+            throw new ArrayListIndexOutOfBoundsException("index Out Of Bounds");
         }
     }
 }
