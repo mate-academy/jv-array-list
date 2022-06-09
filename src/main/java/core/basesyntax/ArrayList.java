@@ -4,12 +4,12 @@ import java.util.NoSuchElementException;
 import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
-    private static final int LIST_CAPACITY = 10;
+    private static final int DEFAULT_CAPACITY = 10;
     private T[] elementData;
     private int size;
 
     public ArrayList() {
-        elementData = (T[]) new Object[LIST_CAPACITY];
+        elementData = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
     @Override
@@ -20,9 +20,8 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index > size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Can't add element in this index");
-        }
+        throwException(index, index > size || index < 0,
+                new ArrayListIndexOutOfBoundsException("Can't add element in this index"));
         ensureCapacity(size + 1);
         System.arraycopy(elementData, index, elementData, index + 1, size - index);
         elementData[index] = value;
@@ -38,26 +37,22 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Element with this index doesn't exist");
-        }
+        throwException(index, index >= size || index < 0,
+                new ArrayListIndexOutOfBoundsException("Element with this index doesn't exist"));
         return elementData[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException(
-                    "Can't replace the element on the specified position");
-        }
+        throwException(index, index >= size || index < 0,
+                new ArrayListIndexOutOfBoundsException("Can't replace the element on the specified position"));
         elementData[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Element with this index doesn't exist");
-        }
+        throwException(index, index >= size || index < 0,
+                new ArrayListIndexOutOfBoundsException("Element with this index doesn't exist"));
         T removedElement = elementData[index];
         removeElement(index);
         return removedElement;
@@ -68,9 +63,8 @@ public class ArrayList<T> implements List<T> {
         int index = 0;
         while (!(Objects.equals(elementData[index], element))) {
             index++;
-            if (index == size) {
-                throw new NoSuchElementException("There is no element like this in this list");
-            }
+            throwException(index, index == size,
+                    new NoSuchElementException("There is no element like this in this list"));
         }
         removeElement(index);
         return element;
@@ -98,5 +92,11 @@ public class ArrayList<T> implements List<T> {
         int numMoved = size - index - 1;
         System.arraycopy(elementData, index + 1, elementData, index, numMoved);
         elementData[--size] = null;
+    }
+
+    private void throwException(int index, Boolean condition, RuntimeException e) {
+        if (condition) {
+            throw e;
+        }
     }
 }
