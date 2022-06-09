@@ -45,7 +45,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void set(T value, int index) {
         throwException(index, index >= size || index < 0,
-                new ArrayListIndexOutOfBoundsException("Can't replace the element on the specified position"));
+                new ArrayListIndexOutOfBoundsException(
+                        "Can't replace the element on the specified position"));
         elementData[index] = value;
     }
 
