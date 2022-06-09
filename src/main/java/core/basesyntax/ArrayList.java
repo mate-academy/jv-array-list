@@ -20,8 +20,9 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        throwException(index, index > size || index < 0,
-                new ArrayListIndexOutOfBoundsException("Can't add element in this index"));
+        if (index > size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Can't add element in this index");
+        }
         ensureCapacity(size + 1);
         System.arraycopy(elementData, index, elementData, index + 1, size - index);
         elementData[index] = value;
@@ -37,23 +38,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        throwException(index, index >= size || index < 0,
-                new ArrayListIndexOutOfBoundsException("Element with this index doesn't exist"));
+        throwArrayListIndexOutOfBoundsException(index);
         return elementData[index];
     }
 
     @Override
     public void set(T value, int index) {
-        throwException(index, index >= size || index < 0,
-                new ArrayListIndexOutOfBoundsException(
-                        "Can't replace the element on the specified position"));
+        throwArrayListIndexOutOfBoundsException(index);
         elementData[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        throwException(index, index >= size || index < 0,
-                new ArrayListIndexOutOfBoundsException("Element with this index doesn't exist"));
+        throwArrayListIndexOutOfBoundsException(index);
         T removedElement = elementData[index];
         removeElement(index);
         return removedElement;
@@ -64,8 +61,9 @@ public class ArrayList<T> implements List<T> {
         int index = 0;
         while (!(Objects.equals(elementData[index], element))) {
             index++;
-            throwException(index, index == size,
-                    new NoSuchElementException("There is no element like this in this list"));
+            if (index == size) {
+                throw new NoSuchElementException("There is no element like this in this list");
+            }
         }
         removeElement(index);
         return element;
@@ -95,9 +93,9 @@ public class ArrayList<T> implements List<T> {
         elementData[--size] = null;
     }
 
-    private void throwException(int index, Boolean condition, RuntimeException e) {
-        if (condition) {
-            throw e;
+    private void throwArrayListIndexOutOfBoundsException(int index) {
+        if (index >= size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Element with this index doesn't exist");
         }
     }
 }
