@@ -38,19 +38,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        throwArrayListIndexOutOfBoundsException(index);
+        checkIndex(index);
         return elementData[index];
     }
 
     @Override
     public void set(T value, int index) {
-        throwArrayListIndexOutOfBoundsException(index);
+        checkIndex(index);
         elementData[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        throwArrayListIndexOutOfBoundsException(index);
+        checkIndex(index);
         T removedElement = elementData[index];
         removeElement(index);
         return removedElement;
@@ -93,7 +93,7 @@ public class ArrayList<T> implements List<T> {
         elementData[--size] = null;
     }
 
-    private void throwArrayListIndexOutOfBoundsException(int index) {
+    private void checkIndex(int index) {
         if (index >= size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Element with this index doesn't exist");
         }
