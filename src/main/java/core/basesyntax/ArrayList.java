@@ -11,25 +11,9 @@ public class ArrayList<T> implements List<T> {
         values = (T[]) new Object[DEFAULT_SIZE];
     }
 
-    private void resizeArray() {
-        int newSize = (size + (size >> 1));
-        T[] resizeElement = (T[]) new Object[newSize];
-        System.arraycopy(values, 0, resizeElement, 0, values.length);
-        values = resizeElement;
-    }
-
-    private void checkIndex(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index " + index
-                    + " doesn't exist in list of size " + size);
-        }
-    }
-
     @Override
     public void add(T value) {
-        if (size == values.length) {
-            resizeArray();
-        }
+        resizeArray();
         values[size] = value;
         size++;
     }
@@ -39,10 +23,7 @@ public class ArrayList<T> implements List<T> {
         if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException("This index doesn't exist");
         }
-
-        if (size == values.length) {
-            resizeArray();
-        }
+        resizeArray();
 
         System.arraycopy(values, index, values, index + 1, size - index);
         values[index] = value;
@@ -82,17 +63,12 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        int index = -1;
         for (int l = 0; l < size; l++) {
             if (element == values[l] || element != null && element.equals(values[l])) {
-                index = l;
                 return remove(l);
             }
         }
-        if (index == -1) {
-            throw new NoSuchElementException("There is no such value in array " + element);
-        }
-        return element;
+        throw new NoSuchElementException("There is no such value in array " + element);
     }
 
     @Override
@@ -103,5 +79,21 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private void resizeArray() {
+        if (size == values.length) {
+            int newSize = (size + (size >> 1));
+            T[] resizeElement = (T[]) new Object[newSize];
+            System.arraycopy(values, 0, resizeElement, 0, values.length);
+            values = resizeElement;
+        }
+    }
+
+    private void checkIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Index " + index
+                    + " doesn't exist in list of size " + size);
+        }
     }
 }
