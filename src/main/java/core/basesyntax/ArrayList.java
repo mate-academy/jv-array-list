@@ -1,14 +1,12 @@
 package core.basesyntax;
 
-import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 @SuppressWarnings("unchecked")
 public class ArrayList<T> implements List<T> {
-
     private static final int DEFAULT_CAPACITY = 10;
     private T[] elements;
-    private int size = 0;
+    private int size;
 
     public ArrayList() {
         elements = (T[]) new Object[DEFAULT_CAPACITY];
@@ -78,8 +76,9 @@ public class ArrayList<T> implements List<T> {
 
     private void resizeArray() {
         int newSize = elements.length + (elements.length >> 1);
-        elements = Arrays.copyOf(elements, newSize);
-        System.arraycopy(elements, 0, elements, 0, size);
+        T[] newElements = (T[]) new Object[newSize];
+        System.arraycopy(elements, 0, newElements, 0, size);
+        elements = newElements;
     }
 
     private void checkIncreaseArray() {
