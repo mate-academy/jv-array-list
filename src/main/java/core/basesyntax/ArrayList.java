@@ -5,7 +5,6 @@ import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-
     private Object[] elementData;
     private int size;
 
@@ -14,11 +13,10 @@ public class ArrayList<T> implements List<T> {
     }
 
     @Override
-    public boolean add(T value) {
+    public void add(T value) {
         checkingLength();
         elementData[size()] = value;
         size++;
-        return true;
     }
 
     @Override
@@ -56,10 +54,10 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         checkingIndex(index);
-        T buffer = (T) elementData[index];
+        T oldValue = (T) elementData[index];
         System.arraycopy(elementData, (index + 1), elementData, index, (size - index - 1));
         size--;
-        return buffer;
+        return oldValue;
     }
 
     @Override
@@ -92,7 +90,8 @@ public class ArrayList<T> implements List<T> {
 
     private void checkingIndex(int index) {
         if (index >= size() || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index " + index + " is invalid.");
+            throw new ArrayListIndexOutOfBoundsException(
+                    "Index " + index + " is invalid for size " + size);
         }
     }
 
