@@ -3,17 +3,17 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    private static final int MAX_ITEMS_NUMBERS = 10;
+    private static final int DEFAULT_CAPACITY = 10;
     private Object[] items;
     private int size;
 
     public ArrayList() {
-        items = new Object[MAX_ITEMS_NUMBERS];
+        items = new Object[DEFAULT_CAPACITY];
     }
 
     @Override
     public void add(T value) {
-        coppyArray();
+        resize();
         items[size] = value;
         size++;
     }
@@ -21,9 +21,9 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("Incorrect index " + index);
+            throw new ArrayListIndexOutOfBoundsException("Incorrect index: " + index);
         }
-        coppyArray();
+        resize();
         if (size > index) {
             System.arraycopy(items, index, items, index + 1, size - index);
         }
@@ -53,19 +53,19 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
-        Object deletedIndex = items[index];
+        Object deletedItem = items[index];
         System.arraycopy(items, index + 1, items, index, size - index - 1);
         size--;
-        return (T) deletedIndex;
+        return (T) deletedItem;
     }
 
     @Override
     public T remove(T element) {
         int index = getIndexByValue(element);
-        Object deleted = items[index];
+        Object deletedItem = items[index];
         System.arraycopy(items,index + 1, items, index,size - index);
         items[size--] = null;
-        return (T) deleted;
+        return (T) deletedItem;
     }
 
     @Override
@@ -80,7 +80,8 @@ public class ArrayList<T> implements List<T> {
 
     private void checkIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index " + index + " is invalid " + size);
+            throw new ArrayListIndexOutOfBoundsException("Index: " + index + " is invalid, size: "
+                    + size);
         }
     }
 
@@ -90,10 +91,10 @@ public class ArrayList<T> implements List<T> {
                 return i;
             }
         }
-        throw new NoSuchElementException("Not found element " + value);
+        throw new NoSuchElementException("Not found element: " + value);
     }
 
-    private void coppyArray() {
+    private void resize() {
         if (size == items.length) {
             Object[] newItems = new Object[(int) (items.length + items.length / 2)];
             System.arraycopy(items, 0, newItems, 0, items.length);
