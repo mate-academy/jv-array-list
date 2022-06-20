@@ -5,7 +5,7 @@ import java.util.NoSuchElementException;
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private T[] values;
-    private int size = 0;
+    private int size;
 
     public ArrayList() {
         values = (T[]) new Object[DEFAULT_CAPACITY];
@@ -16,13 +16,13 @@ public class ArrayList<T> implements List<T> {
         grow();
         values[size] = value;
         size++;
-
     }
 
     @Override
     public void add(T value, int index) {
         if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("Index is invalid");
+            throw new ArrayListIndexOutOfBoundsException("Index "
+                    + index + " is invalid for size " + size);
         }
         grow();
         System.arraycopy(values, index, values, index + 1, size - index);
@@ -75,7 +75,7 @@ public class ArrayList<T> implements List<T> {
                 return remove(i);
             }
         }
-        throw new NoSuchElementException("There is no such element");
+        throw new NoSuchElementException("There is no such element " + element);
     }
 
     @Override
@@ -98,7 +98,7 @@ public class ArrayList<T> implements List<T> {
 
     public void validateIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index is invalid");
+            throw new ArrayListIndexOutOfBoundsException("This index is invalid: " + index);
         }
     }
 }
