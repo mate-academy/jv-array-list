@@ -10,33 +10,33 @@ public class ArrayList<T> implements List<T> {
     private int size;
     private int cursor; // index of next element
     private int lastReturned = -1;  // index of last element returned; -1 if no such
-    //private int expectedModCount = modCount;
 
     private void rangeCheckForAdd(int index) {
         if (index > size || index < 0)
             throw new ArrayListIndexOutOfBoundsException("Index of bounds exception");
     }
 
-    private Object[] grow(int minCapacity) {
+    private Object[] grow(int minimalCapacity) {
         int oldCapacity = arrayData.length;
+        double multiplicator = 1;
+        if (oldCapacity == size) {
+            multiplicator = 1.5;
+        }
         if (oldCapacity > 0 || arrayData != DEFAULTCAPACITY_EMPTY_ELEMENTDATA) {
-            int newCapacity = (int) (oldCapacity * 1.5);
+            int newCapacity = (int) (oldCapacity * multiplicator + 1);
             return arrayData = Arrays.copyOf(arrayData, newCapacity);
         } else {
-            return arrayData = (T[]) new Object[Math.max(DEFAULT_CAPACITY, minCapacity)];
+            return arrayData = (T[]) new Object[Math.max(DEFAULT_CAPACITY, minimalCapacity)];
         }
     }
 
     @Override
     public void add(T value) {
-        checkForComodification();
-
         try {
             int index = cursor;
             ArrayList.this.add(value, index);
             cursor = index + 1;
             lastReturned = -1;
-            //expectedModCount = modCount;
         } catch (IndexOutOfBoundsException ex) {
             throw new ArrayListIndexOutOfBoundsException("Index of bounds exception");
         }
@@ -45,7 +45,6 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         rangeCheckForAdd(index);
-        //modCount++;
         final int s;
         if ((s = size) == arrayData.length)
             arrayData = (T[]) grow(size + 1);
@@ -63,12 +62,14 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        return null;
+        rangeCheckForAdd(index);
+        return arrayData[index];
     }
 
     @Override
     public void set(T value, int index) {
-
+        rangeCheckForAdd(index);
+        arrayData[index] = value;
     }
 
     @Override
@@ -88,6 +89,6 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public boolean isEmpty() {
-        return false;
+        return arrayData == DEFAULTCAPACITY_EMPTY_ELEMENTDATA ? true : false;
     }
 }
