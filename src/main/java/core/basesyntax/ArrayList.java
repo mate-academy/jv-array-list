@@ -30,6 +30,16 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
+    public static Object[] listToArray(List<?> list) {
+        if (!list.isEmpty()) {
+            Object[] tempArray = new Object[list.size()];
+            for (int index = 0; index < list.size(); index++)
+                tempArray[index] = list.get(index);
+            return tempArray;
+        }
+        return null;
+    }
+
     @Override
     public void add(T value) {
         try {
@@ -57,7 +67,12 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-
+        if (!list.isEmpty()) {
+            T[] tempArray = (T[]) listToArray(list);
+            int newCapacity = size + tempArray.length;
+            arrayData = Arrays.copyOf(arrayData, newCapacity);
+            System.arraycopy(tempArray, 0, arrayData, size, tempArray.length);
+        }
     }
 
     @Override
