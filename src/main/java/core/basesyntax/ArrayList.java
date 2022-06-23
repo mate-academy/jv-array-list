@@ -9,9 +9,9 @@ public class ArrayList<T> implements List<T> {
     private static final Object[] DEFAULTCAPACITY_EMPTY_ELEMENTDATA = {};
     private int size;
     private int cursor; // index of next element
-    private int lastReturned = -1;  // index of last element returned; -1 if no such
+    //private int lastReturned = -1;  // index of last element returned; -1 if no such
 
-    private void rangeCheckForAdd(int index) {
+    private void rangeCheckForIndex(int index) {
         if (index > size || index < 0)
             throw new ArrayListIndexOutOfBoundsException("Index of bounds exception");
     }
@@ -46,7 +46,7 @@ public class ArrayList<T> implements List<T> {
             int index = cursor;
             ArrayList.this.add(value, index);
             cursor = index + 1;
-            lastReturned = -1;
+            //lastReturned = -1;
         } catch (IndexOutOfBoundsException ex) {
             throw new ArrayListIndexOutOfBoundsException("Index of bounds exception");
         }
@@ -54,7 +54,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        rangeCheckForAdd(index);
+        rangeCheckForIndex(index);
         final int s;
         if ((s = size) == arrayData.length)
             arrayData = (T[]) grow(size + 1);
@@ -77,24 +77,31 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        rangeCheckForAdd(index);
+        rangeCheckForIndex(index);
         return arrayData[index];
     }
 
     @Override
     public void set(T value, int index) {
-        rangeCheckForAdd(index);
+        rangeCheckForIndex(index);
         arrayData[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        return null;
+        //rangeCheckForIndex(index);
+        T oldValue = get(index);
+        int newSize = size - 1;
+        if (newSize > index)
+            System.arraycopy(arrayData, index + 1, arrayData, index, newSize - index);
+        arrayData[size = newSize] = null;
+        return oldValue;
     }
 
     @Override
     public T remove(T element) {
-        return null;
+
+        return element;
     }
 
     @Override
