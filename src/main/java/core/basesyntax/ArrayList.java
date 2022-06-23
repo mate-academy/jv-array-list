@@ -100,7 +100,24 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-
+        int index = -1;
+        found:
+        {
+            if (element == null) {
+                index = 0;
+                for (; index < size; index++)
+                    if (arrayData[index] == null)
+                        break found;
+            } else {
+                index = 0;
+                for (; index < size; index++)
+                    if (element.equals(arrayData[index]))
+                        break found;
+            }
+            if (index != -1) {
+                remove(index);
+            }
+        }
         return element;
     }
 
