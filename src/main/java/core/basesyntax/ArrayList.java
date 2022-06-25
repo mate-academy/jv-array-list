@@ -2,7 +2,6 @@ package core.basesyntax;
 
 import java.util.Arrays;
 import java.util.NoSuchElementException;
-import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
@@ -20,7 +19,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        add(value,size);
+        add(value, size);
     }
 
     @Override
@@ -31,14 +30,14 @@ public class ArrayList<T> implements List<T> {
         if (size == elementsData.length) {
             elementsData = grow(elementsData.length);
         }
-        System.arraycopy(elementsData,index,elementsData,index + 1,size - index);
+        System.arraycopy(elementsData, index, elementsData, index + 1, size - index);
         elementsData[index] = value;
         size++;
     }
 
     @Override
     public void addAll(List<T> list) {
-        if ((list.size() + size) >= elementsData.length){
+        if ((list.size() + size) >= elementsData.length) {
             elementsData = grow(elementsData.length);
         }
         for (int i = 0; i < list.size(); i++) {
@@ -49,7 +48,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) throws ArrayListIndexOutOfBoundsException {
-        if (index >= size || index < 0){
+        if (index >= size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Index is bigger then ArrayList size");
         }
         return elementsData[index];
@@ -57,7 +56,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void set(T value, int index) {
-        if (index >= size || index < 0){
+        if (index >= size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Index is bigger then ArrayList size");
         }
         elementsData[index] = value;
@@ -65,11 +64,11 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(int index) {
-        if (index >= size || index < 0){
+        if (index >= size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Index is bigger then ArrayList size");
         }
         T removedValue = elementsData[index];
-        System.arraycopy(elementsData,index + 1, elementsData, index, size - index - 1);
+        System.arraycopy(elementsData, index + 1, elementsData, index, size - index - 1);
         size--;
         return removedValue;
     }
