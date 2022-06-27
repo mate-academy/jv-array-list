@@ -12,13 +12,6 @@ public class ArrayList<T> implements List<T> {
         Object[] elementData = new Object[DEFAULT_CAPACITY];
     }
 
-    private void grow() {
-        if (size == elementData.length) {
-            int newCapacity = size + (size >> 1);
-            elementData = Arrays.copyOf(elementData, newCapacity);
-        }
-    }
-
     @Override
     public void add(T value) {
         grow();
@@ -33,18 +26,11 @@ public class ArrayList<T> implements List<T> {
         }
         checkIndexBounds(index);
         grow();
-        // shift elements to right for one position
         System.arraycopy(elementData, index,
                 elementData, index + 1,
                 size - index);
         elementData[index] = value;
         size = size + 1;
-    }
-
-    private void checkIndexBounds(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index " + index + " not found.");
-        }
     }
 
     @Override
@@ -70,7 +56,6 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         checkIndexBounds(index);
         T oldValue = (T) elementData[index];
-        // shift element to left for one position with rewriting elementData[index]
         System.arraycopy(elementData, index + 1, elementData, index, size - 1 - index);
         size--;
         return oldValue;
@@ -81,12 +66,12 @@ public class ArrayList<T> implements List<T> {
         int index = 0;
         while (index < size) {
             if (element == elementData[index]
-                    || element != null && element.equals((T) elementData[index])) {
+                    || element != null && element.equals(elementData[index])) {
                 return remove(index);
             }
             index++;
         }
-        throw new NoSuchElementException("NoSuchElementException, element " + element.toString());
+        throw new NoSuchElementException("NoSuchElementException, element " + element);
     }
 
     @Override
@@ -97,5 +82,18 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private void grow() {
+        if (size == elementData.length) {
+            int newCapacity = size + (size >> 1);
+            elementData = Arrays.copyOf(elementData, newCapacity);
+        }
+    }
+
+    private void checkIndexBounds(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Index " + index + " not found.");
+        }
     }
 }
