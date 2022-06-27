@@ -1,65 +1,31 @@
 package core.basesyntax;
-//import jdk.internal.util.ArraysSupport;
 
 import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    private static final Object[] EMPTY_ARRAYDATA = {};
-    private T[] arrayData = (T[]) new Object[DEFAULT_CAPACITY];
+    private T[] elements = (T[]) new Object[DEFAULT_CAPACITY];
     private int size;
-    private int cursor;
-
-    private String outOfBoundsMsg(int index) {
-        return "Index: " + index + ", Size: " + size;
-    }
-
-    private Object[] grow(int minimalCapacity) {
-        int oldCapacity = arrayData.length;
-        double multiplicator = 1;
-        if (oldCapacity == size) {
-            multiplicator = 1.5;
-        }
-        if (oldCapacity > 0 || arrayData != EMPTY_ARRAYDATA) {
-            int newCapacity = (int) (oldCapacity * multiplicator + 1);
-            return arrayData = Arrays.copyOf(arrayData, newCapacity);
-        } else {
-            return arrayData = (T[]) new Object[Math.max(DEFAULT_CAPACITY, minimalCapacity)];
-        }
-    }
-
-    public static Object[] listToArray(List<?> list) {
-        if (!list.isEmpty()) {
-            Object[] tempArray = new Object[list.size()];
-            for (int index = 0; index < list.size(); index++) {
-                tempArray[index] = list.get(index);
-            }
-            return tempArray;
-        }
-        return null;
-    }
 
     @Override
     public void add(T value) {
-        int index = cursor;
-        ArrayList.this.add(value, index);
-        cursor = index + 1;
+        ArrayList.this.add(value, size);
     }
 
     @Override
     public void add(T value, int index) {
         if (index > size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException(outOfBoundsMsg(index));
+            throw new ArrayListIndexOutOfBoundsException("Index" + index + " of bounds exception");
         } else {
             int s = size;
-            if (s == arrayData.length) {
-                arrayData = (T[]) grow(size + 1);
+            if (s == elements.length) {
+                grow(size + 1);
             }
-            System.arraycopy(arrayData, index,
-                    arrayData, index + 1,
+            System.arraycopy(elements, index,
+                    elements, index + 1,
                     s - index);
-            arrayData[index] = value;
+            elements[index] = value;
             size = s + 1;
         }
     }
@@ -69,8 +35,8 @@ public class ArrayList<T> implements List<T> {
         if (!list.isEmpty()) {
             T[] tempArray = (T[]) listToArray(list);
             int newCapacity = size + tempArray.length;
-            arrayData = Arrays.copyOf(arrayData, newCapacity);
-            System.arraycopy(tempArray, 0, arrayData, size, tempArray.length);
+            elements = Arrays.copyOf(elements, newCapacity);
+            System.arraycopy(tempArray, 0, elements, size, tempArray.length);
             size = newCapacity;
         }
     }
@@ -78,33 +44,33 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException(outOfBoundsMsg(index));
+            throw new ArrayListIndexOutOfBoundsException("Index " + index + " of bounds exception");
         } else {
-            return arrayData[index];
+            return elements[index];
         }
     }
 
     @Override
     public void set(T value, int index) {
         if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException(outOfBoundsMsg(index));
+            throw new ArrayListIndexOutOfBoundsException("Index " + index + " of bounds exception");
         } else {
-            arrayData[index] = value;
+            elements[index] = value;
         }
     }
 
     @Override
     public T remove(int index) {
         if (index > size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException(outOfBoundsMsg(index));
+            throw new ArrayListIndexOutOfBoundsException("Index " + index + " of bounds exception");
         } else {
             int newSize = size - 1;
             final T oldValue = get(index);
             if (newSize > index) {
-                System.arraycopy(arrayData, index + 1, arrayData, index, newSize - index);
+                System.arraycopy(elements, index + 1, elements, index, newSize - index);
             }
             size = newSize;
-            arrayData[newSize] = null;
+            elements[newSize] = null;
             return oldValue;
         }
     }
@@ -116,14 +82,14 @@ public class ArrayList<T> implements List<T> {
         {
             if (element == null) {
                 for (; index < size; index++) {
-                    if (arrayData[index] == null) {
+                    if (elements[index] == null) {
                         remove(index);
                         break found;
                     }
                 }
             } else {
                 for (; index < size; index++) {
-                    if (element.equals(arrayData[index])) {
+                    if (element.equals(elements[index])) {
                         remove(index);
                         break found;
                     }
@@ -142,12 +108,37 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         boolean empty = true;
-        for (T element : arrayData) {
+        for (T element : elements) {
             if (element != null) {
                 empty = false;
                 break;
             }
         }
         return empty;
+    }
+
+    public static Object[] listToArray(List<?> list) {
+        if (!list.isEmpty()) {
+            Object[] tempArray = new Object[list.size()];
+            for (int index = 0; index < list.size(); index++) {
+                tempArray[index] = list.get(index);
+            }
+            return tempArray;
+        }
+        return null;
+    }
+
+    private void grow(int minimalCapacity) {
+        int oldCapacity = elements.length;
+        double multiplicator = 1;
+        if (oldCapacity == size) {
+            multiplicator = 1.5;
+        }
+        if (oldCapacity > 0 || isEmpty()) {
+            int newCapacity = (int) (oldCapacity * multiplicator + 1);
+            elements = Arrays.copyOf(elements, newCapacity);
+        } else {
+            elements = (T[]) new Object[Math.max(DEFAULT_CAPACITY, minimalCapacity)];
+        }
     }
 }
