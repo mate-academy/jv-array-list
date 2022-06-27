@@ -1,6 +1,7 @@
 package core.basesyntax;
 
 import java.util.Arrays;
+import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
@@ -8,7 +9,6 @@ public class ArrayList<T> implements List<T> {
     private int size;
 
     public ArrayList() {
-
         Object[] elementData = new Object[DEFAULT_CAPACITY];
     }
 
@@ -27,14 +27,26 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index < size) {
-            return;
+        if (index < 0 || index > size) {
+            throw new ArrayListIndexOutOfBoundsException("ArrayListIndexOutOfBoundsException");
         }
+        if (size == elementData.length) {
+            elementData = grow(size);
+        }
+        // shift elements to right for one position
+        System.arraycopy(elementData, index,
+                elementData, index + 1,
+                size - index);
+        elementData[index] = value;
+        size = size + 1;
+
     }
 
     @Override
     public void addAll(List<T> list) {
-
+        for (int i = 0; i < list.size(); i++) {
+            add(list.get(i));
+        }
     }
 
     @Override
@@ -56,14 +68,32 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("ArrayListIndexOutOfBoundsException");
+        }
+        T oldValue = (T) elementData[index];
+        // shift element to left for one position with rewriting elementData[index]
+        System.arraycopy(elementData, index + 1, elementData, index, size - 1 - index);
         size--;
-        return null;
+        return oldValue;
     }
 
     @Override
     public T remove(T element) {
-        size--;
-        return null;
+        int index = 0;
+        boolean isFound = false;
+        while (index < size) {
+            if (element == elementData[index]
+                    || element != null && element.equals((T) elementData[index])) {
+                isFound = true;
+                break;
+            }
+            index++;
+        }
+        if (!isFound) {
+            throw new NoSuchElementException();
+        }
+        return remove(index);
     }
 
     @Override
