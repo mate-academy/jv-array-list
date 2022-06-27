@@ -12,11 +12,6 @@ public class ArrayList<T> implements List<T> {
         this.elementsData = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
-    public T[] grow(int currentCapacity) {
-        int newCapacity = currentCapacity + (currentCapacity >> 1);
-        return elementsData = Arrays.copyOf(elementsData, newCapacity);
-    }
-
     @Override
     public void add(T value) {
         add(value, size);
@@ -37,12 +32,8 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        if ((list.size() + size) >= elementsData.length) {
-            elementsData = grow(elementsData.length);
-        }
         for (int i = 0; i < list.size(); i++) {
-            elementsData[size] = list.get(i);
-            size++;
+            add(list.get(i));
         }
     }
 
@@ -92,5 +83,10 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private T[] grow(int currentCapacity) {
+        int newCapacity = currentCapacity + (currentCapacity >> 1);
+        return elementsData = Arrays.copyOf(elementsData, newCapacity);
     }
 }
