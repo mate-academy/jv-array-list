@@ -9,7 +9,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        ArrayList.this.add(value, size);
+        add(value, size);
     }
 
     @Override
