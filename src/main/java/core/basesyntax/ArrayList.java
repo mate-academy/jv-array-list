@@ -4,6 +4,7 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
+    private static final double GROW_MULTIPLICATOR = 1.5;
     private T[] elements = (T[]) new Object[DEFAULT_CAPACITY];
     private int size;
 
@@ -131,7 +132,7 @@ public class ArrayList<T> implements List<T> {
         int oldCapacity = elements.length;
         double multiplicator = 1;
         if (oldCapacity == size) {
-            multiplicator = 1.5;
+            multiplicator = GROW_MULTIPLICATOR;
         }
         if (oldCapacity > 0 || isEmpty()) {
             int newCapacity = (int) (oldCapacity * multiplicator + 1);
