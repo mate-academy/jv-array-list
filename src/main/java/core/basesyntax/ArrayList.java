@@ -132,6 +132,7 @@ public class ArrayList<T> implements List<T> {
         int oldCapacity = elements.length;
         double multiplicator = 1;
         if (oldCapacity == size) {
+
             multiplicator = GROW_MULTIPLICATOR;
         }
         if (oldCapacity > 0 || isEmpty()) {
