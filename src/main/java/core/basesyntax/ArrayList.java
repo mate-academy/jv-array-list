@@ -73,23 +73,15 @@ public class ArrayList<T> implements List<T> {
         int index = 0;
         found:
         {
-            if (element == null) {
-                for (; index < size; index++) {
-                    if (elements[index] == null) {
-                        remove(index);
-                        break found;
-                    }
+            for (; index < size; index++) {
+                if (element.equals(elements[index])) {
+                    remove(index);
+                    break found;
                 }
-            } else {
-                for (; index < size; index++) {
-                    if (element.equals(elements[index])) {
-                        remove(index);
-                        break found;
-                    }
-                }
-                throw new NoSuchElementException();
             }
+            throw new NoSuchElementException();
         }
+
         return element;
     }
 
