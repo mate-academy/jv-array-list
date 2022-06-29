@@ -100,14 +100,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public boolean isEmpty() {
-        boolean empty = true;
-        for (T element : elements) {
-            if (element != null) {
-                empty = false;
-                break;
-            }
-        }
-        return empty;
+        return size == 0;
     }
 
     public void checkIndexInRange(int index) throws ArrayListIndexOutOfBoundsException {
