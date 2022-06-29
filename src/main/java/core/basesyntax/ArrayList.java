@@ -14,19 +14,20 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index > size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index" + index + " of bounds exception");
-        } else {
-            int s = size;
-            if (s == elements.length) {
-                grow(size + 1);
-            }
-            System.arraycopy(elements, index,
-                    elements, index + 1,
-                    s - index);
-            elements[index] = value;
-            size = s + 1;
+        boolean conditionForAdd = index < 0 || index > size;
+        if (conditionForAdd) {
+            throw new ArrayListIndexOutOfBoundsException("Index" + index
+                    + " of bounds for size " + size);
         }
+        int s = size;
+        if (s == elements.length) {
+            grow(size + 1);
+        }
+        System.arraycopy(elements, index,
+                elements, index + 1,
+                s - index);
+        elements[index] = value;
+        size = s + 1;
     }
 
     @Override
@@ -42,36 +43,28 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index " + index + " of bounds exception");
-        } else {
-            return elements[index];
-        }
+        checkIndexInRange(index);
+        return elements[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index " + index + " of bounds exception");
-        } else {
-            elements[index] = value;
-        }
+        checkIndexInRange(index);
+        elements[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index > size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index " + index + " of bounds exception");
-        } else {
-            int newSize = size - 1;
-            final T oldValue = get(index);
-            if (newSize > index) {
-                System.arraycopy(elements, index + 1, elements, index, newSize - index);
-            }
-            size = newSize;
-            elements[newSize] = null;
-            return oldValue;
+        checkIndexInRange(index);
+        int newSize = size - 1;
+        final T oldValue = get(index);
+        if (newSize > index) {
+            System.arraycopy(elements, index + 1, elements, index, newSize - index);
         }
+        size = newSize;
+        elements[newSize] = null;
+        return oldValue;
+
     }
 
     @Override
@@ -114,6 +107,13 @@ public class ArrayList<T> implements List<T> {
             }
         }
         return empty;
+    }
+
+    public void checkIndexInRange(int index) throws ArrayListIndexOutOfBoundsException {
+        if (index >= size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Index" + index
+                    + " of bounds for size " + size);
+        }
     }
 
     public static Object[] listToArray(List<?> list) {
