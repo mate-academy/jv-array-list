@@ -1,39 +1,37 @@
 package core.basesyntax;
 
 import java.util.NoSuchElementException;
-import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
     private static final int START_LENGTH = 10;
-    private static final double LENGTH_INCREASING = 1.5;
-    private int index;
-    private T[] ourArrayList;
+    private static final double INCREASING_COEFFICIENT = 1.5;
+    private int size;
+    private T[] elements;
 
     public ArrayList() {
-        ourArrayList = (T[]) new Object[START_LENGTH];
-        index = 0;
+        elements = (T[]) new Object[START_LENGTH];
     }
 
     @Override
     public void add(T value) {
-        if (index == ourArrayList.length) {
-            addLengthToArrayList();
+        if (size == elements.length) {
+            growArray();
         }
-        ourArrayList[index] = value;
-        index++;
+        elements[size] = value;
+        size++;
     }
 
     @Override
     public void add(T value, int index) {
         if (index < 0 || index > size()) {
-            throw new ArrayListIndexOutOfBoundsException(exceptionMessage(index));
-        } else if (index - this.index == 1) {
+            throw new ArrayListIndexOutOfBoundsException(getExceptionMessage(index));
+        } else if (index - this.size == 1) {
             add(value);
             return;
-        } else if (this.index + 1 >= ourArrayList.length) {
-            addLengthToArrayList();
+        } else if (size == elements.length) {
+            growArray();
         }
-        this.index++;
+        size++;
         addValueByIndex(value, index);
     }
 
@@ -46,55 +44,42 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (indexNotExist(index)) {
-            throw new ArrayListIndexOutOfBoundsException(exceptionMessage(index));
-        }
-        return ourArrayList[index];
+        indexNotExist(index);
+        return elements[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (indexNotExist(index)) {
-            throw new ArrayListIndexOutOfBoundsException(exceptionMessage(index));
-        }
-        ourArrayList[index] = value;
+        indexNotExist(index);
+        elements[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (indexNotExist(index)) {
-            throw new ArrayListIndexOutOfBoundsException(exceptionMessage(index));
-        }
-        T[] newList = (T[]) new Object[(int)(ourArrayList.length - 1)];
-        for (int i = 0; i < index; i++) {
-            newList[i] = ourArrayList[i];
-        }
-        for (int i = index; i < newList.length; i++) {
-            newList[i] = ourArrayList[i + 1];
-        }
-        this.index--;
-        T removedElement = ourArrayList[index];
-        ourArrayList = newList;
+        indexNotExist(index);
+        T[] newList = (T[]) new Object[(int)(elements.length - 1)];
+        System.arraycopy(elements, 0, newList, 0, index);
+        System.arraycopy(elements, index + 1, newList, index, newList.length - index);
+        this.size--;
+        T removedElement = elements[index];
+        elements = newList;
         return removedElement;
     }
 
     @Override
     public T remove(T element) {
         for (int i = 0; i < size(); i++) {
-            if (Objects.equals(element,ourArrayList[i])) {
+            if (element == elements[i] || (element != null && (element.equals(elements[i])))) {
                 return remove(i);
             }
         }
-        if (true) {
-            throw new NoSuchElementException("Such element " + element.toString()
+        throw new NoSuchElementException("Such element " + element
                     + " doesn't exist in the List");
-        }
-        return null;
     }
 
     @Override
     public int size() {
-        return index;
+        return size;
     }
 
     @Override
@@ -102,31 +87,27 @@ public class ArrayList<T> implements List<T> {
         return size() == 0;
     }
 
-    private void addLengthToArrayList() {
-        T[] newList = (T[]) new Object[(int)(ourArrayList.length * LENGTH_INCREASING)];
-        for (int i = 0; i < ourArrayList.length; i++) {
-            newList[i] = ourArrayList[i];
-        }
-        ourArrayList = newList;
+    private void growArray() {
+        T[] newList = (T[]) new Object[(int)(elements.length * INCREASING_COEFFICIENT)];
+        System.arraycopy(elements, 0, newList, 0, elements.length);
+        elements = newList;
     }
 
     private void addValueByIndex(T value, int index) {
-        T[] newList = (T[]) new Object[ourArrayList.length];
+        T[] newList = (T[]) new Object[elements.length];
         newList[index] = value;
-        for (int i = 0; i < index; i++) {
-            newList[i] = ourArrayList[i];
-        }
-        for (int i = index + 1; i < size(); i++) {
-            newList[i] = ourArrayList[i - 1];
-        }
-        ourArrayList = newList;
+        System.arraycopy(elements, 0, newList, 0, index);
+        System.arraycopy(elements, index + 1 - 1, newList, index + 1, size() - (index + 1));
+        elements = newList;
     }
 
-    private boolean indexNotExist(int index) {
-        return index < 0 || index >= size();
+    private void indexNotExist(int index) {
+        if (index < 0 || index >= size()) {
+            throw new ArrayListIndexOutOfBoundsException(getExceptionMessage(index));
+        }
     }
 
-    private String exceptionMessage(int index) {
-        return "Invalid index " + index;
+    private String getExceptionMessage(int index) {
+        return "Invalid index " + index + " for size " + size;
     }
 }
