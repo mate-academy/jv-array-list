@@ -31,24 +31,6 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private void rangeCheckForAdd(int index) {
-        if (index > size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Can't reach index out of capacity");
-        }
-    }
-
-    private void rangeCheck(int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Can't reach index out of capacity");
-        }
-    }
-
-    private void addWithShift(T value, int index) {
-        System.arraycopy(elementData, index, elementData, index + 1, size - index);
-        elementData[index] = value;
-        size++;
-    }
-
     @Override
     public void addAll(List<T> list) {
         for (int i = 0; i < list.size(); i++) {
@@ -56,33 +38,15 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private void checkCapacity() {
-        if (size == capacity) {
-            expandCapacity();
-        }
-    }
-
-    private void expandCapacity() {
-        int newCapacity = newCapacity();
-        T[] newElementData = ((T[]) new Object[newCapacity]);
-        System.arraycopy(elementData, 0, newElementData, 0, size);
-        elementData = newElementData;
-        capacity = newCapacity;
-    }
-
-    private int newCapacity() {
-        return capacity + (capacity >> 1);
-    }
-
     @Override
     public T get(int index) {
-        rangeCheck(index);
+        checkIndex(index);
         return elementData[index];
     }
 
     @Override
     public void set(T value, int index) {
-        rangeCheck(index);
+        checkIndex(index);
         elementData[index] = value;
     }
 
@@ -96,14 +60,61 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if (compareElements(elementData[i], element)) {
+            if (isEqual(elementData[i], element)) {
                 T storedElement = elementData[i];
                 checkAndRemove(i);
                 return storedElement;
             }
         }
         throw new NoSuchElementException("Can't find element " + element + " in storage");
+    }
 
+    @Override
+    public int size() {
+        return size;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return size == 0;
+    }
+
+    private void rangeCheckForAdd(int index) {
+        if (index > size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Can't reach index: " + index
+                    + "out of capacity:" + size);
+        }
+    }
+
+    private void checkIndex(int index) {
+        if (index >= size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Can't reach index: " + index
+                    + "out of capacity:" + size);
+        }
+    }
+
+    private void addWithShift(T value, int index) {
+        System.arraycopy(elementData, index, elementData, index + 1, size - index);
+        elementData[index] = value;
+        size++;
+    }
+
+    private void checkCapacity() {
+        if (size == capacity) {
+            expandCapacity();
+        }
+    }
+
+    private void expandCapacity() {
+        int getNewCapacity = newCapacity();
+        T[] newElementData = ((T[]) new Object[getNewCapacity]);
+        System.arraycopy(elementData, 0, newElementData, 0, size);
+        elementData = newElementData;
+        capacity = getNewCapacity;
+    }
+
+    private int newCapacity() {
+        return capacity + (capacity >> 1);
     }
 
     private void checkAndRemove(int index) {
@@ -124,17 +135,8 @@ public class ArrayList<T> implements List<T> {
         size--;
     }
 
-    private <T> boolean compareElements(T a, T b) {
+    private boolean isEqual(T a, T b) {
         return (a == b) || (a != null && a.equals(b));
     }
-
-    @Override
-    public int size() {
-        return size;
-    }
-
-    @Override
-    public boolean isEmpty() {
-        return size == 0;
-    }
 }
+
