@@ -15,24 +15,23 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        boolean conditionForAdd = index < 0 || index > size;
-        if (conditionForAdd) {
+        if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException("Index" + index
                     + " of bounds for size " + size);
         }
-        int s = size;
-        if (s == elements.length) {
+        if (size == elements.length) {
             grow(size + 1);
         }
         System.arraycopy(elements, index,
                 elements, index + 1,
-                s - index);
+                size - index);
         elements[index] = value;
-        size = s + 1;
+        size++;
     }
 
     @Override
     public void addAll(List<T> list) {
+
         if (!list.isEmpty()) {
             T[] tempArray = (T[]) listToArray(list);
             int newCapacity = size + tempArray.length;
@@ -74,14 +73,19 @@ public class ArrayList<T> implements List<T> {
         found:
         {
             for (; index < size; index++) {
-                if (element.equals(elements[index])) {
+                if (elements[index] == element) {
                     remove(index);
                     break found;
+                }
+                if (element != null) {
+                    if (element.equals(elements[index])) {
+                        remove(index);
+                        break found;
+                    }
                 }
             }
             throw new NoSuchElementException();
         }
-
         return element;
     }
 
@@ -113,19 +117,13 @@ public class ArrayList<T> implements List<T> {
         return null;
     }
 
-    private void grow(int minimalCapacity) {
-        int oldCapacity = elements.length;
-        double multiplicator = 1;
-        if (oldCapacity == size) {
-            multiplicator = GROW_MULTIPLICATOR;
-        }
-        if (oldCapacity > 0 || isEmpty()) {
-            int newCapacity = (int) (oldCapacity * multiplicator + 1);
+    private void grow(int minCapacity) {
+        if (size == elements.length) {
+            int defaultGrow = (int) (elements.length * GROW_MULTIPLICATOR);
+            int newCapacity = Math.max(defaultGrow, minCapacity);
             T[] tempArray = (T[]) new Object[newCapacity];
             System.arraycopy(elements, 0, tempArray, 0, size);
             elements = tempArray;
-        } else {
-            elements = (T[]) new Object[Math.max(DEFAULT_CAPACITY, minimalCapacity)];
         }
     }
 }
