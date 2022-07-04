@@ -84,7 +84,7 @@ public class ArrayList<T> implements List<T> {
                     }
                 }
             }
-            throw new NoSuchElementException("Is no such element present");
+            throw new NoSuchElementException("Such element: " + element + " doesn't exist");
         }
         return element;
     }
