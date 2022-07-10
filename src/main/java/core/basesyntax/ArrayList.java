@@ -1,6 +1,8 @@
 package core.basesyntax;
 
 public class ArrayList<T> implements List<T> {
+
+
     @Override
     public void add(T value) {
 
