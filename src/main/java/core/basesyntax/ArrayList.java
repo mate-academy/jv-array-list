@@ -1,6 +1,27 @@
 package core.basesyntax;
 
+import java.util.Arrays;
+
 public class ArrayList<T> implements List<T> {
+    private static final int DEFAULT_CAPACITY = 10;
+    private T[] objects;
+    private int size;
+
+
+    public ArrayList() {
+        objects = (T[]) new Object[DEFAULT_CAPACITY];
+    }
+
+    @Override
+    public int size() {
+        return size;
+    }
+    @Override
+    public boolean isEmpty() {
+        return size == 0;
+    }
+
+
 
 
     @Override
@@ -38,13 +59,5 @@ public class ArrayList<T> implements List<T> {
         return null;
     }
 
-    @Override
-    public int size() {
-        return 0;
-    }
 
-    @Override
-    public boolean isEmpty() {
-        return false;
-    }
 }
