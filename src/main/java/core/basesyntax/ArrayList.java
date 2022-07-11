@@ -2,16 +2,14 @@ package core.basesyntax;
 
 import java.util.Arrays;
 import java.util.NoSuchElementException;
-import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
-    private static final int DEFAULT_CAPACITY = 5;
+    private static final int DEFAULT_CAPACITY = 10;
     private static final double STEP_INCREASING_ARRAY = 1.5;
     private T[] objects;
     private int size;
 
     public ArrayList() {
-
         objects = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
@@ -23,22 +21,6 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
-    }
-
-    private void growArray() {
-        if (size == objects.length) {
-            T[] arraySours = objects;
-            objects = (T[])new Object[(int)
-                    (Math.round(objects.length * STEP_INCREASING_ARRAY))];
-            System.arraycopy(arraySours,0,objects,0,arraySours.length);
-        }
-    }
-
-    private void checkOutOfBoundsException(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index out of bounds value: "
-                    + index);
-        }
     }
 
     @Override
@@ -99,10 +81,25 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T value) {
         for (int i = 0; i < size(); i++) {
-            if (Objects.equals(objects[i], value)) {
+            if (objects[i] == value || objects[i] != null && objects[i].equals(value)) {
                 return remove(i);
             }
         }
         throw new NoSuchElementException("No such value: " + value);
+    }
+
+    private void growArray() {
+        if (size == objects.length) {
+            T[] oldArray = objects;
+            objects = (T[]) new Object[(int) (objects.length * STEP_INCREASING_ARRAY)];
+            System.arraycopy(oldArray,0,objects,0,oldArray.length);
+        }
+    }
+
+    private void checkOutOfBoundsException(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Index out of bounds value: "
+                    + index);
+        }
     }
 }
