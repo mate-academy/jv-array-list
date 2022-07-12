@@ -24,15 +24,14 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         if (index < 0 || index > size()) {
-            throw new ArrayListIndexOutOfBoundsException(getExceptionMessage(index));
-        } else if (index - this.size == 1) {
-            add(value);
-            return;
-        } else if (size == elements.length) {
+            throw new ArrayListIndexOutOfBoundsException("Invalid index " + index + " for size " + size);
+        }
+        if (size == elements.length) {
             growArray();
         }
+        System.arraycopy(elements, index, elements, index + 1, size - index);
         size++;
-        addValueByIndex(value, index);
+        elements[index] = value;
     }
 
     @Override
@@ -44,25 +43,22 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        indexNotExist(index);
+        checkIndex(index);
         return elements[index];
     }
 
     @Override
     public void set(T value, int index) {
-        indexNotExist(index);
+        checkIndex(index);
         elements[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        indexNotExist(index);
-        T[] newList = (T[]) new Object[(int)(elements.length - 1)];
-        System.arraycopy(elements, 0, newList, 0, index);
-        System.arraycopy(elements, index + 1, newList, index, newList.length - index);
-        this.size--;
+        checkIndex(index);
         T removedElement = elements[index];
-        elements = newList;
+        size--;
+        System.arraycopy(elements, index + 1, elements, index, size - index);
         return removedElement;
     }
 
@@ -93,21 +89,9 @@ public class ArrayList<T> implements List<T> {
         elements = newList;
     }
 
-    private void addValueByIndex(T value, int index) {
-        T[] newList = (T[]) new Object[elements.length];
-        newList[index] = value;
-        System.arraycopy(elements, 0, newList, 0, index);
-        System.arraycopy(elements, index + 1 - 1, newList, index + 1, size() - (index + 1));
-        elements = newList;
-    }
-
-    private void indexNotExist(int index) {
+    private void checkIndex(int index) {
         if (index < 0 || index >= size()) {
-            throw new ArrayListIndexOutOfBoundsException(getExceptionMessage(index));
+            throw new ArrayListIndexOutOfBoundsException("Invalid index " + index + " for size " + size);
         }
-    }
-
-    private String getExceptionMessage(int index) {
-        return "Invalid index " + index + " for size " + size;
     }
 }
