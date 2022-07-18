@@ -15,7 +15,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value) {
         if (size == storage.length) {
-            growCapacity((int) (size * GROW_VALUE));
+            growCapacity();
         }
         storage[size] = value;
         size++;
@@ -24,10 +24,11 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         if (index > size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index out of bounds");
+            throw new ArrayListIndexOutOfBoundsException("Index out of bounds: " + index
+                    + ", max available index: " + size);
         }
         if (size == storage.length) {
-            growCapacity((int) (size * GROW_VALUE));
+            growCapacity();
         }
         System.arraycopy(storage, index, storage, index + 1, size - index);
         storage[index] = value;
@@ -36,31 +37,26 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        int requiredCapacity = list.size() + size;
-        if (requiredCapacity > storage.length) {
-            growCapacity(requiredCapacity);
-        }
         for (int i = 0; i < list.size(); i++) {
-            storage[size + i] = list.get(i);
+            add(list.get(i));
         }
-        size += list.size();
     }
 
     @Override
     public T get(int index) {
-        checkIndexOutOfBoundException(index);
+        checkIndex(index);
         return storage[index];
     }
 
     @Override
     public void set(T value, int index) {
-        checkIndexOutOfBoundException(index);
+        checkIndex(index);
         storage[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        checkIndexOutOfBoundException(index);
+        checkIndex(index);
         T element = storage[index];
         removeElement(index);
         return element;
@@ -86,7 +82,8 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void growCapacity(int increaseSize) {
+    private void growCapacity() {
+        int increaseSize = (int) (size * GROW_VALUE);
         T[] newStorage = (T[]) new Object[(int) (increaseSize)];
         System.arraycopy(storage, 0, newStorage, 0, size);
         storage = newStorage;
@@ -102,9 +99,10 @@ public class ArrayList<T> implements List<T> {
         return -1;
     }
 
-    private void checkIndexOutOfBoundException(int index) {
+    private void checkIndex(int index) {
         if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index out of bounds");
+            throw new ArrayListIndexOutOfBoundsException("Index out of bounds: "
+                    + index + ", max available index: " + (size - 1));
         }
     }
 
@@ -112,7 +110,7 @@ public class ArrayList<T> implements List<T> {
         if (index < (size - 1)) {
             System.arraycopy(storage, index + 1, storage, index, size - index);
         }
-        storage[(size - 1)] = null;
+        storage[size - 1] = null;
         size--;
     }
 }
