@@ -24,8 +24,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("Index of element is"
-                    + " out of bounds of Array List!");
+            throw new ArrayListIndexOutOfBoundsException("Index is invalid " + index);
         }
         if (size == storage.length) {
             increaseCapacity();
@@ -66,7 +65,8 @@ public class ArrayList<T> implements List<T> {
     public T remove(T element) {
         int index = checkElement(element);
         if (index == -1) {
-            throw new NoSuchElementException("The element was not find in the Array List");
+            throw new NoSuchElementException("The element: " + element
+                    + " was not found");
         }
         removeElement(index);
         return element;
@@ -84,8 +84,7 @@ public class ArrayList<T> implements List<T> {
 
     private void checkIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index of element is"
-                    + " out of bounds of Array List!");
+            throw new ArrayListIndexOutOfBoundsException("Index is invalid " + index);
         }
     }
 
