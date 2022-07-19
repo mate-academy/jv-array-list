@@ -1,21 +1,20 @@
 package core.basesyntax;
 
-import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_INITIAL_CAPACITY = 10;
-    private Object[] elementData = new Object[DEFAULT_INITIAL_CAPACITY];
+    private Object[] elements;
     private int size;
 
     public ArrayList() {
-        Object[] elementData = new Object[DEFAULT_INITIAL_CAPACITY];
+        elements = new Object[DEFAULT_INITIAL_CAPACITY];
     }
 
     @Override
     public void add(T value) {
         grow();
-        elementData[size++] = value;
+        elements[size++] = value;
     }
 
     @Override
@@ -24,11 +23,11 @@ public class ArrayList<T> implements List<T> {
             add(value);
             return;
         }
-        indexRangeCheck(index);
+        checkIndex(index);
         grow();
-        System.arraycopy(elementData, index, elementData, index + 1,size - index);
-        elementData[index] = value;
-        size = size + 1;
+        System.arraycopy(elements, index, elements, index + 1,size - index);
+        elements[index] = value;
+        size++;
     }
 
     @Override
@@ -40,21 +39,21 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        indexRangeCheck(index);
-        return (T) elementData[index];
+        checkIndex(index);
+        return (T) elements[index];
     }
 
     @Override
     public void set(T value, int index) {
-        indexRangeCheck(index);
-        elementData[index] = value;
+        checkIndex(index);
+        elements[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        indexRangeCheck(index);
-        T oldValue = (T) elementData[index];
-        System.arraycopy(elementData, index + 1, elementData, index, size - 1 - index);
+        checkIndex(index);
+        T oldValue = (T) elements[index];
+        System.arraycopy(elements, index + 1, elements, index, size - 1 - index);
         size--;
         return oldValue;
     }
@@ -62,13 +61,13 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if (elementData[i] == element
-                    || elementData[i] != null
-                    && elementData[i].equals(element)) {
+            if (elements[i] == element
+                    || elements[i] != null
+                    && elements[i].equals(element)) {
                 return remove(i);
             }
         }
-        throw new NoSuchElementException("Element #" + element + " is no present.");
+        throw new NoSuchElementException("Element #" + element + " is not present.");
     }
 
     @Override
@@ -82,13 +81,15 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void grow() {
-        if (size == elementData.length) {
-            int newCapacity = size + (size >> 1); /* 1.5 times growth */
-            elementData = Arrays.copyOf(elementData, newCapacity);
+        if (size == elements.length) {
+            int newCapacity = size + (size >> 1);
+            Object[] copyElements = new Object[newCapacity];
+            System.arraycopy(elements, 0, copyElements, 0, size);
+            elements = copyElements;
         }
     }
 
-    private void indexRangeCheck(int index) {
+    private void checkIndex(int index) {
         if (index >= size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Index #" + index + " is invalid.");
         }
