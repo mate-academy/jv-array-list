@@ -7,6 +7,7 @@ public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private int counter;
     private T[] values = (T[]) new Object[DEFAULT_CAPACITY];
+
     @Override
     public void add(T value) {
         checkExtention();
