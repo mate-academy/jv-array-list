@@ -108,8 +108,6 @@ public class ArrayList<T> implements List<T> {
         T[] copy = values.clone();
         double capacityMultiplier = 1.5;
         values = (T[]) new Object[(int) (values.length * capacityMultiplier)];
-        for (int i = 0; i < copy.length; i++) {
-            values[i] = copy[i];
-        }
+        System.arraycopy(copy, 0, values, 0, copy.length);
     }
 }
