@@ -4,7 +4,7 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
 
-    private final int DEFAULT_CAPACITY = 10;
+    private static final int DEFAULT_CAPACITY = 10;
 
     private int counter;
 
@@ -14,12 +14,6 @@ public class ArrayList<T> implements List<T> {
     public void add(T value) {
         checkExtention();
         storage[counter++] = value;
-    }
-
-    private void checkExtention() {
-        if (counter == storage.length) {
-            extend();
-        }
     }
 
     @Override
@@ -96,6 +90,12 @@ public class ArrayList<T> implements List<T> {
         return counter == 0;
     }
 
+    private void checkExtention() {
+        if (counter == storage.length) {
+            extend();
+        }
+    }
+
     private void verifyIndexInBound(int index) {
         if (index < 0 || index > counter) {
             throw new ArrayListIndexOutOfBoundsException("incorrect index");
@@ -116,12 +116,10 @@ public class ArrayList<T> implements List<T> {
 
     private void extend() {
         T[] copy = storage.clone();
-        double CAPACITY_MULTIPLIER = 1.5;
-        storage = (T[]) new Object[(int) (storage.length * CAPACITY_MULTIPLIER)];
+        double capacityMultiplier = 1.5;
+        storage = (T[]) new Object[(int) (storage.length * capacityMultiplier)];
         for (int i = 0; i < copy.length; i++) {
             storage[i] = copy[i];
         }
     }
-
-
 }
