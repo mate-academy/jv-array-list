@@ -5,15 +5,12 @@ import java.util.NoSuchElementException;
 public class ArrayList<T> implements List<T> {
 
     private static final int DEFAULT_CAPACITY = 10;
-
     private int counter;
-
-    private T[] storage = (T[]) new Object[DEFAULT_CAPACITY];
-
+    private T[] values = (T[]) new Object[DEFAULT_CAPACITY];
     @Override
     public void add(T value) {
         checkExtention();
-        storage[counter++] = value;
+        values[counter++] = value;
     }
 
     @Override
@@ -25,17 +22,9 @@ public class ArrayList<T> implements List<T> {
             return;
         }
 
-        T tmp = storage[index];
+        System.arraycopy(values, index, values, index + 1, counter - index);
+        values[index] = value;
         counter++;
-        for (int i = index; i < counter; i++) {
-            if (i == index) {
-                storage[i] = value;
-            } else {
-                T tmp2 = storage[i];
-                storage[i] = tmp;
-                tmp = tmp2;
-            }
-        }
     }
 
     @Override
@@ -48,22 +37,22 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         verifyIndexInBoundOrEmpty(index);
-        return storage[index];
+        return values[index];
     }
 
     @Override
     public void set(T value, int index) {
         verifyIndexInBoundOrEmpty(index);
-        storage[index] = value;
+        values[index] = value;
     }
 
     @Override
     public T remove(int index) {
         verifyIndexInBoundOrEmpty(index);
-        T returnValue = storage[index];
-        for (int i = index; i < counter - 1; i++) {
-            storage[i] = storage[i + 1];
-        }
+        T returnValue = values[index];
+
+        System.arraycopy(values, index + 1, values, index, counter - index - 1);
+
         counter--;
         return returnValue;
     }
@@ -71,9 +60,9 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < counter; i++) {
-            if (element != null && element.equals(storage[i])) {
+            if (element != null && element.equals(values[i])) {
                 return remove(i);
-            } else if (element == null && storage[i] == null) {
+            } else if (element == null && values[i] == null) {
                 return remove(i);
             }
         }
@@ -91,7 +80,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void checkExtention() {
-        if (counter == storage.length) {
+        if (counter == values.length) {
             extend();
         }
     }
@@ -115,11 +104,11 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void extend() {
-        T[] copy = storage.clone();
+        T[] copy = values.clone();
         double capacityMultiplier = 1.5;
-        storage = (T[]) new Object[(int) (storage.length * capacityMultiplier)];
+        values = (T[]) new Object[(int) (values.length * capacityMultiplier)];
         for (int i = 0; i < copy.length; i++) {
-            storage[i] = copy[i];
+            values[i] = copy[i];
         }
     }
 }
