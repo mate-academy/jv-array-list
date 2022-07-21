@@ -100,7 +100,7 @@ public class ArrayListTest {
         ArrayList<String> arrayList = new ArrayList<>();
         for (int i = 0; i < ELEMENTS_COUNT; i++) {
             arrayList.add("First + " + i, 0);
-            Assert.assertEquals("Test failed! Size of array should be " + (i + 1) + "but it is "
+            Assert.assertEquals("Test failed! Size of array should be " + (i + 1) + " but it is "
                     + arrayList.size(), i + 1, arrayList.size());
         }
         for (int i = 0; i < ELEMENTS_COUNT; i++) {
