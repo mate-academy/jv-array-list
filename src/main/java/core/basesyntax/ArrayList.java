@@ -29,18 +29,9 @@ public class ArrayList<T> implements List<T> {
         if (size == elements.length) {
             this.grow();
         }
-        ++size;
-        Object[] newElements = new Object[elements.length];
-        for (int i = 0; i < size; i++) {
-            if (i == index) {
-                newElements[i] = value;
-            } else if (i < index) {
-                newElements[i] = elements[i];
-            } else {
-                newElements[i] = elements[i - 1];
-            }
-        }
-        elements = newElements;
+        System.arraycopy(elements,index, elements, index + 1, size - index);
+        elements[index] = value;
+        size++;
     }
 
     @Override
@@ -75,17 +66,9 @@ public class ArrayList<T> implements List<T> {
         if (index >= size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Index " + index + " out of bound.");
         } else {
-            Object[] newElements = new Object[elements.length];
-            for (int i = 0; i < size; i++) {
-                if (i < index) {
-                    newElements[i] = elements[i];
-                } else if (i > index) {
-                    newElements[i - 1] = elements[i];
-                }
-            }
             T removeElement = (T) elements[index];
-            --size;
-            elements = newElements;
+            System.arraycopy(elements, index + 1, elements, index, size - index - 1);
+            size--;
             return removeElement;
         }
     }
