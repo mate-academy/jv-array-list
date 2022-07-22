@@ -1,6 +1,18 @@
 package core.basesyntax;
 
+import java.util.Objects;
+
 public class ArrayList<T> implements List<T> {
+
+
+    private static final int DEFAULTCAPACITY_EMPTY_ELEMENTDATA = 10;
+    private Object[] objects;
+    private int size;
+
+    public ArrayList() {
+        objects = new Object[DEFAULTCAPACITY_EMPTY_ELEMENTDATA];
+    }
+
     @Override
     public void add(T value) {
 
@@ -18,7 +30,8 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        return null;
+        checkIndex(index);
+        return (T) objects[index];
     }
 
     @Override
@@ -44,5 +57,11 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return false;
+    }
+
+    private void checkIndex (int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Index out of range: " + index + " Слава Україні!");
+        }
     }
 }
