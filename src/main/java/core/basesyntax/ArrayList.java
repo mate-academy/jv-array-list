@@ -94,7 +94,7 @@ public class ArrayList<T> implements List<T> {
 
     private void verifyIndexInBoundOrEmpty(int index) {
         if (isEmpty() || (index < 0 || index >= counter)) {
-            throw new ArrayListIndexOutOfBoundsException("incorrect index");
+            throw new ArrayListIndexOutOfBoundsException("Incorrect index: " + index);
         }
     }
 
