@@ -5,12 +5,12 @@ import java.util.Objects;
 public class ArrayList<T> implements List<T> {
 
 
-    private static final int DEFAULTCAPACITY_EMPTY_ELEMENTDATA = 10;
+    private static final int DEFAULT_CAPACITY = 10;
     private Object[] objects; // should we use transient keyword?
     private int size;
 
     public ArrayList() {
-        objects = new Object[DEFAULTCAPACITY_EMPTY_ELEMENTDATA];
+        objects = new Object[DEFAULT_CAPACITY];
     }
 
     @Override
@@ -29,6 +29,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public T get(int index) {
         checkIndex(index);
         return (T) objects[index];
