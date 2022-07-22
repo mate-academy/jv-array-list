@@ -1,48 +1,113 @@
 package core.basesyntax;
 
+import java.util.NoSuchElementException;
+
 public class ArrayList<T> implements List<T> {
+    private static final int DEFAULT_CAPACITY = 10;
+    private static final double GROW_COEFFICIENT = 1.5;
+    private int size;
+    private Object[] elements;
+
+    public ArrayList() {
+        elements = new Object[DEFAULT_CAPACITY];
+    }
+
     @Override
     public void add(T value) {
-
+        if (size == elements.length) {
+            grow();
+        }
+        elements[size] = value;
+        size++;
     }
 
     @Override
     public void add(T value, int index) {
-
+        if (index > size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Index " + index + " out of bound.");
+        }
+        if (size == elements.length) {
+            grow();
+        }
+        System.arraycopy(elements, index, elements, index + 1, size - index);
+        elements[index] = value;
+        size++;
     }
 
     @Override
     public void addAll(List<T> list) {
-
+        for (int i = 0; i < list.size(); i++) {
+            add(list.get(i));
+        }
     }
 
     @Override
     public T get(int index) {
-        return null;
+        if (checkIndex(index)) {
+            throw new ArrayListIndexOutOfBoundsException("Index " + index + " out of bound.");
+        } else {
+            return (T) elements[index];
+        }
     }
 
     @Override
     public void set(T value, int index) {
-
+        if (checkIndex(index)) {
+            throw new ArrayListIndexOutOfBoundsException("Index " + index + " out of bound.");
+        } else {
+            elements[index] = value;
+        }
     }
 
     @Override
     public T remove(int index) {
-        return null;
+        if (checkIndex(index)) {
+            throw new ArrayListIndexOutOfBoundsException("Index " + index + " out of bound.");
+        } else {
+            T removeElement = (T) elements[index];
+            System.arraycopy(elements, index + 1, elements, index, size - index - 1);
+            size--;
+            return removeElement;
+        }
     }
 
     @Override
     public T remove(T element) {
-        return null;
+        int index = getIndex(element);
+        if (index < 0) {
+            throw new NoSuchElementException();
+        }
+        remove(index);
+        return element;
     }
 
     @Override
     public int size() {
-        return 0;
+        return size;
     }
 
     @Override
     public boolean isEmpty() {
-        return false;
+        return size == 0;
+    }
+
+    private void grow() {
+        Object[] newElements = new Object[(int) (size * GROW_COEFFICIENT)];
+        System.arraycopy(elements, 0, newElements, 0, size);
+        elements = newElements;
+    }
+
+    private int getIndex(T element) {
+        for (int i = 0; i < this.size; i++) {
+            T value = (T) elements[i];
+            if ((value != null && value.equals(element)) || value == element) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    private boolean checkIndex(int index) {
+        return index >= size || index < 0;
     }
 }
