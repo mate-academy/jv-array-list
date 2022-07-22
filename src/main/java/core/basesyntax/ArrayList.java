@@ -15,7 +15,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value) {
         if (size == elements.length) {
-            this.grow();
+            grow();
         }
         elements[size] = value;
         size++;
@@ -27,7 +27,7 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayListIndexOutOfBoundsException("Index " + index + " out of bound.");
         }
         if (size == elements.length) {
-            this.grow();
+            grow();
         }
         System.arraycopy(elements,index, elements, index + 1, size - index);
         elements[index] = value;
