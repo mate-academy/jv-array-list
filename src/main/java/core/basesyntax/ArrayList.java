@@ -29,23 +29,21 @@ public class ArrayList<T> implements List<T> {
         if (size == elements.length) {
             grow();
         }
-        System.arraycopy(elements,index, elements, index + 1, size - index);
+        System.arraycopy(elements, index, elements, index + 1, size - index);
         elements[index] = value;
         size++;
     }
 
     @Override
     public void addAll(List<T> list) {
-        if (list != null) {
-            for (int i = 0; i < list.size(); i++) {
-                add(list.get(i));
-            }
+        for (int i = 0; i < list.size(); i++) {
+            add(list.get(i));
         }
     }
 
     @Override
     public T get(int index) {
-        if (index >= size || index < 0) {
+        if (checkIndex(index)) {
             throw new ArrayListIndexOutOfBoundsException("Index " + index + " out of bound.");
         } else {
             return (T) elements[index];
@@ -54,7 +52,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void set(T value, int index) {
-        if (index >= size || index < 0) {
+        if (checkIndex(index)) {
             throw new ArrayListIndexOutOfBoundsException("Index " + index + " out of bound.");
         } else {
             elements[index] = value;
@@ -63,7 +61,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(int index) {
-        if (index >= size || index < 0) {
+        if (checkIndex(index)) {
             throw new ArrayListIndexOutOfBoundsException("Index " + index + " out of bound.");
         } else {
             T removeElement = (T) elements[index];
@@ -76,11 +74,10 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         int index = getIndex(element);
-        if (index >= 0) {
-            remove(index);
-        } else {
+        if (index < 0) {
             throw new NoSuchElementException();
         }
+        remove(index);
         return element;
     }
 
@@ -108,5 +105,9 @@ public class ArrayList<T> implements List<T> {
             }
         }
         return -1;
+    }
+
+    private boolean checkIndex(int index) {
+        return index >= size || index < 0;
     }
 }
