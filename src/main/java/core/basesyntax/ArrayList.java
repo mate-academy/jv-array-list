@@ -1,11 +1,10 @@
 package core.basesyntax;
 
-import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    private static final double MULTIPLIER_CAPACITY = 1.5;
+    private static final double GROW_COEFFICIENT = 1.5;
     private int size;
     private Object[] elements;
 
@@ -16,7 +15,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value) {
         if (size == elements.length) {
-            elements = this.grow();
+            this.grow();
         }
         elements[size] = value;
         size++;
@@ -28,7 +27,7 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayListIndexOutOfBoundsException("Index " + index + " out of bound.");
         }
         if (size == elements.length) {
-            elements = this.grow();
+            this.grow();
         }
         ++size;
         Object[] newElements = new Object[elements.length];
@@ -112,8 +111,10 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private Object[] grow() {
-        return elements = Arrays.copyOf(elements, (int) (size * MULTIPLIER_CAPACITY));
+    private void grow() {
+        Object[] newElements = new Object[(int) (size * GROW_COEFFICIENT)];
+        System.arraycopy(elements, 0, newElements, 0, size);
+        elements = newElements;
     }
 
     private int getIndex(T element) {
