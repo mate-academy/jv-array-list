@@ -6,7 +6,7 @@ public class ArrayList<T> implements List<T> {
 
 
     private static final int DEFAULTCAPACITY_EMPTY_ELEMENTDATA = 10;
-    private Object[] objects;
+    private Object[] objects; // should we use transient keyword?
     private int size;
 
     public ArrayList() {
