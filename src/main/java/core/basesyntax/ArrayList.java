@@ -55,7 +55,7 @@ public class ArrayList<T> implements List<T> {
         System.arraycopy(values, index + 1, values, index, counter - index - 1);
 
         counter--;
-        return returnValue;
+        return removedValue;
     }
 
     @Override
