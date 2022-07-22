@@ -50,7 +50,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         verifyIndexInBoundOrEmpty(index);
-        T returnValue = values[index];
+        T removedValue = values[index];
 
         System.arraycopy(values, index + 1, values, index, counter - index - 1);
 
