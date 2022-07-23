@@ -23,6 +23,7 @@ public class ArrayList<T> implements List<T> {
             elementData = buildUp();
         }
         elementData[size++] = value;
+        size++;
     }
 
     @Override
@@ -38,14 +39,21 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
+        checkList(list);
+        for (int i = 0; i < list.size(); i++) {
+            add(list.get(i));
+        }
+    }
 
+    @SuppressWarnings("unchecked")
+    T elementData(int index) {
+        return (T) elementData[index];
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public T get(int index) {
         checkIndex(index);
-        return (T) elementData[index];
+        return (T) elementData(index);
     }
 
     @Override
@@ -65,7 +73,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public int size() {
-        return 0;
+        return size;
     }
 
     @Override
@@ -76,12 +84,20 @@ public class ArrayList<T> implements List<T> {
     private Object[] buildUp() {
         int oldCapacity = elementData.length;
         int newCapacity = (int) (oldCapacity * SIZE_INCREASE_FACTOR);
-        return new Object[newCapacity];
+        Object[] newElementData = new Object[newCapacity];
+        System.arraycopy(elementData, 0, newElementData, 0, oldCapacity);
+        return newElementData;
     }
 
     private void checkIndex (int index) {
         if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index out of range: " + index + " Слава Україні!");
+            throw new ArrayListIndexOutOfBoundsException("Index out of range: " + index);
+        }
+    }
+
+    private void checkList (List<T> list) {
+        if (list == null) {
+            throw new NullPointerException("List : " + list + " can't be null");
         }
     }
 
