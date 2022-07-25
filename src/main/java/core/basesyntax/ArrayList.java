@@ -25,15 +25,13 @@ public class ArrayList<T> implements List<T> {
         if (size == list.length) {
             list = increase(list);
         }
-        if ((index >= 0) && (index <= size)) {
-            Object[] temporary = new Object[list.length];
-            System.arraycopy(list, 0, temporary,0, index);
-            temporary[index] = value;
-            System.arraycopy(list, index, temporary,index + 1, size - index);
-            list = temporary;
-            size++;
+        if (index == size) {
+            add(value);
         } else {
-            throw new ArrayListIndexOutOfBoundsException("Your index is over the size");
+            isValid(index);
+            System.arraycopy(list, index, list,index + 1, size - index);
+            list[index] = value;
+            size++;
         }
     }
 
@@ -46,53 +44,37 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if ((index >= 0) && (index < size)) {
-            return (T)list[index];
-        } else {
-            throw new ArrayListIndexOutOfBoundsException("Your index is over the size");
-        }
+        isValid(index);
+        return (T)list[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if ((index >= 0) && (index < size)) {
-            list[index] = value;
-        } else {
-            throw new ArrayListIndexOutOfBoundsException("Your index is over the size");
-        }
+        isValid(index);
+        list[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if ((index >= 0) && (index < size)) {
-            T removed = (T)list[index];
-            if (index == list.length - 1) {
-                size--;
-                return removed;
-            }
-            System.arraycopy(this.list, index + 1, this.list,index, size - index);
-            size--;
-            return removed;
-        } else {
-            throw new ArrayListIndexOutOfBoundsException("Your index is over the size");
+        isValid(index);
+        T removed = (T)list[index];
+        if (index != list.length - 1) {
+            System.arraycopy(this.list, index + 1, this.list, index, size - index);
         }
+        size--;
+        return removed;
     }
 
     @Override
     public T remove(T element) {
-        boolean isFound = false;
         for (int i = 0; i < size; i++) {
             if ((list[i] == element) || (list[i] != null) && (list[i].equals(element))) {
                 System.arraycopy(list, i + 1, list, i, size - i);
                 size--;
-                isFound = true;
-                break;
+                return element;
             }
         }
-        if (!isFound) {
-            throw new NoSuchElementException("The element being requested does not exist");
-        }
-        return element;
+        throw new NoSuchElementException("The element being requested does not exist");
     }
 
     @Override
@@ -109,5 +91,12 @@ public class ArrayList<T> implements List<T> {
         Object[] increasedList = new Object[list.length + (list.length >> 1)];
         System.arraycopy(list, 0, increasedList, 0, list.length);
         return increasedList;
+    }
+
+    private void isValid(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Your index " + index
+                    + " is over the size " + size);
+        }
     }
 }
