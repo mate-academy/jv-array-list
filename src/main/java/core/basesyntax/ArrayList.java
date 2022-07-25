@@ -3,33 +3,34 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-
     private static final int DEFAULT_CAPACITY = 10;
     private static final double SIZE_INCREASE_FACTOR = 1.5;
-    private Object[] elementData; // should we use transient keyword?
+    private Object[] elements;
     private int size;
 
     public ArrayList() {
-        elementData = new Object[DEFAULT_CAPACITY];
+        elements = new Object[DEFAULT_CAPACITY];
     }
 
     @Override
     public void add(T value) {
-        if (size == elementData.length) {
-            elementData = buildUp();
+        if (size == elements.length) {
+            resize();
         }
-        elementData[size] = value;
+        elements[size] = value;
         size++;
     }
 
     @Override
     public void add(T value, int index) {
-        checkIndex(index);
-        if (size == elementData.length) {
-            elementData = buildUp();
+        if (index < 0 || index > size) {
+            throw new ArrayListIndexOutOfBoundsException("Index out of range: " + index);
         }
-        System.arraycopy(elementData, index, elementData, index + 1, size - index);
-        elementData[index] = value;
+        if (size == elements.length) {
+            resize();
+        }
+        System.arraycopy(elements, index, elements, index + 1, size - index);
+        elements[index] = value;
         size++;
     }
 
@@ -45,27 +46,24 @@ public class ArrayList<T> implements List<T> {
     @SuppressWarnings("unchecked")
     public T get(int index) {
         checkIndex(index);
-        checkIndexEqualsSize(index);
-        return (T) elementData[index];
+        return (T) elements[index];
     }
 
     @Override
     public void set(T value, int index) {
         checkIndex(index);
-        checkIndexEqualsSize(index);
-        elementData[index] = value;
+        elements[index] = value;
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public T remove(int index) {
         checkIndex(index);
-        checkIndexEqualsSize(index);
-        final T oldValue = (T) elementData[index];
+        final T oldValue = (T) elements[index];
         if (size - 1 > index) {
-            System.arraycopy(elementData, index + 1, elementData, index, size - index - 1);
+            System.arraycopy(elements, index + 1, elements, index, size - index - 1);
         }
-        elementData[size - 1] = null;
+        elements[size - 1] = null;
         size--;
         return oldValue;
     }
@@ -90,22 +88,16 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private Object[] buildUp() {
-        int oldCapacity = elementData.length;
+    private void resize() {
+        int oldCapacity = elements.length;
         int newCapacity = (int) (oldCapacity * SIZE_INCREASE_FACTOR);
-        Object[] newElementData = new Object[newCapacity];
-        System.arraycopy(elementData, 0, newElementData, 0, oldCapacity);
-        return newElementData;
+        Object[] newElements = new Object[newCapacity];
+        System.arraycopy(elements, 0, newElements, 0, oldCapacity);
+        elements = newElements;
     }
 
     private void checkIndex(int index) {
-        if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("Index out of range: " + index);
-        }
-    }
-
-    private void checkIndexEqualsSize(int index) {
-        if (index == size) {
+        if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException("Index out of range: " + index);
         }
     }
@@ -119,7 +111,7 @@ public class ArrayList<T> implements List<T> {
     @SuppressWarnings("unchecked")
     private int getElement(T element) {
         for (int i = 0; i < size; i++) {
-            T value = (T) elementData[i];
+            T value = (T) elements[i];
             if (value != null && value.equals(element)
                     || value == element) {
                 return i;
