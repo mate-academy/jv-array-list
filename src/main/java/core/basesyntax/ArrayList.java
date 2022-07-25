@@ -1,12 +1,8 @@
 package core.basesyntax;
 
-
-import java.util.Arrays;
-import java.util.Objects;
-
+import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-
 
     private static final int DEFAULT_CAPACITY = 10;
     private static final double SIZE_INCREASE_FACTOR = 1.5;
@@ -22,14 +18,14 @@ public class ArrayList<T> implements List<T> {
         if (size == elementData.length) {
             elementData = buildUp();
         }
-        elementData[size++] = value;
+        elementData[size] = value;
         size++;
     }
 
     @Override
     public void add(T value, int index) {
         checkIndex(index);
-        if (index == elementData.length) {
+        if (size == elementData.length) {
             elementData = buildUp();
         }
         System.arraycopy(elementData, index, elementData, index + 1, size - index);
@@ -45,30 +41,43 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
+    @Override
     @SuppressWarnings("unchecked")
-    T elementData(int index) {
+    public T get(int index) {
+        checkIndex(index);
+        checkIndexEqualsSize(index);
         return (T) elementData[index];
     }
 
     @Override
-    public T get(int index) {
-        checkIndex(index);
-        return (T) elementData(index);
-    }
-
-    @Override
     public void set(T value, int index) {
-
+        checkIndex(index);
+        checkIndexEqualsSize(index);
+        elementData[index] = value;
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public T remove(int index) {
-        return null;
+        checkIndex(index);
+        checkIndexEqualsSize(index);
+        final T oldValue = (T) elementData[index];
+        if (size - 1 > index) {
+            System.arraycopy(elementData, index + 1, elementData, index, size - index - 1);
+        }
+        elementData[size - 1] = null;
+        size--;
+        return oldValue;
     }
 
     @Override
     public T remove(T element) {
-        return null;
+        int index = getElement(element);
+        if (index == -1) {
+            throw new NoSuchElementException("This element does not exist: " + element);
+        }
+        remove(index);
+        return element;
     }
 
     @Override
@@ -78,7 +87,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public boolean isEmpty() {
-        return false;
+        return size == 0;
     }
 
     private Object[] buildUp() {
@@ -89,16 +98,33 @@ public class ArrayList<T> implements List<T> {
         return newElementData;
     }
 
-    private void checkIndex (int index) {
-        if (index < 0 || index >= size) {
+    private void checkIndex(int index) {
+        if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException("Index out of range: " + index);
         }
     }
 
-    private void checkList (List<T> list) {
+    private void checkIndexEqualsSize(int index) {
+        if (index == size) {
+            throw new ArrayListIndexOutOfBoundsException("Index out of range: " + index);
+        }
+    }
+
+    private void checkList(List<T> list) {
         if (list == null) {
             throw new NullPointerException("List : " + list + " can't be null");
         }
     }
 
+    @SuppressWarnings("unchecked")
+    private int getElement(T element) {
+        for (int i = 0; i < size; i++) {
+            T value = (T) elementData[i];
+            if (value != null && value.equals(element)
+                    || value == element) {
+                return i;
+            }
+        }
+        return -1;
+    }
 }
