@@ -51,16 +51,6 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private void checkingListForCompl(int size) {
-        list = Arrays.copyOf(list, size * (100 + INCREMENT_PERCENTS) / 100);
-    }
-
-    private void checkingListForCompl() {
-        if (size >= list.length) {
-            checkingListForCompl(size);
-        }
-    }
-
     @Override
     public T get(int index) {
         if (index < 0 || index >= size) {
@@ -97,6 +87,16 @@ public class ArrayList<T> implements List<T> {
         return element;
     }
 
+    @Override
+    public int size() {
+        return size;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return size == 0;
+    }
+
     private void removing(int index) {
         for (int i = index; i < size - 1; i++) {
             list[i] = list[i + 1];
@@ -115,13 +115,13 @@ public class ArrayList<T> implements List<T> {
         return -1;
     }
 
-    @Override
-    public int size() {
-        return size;
+    private void checkingListForCompl(int size) {
+        list = Arrays.copyOf(list, size * (100 + INCREMENT_PERCENTS) / 100);
     }
 
-    @Override
-    public boolean isEmpty() {
-        return size == 0;
+    private void checkingListForCompl() {
+        if (size >= list.length) {
+            checkingListForCompl(size);
+        }
     }
 }
