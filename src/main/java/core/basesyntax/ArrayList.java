@@ -6,16 +6,14 @@ public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_INITIAL_ARRAY_CAPACITY = 10;
     private Object[] values;
     private int size;
-    private int capacityOfArray;
 
     public ArrayList() {
-        capacityOfArray = DEFAULT_INITIAL_ARRAY_CAPACITY;
-        values = new Object[capacityOfArray];
+        values = new Object[DEFAULT_INITIAL_ARRAY_CAPACITY];
     }
 
     @Override
     public void add(T value) {
-        if (size == capacityOfArray) {
+        if (size == values.length) {
             growArray();
         }
         values[size] = value;
@@ -25,32 +23,28 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         if (index > size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index is invalid");
+            throw new ArrayListIndexOutOfBoundsException("Index  " + index
+                    + "is invalid for size " + size);
         }
-        if (size() == capacityOfArray) {
+        if (size() == values.length) {
             growArray();
         }
         if (index == size()) {
             values[size()] = value;
             size++;
         } else if (index < size()) {
-            Object[] newValuesOne = new Object[capacityOfArray];
-            Object[] newValuesTwo = new Object[capacityOfArray];
-            System.arraycopy(values, 0, newValuesOne, 0, index);
-            System.arraycopy(values, index, newValuesTwo, 0, capacityOfArray - index);
-            values = newValuesOne;
+            System.arraycopy(values, index, values, index + 1, values.length - index - 1);
             values[index] = value;
-            System.arraycopy(newValuesTwo, 0, values, index + 1, capacityOfArray - index - 1);
             size++;
         }
     }
 
     @Override
     public void addAll(List<T> list) {
-        while (list.size() + size() > capacityOfArray) {
+        while (list.size() + size() > values.length) {
             growArray();
         }
-        Object[] valuesFmArrayList = new Object[capacityOfArray];
+        Object[] valuesFmArrayList = new Object[values.length];
         for (int i = 0; i < list.size(); i++) {
             valuesFmArrayList[i] = list.get(i);
         }
@@ -60,29 +54,21 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index is invalid");
-        }
+        checkIndex(index);
         return (T) values[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index is invalid");
-        }
+        checkIndex(index);
         values[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index is invalid");
-        }
+        checkIndex(index);
         final T removedValue = (T) values[index];
-        Object[] newValuesOne = new Object[capacityOfArray];
-        System.arraycopy(values, index + 1, newValuesOne, 0, capacityOfArray - index - 1);
-        System.arraycopy(newValuesOne, 0, values, index, capacityOfArray - index - 1);
+        System.arraycopy(values, index + 1, values, index, values.length - index - 1);
         size--;
         return removedValue;
     }
@@ -95,7 +81,7 @@ public class ArrayList<T> implements List<T> {
                 return remove(index);
             }
         }
-        throw new NoSuchElementException("Element was not found");
+        throw new NoSuchElementException("Element was not found" + element);
     }
 
     @Override
@@ -109,9 +95,15 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void growArray() {
-        Object[] newValues = new Object[capacityOfArray + capacityOfArray / 2];
-        System.arraycopy(values, 0, newValues, 0, capacityOfArray);
+        Object[] newValues = new Object[values.length + values.length / 2];
+        System.arraycopy(values, 0, newValues, 0, values.length);
         values = newValues;
-        capacityOfArray += capacityOfArray / 2;
+    }
+
+    private void checkIndex(int index) {
+        if (index >= size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Index  " + index
+                    + "is invalid for size " + size);
+        }
     }
 }
