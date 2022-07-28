@@ -4,21 +4,20 @@ import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    private static final int MAX_ELEMENTS = 10;
+    private static final int DEFAULT_CAPACITY = 10;
     private static final int INCREMENT_PERCENTS = 50;
 
     private int size;
-    private Object[] list;
+    private Object[] elements;
 
     public ArrayList() {
-        size = 0;
-        list = new Object[MAX_ELEMENTS];
+        elements = new Object[DEFAULT_CAPACITY];
     }
 
     @Override
     public void add(T value) {
-        checkingListForCompl();
-        list[size] = value;
+        checkingListToAddition();
+        elements[size] = value;
         size++;
     }
 
@@ -27,52 +26,47 @@ public class ArrayList<T> implements List<T> {
         if (index > size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Index out of bounds");
         }
-        checkingListForCompl();
-        Object[] newArray = Arrays.copyOfRange(list, index, size);
-        list = Arrays.copyOf(Arrays.copyOfRange(list, 0, index), list.length);
-        size = index + 1;
-        for (Object o : newArray) {
-            list[size] = o;
-            size++;
+        checkingListToAddition();
+        if (index != size) {
+            System.arraycopy(elements, index, elements, index + 1, size - index);
         }
-        list[index] = value;
+        elements[index] = value;
+        size++;
     }
 
     @Override
     public void addAll(List<T> list) {
-        while (size + list.size() > this.list.length) {
-            checkingListForCompl(size);
+        while (size + list.size() > this.elements.length) {
+            checkingListToAddition(size);
         }
-        if (!list.isEmpty()) {
-            for (int i = 0; i < list.size(); i++) {
-                this.list[size] = list.get(i);
-                size++;
-            }
+        for (int i = 0; i < list.size(); i++) {
+            this.elements[size] = list.get(i);
+            size++;
         }
     }
 
     @Override
     public T get(int index) {
-        if (index < 0 || index >= size) {
+        if (checkingIndexForException(index)) {
             throw new ArrayListIndexOutOfBoundsException("Can`t find element by index" + index);
         }
-        return (T)list[index];
+        return (T) elements[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index < 0 || index >= size) {
+        if (checkingIndexForException(index)) {
             throw new ArrayListIndexOutOfBoundsException("Can`t find element by index" + index);
         }
-        list[index] = value;
+        elements[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index < 0 || index >= size) {
+        if (checkingIndexForException(index)) {
             throw new ArrayListIndexOutOfBoundsException("Index out of bounds");
         }
-        Object el = list[index];
+        Object el = elements[index];
         removing(index);
         return (T)el;
     }
@@ -98,30 +92,34 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void removing(int index) {
-        for (int i = index; i < size - 1; i++) {
-            list[i] = list[i + 1];
+        elements[index] = new Object();
+        if (index != size - 1) {
+            System.arraycopy(elements, index + 1, elements, index, size - index - 1);
         }
         size--;
-        list[size] = new Object();
     }
 
     private int findIndexByElement(T element) {
         for (int i = 0; i < size; i++) {
-            if (list[i] == null && element == null
-                    || list[i] != null && list[i].equals(element)) {
+            if (elements[i] == null && element == null
+                    || elements[i] != null && elements[i].equals(element)) {
                 return i;
             }
         }
         return -1;
     }
 
-    private void checkingListForCompl(int size) {
-        list = Arrays.copyOf(list, size * (100 + INCREMENT_PERCENTS) / 100);
+    private void checkingListToAddition(int size) {
+        elements = Arrays.copyOf(elements, size * (100 + INCREMENT_PERCENTS) / 100);
     }
 
-    private void checkingListForCompl() {
-        if (size >= list.length) {
-            checkingListForCompl(size);
+    private void checkingListToAddition() {
+        if (size >= elements.length) {
+            checkingListToAddition(size);
         }
+    }
+
+    private boolean checkingIndexForException(int index) {
+        return index < 0 || index >= size;
     }
 }
