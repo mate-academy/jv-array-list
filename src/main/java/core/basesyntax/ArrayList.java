@@ -23,10 +23,7 @@ public class ArrayList<T> implements List<T> {
     public void add(T value, int index) {
         checkIndexForAdd(index);
         expand();
-        //      System.arraycopy(elements, index, elements, index + 1, size);
-        for (int i = size(); i > index; i--) {
-            elements[i] = elements[i - 1];
-        }
+        System.arraycopy(elements, index, elements, index + 1, size - index);
         elements[index] = value;
         size++;
 
@@ -59,9 +56,7 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         checkIndex(index);
         final T removed = elements[index];
-        for (int i = index; i < size() - 1; i++) {
-            elements[i] = elements[i + 1];
-        }
+        System.arraycopy(elements, index + 1, elements, index, size - 1 - index);
         elements[size() - 1] = null;
         size--;
         return removed;
@@ -89,20 +84,24 @@ public class ArrayList<T> implements List<T> {
 
     private void checkIndex(int index) {
         if (index < 0 || index >= size && index != 0) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index " + index + " for size " + size);
+            throw new ArrayListIndexOutOfBoundsException("Invalid index " + index
+                    + " for size " + size);
         }
     }
 
     private void checkIndexForAdd(int index) {
         if (index < 0 || index > size() + 1) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index " + index + " for size " + size);
+            throw new ArrayListIndexOutOfBoundsException("Invalid index " + index
+                    + " for size " + size);
         }
     }
 
     private void expand() {
         if (size >= elements.length) {
-            elements = Arrays.copyOf(elements, (int) (elements.length
-                    * COEFFICIENT_OF_EXPANSION));
+            T[] expandedElements = (T[]) new Object[(int) (elements.length
+                    * COEFFICIENT_OF_EXPANSION)];
+            System.arraycopy(elements, 0, expandedElements, 0, size);
+            elements = expandedElements;
         }
     }
 }
