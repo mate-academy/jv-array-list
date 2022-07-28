@@ -5,8 +5,6 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    private static final int INCREMENT_PERCENTS = 50;
-
     private int size;
     private Object[] elements;
 
@@ -66,9 +64,9 @@ public class ArrayList<T> implements List<T> {
         if (checkingIndexForException(index)) {
             throw new ArrayListIndexOutOfBoundsException("Index out of bounds");
         }
-        Object el = elements[index];
+        Object element = elements[index];
         removing(index);
-        return (T)el;
+        return (T)element;
     }
 
     @Override
@@ -92,7 +90,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void removing(int index) {
-        elements[index] = new Object();
+        elements[index] = null;
         if (index != size - 1) {
             System.arraycopy(elements, index + 1, elements, index, size - index - 1);
         }
@@ -110,7 +108,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void checkingListToAddition(int size) {
-        elements = Arrays.copyOf(elements, size * (100 + INCREMENT_PERCENTS) / 100);
+        elements = Arrays.copyOf(elements, size + size / 2);
     }
 
     private void checkingListToAddition() {
