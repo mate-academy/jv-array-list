@@ -7,7 +7,7 @@ public class ArrayList<T> implements List<T> {
     private int size;
     private Object[] elements;
 
-    public ArrayList () {
+    public ArrayList() {
         elements = new Object[DEFAULT_OF_SIZE];
     }
 
@@ -23,8 +23,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("Cannot add element " + value +
-                    ". Index " + index + " is not correct");
+            throw new ArrayListIndexOutOfBoundsException("Cannot add element " + value
+                    + ". Index " + index + " is not correct");
         }
         if (size == elements.length) {
             elements = increaseInSize(elements);
@@ -48,8 +48,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         if (isIndexCorrect(index)) {
-            throw new ArrayListIndexOutOfBoundsException("Cannot find element. " +
-                    "Index " + index + " is not correct");
+            throw new ArrayListIndexOutOfBoundsException("Cannot find element. "
+                    + "Index " + index + " is not correct");
         }
         return (T) elements[index];
     }
@@ -57,8 +57,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void set(T value, int index) {
         if (isIndexCorrect(index)) {
-            throw new ArrayListIndexOutOfBoundsException("Cannot find element. " + value +
-                    " Index " + index + " is not correct");
+            throw new ArrayListIndexOutOfBoundsException("Cannot find element. " + value
+                    + " Index " + index + " is not correct");
         }
         elements[index] = value;
     }
@@ -66,8 +66,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         if (isIndexCorrect(index)) {
-            throw new ArrayListIndexOutOfBoundsException("Cannot remove element. " +
-                    "Index " + index + " is not correct");
+            throw new ArrayListIndexOutOfBoundsException("Cannot remove element. "
+                    + "Index " + index + " is not correct");
         }
         T element = (T) elements[index];
         if (index != size - 1) {
@@ -99,13 +99,13 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private Object[] increaseInSize (Object[] elements) {
+    private Object[] increaseInSize(Object[] elements) {
         Object[] increaseInSizeLine = new Object[elements.length + (elements.length / 2)];
         System.arraycopy(elements, 0, increaseInSizeLine, 0, elements.length);
         return increaseInSizeLine;
     }
 
-    private boolean isIndexCorrect (int index) {
+    private boolean isIndexCorrect(int index) {
         return index < 0 || index >= size;
     }
 }
