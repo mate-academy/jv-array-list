@@ -3,35 +3,31 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    private static final int DEFAULT_OF_SIZE = 10;
+    private static final int DEFAULT_CAPACITY = 10;
     private int size;
     private Object[] elements;
 
     public ArrayList() {
-        elements = new Object[DEFAULT_OF_SIZE];
+        elements = new Object[DEFAULT_CAPACITY];
     }
 
     @Override
     public void add(T value) {
         if (size == elements.length) {
-            elements = increaseInSize(elements);
+            increaseSize();
         }
-        elements[size] = value;
-        size++;
+        elements[size++] = value;
     }
 
     @Override
     public void add(T value, int index) {
-        if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("Cannot add element " + value
-                    + ". Index " + index + " is not correct");
-        }
         if (size == elements.length) {
-            elements = increaseInSize(elements);
+            increaseSize();
         }
         if (index == size) {
             add(value);
         } else {
+            isIndexCorrect(index);
             System.arraycopy(elements, index, elements, index + 1, size - index);
             elements[index] = value;
             size++;
@@ -47,43 +43,30 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (isIndexCorrect(index)) {
-            throw new ArrayListIndexOutOfBoundsException("Cannot find element. "
-                    + "Index " + index + " is not correct");
-        }
+        isIndexCorrect(index);
         return (T) elements[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (isIndexCorrect(index)) {
-            throw new ArrayListIndexOutOfBoundsException("Cannot find element. " + value
-                    + " Index " + index + " is not correct");
-        }
+        isIndexCorrect(index);
         elements[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (isIndexCorrect(index)) {
-            throw new ArrayListIndexOutOfBoundsException("Cannot remove element. "
-                    + "Index " + index + " is not correct");
-        }
+        isIndexCorrect(index);
         T element = (T) elements[index];
-        if (index != size - 1) {
-            System.arraycopy(elements, index + 1, elements, index, size - index - 1);
-        }
+        System.arraycopy(elements, index + 1, elements, index, size - index - 1);
         size--;
         return element;
     }
 
     @Override
     public T remove(T element) {
-        for (int i = 0; i < size - 1; i++) {
-            if (elements[i] == element || (elements[i] != null && elements[i].equals(element))) {
-                System.arraycopy(elements, i + 1, elements, i, size - 1);
-                size--;
-                return element;
+        for (int i = 0; i < size; i++) {
+            if (elements[i] == element || elements[i] != null && elements[i].equals(element)) {
+                return remove(i);
             }
         }
         throw new NoSuchElementException("Element " + element + " doesn`t exist");
@@ -99,13 +82,16 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private Object[] increaseInSize(Object[] elements) {
-        Object[] increaseInSizeLine = new Object[elements.length + (elements.length / 2)];
-        System.arraycopy(elements, 0, increaseInSizeLine, 0, elements.length);
-        return increaseInSizeLine;
+    private void increaseSize() {
+        Object[] increaseSizeLine = new Object[elements.length + (elements.length / 2)];
+        System.arraycopy(elements, 0, increaseSizeLine, 0, elements.length);
+        elements = increaseSizeLine;
     }
 
     private boolean isIndexCorrect(int index) {
-        return index < 0 || index >= size;
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Index " + index + " is not correct");
+        }
+        return false;
     }
 }
