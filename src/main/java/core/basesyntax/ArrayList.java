@@ -89,7 +89,7 @@ public class ArrayList<T> implements List<T> {
 
     private void increaseArray() {
         if (size == values.length) {
-            T[] newArray = (T[]) new Object[(int) (size + size << 1)];
+            Object[] newArray = new Object[size + size << 1];
             System.arraycopy(values, 0, newArray, 0, size);
             values = newArray;
         }
