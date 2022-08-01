@@ -3,8 +3,8 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    private static final int MAX_ITEMS_NUMBER = 6;
-    private Object[] items = new Object[MAX_ITEMS_NUMBER];
+    private static final int DEFAULT_CAPACITY = 10;
+    private Object[] items = new Object[DEFAULT_CAPACITY];
     private int size;
 
     @Override
@@ -37,23 +37,22 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        verifyIndexOutOfBounds(index);
+        checkIndex(index);
         return (T) items[index];
     }
 
     @Override
     public void set(T value, int index) {
-        verifyIndexOutOfBounds(index);
+        checkIndex(index);
         items[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        verifyIndexOutOfBounds(index);
+        checkIndex(index);
         Object deletedItem = items[index];
         System.arraycopy(items, index + 1, items, index, size - 1 - index);
         size--;
-
         return (T) deletedItem;
     }
 
@@ -85,7 +84,7 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private void verifyIndexOutOfBounds(int index) {
+    private void checkIndex(int index) {
         if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException("Incorrect index: " + index
                     + " for size " + size);
