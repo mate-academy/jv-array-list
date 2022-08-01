@@ -2,6 +2,7 @@ package core.basesyntax;
 
 import java.util.Arrays;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
@@ -34,18 +35,14 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        while (size + list.size() > this.elements.length) {
-            checkingListToAddition(size);
-        }
         for (int i = 0; i < list.size(); i++) {
-            this.elements[size] = list.get(i);
-            size++;
+            add(list.get(i));
         }
     }
 
     @Override
     public T get(int index) {
-        if (checkingIndexForException(index)) {
+        if (isIndexInValidRange(index)) {
             throw new ArrayListIndexOutOfBoundsException("Can`t find element by index" + index);
         }
         return (T) elements[index];
@@ -53,7 +50,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void set(T value, int index) {
-        if (checkingIndexForException(index)) {
+        if (isIndexInValidRange(index)) {
             throw new ArrayListIndexOutOfBoundsException("Can`t find element by index" + index);
         }
         elements[index] = value;
@@ -61,11 +58,11 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(int index) {
-        if (checkingIndexForException(index)) {
+        if (isIndexInValidRange(index)) {
             throw new ArrayListIndexOutOfBoundsException("Index out of bounds");
         }
         Object element = elements[index];
-        removing(index);
+        removeElement(index);
         return (T)element;
     }
 
@@ -75,7 +72,7 @@ public class ArrayList<T> implements List<T> {
         if (index == -1) {
             throw new NoSuchElementException("Can`t find element int list");
         }
-        removing(index);
+        removeElement(index);
         return element;
     }
 
@@ -89,7 +86,7 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void removing(int index) {
+    private void removeElement(int index) {
         elements[index] = null;
         if (index != size - 1) {
             System.arraycopy(elements, index + 1, elements, index, size - index - 1);
@@ -99,25 +96,20 @@ public class ArrayList<T> implements List<T> {
 
     private int findIndexByElement(T element) {
         for (int i = 0; i < size; i++) {
-            if (elements[i] == null && element == null
-                    || elements[i] != null && elements[i].equals(element)) {
+            if (Objects.equals(elements[i], element)) {
                 return i;
             }
         }
         return -1;
     }
 
-    private void checkingListToAddition(int size) {
-        elements = Arrays.copyOf(elements, size + size / 2);
-    }
-
     private void checkingListToAddition() {
         if (size >= elements.length) {
-            checkingListToAddition(size);
+            elements = Arrays.copyOf(elements, size + size / 2);
         }
     }
 
-    private boolean checkingIndexForException(int index) {
+    private boolean isIndexInValidRange(int index) {
         return index < 0 || index >= size;
     }
 }
