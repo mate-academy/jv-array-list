@@ -1,5 +1,7 @@
 package core.basesyntax;
 
+import java.util.NoSuchElementException;
+
 public class ArrayList<T> implements List<T> {
     private Object[] objects;
     private int currantLength;
@@ -22,7 +24,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index > numberOfElements || index < 0) {
+        if (!isIndexValid(index, 0, numberOfElements + 1)) {
             throw new ArrayListIndexOutOfBoundsException("Can't write an element to ArrayList");
         }
         if (numberOfElements == currantLength) {
@@ -44,7 +46,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index >= numberOfElements || index < 0) {
+        if (!isIndexValid(index, 0, numberOfElements - 1)) {
             throw new ArrayListIndexOutOfBoundsException("Can't get an element");
         }
         return (T) objects[index];
@@ -52,7 +54,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void set(T value, int index) {
-        if (index > numberOfElements || index < 0) {
+        if (!isIndexValid(index, 0, numberOfElements + 1)) {
             throw new ArrayListIndexOutOfBoundsException("There is not such index");
         }
         objects[index] = value;
@@ -65,7 +67,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(int index) {
-        if (index >= numberOfElements || index < 0) {
+        if (!isIndexValid(index, 0, numberOfElements - 1)) {
             throw new ArrayListIndexOutOfBoundsException("Index "
                     + String.valueOf(index)
                     + " is not exist");
@@ -89,7 +91,7 @@ public class ArrayList<T> implements List<T> {
                 return (T) removedObject;
             }
         }
-        throw new java.util.NoSuchElementException("There is not such element.");
+        throw new NoSuchElementException("There is not such element.");
     }
 
     @Override
@@ -99,7 +101,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public boolean isEmpty() {
-        return (numberOfElements == 0) ? true : false;
+        return numberOfElements == 0;
     }
 
     private void grow() {
@@ -109,5 +111,9 @@ public class ArrayList<T> implements List<T> {
         }
         objects = newObject;
         currantLength = objects.length;
+    }
+
+    private boolean isIndexValid(int index, int indexFrom, int indexTo) {
+        return index >= indexFrom && index <= indexTo;
     }
 }
