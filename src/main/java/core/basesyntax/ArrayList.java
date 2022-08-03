@@ -3,67 +3,38 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    private int defaultCapacity = 10;
-    private Object[] dataElement;
-    private int size = 0;
-    private int newCapacity = 0;
+    private static final double INCREASING_RATE = 1.5;
+    private static final int DEFAULT_CAPACITY = 10;
+    private T[] data;
+    private int size;
 
-    private void resize(int size) {
-        if (dataElement != null && size == dataElement.length) {
-            newCapacity += size * 2;
-            Object[] dataElement1 = new Object[newCapacity];
-            System.arraycopy(this.dataElement, 0,
-                    dataElement1, 0,size);
-            this.dataElement = dataElement1;
-        }
-    }
-
-    private void checkNullArray() {
-        if (dataElement == null) {
-            dataElement = new Object[defaultCapacity];
-        }
-    }
-
-    private void checkIndex(int index, int length) {
-        if (index < 0 || index >= length) {
-            throw new
-            ArrayListIndexOutOfBoundsException("Your index out of range");
-        }
-    }
-
-    private void removeElement(int index) {
-        int s = size + 1;
-        checkIndex(index,s);
-        size--;
-        Object[] dataElement;
-        dataElement = this.dataElement;
-        System.arraycopy(dataElement, index + 1, dataElement,
-                index,size - index);
-
+    public ArrayList() {
+        data = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
     @Override
     public void add(T value) {
-        checkNullArray();
-        resize(size);
-        dataElement[size] = value;
+        if (size + 1 == data.length) {
+            increaseCapacity();
+        }
+        data[size] = value;
         size++;
-
     }
 
     @Override
     public void add(T value, int index) {
-        int s = size + 1;
-        checkIndex(index,s);
-        checkNullArray();
-        resize(s);
-        Object[] dataElement;
-        dataElement = this.dataElement;
-        System.arraycopy(dataElement, index,
-                dataElement, index + 1,
-                s - index);
-        dataElement[index] = value;
-        size = s;
+        if (index == size) {
+            data[size] = value;
+        }
+        if (index < 0 || index > size) {
+            throw new ArrayListIndexOutOfBoundsException("Your index out of range");
+        }
+        if (size + 1 == data.length) {
+            increaseCapacity();
+        }
+        System.arraycopy(data, index, data, index + 1, size - index);
+        data[index] = value;
+        size++;
     }
 
     @Override
@@ -75,39 +46,40 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        checkIndex(index,size);
-        return (T) dataElement[index];
+        checkIndex(index);
+        return (T) data[index];
     }
 
     @Override
     public void set(T value, int index) {
-        checkIndex(index,size);
-        dataElement[index] = value;
+        checkIndex(index);
+        data[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        checkIndex(index,size);
-        Object value = dataElement[index];
-        removeElement(index);
-        return (T) value;
+        checkIndex(index);
+        T value = data[index];
+        System.arraycopy(data, index + 1, data, index, size - index - 1);
+        size--;
+        return value;
     }
 
     @Override
     public T remove(T element) {
         int index = -1;
         for (int i = 0; i < size; i++) {
-            if (dataElement[i] == element
-                    || dataElement[i] != null
-                    && dataElement[i].equals(element)) {
+            if (data[i] == element
+                    || data[i] != null
+                    && data[i].equals(element)) {
                 index = i;
                 break;
             }
         }
         if (index < 0) {
-            throw new NoSuchElementException("not find element");
+            throw new NoSuchElementException("The element is not found");
         }
-        removeElement(index);
+        remove(index);
         return element;
     }
 
@@ -119,5 +91,18 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private void increaseCapacity() {
+        int newCapacity = (int)(data.length * INCREASING_RATE);
+        T[] newArray = (T[]) new Object[newCapacity];
+        System.arraycopy(data, 0, newArray, 0, data.length);
+        data = newArray;
+    }
+
+    private void checkIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Your index out of range");
+        }
     }
 }
