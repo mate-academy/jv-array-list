@@ -28,7 +28,9 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) throws ArrayListIndexOutOfBoundsException {
-        checkIndex(index > size || index < 0);
+        if (index < 0 || index > size) {
+            throw new ArrayListIndexOutOfBoundsException(INDEX_ERROR);
+        }
         if (index == size) {
             add(value);
         } else {
@@ -48,19 +50,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) throws ArrayListIndexOutOfBoundsException {
-        checkIndex(index >= size || index < 0);
+        checkIndex(index);
         return (T) values[index];
     }
 
     @Override
     public void set(T value, int index) throws ArrayListIndexOutOfBoundsException {
-        checkIndex(index >= size || index < 0);
+        checkIndex(index);
         values[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        checkIndex(index >= size || index < 0);
+        checkIndex(index);
         T removedElement = (T) values[index];
         Object[] temp = Arrays.copyOfRange(values, index + 1, size);
         size = index;
@@ -70,18 +72,12 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) throws NoSuchElementException {
-        boolean isExist = false;
         for (int i = 0; i < size; i++) {
             if (element == values[i] || element != null && element.equals(values[i])) {
-                remove(i);
-                isExist = true;
-                break;
+                return remove(i);
             }
         }
-        if (!isExist) {
-            throw new NoSuchElementException(MISSING_ELEMENT);
-        }
-        return element;
+        throw new NoSuchElementException(MISSING_ELEMENT);
     }
 
     @Override
@@ -99,8 +95,8 @@ public class ArrayList<T> implements List<T> {
         values = Arrays.copyOf(values, capacity);
     }
 
-    private void checkIndex(boolean incorrectIndex) throws ArrayListIndexOutOfBoundsException {
-        if (incorrectIndex) {
+    private void checkIndex(int index) throws ArrayListIndexOutOfBoundsException {
+        if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException(INDEX_ERROR);
         }
     }
