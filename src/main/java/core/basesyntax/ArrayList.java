@@ -54,7 +54,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     @Override
-    public void set(T value, int index)  throws ArrayListIndexOutOfBoundsException{
+    public void set(T value, int index) throws ArrayListIndexOutOfBoundsException {
         checkIndex(index >= size || index < 0);
         values[index] = value;
     }
