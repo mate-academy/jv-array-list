@@ -3,41 +3,41 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    private static final int DEFAULT_VALUE = 10;
-    private int elementsInArray = 0;
-    private Object[] array = new Object[DEFAULT_VALUE];
+    private static final int MAX_ARRAY_LENGTH = 10;
+    private int size;
+    private Node<T>[] items;
 
     public ArrayList(T value) {
     }
 
     public ArrayList() {
+        items = new Node[MAX_ARRAY_LENGTH];
+        size = 0;
     }
 
     @Override
     public void add(T value) {
-        int countOfElements = size();
-        if (countOfElements < array.length) {
-            array[countOfElements] = value;
-            elementsInArray++;
+        if (size < items.length) {
+            items[size] = new Node<>(value);
+            size++;
         } else {
-            growArray(countOfElements);
-            array[countOfElements] = value;
-            elementsInArray++;
+            growArray(size);
+            items[size] = new Node<>(value);
+            size++;
         }
     }
 
     @Override
     public void add(T value, int index) {
-        int countOfElements = size();
-        if (index < 0 || index > countOfElements) {
+        if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException("Wrong index");
-        } else if (index == countOfElements) {
+        } else if (index == size) {
             add(value);
         } else {
-            if (countOfElements + 1 <= array.length) {
+            if (size + 1 <= items.length) {
                 addInside(index, value);
             } else {
-                growArray(countOfElements);
+                growArray(size);
                 addInside(index, value);
             }
         }
@@ -52,38 +52,39 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (indexInRange(index)) {
-            return (T) array[index];
+        if (getIndexInRange(index)) {
+            return items[index].getValue();
         }
         return null;
     }
 
     @Override
     public void set(T value, int index) {
-        if (indexInRange(index)) {
-            array[index] = value;
+        if (getIndexInRange(index)) {
+            items[index] = new Node<>(value);
         }
     }
 
     @Override
     public T remove(int index) {
-        if (indexInRange(index)) {
-            Object removedElement = array[index];
-            if (index + 1 != size()) {
-                System.arraycopy(array,index + 1,array,index, size() - index);
-                elementsInArray--;
+        if (getIndexInRange(index)) {
+            Node<T> removedElement = items[index];
+            if (index + 1 != size) {
+                System.arraycopy(items,index + 1,items, index, size - index);
+                size--;
             } else {
-                elementsInArray--;
+                size--;
             }
-            return (T) removedElement;
+            return removedElement.getValue();
         }
         return null;
     }
 
     @Override
     public T remove(T element) {
-        for (int i = 0; i < size(); i++) {
-            if ((element == array[i]) || (element != null && element.equals(array[i]))) {
+        for (int i = 0; i < size; i++) {
+            if ((element == items[i].getValue())
+                    || (element != null && element.equals(items[i].getValue()))) {
                 return remove(i);
             }
         }
@@ -92,7 +93,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public int size() {
-        return elementsInArray;
+        return size;
     }
 
     @Override
@@ -104,18 +105,18 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void growArray(int countOfElements) {
-        int newArrayLength = newLength(countOfElements);
-        Object [] tempArray = new Object[newArrayLength];
+        int newArrayLength = getNewLength(countOfElements);
+        Node<T> [] tempArray = new Node[newArrayLength];
         for (int i = 0; i < countOfElements; i++) {
-            tempArray[i] = array[i];
+            tempArray[i] = items[i];
         }
-        array = new Object[newArrayLength];
+        items = new Node[newArrayLength];
         for (int i = 0; i < countOfElements; i++) {
-            array[i] = tempArray[i];
+            items[i] = tempArray[i];
         }
     }
 
-    private int newLength(int oldLength) {
+    private int getNewLength(int oldLength) {
         if (oldLength == 1) {
             return 2;
         }
@@ -123,21 +124,37 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void addInside(int index, T value) {
-        Object[] tempArray = new Object[array.length - index - 1];
+        Node<T>[] tempArray = new Node[items.length - index - 1];
         for (int i = 0; i < tempArray.length; i++) {
-            tempArray[i] = array[index + i];
+            tempArray[i] = items[index + i];
         }
-        array[index] = value;
+        items[index] = new Node<>(value);
         for (int i = 0; i < tempArray.length; i++) {
-            array[index + 1 + i] = tempArray[i];
+            items[index + 1 + i] = tempArray[i];
         }
-        elementsInArray++;
+        size++;
     }
 
-    private boolean indexInRange(int index) {
+    private boolean getIndexInRange(int index) {
         if (index < 0 || index >= size()) {
             throw new ArrayListIndexOutOfBoundsException("Wrong index");
         }
         return true;
+    }
+
+    private class Node<T> {
+        private T value;
+
+        public Node(T value) {
+            this.value = value;
+        }
+
+        public void setValue(T value) {
+            this.value = value;
+        }
+
+        public T getValue() {
+            return value;
+        }
     }
 }
