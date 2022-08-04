@@ -1,7 +1,6 @@
 package core.basesyntax;
 
 import java.util.NoSuchElementException;
-import java.util.stream.IntStream;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_LENGTH = 10;
@@ -36,7 +35,9 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        IntStream.range(0, list.size()).mapToObj(list::get).forEach(this::add);
+        for (int i = 0; i < list.size(); i++) {
+            add(list.get(i));
+        }
     }
 
     @Override
