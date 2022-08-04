@@ -6,17 +6,17 @@ import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_SIZE = 10;
-    private Object[] objects;
+    private Object[] elements;
     private int size;
 
     public ArrayList() {
-        objects = new Object[DEFAULT_SIZE];
+        elements = new Object[DEFAULT_SIZE];
     }
 
     @Override
     public void add(T value) {
         checkingSizeOfList();
-        objects[size] = value;
+        elements[size] = value;
         size++;
     }
 
@@ -28,9 +28,9 @@ public class ArrayList<T> implements List<T> {
         }
         checkingSizeOfList();
         if (index != size) {
-            System.arraycopy(objects, index, objects, index + 1, size - index);
+            System.arraycopy(elements, index, elements, index + 1, size - index);
         }
-        objects[index] = value;
+        elements[index] = value;
         size++;
     }
 
@@ -47,7 +47,7 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayListIndexOutOfBoundsException("Wrong index value. "
                     + "Index out of bounds.");
         }
-        return (T) objects[index];
+        return (T) elements[index];
     }
 
     @Override
@@ -56,7 +56,7 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayListIndexOutOfBoundsException("Wrong index value. "
                     + "Index out of bounds.");
         }
-        objects[index] = value;
+        elements[index] = value;
     }
 
     @Override
@@ -65,18 +65,31 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayListIndexOutOfBoundsException("Wrong index value. "
                     + "Index out of bounds.");
         }
-        Object object = objects[index];
-        removeObject(index);
+        Object object = elements[index];
+        elements[index] = null;
+        if (index != size - 1) {
+            System.arraycopy(elements, index + 1, elements, index, size - index - 1);
+        }
+        size--;
         return (T) object;
     }
 
     @Override
     public T remove(T value) {
-        int index = findByValue(value);
+        int index = -1;
+        for (int i = 0; i < size; i++) {
+            if (Objects.equals(elements[i], value)) {
+                index = i;
+            }
+        }
         if (index == -1) {
             throw new NoSuchElementException("This value is missing in list");
         }
-        removeObject(index);
+        elements[index] = null;
+        if (index != size - 1) {
+            System.arraycopy(elements, index + 1, elements, index, size - index - 1);
+        }
+        size--;
         return value;
     }
 
@@ -91,8 +104,8 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void checkingSizeOfList() {
-        if (size == objects.length) {
-            objects = Arrays.copyOf(objects,size + size / 2);
+        if (size == elements.length) {
+            elements = Arrays.copyOf(elements,size + size / 2);
         }
     }
 
@@ -102,18 +115,10 @@ public class ArrayList<T> implements List<T> {
 
     private int findByValue(T value) {
         for (int i = 0; i < size; i++) {
-            if (Objects.equals(objects[i], value)) {
+            if (Objects.equals(elements[i], value)) {
                 return i;
             }
         }
         return -1;
-    }
-
-    private void removeObject(int index) {
-        objects[index] = null;
-        if (index != size - 1) {
-            System.arraycopy(objects, index + 1, objects, index, size - index - 1);
-        }
-        size--;
     }
 }
