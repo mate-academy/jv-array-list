@@ -2,6 +2,7 @@ package core.basesyntax;
 
 import java.util.Arrays;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
@@ -28,11 +29,11 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) throws ArrayListIndexOutOfBoundsException {
-        checkIndex(index > size);
+        checkIndex(index > size || index < 0);
         if (index == size) {
             add(value);
         } else {
-            Object[] temp = Arrays.copyOfRange(values, index, values.length);
+            Object[] temp = Arrays.copyOfRange(values, index, size);
             values[index] = value;
             size = index + 1;
             addArray(temp);
@@ -48,21 +49,21 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) throws ArrayListIndexOutOfBoundsException {
-        checkIndex(index >= size);
+        checkIndex(index >= size || index < 0);
         return (T) values[index];
     }
 
     @Override
     public void set(T value, int index)  throws ArrayListIndexOutOfBoundsException{
-        checkIndex(index >= size);
+        checkIndex(index >= size || index < 0);
         values[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        checkIndex(index >= size);
+        checkIndex(index >= size || index < 0);
         T removedElement = (T) values[index];
-        Object[] temp = Arrays.copyOfRange(values, index + 1, values.length);
+        Object[] temp = Arrays.copyOfRange(values, index + 1, size);
         size = index;
         addArray(temp);
         return removedElement;
@@ -70,16 +71,18 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) throws NoSuchElementException {
-        int index = -1;
+        boolean isExist = false;
         for (int i = 0; i < size; i++) {
-            if (element.equals(values[i])) {
+            if (Objects.equals(element, values[i])) {
                 remove(i);
-                return element;
-            } else {
-                throw new NoSuchElementException(MISSING_ELEMENT);
+                isExist = true;
+                break;
             }
         }
-        return null;
+        if (!isExist) {
+            throw new NoSuchElementException(MISSING_ELEMENT);
+        }
+        return element;
     }
 
     @Override
