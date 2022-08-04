@@ -45,7 +45,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (checkIndexValidity(index)) {
+        if (index > size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Index out of bound exception.");
         }
 
@@ -99,10 +99,6 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
-    }
-
-    private boolean checkIndexValidity(int index) {
-        return index >= size || index < 0;
     }
 
     public int checkIndex(int index) {
