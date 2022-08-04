@@ -22,7 +22,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (isOutOfBounds(index)) {
+        if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException("Can't add element by index: " + index
                     + ", it's out of bounds");
         }
@@ -102,6 +102,6 @@ public class ArrayList<T> implements List<T> {
     }
 
     private boolean isOutOfBounds(int index) {
-        return (index < 0 || index > size);
+        return (index < 0 || index >= size);
     }
 }
