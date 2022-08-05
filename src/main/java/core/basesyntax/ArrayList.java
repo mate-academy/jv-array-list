@@ -34,7 +34,8 @@ public class ArrayList<T> implements List<T> {
         if (index == size) {
             add(value);
         } else {
-            Object[] temp = Arrays.copyOfRange(values, index, size);
+            Object[] temp = new Object[size - index];
+            System.arraycopy(values, index, temp, 0, size - index);
             values[index] = value;
             size = index + 1;
             addArray(temp);
@@ -64,7 +65,8 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         checkIndex(index);
         T removedElement = (T) values[index];
-        Object[] temp = Arrays.copyOfRange(values, index + 1, size);
+        Object[] temp = new Object[size - index - 1];
+        System.arraycopy(values, index + 1, temp, 0, size - index - 1);
         size = index;
         addArray(temp);
         return removedElement;
@@ -92,7 +94,9 @@ public class ArrayList<T> implements List<T> {
 
     private void increaseCapasity() {
         capacity *= GROWTH_FACTOR;
-        values = Arrays.copyOf(values, capacity);
+        Object[] temp = new Object[capacity];
+        System.arraycopy(values, 0, temp, 0, size);
+        values = temp;
     }
 
     private void checkIndex(int index) throws ArrayListIndexOutOfBoundsException {
