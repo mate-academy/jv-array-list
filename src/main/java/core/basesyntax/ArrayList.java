@@ -23,7 +23,7 @@ public class ArrayList<T> implements List<T> {
     public void add(T value, int index) {
         rangeCheckForAdd(index);
         checkLength();
-        copy(index, index + 1);
+        copyWithShift(index, index + 1);
         listOfData[index] = value;
         size++;
     }
@@ -51,7 +51,7 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         rangeCheck(index);
         T value = (T)listOfData[index];
-        copy(index + 1, index);
+        copyWithShift(index + 1, index);
         size--;
         return value;
     }
@@ -73,9 +73,10 @@ public class ArrayList<T> implements List<T> {
     }
 
     private Object[] grow() {
-        Object[] temp = new Object[size + (size >> 1)];
-        copyToGrow(listOfData, temp);
-        return temp;
+        Object[] newListOfData = new Object[size + (size >> 1)];
+        System.arraycopy(listOfData, ARRAY_START_POSITION,
+                newListOfData, ARRAY_START_POSITION, size);
+        return newListOfData;
     }
 
     private void checkLength() {
@@ -84,14 +85,9 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private void copy(int sourcePosition, int destinationPosition) {
+    private void copyWithShift(int sourcePosition, int destinationPosition) {
         System.arraycopy(listOfData, sourcePosition,
                 listOfData, destinationPosition, size - sourcePosition);
-    }
-
-    private void copyToGrow(Object[] soursArray, Object[] destArray) {
-        System.arraycopy(soursArray, ARRAY_START_POSITION,
-                destArray, ARRAY_START_POSITION, size);
     }
 
     private void rangeCheckForAdd(int index) {
@@ -107,13 +103,13 @@ public class ArrayList<T> implements List<T> {
     }
 
     private int getIndex(T element) {
-        for (int i = 0; i < listOfData.length; i++) {
+        for (int i = 0; i < size; i++) {
             if (element == listOfData[i]
                     || listOfData[i] != null
                     && listOfData[i].equals(element)) {
                 return i;
             }
         }
-        throw new NoSuchElementException();
+        throw new NoSuchElementException("There is no such element " + element + " in the List.");
     }
 }
