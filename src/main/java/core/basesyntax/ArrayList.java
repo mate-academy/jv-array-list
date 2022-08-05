@@ -21,7 +21,7 @@ public class ArrayList<T> implements List<T> {
         int index = -1;
         int counter = 0;
         for (Object o : elements) {
-            if (Objects.equals(o,value)) {
+            if (o != null && o.equals(value) || o == value) {
                 index = counter;
                 return index;
             }
@@ -68,7 +68,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        for(int i = 0; i < list.size(); i++) {
+        for (int i = 0; i < list.size(); i++) {
             add(list.get(i));
         }
     }
