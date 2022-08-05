@@ -13,9 +13,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (size >= items.length) {
-            grow();
-        }
+        checkCapacity();
         items[size] = value;
         size++;
     }
@@ -27,7 +25,7 @@ public class ArrayList<T> implements List<T> {
                     "Incorrect index: " + index
                             + " for size " + size);
         }
-        grow();
+        checkCapacity();
         if (size > index) {
             System.arraycopy(items, index, items, index + 1, size - index);
         }
@@ -66,10 +64,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if (element == items[i] || element != null && element.equals(items[i])) {
-                System.arraycopy(items, i + 1, items, i, size - i);
-                size--;
-                return element;
+            if (element != null && element.equals(items[i]) || element == items[i]) {
+                return remove(i);
             }
         }
         throw new NoSuchElementException("Not found element: " + element);
@@ -93,7 +89,7 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private void grow() {
+    private void checkCapacity() {
         if (size == items.length) {
             Object[] newItems = new Object[items.length + (items.length >> 1)];
             System.arraycopy(items, 0, newItems, 0, size);
