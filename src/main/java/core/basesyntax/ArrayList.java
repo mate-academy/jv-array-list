@@ -3,38 +3,34 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    private Object[] objects;
-    private int currantLength;
-    private int numberOfElements;
+    private static final int DEFAULT_CAPACITY = 10;
+    private Object[] elements;
+    private int size;
 
     public ArrayList() {
-        objects = new Object[10];
-        currantLength = 10;
-        numberOfElements = 0;
+        elements = new Object[DEFAULT_CAPACITY];
     }
 
     @Override
     public void add(T value) {
-        if (numberOfElements == currantLength) {
+        if (size == elements.length) {
             grow();
         }
-        objects[numberOfElements] = value;
-        numberOfElements++;
+        elements[size] = value;
+        size++;
     }
 
     @Override
     public void add(T value, int index) {
-        if (!isIndexValid(index, 0, numberOfElements + 1)) {
+        if (!isIndexValid(index, 0, size + 1)) {
             throw new ArrayListIndexOutOfBoundsException("Can't write an element to ArrayList");
         }
-        if (numberOfElements == currantLength) {
+        if (size == elements.length) {
             grow();
         }
-        for (int i = numberOfElements; i > index; i--) {
-            objects[i] = objects[i - 1];
-        }
-        objects[index] = value;
-        numberOfElements++;
+        System.arraycopy(elements, index, elements, index + 1, size - index);
+        elements[index] = value;
+        size++;
     }
 
     @Override
@@ -46,47 +42,44 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (!isIndexValid(index, 0, numberOfElements - 1)) {
+        if (!isIndexValid(index, 0, size - 1)) {
             throw new ArrayListIndexOutOfBoundsException("Can't get an element");
         }
-        return (T) objects[index];
+        return (T) elements[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (!isIndexValid(index, 0, numberOfElements + 1)) {
+        if (!isIndexValid(index, 0, size + 1)) {
             throw new ArrayListIndexOutOfBoundsException("There is not such index");
         }
-        objects[index] = value;
-        if (index == numberOfElements) {
+        elements[index] = value;
+        if (index == size) {
             this.get(index);
         } else {
-            objects[index] = value;
+            elements[index] = value;
         }
     }
 
     @Override
     public T remove(int index) {
-        if (!isIndexValid(index, 0, numberOfElements - 1)) {
+        if (!isIndexValid(index, 0, size - 1)) {
             throw new ArrayListIndexOutOfBoundsException("Index "
                     + String.valueOf(index)
                     + " is not exist");
         }
-        Object removedObject = objects[index];
-        for (int i = index; i < numberOfElements - 1; i++) {
-            objects[i] = objects[i + 1];
-        }
-        numberOfElements--;
+        Object removedObject = elements[index];
+        System.arraycopy(elements, index + 1, elements, index, size - index - 1);
+        size--;
         return (T) removedObject;
     }
 
     @Override
     public T remove(T element) {
-        Object removedObject = null;
-        for (int i = 0; i < numberOfElements; i++) {
-            if (element == null && objects[i] == null
-                    || objects[i] != null && objects[i].equals(element)) {
-                removedObject = objects[i];
+        Object removedObject;
+        for (int i = 0; i < size; i++) {
+            if (element == elements[i] || elements[i] != null && elements[i].equals(element)) {
+                removedObject = elements[i];
                 remove(i);
                 return (T) removedObject;
             }
@@ -96,21 +89,20 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public int size() {
-        return numberOfElements;
+        return size;
     }
 
     @Override
     public boolean isEmpty() {
-        return numberOfElements == 0;
+        return size == 0;
     }
 
     private void grow() {
-        Object[] newObject = new Object[currantLength + currantLength / 2];
-        for (int i = 0; i < objects.length; i++) {
-            newObject[i] = objects[i];
+        Object[] newObject = new Object[elements.length + elements.length / 2];
+        for (int i = 0; i < elements.length; i++) {
+            newObject[i] = elements[i];
         }
-        objects = newObject;
-        currantLength = objects.length;
+        elements = newObject;
     }
 
     private boolean isIndexValid(int index, int indexFrom, int indexTo) {
