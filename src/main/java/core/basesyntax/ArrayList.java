@@ -1,5 +1,7 @@
 package core.basesyntax;
 
+import java.util.Objects;
+
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 5;
     private Object[] elements;
@@ -28,6 +30,8 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
+        //проверяем индекс на валидность
+        checkIndex(index, size);
         //если массив полный и нам нужно добавить еще один елемент то нам нужно сделать ресайз
         resizeIfFull();
         //если на переданном индексе уже будет елемент тогда нужно кусок массива отодвинуть вправо,
@@ -46,7 +50,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        return null;
+
     }
 
     @Override
@@ -82,6 +86,12 @@ public class ArrayList<T> implements List<T> {
             //arraycopy берет кусок памяти и вставляет куда мы скажем
             System.arraycopy(elements, 0, newArray, 0, size);
             elements = newArray;
+        }
+    }
+
+    private void checkIndex(int index, int size) {
+        if (index < 0 || index > size) {
+            throw new ArrayListIndexOutOfBoundsException("Passed index is invalid");
         }
     }
 
