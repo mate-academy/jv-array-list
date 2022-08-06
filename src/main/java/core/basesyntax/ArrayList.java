@@ -15,7 +15,7 @@ public class ArrayList<T> implements List<T> {
 
     public ArrayList(int initCapacity) {
         if (initCapacity <= 0) {
-            throw new ArrayListIndexOutOfBoundsException("Illegal Argument to create array");
+            throw new ArrayListIndexOutOfBoundsException("Illegal argument to create array");
         }
         elements = new Object[initCapacity];
     }
@@ -86,7 +86,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public boolean isEmpty() {
-        return false;
+        return size == 0;
     }
 
     private void resizeIfFull() {
