@@ -3,6 +3,8 @@ package core.basesyntax;
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 5;
     private Object[] elements;
+    //size показывает сколько элементов заполнено
+    private int size;
 
 
     public ArrayList() {
@@ -11,7 +13,7 @@ public class ArrayList<T> implements List<T> {
 
     public ArrayList(int initCapacity) {
         if (initCapacity <= 0) {
-            throw new ArrayListIndexOutOfBoundsException("Illegal Argument");
+            throw new ArrayListIndexOutOfBoundsException("Illegal Argument to create array");
         }
         elements = new Object[initCapacity];
     }
@@ -19,7 +21,9 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-
+        resizeIfFull();
+        elements[size] = value;
+        size++;
     }
 
     @Override
@@ -61,4 +65,16 @@ public class ArrayList<T> implements List<T> {
     public boolean isEmpty() {
         return false;
     }
+
+    private void resizeIfFull() {
+        //если массив полон
+        //создай новый массив x1,5 и положи в него старый
+        if (elements.length == size) {
+            Object[] newArray = new Object[elements.length + (elements.length >> 2)];
+            //arraycopy берет кусок памяти и вставляет куда мы скажем
+            System.arraycopy(elements, 0, newArray, 0, size);
+            elements = newArray;
+        }
+    }
+
 }
