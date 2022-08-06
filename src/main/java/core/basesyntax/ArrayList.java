@@ -37,9 +37,6 @@ public class ArrayList<T> implements List<T> {
     @Override
     @SuppressWarnings("unchecked")
     public T get(int index) {
-        if (isEmpty()) {
-            throw new NoSuchElementException("No element with index " + index + " found");
-        }
         checkIndex(index, size);
         return (T) array[index];
     }
@@ -67,10 +64,9 @@ public class ArrayList<T> implements List<T> {
         int elementIndex = getIndex(element);
         if (elementIndex < 0) {
             throw new NoSuchElementException("Element is not found in the array");
-        } else {
-            removedElement = (T) array[getIndex(element)];
-            remove(elementIndex);
         }
+        removedElement = (T) array[elementIndex];
+        remove(elementIndex);
         return removedElement;
     }
 
@@ -101,12 +97,8 @@ public class ArrayList<T> implements List<T> {
 
     private int getIndex(T value) {
         for (int i = 0; i < size; i++) {
-            if (value != null && value.equals(array[i])) {
+            if (value != null && value.equals(array[i]) || value == array[i]) {
                 return i;
-            } else {
-                if ((value == null) && array[i] == null) {
-                    return i;
-                }
             }
         }
         return -1;
