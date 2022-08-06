@@ -92,14 +92,14 @@ public class ArrayList<T> implements List<T> {
         if (index > size - 1 || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("index is out of bounds of the list size");
         }
-        T element = (T) elements[index];
+        T removedelement = (T) elements[index];
         if (index == size - 1) {
             size--;
-            return element;
+            return removedelement;
         }
         System.arraycopy(elements, index + 1, elements, index,size - index);
         size--;
-        return element;
+        return removedelement;
     }
 
     @Override
