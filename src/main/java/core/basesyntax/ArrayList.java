@@ -23,7 +23,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         if (index > size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index out of bound exception.");
+            throw new ArrayListIndexOutOfBoundsException("Index out of bound exception " + index);
         }
 
         if (size >= list.length) {
@@ -45,16 +45,8 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index > size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index out of bound exception.");
-        }
-
         int elementIndex = checkIndex(index);
-        return elementData(elementIndex);
-    }
-
-    T elementData(int index) {
-        return (T) list[index];
+        return (T) list[elementIndex];
     }
 
     @Override
@@ -65,11 +57,11 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(int index) {
-        int ind = checkIndex(index);
-        T oldValue = elementData(ind);
-        int numMoved = size - ind - 1;
+        int elementIndex = checkIndex(index);
+        T oldValue = (T) list[elementIndex];
+        int numMoved = size - elementIndex - 1;
         if (numMoved > 0) {
-            System.arraycopy(list, ind + 1, list, ind, numMoved);
+            System.arraycopy(list, elementIndex + 1, list, elementIndex, numMoved);
         }
         list[--size] = null;
         return oldValue;
@@ -77,18 +69,13 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        int index = -1;
         for (int i = 0; i < size; i++) {
             if (element == list[i] || element != null && element.equals(list[i])) {
-                index = i;
+                return remove(i);
             }
         }
 
-        if (index == -1) {
-            throw new NoSuchElementException("No such element in the list.");
-        }
-
-        return remove(index);
+        throw new NoSuchElementException("No such element in the list.");
     }
 
     @Override
@@ -103,7 +90,7 @@ public class ArrayList<T> implements List<T> {
 
     public int checkIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Out of bounds.");
+            throw new ArrayListIndexOutOfBoundsException("Out of bounds index " + index);
         }
         return index;
     }
@@ -119,7 +106,8 @@ public class ArrayList<T> implements List<T> {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof ArrayList)) {
+
+        if (o == null || o.getClass() != this.getClass()) {
             return false;
         }
 
@@ -136,13 +124,5 @@ public class ArrayList<T> implements List<T> {
         int result = Arrays.hashCode(list);
         result = 31 * result + size;
         return result;
-    }
-
-    public int getSize() {
-        return size;
-    }
-
-    public void setSize(int size) {
-        this.size = size;
     }
 }
