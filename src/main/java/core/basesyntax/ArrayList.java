@@ -1,9 +1,12 @@
 package core.basesyntax;
 
 public class ArrayList<T> implements List<T> {
+    private static final int DEFAULT_CAPACITY = 5;
     private Object[] elements;
 
+
     public ArrayList() {
+        this(DEFAULT_CAPACITY);
     }
 
     public ArrayList(int initCapacity) {
