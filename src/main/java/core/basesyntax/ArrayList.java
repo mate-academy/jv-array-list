@@ -7,6 +7,7 @@ import java.util.Objects;
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_SIZE = 10;
     private Object[] elements;
+    private Object object;
     private int size;
 
     public ArrayList() {
@@ -65,7 +66,7 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayListIndexOutOfBoundsException("Wrong index value. "
                     + "Index out of bounds.");
         }
-        Object object = elements[index];
+        object = elements[index];
         elements[index] = null;
         if (index != size - 1) {
             System.arraycopy(elements, index + 1, elements, index, size - index - 1);
