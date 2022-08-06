@@ -1,6 +1,6 @@
 package core.basesyntax;
 
-import java.util.Objects;
+import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 5;
@@ -76,7 +76,35 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        return null;
+        int index = 0;
+        boolean noElement = false;
+        for (Object s : elements) {
+            if (element == null && s == null) {
+                noElement = true;
+                break;
+            }
+
+            if (s == null) {
+                index++;
+                continue;
+            }
+
+            if (s.equals(element)) {
+                noElement = true;
+                break;
+            }
+            index++;
+        }
+        if (noElement == false) {
+            throw new NoSuchElementException("There are no more elements remaining!");
+        }
+        //индекс вычислен правильно
+        checkIndex(index, size);
+        resizeIfFull();
+        T removedElement = (T) elements[index];
+        System.arraycopy(elements, index + 1, elements, index, size - index);
+        size--;
+        return removedElement;
     }
 
     @Override
@@ -101,7 +129,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void checkIndex(int index, int size) {
-        if (index < 0 || index > size) {
+        if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException("Passed index is invalid");
         }
     }
