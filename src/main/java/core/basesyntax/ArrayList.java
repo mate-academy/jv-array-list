@@ -112,13 +112,4 @@ public class ArrayList<T> implements List<T> {
     private boolean validationIndex(int index) {
         return index >= size || index < 0;
     }
-
-    private int findByValue(T value) {
-        for (int i = 0; i < size; i++) {
-            if (Objects.equals(elements[i], value)) {
-                return i;
-            }
-        }
-        return -1;
-    }
 }
