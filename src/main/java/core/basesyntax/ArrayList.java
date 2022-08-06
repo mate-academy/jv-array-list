@@ -1,6 +1,19 @@
 package core.basesyntax;
 
 public class ArrayList<T> implements List<T> {
+    private Object[] elements;
+
+    public ArrayList() {
+    }
+
+    public ArrayList(int initCapacity) {
+        if (initCapacity <= 0) {
+            throw new ArrayListIndexOutOfBoundsException("Illegal Argument");
+        }
+        elements = new Object[initCapacity];
+    }
+
+
     @Override
     public void add(T value) {
 
