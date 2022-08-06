@@ -45,6 +45,9 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
+        for (int i = 0; i < list.size(); i++) {
+            add(list.get(i));
+        }
 
     }
 
@@ -60,7 +63,6 @@ public class ArrayList<T> implements List<T> {
         resizeIfFull();
         elements[index] = value;
         size++;
-
     }
 
     @Override
