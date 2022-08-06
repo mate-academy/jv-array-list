@@ -1,11 +1,9 @@
 package core.basesyntax;
 
 import java.util.NoSuchElementException;
-import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
 
-    // to do private resize and getIndex
     private static final int INITIAL_CAPACITY = 10;
     private int capacity;
     private int size;
@@ -99,9 +97,7 @@ public class ArrayList<T> implements List<T> {
             size--;
             return element;
         }
-        for (int i = index; i < size; i++) {
-            elements[i] = elements[i + 1];
-        }
+        System.arraycopy(elements, index + 1, elements, index,size - index);
         size--;
         return element;
     }
