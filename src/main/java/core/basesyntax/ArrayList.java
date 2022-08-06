@@ -30,14 +30,13 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        //проверяем индекс на валидность
-        checkIndex(index, size);
         //если массив полный и нам нужно добавить еще один елемент то нам нужно сделать ресайз
         resizeIfFull();
         //если на переданном индексе уже будет елемент тогда нужно кусок массива отодвинуть вправо,
         //и на нужный индекс засетить значение
         //c массива elements, начиная с элемента index, скопируй в этот же массив начиная с элемента index+1
         //и нужно скопировать size - index елементов
+        checkIndex(index, size);
         System.arraycopy(elements, index, elements, index + 1, size - index);
         elements[index] = value;
         size++;
@@ -53,24 +52,29 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        checkIndex(index, size);
+        checkEqualsIndex(index, size);
+        if (index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Passed index is invalid");
+        }
         return (T) elements[index];
     }
 
     @Override
     public void set(T value, int index) {
         checkIndex(index, size);
+        checkEqualsIndex(index, size);
         resizeIfFull();
         elements[index] = value;
-        size++;
     }
 
     @Override
     public T remove(int index) {
+        checkEqualsIndex(index, size);
         checkIndex(index, size);
         T removedElement = (T) elements[index];
         //нужно взять весь массив после индекса (тоесть след на один)
         // и скопировать на индекс - 1, остаточное место станет null
+        resizeIfFull();
         System.arraycopy(elements, index + 1, elements, index, size - index);
         size--;
         return removedElement;
@@ -131,7 +135,13 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void checkIndex(int index, int size) {
-        if (index < 0 || index >= size) {
+        if (index < 0 || index > size) {
+            throw new ArrayListIndexOutOfBoundsException("Passed index is invalid");
+        }
+    }
+
+    private void checkEqualsIndex(int index, int size) {
+        if (index == size) {
             throw new ArrayListIndexOutOfBoundsException("Passed index is invalid");
         }
     }
