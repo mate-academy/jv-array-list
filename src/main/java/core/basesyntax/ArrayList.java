@@ -28,7 +28,15 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-
+        //если массив полный и нам нужно добавить еще один елемент то нам нужно сделать ресайз
+        resizeIfFull();
+        //если на переданном индексе уже будет елемент тогда нужно кусок массива отодвинуть вправо,
+        //и на нужный индекс засетить значение
+        //c массива elements, начиная с элемента index, скопируй в этот же массив начиная с элемента index+1
+        //и нужно скопировать size - index елементов
+        System.arraycopy(elements, index, elements, index + 1, size - index);
+        elements[index] = value;
+        size++;
     }
 
     @Override
