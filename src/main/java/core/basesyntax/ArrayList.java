@@ -4,14 +4,16 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    private Object[] elements;
+    private static final double INCREASING_RATE = 1.5;
+    private T[] elements;
     private int size;
 
+    @SuppressWarnings("unchecked")
     public ArrayList(int initCapacity) {
         if (initCapacity <= 0) {
             throw new IllegalArgumentException("IllegalArgument: " + initCapacity);
         }
-        this.elements = new Object[initCapacity];
+        this.elements = (T[]) new Object[initCapacity];
     }
 
     public ArrayList() {
@@ -31,7 +33,7 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayListIndexOutOfBoundsException("Index more than array size");
         }
         resizeArray();
-        System.arraycopy(elements, index, elements,index + 1,size - index);
+        System.arraycopy(elements, index, elements, index + 1, size - index);
         elements[index] = element;
         size++;
     }
@@ -39,17 +41,14 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void addAll(List<T> list) {
         for (int i = 0; i < list.size(); i++) {
-            if (list.size() + size <= elements.length) {
-                add(list.get(i));
-            }
+            add(list.get(i));
         }
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public T get(int index) {
         checkIndexOutOfBounds(index);
-        return (T) elements[index];
+        return elements[index];
     }
 
     @Override
@@ -59,10 +58,9 @@ public class ArrayList<T> implements List<T> {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public T remove(int index) {
         checkIndexOutOfBounds(index);
-        T removedElement = (T) elements[index];
+        T removedElement = elements[index];
         System.arraycopy(elements, index + 1, elements, index, size - index - 1);
         size--;
         return removedElement;
@@ -71,8 +69,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if (elements[i] == null && element == null
-                    || elements[i] != null && elements[i].equals(element)) {
+            if (elements[i] == element || elements[i] != null && elements[i].equals(element)) {
                 return remove(i);
             }
         }
@@ -95,11 +92,12 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
+    @SuppressWarnings("unchecked")
     private void resizeArray() {
         if (elements.length == size) {
-            Object[] newArray = new Object[(int)(size * 1.5)];
+            T[] newArray = (T[]) new Object[(int)(size * INCREASING_RATE)];
             System.arraycopy(elements, 0, newArray, 0, size);
-            this.elements = newArray;
+            this.elements = (T[]) newArray;
         }
     }
 }
