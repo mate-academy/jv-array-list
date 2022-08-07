@@ -6,12 +6,12 @@ public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private static final double SIZE_MULTIPLIER = 1.5;
     private static final String WRONG_INDEX = "Index is out of list size";
-    private Object[] values;
+    private T[] values;
     private int size;
     private int capacity;
 
-    {
-        values = new Object[DEFAULT_CAPACITY];
+    public ArrayList() {
+        values = (T[]) new Object[DEFAULT_CAPACITY];
         capacity = DEFAULT_CAPACITY;
     }
 
@@ -32,11 +32,12 @@ public class ArrayList<T> implements List<T> {
         if (index == size) {
             add(value);
         } else {
-            Object[] temp = new Object[size - index];
-            System.arraycopy(values,index,temp,0,size - index);
+            while (capacity < size + 1) {
+                increaseCapacity();
+            }
+            System.arraycopy(values, index, values, index + 1, size - index);
             values[index] = value;
-            size = index + 1;
-            addArray(temp);
+            size++;
         }
     }
 
@@ -63,12 +64,10 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
-        Object[] temp = new Object[size - index - 1];
-        System.arraycopy(values,index + 1,temp,0,size - index - 1);
-        size = index;
-        T removedValue = (T) values[index];
-        addArray(temp);
-        return removedValue;
+        T value = (T) values[index];
+        System.arraycopy(values, index + 1, values, index, size - index - 1);
+        size--;
+        return value;
     }
 
     @Override
@@ -91,17 +90,9 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void addArray(Object[] temp) {
-        while (capacity < size + temp.length) {
-            increaseCapacity();
-        }
-        System.arraycopy(temp, 0, values, size, temp.length);
-        size += temp.length;
-    }
-
     private void increaseCapacity() {
         capacity *= SIZE_MULTIPLIER;
-        Object[] temp = new Object[capacity];
+        T[] temp = (T[]) new Object[capacity];
         System.arraycopy(values, 0, temp, 0, values.length);
         values = temp;
     }
