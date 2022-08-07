@@ -15,19 +15,6 @@ public class ArrayList<T> implements List<T> {
         size = 0;
     }
 
-    private int getIndex(T value) {
-        int index = -1;
-        int counter = 0;
-        for (Object o : elements) {
-            if (o != null && o.equals(value) || o == value) {
-                index = counter;
-                return index;
-            }
-            counter++;
-        }
-        return index;
-    }
-
     private void resize() {
         Object[] temp = new Object[size + (size >> 1)];
         System.arraycopy(elements, 0, temp, 0, elements.length);
@@ -104,7 +91,15 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        int index = getIndex(element);
+        int index = -1;
+        int counter = 0;
+        for (Object o : elements) {
+            if (o != null && o.equals(element) || o == element) {
+                index = counter;
+                break;
+            }
+            counter++;
+        }
         if (index == - 1) {
             throw new NoSuchElementException();
         }
