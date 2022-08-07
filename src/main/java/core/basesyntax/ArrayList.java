@@ -52,7 +52,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) throws ArrayListIndexOutOfBoundsException {
         checkIfIndexInInterval(index);
-        final T elementToRemove = (T) data[index];  // mvn попросив зробити змінну final, чи так правильно?
+        // mvn попросив зробити змінну final, чи так правильно?
+        final T elementToRemove = (T) data[index];
         if (size == data.length) {
             increaseCapacity();
         }
