@@ -11,6 +11,7 @@ public class ArrayList<T> implements List<T> {
     public ArrayList() {
         elementData = new Object[DEFAULT_CAPACITY];
     }
+
     @Override
     public void add(T value) {
         if (size == elementData.length) {
@@ -22,15 +23,14 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (!isIndexValid(index)) {
-            throw new ArrayListIndexOutOfBoundsException("message");
+        if (index < 0 || index > size) {
+            throw new ArrayListIndexOutOfBoundsException("Cannot add element. "
+                    + "Index out of bounds of this list.");
         }
         if (size == elementData.length) {
             elementData = grow();
         }
-        for (int i = elementData.length - 1; i > index - 1; i--) {
-            elementData[i] = elementData[i-1];
-        }
+        System.arraycopy(elementData, index, elementData, index + 1, size - index);
         elementData[index] = value;
         size++;
     }
@@ -44,29 +44,30 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (!isIndexValid(index)) {
-            throw new ArrayListIndexOutOfBoundsException("message");
+        if (index < 0 || index > size - 1) {
+            throw new ArrayListIndexOutOfBoundsException("Cannot get element. "
+                    + "There is no element at that index.");
         }
         return (T) elementData[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (!isIndexValid(index)) {
-            throw new ArrayListIndexOutOfBoundsException("message");
+        if (index < 0 || index > size - 1) {
+            throw new ArrayListIndexOutOfBoundsException("Cannot set element. "
+                    + "There is no element at that index.");
         }
         elementData[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (!isIndexValid(index)) {
-            throw new ArrayListIndexOutOfBoundsException("message");
+        if (index < 0 || index > size - 1) {
+            throw new ArrayListIndexOutOfBoundsException("Cannot remove element. "
+                    + "There is no element at that index.");
         }
         Object removedObject = elementData[index];
-        for (int i = index; i < elementData.length - 1; i++) {
-            elementData[i] =  elementData[i + 1];
-        }
+        System.arraycopy(elementData, index + 1, elementData, index, size - index - 1);
         size--;
         return (T) removedObject;
     }
@@ -78,9 +79,11 @@ public class ArrayList<T> implements List<T> {
             if (Objects.equals(elementData[i], element)) {
                 removedObject = elementData[i];
                 remove(i);
+                return (T) removedObject;
             }
         }
-        throw new NoSuchElementException("message");
+        throw new NoSuchElementException("Cannot remove element. "
+                + "This element doesn't exist in this list.");
     }
 
     @Override
@@ -94,14 +97,10 @@ public class ArrayList<T> implements List<T> {
     }
 
     private Object[] grow() {
-        Object[] grow = new Object[elementData.length + elementData.length >> 1];
+        Object[] grow = new Object[elementData.length + elementData.length / 2];
         for (int i = 0; i < elementData.length; i++) {
             grow[i] = elementData[i];
         }
         return grow;
-    }
-
-    private boolean isIndexValid (int index) {
-        return index > 0 && index < size;
     }
 }
