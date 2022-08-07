@@ -87,10 +87,12 @@ public class ArrayList<T> implements List<T> {
 
     public void checkIndexAndSize(int size, int index) {
         if (index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Incorrect index: " + index);
+            throw new ArrayListIndexOutOfBoundsException("Index less then 0: " + index);
         }
         if (size <= index) {
-            throw new ArrayListIndexOutOfBoundsException("Incorrect size: " + size);
+            throw new ArrayListIndexOutOfBoundsException("Index larger then size: "
+                    + "index: " + index
+                    + "size: " + size);
         }
     }
 
