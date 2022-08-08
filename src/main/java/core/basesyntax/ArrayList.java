@@ -1,5 +1,7 @@
 package core.basesyntax;
 
+import java.util.NoSuchElementException;
+
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private static final int ARRAY_FIRST_INDEX = 0;
@@ -65,7 +67,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        return null;
+        return remove(indexOf(element));
     }
 
     @Override
@@ -99,5 +101,14 @@ public class ArrayList<T> implements List<T> {
         if (index >= size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Invalid index");
         }
+    }
+
+    private int indexOf(T element) {
+        for (int i = 0; i < size; i++) {
+            if (values[i] == element || values[i] != null && values[i].equals(element)) {
+                return i;
+            }
+        }
+        throw new NoSuchElementException("Element not found");
     }
 }
