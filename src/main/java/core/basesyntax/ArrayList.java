@@ -5,21 +5,16 @@ import java.util.NoSuchElementException;
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private static final double SIZE_MULTIPLIER = 1.5;
-    private static final String WRONG_INDEX = "Index is out of list size";
     private T[] values;
     private int size;
-    private int capacity;
 
     public ArrayList() {
         values = (T[]) new Object[DEFAULT_CAPACITY];
-        capacity = DEFAULT_CAPACITY;
     }
 
     @Override
     public void add(T value) {
-        if (size == capacity) {
-            increaseCapacity();
-        }
+        increaseCapacity();
         values[size] = value;
         size++;
     }
@@ -27,14 +22,13 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException(WRONG_INDEX);
+            throw new ArrayListIndexOutOfBoundsException("Unappropriated index: " + index
+                    + " for size: " + size);
         }
         if (index == size) {
             add(value);
         } else {
-            while (capacity < size + 1) {
-                increaseCapacity();
-            }
+            increaseCapacity();
             System.arraycopy(values, index, values, index + 1, size - index);
             values[index] = value;
             size++;
@@ -77,7 +71,7 @@ public class ArrayList<T> implements List<T> {
                 return remove(i);
             }
         }
-        throw new NoSuchElementException("Element didn`t found");
+        throw new NoSuchElementException("Couldn`t find element: " + element);
     }
 
     @Override
@@ -91,15 +85,17 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void increaseCapacity() {
-        capacity *= SIZE_MULTIPLIER;
-        T[] temp = (T[]) new Object[capacity];
-        System.arraycopy(values, 0, temp, 0, values.length);
-        values = temp;
+        if (values.length == size) {
+            T[] temp = (T[]) new Object[(int) (values.length * SIZE_MULTIPLIER)];
+            System.arraycopy(values, 0, temp, 0, values.length);
+            values = temp;
+        }
     }
 
     private void checkIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException(WRONG_INDEX);
+            throw new ArrayListIndexOutOfBoundsException("Index: " + index
+                    + " is out of list size: " + size);
         }
     }
 }
