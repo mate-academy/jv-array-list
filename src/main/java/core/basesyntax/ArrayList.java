@@ -25,14 +25,10 @@ public class ArrayList<T> implements List<T> {
             add(value);
         } else {
             increase();
-            T[] valuesTemp = (T[]) new Object[size - index + 1];
-            for (int i = index; i <= size; i++) {
-                valuesTemp[i - index] = values[i];
-            }
+            Object[] valuesTemp = new Object[size - index + 1];
+            System.arraycopy(values, index, valuesTemp, 0, valuesTemp.length);
             values[index] = value;
-            for (int i = index + 1; i <= size; i++) {
-                values[i] = valuesTemp[i - index - 1];
-            }
+            System.arraycopy(valuesTemp, 0, values, index + 1, valuesTemp.length - 1);
             size++;
         }
     }
@@ -47,7 +43,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         checkIndex(index);
-        return values[index];
+        return (T) values[index];
     }
 
     @Override
@@ -59,28 +55,25 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
-        T oldValue = values[index];
-        for (int i = index + 1; i < size; i++) {
-            values[i - 1] = values[i];
-        }
+        Object oldValue = values[index];
+        System.arraycopy(values, index + 1, values, index, size - index - 1);
         size--;
-        return oldValue;
+        return (T) oldValue;
     }
 
     @Override
     public T remove(T element) {
-        int indexTemp = -1;
+        int index = -1;
         for (int i = 0; i < size; i++) {
             if (values[i] == element || values[i] != null && values[i].equals(element)) {
-                indexTemp = i;
+                index = i;
             }
         }
-        if (indexTemp == -1) {
+        if (index == -1) {
             throw new NoSuchElementException("There is no such element");
         }
-        for (int i = indexTemp + 1; i < size; i++) {
-            values[i - 1] = values[i];
-        }
+        System.arraycopy(values, index + 1, values,
+                index, size - index - 1);
         size--;
         return element;
     }
@@ -97,10 +90,8 @@ public class ArrayList<T> implements List<T> {
 
     private void increase() {
         if (size >= values.length) {
-            T[] valuesTemp = (T[]) new Object[size * 3 / 2];
-            for (int i = 0; i < size; i++) {
-                valuesTemp[i] = values[i];
-            }
+            Object[] valuesTemp = new Object[size * 3 / 2];
+            System.arraycopy(values, 0, valuesTemp, 0, size);
             values = valuesTemp;
         }
     }
@@ -116,5 +107,4 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayListIndexOutOfBoundsException("To big index");
         }
     }
-
 }
