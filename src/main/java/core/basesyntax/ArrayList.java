@@ -3,7 +3,7 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    private static final int DEFAULT_CAPACITY = 5;
+    private static final int DEFAULT_CAPACITY = 10;
     private static final int ZERO = 0;
     private Object[] elements;
     private int size;
@@ -46,9 +46,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         checkEqualsIndex(index, size);
-        if (index < ZERO) {
-            throw new ArrayListIndexOutOfBoundsException("Passed index is invalid");
-        }
+        checkIndex(index, size);
         return (T) elements[index];
     }
 
