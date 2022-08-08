@@ -94,9 +94,7 @@ public class ArrayList<T> implements List<T> {
 
     public void grow() {
         Object[] newElements = new Object[elements.length * 3 / 2];
-        for (int i = 0; i < elements.length; i++) {
-            newElements[i] = elements[i];
-        }
+        System.arraycopy(elements, 0, newElements, 0, size);
         elements = newElements;
     }
 }
