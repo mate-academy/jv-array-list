@@ -53,7 +53,14 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(int index) {
-        return null;
+        checkIndex(index);
+        T removed = values[index];
+        T[] tempArray = (T[]) new Object[capacity];
+        System.arraycopy(values, ARRAY_FIRST_INDEX, tempArray, ARRAY_FIRST_INDEX, index);
+        System.arraycopy(values, index + 1, tempArray, index,size - index - 1);
+        values = tempArray;
+        size--;
+        return removed;
     }
 
     @Override
