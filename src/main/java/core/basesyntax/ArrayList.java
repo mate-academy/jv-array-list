@@ -14,19 +14,15 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (size == elementData.length) {
-            elementData = Arrays.copyOf(elementData, (int) (elementData.length * 1.5));
-        }
+        checkForResize();
         elementData[size] = value;
         size++;
     }
 
     @Override
     public void add(T value, int index) {
-        rangeCheckForAdd(index);
-        if (size == elementData.length) {
-            elementData = Arrays.copyOf(elementData, (int) (elementData.length * 1.5));
-        }
+        checkRangeForAdd(index);
+        checkForResize();
         System.arraycopy(elementData, index, elementData, index + 1, size - index);
         elementData[index] = value;
         size++;
@@ -43,56 +39,44 @@ public class ArrayList<T> implements List<T> {
     public T get(int index) {
         if (index >= 0 && index < size) {
             return (T) elementData[index];
-        } else {
-            throw new ArrayListIndexOutOfBoundsException("Cannot get the element "
-                    + "because index " + index + " is invalid");
         }
+        throw new ArrayListIndexOutOfBoundsException("Cannot get the element "
+                + "because index " + index + " is invalid");
     }
 
     @Override
     public void set(T value, int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Cannot set the value "
-                    + "because index " + index + " is invalid");
-        }
+        checkIndexValidation(index);
         elementData[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Cannot remove element because "
-                    + "index " + index + " is invalid");
-        }
-        final Object[] es = elementData;
-        T oldValue = (T) es[index];
-        fastRemove(es, index);
+        checkIndexValidation(index);
+        Object[] dataList = elementData;
+        T oldValue = (T) dataList[index];
+        fastRemove(dataList, index);
         return oldValue;
     }
 
     @Override
     public T remove(T element) {
-        final Object[] es = elementData;
+        final Object[] dataList = elementData;
         final int size = this.size;
-        int i = 0;
-        found: {
+        for (int i = 0; i < size; i++) {
             if (element == null) {
-                for (; i < size; i++) {
-                    if (es[i] == null) {
-                        break found;
-                    }
+                if (dataList[i] == null) {
+                    remove(i);
+                    return element;
                 }
             } else {
-                for (; i < size; i++) {
-                    if (element.equals(es[i])) {
-                        break found;
-                    }
+                if (element.equals(dataList[i])) {
+                    remove(i);
+                    return element;
                 }
             }
-            throw new NoSuchElementException();
         }
-        fastRemove(es, i);
-        return element;
+        throw new NoSuchElementException();
     }
 
     @Override
@@ -105,17 +89,30 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void rangeCheckForAdd(int index) {
+    private void checkRangeForAdd(int index) {
         if (index > size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Index " + index + " is invalid");
         }
     }
 
-    private void fastRemove(Object[] es, int i) {
-        final int newSize;
-        if ((newSize = size - 1) > i) {
-            System.arraycopy(es, i + 1, es, i, newSize - i);
+    private void checkForResize() {
+        if (size == elementData.length) {
+            elementData = Arrays.copyOf(elementData, (int) (elementData.length * 1.5));
         }
-        es[size = newSize] = null;
+    }
+
+    private void checkIndexValidation(int index) {
+        if (index >= size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Cannot remove element because "
+                    + "index " + index + " is invalid");
+        }
+    }
+
+    private void fastRemove(Object[] dataList, int index) {
+        int newSize = size - 1;
+        if (newSize > index) {
+            System.arraycopy(dataList, index + 1, dataList, index, newSize - index);
+        }
+        dataList[size = newSize] = null;
     }
 }
