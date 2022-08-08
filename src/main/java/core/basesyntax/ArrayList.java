@@ -33,7 +33,6 @@ public class ArrayList<T> implements List<T> {
         System.arraycopy(elements, index, elements, index + 1, size - index);
         elements[index] = value;
         size++;
-
     }
 
     @Override
