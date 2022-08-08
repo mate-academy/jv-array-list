@@ -96,7 +96,7 @@ public class ArrayList<T> implements List<T> {
         if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException("Can't " + actionString
                     + " element by index: " + index
-                    + ", it's out of bounds");
+                    + ", it's out of bounds for size " + size);
         }
     }
 }
