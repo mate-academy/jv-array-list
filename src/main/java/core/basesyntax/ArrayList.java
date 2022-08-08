@@ -34,12 +34,17 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-
+        for (int i = 0; i < list.size(); i++) {
+            add(list.get(i));
+        }
     }
 
     @Override
     public T get(int index) {
-        return null;
+        if (index >= size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Invalid index");
+        }
+        return values[index];
     }
 
     @Override
