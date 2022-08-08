@@ -4,8 +4,8 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    private Object[] arrayList;
     private int size;
+    private Object[] arrayList;
 
     public ArrayList() {
         arrayList = new Object[DEFAULT_CAPACITY];
@@ -23,7 +23,7 @@ public class ArrayList<T> implements List<T> {
     public void add(T value, int index) {
         if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException("Can not add the element. "
-            + "Index out of bound exception " + index);
+            + value + "Index out of bound exception " + index);
         }
         if (size >= arrayList.length) {
             ensureCapacity();
