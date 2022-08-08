@@ -57,14 +57,14 @@ public class ArrayList<T> implements List<T> {
     @Override
     @SuppressWarnings("unchecked")
     public T remove(T element) {
-        T removedObject;
+        Object removedObject;
         for (int i = 0; i < size; i++) {
             if (element == objects[i]
                     || objects[i] != null
                     && objects[i].equals(element)) {
-                removedObject = (T) objects[i];
+                removedObject = objects[i];
                 remove(i);
-                return removedObject;
+                return (T) removedObject;
             }
         }
         throw new NoSuchElementException("Cant find " + element);
