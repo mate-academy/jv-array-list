@@ -4,6 +4,8 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
+    private static final String MESSAGE = "There is not such element.";
+    private static final String MESSAGE_OUT = "Out of bounds ";
     private int size;
     private Object[] elements;
 
@@ -33,7 +35,7 @@ public class ArrayList<T> implements List<T> {
 
     public void checkIndex(int index, int size) {
         if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Out of bounds " + index);
+            throw new ArrayListIndexOutOfBoundsException(MESSAGE_OUT + index);
         }
     }
 
@@ -60,7 +62,6 @@ public class ArrayList<T> implements List<T> {
     @SuppressWarnings("unchecked")
     @Override
     public T remove(int index) {
-
         checkIndex(index, size);
         T removedObject = (T) elements[index];
         System.arraycopy(elements, index + 1, elements, index, size - index - 1);
@@ -79,7 +80,7 @@ public class ArrayList<T> implements List<T> {
                 return (T) removedObject;
             }
         }
-        throw new NoSuchElementException("There is not such element.");
+        throw new NoSuchElementException(MESSAGE);
     }
 
     @Override
