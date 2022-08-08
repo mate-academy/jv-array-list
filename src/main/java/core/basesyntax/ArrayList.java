@@ -21,15 +21,8 @@ public class ArrayList<T> implements List<T> {
         checkArraySizeAndResize();
         size++;
         checkIndex(index);
-        Object[] tmp = new Object[size];
-        for (int i = 0; i < index; i++) {
-            tmp[i] = storage[i];
-        }
-        tmp[index] = value;
-        for (int j = 1 + index; j < size; j++) {
-            tmp[j] = storage[j - 1];
-        }
-        storage = tmp;
+        System.arraycopy(storage, index, storage, index + 1, size - 1 - index);
+        storage[index] = value;
     }
 
     @Override
