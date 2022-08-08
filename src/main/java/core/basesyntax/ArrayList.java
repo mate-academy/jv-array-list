@@ -98,13 +98,13 @@ public class ArrayList<T> implements List<T> {
         objects = newObject;
     }
 
-    public void checkIndex(int index) {
+    private void checkIndex(int index) {
         if (index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Index: " + index + " less then 0");
         }
     }
 
-    public void checkSize(int index) {
+    private void checkSize(int index) {
         if (size <= index) {
             throw new ArrayListIndexOutOfBoundsException("Index: " + index
                     + " larger then size: " + size);
