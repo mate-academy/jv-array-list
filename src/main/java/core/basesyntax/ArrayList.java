@@ -4,12 +4,12 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    private T[] values;
+    private Object[] values;
 
     private int size;
 
     public ArrayList() {
-        this.values = (T[]) new Object[DEFAULT_CAPACITY];
+        this.values = new Object[DEFAULT_CAPACITY];
     }
 
     @Override
