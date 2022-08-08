@@ -3,12 +3,12 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    public static final int LENGHT = 10;
+    public static final int MAX_LENGHT = 10;
     private Object[] array;
     private int size;
 
     public ArrayList() {
-        array = new Object[LENGHT];
+        array = new Object[MAX_LENGHT];
     }
 
     @Override
@@ -22,7 +22,6 @@ public class ArrayList<T> implements List<T> {
     public void add(T value, int index) {
         validateIndex(index, size + 1);
         grow();
-
         System.arraycopy(array, index, array, index + 1, size - index);
         array[index] = value;
         size++;
@@ -34,7 +33,6 @@ public class ArrayList<T> implements List<T> {
         for (int i = 0; i < list.size(); i++) {
             add(list.get(i));
         }
-
     }
 
     @Override
