@@ -97,7 +97,7 @@ public class ArrayList<T> implements List<T> {
 
     public void checkIndexException(int index) {
         if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Error list index");
+            throw new ArrayListIndexOutOfBoundsException(EXCEPTION_MASSAGE);
         }
     }
 
