@@ -3,7 +3,6 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-
     private static final int DEFAULT_CAPACITY = 10;
     private Object[] elementData;
     private int size;
@@ -43,25 +42,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index < 0 || index > size - 1) {
-            throw new ArrayListIndexOutOfBoundsException("Incorrect index: " + index);
-        }
+        checkException(index);
         return (T) elementData[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index < 0 || index > size - 1) {
-            throw new ArrayListIndexOutOfBoundsException("Incorrect index: " + index);
-        }
+        checkException(index);
         elementData[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index < 0 || index > size - 1) {
-            throw new ArrayListIndexOutOfBoundsException("Incorrect index: " + index);
-        }
+        checkException(index);
         Object removeObject = elementData[index];
         System.arraycopy(elementData, index + 1, elementData, index, size - index - 1);
         size--;
@@ -75,9 +68,7 @@ public class ArrayList<T> implements List<T> {
             if ((elementData[i] == element)
                     || (elementData[i]
                     != null && elementData[i].equals(element))) {
-                removObject = elementData[i];
-                remove(i);
-                return (T) removObject;
+                return remove(i);
             }
         }
         throw new NoSuchElementException("Can't remove element: " + element);
@@ -99,5 +90,11 @@ public class ArrayList<T> implements List<T> {
             grow[i] = elementData[i];
         }
         return grow;
+    }
+
+    private void checkException(int index) {
+        if (index < 0 || index > size - 1) {
+            throw new ArrayListIndexOutOfBoundsException("Incorrect index: " + index);
+        }
     }
 }
