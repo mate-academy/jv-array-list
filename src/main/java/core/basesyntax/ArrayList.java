@@ -60,4 +60,10 @@ public class ArrayList<T> implements List<T> {
         }
         return index;
     }
+
+    private void ensureCapacity() {
+        Object[] newArrayList = new Object[arrayList.length + arrayList.length / 2];
+        System.arraycopy(arrayList, 0, newArrayList, 0, size);
+        arrayList = newArrayList;
+    }
 }
