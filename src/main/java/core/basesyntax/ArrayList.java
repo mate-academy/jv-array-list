@@ -45,7 +45,7 @@ public class ArrayList<T> implements List<T> {
             return (T) elementData[index];
         } else {
             throw new ArrayListIndexOutOfBoundsException("Cannot get the element "
-                    + "because index is invalid");
+                    + "because index " + index + " is invalid");
         }
     }
 
@@ -53,7 +53,7 @@ public class ArrayList<T> implements List<T> {
     public void set(T value, int index) {
         if (index >= size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Cannot set the value "
-                    + "because index is invalid");
+                    + "because index " + index + " is invalid");
         }
         elementData[index] = value;
     }
@@ -62,7 +62,7 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         if (index >= size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Cannot remove element because "
-                    + "index is invalid");
+                    + "index " + index + " is invalid");
         }
         final Object[] es = elementData;
         T oldValue = (T) es[index];
@@ -72,7 +72,6 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        T oldValue = element;
         final Object[] es = elementData;
         final int size = this.size;
         int i = 0;
@@ -93,7 +92,7 @@ public class ArrayList<T> implements List<T> {
             throw new NoSuchElementException();
         }
         fastRemove(es, i);
-        return oldValue;
+        return element;
     }
 
     @Override
@@ -108,7 +107,7 @@ public class ArrayList<T> implements List<T> {
 
     private void rangeCheckForAdd(int index) {
         if (index > size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index is invalid");
+            throw new ArrayListIndexOutOfBoundsException("Index " + index + " is invalid");
         }
     }
 
