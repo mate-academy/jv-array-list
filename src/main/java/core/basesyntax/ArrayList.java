@@ -23,7 +23,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("Index out of bounds");
+            throw new ArrayListIndexOutOfBoundsException("Index" + index + "is out of bounds!");
         }
         if (size == list.length) {
             grow();
@@ -45,8 +45,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         if (isIndexInInvalidRange(index)) {
-            throw new ArrayListIndexOutOfBoundsException(
-                    "The index is greater for the length of the list!");
+            throw new ArrayListIndexOutOfBoundsException("Index" + index + "is out of bounds!");
         }
         return list[index];
     }
@@ -54,8 +53,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void set(T value, int index) {
         if (isIndexInInvalidRange(index)) {
-            throw new ArrayListIndexOutOfBoundsException(
-                    "The index is greater for the length of the list!");
+            throw new ArrayListIndexOutOfBoundsException("Index" + index + "is out of bounds!");
         }
         list[index] = value;
     }
@@ -63,8 +61,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         if (isIndexInInvalidRange(index)) {
-            throw new ArrayListIndexOutOfBoundsException(
-                    "The index is greater for the length of the list!");
+            throw new ArrayListIndexOutOfBoundsException("Index" + index + "is out of bounds!");
         }
         T removedObject = list[index];
         removeObject(index);
@@ -86,7 +83,7 @@ public class ArrayList<T> implements List<T> {
             }
         }
         if (index == -1) {
-            throw new NoSuchElementException("The element was not found");
+            throw new NoSuchElementException("The element was not found!");
         }
         removeObject(index);
         return removedObject;
