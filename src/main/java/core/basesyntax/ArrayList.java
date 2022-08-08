@@ -70,7 +70,7 @@ public class ArrayList<T> implements List<T> {
             }
         }
         if (index == -1) {
-            throw new NoSuchElementException("There is no such element");
+            throw new NoSuchElementException("There is no such element " + element);
         }
         System.arraycopy(values, index + 1, values,
                 index, size - index - 1);
@@ -98,13 +98,13 @@ public class ArrayList<T> implements List<T> {
 
     private void checkIndex(int index) {
         if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("To big index");
+            throw new ArrayListIndexOutOfBoundsException("To big index " + index);
         }
     }
 
     private void checkAddIndex(int index) {
         if (index != 0 && (index > size || index < 0)) {
-            throw new ArrayListIndexOutOfBoundsException("To big index");
+            throw new ArrayListIndexOutOfBoundsException("To big index " + index);
         }
     }
 }
