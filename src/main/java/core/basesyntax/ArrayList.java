@@ -46,11 +46,18 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public int size() {
-        return 0;
+        return size;
     }
 
     @Override
     public boolean isEmpty() {
         return false;
+    }
+
+    public int checkIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Out of bound index " + index);
+        }
+        return index;
     }
 }
