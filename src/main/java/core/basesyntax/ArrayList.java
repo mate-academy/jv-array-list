@@ -31,7 +31,7 @@ public class ArrayList<T> implements List<T> {
         if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException(EXCEPTION_MASSAGE_INDEX);
         }
-        System.arraycopy(list,index,list,index + 1,size - index);
+        System.arraycopy(list, index, list, index + 1, size - index);
         list[index] = value;
         size++;
     }
@@ -62,7 +62,7 @@ public class ArrayList<T> implements List<T> {
             changeSizeList();
         }
         T returnElement = list[index];
-        System.arraycopy(list,index + 1,list,index,size - index);
+        System.arraycopy(list, index + 1, list, index, size - index);
         size--;
         return returnElement;
     }
@@ -77,7 +77,6 @@ public class ArrayList<T> implements List<T> {
                 remove(i);
                 availableException++;
                 break;
-
             }
         }
         if (availableException == 0) {
@@ -104,7 +103,7 @@ public class ArrayList<T> implements List<T> {
 
     public void changeSizeList() {
         T[] newList = (T[]) new Object[(int) (size * MULTIPLIER_SIZE)];
-        System.arraycopy(list,0,newList,0,size);
+        System.arraycopy(list, 0, newList, 0, size);
         list = newList;
     }
 }
