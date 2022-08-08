@@ -5,19 +5,19 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int CAPACITY = 10;
-    private Object[] list;
+    private Object[] elements;
     private int size;
 
     public ArrayList() {
-        list = new Object[CAPACITY];
+        elements = new Object[CAPACITY];
     }
 
     @Override
     public void add(T value) {
-        if (size >= list.length) {
+        if (size >= elements.length) {
             ensureCapacity();
         }
-        list[size++] = value;
+        elements[size++] = value;
     }
 
     @Override
@@ -26,12 +26,12 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayListIndexOutOfBoundsException("Index out of bound exception " + index);
         }
 
-        if (size >= list.length) {
+        if (size >= elements.length) {
             ensureCapacity();
         }
 
-        System.arraycopy(list, index, list, index + 1, size - index);
-        list[index] = value;
+        System.arraycopy(elements, index, elements, index + 1, size - index);
+        elements[index] = value;
         size++;
 
     }
@@ -45,32 +45,32 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        int elementIndex = checkIndex(index);
-        return (T) list[elementIndex];
+        checkIndex(index);
+        return (T) elements[index];
     }
 
     @Override
     public void set(T value, int index) {
-        int ind = checkIndex(index);
-        list[ind] = value;
+        checkIndex(index);
+        elements[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        int elementIndex = checkIndex(index);
-        T oldValue = (T) list[elementIndex];
-        int numMoved = size - elementIndex - 1;
-        if (numMoved > 0) {
-            System.arraycopy(list, elementIndex + 1, list, elementIndex, numMoved);
+        checkIndex(index);
+        T oldValue = (T) elements[index];
+        int numberMoved = size - index - 1;
+        if (numberMoved > 0) {
+            System.arraycopy(elements, index + 1, elements, index, numberMoved);
         }
-        list[--size] = null;
+        elements[--size] = null;
         return oldValue;
     }
 
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if (element == list[i] || element != null && element.equals(list[i])) {
+            if (element == elements[i] || element != null && element.equals(elements[i])) {
                 return remove(i);
             }
         }
@@ -88,17 +88,16 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    public int checkIndex(int index) {
+    public void checkIndex(int index) {
         if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException("Out of bounds index " + index);
         }
-        return index;
     }
 
     private void ensureCapacity() {
         Object[] newList = new Object[(int) (size + size * 1.5)];
-        System.arraycopy(list, 0, newList, 0, size);
-        list = newList;
+        System.arraycopy(elements, 0, newList, 0, size);
+        elements = newList;
     }
 
     @Override
@@ -116,12 +115,12 @@ public class ArrayList<T> implements List<T> {
         if (size != arrayList.size) {
             return false;
         }
-        return Arrays.equals(list, arrayList.list);
+        return Arrays.equals(elements, arrayList.elements);
     }
 
     @Override
     public int hashCode() {
-        int result = Arrays.hashCode(list);
+        int result = Arrays.hashCode(elements);
         result = 31 * result + size;
         return result;
     }
