@@ -18,4 +18,12 @@ public interface List<T> {
     int size();
 
     boolean isEmpty();
+
+    default T[] toArray() {
+        T[] items = (T[]) new Object[size()];
+        for (int i = 0; i < size(); i++) {
+            items[i] = get(i);
+        }
+        return items;
+    }
 }
