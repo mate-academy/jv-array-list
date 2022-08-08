@@ -2,6 +2,7 @@ package core.basesyntax;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
+    private static final int ARRAY_FIRST_INDEX = 0;
     private int size;
     private int capacity;
     private T[] values;
@@ -14,12 +15,15 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-
+        if (size == capacity) {
+            values = grow();
+        }
+        values[size] = value;
     }
 
     @Override
     public void add(T value, int index) {
-
+        values[index] = value;
     }
 
     @Override
@@ -55,5 +59,13 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return false;
+    }
+
+    private T[] grow() {
+        capacity = (int) (capacity * 1.5);
+        T[] tempArray = (T[]) new Object[capacity];
+        System.arraycopy(values, ARRAY_FIRST_INDEX, tempArray, ARRAY_FIRST_INDEX, size);
+
+        return tempArray;
     }
 }
