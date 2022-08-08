@@ -4,8 +4,12 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int MAX_RANGE = 10;
-    private Object[] objects = new Object[MAX_RANGE];
+    private Object[] objects;
     private int size = 0;
+
+    public ArrayList() {
+        objects = new Object[MAX_RANGE];
+    }
 
     @Override
     public void add(T value) {
