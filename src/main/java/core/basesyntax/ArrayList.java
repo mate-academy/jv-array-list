@@ -14,7 +14,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value) {
         if (size == elements.length) {
-            elements = grow();
+            grow();
         }
         elements[size] = value;
         size++;
@@ -22,12 +22,9 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (!(isIndexInValidRange(index, size + 1))) {
-            throw new ArrayListIndexOutOfBoundsException("Cannot add element. "
-                    + "Index out of bounds of this list.");
-        }
+        isIndexInValidRange(index, size + 1);
         if (size == elements.length) {
-            elements = grow();
+            grow();
         }
         System.arraycopy(elements, index, elements, index + 1, size - index);
         elements[index] = value;
@@ -43,28 +40,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (!(isIndexInValidRange(index, size))) {
-            throw new ArrayListIndexOutOfBoundsException("Cannot get element. "
-                    + "There is no element at that index.");
-        }
+        isIndexInValidRange(index, size);
         return (T) elements[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (!(isIndexInValidRange(index, size))) {
-            throw new ArrayListIndexOutOfBoundsException("Cannot set element. "
-                    + "There is no element at that index.");
-        }
+        isIndexInValidRange(index, size);
         elements[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (!(isIndexInValidRange(index, size))) {
-            throw new ArrayListIndexOutOfBoundsException("Cannot remove element. "
-                    + "There is no element at that index.");
-        }
+        isIndexInValidRange(index, size);
         Object removedObject = elements[index];
         System.arraycopy(elements, index + 1, elements, index, size - index - 1);
         size--;
@@ -73,12 +61,9 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        Object removedObject = null;
         for (int i = 0; i < size; i++) {
             if ((element == elements[i]) || (element != null && element.equals(elements[i]))) {
-                removedObject = elements[i];
-                remove(i);
-                return (T) removedObject;
+                return remove(i);
             }
         }
         throw new NoSuchElementException("Cannot remove element. "
@@ -95,13 +80,16 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private Object[] grow() {
-        Object[] grow = new Object[elements.length + elements.length / 2];
-        System.arraycopy(elements, 0, grow, 0, size);
-        return grow;
+    private void grow() {
+        Object[] newArray = new Object[elements.length + elements.length / 2];
+        System.arraycopy(elements, 0, newArray, 0, size);
+        elements = newArray;
     }
 
-    private boolean isIndexInValidRange(int index, int range) {
-        return index >= 0 && index < range;
+    private void isIndexInValidRange(int index, int range) {
+        if (index < 0 || index >= range) {
+            throw new ArrayListIndexOutOfBoundsException("There is no element at that index"
+                    + " or index is out of bound of list");
+        }
     }
 }
