@@ -22,7 +22,9 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        checkIndex(index, "to add");
+        if (index < 0 || index > size) {
+            throw new ArrayListIndexOutOfBoundsException("Index out of bounds");
+        }
         if (size == list.length) {
             grow();
         }
@@ -42,19 +44,28 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        checkIndex(index, "actually");
+        if (isIndexInInvalidRange(index)) {
+            throw new ArrayListIndexOutOfBoundsException(
+                    "The index is greater for the length of the list!");
+        }
         return list[index];
     }
 
     @Override
     public void set(T value, int index) {
-        checkIndex(index, "actually");
+        if (isIndexInInvalidRange(index)) {
+            throw new ArrayListIndexOutOfBoundsException(
+                    "The index is greater for the length of the list!");
+        }
         list[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        checkIndex(index, "actually");
+        if (isIndexInInvalidRange(index)) {
+            throw new ArrayListIndexOutOfBoundsException(
+                    "The index is greater for the length of the list!");
+        }
         T removedObject = list[index];
         removeObject(index);
         return removedObject;
@@ -93,26 +104,12 @@ public class ArrayList<T> implements List<T> {
 
     private void grow() {
         T[] temporaryArray = list;
-        list = (T[]) new Object[list.length + (DEFAULT_CAPACITY >> 1)];
+        list = (T[]) new Object[list.length + (list.length >> 1)];
         System.arraycopy(temporaryArray, 0, list, 0, size);
     }
 
-    private void checkIndex(int index, String operation) {
-        switch (operation) {
-            case "to add":
-                if (index > size || index < 0) {
-                    throw new ArrayListIndexOutOfBoundsException(
-                            "The index is greater for the length of the list!");
-                }
-                break;
-            case "actually":
-                if (index >= size || index < 0) {
-                    throw new ArrayListIndexOutOfBoundsException(
-                            "The index is greater for the length of the list!");
-                }
-                break;
-            default:
-        }
+    private boolean isIndexInInvalidRange(int index) {
+        return index < 0 || index >= size;
     }
 
     private void removeObject(int index) {
