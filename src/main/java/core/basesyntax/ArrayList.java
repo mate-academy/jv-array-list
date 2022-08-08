@@ -14,7 +14,7 @@ public class ArrayList<T> implements List<T> {
 
     public ArrayList(int initCapacity) {
         if (initCapacity <= ZERO) {
-            throw new ArrayListIndexOutOfBoundsException("Illegal argument to create array");
+            throw new ArrayListIndexOutOfBoundsException("Illegal argument to create array " + initCapacity);
         }
         elements = new Object[initCapacity];
     }
@@ -40,7 +40,6 @@ public class ArrayList<T> implements List<T> {
         for (int i = 0; i < list.size(); i++) {
             add(list.get(i));
         }
-
     }
 
     @Override
@@ -78,12 +77,10 @@ public class ArrayList<T> implements List<T> {
                 noElement = true;
                 break;
             }
-
             if (s == null) {
                 index++;
                 continue;
             }
-
             if (s.equals(element)) {
                 noElement = true;
                 break;
@@ -114,7 +111,6 @@ public class ArrayList<T> implements List<T> {
     private void resizeIfFull() {
         if (elements.length == size) {
             Object[] newArray = new Object[elements.length + (elements.length >> 1)];
-            //arraycopy берет кусок памяти и вставляет куда мы скажем
             System.arraycopy(elements, 0, newArray, 0, size);
             elements = newArray;
         }
@@ -122,14 +118,13 @@ public class ArrayList<T> implements List<T> {
 
     private void checkIndex(int index, int size) {
         if (index < ZERO || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("Passed index is invalid");
+            throw new ArrayListIndexOutOfBoundsException("Passed index is invalid " + index);
         }
     }
 
     private void checkEqualsIndex(int index, int size) {
         if (index == size) {
-            throw new ArrayListIndexOutOfBoundsException("Passed index is invalid");
+            throw new ArrayListIndexOutOfBoundsException("Passed index is invalid " + index);
         }
     }
-
 }
