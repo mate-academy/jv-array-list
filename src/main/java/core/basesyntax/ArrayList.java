@@ -86,8 +86,8 @@ public class ArrayList<T> implements List<T> {
     public T remove(T element) {
         int index = -1;
         int counter = 0;
-        for (Object o : elements) {
-            if (o != null && o.equals(element) || o == element) {
+        for (Object object : elements) {
+            if (object != null && object.equals(element) || object == element) {
                 index = counter;
                 break;
             }
