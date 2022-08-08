@@ -14,7 +14,8 @@ public class ArrayList<T> implements List<T> {
 
     public ArrayList(int initCapacity) {
         if (initCapacity <= ZERO) {
-            throw new ArrayListIndexOutOfBoundsException("Illegal argument to create array " + initCapacity);
+            throw new ArrayListIndexOutOfBoundsException("Illegal argument to create array "
+                    + initCapacity);
         }
         elements = new Object[initCapacity];
     }
