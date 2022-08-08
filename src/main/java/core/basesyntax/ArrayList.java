@@ -9,7 +9,7 @@ public class ArrayList<T> implements List<T> {
     private int size;
 
     public ArrayList() {
-        this.values = new Object[DEFAULT_CAPACITY];
+        values = new Object[DEFAULT_CAPACITY];
     }
 
     @Override
