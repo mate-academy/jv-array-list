@@ -18,13 +18,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (size == storage.length) {
-            Object[] tmp = new Object[size * 3 / 2];
-            for (int i = 0; i < size; i++) {
-                tmp[i] = storage[i];
-            }
-            storage = tmp;
-        }
+        checkArraySizeAndResize();
         size++;
         checkIndex(index);
         Object[] tmp = new Object[size];
@@ -61,16 +55,9 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
-        Object[] tmp = new Object[size];
-        for (int i = 0; i < index; i++) {
-            tmp[i] = storage[i];
-        }
-        final Object removed = storage[index];
-        for (int j = 1 + index; j < size; j++) {
-            tmp[j - 1] = storage[j];
-        }
+        Object removed = storage[index];
+        System.arraycopy(storage, index + 1, storage, index, size - 1 - index);
         --size;
-        storage = tmp;
         return (T) removed;
     }
 
@@ -106,5 +93,13 @@ public class ArrayList<T> implements List<T> {
             }
         }
         return -1;
+    }
+
+    private void checkArraySizeAndResize() {
+        if (size == storage.length) {
+            Object[] tmp = new Object[size * 3 / 2];
+            System.arraycopy(storage, 0, tmp, 0, size);
+            storage = tmp;
+        }
     }
 }
