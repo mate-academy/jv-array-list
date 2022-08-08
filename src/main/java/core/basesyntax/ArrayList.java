@@ -7,9 +7,6 @@ public class ArrayList<T> implements List<T> {
     private int size;
     private Node<T>[] items;
 
-    public ArrayList(T value) {
-    }
-
     public ArrayList() {
         items = new Node[MAX_ARRAY_LENGTH];
         size = 0;
