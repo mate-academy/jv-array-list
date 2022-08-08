@@ -43,9 +43,6 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        if (sizeArray + list.size() > array.length) {
-            array = Arrays.copyOf(array, incrementLength());
-        }
         for (int i = 0; i < list.size(); i++) {
             add(list.get(i));
         }
