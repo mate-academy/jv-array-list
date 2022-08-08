@@ -1,37 +1,36 @@
 package core.basesyntax;
 
 import java.util.NoSuchElementException;
-import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    private Object[] elementData;
+    private Object[] elements;
     private int size;
 
     public ArrayList() {
-        elementData = new Object[DEFAULT_CAPACITY];
+        elements = new Object[DEFAULT_CAPACITY];
     }
 
     @Override
     public void add(T value) {
-        if (size == elementData.length) {
-            elementData = grow();
+        if (size == elements.length) {
+            elements = grow();
         }
-        elementData[size] = value;
+        elements[size] = value;
         size++;
     }
 
     @Override
     public void add(T value, int index) {
-        if (index < 0 || index > size) {
+        if (!(isIndexInValidRange(index, size + 1))) {
             throw new ArrayListIndexOutOfBoundsException("Cannot add element. "
                     + "Index out of bounds of this list.");
         }
-        if (size == elementData.length) {
-            elementData = grow();
+        if (size == elements.length) {
+            elements = grow();
         }
-        System.arraycopy(elementData, index, elementData, index + 1, size - index);
-        elementData[index] = value;
+        System.arraycopy(elements, index, elements, index + 1, size - index);
+        elements[index] = value;
         size++;
     }
 
@@ -44,30 +43,30 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index < 0 || index > size - 1) {
+        if (!(isIndexInValidRange(index, size))) {
             throw new ArrayListIndexOutOfBoundsException("Cannot get element. "
                     + "There is no element at that index.");
         }
-        return (T) elementData[index];
+        return (T) elements[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index < 0 || index > size - 1) {
+        if (!(isIndexInValidRange(index, size))) {
             throw new ArrayListIndexOutOfBoundsException("Cannot set element. "
                     + "There is no element at that index.");
         }
-        elementData[index] = value;
+        elements[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index < 0 || index > size - 1) {
+        if (!(isIndexInValidRange(index, size))) {
             throw new ArrayListIndexOutOfBoundsException("Cannot remove element. "
                     + "There is no element at that index.");
         }
-        Object removedObject = elementData[index];
-        System.arraycopy(elementData, index + 1, elementData, index, size - index - 1);
+        Object removedObject = elements[index];
+        System.arraycopy(elements, index + 1, elements, index, size - index - 1);
         size--;
         return (T) removedObject;
     }
@@ -76,8 +75,8 @@ public class ArrayList<T> implements List<T> {
     public T remove(T element) {
         Object removedObject = null;
         for (int i = 0; i < size; i++) {
-            if (Objects.equals(elementData[i], element)) {
-                removedObject = elementData[i];
+            if ((element == elements[i]) || (element != null && element.equals(elements[i]))) {
+                removedObject = elements[i];
                 remove(i);
                 return (T) removedObject;
             }
@@ -97,10 +96,12 @@ public class ArrayList<T> implements List<T> {
     }
 
     private Object[] grow() {
-        Object[] grow = new Object[elementData.length + elementData.length / 2];
-        for (int i = 0; i < elementData.length; i++) {
-            grow[i] = elementData[i];
-        }
+        Object[] grow = new Object[elements.length + elements.length / 2];
+        System.arraycopy(elements, 0, grow, 0, size);
         return grow;
+    }
+
+    private boolean isIndexInValidRange(int index, int range) {
+        return index >= 0 && index < range;
     }
 }
