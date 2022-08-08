@@ -113,7 +113,7 @@ public class ArrayList<T> implements List<T> {
 
     private void resizeIfFull() {
         if (elements.length == size) {
-            Object[] newArray = new Object[elements.length + (elements.length >> 2)];
+            Object[] newArray = new Object[elements.length + (elements.length >> 1)];
             //arraycopy берет кусок памяти и вставляет куда мы скажем
             System.arraycopy(elements, 0, newArray, 0, size);
             elements = newArray;
