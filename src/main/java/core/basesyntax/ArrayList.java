@@ -7,7 +7,7 @@ import java.util.Objects;
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_SIZE = 10;
     private int size;
-    private Object [] elements;
+    private Object[] elements;
 
     public ArrayList() {
         elements = new Object[DEFAULT_SIZE];
@@ -15,7 +15,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        expandingListForAddition();
+        checkList();
         elements[size] = value;
         size++;
     }
@@ -23,9 +23,9 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         if (index > size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index out of List Range");
+            throw new ArrayListIndexOutOfBoundsException("Index" + index + " out of List Range");
         }
-        expandingListForAddition();
+        checkList();
         if (index != size) {
             System.arraycopy(elements, index, elements, index + 1, size - index);
         }
@@ -42,27 +42,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (isIndexNotInListRange(index)) {
-            throw new ArrayListIndexOutOfBoundsException("Element with index = "
-                    + index + " does not exist");
-        }
+        checkIndex(index);
         return (T) elements[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (isIndexNotInListRange(index)) {
-            throw new ArrayListIndexOutOfBoundsException("Element with index = "
-                    + index + " does not exist");
-        }
+        checkIndex(index);
         elements[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (isIndexNotInListRange(index)) {
-            throw new ArrayListIndexOutOfBoundsException("Index out of List Range");
-        }
+        checkIndex(index);
         Object element = elements[index];
         deleteElement(index);
 
@@ -106,13 +98,15 @@ public class ArrayList<T> implements List<T> {
         return -1;
     }
 
-    private void expandingListForAddition() {
+    private void checkList() {
         if (size >= elements.length) {
             elements = Arrays.copyOf(elements, size + size / 2);
         }
     }
 
-    private boolean isIndexNotInListRange(int index) {
-        return index < 0 || index >= size;
+    private void checkIndex (int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Index" + index + " out of List Range");
+        }
     }
 }
