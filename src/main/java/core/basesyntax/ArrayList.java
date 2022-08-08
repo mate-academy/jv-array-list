@@ -1,19 +1,21 @@
 package core.basesyntax;
 
-import jdk.internal.util.ArraysSupport;
 import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    private static final Object[] DEFAULTCAPACITY_EMPTY_ELEMENTDATA = {};
     private int size;
-    private Object[] elementData = new Object[DEFAULT_CAPACITY];
+    private Object[] elementData;
+
+    public ArrayList() {
+        this.elementData = new Object[DEFAULT_CAPACITY];
+    }
 
     @Override
     public void add(T value) {
         if (size == elementData.length) {
-            elementData = grow();
+            elementData = Arrays.copyOf(elementData, elementData.length * 2);
         }
         elementData[size] = value;
         size++;
@@ -22,14 +24,12 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         rangeCheckForAdd(index);
-        final int s;
-        Object[] elementData;
-        if ((s = size) == (elementData = this.elementData).length) {
-            elementData = grow();
+        if (size == elementData.length) {
+            elementData = Arrays.copyOf(elementData, elementData.length * 2);
         }
-        System.arraycopy(elementData, index, elementData, index + 1, s - index);
+        System.arraycopy(elementData, index, elementData, index + 1, size - index);
         elementData[index] = value;
-        size = s + 1;
+        size++;
     }
 
     @Override
@@ -44,29 +44,30 @@ public class ArrayList<T> implements List<T> {
         if (index >= 0 && index < size) {
             return (T) elementData[index];
         } else {
-            throw new ArrayListIndexOutOfBoundsException("Index is invalid");
+            throw new ArrayListIndexOutOfBoundsException("Cannot get the element "
+                    + "because index is invalid");
         }
     }
 
     @Override
     public void set(T value, int index) {
-        if (index >= 0 && index < size) {
-            elementData[index] = value;
-        } else {
-            throw new ArrayListIndexOutOfBoundsException("Index is invalid");
+        if (index >= size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Cannot set the value "
+                    + "because index is invalid");
         }
+        elementData[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index >= 0 && index < size) {
-            final Object[] es = elementData;
-            @SuppressWarnings("unchecked") T oldValue = (T) es[index];
-            fastRemove(es, index);
-            return oldValue;
-        } else {
-            throw new ArrayListIndexOutOfBoundsException("Index is invalid");
+        if (index >= size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Cannot remove element because "
+                    + "index is invalid");
         }
+        final Object[] es = elementData;
+        @SuppressWarnings("unchecked") T oldValue = (T) es[index];
+        fastRemove(es, index);
+        return oldValue;
     }
 
     @Override
@@ -77,13 +78,17 @@ public class ArrayList<T> implements List<T> {
         int i = 0;
         found: {
             if (element == null) {
-                for (; i < size; i++)
-                    if (es[i] == null)
+                for (; i < size; i++) {
+                    if (es[i] == null) {
                         break found;
+                    }
+                }
             } else {
-                for (; i < size; i++)
-                    if (element.equals(es[i]))
+                for (; i < size; i++) {
+                    if (element.equals(es[i])) {
                         break found;
+                    }
+                }
             }
             throw new NoSuchElementException();
         }
@@ -101,51 +106,17 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private Object[] grow(int minCapacity) {
-        int oldCapacity = elementData.length;
-        if (oldCapacity > 0 || elementData != DEFAULTCAPACITY_EMPTY_ELEMENTDATA) {
-            int newCapacity = ArraysSupport.newLength(oldCapacity,
-                    minCapacity - oldCapacity, /* minimum growth */
-                    oldCapacity >> 1           /* preferred growth */);
-            return elementData = Arrays.copyOf(elementData, newCapacity);
-        } else {
-            return elementData = new Object[Math.max(DEFAULT_CAPACITY, minCapacity)];
-        }
-    }
-
-    private Object[] grow() {
-        return grow(size + 1);
-    }
-
     private void rangeCheckForAdd(int index) {
-        if (index > size || index < 0)
-            throw new IndexOutOfBoundsException(outOfBoundsMsg(index));
-    }
-
-    public Object[] toArray() {
-        return Arrays.copyOf(elementData, size);
-    }
-
-    @SuppressWarnings("unchecked")
-    public <T> T[] toArray(T[] a) {
-        if (a.length < size)
-            // Make a new array of a's runtime type, but my contents:
-            return (T[]) Arrays.copyOf(elementData, size, a.getClass());
-        System.arraycopy(elementData, 0, a, 0, size);
-        if (a.length > size)
-            a[size] = null;
-        return a;
+        if (index > size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Index is invalid");
+        }
     }
 
     private void fastRemove(Object[] es, int i) {
         final int newSize;
-        if ((newSize = size - 1) > i)
+        if ((newSize = size - 1) > i) {
             System.arraycopy(es, i + 1, es, i, newSize - i);
+        }
         es[size = newSize] = null;
     }
-
-    private String outOfBoundsMsg(int index) {
-        return "Index: "+index+", Size: "+size;
-    }
-
 }
