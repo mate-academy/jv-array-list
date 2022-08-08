@@ -41,15 +41,14 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index");
-        }
+        checkIndex(index);
         return values[index];
     }
 
     @Override
     public void set(T value, int index) {
-
+        checkIndex(index);
+        values[index] = value;
     }
 
     @Override
@@ -81,13 +80,17 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void insert(int index, T value) {
-        if (index > size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index");
-        }
+        checkIndex(index);
         T[] tempArray = (T[]) new Object[capacity];
         System.arraycopy(values, ARRAY_FIRST_INDEX, tempArray, ARRAY_FIRST_INDEX, index);
         tempArray[index] = value;
         System.arraycopy(values, index, tempArray, index + 1, size - index);
         values = tempArray;
+    }
+
+    private void checkIndex(int index) {
+        if (index >= size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Invalid index");
+        }
     }
 }
