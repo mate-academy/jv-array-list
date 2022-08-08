@@ -40,12 +40,14 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        return null;
+        int elementOfIndex = checkIndex(index);
+        return (T) arrayList[elementOfIndex];
     }
 
     @Override
     public void set(T value, int index) {
-
+        int newElementIndex = checkIndex(index);
+        arrayList[newElementIndex] = value;
     }
 
     @Override
