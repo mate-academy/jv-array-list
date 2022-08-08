@@ -2,18 +2,25 @@ package core.basesyntax;
 
 import java.util.Arrays;
 import java.util.NoSuchElementException;
-import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
     private static final int START_CAPACITY = 10;
-    private int sizeArray = 0;
+    private static final double COEFFICIENT_MULTIPLY = 1.5;
+    private int sizeArray;
     private Object[] array = new Object[START_CAPACITY];
+
+    private int incrementLength() {
+        return (int) (array.length * COEFFICIENT_MULTIPLY);
+    }
+
+    private boolean equals(Object first, Object second) {
+        return first == second || (first != null && first.equals(second));
+    }
 
     @Override
     public void add(T value) {
         if (sizeArray + 1 > array.length) {
-            int newSize = (int) (array.length * 1.5);
-            array = Arrays.copyOf(array, newSize);
+            array = Arrays.copyOf(array, incrementLength());
         }
         array[sizeArray] = value;
         sizeArray++;
@@ -24,7 +31,7 @@ public class ArrayList<T> implements List<T> {
         if (index > sizeArray || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Index out of range");
         }
-        int newSize = (sizeArray + 1 > array.length) ? (int) (array.length * 1.5) : array.length;
+        int newSize = (sizeArray + 1 > array.length) ? incrementLength() : array.length;
         Object[] newArray = new Object[newSize];
 
         System.arraycopy(array, 0, newArray, 0, index);
@@ -37,8 +44,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void addAll(List<T> list) {
         if (sizeArray + list.size() > array.length) {
-            int newSize = (int) (array.length * 1.5);
-            array = Arrays.copyOf(array, newSize);
+            array = Arrays.copyOf(array, incrementLength());
         }
         for (int i = 0; i < list.size(); i++) {
             add(list.get(i));
@@ -82,7 +88,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         int i = 0;
-        while (!Objects.equals(element, array[i]) && i < sizeArray) {
+        while (!equals(element, array[i]) && i < sizeArray) {
             i++;
         }
         if (i < sizeArray) {
