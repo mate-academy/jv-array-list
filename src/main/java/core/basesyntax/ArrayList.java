@@ -15,13 +15,6 @@ public class ArrayList<T> implements List<T> {
         size = 0;
     }
 
-    private void resize() {
-        Object[] temp = new Object[size + (size >> 1)];
-        System.arraycopy(elements, 0, temp, 0, elements.length);
-        elements = temp;
-        capacity = size + (size >> 1);
-    }
-
     @Override
     public void add(T value) {
         if (size() == capacity) {
@@ -114,5 +107,12 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size() == 0;
+    }
+
+    private void resize() {
+        Object[] temp = new Object[size + (size >> 1)];
+        System.arraycopy(elements, 0, temp, 0, elements.length);
+        elements = temp;
+        capacity = size + (size >> 1);
     }
 }
