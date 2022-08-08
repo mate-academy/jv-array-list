@@ -79,7 +79,7 @@ public class ArrayList<T> implements List<T> {
     public T remove(T value) {
         int index = -1;
         for (int i = 0; i < size; i++) {
-            if (Objects.equals(elements[i], value)) {
+            if (value != null && value.equals(elements[i]) || value == elements[i]) {
                 index = i;
             }
         }
