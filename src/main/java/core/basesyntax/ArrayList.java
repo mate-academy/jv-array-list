@@ -1,7 +1,6 @@
 package core.basesyntax;
 
 import java.util.NoSuchElementException;
-import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
 
@@ -73,13 +72,15 @@ public class ArrayList<T> implements List<T> {
     public T remove(T element) {
         Object removObject = null;
         for (int i = 0; i < size; i++) {
-            if ((elementData[i] == element) || (elementData[i] != null && elementData[i].equals(element))) {
+            if ((elementData[i] == element)
+                    || (elementData[i]
+                    != null && elementData[i].equals(element))) {
                 removObject = elementData[i];
                 remove(i);
                 return (T) removObject;
             }
         }
-        throw new NoSuchElementException("Can't remove element: "  + element);
+        throw new NoSuchElementException("Can't remove element: " + element);
     }
 
     @Override
