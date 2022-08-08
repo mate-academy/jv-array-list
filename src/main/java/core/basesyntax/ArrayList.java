@@ -20,11 +20,16 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        checkIndexAndSize(size + 1, index);
-        checkLength(size);
-        System.arraycopy(objects, index, objects, index + 1, size - index);
-        objects[index] = value;
-        size++;
+        checkIndex(index);
+        if ((size - index) >= 0) {
+            checkLength(size);
+            System.arraycopy(objects, index, objects, index + 1, size - index);
+            objects[index] = value;
+            size++;
+        } else {
+            throw new ArrayListIndexOutOfBoundsException("Index: " + index
+                    + " lager then size: " + size);
+        }
     }
 
     @Override
@@ -37,13 +42,15 @@ public class ArrayList<T> implements List<T> {
     @Override
     @SuppressWarnings("unchecked")
     public T get(int index) {
-        checkIndexAndSize(size, index);
+        checkIndex(index);
+        checkSize(index);
         return (T) objects[index];
     }
 
     @Override
     public void set(T value, int index) {
-        checkIndexAndSize(size, index);
+        checkIndex(index);
+        checkSize(index);
         remove(index);
         add(value, index);
     }
@@ -51,7 +58,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     @SuppressWarnings("unchecked")
     public T remove(int index) {
-        checkIndexAndSize(size, index);
+        checkIndex(index);
+        checkSize(index);
         Object removedObject = objects[index];
         System.arraycopy(objects, index + 1, objects, index, size - index - 1);
         size--;
@@ -81,23 +89,25 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public boolean isEmpty() {
-        return size <= 0;
+        return size == 0;
     }
 
     private void grow() {
-        Object[] newObject = new Object[(int) (objects.length * 1.5)];
+        Object[] newObject = new Object[(objects.length * 3 / 2)];
         System.arraycopy(objects, 0, newObject, 0, objects.length);
         objects = newObject;
     }
 
-    public void checkIndexAndSize(int size, int index) {
+    public void checkIndex(int index) {
         if (index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index less then 0: " + index);
+            throw new ArrayListIndexOutOfBoundsException("Index: " + index + " less then 0");
         }
+    }
+
+    public void checkSize(int index) {
         if (size <= index) {
-            throw new ArrayListIndexOutOfBoundsException("Index larger then size: "
-                    + "index: " + index
-                    + "size: " + size);
+            throw new ArrayListIndexOutOfBoundsException("Index: " + index
+                    + " larger then size: " + size);
         }
     }
 
