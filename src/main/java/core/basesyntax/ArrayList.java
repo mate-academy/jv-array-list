@@ -89,14 +89,11 @@ public class ArrayList<T> implements List<T> {
         for (Object object : elements) {
             if (object != null && object.equals(element) || object == element) {
                 index = counter;
-                break;
+                return remove(index);
             }
             counter++;
         }
-        if (index == - 1) {
-            throw new NoSuchElementException();
-        }
-        return remove(index);
+        throw new NoSuchElementException();
     }
 
     @Override
