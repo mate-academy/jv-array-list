@@ -1,10 +1,9 @@
 package core.basesyntax;
 
-import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    public static final int DEFAULT_CAPACITY = 10;
+    private static final int DEFAULT_CAPACITY = 10;
     private T[] list;
     private int size;
 
@@ -23,10 +22,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index > size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException(
-                    "The index is greater for the length of the list!");
-        }
+        checkIndex(index, "to add");
         if (size == list.length) {
             grow();
         }
@@ -46,28 +42,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException(
-                    "The index is greater for the length of the list!");
-        }
+        checkIndex(index, "actually");
         return list[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException(
-                    "The index is greater for the length of the list!");
-        }
+        checkIndex(index, "actually");
         list[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException(
-                    "The index is greater for the length of the list!");
-        }
+        checkIndex(index, "actually");
         T removedObject = list[index];
         removeObject(index);
         return removedObject;
@@ -75,22 +62,16 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        int index = -1;
         T removedObject = null;
-        if (element == null) {
-            for (int i = 0; i < size; i++) {
-                if (list[i] == null) {
-                    index = i;
-                    break;
-                }
-            }
-        } else {
-            for (int i = 0; i < size; i++) {
-                if (element.equals(list[i])) {
-                    index = i;
-                    removedObject = list[i];
-                    break;
-                }
+        int index = -1;
+        for (int i = 0; i < size; i++) {
+            if (element != null && element.equals(list[i])) {
+                index = i;
+                removedObject = list[i];
+                break;
+            } else if (element == null && list[i] == null) {
+                index = i;
+                break;
             }
         }
         if (index == -1) {
@@ -111,15 +92,34 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void grow() {
-        list = Arrays.copyOf(list, list.length + (DEFAULT_CAPACITY >> 1));
+        T[] temporaryArray = list;
+        list = (T[]) new Object[list.length + (DEFAULT_CAPACITY >> 1)];
+        System.arraycopy(temporaryArray, 0, list, 0, size);
+    }
+
+    private void checkIndex(int index, String operation) {
+        switch (operation) {
+            case "to add":
+                if (index > size || index < 0) {
+                    throw new ArrayListIndexOutOfBoundsException(
+                            "The index is greater for the length of the list!");
+                }
+                break;
+            case "actually":
+                if (index >= size || index < 0) {
+                    throw new ArrayListIndexOutOfBoundsException(
+                            "The index is greater for the length of the list!");
+                }
+                break;
+            default:
+        }
     }
 
     private void removeObject(int index) {
-        int newSize = size - 1;
-        if (newSize > index) {
-            System.arraycopy(list, index + 1, list, index, newSize - index);
+        if (size - 1 > index) {
+            System.arraycopy(list, index + 1, list, index, size - 1 - index);
         }
-        size = newSize;
+        size--;
         list[size] = null;
     }
 }
