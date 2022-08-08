@@ -11,17 +11,31 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-
+        if (size >= arrayList.length) {
+            ensureCapacity();
+        }
+        arrayList[size++] = value;
     }
 
     @Override
     public void add(T value, int index) {
-
+        if (index < 0 || index > size) {
+            throw new ArrayListIndexOutOfBoundsException("Can not add the element. "
+            + "Index out of bound exception " + index);
+        }
+        if (size>= arrayList.length) {
+            ensureCapacity();
+        }
+        System.arraycopy(arrayList, index, arrayList, index + 1, size - index);
+        arrayList[index] = value;
+        size++;
     }
 
     @Override
     public void addAll(List<T> list) {
-
+        for (int i = 0; i < list.size(); i++) {
+            add(list.get(i));
+        }
     }
 
     @Override
