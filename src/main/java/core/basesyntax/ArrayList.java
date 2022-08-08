@@ -24,7 +24,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     @Override
-    public void add(T value, int index) throws ArrayListIndexOutOfBoundsException {
+    public void add(T value, int index) {
         if (size == data.length) {
             increaseCapacity();
         }
@@ -54,30 +54,24 @@ public class ArrayList<T> implements List<T> {
         checkIfIndexInInterval(index);
         // mvn попросив зробити змінну final, чи так правильно?
         final T elementToRemove = (T) data[index];
-        if (size == data.length) {
-            increaseCapacity();
-        }
-        System.arraycopy(data, index + 1, data, index, size - index);
+        System.arraycopy(data, index + 1, data, index, size - (index + 1));
         size--;
         return elementToRemove;
     }
 
     @Override
     public T remove(T element) throws ArrayListIndexOutOfBoundsException {
-        int index = 0;
-        int count = 0;
+        int index = getIndex(element);
+        return remove(index);
+    }
+
+    private int getIndex(T element) {
         for (int i = 0; i < size; i++) {
             if (element == data[i] || (data[i] != null && data[i].equals(element))) {
-                index = i;
-                count++;
-                break;
+                return i;
             }
         }
-        if (count != 0) {
-            return remove(index);
-        } else {
-            throw new NoSuchElementException(NO_ELEMENT);
-        }
+        throw new NoSuchElementException(NO_ELEMENT);
     }
 
     @Override
