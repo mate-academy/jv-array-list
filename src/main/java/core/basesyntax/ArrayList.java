@@ -15,7 +15,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        checkList();
+        checkCapacity();
         elements[size] = value;
         size++;
     }
@@ -23,9 +23,9 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         if (index > size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index" + index + " out of List Range");
+            throw new ArrayListIndexOutOfBoundsException("Index " + index + " out of List Range");
         }
-        checkList();
+        checkCapacity();
         if (index != size) {
             System.arraycopy(elements, index, elements, index + 1, size - index);
         }
@@ -98,7 +98,7 @@ public class ArrayList<T> implements List<T> {
         return -1;
     }
 
-    private void checkList() {
+    private void checkCapacity() {
         if (size >= elements.length) {
             elements = Arrays.copyOf(elements, size + size / 2);
         }
@@ -106,7 +106,7 @@ public class ArrayList<T> implements List<T> {
 
     private void checkIndex (int index) {
         if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index" + index + " out of List Range");
+            throw new ArrayListIndexOutOfBoundsException("Index " + index + " out of List Range");
         }
     }
 }
