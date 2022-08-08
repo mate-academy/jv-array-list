@@ -15,7 +15,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value) {
         if (size == elementData.length) {
-            elementData = Arrays.copyOf(elementData, elementData.length * 2);
+            elementData = Arrays.copyOf(elementData, (int) (elementData.length * 1.5));
         }
         elementData[size] = value;
         size++;
@@ -25,7 +25,7 @@ public class ArrayList<T> implements List<T> {
     public void add(T value, int index) {
         rangeCheckForAdd(index);
         if (size == elementData.length) {
-            elementData = Arrays.copyOf(elementData, elementData.length * 2);
+            elementData = Arrays.copyOf(elementData, (int) (elementData.length * 1.5));
         }
         System.arraycopy(elementData, index, elementData, index + 1, size - index);
         elementData[index] = value;
@@ -65,7 +65,7 @@ public class ArrayList<T> implements List<T> {
                     + "index is invalid");
         }
         final Object[] es = elementData;
-        @SuppressWarnings("unchecked") T oldValue = (T) es[index];
+        T oldValue = (T) es[index];
         fastRemove(es, index);
         return oldValue;
     }
