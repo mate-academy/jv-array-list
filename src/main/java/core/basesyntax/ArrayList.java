@@ -56,7 +56,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
-        T removed = values[index];
+        final T removed = values[index];
         T[] tempArray = (T[]) new Object[capacity];
         System.arraycopy(values, ARRAY_FIRST_INDEX, tempArray, ARRAY_FIRST_INDEX, index);
         System.arraycopy(values, index + 1, tempArray, index,size - index - 1);
@@ -89,7 +89,9 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void insert(int index, T value) {
-        checkIndex(index);
+        if (index > size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Invalid index");
+        }
         T[] tempArray = (T[]) new Object[capacity];
         System.arraycopy(values, ARRAY_FIRST_INDEX, tempArray, ARRAY_FIRST_INDEX, index);
         tempArray[index] = value;
