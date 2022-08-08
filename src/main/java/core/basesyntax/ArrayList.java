@@ -1,7 +1,6 @@
 package core.basesyntax;
 
 import java.util.NoSuchElementException;
-import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
@@ -26,7 +25,7 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayListIndexOutOfBoundsException("Can not add the element. "
             + "Index out of bound exception " + index);
         }
-        if (size>= arrayList.length) {
+        if (size >= arrayList.length) {
             ensureCapacity();
         }
         System.arraycopy(arrayList, index, arrayList, index + 1, size - index);
