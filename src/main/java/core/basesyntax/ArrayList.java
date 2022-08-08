@@ -1,48 +1,110 @@
 package core.basesyntax;
 
+import java.util.NoSuchElementException;
+
 public class ArrayList<T> implements List<T> {
+    private static final int DEFAULT_CAPACITY = 10;
+    private Object[] storage;
+    private int size;
+
+    public ArrayList() {
+        this.storage = new Object[DEFAULT_CAPACITY];
+    }
+
     @Override
     public void add(T value) {
-
+        add(value, size);
     }
 
     @Override
     public void add(T value, int index) {
-
+        if (size == storage.length) {
+            Object[] tmp = new Object[size * 3 / 2];
+            for (int i = 0; i < size; i++) {
+                tmp[i] = storage[i];
+            }
+            storage = tmp;
+        }
+        size++;
+        checkIndex(index);
+        Object[] tmp = new Object[size];
+        for (int i = 0; i < index; i++) {
+            tmp[i] = storage[i];
+        }
+        tmp[index] = value;
+        for (int j = 1 + index; j < size; j++) {
+            tmp[j] = storage[j - 1];
+        }
+        storage = tmp;
     }
 
     @Override
     public void addAll(List<T> list) {
-
+        for (int i = 0; i < list.size(); i++) {
+            T element = list.get(i);
+            add(element);
+        }
     }
 
     @Override
     public T get(int index) {
-        return null;
+        checkIndex(index);
+        return (T) storage[index];
     }
 
     @Override
     public void set(T value, int index) {
-
+        checkIndex(index);
+        storage[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        return null;
+        checkIndex(index);
+        Object[] tmp = new Object[size];
+        for (int i = 0; i < index; i++) {
+            tmp[i] = storage[i];
+        }
+        final Object removed = storage[index];
+        for (int j = 1 + index; j < size; j++) {
+            tmp[j - 1] = storage[j];
+        }
+        --size;
+        storage = tmp;
+        return (T) removed;
     }
 
     @Override
     public T remove(T element) {
-        return null;
+        if (getIndex(element) == -1) {
+            throw new NoSuchElementException(element + " not find ");
+        }
+        return remove(getIndex(element));
     }
 
     @Override
     public int size() {
-        return 0;
+        return size;
     }
 
     @Override
     public boolean isEmpty() {
-        return false;
+        return size == 0;
+    }
+
+    private void checkIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("you use invalid index");
+        }
+    }
+
+    private int getIndex(T element) {
+        for (int i = 0; i < size; i++) {
+            if (element == storage[i]
+                    || element != null && element.equals(storage[i])) {
+                return i;
+            }
+        }
+        return -1;
     }
 }
