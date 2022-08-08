@@ -25,7 +25,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         if (index > size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Can't add this vale");
+            throw new ArrayListIndexOutOfBoundsException("Can't add this value: " + value);
         }
         if (elementData.length == size) {
             elementData = grow();
@@ -45,7 +45,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         if (index < 0 || index > size - 1) {
-            throw new ArrayListIndexOutOfBoundsException("Incorrect index");
+            throw new ArrayListIndexOutOfBoundsException("Incorrect index: " + index);
         }
         return (T) elementData[index];
     }
@@ -53,7 +53,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void set(T value, int index) {
         if (index < 0 || index > size - 1) {
-            throw new ArrayListIndexOutOfBoundsException("Incorrect index");
+            throw new ArrayListIndexOutOfBoundsException("Incorrect index: " + index);
         }
         elementData[index] = value;
     }
@@ -61,7 +61,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         if (index < 0 || index > size - 1) {
-            throw new ArrayListIndexOutOfBoundsException("Incorrect index");
+            throw new ArrayListIndexOutOfBoundsException("Incorrect index: " + index);
         }
         Object removeObject = elementData[index];
         System.arraycopy(elementData, index + 1, elementData, index, size - index - 1);
@@ -73,13 +73,13 @@ public class ArrayList<T> implements List<T> {
     public T remove(T element) {
         Object removObject = null;
         for (int i = 0; i < size; i++) {
-            if (Objects.equals(elementData[i], element)) {
+            if ((elementData[i] == element) || (elementData[i] != null && elementData[i].equals(element))) {
                 removObject = elementData[i];
                 remove(i);
                 return (T) removObject;
             }
         }
-        throw new NoSuchElementException("Can't remove element");
+        throw new NoSuchElementException("Can't remove element: "  + element);
     }
 
     @Override
