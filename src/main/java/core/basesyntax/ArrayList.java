@@ -24,10 +24,15 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
+        if (index > size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Index: " + index
+                    + " ,out of bounds for length: " + size);
+        }
         if (size == values.length) {
             values = grow();
         }
-        insert(index,value);
+        System.arraycopy(values,index,values,index + 1, size - index);
+        values[index] = value;
         size++;
     }
 
@@ -80,20 +85,10 @@ public class ArrayList<T> implements List<T> {
         return tempArray;
     }
 
-    private void insert(int index, T value) {
-        if (index > size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index");
-        }
-        T[] tempArray = (T[]) new Object[values.length];
-        System.arraycopy(values, ARRAY_FIRST_INDEX, tempArray, ARRAY_FIRST_INDEX, index);
-        tempArray[index] = value;
-        System.arraycopy(values, index, tempArray, index + 1, size - index);
-        values = tempArray;
-    }
-
     private void checkIndex(int index) {
         if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index");
+            throw new ArrayListIndexOutOfBoundsException("Index: " + index
+                    + " ,out of bounds for length: " + size);
         }
     }
 
