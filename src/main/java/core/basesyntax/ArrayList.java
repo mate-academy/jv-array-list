@@ -13,14 +13,18 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        resize();
+        if (size == arrayElements.length - 1) {
+            resize();
+        }
         arrayElements[size++] = value;
     }
 
     @Override
     public void add(T value, int index) {
         rangeCheckForAdd(index);
-        resize();
+        if (size == arrayElements.length - 1) {
+            resize();
+        }
         System.arraycopy(arrayElements, index, arrayElements, index + 1, size - index);
         arrayElements[index] = value;
         size++;
@@ -77,11 +81,9 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void resize() {
-        if (size == arrayElements.length - 1) {
-            Object[] newArray = new Object[arrayElements.length + arrayElements.length / 2];
-            System.arraycopy(arrayElements, 0, newArray, 0, size);
-            arrayElements = newArray;
-        }
+        Object[] newArray = new Object[arrayElements.length + arrayElements.length / 2];
+        System.arraycopy(arrayElements, 0, newArray, 0, size);
+        arrayElements = newArray;
     }
 
     private void rangeCheckForAdd(int index) {
