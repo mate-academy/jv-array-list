@@ -65,6 +65,7 @@ public class ArrayList<T> implements List<T> {
         for (int i = 0; i < size; i++) {
             if (values[i] == element || values[i] != null && values[i].equals(element)) {
                 index = i;
+                break;
             }
         }
         if (index == -1) {
