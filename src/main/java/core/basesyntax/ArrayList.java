@@ -65,21 +65,12 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        int index = 0;
-        boolean noElement = false;
         for (int i = 0; i < elements.length; i++) {
             if (elements[i] == element || (elements[i] != null && elements[i].equals(element))) {
                 return remove(i);
             }
         }
-        if (!noElement) {
-            throw new NoSuchElementException("There are no more elements remaining!");
-        }
-        checkIndex(index, size);
-        T removedElement = (T) elements[index];
-        System.arraycopy(elements, index + 1, elements, index, size - index);
-        size--;
-        return removedElement;
+        throw new NoSuchElementException("There are no more elements remaining!");
     }
 
     @Override
