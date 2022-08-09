@@ -19,10 +19,12 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         checkArraySizeAndResize();
-        size++;
-        checkIndex(index);
-        System.arraycopy(storage, index, storage, index + 1, size - 1 - index);
+        if (index < 0 || index > size) {
+            throw new ArrayListIndexOutOfBoundsException("you use invalid index " + index);
+        }
+        System.arraycopy(storage, index, storage, index + 1, size - index);
         storage[index] = value;
+        size++;
     }
 
     @Override
@@ -49,8 +51,8 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         checkIndex(index);
         Object removed = storage[index];
+        System.arraycopy(storage, index + 1, storage, index, size - 1 - index);
         --size;
-        System.arraycopy(storage, index + 1, storage, index, size - index);
         return (T) removed;
     }
 
