@@ -3,12 +3,12 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    private static final int DEFAULT_LENGTH = 10;
+    private static final int DEFAULT_CAPACITY = 10;
     private Object[] items;
     private int size;
 
     public ArrayList() {
-        items = new Object[DEFAULT_LENGTH];
+        items = new Object[DEFAULT_CAPACITY];
     }
 
     @Override
@@ -26,9 +26,7 @@ public class ArrayList<T> implements List<T> {
                             + " for size " + size);
         }
         checkCapacity();
-        if (size > index) {
-            System.arraycopy(items, index, items, index + 1, size - index);
-        }
+        System.arraycopy(items, index, items, index + 1, size - index);
         items[index] = value;
         size++;
     }
