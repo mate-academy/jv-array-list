@@ -23,10 +23,10 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
+        checkIndex(index, size + 1);
         if (size == elementData.length) {
             resize();
         }
-        checkIndex(index, size + 1);
         System.arraycopy(elementData, index, elementData, index + 1, size - index);
         elementData[index] = value;
         size++;
@@ -82,7 +82,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public boolean isEmpty() {
-        return size() == 0;
+        return size == 0;
     }
 
     private boolean checkIndex(int index, int size) {
