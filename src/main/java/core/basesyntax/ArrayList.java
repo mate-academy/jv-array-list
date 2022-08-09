@@ -82,7 +82,7 @@ public class ArrayList<T> implements List<T> {
     private void validateIndex(int index, int size) {
         if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException(
-                    "Wrong index out of bounds, please check index!");
+                    "Wrong index out of bounds, please check index!" + index);
         }
     }
 
@@ -98,7 +98,6 @@ public class ArrayList<T> implements List<T> {
         for (int i = 0; i < size; i++) {
             if (value != null && value.equals(array[i]) || value == array[i]) {
                 return i;
-
             }
         }
         return -1;
