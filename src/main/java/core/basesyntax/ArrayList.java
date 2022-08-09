@@ -25,9 +25,7 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayListIndexOutOfBoundsException("Index out of bound");
         }
         checkingListToAddition();
-        if (size != index) {
-            System.arraycopy(elementData, index, elementData, index + 1, size - index);
-        }
+        System.arraycopy(elementData, index, elementData, index + 1, size - index);
         elementData[index] = value;
         size++;
     }
@@ -61,12 +59,11 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        T removedElement;
         int index = findIndexByElement(element);
         if (index == -1) {
             throw new NoSuchElementException("Can't find element by index" + index);
         }
-        removedElement = (T) elementData[index];
+        T removedElement = (T) elementData[index];
         removeElement(index);
         return removedElement;
     }
@@ -95,9 +92,7 @@ public class ArrayList<T> implements List<T> {
 
     private void removeElement(int index) {
         elementData[index] = null;
-        if (index != size - 1) {
-            System.arraycopy(elementData, index + 1, elementData, index, size - index - 1);
-        }
+        System.arraycopy(elementData, index + 1, elementData, index, size - index - 1);
         size--;
     }
 
