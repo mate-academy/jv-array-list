@@ -5,20 +5,20 @@ import java.util.NoSuchElementException;
 public class ArrayList<T> implements List<T> {
     private static final double INCREASING_RATE = 1.5;
     private static final int DEFAULT_CAPACITY = 10;
-    private Object[] internalArray;
-    private int size = 0;
+    private Object[] elements;
+    private int size;
 
     public ArrayList() {
-        internalArray = new Object[DEFAULT_CAPACITY];
+        elements = new Object[DEFAULT_CAPACITY];
     }
 
     @Override
     public void add(T value) {
-        size += 1;
-        if (size > internalArray.length) {
+        if (size >= elements.length) {
             increaseCapacity();
         }
-        internalArray[size - 1] = value;
+        elements[size] = value;
+        size++;
     }
 
     @Override
@@ -26,12 +26,12 @@ public class ArrayList<T> implements List<T> {
         if (index != size) {
             checkIndex(index);
         }
-        size += 1;
-        if (size > internalArray.length) {
+        if (size >= elements.length) {
             increaseCapacity();
         }
-        System.arraycopy(internalArray, index, internalArray, index + 1, size - 1 - index);
-        internalArray[index] = value;
+        System.arraycopy(elements, index, elements, index + 1, size - index);
+        elements[index] = value;
+        size++;
     }
 
     @Override
@@ -44,20 +44,20 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         checkIndex(index);
-        return (T) internalArray[index];
+        return (T) elements[index];
     }
 
     @Override
     public void set(T value, int index) {
         checkIndex(index);
-        internalArray[index] = value;
+        elements[index] = value;
     }
 
     @Override
     public T remove(int index) {
         checkIndex(index);
-        T value = (T) internalArray[index];
-        System.arraycopy(internalArray, index + 1, internalArray, index, size - index - 1);
+        T value = (T) elements[index];
+        System.arraycopy(elements, index + 1, elements, index, size - index - 1);
         size--;
         return value;
     }
@@ -66,7 +66,7 @@ public class ArrayList<T> implements List<T> {
     public T remove(T element) {
         int elementIndex = getIndexOfElement(element);
         if (elementIndex < 0) {
-            throw new NoSuchElementException("No such element in ArrayList");
+            throw new NoSuchElementException("No such element in ArrayList " + element);
         }
         return remove(elementIndex);
     }
@@ -83,28 +83,25 @@ public class ArrayList<T> implements List<T> {
 
     private int getIndexOfElement(T element) {
         for (int i = 0; i < size; i++) {
-            if (internalArray[i] == element || (internalArray[i] != null
-                    && internalArray[i].equals(element))) {
+            if (elements[i] == element || (elements[i] != null
+                    && elements[i].equals(element))) {
                 return i;
             }
         }
         return -1;
     }
 
-    private int getNewCapacity() {
-        return (int) (size * INCREASING_RATE);
-    }
-
     private void increaseCapacity() {
-        int newCapacity = getNewCapacity();
-        Object[] newInternalArray = new Object[newCapacity];
-        System.arraycopy(internalArray, 0, newInternalArray, 0, internalArray.length);
-        internalArray = newInternalArray;
+        int newCapacity = (int) (size * INCREASING_RATE);
+        Object[] newElements = new Object[newCapacity];
+        System.arraycopy(elements, 0, newElements, 0, elements.length);
+        elements = newElements;
     }
 
     private void checkIndex(int index) {
         if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index not in range");
+            throw new ArrayListIndexOutOfBoundsException("Index " + index
+                    + " not in range for size " + size);
         }
     }
 }
