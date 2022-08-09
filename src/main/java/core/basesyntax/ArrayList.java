@@ -4,17 +4,17 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    private Object[] dataArray;
+    private Object[] elementsArray;
     private int size;
 
     public ArrayList() {
-        dataArray = new Object[DEFAULT_CAPACITY];
+        elementsArray = new Object[DEFAULT_CAPACITY];
     }
 
     @Override
     public void add(T value) {
         growUp();
-        dataArray[size] = value;
+        elementsArray[size] = value;
         size++;
     }
 
@@ -26,8 +26,8 @@ public class ArrayList<T> implements List<T> {
             return;
         }
         if (index < size && index >= 0) {
-            System.arraycopy(dataArray, index, dataArray, index + 1, size - index);
-            dataArray[index] = value;
+            System.arraycopy(elementsArray, index, elementsArray, index + 1, size - index);
+            elementsArray[index] = value;
             size++;
             return;
         }
@@ -37,51 +37,46 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        if (list.size() > size) {
-            growUp();
-        }
         for (int i = 0; i < list.size(); i++) {
-            dataArray[size] = list.get(i);
-            size++;
+            add(list.get(i));
         }
     }
 
     @Override
     public T get(int index) {
         validationForIndex(index);
-        return (T)dataArray[index];
+        return (T) elementsArray[index];
     }
 
     @Override
     public void set(T value, int index) {
         validationForIndex(index);
-        growUp();
         if (index == size) {
             add(value);
         }
-        dataArray[index] = value;
+        elementsArray[index] = value;
     }
 
     @Override
     public T remove(int index) {
         validationForIndex(index);
-        Object elemetRemove = dataArray[index];
-        System.arraycopy(dataArray, index + 1, dataArray, index, size - index - 1);
+        Object removedElement = elementsArray[index];
+        System.arraycopy(elementsArray, index + 1, elementsArray, index, size - index - 1);
         size--;
-        return (T) elemetRemove;
+        return (T) removedElement;
     }
 
     @Override
     public T remove(T element) {
-        for (int i = 0; i < dataArray.length; i++) {
+        for (int i = 0; i < elementsArray.length; i++) {
             if (element != null
-                    && element.equals(dataArray[i])
-                    || element == dataArray[i]) {
+                    && element.equals(elementsArray[i])
+                    || element == elementsArray[i]) {
                 return remove(i);
 
             }
         }
-        throw new NoSuchElementException();
+        throw new NoSuchElementException("No such element " + element + "at list");
     }
 
     @Override
@@ -95,10 +90,10 @@ public class ArrayList<T> implements List<T> {
     }
 
     public void growUp() {
-        if (dataArray.length == size) {
-            Object[] newArray = new Object[(int) (dataArray.length + dataArray.length / 2)];
-            System.arraycopy(dataArray,0,newArray,0, size);
-            dataArray = newArray;
+        if (elementsArray.length == size) {
+            Object[] newArray = new Object[(int) (elementsArray.length + elementsArray.length / 2)];
+            System.arraycopy(elementsArray,0,newArray,0, size);
+            elementsArray = newArray;
         }
     }
 
