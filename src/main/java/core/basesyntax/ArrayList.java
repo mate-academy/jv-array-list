@@ -97,7 +97,7 @@ public class ArrayList<T> implements List<T> {
             }
             counter++;
         }
-        throw new NoSuchElementException();
+        throw new NoSuchElementException("Element is absent in the list");
     }
 
     @Override
