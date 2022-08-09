@@ -6,16 +6,16 @@ public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private static final double ARRAY_MAGNIFICATION = 1.5;
     private int size;
-    private T[] defaultArray;
+    private T[] elements;
 
     public ArrayList() {
-        this.defaultArray = (T[]) new Object[DEFAULT_CAPACITY];
+        this.elements = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
     @Override
     public void add(T value) {
-        checkArrayPlus();
-        defaultArray[size] = value;
+        resizeArray();
+        elements[size] = value;
         size++;
     }
 
@@ -24,9 +24,9 @@ public class ArrayList<T> implements List<T> {
         if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException("Index not valid: " + index);
         }
-        checkArrayPlus();
-        System.arraycopy(defaultArray, index, defaultArray, index + 1, size - index);
-        defaultArray[index] = value;
+        resizeArray();
+        System.arraycopy(elements, index, elements, index + 1, size - index);
+        elements[index] = value;
         size++;
     }
 
@@ -40,29 +40,29 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         checkIndex(index);
-        return defaultArray[index];
+        return elements[index];
     }
 
     @Override
     public void set(T value, int index) {
         checkIndex(index);
-        defaultArray[index] = value;
+        elements[index] = value;
     }
 
     @Override
     public T remove(int index) {
         checkIndex(index);
-        T returnFields = defaultArray[index];
-        System.arraycopy(defaultArray, index + 1, defaultArray, index, size - index - 1);
+        T returnFields = elements[index];
+        System.arraycopy(elements, index + 1, elements, index, size - index - 1);
         size--;
         return returnFields;
     }
 
     @Override
     public T remove(T element) {
-        for (int i = 0; i < defaultArray.length; i++) {
-            if (defaultArray[i] != null ? defaultArray[i].equals(element)
-                    : defaultArray[i] == element) {
+        for (int i = 0; i < elements.length; i++) {
+            if (elements[i] != null ? elements[i].equals(element)
+                    : elements[i] == element) {
                 return remove(i);
             }
         }
@@ -75,11 +75,11 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private void checkArrayPlus() {
-        if (defaultArray.length == size) {
-            T[] newArray = (T[]) new Object[(int) (defaultArray.length * ARRAY_MAGNIFICATION)];
-            System.arraycopy(defaultArray, 0, newArray, 0, size);
-            defaultArray = newArray;
+    private void resizeArray() {
+        if (elements.length == size) {
+            T[] newArray = (T[]) new Object[(int) (elements.length * ARRAY_MAGNIFICATION)];
+            System.arraycopy(elements, 0, newArray, 0, size);
+            elements = newArray;
         }
     }
 
