@@ -63,7 +63,6 @@ public class ArrayList<T> implements List<T> {
     @Override
     @SuppressWarnings("unchecked")
     public T remove(T element) {
-        Object removedObject;
         for (int i = 0; i < size; i++) {
             if (element == objects[i]
                     || objects[i] != null
