@@ -13,11 +13,7 @@ public class ArrayList<T> implements List<T> {
             array[size] = value;
             size++;
         } else {
-            Object[] oldArray = array;
-            array = new Object[(int) (array.length * 1.5)];
-            for (int i = 0; i < oldArray.length; i++) {
-                array[i] = oldArray[i];
-            }
+            resize();
             array[size] = value;
             size++;
         }
@@ -27,38 +23,15 @@ public class ArrayList<T> implements List<T> {
     public void add(T value, int index) {
         if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException(
-                    String.format("Index %s out of bound for length %s", index, size)
-            );
-        } else {
-            if (size + 1 < array.length) {
-                Object[] tempArr = new Object[size + 1];
-                for (int i = index + 1; i <= size; i++) {
-                    tempArr[i] = array[i - 1];
-                    array[i - 1] = null;
-                }
-                array[index] = value;
-                for (int i = index + 1; i <= size; i++) {
-                    array[i] = tempArr[i];
-                }
-                size++;
-            } else {
-                Object[] oldArray = array;
-                array = new Object[(int) (array.length * 1.5)];
-                for (int i = 0; i < oldArray.length; i++) {
-                    array[i] = oldArray[i];
-                }
-                Object[] tempArr = new Object[size + 1];
-                for (int i = index + 1; i <= size; i++) {
-                    tempArr[i] = array[i - 1];
-                    array[i - 1] = null;
-                }
-                array[index] = value;
-                for (int i = index + 1; i <= size; i++) {
-                    array[i] = tempArr[i];
-                }
-                size++;
-            }
+                    String.format("Index %s out of bound for length %s", index, size));
         }
+        if (size == array.length) {
+            resizeByIndex();
+        } else {
+            System.arraycopy(array, index, array, index + 1, size - index);
+        }
+        array[index] = value;
+        size++;
     }
 
     @Override
@@ -123,6 +96,18 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public boolean isEmpty() {
-        return size <= 0;
+        return size == 0;
+    }
+
+    private void resizeByIndex() {
+        Object[] newArray = new Object[(int) (array.length * 1.5)];
+        System.arraycopy(array, 0, newArray, 1, size);
+        array = newArray;
+    }
+
+    private void resize() {
+        Object[] newArray = new Object[(int) (array.length * 1.5)];
+        System.arraycopy(array, 0, newArray, 0, size);
+        array = newArray;
     }
 }
