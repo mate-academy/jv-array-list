@@ -20,15 +20,14 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if ((size - index) >= 0 && index >= 0) {
-            grow();
-            System.arraycopy(objects, index, objects, index + 1, size - index);
-            objects[index] = value;
-            size++;
-        } else {
+        if (index > size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Index: " + index
                     + " lager then size: " + size);
         }
+        grow();
+        System.arraycopy(objects, index, objects, index + 1, size - index);
+        objects[index] = value;
+        size++;
     }
 
     @Override
