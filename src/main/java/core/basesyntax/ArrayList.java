@@ -24,7 +24,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("The index passed to method is invalid");
+            throw new ArrayListIndexOutOfBoundsException("The index" + index
+                    + "passed to method is invalid");
         }
         if (size == elementData.length) {
             grow();
