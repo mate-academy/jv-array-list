@@ -9,12 +9,11 @@ public class ArrayList<T> implements List<T> {
 
     public ArrayList() {
         elements = new Object[DEFAULT_CAPACITY];
-        size = 0;
     }
 
     @Override
     public void add(T value) {
-        sizeCheck();
+        checkSize();
         elements[size] = value;
         size++;
     }
@@ -25,7 +24,7 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayListIndexOutOfBoundsException("Index " + index
                     + " out of bounds for length " + size);
         }
-        sizeCheck();
+        checkSize();
         System.arraycopy(elements,index,elements,index + 1, size - index);
         elements[index] = value;
         size++;
@@ -40,19 +39,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        indexCheck(index);
+        checkIndex(index);
         return (T) elements[index];
     }
 
     @Override
     public void set(T value, int index) {
-        indexCheck(index);
+        checkIndex(index);
         elements[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        indexCheck(index);
+        checkIndex(index);
         Object deleteElements = elements[index];
         System.arraycopy(elements,index + 1, elements, index, size - index - 1);
         size--;
@@ -79,14 +78,14 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void indexCheck(int index) {
+    private void checkIndex(int index) {
         if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException("Index " + index
                     + " out of bounds for length " + size);
         }
     }
 
-    private void sizeCheck() {
+    private void checkSize() {
         if (size == elements.length) {
             Object[] newElements = new Object[size + (size / 2)];
             System.arraycopy(elements, 0, newElements, 0, size);
