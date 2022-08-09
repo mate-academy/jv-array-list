@@ -100,13 +100,9 @@ public class ArrayList<T> implements List<T> {
 
     private void addInside(int index, T value) {
         Object[] tempArray = new Object[items.length - index - 1];
-        for (int i = 0; i < tempArray.length; i++) {
-            tempArray[i] = items[index + i];
-        }
+        System.arraycopy(items, index, tempArray, 0, tempArray.length);
         items[index] = value;
-        for (int i = 0; i < tempArray.length; i++) {
-            items[index + 1 + i] = tempArray[i];
-        }
+        System.arraycopy(tempArray, 0, items, index + 1, tempArray.length);
         size++;
     }
 
