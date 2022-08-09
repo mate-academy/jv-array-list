@@ -32,7 +32,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         if (index > size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("index is out of bounds of the list size");
+            throw new ArrayListIndexOutOfBoundsException("index "
+                    + index + " is out of bounds of the list size");
         }
         if (size == capacity) {
             resize();
@@ -54,7 +55,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         if (index > size() - 1 || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("index is out of bounds of the list size");
+            throw new ArrayListIndexOutOfBoundsException("index "
+                    + index + " is out of bounds of the list size");
         }
         return (T) elements[index];
     }
@@ -62,7 +64,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void set(T value, int index) {
         if (index > size() - 1 || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("index is out of bounds of the list size");
+            throw new ArrayListIndexOutOfBoundsException("index "
+                    + index + " is out of bounds of the list size");
         }
         elements[index] = value;
     }
@@ -70,7 +73,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         if (index > size - 1 || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("index is out of bounds of the list size");
+            throw new ArrayListIndexOutOfBoundsException("index "
+                    + index + " is out of bounds of the list size");
         }
         T removedElement = (T) elements[index];
         if (index == size - 1) {
