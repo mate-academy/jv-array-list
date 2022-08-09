@@ -1,10 +1,11 @@
 package core.basesyntax;
 
+import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int ARRAY_SIZE = 10;
-    private static final int ARRAY_ADD_SIZE = 5;
+    private static final double ARRAY_ADD_SIZE = 1.5;
     private Object[] values = new Object[ARRAY_SIZE];
     private int size = 0;
 
@@ -18,7 +19,9 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         checkingResize();
-        exceptionCheck(index, "marker");
+        if (index != size) {
+            exceptionCheck(index);
+        }
         if (index <= size) {
             Object[] newArray = this.values.clone();
             values[index] = value;
@@ -35,8 +38,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void addAll(List<T> list) {
         for (int i = 0; i < list.size(); i++) {
-            this.values[this.size] = list.get(i);
-            size++;
+            add(list.get(i));
         }
     }
 
@@ -114,19 +116,9 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    public void exceptionCheck(int index, String marker) {
-        if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("The index of Array is out of bounds");
-        }
-    }
-
     public void checkingResize() {
         if (this.values.length == size) {
-            Object[] newArray = this.values.clone();
-            values = new Object[size + ARRAY_ADD_SIZE];
-            for (int i = 0; i < size; i++) {
-                values[i] = newArray[i];
-            }
+            values = Arrays.copyOf(values, (int) (size * ARRAY_ADD_SIZE));
         }
     }
 }
