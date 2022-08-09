@@ -25,10 +25,10 @@ public class ArrayList<T> implements List<T> {
             add(value);
         } else {
             increase();
-            size++;
-            Object[] valuesTemp = new Object[size - index];
+            Object[] valuesTemp = new Object[size - index + 1];
             System.arraycopy(values, index, valuesTemp, 0, valuesTemp.length);
             values[index] = value;
+            size++;
             System.arraycopy(valuesTemp, 0, values, index + 1, valuesTemp.length - 1);
         }
     }
