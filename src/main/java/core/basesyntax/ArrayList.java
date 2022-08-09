@@ -86,14 +86,10 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        int index = -1;
-        int counter = 0;
-        for (Object object : elements) {
-            if (object != null && object.equals(element) || object == element) {
-                index = counter;
-                return remove(index);
+        for (int i = 0; i < elements.length; i++ ) {
+            if (elements[i] != null && elements[i].equals(element) || elements[i] == element) {
+                return remove(i);
             }
-            counter++;
         }
         throw new NoSuchElementException("Element is absent in the list");
     }
