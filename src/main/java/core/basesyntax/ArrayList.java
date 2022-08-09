@@ -29,9 +29,9 @@ public class ArrayList<T> implements List<T> {
         if (index <= size) {
             System.arraycopy(values, index, values, index + 1, size - index);
             values[index] = value;
-            this.size++;
+            size++;
         } else {
-            this.values[this.size] = value;
+            values[size] = value;
             size++;
         }
     }
@@ -52,21 +52,25 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void set(T value, int index) {
         checkException(index);
-        this.values[index] = value;
+        values[index] = value;
     }
 
     @Override
     public T remove(int index) {
         checkException(index);
         Object deleted = values[index];
-        for (int i = index; i < size; i++) {
-            if (index == size - 1) {
-                this.values[i] = null;
-            } else {
-                this.values[i] = values[i + 1];
-            }
+        System.out.println("Index - " + index);
+        System.out.println("Size - " + size);
+        for (int i = 0; i < size; i++) {
+            System.out.println(values[i]);
         }
-        this.size--;
+        checkingResize();
+        System.arraycopy(values, index + 1, values, index, size - index);
+        size--;
+        for (int i = 0; i < size; i++) {
+            System.out.println(values[i]);
+        }
+        System.out.println("Size After - " + size);
         return (T) deleted;
     }
 
@@ -88,12 +92,12 @@ public class ArrayList<T> implements List<T> {
             checkException(index);
             for (int i = index; i < size; i++) {
                 if (index == size - 1) {
-                    this.values[i] = null;
+                    values[i] = null;
                 } else {
-                    this.values[i] = values[i + 1];
+                    values[i] = values[i + 1];
                 }
             }
-            this.size--;
+            size--;
         } else {
             throw new NoSuchElementException("No such element in Array");
         }
@@ -118,7 +122,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void checkingResize() {
-        if (this.values.length == size) {
+        if (values.length == size) {
             values = Arrays.copyOf(values, (int) (size * ARRAY_ADD_SIZE));
         }
     }
