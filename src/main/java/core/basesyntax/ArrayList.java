@@ -61,17 +61,12 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        int index = -1;
         for (int i = 0; i < size; i++) {
             if (values[i] == element || values[i] != null && values[i].equals(element)) {
-                index = i;
-                break;
+                return remove(i);
             }
         }
-        if (index == -1) {
-            throw new NoSuchElementException("There is no such element " + element);
-        }
-        return remove(index);
+        throw new NoSuchElementException("There is no such element " + element);
     }
 
     @Override
