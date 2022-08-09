@@ -4,7 +4,6 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int ARRAY_SIZE = 10;
-
     private int size = 0;
     private Object[] array = new Object[ARRAY_SIZE];
 
@@ -20,7 +19,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         if (index > size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Wrong index out of bounds");
+            throw new ArrayListIndexOutOfBoundsException("Wrong index: " + index
+                    + " out of bounds");
         }
         if (size == index) {
             add(value);
@@ -44,24 +44,21 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         if (size <= index || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Wrong index out of bounds");
+            throw new ArrayListIndexOutOfBoundsException("Wrong index: " + index
+                    + " out of bounds");
         }
         return (T) array[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Wrong index out of bounds");
-        }
+        checkOutOfBounds(index);
         array[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Wrong index out of bounds");
-        }
+        checkOutOfBounds(index);
         T removedElement = (T) array[index];
         size--;
         System.arraycopy(array, index + 1, array, index, size - index);
@@ -72,9 +69,7 @@ public class ArrayList<T> implements List<T> {
     public T remove(T element) {
         for (int i = 0; i < array.length; i++) {
             if (array[i] == element || (array[i] != null && array[i].equals(element))) {
-                size--;
-                System.arraycopy(array, i + 1, array, i, size - i);
-                return element;
+                return remove(i);
             }
         }
         throw new NoSuchElementException("element not exist in list");
@@ -94,6 +89,13 @@ public class ArrayList<T> implements List<T> {
         Object[] newArray = new Object[size + size << 1];
         System.arraycopy(array, 0, newArray, 0, size);
         array = newArray;
+    }
+
+    private void checkOutOfBounds(int index) {
+        if (index >= size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Wrong index: " + index
+                    + " out of bounds");
+        }
     }
 }
 
