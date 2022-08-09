@@ -69,6 +69,16 @@ public class ArrayList<T> implements List<T> {
         throw new NoSuchElementException("There is no such element in ArrayList");
     }
 
+    @Override
+    public int size() {
+        return size;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return size == 0;
+    }
+
     private void checkIndex(int index) {
         if (index >= size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Index not valid: " + index);
@@ -83,13 +93,4 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    @Override
-    public int size() {
-        return size;
-    }
-
-    @Override
-    public boolean isEmpty() {
-        return size == 0;
-    }
 }
