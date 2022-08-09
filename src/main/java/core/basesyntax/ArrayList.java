@@ -95,9 +95,9 @@ public class ArrayList<T> implements List<T> {
 
     private void checkIndexValidation(int index) {
         if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("The index " + index + "passed to method is invalid");
+            throw new ArrayListIndexOutOfBoundsException("The index "
+                    + index + "passed to method is invalid");
         }
     }
-
 
 }
