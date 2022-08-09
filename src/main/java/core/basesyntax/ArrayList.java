@@ -23,7 +23,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("Index" + index + "is out of bounds!");
+            throw new ArrayListIndexOutOfBoundsException("Index " + index + " is out of bounds!");
         }
         if (size == list.length) {
             grow();
@@ -45,7 +45,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         if (isIndexInInvalidRange(index)) {
-            throw new ArrayListIndexOutOfBoundsException("Index" + index + "is out of bounds!");
+            throw new ArrayListIndexOutOfBoundsException("Index " + index + " is out of bounds!");
         }
         return list[index];
     }
@@ -53,7 +53,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void set(T value, int index) {
         if (isIndexInInvalidRange(index)) {
-            throw new ArrayListIndexOutOfBoundsException("Index" + index + "is out of bounds!");
+            throw new ArrayListIndexOutOfBoundsException("Index " + index + " is out of bounds!");
         }
         list[index] = value;
     }
@@ -61,7 +61,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         if (isIndexInInvalidRange(index)) {
-            throw new ArrayListIndexOutOfBoundsException("Index" + index + "is out of bounds!");
+            throw new ArrayListIndexOutOfBoundsException("Index " + index + " is out of bounds!");
         }
         T removedObject = list[index];
         removeObject(index);
@@ -70,23 +70,13 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        T removedObject = null;
-        int index = -1;
-        for (int i = 0; i < size; i++) {
-            if (element != null && element.equals(list[i])) {
-                index = i;
-                removedObject = list[i];
-                break;
-            } else if (element == null && list[i] == null) {
-                index = i;
-                break;
-            }
-        }
+        int index = findIndexByElement(element);
         if (index == -1) {
             throw new NoSuchElementException("The element was not found!");
+        } else {
+            removeObject(index);
+            return element;
         }
-        removeObject(index);
-        return removedObject;
     }
 
     @Override
@@ -103,6 +93,18 @@ public class ArrayList<T> implements List<T> {
         T[] temporaryArray = list;
         list = (T[]) new Object[list.length + (list.length >> 1)];
         System.arraycopy(temporaryArray, 0, list, 0, size);
+    }
+
+    private int findIndexByElement(T element) {
+        int index = -1;
+        for (int i = 0; i < size; i++) {
+            if ((element == null && list[i] == null)
+                    || (element != null && element.equals(list[i]))) {
+                index = i;
+                break;
+            }
+        }
+        return index;
     }
 
     private boolean isIndexInInvalidRange(int index) {
