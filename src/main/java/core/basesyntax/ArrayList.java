@@ -6,28 +6,29 @@ import java.util.NoSuchElementException;
 public class ArrayList<T> implements List<T> {
     private static final int ARRAY_SIZE = 10;
     private static final double ARRAY_ADD_SIZE = 1.5;
-    private Object[] values = new Object[ARRAY_SIZE];
-    private int size = 0;
+    private Object[] values;
+    private int size;
+
+    public ArrayList() {
+        this.values = new Object[ARRAY_SIZE];
+    }
 
     @Override
     public void add(T value) {
         checkingResize();
-        this.values[this.size] = value;
+        values[size] = value;
         size++;
     }
 
     @Override
     public void add(T value, int index) {
-        checkingResize();
         if (index != size) {
-            exceptionCheck(index);
+            checkException(index);
         }
+        checkingResize();
         if (index <= size) {
-            Object[] newArray = this.values.clone();
+            System.arraycopy(values, index, values, index + 1, size - index);
             values[index] = value;
-            for (int i = index + 1; i <= size; i++) {
-                this.values[i] = newArray[i - 1];
-            }
             this.size++;
         } else {
             this.values[this.size] = value;
@@ -44,19 +45,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        exceptionCheck(index);
+        checkException(index);
         return (T) values[index];
     }
 
     @Override
     public void set(T value, int index) {
-        exceptionCheck(index);
+        checkException(index);
         this.values[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        exceptionCheck(index);
+        checkException(index);
         Object deleted = values[index];
         for (int i = index; i < size; i++) {
             if (index == size - 1) {
@@ -84,7 +85,7 @@ public class ArrayList<T> implements List<T> {
             }
         }
         if (isElement) {
-            exceptionCheck(index);
+            checkException(index);
             for (int i = index; i < size; i++) {
                 if (index == size - 1) {
                     this.values[i] = null;
@@ -102,21 +103,21 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public int size() {
-        return this.size;
+        return size;
     }
 
     @Override
     public boolean isEmpty() {
-        return this.size == 0;
+        return size == 0;
     }
 
-    public void exceptionCheck(int index) {
+    private void checkException(int index) {
         if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException("The index of Array is out of bounds");
         }
     }
 
-    public void checkingResize() {
+    private void checkingResize() {
         if (this.values.length == size) {
             values = Arrays.copyOf(values, (int) (size * ARRAY_ADD_SIZE));
         }
