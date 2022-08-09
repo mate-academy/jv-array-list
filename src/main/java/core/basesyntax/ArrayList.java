@@ -29,7 +29,7 @@ public class ArrayList<T> implements List<T> {
             changeSizeList();
         }
         if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException(EXCEPTION_MESSAGE_INDEX);
+            throw new ArrayListIndexOutOfBoundsException(EXCEPTION_MESSAGE_INDEX + " " + index);
         }
         System.arraycopy(list, index, list, index + 1, size - index);
         list[index] = value;
@@ -97,7 +97,7 @@ public class ArrayList<T> implements List<T> {
 
     public void checkIndexException(int index) {
         if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException(EXCEPTION_MESSAGE_INDEX);
+            throw new ArrayListIndexOutOfBoundsException(EXCEPTION_MESSAGE_INDEX + " " + index);
         }
     }
 
