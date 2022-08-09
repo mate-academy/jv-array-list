@@ -31,7 +31,7 @@ public class ArrayList<T> implements List<T> {
                     + index + " to ArrayList");
         }
         if (size == elements.length) {
-            Object[] newObject = new Object[elements.length + elements.length / 2];
+            Object[] newObject = new Object[(int) (elements.length * 1.5)];
             for (int i = 0; i < elements.length; i++) {
                 newObject[i] = elements[i];
             }
