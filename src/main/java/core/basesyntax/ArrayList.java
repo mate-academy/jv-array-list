@@ -3,7 +3,7 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    public static final int MAX_LENGHT = 10;
+    private static final int MAX_LENGHT = 10;
     private Object[] array;
     private int size;
 
@@ -82,7 +82,7 @@ public class ArrayList<T> implements List<T> {
     private void validateIndex(int index, int size) {
         if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException(
-                    "Wrong index out of bounds, please check index!" + index);
+                    "Wrong index out of bounds, please check index! " + index);
         }
     }
 
