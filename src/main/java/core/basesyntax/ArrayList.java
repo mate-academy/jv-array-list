@@ -4,12 +4,13 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    private Object[] objects = new Object[0];
+    private Object[] objects;
     private int size;
     private int capacity;
 
     public ArrayList() {
         this.capacity = DEFAULT_CAPACITY;
+        objects = new Object[DEFAULT_CAPACITY];
     }
 
     @Override
@@ -17,10 +18,6 @@ public class ArrayList<T> implements List<T> {
         if (size >= capacity) {
             capacity = grow();
         }
-        Object[] temp = new Object[size];
-        System.arraycopy(objects, 0, temp, 0, size);
-        objects = new Object[capacity];
-        System.arraycopy(temp, 0, objects, 0, size);
         objects[size] = value;
         size++;
     }
@@ -52,6 +49,10 @@ public class ArrayList<T> implements List<T> {
 
     private int grow() {
         capacity += capacity >> 1;
+        Object[] temp = new Object[size];
+        System.arraycopy(objects, 0, temp, 0, size);
+        objects = new Object[capacity];
+        System.arraycopy(temp, 0, objects, 0, size);
         return capacity;
     }
 
