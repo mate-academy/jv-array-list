@@ -20,8 +20,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        checkIndex(index);
-        if ((size - index) >= 0) {
+        if ((size - index) >= 0 && index >= 0) {
             grow();
             System.arraycopy(objects, index, objects, index + 1, size - index);
             objects[index] = value;
@@ -43,14 +42,12 @@ public class ArrayList<T> implements List<T> {
     @SuppressWarnings("unchecked")
     public T get(int index) {
         checkIndex(index);
-        checkSize(index);
         return (T) objects[index];
     }
 
     @Override
     public void set(T value, int index) {
         checkIndex(index);
-        checkSize(index);
         remove(index);
         add(value, index);
     }
@@ -59,7 +56,6 @@ public class ArrayList<T> implements List<T> {
     @SuppressWarnings("unchecked")
     public T remove(int index) {
         checkIndex(index);
-        checkSize(index);
         Object removedObject = objects[index];
         System.arraycopy(objects, index + 1, objects, index, size - index - 1);
         size--;
@@ -101,15 +97,9 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void checkIndex(int index) {
-        if (index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index: " + index + " less then 0");
-        }
-    }
-
-    private void checkSize(int index) {
-        if (size <= index) {
+        if (index < 0 || size <= index) {
             throw new ArrayListIndexOutOfBoundsException("Index: " + index
-                    + " larger then size: " + size);
+                    + " less then 0 or lager then size: " + size);
         }
     }
 }
