@@ -7,18 +7,16 @@ public class ArrayList<T> implements List<T> {
     private static final int ARRAY_FIRST_INDEX = 0;
     private static final double GROWTH_INDEX = 1.5;
     private int size;
-    private int capacity;
     private T[] values;
 
     public ArrayList() {
         size = 0;
-        capacity = DEFAULT_CAPACITY;
-        values = (T[]) new Object[capacity];
+        values = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
     @Override
     public void add(T value) {
-        if (size == capacity) {
+        if (size == values.length) {
             values = grow();
         }
         values[size] = value;
@@ -27,7 +25,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (size == capacity) {
+        if (size == values.length) {
             values = grow();
         }
         insert(index,value);
@@ -57,7 +55,7 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         checkIndex(index);
         final T removed = values[index];
-        T[] tempArray = (T[]) new Object[capacity];
+        T[] tempArray = (T[]) new Object[values.length];
         System.arraycopy(values, ARRAY_FIRST_INDEX, tempArray, ARRAY_FIRST_INDEX, index);
         System.arraycopy(values, index + 1, tempArray, index,size - index - 1);
         values = tempArray;
@@ -81,10 +79,8 @@ public class ArrayList<T> implements List<T> {
     }
 
     private T[] grow() {
-        capacity = (int) (capacity * GROWTH_INDEX);
-        T[] tempArray = (T[]) new Object[capacity];
+        T[] tempArray = (T[]) new Object[(int) (values.length * GROWTH_INDEX)];
         System.arraycopy(values, ARRAY_FIRST_INDEX, tempArray, ARRAY_FIRST_INDEX, size);
-
         return tempArray;
     }
 
@@ -92,7 +88,7 @@ public class ArrayList<T> implements List<T> {
         if (index > size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Invalid index");
         }
-        T[] tempArray = (T[]) new Object[capacity];
+        T[] tempArray = (T[]) new Object[values.length];
         System.arraycopy(values, ARRAY_FIRST_INDEX, tempArray, ARRAY_FIRST_INDEX, index);
         tempArray[index] = value;
         System.arraycopy(values, index, tempArray, index + 1, size - index);
