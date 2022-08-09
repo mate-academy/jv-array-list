@@ -54,8 +54,8 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         checkIndex(index);
         Object oldValue = values[index];
+        System.arraycopy(values, index + 1, values, index, size - index - 1);
         size--;
-        System.arraycopy(values, index + 1, values, index, size - index);
         return (T) oldValue;
     }
 
@@ -70,10 +70,7 @@ public class ArrayList<T> implements List<T> {
         if (index == -1) {
             throw new NoSuchElementException("There is no such element " + element);
         }
-        size--;
-        System.arraycopy(values, index + 1, values,
-                index, size - index);
-        return element;
+        return remove(index);
     }
 
     @Override
