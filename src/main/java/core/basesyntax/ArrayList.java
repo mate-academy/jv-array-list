@@ -103,7 +103,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void checkAddIndex(int index) {
-        if (index != 0 && (index > size || index < 0)) {
+        if (index > size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Too big index " + index);
         }
     }
