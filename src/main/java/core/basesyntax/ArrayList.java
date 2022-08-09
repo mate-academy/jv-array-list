@@ -4,7 +4,6 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    private static final int ZERO = 0;
     private Object[] elements;
     private int size;
 
@@ -13,7 +12,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     public ArrayList(int initCapacity) {
-        if (initCapacity <= ZERO) {
+        if (initCapacity <= 0) {
             throw new ArrayListIndexOutOfBoundsException("Illegal argument to create array "
                     + initCapacity);
         }
@@ -29,8 +28,8 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        resizeIfFull();
         checkIndex(index, size);
+        resizeIfFull();
         System.arraycopy(elements, index, elements, index + 1, size - index);
         elements[index] = value;
         size++;
@@ -52,7 +51,6 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void set(T value, int index) {
-        checkIndex(index, size);
         checkEqualsIndex(index, size);
         resizeIfFull();
         elements[index] = value;
@@ -61,10 +59,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         checkEqualsIndex(index, size);
-        checkIndex(index, size);
-        final T removedElement = (T) elements[index];
-        resizeIfFull();
-        System.arraycopy(elements, index + 1, elements, index, size - index);
+        T removedElement = (T) elements[index];
+        System.arraycopy(elements, index + 1, elements, index, size - index - 1);
         size--;
         return removedElement;
     }
@@ -77,12 +73,10 @@ public class ArrayList<T> implements List<T> {
             if (element == null && s == null) {
                 noElement = true;
                 break;
-            }
-            if (s == null) {
+            } else if (s == null) {
                 index++;
                 continue;
-            }
-            if (s.equals(element)) {
+            } else if (s.equals(element)) {
                 noElement = true;
                 break;
             }
@@ -92,7 +86,6 @@ public class ArrayList<T> implements List<T> {
             throw new NoSuchElementException("There are no more elements remaining!");
         }
         checkIndex(index, size);
-        resizeIfFull();
         T removedElement = (T) elements[index];
         System.arraycopy(elements, index + 1, elements, index, size - index);
         size--;
@@ -106,7 +99,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public boolean isEmpty() {
-        return size == ZERO;
+        return size == 0;
     }
 
     private void resizeIfFull() {
@@ -118,13 +111,13 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void checkIndex(int index, int size) {
-        if (index < ZERO || index > size) {
+        if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException("Passed index is invalid " + index);
         }
     }
 
     private void checkEqualsIndex(int index, int size) {
-        if (index == size) {
+        if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException("Passed index is invalid " + index);
         }
     }
