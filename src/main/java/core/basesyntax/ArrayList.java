@@ -37,11 +37,8 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index >= 0 && index < size) {
-            return (T) elementData[index];
-        }
-        throw new ArrayListIndexOutOfBoundsException("Cannot get the element "
-                + "because index " + index + " is invalid");
+        checkIndexValidation(index);
+        return (T) elementData[index];
     }
 
     @Override
@@ -53,30 +50,20 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         checkIndexValidation(index);
-        Object[] dataList = elementData;
-        T oldValue = (T) dataList[index];
-        fastRemove(dataList, index);
+        T oldValue = (T) elementData[index];
+        removeFast(elementData, index);
         return oldValue;
     }
 
     @Override
     public T remove(T element) {
-        final Object[] dataList = elementData;
-        final int size = this.size;
         for (int i = 0; i < size; i++) {
-            if (element == null) {
-                if (dataList[i] == null) {
-                    remove(i);
-                    return element;
-                }
-            } else {
-                if (element.equals(dataList[i])) {
-                    remove(i);
-                    return element;
-                }
+            if (element == elementData[i] || element != null && element.equals(elementData[i])) {
+                return remove(i);
             }
         }
-        throw new NoSuchElementException();
+        throw new NoSuchElementException("There is no such an element "
+                + element + " in this ArrayList");
     }
 
     @Override
@@ -108,11 +95,9 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private void fastRemove(Object[] dataList, int index) {
+    private void removeFast(Object[] dataList, int index) {
         int newSize = size - 1;
-        if (newSize > index) {
-            System.arraycopy(dataList, index + 1, dataList, index, newSize - index);
-        }
+        System.arraycopy(dataList, index + 1, dataList, index, newSize - index);
         dataList[size = newSize] = null;
     }
 }
