@@ -3,6 +3,8 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
+    private static final String NO_POSITION_MESSAGE = "This position is not exist in list ";
+    private static final String NO_ELEMENT_MESSAGE = "There is no such element in list ";
     private static int capacity = 10;
     private static final int ONE = 1;
     private static final int ZERO = 0;
@@ -24,17 +26,12 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index < ZERO || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("This position is not exist in list");
-        }
+        validIndex(value, index);
         if (size == capacity) {
             grow();
         }
-        T[] newItems = (T[]) new Object[capacity];
-        System.arraycopy(items, ZERO, newItems, ZERO, index);
-        newItems[index] = value;
-        System.arraycopy(items, index, newItems, index + ONE, size - index);
-        items = newItems;
+        System.arraycopy(items, index, items, index + ONE, size - index);
+        items[index] = value;
         size++;
     }
 
@@ -43,39 +40,27 @@ public class ArrayList<T> implements List<T> {
         while (capacity < size + list.size()) {
             grow();
         }
-        T[] newItems = (T[]) new Object[capacity];
-        System.arraycopy(items, ZERO, newItems, ZERO, size);
-        System.arraycopy(list.toArray(), ZERO, newItems, size, list.size());
-        items = newItems;
+        System.arraycopy(list.toArray(), ZERO, items, size, list.size());
         size += list.size();
     }
 
     @Override
     public T get(int index) {
-        if (index < ZERO || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("This position is not exist in list");
-        }
+        validIndex(index);
         return items[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index < ZERO || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("This position is not exist in list");
-        }
+        validIndex(index);
         items[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index < ZERO || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("This position is not exist in list");
-        }
-        T[] newItems = (T[]) new Object[capacity];
-        System.arraycopy(items, ZERO, newItems, ZERO, index);
+        validIndex(index);
         T removedObject = items[index];
-        System.arraycopy(items, index + ONE, newItems, index, --size - index);
-        items = newItems;
+        System.arraycopy(items, index + ONE, items, index, --size - index);
         return removedObject;
     }
 
@@ -86,7 +71,7 @@ public class ArrayList<T> implements List<T> {
                 return remove(i);
             }
         }
-        throw new NoSuchElementException("There is no such element in list");
+        throw new NoSuchElementException(NO_ELEMENT_MESSAGE + element);
     }
 
     @Override
@@ -105,5 +90,17 @@ public class ArrayList<T> implements List<T> {
         T[] newItems = (T[]) new Object[capacity];
         System.arraycopy(items, ZERO, newItems, ZERO, oldCapacity);
         items = newItems;
+    }
+
+    public void validIndex(int index) {
+        if (index < ZERO || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException(NO_POSITION_MESSAGE + index);
+        }
+    }
+
+    public void validIndex(T value, int index) {
+        if (index < ZERO || index > size) {
+            throw new ArrayListIndexOutOfBoundsException(NO_POSITION_MESSAGE + index);
+        }
     }
 }
