@@ -6,6 +6,7 @@ public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private T[] values;
     private int size;
+
     public ArrayList() {
         values = (T[]) new Object[DEFAULT_CAPACITY];
     }
@@ -85,7 +86,7 @@ public class ArrayList<T> implements List<T> {
     private void resize() {
         Object[] newArray = new Object[size + (size >> 1)];
         System.arraycopy(values, 0, newArray, 0, size);
-        values = newArray;
+        values = (T[]) newArray;
     }
 
     private void checkIndex(int index) {
