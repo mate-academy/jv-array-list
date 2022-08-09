@@ -4,11 +4,11 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    private T[] arrayList;
+    private Object[] arrayList;
     private int size;
 
     public ArrayList() {
-        arrayList = (T[]) new Object[DEFAULT_CAPACITY];
+        arrayList = new Object[DEFAULT_CAPACITY];
     }
 
     @Override
@@ -24,7 +24,7 @@ public class ArrayList<T> implements List<T> {
     public void add(T value, int index) {
         if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException(
-                    "Index low than 0 or bigger than array size");
+                    "Index " + index + " low than 0 or bigger than array size");
         }
         if (size == arrayList.length) {
             arrayListGrow();
@@ -45,7 +45,7 @@ public class ArrayList<T> implements List<T> {
     public T get(int index) {
         if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException(
-                    "Index low than 0 or bigger than array size");
+                    "Index " + index + " low than 0 or bigger than array size");
         }
         return (T) arrayList[index];
     }
@@ -54,7 +54,7 @@ public class ArrayList<T> implements List<T> {
     public void set(T value, int index) {
         if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException(
-                    "Index low than 0 or bigger than array size");
+                    "Index " + index + " low than 0 or bigger than array size");
         }
         arrayList[index] = value;
     }
@@ -63,7 +63,7 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException(
-                    "Index low than 0 or bigger than array size");
+                    "Index " + index + " low than 0 or bigger than array size");
         }
         T removedElement = (T) arrayList[index];
         System.arraycopy(arrayList, index + 1, arrayList, index, size - index - 1);
@@ -92,10 +92,10 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private T[] arrayListGrow() {
-        T[] newArrayList = (T[]) new Object[(int)((arrayList.length + (arrayList.length * 2)) / 2)];
+    private Object[] arrayListGrow() {
+        Object[] newArrayList = new Object[(int)((arrayList.length + (arrayList.length * 2)) / 2)];
         System.arraycopy(arrayList, 0, newArrayList, 0, arrayList.length);
-        arrayList = (T[]) newArrayList;
+        arrayList = newArrayList;
         return newArrayList;
     }
 }
