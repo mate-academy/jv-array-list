@@ -23,8 +23,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("Wrong index value. "
-                    + "Index out of bounds. Index: " + index);
+            throw new ArrayListIndexOutOfBoundsException("Wrong index value: "
+                    + index + ". Index out of bounds. Index: ");
         }
         checkingSizeOfList();
         if (index != size) {
@@ -44,8 +44,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         if (validationIndex(index)) {
-            throw new ArrayListIndexOutOfBoundsException("Wrong index value. "
-                    + "Index out of bounds. Index: " + index);
+            throw new ArrayListIndexOutOfBoundsException("Wrong index value: "
+                    + index + ". Index out of bounds. Index: ");
         }
         return (T) elements[index];
     }
@@ -53,8 +53,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void set(T value, int index) {
         if (validationIndex(index)) {
-            throw new ArrayListIndexOutOfBoundsException("Wrong index value. "
-                    + "Index out of bounds. Index: " + index);
+            throw new ArrayListIndexOutOfBoundsException("Wrong index value: "
+                    + index + ". Index out of bounds. Index: ");
         }
         elements[index] = value;
     }
@@ -62,8 +62,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         if (validationIndex(index)) {
-            throw new ArrayListIndexOutOfBoundsException("Wrong index value. "
-                    + "Index out of bounds. Index: " + index);
+            throw new ArrayListIndexOutOfBoundsException("Wrong index value: "
+                    + index + ". Index out of bounds.");
         }
         object = elements[index];
         elements[index] = null;
