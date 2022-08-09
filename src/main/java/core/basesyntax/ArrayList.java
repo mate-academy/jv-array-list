@@ -4,21 +4,19 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_ARRAY_SIZE = 10;
-    private static final int DEFAULT_LIST_SIZE = 0;
-    private Object[] mainArray;
+    private Object[] data;
     private int size;
 
     public ArrayList() {
-        mainArray = new Object[DEFAULT_ARRAY_SIZE];
-        size = DEFAULT_LIST_SIZE;
+        data = new Object[DEFAULT_ARRAY_SIZE];
     }
 
     @Override
     public void add(T value) {
-        if (size + 1 > mainArray.length) {
-            sizeIncrease();
+        if (size + 1 > data.length) {
+            increaseSize();
         }
-        mainArray[size] = value;
+        data[size] = value;
         size++;
     }
 
@@ -28,14 +26,11 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayListIndexOutOfBoundsException("Can`t add element to: "
                     + index + " index");
         }
-        if (size >= mainArray.length) {
-            validIndex(index);
+        if (size + 1 > data.length) {
+            increaseSize();
         }
-        if (size + 1 > mainArray.length) {
-            sizeIncrease();
-        }
-        System.arraycopy(mainArray, index, mainArray, index + 1, size - index);
-        mainArray[index] = value;
+        System.arraycopy(data, index, data, index + 1, size - index);
+        data[index] = value;
         size++;
     }
 
@@ -49,28 +44,28 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         validIndex(index);
-        return (T) mainArray[index];
+        return (T) data[index];
     }
 
     @Override
     public void set(T value, int index) {
         validIndex(index);
-        mainArray[index] = value;
+        data[index] = value;
     }
 
     @Override
     public T remove(int index) {
         validIndex(index);
-        Object value = mainArray[index];
-        System.arraycopy(mainArray, index + 1, mainArray, index, size - index - 1);
+        Object value = data[index];
+        System.arraycopy(data, index + 1, data, index, size - index - 1);
         size--;
         return (T) value;
     }
 
     @Override
     public T remove(T element) {
-        for (int i = 0; i < size + 1; i++) {
-            if (element == mainArray[i] || (element != null && element.equals(mainArray[i]))) {
+        for (int i = 0; i < size; i++) {
+            if (element == data[i] || (element != null && element.equals(data[i]))) {
                 return remove(i);
             }
         }
@@ -87,15 +82,15 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    public void validIndex(int index) {
+    private void validIndex(int index) {
         if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException("Can`t set to " + index + " index");
         }
     }
 
-    public void sizeIncrease() {
-        Object[] temporallyArray = new Object[((int) (mainArray.length * 1.5))];
-        System.arraycopy(mainArray, 0, temporallyArray, 0, size);
-        mainArray = temporallyArray;
+    private void increaseSize() {
+        Object[] temporallyArray = new Object[((int) (data.length * 1.5))];
+        System.arraycopy(data, 0, temporallyArray, 0, size);
+        data = temporallyArray;
     }
 }
