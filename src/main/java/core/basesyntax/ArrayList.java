@@ -21,7 +21,9 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        checkIndex(index);
+        if (index < 0 || index > size) {
+            throw new ArrayListIndexOutOfBoundsException("Index not valid: " + index);
+        }
         checkArrayPlus();
         System.arraycopy(defaultArray, index, defaultArray, index + 1, size - index);
         defaultArray[index] = value;
@@ -37,22 +39,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        checkIndexGetRemove(index);
+        checkIndex(index);
         return defaultArray[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index < size && index >= 0) {
-            defaultArray[index] = value;
-        } else {
-            throw new ArrayListIndexOutOfBoundsException("OutOfBoundsArrayList: " + index);
-        }
+        checkIndex(index);
+        defaultArray[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        checkIndexGetRemove(index);
+        checkIndex(index);
         T returnFields = defaultArray[index];
         System.arraycopy(defaultArray, index + 1, defaultArray, index, size - index - 1);
         size--;
@@ -71,12 +70,6 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void checkIndex(int index) {
-        if (index > size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index not valid: " + index);
-        }
-    }
-
-    private void checkIndexGetRemove(int index) {
         if (index >= size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Index not valid: " + index);
         }
