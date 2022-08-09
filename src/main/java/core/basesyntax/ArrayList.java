@@ -42,19 +42,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        checkException(index);
+        checkIndex(index);
         return (T) elementData[index];
     }
 
     @Override
     public void set(T value, int index) {
-        checkException(index);
+        checkIndex(index);
         elementData[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        checkException(index);
+        checkIndex(index);
         Object removeObject = elementData[index];
         System.arraycopy(elementData, index + 1, elementData, index, size - index - 1);
         size--;
@@ -63,7 +63,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        Object removObject = null;
+        Object removeObject = null;
         for (int i = 0; i < size; i++) {
             if ((elementData[i] == element)
                     || (elementData[i]
@@ -92,7 +92,7 @@ public class ArrayList<T> implements List<T> {
         return grow;
     }
 
-    private void checkException(int index) {
+    private void checkIndex(int index) {
         if (index < 0 || index > size - 1) {
             throw new ArrayListIndexOutOfBoundsException("Incorrect index: " + index);
         }
