@@ -92,13 +92,13 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    public void checkIndexException(int index) {
+    private void checkIndexException(int index) {
         if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException(EXCEPTION_MESSAGE_INDEX + " " + index);
         }
     }
 
-    public void changeSizeList() {
+    private void changeSizeList() {
         T[] newList = (T[]) new Object[(int) (size * MULTIPLIER_SIZE)];
         System.arraycopy(list, 0, newList, 0, size);
         list = newList;
