@@ -84,7 +84,7 @@ public class ArrayList<T> implements List<T> {
         return size == ZERO;
     }
 
-    public void grow() {
+    private void grow() {
         int oldCapacity = capacity;
         capacity += capacity >> ONE;
         T[] newItems = (T[]) new Object[capacity];
@@ -92,13 +92,13 @@ public class ArrayList<T> implements List<T> {
         items = newItems;
     }
 
-    public void validIndex(int index) {
+    private void validIndex(int index) {
         if (index < ZERO || index >= size) {
             throw new ArrayListIndexOutOfBoundsException(NO_POSITION_MESSAGE + index);
         }
     }
 
-    public void validIndex(T value, int index) {
+    private void validIndex(T value, int index) {
         if (index < ZERO || index > size) {
             throw new ArrayListIndexOutOfBoundsException(NO_POSITION_MESSAGE + index);
         }
