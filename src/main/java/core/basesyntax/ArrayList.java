@@ -33,11 +33,9 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        while (items.length < size + list.size()) {
-            grow();
+        for (int i = 0; i < list.size(); i++) {
+            add(list.get(i));
         }
-        System.arraycopy(list.toArray(), 0, items, size, list.size());
-        size += list.size();
     }
 
     @Override
