@@ -107,25 +107,4 @@ public class ArrayList<T> implements List<T> {
     public boolean isEmpty() {
         return size == 0;
     }
-
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || o.getClass() != this.getClass()) {
-            return false;
-        }
-        ArrayList<?> arrayList = (ArrayList<?>) o;
-        if (size != arrayList.size) {
-            return false;
-        }
-        return Arrays.equals(elementData, arrayList.elementData);
-    }
-
-    @Override
-    public int hashCode() {
-        int result = Arrays.hashCode(elementData);
-        result = 31 * result + size;
-        return result;
-    }
 }
