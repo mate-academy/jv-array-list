@@ -55,10 +55,7 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         checkIndex(index);
         final T removed = values[index];
-        T[] tempArray = (T[]) new Object[values.length];
-        System.arraycopy(values, ARRAY_FIRST_INDEX, tempArray, ARRAY_FIRST_INDEX, index);
-        System.arraycopy(values, index + 1, tempArray, index,size - index - 1);
-        values = tempArray;
+        System.arraycopy(values, index + 1, values, index,size - index - 1);
         size--;
         return removed;
     }
