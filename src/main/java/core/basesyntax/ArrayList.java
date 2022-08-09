@@ -43,33 +43,21 @@ public class ArrayList<T> implements List<T> {
 
     }
 
-    private void grow() {
-        Object[] newList = new Object[(int) (size * 1.5)];
-        System.arraycopy(elementData, 0, newList, 0, size);
-        elementData = newList;
-    }
-
     @Override
     public T get(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("The index passed to method is invalid");
-        }
+        checkIndexValidation(index);
         return (T) elementData[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("The index passed to method is invalid");
-        }
+        checkIndexValidation(index);
         elementData[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("The index passed to method is invalid");
-        }
+        checkIndexValidation(index);
         int newSize = size - 1;
         T oldValue = (T)elementData[index];
         if (newSize > 0) {
@@ -98,4 +86,18 @@ public class ArrayList<T> implements List<T> {
     public boolean isEmpty() {
         return size == 0;
     }
+
+    private void grow() {
+        Object[] newList = new Object[(int) (size * 1.5)];
+        System.arraycopy(elementData, 0, newList, 0, size);
+        elementData = newList;
+    }
+
+    private void checkIndexValidation(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("The index " + index + "passed to method is invalid");
+        }
+    }
+
+
 }
