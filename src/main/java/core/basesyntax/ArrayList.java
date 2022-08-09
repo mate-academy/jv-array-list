@@ -4,7 +4,6 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    private static final double GROW_INDEX = 1.5;
     private Object[] values;
     private int size;
 
@@ -53,7 +52,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         validateIndex(index);
-        final T removedValue = (T) values[index];
+        T removedValue = (T) values[index];
         System.arraycopy(values, index + 1, values, index, values.length - index - 1);
         size--;
         return removedValue;
@@ -82,7 +81,7 @@ public class ArrayList<T> implements List<T> {
 
     private void growArray() {
         if (values.length == size) {
-            Object newArray = new Object[(int) (size() * GROW_INDEX)];
+            Object newArray = new Object[(int) (size() * 1.5)];
             System.arraycopy(values, 0, newArray, 0, values.length);
             values = (T[]) newArray;
         }
