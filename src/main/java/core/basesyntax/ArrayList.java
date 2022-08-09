@@ -14,7 +14,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value) {
         if (size == elements.length) {
-            Object[] newObject = new Object[elements.length + elements.length / 2];
+            Object[] newObject = new Object[(int) (elements.length * 1.5)];
             for (int i = 0; i < elements.length; i++) {
                 newObject[i] = elements[i];
             }
@@ -27,7 +27,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         if (index > size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Can't write an element to ArrayList");
+            throw new ArrayListIndexOutOfBoundsException("Can't write an element with index "
+                    + index + " to ArrayList");
         }
         if (size == elements.length) {
             Object[] newObject = new Object[elements.length + elements.length / 2];
@@ -51,7 +52,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         if (index > size() - 1 || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Can't get an element");
+            throw new ArrayListIndexOutOfBoundsException("Can't get an element with index "
+                    + index + "from ArrayList");
         }
         return (T) elements[index];
     }
@@ -59,7 +61,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void set(T value, int index) {
         if (index > size() - 1 || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index is out of bounds of the list size");
+            throw new ArrayListIndexOutOfBoundsException("Index " + index
+                    + " is out of bounds of the list size");
         }
         elements[index] = value;
     }
@@ -67,7 +70,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         if (index > size - 1 || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index is out of bounds of the list size");
+            throw new ArrayListIndexOutOfBoundsException("Index " + index
+                    + " is out of bounds of the list size");
         }
         T removed = (T) elements[index];
         System.arraycopy(elements, index + 1, elements, index, size - index - 1);
@@ -82,7 +86,7 @@ public class ArrayList<T> implements List<T> {
                 return remove(i);
             }
         }
-        throw new NoSuchElementException("No element in the list");
+        throw new NoSuchElementException("No element " + element + " in the list");
     }
 
     @Override
