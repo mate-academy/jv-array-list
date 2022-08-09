@@ -66,20 +66,8 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        T returnElement = null;
-        int availableException = 0;
-        for (int i = 0; i < size; i++) {
-            if ((list[i] == element) || (list[i] != null && list[i].equals(element))) {
-                returnElement = list[i];
-                remove(i);
-                availableException++;
-                break;
-            }
-        }
-        if (availableException == 0) {
-            throw new NoSuchElementException(EXCEPTION_MESSAGE_ELEMENT);
-        }
-        return returnElement;
+        int index = findIndex(element);
+        return remove(index);
     }
 
     @Override
@@ -96,6 +84,15 @@ public class ArrayList<T> implements List<T> {
         if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException(EXCEPTION_MESSAGE_INDEX + " " + index);
         }
+    }
+
+    private int findIndex(T element) {
+        for (int i = 0; i < size; i++) {
+            if ((list[i] == element) || (list[i] != null && list[i].equals(element))) {
+                return i;
+            }
+        }
+        throw new NoSuchElementException(EXCEPTION_MESSAGE_ELEMENT);
     }
 
     private void changeSizeList() {
