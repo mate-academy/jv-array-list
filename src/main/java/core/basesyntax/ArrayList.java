@@ -11,7 +11,7 @@ public class ArrayList<T> implements List<T> {
         row = new Object[CAPACITY];
     }
 
-    public void checkSize() {
+    private void checkSize() {
         if (size == row.length) {
             Object[] newRow = new Object[row.length + row.length / 2];
             System.arraycopy(row, 0,newRow, 0, size);
@@ -19,7 +19,7 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    public void indexExeption(int index) {
+    private void indexException(int index) {
         if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException("Incorrect input index: " + index);
         }
@@ -52,19 +52,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        indexExeption(index);
+        indexException(index);
         return (T) row[index];
     }
 
     @Override
     public void set(T value, int index) {
-        indexExeption(index);
+        indexException(index);
         row[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        indexExeption(index);
+        indexException(index);
         T value = (T) row[index];
         System.arraycopy(row, index + 1, row, index, size - index - 1);
         size--;
@@ -89,7 +89,7 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    public int indexOf(T element) {
+    private int indexOf(T element) {
         int i = 0;
         for ( ;i < size; i++) {
             if (row[i] == element || row[i] != null && row[i].equals(element)) {
@@ -98,5 +98,4 @@ public class ArrayList<T> implements List<T> {
         }
         throw new NoSuchElementException("Element " + element + " was not found!");
     }
-
 }
