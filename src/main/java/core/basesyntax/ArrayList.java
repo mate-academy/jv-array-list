@@ -4,29 +4,29 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    private Object[] arrayElements;
+    private Object[] elements;
     private int size;
 
     public ArrayList() {
-        arrayElements = new Object[DEFAULT_CAPACITY];
+        elements = new Object[DEFAULT_CAPACITY];
     }
 
     @Override
     public void add(T value) {
-        if (size == arrayElements.length - 1) {
+        if (size == elements.length - 1) {
             resize();
         }
-        arrayElements[size++] = value;
+        elements[size++] = value;
     }
 
     @Override
     public void add(T value, int index) {
         checkRangeForAdd(index);
-        if (size == arrayElements.length - 1) {
+        if (size == elements.length - 1) {
             resize();
         }
-        System.arraycopy(arrayElements, index, arrayElements, index + 1, size - index);
-        arrayElements[index] = value;
+        System.arraycopy(elements, index, elements, index + 1, size - index);
+        elements[index] = value;
         size++;
     }
 
@@ -39,30 +39,30 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        indexCheck(index);
-        return (T) arrayElements[index];
+        checkIndex(index);
+        return (T) elements[index];
     }
 
     @Override
     public void set(T value, int index) {
-        indexCheck(index);
-        arrayElements[index] = value;
+        checkIndex(index);
+        elements[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        indexCheck(index);
-        T removedElement = (T) arrayElements[index];
-        System.arraycopy(arrayElements, index + 1, arrayElements, index, size - index - 1);
+        checkIndex(index);
+        T removedElement = (T) elements[index];
+        System.arraycopy(elements, index + 1, elements, index, size - index - 1);
         size--;
         return removedElement;
     }
 
     @Override
     public T remove(T element) {
-        for (int i = 0; i < arrayElements.length; i++) {
-            if (element == null ? arrayElements[i] == element : element.equals(arrayElements[i])) {
-                System.arraycopy(arrayElements, i + 1, arrayElements, i, size - i);
+        for (int i = 0; i < elements.length; i++) {
+            if (element == null ? elements[i] == element : element.equals(elements[i])) {
+                System.arraycopy(elements, i + 1, elements, i, size - i);
                 size--;
                 return element;
             }
@@ -81,9 +81,9 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void resize() {
-        Object[] newArray = new Object[arrayElements.length + arrayElements.length / 2];
-        System.arraycopy(arrayElements, 0, newArray, 0, size);
-        arrayElements = newArray;
+        Object[] newArray = new Object[elements.length + elements.length / 2];
+        System.arraycopy(elements, 0, newArray, 0, size);
+        elements = newArray;
     }
 
     private void checkRangeForAdd(int index) {
@@ -92,7 +92,7 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private void indexCheck(int index) {
+    private void checkIndex(int index) {
         if (isEmpty() || index > size - 1 || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Index " + index + " not found");
         }
