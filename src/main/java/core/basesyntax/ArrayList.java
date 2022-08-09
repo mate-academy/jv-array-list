@@ -30,10 +30,6 @@ public class ArrayList<T> implements List<T> {
         if (size == capacity) {
             capacity = grow();
         }
-        if (index == size) {
-            add(value);
-            return;
-        }
         System.arraycopy(objects, index, objects, index + 1, size - index);
         objects[index] = value;
         size++;
@@ -48,26 +44,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        indexCheck(index);
+        checkIndex(index);
         return (T) objects[index];
-    }
-
-    private void indexCheck(int index) {
-        if (index > size() - 1 || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException(
-                    "No element with such index in list: " + index);
-        }
     }
 
     @Override
     public void set(T value, int index) {
-        indexCheck(index);
+        checkIndex(index);
         objects[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        indexCheck(index);
+        checkIndex(index);
         final T deletedObject = (T) objects[index];
         System.arraycopy(objects, index + 1, objects, index, size - (index + 1));
         objects[size - 1] = null;
@@ -102,5 +91,12 @@ public class ArrayList<T> implements List<T> {
         objects = new Object[capacity];
         System.arraycopy(temp, 0, objects, 0, size);
         return capacity;
+    }
+
+    private void checkIndex(int index) {
+        if (index > size() - 1 || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException(
+                    "No element with such index in list: " + index);
+        }
     }
 }
