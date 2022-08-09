@@ -4,6 +4,7 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
+    private static final double GROW_NUMBER = 1.5;
     private int size;
     private Object[] elementData;
 
@@ -29,19 +30,6 @@ public class ArrayList<T> implements List<T> {
         System.arraycopy(elementData, index, elementData, index + 1, size - index);
         elementData[index] = value;
         size++;
-    }
-
-    private void resize() {
-        Object[] newElement = new Object[elementData.length * 3 / 2];
-        System.arraycopy(elementData, 0, newElement, 0, size);
-        elementData = newElement;
-    }
-
-    public boolean checkIndex(int index, int size) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index: " + index + " is out of bound");
-        }
-        return true;
     }
 
     @Override
@@ -76,7 +64,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        for (int i = 0; i < elementData.length; i++) {
+        for (int i = 0; i < size; i++) {
             if (element == elementData[i] || elementData[i] != null
                     && elementData[i].equals(element)) {
                 System.arraycopy(elementData, i + 1, elementData, i, size - i);
@@ -95,5 +83,18 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size() == 0;
+    }
+
+    private boolean checkIndex(int index, int size) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Index: " + index + " is out of bound");
+        }
+        return true;
+    }
+
+    private void resize() {
+        Object[] newElement = new Object[(int) (elementData.length * GROW_NUMBER)];
+        System.arraycopy(elementData, 0, newElement, 0, size);
+        elementData = newElement;
     }
 }
