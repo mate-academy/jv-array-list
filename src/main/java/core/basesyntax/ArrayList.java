@@ -5,15 +5,19 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int START_CAPACITY = 10;
+    private static final int EMPTY_LIST = 0;
     private static final double COEFFICIENT_MULTIPLY = 1.5;
     private int size;
-    private Object[] array = new Object[START_CAPACITY];
+    private Object[] array;
+
+    public ArrayList() {
+        this.size = EMPTY_LIST;
+        this.array = new Object[START_CAPACITY];
+    }
 
     @Override
     public void add(T value) {
-        if (size + 1 > array.length) {
-            array = Arrays.copyOf(array, incrementLength());
-        }
+        checkResize();
         array[size] = value;
         size++;
     }
@@ -23,13 +27,9 @@ public class ArrayList<T> implements List<T> {
         if (index > size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Index " + index + " out of range");
         }
-        int newSize = (size + 1 > array.length) ? incrementLength() : array.length;
-        Object[] newArray = new Object[newSize];
-
-        System.arraycopy(array, 0, newArray, 0, index);
-        newArray[index] = value;
-        System.arraycopy(array, index, newArray, index + 1, size - index);
-        array = newArray;
+        checkResize();
+        System.arraycopy(array, index, array, index + 1, size - index);
+        array[index] = value;
         size++;
     }
 
@@ -42,28 +42,24 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        checkArrayListIndexOutOfBoundsException(index);
+        checkIndex(index);
         return (T) array[index];
     }
 
     @Override
     public void set(T value, int index) {
-        checkArrayListIndexOutOfBoundsException(index);
+        checkIndex(index);
         array[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        checkArrayListIndexOutOfBoundsException(index);
+        checkIndex(index);
         Object[] newArray = new Object[array.length];
-        T value;
-
-        System.arraycopy(array, 0, newArray, 0, index);
-        value = (T) array[index];
+        T value = (T) array[index];
         if (index < array.length - 1) {
-            System.arraycopy(array, index + 1, newArray, index, size - index);
+            System.arraycopy(array, index + 1, array, index, size - index);
         }
-        array = newArray;
         size--;
         return value;
     }
@@ -96,9 +92,15 @@ public class ArrayList<T> implements List<T> {
         return first == second || (first != null && first.equals(second));
     }
 
-    private void checkArrayListIndexOutOfBoundsException(int index) {
+    private void checkIndex(int index) {
         if (index >= size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Index " + index + " out of range");
+        }
+    }
+
+    private void checkResize() {
+        if (size + 1 > array.length) {
+            array = Arrays.copyOf(array, incrementLength());
         }
     }
 }
