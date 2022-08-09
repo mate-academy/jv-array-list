@@ -73,10 +73,9 @@ public class ArrayList<T> implements List<T> {
         int index = findIndexByElement(element);
         if (index == -1) {
             throw new NoSuchElementException("The element was not found!");
-        } else {
-            removeObject(index);
-            return element;
         }
+        removeObject(index);
+        return element;
     }
 
     @Override
@@ -96,15 +95,13 @@ public class ArrayList<T> implements List<T> {
     }
 
     private int findIndexByElement(T element) {
-        int index = -1;
         for (int i = 0; i < size; i++) {
             if ((element == null && list[i] == null)
                     || (element != null && element.equals(list[i]))) {
-                index = i;
-                break;
+                return i;
             }
         }
-        return index;
+        return -1;
     }
 
     private boolean isIndexInInvalidRange(int index) {
