@@ -39,9 +39,7 @@ public class ArrayList<T> implements List<T> {
             resize();
         }
         size++;
-        for (int i = size - 1; i > index; i--) {
-            elements[i] = elements[i - 1];
-        }
+        System.arraycopy(elements, index, elements, index + 1, elements.length - index - 1);
         elements[index] = value;
     }
 
