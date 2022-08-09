@@ -48,8 +48,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void set(T value, int index) {
         checkIndex(index);
-        remove(index);
-        add(value, index);
+        objects[index] = value;
     }
 
     @Override
