@@ -91,9 +91,9 @@ public class ArrayList<T> implements List<T> {
 
     private void checkArraySizeAndResize() {
         if (size == storage.length) {
-            Object[] tmp = new Object[size * 3 / 2];
-            System.arraycopy(storage, 0, tmp, 0, size);
-            storage = tmp;
+            Object[] temporaryStorage = new Object[size * 3 / 2];
+            System.arraycopy(storage, 0, temporaryStorage, 0, size);
+            storage = temporaryStorage;
         }
     }
 }
