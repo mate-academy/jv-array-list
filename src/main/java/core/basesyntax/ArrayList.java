@@ -21,7 +21,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        rangeCheckForAdd(index);
+        checkRangeForAdd(index);
         if (size == arrayElements.length - 1) {
             resize();
         }
@@ -86,7 +86,7 @@ public class ArrayList<T> implements List<T> {
         arrayElements = newArray;
     }
 
-    private void rangeCheckForAdd(int index) {
+    private void checkRangeForAdd(int index) {
         if (index > size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Index out of bound " + index);
         }
