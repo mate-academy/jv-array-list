@@ -1,60 +1,60 @@
 package core.basesyntax;
 
 import java.util.NoSuchElementException;
-import java.util.stream.IntStream;
 
 public class ArrayList<T> implements List<T> {
-
-    private static final int DEFAULT_SIZE_ARRAY = 10;
-    private T[] array;
-    private int size = 0;
+    private static final int DEFAULT_SIZE = 10;
+    private static final double DEFAULT_GROW_ARRAY = 1.5;
+    private Object[] elements;
+    private int size;
 
     public ArrayList() {
-        array = (T[]) new Object[DEFAULT_SIZE_ARRAY];
+        elements = new Object[DEFAULT_SIZE];
     }
 
     @Override
     public void add(T value) {
         grow();
-        array[size] = (T) value;
+        elements[size] = value;
         size++;
     }
 
     @Override
     public void add(T value, int index) {
         grow();
-        if (index > size || index < 0 || array.length < index) {
-            throw new ArrayListIndexOutOfBoundsException("such an index is unacceptable");
+        if (index > size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException(
+                    "Such an index " + index + " is invalid for size " + size);
         }
-        System.arraycopy(array, index, array, index + 1, size - index);
-        array[index] = value;
+        System.arraycopy(elements, index, elements, index + 1, size - index);
+        elements[index] = value;
         size++;
     }
 
     @Override
     public void addAll(List<T> list) {
-        IntStream.range(0, list.size())
-                .forEach(element -> add(list.get(element)));
+        for (int i = 0; i < list.size(); i++) {
+            add(list.get(i));
+        }
     }
 
     @Override
     public T get(int index) {
         checkIndex(index);
-        return array[index];
+        return (T) elements[index];
     }
 
     @Override
     public void set(T value, int index) {
         checkIndex(index);
-        checkIndex(index);
-        array[index] = value;
+        elements[index] = value;
     }
 
     @Override
     public T remove(int index) {
         checkIndex(index);
         T element = get(index);
-        System.arraycopy(array, index + 1, array, index, size - index - 1);
+        System.arraycopy(elements, index + 1, elements, index, size - index - 1);
         size--;
         return element;
     }
@@ -76,23 +76,26 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void grow() {
-        if (size == array.length) {
-            T[] newArray = (T[]) new Object[(int) (size * 1.5)];
-            System.arraycopy(array, 0, newArray, 0, size);
-            array = newArray;
+        if (size == elements.length) {
+            Object[] newArray = new Object[(int) (size * DEFAULT_GROW_ARRAY)];
+            System.arraycopy(elements, 0, newArray, 0, size);
+            elements = newArray;
         }
     }
 
     private int findItIndex(T element) {
-        return IntStream.range(0, size)
-                .filter(i -> element == get(i) || (get(i) != null && get(i).equals(element)))
-                .findFirst()
-                .orElseThrow(() -> new NoSuchElementException("not found element in array"));
+        for (int i = 0; i < size; i++) {
+            if (element == get(i) || (get(i) != null && get(i).equals(element))) {
+                return i;
+            }
+        }
+        throw new NoSuchElementException("not found element in array");
     }
 
     private void checkIndex(int index) {
         if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("such an index is unacceptable");
+            throw new ArrayListIndexOutOfBoundsException(
+                    "Such an index " + index + " is invalid for size " + size);
         }
     }
 }
