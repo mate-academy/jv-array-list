@@ -4,8 +4,12 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int ARRAY_SIZE = 10;
-    private int size = 0;
-    private Object[] array = new Object[ARRAY_SIZE];
+    private int size;
+    private Object[] array;
+
+    public ArrayList() {
+        array = new Object[ARRAY_SIZE];
+    }
 
     @Override
     public void add(T value) {
@@ -21,10 +25,6 @@ public class ArrayList<T> implements List<T> {
         if (index > size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Wrong index: " + index
                     + " out of bounds");
-        }
-        if (size == index) {
-            add(value);
-            return;
         }
         if (size + 1 == array.length) {
             increaseArray();
@@ -43,10 +43,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (size <= index || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Wrong index: " + index
-                    + " out of bounds");
-        }
+        checkOutOfBounds(index);
         return (T) array[index];
     }
 
@@ -72,7 +69,7 @@ public class ArrayList<T> implements List<T> {
                 return remove(i);
             }
         }
-        throw new NoSuchElementException("element not exist in list");
+        throw new NoSuchElementException("element" + element.toString() + "not exist in list");
     }
 
     @Override
