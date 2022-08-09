@@ -6,8 +6,8 @@ import java.util.NoSuchElementException;
 public class ArrayList<T> implements List<T> {
     private static final int MAX_CAPACITY = 10;
     private static final float GROWTH_COEFFICIENT = 1.5f;
-    private static final String NO_ELEMENT = "No such element in the list";
-    private static final String INDEX_ERROR = "The index is out of list`s interval";
+    private static final String NO_ELEMENT_MESSAGE = "No such element in the list";
+    private static final String INDEX_ERROR_MESSAGE = "The index is out of list`s interval ";
     private Object[] data;
     private int size;
 
@@ -29,7 +29,7 @@ public class ArrayList<T> implements List<T> {
             increaseCapacity();
         }
         if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException(INDEX_ERROR);
+            throw new ArrayListIndexOutOfBoundsException(INDEX_ERROR_MESSAGE + index);
         }
         System.arraycopy(data, index, data, index + 1, size - index);
         data[index] = value;
@@ -44,38 +44,28 @@ public class ArrayList<T> implements List<T> {
     }
 
     @Override
-    public T get(int index) throws ArrayListIndexOutOfBoundsException {
+    public T get(int index) {
         checkIfIndexInInterval(index);
         return (T) data[index];
     }
 
     @Override
-    public T remove(int index) throws ArrayListIndexOutOfBoundsException {
+    public T remove(int index) {
         checkIfIndexInInterval(index);
-        // mvn попросив зробити змінну final, чи так правильно?
-        final T elementToRemove = (T) data[index];
+        T elementToRemove = (T) data[index];
         System.arraycopy(data, index + 1, data, index, size - (index + 1));
         size--;
         return elementToRemove;
     }
 
     @Override
-    public T remove(T element) throws ArrayListIndexOutOfBoundsException {
+    public T remove(T element) {
         int index = getIndex(element);
         return remove(index);
     }
 
-    private int getIndex(T element) {
-        for (int i = 0; i < size; i++) {
-            if (element == data[i] || (data[i] != null && data[i].equals(element))) {
-                return i;
-            }
-        }
-        throw new NoSuchElementException(NO_ELEMENT);
-    }
-
     @Override
-    public void set(T value, int index) throws ArrayListIndexOutOfBoundsException {
+    public void set(T value, int index) {
         checkIfIndexInInterval(index);
         data[index] = value;
     }
@@ -96,14 +86,18 @@ public class ArrayList<T> implements List<T> {
         data = temp;
     }
 
-    public void checkIfIndexInInterval(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException(INDEX_ERROR);
+    private int getIndex(T element) {
+        for (int i = 0; i < size; i++) {
+            if (element == data[i] || (data[i] != null && data[i].equals(element))) {
+                return i;
+            }
         }
+        throw new NoSuchElementException(NO_ELEMENT_MESSAGE);
     }
 
-    @Override
-    public String toString() {
-        return Arrays.toString(data);
+    private void checkIfIndexInInterval(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException(INDEX_ERROR_MESSAGE + index);
+        }
     }
 }
