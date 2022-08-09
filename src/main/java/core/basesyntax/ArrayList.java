@@ -1,6 +1,5 @@
 package core.basesyntax;
 
-import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
@@ -10,11 +9,12 @@ public class ArrayList<T> implements List<T> {
 
     public ArrayList() {
         elements = new Object[DEFAULT_CAPACITY];
+        size = 0;
     }
 
     @Override
     public void add(T value) {
-        lengthCheck();
+        sizeCheck();
         elements[size] = value;
         size++;
     }
@@ -25,10 +25,8 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayListIndexOutOfBoundsException("Index " + index
                     + " out of bounds for length " + size);
         }
-        lengthCheck();
-        if (size > index) {
-            System.arraycopy(elements,index,elements,index + 1, size - index);
-        }
+        sizeCheck();
+        System.arraycopy(elements,index,elements,index + 1, size - index);
         elements[index] = value;
         size++;
     }
@@ -36,7 +34,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void addAll(List<T> list) {
         for (int i = 0; i < list.size(); i++) {
-            this.add(list.get(i));
+            add(list.get(i));
         }
     }
 
@@ -81,11 +79,6 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    @Override
-    public String toString() {
-        return Arrays.toString(elements);
-    }
-
     private void indexCheck(int index) {
         if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException("Index " + index
@@ -93,7 +86,7 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private void lengthCheck() {
+    private void sizeCheck() {
         if (size == elements.length) {
             Object[] newElements = new Object[size + (size / 2)];
             System.arraycopy(elements, 0, newElements, 0, size);
