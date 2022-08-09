@@ -6,7 +6,6 @@ import java.util.NoSuchElementException;
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_SIZE = 10;
     private Object[] elements;
-    private Object object;
     private int size;
 
     public ArrayList() {
@@ -22,14 +21,9 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("Wrong index value: "
-                    + index + ". Index out of bounds. Index: ");
-        }
+        checkValidationIndex(index, size + 1);
         checkingSizeOfList();
-        if (index != size) {
-            System.arraycopy(elements, index, elements, index + 1, size - index);
-        }
+        System.arraycopy(elements, index, elements, index + 1, size - index);
         elements[index] = value;
         size++;
     }
@@ -43,49 +37,35 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (validationIndex(index)) {
-            throw new ArrayListIndexOutOfBoundsException("Wrong index value: "
-                    + index + ". Index out of bounds. Index: ");
-        }
+        checkValidationIndex(index, size);
         return (T) elements[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (validationIndex(index)) {
-            throw new ArrayListIndexOutOfBoundsException("Wrong index value: "
-                    + index + ". Index out of bounds. Index: ");
-        }
+        checkValidationIndex(index, size);
         elements[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (validationIndex(index)) {
-            throw new ArrayListIndexOutOfBoundsException("Wrong index value: "
-                    + index + ". Index out of bounds.");
-        }
-        object = elements[index];
+        checkValidationIndex(index, size);
+        final Object object = elements[index];
         elements[index] = null;
-        if (index != size - 1) {
-            System.arraycopy(elements, index + 1, elements, index, size - index - 1);
-        }
+        System.arraycopy(elements, index + 1, elements, index, size - index - 1);
         size--;
         return (T) object;
     }
 
     @Override
     public T remove(T value) {
-        int index = -1;
         for (int i = 0; i < size; i++) {
-            if (value != null && value.equals(elements[i]) || value == elements[i]) {
-                index = i;
+            if (value != null && value.equals(elements[i])
+                    || value == elements[i]) {
+                return remove(i);
             }
         }
-        if (index == -1) {
-            throw new NoSuchElementException("This value is missing in list");
-        }
-        return remove(index);
+        throw new NoSuchElementException("This value is missing in list");
     }
 
     @Override
@@ -104,7 +84,10 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private boolean validationIndex(int index) {
-        return index >= size || index < 0;
+    private void checkValidationIndex(int index, int size) {
+        if (index < 0 || index > size - 1) {
+            throw new ArrayListIndexOutOfBoundsException("Wrong index value: "
+                    + index + ". Index out of bounds. Index: ");
+        }
     }
 }
