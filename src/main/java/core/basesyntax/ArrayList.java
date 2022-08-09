@@ -58,9 +58,6 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         checkIndexException(index);
-        if (size == list.length) {
-            changeSizeList();
-        }
         T returnElement = list[index];
         System.arraycopy(list, index + 1, list, index, size - index);
         size--;
