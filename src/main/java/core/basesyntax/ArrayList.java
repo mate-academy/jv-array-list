@@ -68,9 +68,7 @@ public class ArrayList<T> implements List<T> {
             if (element == objects[i]
                     || objects[i] != null
                     && objects[i].equals(element)) {
-                removedObject = objects[i];
-                remove(i);
-                return (T) removedObject;
+                return remove(i);
             }
         }
         throw new NoSuchElementException("Cant find " + element);
