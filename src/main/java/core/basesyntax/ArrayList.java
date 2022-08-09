@@ -59,7 +59,6 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        T removed;
         int index = getIndex(element);
         if (index < 0) {
             throw new NoSuchElementException("Element is not found in the array");
