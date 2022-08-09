@@ -5,17 +5,19 @@ import java.util.NoSuchElementException;
 public class ArrayList<T> implements List<T> {
     private static final double MAGNIFICATION_FACTOR = 1.5;
     private static final int DEFAULT_CAPACITY = 10;
-    private T[] elementData;
+    private T[] elements;
     private int size;
 
     public ArrayList() {
-        elementData = (T[]) new Object[DEFAULT_CAPACITY];
+        elements = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
     @Override
     public void add(T value) {
-        extendArray();
-        elementData[size] = value;
+        if (size == elements.length) {
+            extendArray();
+        }
+        elements[size] = value;
         size++;
     }
 
@@ -25,9 +27,11 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayListIndexOutOfBoundsException(String
                     .format("Failed to get element for index %d", index));
         }
-        extendArray();
-        System.arraycopy(elementData, index, elementData, index + 1, size - index);
-        elementData[index] = value;
+        if (size == elements.length) {
+            extendArray();
+        }
+        System.arraycopy(elements, index, elements, index + 1, size - index);
+        elements[index] = value;
         size++;
     }
 
@@ -41,26 +45,23 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         checkIndex(index);
-        return elementData[index];
+        return elements[index];
     }
 
     @Override
     public void set(T value, int index) {
         checkIndex(index);
-        elementData[index] = value;
+        elements[index] = value;
     }
 
     @Override
     public T remove(int index) {
         checkIndex(index);
-        T result = elementData[index];
-        if (result == null) {
-            return null;
-        }
-        elementData[index] = null;
-        if (elementData.length - index >= 0) {
-            System.arraycopy(elementData, index + 1, elementData,
-                    index, elementData.length - 1 - index);
+        final T result = elements[index];
+        elements[index] = null;
+        if (elements.length - index >= 0) {
+            System.arraycopy(elements, index + 1, elements,
+                    index, elements.length - 1 - index);
         }
         size--;
         return result;
@@ -69,18 +70,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            T result = elementData[i];
-            if (element == null) {
-                if (elementData[i] == null) {
-                    reindexArray(i + 1, i);
-                    size--;
-                    return result;
-                }
-            } else if (element.equals(elementData[i])) {
-                elementData[i] = null;
-                reindexArray(i + 1, i);
-                size--;
-                return result;
+            if (element == elements[i] || (element != null && element.equals(elements[i]))) {
+                return remove(i);
             }
         }
         throw new NoSuchElementException("Can't remove the element");
@@ -97,16 +88,14 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void reindexArray(int srcPos, int destPos) {
-        Object[] newElementData = new Object[(int) (elementData.length * MAGNIFICATION_FACTOR)];
-        System.arraycopy(elementData,srcPos, elementData, destPos, size);
+        Object[] newElements = new Object[(int) (elements.length * MAGNIFICATION_FACTOR)];
+        System.arraycopy(elements,srcPos, elements, destPos, size);
     }
 
     private void extendArray() {
-        if (size == elementData.length) {
-            Object[] newElementData = new Object[(int) (elementData.length * MAGNIFICATION_FACTOR)];
-            System.arraycopy(elementData, 0, newElementData, 0, size);
-            elementData = (T[]) newElementData;
-        }
+        Object[] newElements = new Object[(int) (elements.length * MAGNIFICATION_FACTOR)];
+        System.arraycopy(elements, 0, newElements, 0, size);
+        elements = (T[]) newElements;
     }
 
     private void checkIndex(int index) {
