@@ -45,14 +45,12 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         checkEqualsIndex(index, size);
-        checkIndex(index, size);
         return (T) elements[index];
     }
 
     @Override
     public void set(T value, int index) {
         checkEqualsIndex(index, size);
-        resizeIfFull();
         elements[index] = value;
     }
 
@@ -69,18 +67,10 @@ public class ArrayList<T> implements List<T> {
     public T remove(T element) {
         int index = 0;
         boolean noElement = false;
-        for (Object s : elements) {
-            if (element == null && s == null) {
-                noElement = true;
-                break;
-            } else if (s == null) {
-                index++;
-                continue;
-            } else if (s.equals(element)) {
-                noElement = true;
-                break;
+        for (int i = 0; i < elements.length; i++) {
+            if (elements[i] == element || (elements[i] != null && elements[i].equals(element))) {
+                return remove(i);
             }
-            index++;
         }
         if (!noElement) {
             throw new NoSuchElementException("There are no more elements remaining!");
