@@ -6,39 +6,31 @@ import java.util.NoSuchElementException;
 public class ArrayList<T> implements List<T> {
     private static final int START_CAPACITY = 10;
     private static final double COEFFICIENT_MULTIPLY = 1.5;
-    private int sizeArray;
+    private int size;
     private Object[] array = new Object[START_CAPACITY];
-
-    private int incrementLength() {
-        return (int) (array.length * COEFFICIENT_MULTIPLY);
-    }
-
-    private boolean equals(Object first, Object second) {
-        return first == second || (first != null && first.equals(second));
-    }
 
     @Override
     public void add(T value) {
-        if (sizeArray + 1 > array.length) {
+        if (size + 1 > array.length) {
             array = Arrays.copyOf(array, incrementLength());
         }
-        array[sizeArray] = value;
-        sizeArray++;
+        array[size] = value;
+        size++;
     }
 
     @Override
     public void add(T value, int index) {
-        if (index > sizeArray || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index out of range");
+        if (index > size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Index " + index + " out of range");
         }
-        int newSize = (sizeArray + 1 > array.length) ? incrementLength() : array.length;
+        int newSize = (size + 1 > array.length) ? incrementLength() : array.length;
         Object[] newArray = new Object[newSize];
 
         System.arraycopy(array, 0, newArray, 0, index);
         newArray[index] = value;
-        System.arraycopy(array, index, newArray, index + 1, sizeArray - index);
+        System.arraycopy(array, index, newArray, index + 1, size - index);
         array = newArray;
-        sizeArray++;
+        size++;
     }
 
     @Override
@@ -50,57 +42,63 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index >= sizeArray || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index out of range");
-        }
+        checkArrayListIndexOutOfBoundsException(index);
         return (T) array[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index >= sizeArray || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index out of range");
-        }
+        checkArrayListIndexOutOfBoundsException(index);
         array[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index >= sizeArray || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index out of range");
-        }
+        checkArrayListIndexOutOfBoundsException(index);
         Object[] newArray = new Object[array.length];
         T value;
 
         System.arraycopy(array, 0, newArray, 0, index);
         value = (T) array[index];
         if (index < array.length - 1) {
-            System.arraycopy(array, index + 1, newArray, index, sizeArray - index);
+            System.arraycopy(array, index + 1, newArray, index, size - index);
         }
         array = newArray;
-        sizeArray--;
+        size--;
         return value;
     }
 
     @Override
     public T remove(T element) {
-        int i = 0;
-        while (!equals(element, array[i]) && i < sizeArray) {
-            i++;
+        for (int i = 0; i < size(); i++) {
+            if (equals(element, array[i])) {
+                return remove(i);
+            }
         }
-        if (i < sizeArray) {
-            return remove(i);
-        }
-        throw new NoSuchElementException();
+        throw new NoSuchElementException("Value not found: " + element.toString());
     }
 
     @Override
     public int size() {
-        return sizeArray;
+        return size;
     }
 
     @Override
     public boolean isEmpty() {
-        return sizeArray == 0;
+        return size == 0;
+    }
+
+    private int incrementLength() {
+        return (int) (array.length * COEFFICIENT_MULTIPLY);
+    }
+
+    private boolean equals(Object first, Object second) {
+        return first == second || (first != null && first.equals(second));
+    }
+
+    private void checkArrayListIndexOutOfBoundsException(int index) {
+        if (index >= size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Index " + index + " out of range");
+        }
     }
 }
