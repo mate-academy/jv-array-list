@@ -58,19 +58,10 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         checkException(index);
-        Object deleted = values[index];
-        System.out.println("Index - " + index);
-        System.out.println("Size - " + size);
-        for (int i = 0; i < size; i++) {
-            System.out.println(values[i]);
-        }
         checkingResize();
+        Object deleted = values[index];
         System.arraycopy(values, index + 1, values, index, size - index);
         size--;
-        for (int i = 0; i < size; i++) {
-            System.out.println(values[i]);
-        }
-        System.out.println("Size After - " + size);
         return (T) deleted;
     }
 
