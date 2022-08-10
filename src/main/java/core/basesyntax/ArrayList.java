@@ -58,11 +58,8 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         checkIndex(index);
         final T result = elements[index];
-        elements[index] = null;
-        if (elements.length - index >= 0) {
-            System.arraycopy(elements, index + 1, elements,
-                    index, elements.length - 1 - index);
-        }
+        System.arraycopy(elements, index + 1, elements,
+                index, elements.length - 1 - index);
         size--;
         return result;
     }
@@ -74,7 +71,7 @@ public class ArrayList<T> implements List<T> {
                 return remove(i);
             }
         }
-        throw new NoSuchElementException("Can't remove the element");
+        throw new NoSuchElementException("Can't remove the element " + element);
     }
 
     @Override
