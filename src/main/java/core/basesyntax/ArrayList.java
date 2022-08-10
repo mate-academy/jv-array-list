@@ -27,14 +27,6 @@ public class ArrayList<T> implements List<T> {
         size++;
     }
 
-    public void grow() {
-        if (elements.length == size) {
-            Object [] newArray = new Object[elements.length + elements.length / 2];
-            System.arraycopy(elements,0, newArray,0, size);
-            elements = newArray;
-        }
-    }
-
     @Override
     public void addAll(List<T> list) {
         for (int i = 0; i < list.size(); i++) {
@@ -83,10 +75,17 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    public void checkIndex(int index, int length) {
+    private void checkIndex(int index, int length) {
         if (index < 0 || index >= length) {
             throw new ArrayListIndexOutOfBoundsException("We are out of sithe array for index "
                     + index + " size " + size);
+        }
+    }
+    private void grow() {
+        if (elements.length == size) {
+            Object [] newArray = new Object[elements.length + elements.length / 2];
+            System.arraycopy(elements,0, newArray,0, size);
+            elements = newArray;
         }
     }
 }
