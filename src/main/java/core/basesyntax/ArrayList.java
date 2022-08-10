@@ -85,7 +85,8 @@ public class ArrayList<T> implements List<T> {
 
     public void checkIndex(int index, int length) {
         if (index < 0 || index >= length) {
-            throw new ArrayListIndexOutOfBoundsException("We are out of sithe array for index " +index+" size "+size);
+            throw new ArrayListIndexOutOfBoundsException("We are out of sithe array for index "
+                    + index + " size " + size);
         }
     }
 }
