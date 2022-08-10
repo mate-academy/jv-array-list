@@ -81,6 +81,7 @@ public class ArrayList<T> implements List<T> {
                     + index + " size " + size);
         }
     }
+
     private void grow() {
         if (elements.length == size) {
             Object [] newArray = new Object[elements.length + elements.length / 2];
