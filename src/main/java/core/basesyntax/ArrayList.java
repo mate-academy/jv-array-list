@@ -13,13 +13,7 @@ public class ArrayList<T> implements List<T> {
             array[size] = value;
             size++;
         }
-        if (size >= array.length) {
-            Object[] tempArray = array;
-            array = new Object[(int) (array.length * 1.5)];
-            for (int i = 0; i < tempArray.length; i++) {
-                array[i] = tempArray[i];
-            }
-        }
+        resize();
     }
 
     @Override
