@@ -67,8 +67,6 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        Object deleted = null;
-        boolean isElement = false;
         int index = 0;
         for (int i = 0; i < size; i++) {
             if (values[i] == element
@@ -76,21 +74,7 @@ public class ArrayList<T> implements List<T> {
                 return remove(i);
             }
         }
-        if (isElement) {
-            checkException(index);
-            for (int i = index; i < size; i++) {
-                if (index == size - 1) {
-                    values[i] = null;
-                } else {
-                    values[i] = values[i + 1];
-                }
-            }
-            size--;
-        } else {
-            throw new NoSuchElementException("No such element in Array");
-        }
-
-        return (T) deleted;
+        throw new NoSuchElementException("No such element in Array");
     }
 
     @Override
@@ -105,7 +89,8 @@ public class ArrayList<T> implements List<T> {
 
     private void checkException(int index) {
         if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("The index of Array is out of bounds");
+            throw new ArrayListIndexOutOfBoundsException("The index: "
+                    + index + " of Array is out of bounds");
         }
     }
 
