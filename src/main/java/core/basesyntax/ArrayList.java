@@ -4,6 +4,7 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
+    private static final double RESIZE_COEFFICIENT = 1.5;
     private Object[] elements;
     private int size;
 
@@ -14,11 +15,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value) {
         if (size == elements.length) {
-            Object[] newObject = new Object[(int) (elements.length * 1.5)];
-            for (int i = 0; i < elements.length; i++) {
-                newObject[i] = elements[i];
-            }
-            elements = newObject;
+            resize();
         }
         elements[size] = value;
         size++;
@@ -26,16 +23,9 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index > size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Can't write an element with index "
-                    + index + " to ArrayList");
-        }
+        checkException(index);
         if (size == elements.length) {
-            Object[] newObject = new Object[(int) (elements.length * 1.5)];
-            for (int i = 0; i < elements.length; i++) {
-                newObject[i] = elements[i];
-            }
-            elements = newObject;
+            resize();
         }
         System.arraycopy(elements, index, elements, index + 1, size - index);
         elements[index] = value;
@@ -97,5 +87,20 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private void resize() {
+        Object[] tempArray = new Object[(int) (elements.length * RESIZE_COEFFICIENT)];
+        for (int i = 0; i < elements.length; i++) {
+            tempArray[i] = elements[i];
+        }
+        elements = tempArray;
+    }
+
+    private void checkException(int index) {
+        if (index > size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Can't write an element with index "
+                    + index + " to ArrayList");
+        }
     }
 }
