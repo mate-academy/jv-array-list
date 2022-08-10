@@ -4,31 +4,17 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int CAPACITY = 10;
-    private Object[] row;
+    private Object[] elements;
     private int size;
 
     public ArrayList() {
-        row = new Object[CAPACITY];
-    }
-
-    private void checkSize() {
-        if (size == row.length) {
-            Object[] newRow = new Object[row.length + row.length / 2];
-            System.arraycopy(row, 0,newRow, 0, size);
-            row = newRow;
-        }
-    }
-
-    private void indexException(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Incorrect input index: " + index);
-        }
+        elements = new Object[CAPACITY];
     }
 
     @Override
     public void add(T value) {
         checkSize();
-        row[size] = value;
+        elements[size] = value;
         size++;
     }
 
@@ -38,8 +24,8 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayListIndexOutOfBoundsException("Incorrect input index: " + index);
         }
         checkSize();
-        System.arraycopy(row, index, row,index + 1, size - index);
-        row[index] = value;
+        System.arraycopy(elements, index, elements,index + 1, size - index);
+        elements[index] = value;
         size++;
     }
 
@@ -53,30 +39,28 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         indexException(index);
-        return (T) row[index];
+        return (T) elements[index];
     }
 
     @Override
     public void set(T value, int index) {
         indexException(index);
-        row[index] = value;
+        elements[index] = value;
     }
 
     @Override
     public T remove(int index) {
         indexException(index);
-        T value = (T) row[index];
-        System.arraycopy(row, index + 1, row, index, size - index - 1);
+        T value = (T) elements[index];
+        System.arraycopy(elements, index + 1, elements, index, size - index - 1);
         size--;
         return value;
     }
 
     @Override
     public T remove(T element) {
-        indexOf(element);
-        T value = (T) row[indexOf(element)];
-        remove(indexOf(element));
-        return value;
+        int index = indexOf(element);
+        return remove(index);
     }
 
     @Override
@@ -89,10 +73,23 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
+    private void checkSize() {
+        if (size == elements.length) {
+            Object[] newElements = new Object[elements.length + elements.length / 2];
+            System.arraycopy(elements, 0,newElements, 0, size);
+            elements = newElements;
+        }
+    }
+
+    private void indexException(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Incorrect input index: " + index);
+        }
+    }
+
     private int indexOf(T element) {
-        int i = 0;
-        for ( ;i < size; i++) {
-            if (row[i] == element || row[i] != null && row[i].equals(element)) {
+        for (int i = 0; i < size; i++) {
+            if (elements[i] == element || elements[i] != null && elements[i].equals(element)) {
                 return i;
             }
         }
