@@ -22,7 +22,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
+            throw new ArrayListIndexOutOfBoundsException("Index: " + index + " out of range: " + size);
         }
         if (index == size) {
             add(value);
@@ -83,7 +83,7 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    public void increasingSize() {
+    private void increasingSize() {
         if (size == values.length) {
             T[] newArray = (T[]) new Object[(int) (values.length * SIZE_MULTIPLIE)];
             System.arraycopy(values, 0, newArray, 0, values.length);
@@ -93,7 +93,7 @@ public class ArrayList<T> implements List<T> {
 
     private void checkIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
+            throw new ArrayListIndexOutOfBoundsException("Index: " + index + " out of range: " + size);
         }
     }
 }
