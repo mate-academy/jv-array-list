@@ -14,7 +14,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        increasingSize();
+        increaseSize();
         values[size] = value;
         size++;
     }
@@ -28,7 +28,7 @@ public class ArrayList<T> implements List<T> {
         if (index == size) {
             add(value);
         } else {
-            increasingSize();
+            increaseSize();
             System.arraycopy(values, index, values, index + 1, size - index);
             values[index] = value;
             size++;
@@ -84,7 +84,7 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void increasingSize() {
+    private void increaseSize() {
         if (size == values.length) {
             T[] newArray = (T[]) new Object[(int) (values.length * SIZE_MULTIPLIE)];
             System.arraycopy(values, 0, newArray, 0, values.length);
