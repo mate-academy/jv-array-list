@@ -26,7 +26,7 @@ public class ArrayList<T> implements List<T> {
             this.grow();
         }
         if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("index: " + index + "size: " + size);
+            throw new ArrayListIndexOutOfBoundsException("index: " + index + " out of bounds for size: " + size);
         }
         if (index <= size) {
             Object[] newObjectsArray = new Object[objects.length + 1];
