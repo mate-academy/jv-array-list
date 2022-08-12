@@ -61,7 +61,7 @@ public class ArrayList<T> implements List<T> {
         checkIndex(index);
         Object[] newObjectsArray = new Object[objects.length];
         System.arraycopy(objects, index + 1, objects, index, size - index - 1);
-        T removedObject = (T) objects[index];
+        T removedObject = objects[index];
         objects = newObjectsArray;
         size--;
         return removedObject;
