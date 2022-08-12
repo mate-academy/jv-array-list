@@ -29,11 +29,8 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayListIndexOutOfBoundsException("index: " + index
                     + " out of bounds for size: " + size);
         }
-        Object[] newObjectsArray = new Object[objects.length + 1];
-        System.arraycopy(objects, 0, newObjectsArray, 0, index);
-        newObjectsArray[index] = value;
-        System.arraycopy(objects, index, newObjectsArray, index + 1, objects.length - index);
-        objects = newObjectsArray;
+        System.arraycopy(objects, index, objects, index + 1, size - index);
+        objects[index] = value;
         size++;
     }
 
@@ -59,10 +56,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
-        Object[] newObjectsArray = new Object[objects.length];
-        System.arraycopy(objects, index + 1, objects, index, size - index - 1);
         T removedObject = objects[index];
-        objects = newObjectsArray;
+        System.arraycopy(objects, index + 1, objects, index, size - index - 1);
         size--;
         return removedObject;
     }
@@ -97,7 +92,7 @@ public class ArrayList<T> implements List<T> {
         int newSizeArray = (int) (objects.length * 1.5);
         Object[] newObjectsArray = new Object[newSizeArray];
         System.arraycopy(objects, 0, newObjectsArray, 0, objects.length);
-        this.objects = newObjectsArray;
+        objects = (T[]) newObjectsArray;
     }
 
     private void checkIndex(int index) {
