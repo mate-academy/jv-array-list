@@ -60,8 +60,7 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         checkIndex(index);
         Object[] newObjectsArray = new Object[objects.length];
-        System.arraycopy(objects, 0, newObjectsArray, 0, index);
-        System.arraycopy(objects, index + 1, newObjectsArray, index, objects.length - (index + 1));
+        System.arraycopy(objects, index + 1, objects, index, size - index - 1);
         T removedObject = (T) objects[index];
         objects = newObjectsArray;
         size--;
