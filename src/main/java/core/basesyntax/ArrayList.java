@@ -28,15 +28,10 @@ public class ArrayList<T> implements List<T> {
     }
 
     private T[] grow(int minCapacity) {
-        int oldCapacity = elementData.length;
-        if (oldCapacity > 0 || elementData != DEFAULT_CAPACITY_EMPTY_ELEMENT_DATA) {
-            int newCapacity = oldCapacity + (oldCapacity >> 1);
-            T[] newElementData = (T[]) new Object[newCapacity];
-            System.arraycopy(elementData, 0, newElementData, 0, size);
-            return newElementData;
-        } else {
-            return elementData = (T[]) new Object[Math.max(DEFAULT_CAPACITY, minCapacity)];
-        }
+        int newCapacity = oldCapacity + (oldCapacity >> 1);
+        T[] newElements = (T[]) new Object[newCapacity];
+        System.arraycopy(elements, 0, newElements , 0, size);
+        elements = newElements;
     }
 
     private T[] grow() {
