@@ -18,7 +18,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value) {
         if (size == elements.length) {
-            elements = grow(size);
+            elements = grow();
         }
         elements[size] = value;
         size++;
@@ -28,7 +28,7 @@ public class ArrayList<T> implements List<T> {
     public void add(T value, int index) {
         rangeCheckForAdd(index);
         if (size == elements.length) {
-            elements = grow(size);
+            elements = grow();
         }
         System.arraycopy(elements, index, elements, index + 1, size - index);
         elements[index] = value;
@@ -39,9 +39,6 @@ public class ArrayList<T> implements List<T> {
     public void addAll(List<T> list) {
         for (int i = 0; i < list.size(); i++) {
             add(list.get(i));
-        }
-        if (size < elements.length) {
-            elements = grow(size + 1);
         }
         System.arraycopy(elements, size, elements, size, size - 1);
     }
@@ -70,8 +67,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if ((elements[i] == element) || (elements[i] != null
-                    && elements[i].equals(element))) {
+            if (elements[i] == element || elements[i] != null
+                    && elements[i].equals(element)) {
                 return remove(i);
             }
         }
@@ -100,8 +97,8 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private T[] grow(int oldCapacity) {
-        int newCapacity = oldCapacity + (oldCapacity >> 1);
+    private T[] grow() {
+        int newCapacity = elements.length + (elements.length >> 1);
         T[] newElements = (T[]) new Object[newCapacity];
         System.arraycopy(elements, 0, newElements, 0, size);
         elements = newElements;
