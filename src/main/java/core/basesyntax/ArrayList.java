@@ -3,55 +3,43 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    private static final int DEFAULT_ARRAYLIST_SIZE = 15;
+    private static final int DEFAULT_ARRAYLIST_SIZE = 10;
     private int listSize;
-    private int lastRecord = 0;
+    private int size;
 
-    private T[] listArray = (T[])(new Object[DEFAULT_ARRAYLIST_SIZE]);
+    private T[] array;
 
     public ArrayList() {
         listSize = DEFAULT_ARRAYLIST_SIZE;
-    }
-
-    private void growArray(int records) {
-        T[] tempArray = (T[])(new Object[listArray.length]);
-        for (int i = 0; i < listArray.length; i++) {
-            tempArray[i] = listArray[i];
-        }
-        listArray = (T[])(new Object[listArray.length + records]);
-        for (int i = 0; i < tempArray.length; i++) {
-            listArray[i] = tempArray[i];
-        }
+        array = (T[])(new Object[DEFAULT_ARRAYLIST_SIZE]);
     }
 
     @Override
     public void add(T value) {
-        if (lastRecord + 1 > listArray.length) {
-            growArray(listArray.length >> 1);
+        if (size + 1 > array.length) {
+            growArray(array.length >> 1);
         }
-        listArray[lastRecord] = value;
-        lastRecord++;
+        array[size] = value;
+        size++;
     }
 
     @Override
     public void add(T value, int index) {
-        if (index > lastRecord || index < 0) {
+        if (index > size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Index out of array list range");
         }
-        if (lastRecord + 1 > listArray.length) {
-            growArray(listArray.length >> 1);
+        if (size + 1 > array.length) {
+            growArray(array.length >> 1);
         }
-        for (int i = listArray.length - 1; i > index; i--) {
-            listArray[i] = listArray[i - 1];
-        }
-        listArray[index] = value;
-        lastRecord++;
+        System.arraycopy(array, index, array, index + 1,array.length - index - 1);
+        array[index] = value;
+        size++;
     }
 
     @Override
     public void addAll(List<T> list) {
-        if (lastRecord + list.size() > listArray.length) {
-            growArray(listArray.length + list.size() + listArray.length >> 1);
+        if (size + list.size() > array.length) {
+            growArray(array.length + list.size() + array.length >> 1);
         }
         for (int i = 0; i < list.size(); i++) {
             add(list.get(i));
@@ -60,41 +48,39 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index >= lastRecord || index < 0) {
+        if (index >= size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Index out of array list range");
         }
-        return listArray[index];
+        return array[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index >= lastRecord || index < 0) {
+        if (index >= size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Index out of array list range");
         }
-        listArray[index] = value;
-        if (index > lastRecord) {
-            lastRecord = index;
+        array[index] = value;
+        if (index > size) {
+            size = index;
         }
     }
 
     @Override
     public T remove(int index) {
-        if (index >= lastRecord || index < 0) {
+        if (index >= size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Index out of array list range");
         }
-        T result = listArray[index];
-        for (int i = index; i < listArray.length - 1; i++) {
-            listArray[i] = listArray[i + 1];
-        }
-        lastRecord--;
+        T result = array[index];
+        System.arraycopy(array,index + 1, array, index,array.length - index - 1);
+        size--;
         return result;
     }
 
     @Override
     public T remove(T element) {
         boolean isFound = false;
-        for (int i = 0; i < lastRecord; i++) {
-            if (listArray[i] == element || element != null && element.equals(listArray[i])) {
+        for (int i = 0; i < size; i++) {
+            if (array[i] == element || element != null && element.equals(array[i])) {
                 remove(i);
                 isFound = true;
                 break;
@@ -108,14 +94,21 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public int size() {
-        return lastRecord;
+        return size;
     }
 
     @Override
     public boolean isEmpty() {
-        if (lastRecord == 0) {
+        if (size == 0) {
             return true;
         }
         return false;
+    }
+
+    private void growArray(int records) {
+        T[] tempArray = (T[])(new Object[array.length]);
+        System.arraycopy(array, 0, tempArray,0, array.length);
+        array = (T[])(new Object[array.length + records]);
+        System.arraycopy(tempArray, 0, array,0, array.length - records);
     }
 }
