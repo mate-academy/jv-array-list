@@ -109,7 +109,7 @@ public class ArrayList<T> implements List<T> {
                 throw new NoSuchElementException("NoSuchElementException");
             }
         }
-        return null;
+        throw new NoSuchElementException("Couldn't find element " + element);
     }
 
     @Override
