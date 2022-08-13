@@ -95,10 +95,7 @@ public class ArrayList<T> implements List<T> {
         for (int i = 0; i < size; i++) {
             if ((elementData[i] == element) || (elementData[i] != null
                     && elementData[i].equals(element))) {
-                T deleteElement = elementData[i];
-                System.arraycopy(elementData, i + 1, elementData, i, size - 1 - i);
-                size = size - 1;
-                return deleteElement;
+                return remove(i);
             }
         }
         throw new NoSuchElementException("Couldn't find element " + element);
