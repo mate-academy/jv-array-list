@@ -28,7 +28,7 @@ public class ArrayList<T> implements List<T> {
     public void add(T value, int index) {
         rangeCheckForAdd(index);
         if (size == elements.length) {
-            elements = grow();
+            grow();
         }
         System.arraycopy(elements, index, elements, index + 1, size - index);
         elements[index] = value;
