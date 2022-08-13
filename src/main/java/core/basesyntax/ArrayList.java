@@ -12,14 +12,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     public ArrayList(int initialCapacity) {
-        if (initialCapacity > 0) {
-            this.elementData = (T[]) new Object[initialCapacity];
-        } else if (initialCapacity == 0) {
-            this.elementData = (T[]) EMPTY_ELEMENT_DATA;
-        } else {
-            throw new IllegalArgumentException("Illegal Capacity: "
-                    + initialCapacity);
-        }
+        this.elements = (T[]) new Object[initialCapacity];
     }
 
     private void rangeCheckForAdd(int index) {
