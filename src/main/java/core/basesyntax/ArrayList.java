@@ -83,7 +83,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(int index) {
-        rangeCheckForGetSetRemove(index);
+        checkIndex(index);
         T deleteElement = elementData[index];
         System.arraycopy(elementData, index + 1, elementData, index, size - 1 - index);
         size = size - 1;
