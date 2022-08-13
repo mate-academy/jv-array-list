@@ -100,9 +100,6 @@ public class ArrayList<T> implements List<T> {
                 size = size - 1;
                 return deleteElement;
             }
-            if (i == size - 1) {
-                throw new NoSuchElementException("NoSuchElementException");
-            }
         }
         throw new NoSuchElementException("Couldn't find element " + element);
     }
