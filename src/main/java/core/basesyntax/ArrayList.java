@@ -4,8 +4,6 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    private static final Object[] EMPTY_ELEMENT_DATA = {};
-    private static final Object[] DEFAULT_CAPACITY_EMPTY_ELEMENT_DATA = {};
     private T[] elementData;
     private int size;
 
