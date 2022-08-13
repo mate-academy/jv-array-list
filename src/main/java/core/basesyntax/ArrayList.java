@@ -36,7 +36,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         if (index > lastRecord || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index out of list range");
+            throw new ArrayListIndexOutOfBoundsException("Index out of array list range");
         }
         if (lastRecord + 1 > listArray.length) {
             growArray(listArray.length >> 1);
@@ -61,7 +61,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         if (index >= lastRecord || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index out of list range");
+            throw new ArrayListIndexOutOfBoundsException("Index out of array list range");
         }
         return listArray[index];
     }
@@ -69,7 +69,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void set(T value, int index) {
         if (index >= lastRecord || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index out of list range");
+            throw new ArrayListIndexOutOfBoundsException("Index out of array list range");
         }
         listArray[index] = value;
         if (index > lastRecord) {
@@ -80,7 +80,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         if (index >= lastRecord || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index out of list range");
+            throw new ArrayListIndexOutOfBoundsException("Index out of array list range");
         }
         T result = listArray[index];
         for (int i = index; i < listArray.length - 1; i++) {
