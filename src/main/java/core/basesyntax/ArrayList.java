@@ -8,7 +8,6 @@ public class ArrayList<T> implements List<T> {
     private static final Object[] DEFAULT_CAPACITY_EMPTY_ELEMENT_DATA = {};
     private T[] elementData;
     private int size;
-    private final int minCapacity = size + 1;
 
     public ArrayList() {
         this.elementData = (T[]) DEFAULT_CAPACITY_EMPTY_ELEMENT_DATA;
@@ -50,7 +49,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     private T[] grow() {
-        return grow(size + 1);
+        return grow(size);
     }
 
     @Override
@@ -63,9 +62,9 @@ public class ArrayList<T> implements List<T> {
     }
 
     @Override
-    public void add(T value, int index) throws ArrayListIndexOutOfBoundsException {
+    public void add(T value, int index) {
         rangeCheckForAdd(index);
-        if (index == elementData.length) {
+        if (size == elementData.length) {
             elementData = grow();
         }
         System.arraycopy(elementData, index, elementData, index + 1, size - index);
@@ -85,19 +84,19 @@ public class ArrayList<T> implements List<T> {
     }
 
     @Override
-    public T get(int index) throws ArrayListIndexOutOfBoundsException {
+    public T get(int index) {
         rangeCheckForGetSetRemove(index);
         return elementData[index];
     }
 
     @Override
-    public void set(T value, int index) throws ArrayListIndexOutOfBoundsException {
+    public void set(T value, int index) {
         rangeCheckForGetSetRemove(index);
         elementData[index] = value;
     }
 
     @Override
-    public T remove(int index) throws ArrayListIndexOutOfBoundsException {
+    public T remove(int index) {
         rangeCheckForGetSetRemove(index);
         T deleteElement = elementData[index];
         System.arraycopy(elementData, index + 1, elementData, index, size - 1 - index);
@@ -106,7 +105,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     @Override
-    public T remove(T element) throws NoSuchElementException {
+    public T remove(T element) {
         for (int i = 0; i < size; i++) {
             if ((elementData[i] == element) || (elementData[i] != null
                     && elementData[i].equals(element))) {
