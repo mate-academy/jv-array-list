@@ -100,8 +100,8 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private T[] grow(int oldCapacity) {
-        int newCapacity = oldCapacity + (oldCapacity >> 1);
+    private T[] grow() {
+        int newCapacity = elements.length + (elements.length >> 1);
         T[] newElements = (T[]) new Object[newCapacity];
         System.arraycopy(elements, 0, newElements, 0, size);
         elements = newElements;
