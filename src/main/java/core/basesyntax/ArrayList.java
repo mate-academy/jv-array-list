@@ -40,7 +40,6 @@ public class ArrayList<T> implements List<T> {
         for (int i = 0; i < list.size(); i++) {
             add(list.get(i));
         }
-        System.arraycopy(elements, size, elements, size, size - 1);
     }
 
     @Override
