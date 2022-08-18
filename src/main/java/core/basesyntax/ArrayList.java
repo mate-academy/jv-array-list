@@ -45,37 +45,25 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        errorChecking(index);
+        checkIndex(index);
         return elements[index];
     }
 
     @Override
     public void set(T value, int index) {
-        errorChecking(index);
-        if (index == size) {
-            add(value);
-        } else {
-            elements[index] = value;
-        }
+        checkIndex(index);
+        elements[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        errorChecking(index);
-        T[] beginning = (T[]) new Object[index];
-        T[] end = (T[]) new Object[elements.length - index - 1];
-        System.arraycopy(elements, 0, beginning, 0, index);
-        System.arraycopy(elements, index + 1, end, 0, elements.length - index - 1);
-        T result = elements[index];
-        for (int i = 0; i < size - 1; i++) {
-            if (i < index) {
-                elements[i] = beginning[i];
-            } else {
-                elements[i] = end[i - index];
-            }
+        checkIndex(index);
+        T value = elements[index];
+        for (int i = index; i < size - 1; i++) {
+            elements[i] = elements[i + 1];
         }
         size--;
-        return result;
+        return value;
     }
 
     @Override
@@ -85,7 +73,7 @@ public class ArrayList<T> implements List<T> {
                 return remove(i);
             }
         }
-        throw new NoSuchElementException(elements + " does not exist");
+        throw new NoSuchElementException(element + " does not exist");
     }
 
     @Override
@@ -100,15 +88,13 @@ public class ArrayList<T> implements List<T> {
 
     private void resize() {
         if (size == elements.length) {
-            T[] arr = elements;
-            elements = (T[]) new Object[(int) (size * 1.5)];
-            for (int i = 0; i < arr.length; i++) {
-                elements[i] = arr[i];
-            }
+            T[] newElements = (T[]) new Object[(int) (size * 1.5)];
+            System.arraycopy(elements, 0, newElements, 0, elements.length);
+            elements = newElements;
         }
     }
 
-    private void errorChecking(int index) {
+    private void checkIndex(int index) {
         if (index >= size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException(index
                     + " or less than 0 or greater than " + size);
