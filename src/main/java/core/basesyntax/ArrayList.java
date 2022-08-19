@@ -80,9 +80,9 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void resize() {
-            Object[] resizedArray = new Object[(elements.length * 2)];
-            System.arraycopy(this.elements, 0, resizedArray, 0, size);
-            elements = (T[]) resizedArray;
+        Object[] resizedArray = new Object[(elements.length * 2)];
+        System.arraycopy(this.elements, 0, resizedArray, 0, size);
+        elements = (T[]) resizedArray;
     }
 
     private void checkIndex(int index) {
