@@ -4,20 +4,18 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_ARRAYLIST_SIZE = 10;
-    private int listSize;
     private int size;
 
     private T[] array;
 
     public ArrayList() {
-        listSize = DEFAULT_ARRAYLIST_SIZE;
         array = (T[])(new Object[DEFAULT_ARRAYLIST_SIZE]);
     }
 
     @Override
     public void add(T value) {
         if (size + 1 > array.length) {
-            growArray(array.length >> 1);
+            growArray();
         }
         array[size] = value;
         size++;
@@ -25,11 +23,9 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index > size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index out of array list range");
-        }
+        outOfRangeCheck((index == size && size != 0) ? (index - 1) : index);
         if (size + 1 > array.length) {
-            growArray(array.length >> 1);
+            growArray();
         }
         System.arraycopy(array, index, array, index + 1,array.length - index - 1);
         array[index] = value;
@@ -38,8 +34,8 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        if (size + list.size() > array.length) {
-            growArray(array.length + list.size() + array.length >> 1);
+        while (size + list.size() > array.length) {
+            growArray();
         }
         for (int i = 0; i < list.size(); i++) {
             add(list.get(i));
@@ -48,17 +44,13 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index out of array list range");
-        }
+        outOfRangeCheck(index == size ? index + 1 : index);
         return array[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index out of array list range");
-        }
+        outOfRangeCheck(index == size ? index + 1 : index);
         array[index] = value;
         if (index > size) {
             size = index;
@@ -67,9 +59,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index out of array list range");
-        }
+        outOfRangeCheck(index == size ? index + 1 : index);
         T result = array[index];
         System.arraycopy(array,index + 1, array, index,array.length - index - 1);
         size--;
@@ -105,10 +95,17 @@ public class ArrayList<T> implements List<T> {
         return false;
     }
 
-    private void growArray(int records) {
+    private void growArray() {
         T[] tempArray = (T[])(new Object[array.length]);
         System.arraycopy(array, 0, tempArray,0, array.length);
-        array = (T[])(new Object[array.length + records]);
-        System.arraycopy(tempArray, 0, array,0, array.length - records);
+        array = (T[])(new Object[array.length + (array.length >> 1)]);
+        System.arraycopy(tempArray, 0, array,0, tempArray.length);
+    }
+
+    private void outOfRangeCheck(int index) {
+        //if (size==0)
+        if (index > size || index < 0 && size != 0) {
+            throw new ArrayListIndexOutOfBoundsException("Index out of array list range");
+        }
     }
 }
