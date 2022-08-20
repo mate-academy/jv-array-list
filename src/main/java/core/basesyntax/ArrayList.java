@@ -9,12 +9,12 @@ public class ArrayList<T> implements List<T> {
     private T[] array;
 
     public ArrayList() {
-        array = (T[])(new Object[DEFAULT_ARRAYLIST_SIZE]);
+        array = (T[]) new Object[DEFAULT_ARRAYLIST_SIZE];
     }
 
     @Override
     public void add(T value) {
-        if (size + 1 > array.length) {
+        if (size == array.length) {
             growArray();
         }
         array[size] = value;
@@ -23,8 +23,12 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        outOfRangeCheck((index == size && size != 0) ? (index - 1) : index);
-        if (size + 1 > array.length) {
+        if (index == size) {
+            add(value);
+            return;
+        }
+        checkIndex(index);
+        if (size == array.length) {
             growArray();
         }
         System.arraycopy(array, index, array, index + 1,array.length - index - 1);
@@ -34,9 +38,6 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        while (size + list.size() > array.length) {
-            growArray();
-        }
         for (int i = 0; i < list.size(); i++) {
             add(list.get(i));
         }
@@ -44,13 +45,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        outOfRangeCheck(index == size ? index + 1 : index);
+        if (index == size) {
+            throw new ArrayListIndexOutOfBoundsException("Index out of array list range");
+        }
+        checkIndex(index);
         return array[index];
     }
 
     @Override
     public void set(T value, int index) {
-        outOfRangeCheck(index == size ? index + 1 : index);
+        if (index == size) {
+            throw new ArrayListIndexOutOfBoundsException("Index out of array list range");
+        }
+        checkIndex(index);
         array[index] = value;
         if (index > size) {
             size = index;
@@ -59,7 +66,10 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(int index) {
-        outOfRangeCheck(index == size ? index + 1 : index);
+        if (index == size) {
+            throw new ArrayListIndexOutOfBoundsException("Index out of array list range");
+        }
+        checkIndex(index);
         T result = array[index];
         System.arraycopy(array,index + 1, array, index,array.length - index - 1);
         size--;
@@ -68,18 +78,12 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        boolean isFound = false;
         for (int i = 0; i < size; i++) {
             if (array[i] == element || element != null && element.equals(array[i])) {
-                remove(i);
-                isFound = true;
-                break;
+                return remove(i);
             }
         }
-        if (!isFound) {
-            throw new NoSuchElementException();
-        }
-        return element;
+        throw new NoSuchElementException();
     }
 
     @Override
@@ -89,22 +93,18 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public boolean isEmpty() {
-        if (size == 0) {
-            return true;
-        }
-        return false;
+        return size == 0;
     }
 
     private void growArray() {
-        T[] tempArray = (T[])(new Object[array.length]);
+        T[] tempArray = (T[])(new Object[array.length + (array.length >> 1)]);
         System.arraycopy(array, 0, tempArray,0, array.length);
-        array = (T[])(new Object[array.length + (array.length >> 1)]);
-        System.arraycopy(tempArray, 0, array,0, tempArray.length);
+        array = (T[]) new Object[array.length + (array.length >> 1)];
+        array = tempArray;
     }
 
-    private void outOfRangeCheck(int index) {
-        //if (size==0)
-        if (index > size || index < 0 && size != 0) {
+    private void checkIndex(int index) {
+        if (index > size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Index out of array list range");
         }
     }
