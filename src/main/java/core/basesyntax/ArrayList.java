@@ -45,18 +45,12 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index == size) {
-            throw new ArrayListIndexOutOfBoundsException("Index out of array list range");
-        }
         checkIndex(index);
         return array[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index == size) {
-            throw new ArrayListIndexOutOfBoundsException("Index out of array list range");
-        }
         checkIndex(index);
         array[index] = value;
         if (index > size) {
@@ -66,9 +60,6 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(int index) {
-        if (index == size) {
-            throw new ArrayListIndexOutOfBoundsException("Index out of array list range");
-        }
         checkIndex(index);
         T result = array[index];
         System.arraycopy(array,index + 1, array, index,array.length - index - 1);
@@ -99,12 +90,11 @@ public class ArrayList<T> implements List<T> {
     private void growArray() {
         T[] tempArray = (T[])(new Object[array.length + (array.length >> 1)]);
         System.arraycopy(array, 0, tempArray,0, array.length);
-        array = (T[]) new Object[array.length + (array.length >> 1)];
         array = tempArray;
     }
 
     private void checkIndex(int index) {
-        if (index > size || index < 0) {
+        if (index >= size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Index out of array list range");
         }
     }
