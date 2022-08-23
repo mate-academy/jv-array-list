@@ -12,12 +12,11 @@ public class ArrayList<T> implements List<T> {
     }
 
     @Override
-    public T add(T value) {
+    public void add(T value) {
         if (size == elements.length) {
             grow();
         }
         elements[size++] = value;
-        return value;
     }
 
     @Override
