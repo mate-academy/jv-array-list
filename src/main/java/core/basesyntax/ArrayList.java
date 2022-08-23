@@ -3,18 +3,21 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    private static final int LIMIT_CAPACITY = 10;
-    private Object[] elements;
+    private static final int DEFAULT_CAPACITY = 10;
+    private T[] elements;
     private int size;
 
     public ArrayList() {
-        elements = new Object[LIMIT_CAPACITY];
+        elements = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
     @Override
-    public void add(T value) {
-        grow();
+    public T add(T value) {
+        if (size == elements.length) {
+            grow();
+        }
         elements[size++] = value;
+        return value;
     }
 
     @Override
@@ -24,7 +27,9 @@ public class ArrayList<T> implements List<T> {
             return;
         }
         checkIndex(index);
-        grow();
+        if (size == elements.length) {
+            grow();
+        }
         System.arraycopy(elements, index, elements, index + 1,size - index);
         elements[index] = value;
         size++;
@@ -79,12 +84,10 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void grow() {
-        if (size == elements.length) {
-            int newCapacity = size + (size >> 1);
-            Object[] copyElements = new Object[newCapacity];
-            System.arraycopy(elements, 0, copyElements, 0, size);
-            elements = copyElements;
-        }
+        int newCapacity = size + (size >> 1);
+        T[] copyElements = (T[]) new Object[newCapacity];
+        System.arraycopy(elements, 0, copyElements, 0, size);
+        elements = copyElements;
     }
 
     private void checkIndex(int index) {
