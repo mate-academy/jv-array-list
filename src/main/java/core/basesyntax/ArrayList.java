@@ -84,6 +84,7 @@ public class ArrayList<T> implements List<T> {
             throwIndexException(index);
         }
     }
+
     private void throwIndexException(int index) {
         throw new ArrayListIndexOutOfBoundsException("Index '" + index + "' is not valid.");
     }
