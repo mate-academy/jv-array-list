@@ -23,7 +23,7 @@ public class ArrayList<T> implements List<T> {
         if (size == elementData.length) {
             grow();
         }
-        elementData[size()] = value;
+        elementData[size] = value;
         size++;
     }
 
@@ -49,19 +49,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        indexCheck(index);
+        checkIndex(index);
         return elementData[index];
     }
 
     @Override
     public void set(T value, int index) {
-        indexCheck(index);
+        checkIndex(index);
         elementData[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        indexCheck(index);
+        checkIndex(index);
         T removedElement = elementData[index];
         System.arraycopy(elementData, index + 1, elementData, index,size - index - 1);
         size--;
@@ -88,7 +88,7 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void indexCheck(int index) {
+    private void checkIndex(int index) {
         if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException("Index '" + index + "' is not valid.");
         }
