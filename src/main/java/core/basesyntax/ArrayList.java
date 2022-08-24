@@ -91,7 +91,8 @@ public class ArrayList<T> implements List<T> {
 
     private void checkIndex(int index) {
         if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index" + index + " is invalid for size: " + size);
+            throw new ArrayListIndexOutOfBoundsException("Index" + index + " is invalid for size: "
+                    + size);
         }
     }
 }
