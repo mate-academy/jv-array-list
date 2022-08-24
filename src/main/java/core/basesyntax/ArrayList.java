@@ -12,12 +12,6 @@ public class ArrayList<T> implements List<T> {
         elementData = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
-    private void grow() {
-        T[] newArray = (T[]) new Object[(int) (size * 1.5)];
-        System.arraycopy(elementData, 0, newArray, 0, size);
-        elementData = newArray;
-    }
-
     @Override
     public void add(T value) {
         if (size == elementData.length) {
@@ -86,6 +80,12 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private void grow() {
+        T[] newArray = (T[]) new Object[(int) (size * 1.5)];
+        System.arraycopy(elementData, 0, newArray, 0, size);
+        elementData = newArray;
     }
 
     private void checkIndex(int index) {
