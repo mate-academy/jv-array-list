@@ -1,4 +1,5 @@
 package core.basesyntax;
+
 import java.util.NoSuchElementException;
 import java.util.Objects;
 
@@ -7,7 +8,6 @@ public class ArrayList<T> implements List<T> {
     private T[] list;
     private int size;
 
-
     public ArrayList() {
         this.size = 0;
         this.list = (T[]) new Object[DEFAULT_CAPACITY];
@@ -15,7 +15,9 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (!isOutOfBound(size)) grow();
+        if (!isOutOfBound(size)) {
+            grow();
+        }
         list[size] = value;
         size++;
     }
@@ -25,11 +27,13 @@ public class ArrayList<T> implements List<T> {
         if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException("Index " + index + " not found");
         }
-        if (!isOutOfBound(size)) grow();
+        if (!isOutOfBound(size)) {
+            grow();
+        }
         System.arraycopy(list, index, list, index + 1, size - index);
         list[index] = value;
         size++;
-        }
+    }
 
     @Override
     public void addAll(List<T> list) {
