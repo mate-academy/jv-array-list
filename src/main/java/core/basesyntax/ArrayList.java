@@ -13,18 +13,14 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void grow() {
-        if (size > 0) {
-            T[] newArray = (T[]) new Object[(int) (size * 1.5)];
-            System.arraycopy(elementData, 0, newArray, 0, size);
-            elementData = newArray;
-        } else {
-            elementData = (T[]) new Object[10];
-        }
+        T[] newArray = (T[]) new Object[(int) (size * 1.5)];
+        System.arraycopy(elementData, 0, newArray, 0, size);
+        elementData = newArray;
     }
 
     @Override
     public void add(T value) {
-        if (size() == elementData.length) {
+        if (size == elementData.length) {
             grow();
         }
         elementData[size()] = value;
