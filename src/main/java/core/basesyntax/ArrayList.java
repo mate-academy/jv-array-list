@@ -54,7 +54,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
-        T removedElement = list[index];
+        final T removedElement = list[index];
         System.arraycopy(list, index + 1, list, index, size - 1 - index);
         set(null, size - 1);
         size--;
@@ -89,15 +89,15 @@ public class ArrayList<T> implements List<T> {
 
     private void checkIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index " + index + " not found. " +
-                    "Actual array size: " + size);
+            throw new ArrayListIndexOutOfBoundsException("Index " + index + " not found. "
+                    + "Actual array size: " + size);
         }
     }
 
     private void checkArraySize(int index) {
         if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("Index " + index + " not found. " +
-                    "Actual array size: " + size);
+            throw new ArrayListIndexOutOfBoundsException("Index " + index + " not found. "
+                    + "Actual array size: " + size);
         }
     }
 
