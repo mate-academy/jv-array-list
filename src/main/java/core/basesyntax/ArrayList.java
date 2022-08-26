@@ -1,7 +1,6 @@
 package core.basesyntax;
 
 import java.util.NoSuchElementException;
-import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
@@ -9,13 +8,13 @@ public class ArrayList<T> implements List<T> {
     private int size;
 
     public ArrayList() {
-        this.size = 0;
-        this.list = (T[]) new Object[DEFAULT_CAPACITY];
+        size = 0;
+        list = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
     @Override
     public void add(T value) {
-        if (!isOutOfBound(size)) {
+        if (isOutOfBound(size)) {
             grow();
         }
         list[size] = value;
@@ -24,10 +23,8 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("Index " + index + " not found");
-        }
-        if (!isOutOfBound(size)) {
+        checkArraySize(index);
+        if (isOutOfBound(size)) {
             grow();
         }
         System.arraycopy(list, index, list, index + 1, size - index);
@@ -57,16 +54,17 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
-        T removeElement = list[index];
+        T removedElement = list[index];
         System.arraycopy(list, index + 1, list, index, size - 1 - index);
+        set(null, size - 1);
         size--;
-        return removeElement;
+        return removedElement;
     }
 
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if (Objects.equals(list[i], element)) {
+            if (list[i] == element || list[i] != null && list[i].equals(element)) {
                 return remove(i);
             }
         }
@@ -75,7 +73,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public int size() {
-        return this.size;
+        return size;
     }
 
     @Override
@@ -91,12 +89,20 @@ public class ArrayList<T> implements List<T> {
 
     private void checkIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index " + index + " not found");
+            throw new ArrayListIndexOutOfBoundsException("Index " + index + " not found. " +
+                    "Actual array size: " + size);
+        }
+    }
+
+    private void checkArraySize(int index) {
+        if (index < 0 || index > size) {
+            throw new ArrayListIndexOutOfBoundsException("Index " + index + " not found. " +
+                    "Actual array size: " + size);
         }
     }
 
     private boolean isOutOfBound(int size) {
-        return size < list.length;
+        return size >= list.length;
     }
 
 }
