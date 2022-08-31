@@ -13,16 +13,16 @@ public class ArrayList<T> implements List<T> {
         arrayList = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
-    private void increaseCapacity() {
-        T[] newArray = (T[]) new Object[(int) (size * SIZE_MULTIPLIER)];
-        System.arraycopy(arrayList, 0, newArray, 0, size);
-        arrayList = newArray;
-    }
-
     private void checkIndex(int index) {
         if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException("Index out of range");
         }
+    }
+
+    private void increaseCapacity() {
+        T[] newArray = (T[]) new Object[(int) (size * SIZE_MULTIPLIER)];
+        System.arraycopy(arrayList, 0, newArray, 0, size);
+        arrayList = newArray;
     }
 
     @Override
