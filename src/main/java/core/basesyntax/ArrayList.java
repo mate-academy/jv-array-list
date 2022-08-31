@@ -1,5 +1,6 @@
 package core.basesyntax;
 
+import java.util.NoSuchElementException;
 import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
@@ -82,7 +83,7 @@ public class ArrayList<T> implements List<T> {
                 return remove(i);
             }
         }
-        throw new ArrayListIndexOutOfBoundsException("Cant remove this element" + element);
+        throw new NoSuchElementException("Cant remove this element" + element);
     }
 
     @Override
