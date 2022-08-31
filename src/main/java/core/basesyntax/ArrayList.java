@@ -5,17 +5,19 @@ import java.util.NoSuchElementException;
 public class ArrayList<T> implements List<T> {
     private static final int START_ITEMS_NUMBER = 10;
     private static final double INCREASE_RATE = 1.5;
-    private T[] item;
+    private T[] items;
     private int size;
 
     public ArrayList() {
-        item = (T[]) new Object[START_ITEMS_NUMBER];
+        items = (T[]) new Object[START_ITEMS_NUMBER];
     }
 
     @Override
     public void add(T value) {
-        checkGrow();
-        item[size] = value;
+        if (items.length == size) {
+            grow();
+        }
+        items[size] = value;
         size++;
     }
 
@@ -25,9 +27,11 @@ public class ArrayList<T> implements List<T> {
             add(value);
         } else {
             checkIndex(index);
-            checkGrow();
-            System.arraycopy(item, index, item, index + 1, size - index);
-            item[index] = value;
+            if (items.length == size) {
+                grow();
+            }
+            System.arraycopy(items, index, items, index + 1, size - index);
+            items[index] = value;
             size++;
         }
     }
@@ -42,20 +46,20 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         checkIndex(index);
-        return item[index];
+        return items[index];
     }
 
     @Override
     public void set(T value, int index) {
         checkIndex(index);
-        item[index] = value;
+        items[index] = value;
     }
 
     @Override
     public T remove(int index) {
         checkIndex(index);
-        T removed = item[index];
-        System.arraycopy(item, index + 1, item, index, size - index - 1);
+        T removed = items[index];
+        System.arraycopy(items, index + 1, items, index, size - index - 1);
         size--;
         return removed;
     }
@@ -77,17 +81,9 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void grow() {
-
         T[] listNew = (T[]) new Object[(int) (size * INCREASE_RATE)];
-        System.arraycopy(item, 0, listNew, 0, size);
-        item = listNew;
-
-    }
-
-    private void checkGrow() {
-        if (item.length == size) {
-            grow();
-        }
+        System.arraycopy(items, 0, listNew, 0, size);
+        items = listNew;
     }
 
     private void checkIndex(int index) {
@@ -98,7 +94,7 @@ public class ArrayList<T> implements List<T> {
 
     private int findValue(T element) {
         for (int i = 0; i < size; i++) {
-            if (item[i] == element || item[i] != null && item[i].equals(element)) {
+            if (items[i] == element || items[i] != null && items[i].equals(element)) {
                 return i;
             }
         }
