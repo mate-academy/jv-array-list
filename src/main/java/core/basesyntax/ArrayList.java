@@ -6,7 +6,7 @@ public class ArrayList<T> implements List<T> {
     private static final int START_ITEMS_NUMBER = 10;
     private static final double INCREASE_RATE = 1.5;
     private T[] item;
-    private static int size;
+    private int size;
 
     public ArrayList() {
         item = (T[]) new Object[START_ITEMS_NUMBER];
@@ -14,23 +14,18 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (item.length == size) {
-            grow();
-        }
+        grow();
         item[size] = value;
         size++;
-
     }
 
     @Override
     public void add(T value, int index) {
-        checkIndex(index);
         if (index == size) {
             add(value);
         } else {
-            if (item.length == size) {
-                grow();
-            }
+            checkIndex(index);
+            grow();
             System.arraycopy(item, index, item, index + 1, size - index);
             item[index] = value;
             size++;
@@ -82,13 +77,15 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void grow() {
-        T[] listNew = (T[]) new Object[(int) (size * INCREASE_RATE)];
-        System.arraycopy(item, 0, listNew, 0, size);
-        item = listNew;
+        if (item.length == size) {
+            T[] listNew = (T[]) new Object[(int) (size * INCREASE_RATE)];
+            System.arraycopy(item, 0, listNew, 0, size);
+            item = listNew;
+        }
     }
 
     private void checkIndex(int index) {
-        if (index < 0 || (index > size)) {
+        if (index < 0 || (index >= size)) {
             throw new ArrayListIndexOutOfBoundsException("Incorrect index: " + index);
         }
     }
