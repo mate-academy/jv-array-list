@@ -8,13 +8,12 @@ public class ArrayList<T> implements List<T> {
     private int size;
 
     public ArrayList() {
-        size = 0;
         list = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
     @Override
     public void add(T value) {
-        if (isOutOfBound(size)) {
+        if (size == list.length) {
             grow();
         }
         list[size] = value;
@@ -23,8 +22,11 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        checkArraySize(index);
-        if (isOutOfBound(size)) {
+        if (index < 0 || index > size) {
+            throw new ArrayListIndexOutOfBoundsException("Index " + index + " not found. "
+                    + "Actual array size: " + size);
+        }
+        if (size == list.length) {
             grow();
         }
         System.arraycopy(list, index, list, index + 1, size - index);
@@ -68,7 +70,7 @@ public class ArrayList<T> implements List<T> {
                 return remove(i);
             }
         }
-        throw new NoSuchElementException("Element not found");
+        throw new NoSuchElementException("Element" + element + " not found");
     }
 
     @Override
@@ -93,16 +95,4 @@ public class ArrayList<T> implements List<T> {
                     + "Actual array size: " + size);
         }
     }
-
-    private void checkArraySize(int index) {
-        if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("Index " + index + " not found. "
-                    + "Actual array size: " + size);
-        }
-    }
-
-    private boolean isOutOfBound(int size) {
-        return size >= list.length;
-    }
-
 }
