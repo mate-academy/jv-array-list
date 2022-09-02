@@ -66,7 +66,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if (Objects.equals(element,array[i])) {
+            if (array[i] == element || array[i] != null && array[i].equals(element)) {
                 return remove(i);
             }
         }
