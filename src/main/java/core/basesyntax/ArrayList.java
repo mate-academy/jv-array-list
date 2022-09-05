@@ -1,7 +1,6 @@
 package core.basesyntax;
 
 import java.util.NoSuchElementException;
-import java.util.Objects;
 
 @SuppressWarnings("unchecked")
 public class ArrayList<T> implements List<T> {
