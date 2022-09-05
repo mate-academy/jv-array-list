@@ -67,11 +67,11 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if (Objects.equals(element, arrayList[i])) {
+            if (equals(element, arrayList[i])) {
                 return remove(i);
             }
         }
-        throw new NoSuchElementException("Cant remove element");
+        throw new NoSuchElementException("Element is not present in list");
     }
 
     @Override
@@ -94,5 +94,9 @@ public class ArrayList<T> implements List<T> {
         T[] newArray = (T[]) new Object[(int) (size * MULTIPLIER)];
         System.arraycopy(arrayList, 0, newArray, 0, size);
         arrayList = newArray;
+    }
+
+    private boolean equals(Object obj1, Object obj2) {
+        return obj1 == obj2 || obj1 != null && obj1.equals(obj2);
     }
 }
