@@ -22,20 +22,13 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (checkArraySize(index)) {
-            throw new ArrayListIndexOutOfBoundsException("Index " + index + " not found. "
-                    + "Actual array size: " + size);
-        }
+        checkIndexForAdding(index);
         if (size == list.length) {
             grow();
         }
         System.arraycopy(list, index, list, index + 1, size - index);
         list[index] = value;
         size++;
-    }
-
-    private boolean checkArraySize(int index) {
-        return index < 0 || index > size;
     }
 
     @Override
@@ -95,6 +88,13 @@ public class ArrayList<T> implements List<T> {
 
     private void checkIndex(int index) {
         if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Index " + index + " not found. "
+                    + "Actual array size: " + size);
+        }
+    }
+
+    private void checkIndexForAdding(int index) {
+        if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException("Index " + index + " not found. "
                     + "Actual array size: " + size);
         }
