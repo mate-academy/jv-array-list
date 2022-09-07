@@ -4,20 +4,21 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
+    private static final double ARRAY_EXPANSION = 1.5;
     private Object[] elements = new Object[DEFAULT_CAPACITY];
     private int size;
 
     @Override
     public void add(T value) {
-        resizeIfNeeded();
+        resize();
         elements[size] = value;
         size++;
     }
 
     @Override
     public void add(T value, int index) {
-        checkForAdd(index);
-        resizeIfNeeded();
+        checkIndexForAdd(index);
+        resize();
         System.arraycopy(elements, index, elements, index + 1, size - index);
         elements[index] = value;
         size++;
@@ -32,19 +33,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        check(index);
+        checkIndex(index);
         return (T) elements[index];
     }
 
     @Override
     public void set(T value, int index) {
-        check(index);
+        checkIndex(index);
         elements[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        check(index);
+        checkIndex(index);
         T removedElement = (T) elements[index];
         System.arraycopy(elements, index + 1, elements, index, size - index - 1);
         size--;
@@ -58,7 +59,7 @@ public class ArrayList<T> implements List<T> {
                 return remove(i);
             }
         }
-        throw new NoSuchElementException("This element is not find");
+        throw new NoSuchElementException("This element is not found " + element);
     }
 
     @Override
@@ -71,25 +72,25 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    public void resizeIfNeeded() {
+    public void resize() {
         if (size == elements.length) {
-            Object[] newArray = new Object[(int) (elements.length * 1.5)];
+            Object[] newArray = new Object[(int) (elements.length * ARRAY_EXPANSION)];
             System.arraycopy(elements, 0, newArray, 0, size);
             elements = newArray;
         }
     }
 
-    public void checkForAdd(int index) {
+    public void checkIndexForAdd(int index) {
         if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException("Index "
-                    + index + " is greater than size");
+                    + index + " is greater than size " + size);
         }
     }
 
-    public void check(int index) {
+    public void checkIndex(int index) {
         if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException("Index "
-                    + index + " is greater than size");
+                    + index + " is greater than size " + size);
         }
     }
 }
