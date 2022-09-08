@@ -23,7 +23,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         if (index > size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Such index " + index + " doesn't exist");
+            throw new ArrayListIndexOutOfBoundsException("Index " + index + " is out of bounds");
         }
         if (size == elementData.length) {
             grow();
@@ -35,38 +35,28 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        Object[] newArrayList = new Object[elementData.length + list.size()];
-        System.arraycopy(elementData, 0, newArrayList, 0, size);
         for (int i = 0; i < list.size(); i++) {
-            newArrayList[size + i] = list.get(i);
+            add(list.get(i), size);
         }
-        elementData = newArrayList;
-        size += list.size();
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public T get(int index) {
-        if (index >= size || index < 0) {
-            rangeCheck(index);
-        }
+        rangeCheck(index);
         return (T) elementData[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index >= size || index < 0) {
-            rangeCheck(index);
-        }
+        rangeCheck(index);
         elementData[index] = value;
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public T remove(int index) {
-        if (index >= size || index < 0) {
-            rangeCheck(index);
-        }
+        rangeCheck(index);
         T removedElement = (T) elementData[index];
         System.arraycopy(elementData, index + 1, elementData, index, size - index - 1);
         size--;
@@ -101,6 +91,8 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void rangeCheck(int index) {
-        throw new ArrayListIndexOutOfBoundsException("Such index " + index + " doesn't exist");
+        if (index >= size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Index " + index + " is out of bounds");
+        }
     }
 }
