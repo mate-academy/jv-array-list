@@ -38,7 +38,7 @@ public class ArrayList<T> implements List<T> {
         Object[] newArrayList = new Object[elementData.length + list.size()];
         System.arraycopy(elementData, 0, newArrayList, 0, size);
         for (int i = 0; i < list.size(); i++) {
-            newArrayList[size+i] = list.get(i);
+            newArrayList[size + i] = list.get(i);
         }
         elementData = newArrayList;
         size += list.size();
@@ -100,13 +100,12 @@ public class ArrayList<T> implements List<T> {
     }
 
     public void grow() {
-            Object[] newArray = new Object[elementData.length + (elementData.length / 2)];
-            System.arraycopy(elementData, 0, newArray, 0, size);
-            elementData = newArray;
-
+        Object[] newArray = new Object[elementData.length + (elementData.length / 2)];
+        System.arraycopy(elementData, 0, newArray, 0, size);
+        elementData = newArray;
     }
 
     private void rangeCheck(int index) {
-            throw new ArrayListIndexOutOfBoundsException("Such index " + index + " doesn't exist");
+        throw new ArrayListIndexOutOfBoundsException("Such index " + index + " doesn't exist");
     }
 }
