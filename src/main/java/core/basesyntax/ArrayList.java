@@ -53,11 +53,8 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         rangeCheck(index);
         final T element = (T) elements[index];
-        if (size == elements.length && index == size - 1) {
-            elements[size - 1] = null;
-        } else {
-            System.arraycopy(elements, index + 1, elements, index, size - index);
-        }
+        System.arraycopy(elements, index + 1, elements, index, size - index - 1);
+        elements[size - 1] = null;
         size--;
         reduceCapacityIfNeed();
         return element;
@@ -95,15 +92,22 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void growIfNeed(int newElementsAmount) {
+        int newCapacity = elements.length + elements.length / CAPACITY_FACTOR;
+        if (newCapacity < size + newElementsAmount) {
+            newCapacity = size + newElementsAmount;
+        }
+        if (newCapacity < elements.length) {
+            throw new RuntimeException("Can't grow: Integer overflow");
+        }
         if (elements.length - size - newElementsAmount < 0) {
-            elements = Arrays.copyOf(elements, elements.length + elements.length / CAPACITY_FACTOR);
+            elements = Arrays.copyOf(elements, newCapacity);
         }
     }
 
     private void reduceCapacityIfNeed() {
-        int resultSize = elements.length - elements.length / CAPACITY_FACTOR;
-        if (resultSize >= size && resultSize >= DEFAULT_CAPACITY) {
-            elements = Arrays.copyOf(elements, resultSize);
+        int newCapacity = elements.length - elements.length / CAPACITY_FACTOR;
+        if (newCapacity >= size && newCapacity >= DEFAULT_CAPACITY) {
+            elements = Arrays.copyOf(elements, newCapacity);
         }
     }
 
