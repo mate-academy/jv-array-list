@@ -1,7 +1,6 @@
 package core.basesyntax;
 
 import java.util.NoSuchElementException;
-import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
@@ -15,9 +14,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (size == array.length) {
-            grow();
-        }
+        growIfFull();
         array[size] = value;
         size++;
     }
@@ -25,11 +22,10 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("Entered index is out of bounds");
+            throw new ArrayListIndexOutOfBoundsException("Entered index "
+                    + index + " is out of bounds for size " + size);
         }
-        if (size == array.length) {
-            grow();
-        }
+        growIfFull();
         System.arraycopy(array, index, array, index + 1, size - index);
         array[index] = value;
         size++;
@@ -66,7 +62,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if (Objects.equals(element,array[i])) {
+            if ((array[i] == element || array[i] != null && array[i].equals(element))) {
                 return remove(i);
             }
         }
@@ -83,7 +79,10 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void grow() {
+    private void growIfFull() {
+        if (array.length > size) {
+            return;
+        }
         T[] increasedArray = (T[]) new Object[(int) (size * INCREASE_RATE)];
         System.arraycopy(array, 0, increasedArray, 0, size);
         array = increasedArray;
@@ -91,7 +90,8 @@ public class ArrayList<T> implements List<T> {
 
     private void checkIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Entered index is out of bounds");
+            throw new ArrayListIndexOutOfBoundsException("Entered index "
+                    + index + " is out of bounds for size " + size);
         }
     }
 }
