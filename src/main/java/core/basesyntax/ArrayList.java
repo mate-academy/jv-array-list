@@ -4,7 +4,6 @@ import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 @SuppressWarnings("unchecked")
-
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private T[] arrayList;
@@ -23,7 +22,7 @@ public class ArrayList<T> implements List<T> {
     public void add(T value, int index) {
         boundsCheckForAdd(index);
         if (size == arrayList.length) {
-            arrayList = grow();
+            arrayList = grow(1);
         }
         System.arraycopy(arrayList, index,
                 arrayList, index + 1,
@@ -35,18 +34,21 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void addAll(List<T> list) {
         T[] a = (T[]) new Object[list.size()];
+        int minGrow;
         for (int i = 0; i < list.size(); i++) {
             a[i] = list.get(i);
         }
         if (a.length > (arrayList.length - size)) {
-            arrayList = grow();
+            minGrow = a.length - (arrayList.length - size);
+            arrayList = grow(minGrow);
         }
         System.arraycopy(a, 0, arrayList, size, a.length);
         size += a.length;
     }
 
-    private T[] grow() {
-        return arrayList = Arrays.copyOf(arrayList, arrayList.length + (arrayList.length >> 1));
+    private T[] grow(int minGrow) {
+        return arrayList = Arrays.copyOf(arrayList,
+                Math.max(arrayList.length + (arrayList.length >> 1),minGrow));
     }
 
     @Override
