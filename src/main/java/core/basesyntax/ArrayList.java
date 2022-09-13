@@ -8,7 +8,6 @@ import java.util.NoSuchElementException;
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private T[] arrayList;
-
     private int size;
 
     public ArrayList() {
@@ -74,9 +73,7 @@ public class ArrayList<T> implements List<T> {
     public T remove(T element) {
         for (int i = 0; i < arrayList.length; i++) {
             if (element == arrayList[i]
-                    || element != null
-                    && arrayList[i] != null
-                    && element.equals(arrayList[i])) {
+                    || element != null && element.equals(arrayList[i])) {
                 T oldValue = arrayList[i];
                 fastRemove(i);
                 return oldValue;
@@ -86,11 +83,12 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void fastRemove(int i) {
-        final int newSize;
-        if ((newSize = size - 1) > i) {
+        final int newSize = size - 1;
+        if (newSize > i) {
             System.arraycopy(arrayList, i + 1, arrayList, i, newSize - i);
         }
-        arrayList[size = newSize] = null;
+        arrayList[newSize] = null;
+        size = newSize;
     }
 
     @Override
