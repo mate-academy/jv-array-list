@@ -9,7 +9,7 @@ public class ArrayList<T> implements List<T> {
     private int size;
     private T[] elements;
 
-    @SuppressWarnings("unchecked ")
+    @SuppressWarnings(" unchecked ")
     public ArrayList(int initCapacity) {
         if (initCapacity <= 0) {
             throw new IllegalArgumentException();
