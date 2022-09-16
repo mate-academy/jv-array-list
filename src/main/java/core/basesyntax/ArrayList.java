@@ -3,7 +3,6 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-
     private static final int DEFAULT_CAPACITY = 10;
     private static final double GROWTH_INDEX = 1.5;
     private int size;
@@ -12,7 +11,7 @@ public class ArrayList<T> implements List<T> {
     @SuppressWarnings(" unchecked ")
     public ArrayList(int initCapacity) {
         if (initCapacity <= 0) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("initCapacity expected >= 0, but was " + initCapacity);
         }
         elements = (T[]) new Object[initCapacity];
     }
@@ -23,7 +22,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        resizeIfNeeded();
+        resize();
         elements[size] = value;
         size++;
     }
@@ -34,9 +33,11 @@ public class ArrayList<T> implements List<T> {
             add(value);
         } else {
             if (index < 0 || index >= size) {
-                throw new ArrayListIndexOutOfBoundsException("index > size" + size + index);
+                throw new ArrayListIndexOutOfBoundsException("expected" +
+                        " that index > 0 and index >= size, but was size" +
+                        " " + size + "index "+ index);
             }
-            resizeIfNeeded();
+            resize();
             System.arraycopy(elements, index, elements, index + 1, size - index);
             elements[index] = value;
             size++;
@@ -65,7 +66,9 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException(" index > size");
+            throw new ArrayListIndexOutOfBoundsException("expected" +
+                    " that index > 0 and index >= size, but was size" +
+                    " " + size + "index "+ index);
         }
         T removedElement = elements[index];
         System.arraycopy(elements, index + 1, elements, index, size - index - 1);
@@ -100,12 +103,14 @@ public class ArrayList<T> implements List<T> {
 
     private void checkIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("size < index ");
+            throw new ArrayListIndexOutOfBoundsException("expected" +
+                    " that index > 0 and index >= size, but was size" +
+                    " " + size + "index "+ index);
         }
     }
 
     @SuppressWarnings("unchecked")
-    private void resizeIfNeeded() {
+    private void resize() {
         if (size == elements.length) {
             T[] newArray = (T[]) new Object[(int) (elements.length * GROWTH_INDEX)];
             System.arraycopy(elements, 0, newArray, 0, size);
