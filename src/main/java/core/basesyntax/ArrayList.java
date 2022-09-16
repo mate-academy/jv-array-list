@@ -11,7 +11,8 @@ public class ArrayList<T> implements List<T> {
     @SuppressWarnings(" unchecked ")
     public ArrayList(int initCapacity) {
         if (initCapacity <= 0) {
-            throw new IllegalArgumentException("initCapacity expected >= 0, but was " + initCapacity);
+            throw new IllegalArgumentException("initCapacity"
+                    + " expected >= 0, but was " + initCapacity);
         }
         elements = (T[]) new Object[initCapacity];
     }
@@ -33,9 +34,9 @@ public class ArrayList<T> implements List<T> {
             add(value);
         } else {
             if (index < 0 || index >= size) {
-                throw new ArrayListIndexOutOfBoundsException("expected" +
-                        " that index > 0 and index >= size, but was size" +
-                        " " + size + "index "+ index);
+                throw new ArrayListIndexOutOfBoundsException("expected"
+                        + " that index > 0 and index >= size, but was size"
+                        + " " + size + "index " + index);
             }
             resize();
             System.arraycopy(elements, index, elements, index + 1, size - index);
@@ -66,9 +67,9 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("expected" +
-                    " that index > 0 and index >= size, but was size" +
-                    " " + size + "index "+ index);
+            throw new ArrayListIndexOutOfBoundsException("expected"
+                    + " that index > 0 and index >= size, but was size"
+                    + " " + size + "index " + index);
         }
         T removedElement = elements[index];
         System.arraycopy(elements, index + 1, elements, index, size - index - 1);
@@ -103,9 +104,9 @@ public class ArrayList<T> implements List<T> {
 
     private void checkIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("expected" +
-                    " that index > 0 and index >= size, but was size" +
-                    " " + size + "index "+ index);
+            throw new ArrayListIndexOutOfBoundsException("expected"
+                    + " that index > 0 and index >= size, but was size"
+                    + " " + size + "index " + index);
         }
     }
 
