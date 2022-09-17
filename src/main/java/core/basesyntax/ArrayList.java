@@ -33,11 +33,7 @@ public class ArrayList<T> implements List<T> {
         if (index == size) {
             add(value);
         } else {
-            if (index < 0 || index >= size) {
-                throw new ArrayListIndexOutOfBoundsException("expected"
-                        + " that index > 0 and index >= size, but was size"
-                        + " " + size + "index " + index);
-            }
+            checkIndex(index);
             resize();
             System.arraycopy(elements, index, elements, index + 1, size - index);
             elements[index] = value;
@@ -66,11 +62,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("expected"
-                    + " that index > 0 and index >= size, but was size"
-                    + " " + size + "index " + index);
-        }
+        checkIndex(index);
         T removedElement = elements[index];
         System.arraycopy(elements, index + 1, elements, index, size - index - 1);
         size--;
