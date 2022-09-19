@@ -47,7 +47,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index < 0 || index >= size) {
+        if (checkIndex(index)) {
             throw new ArrayListIndexOutOfBoundsException("Illegal index");
         }
         return (T) elementData[index];
@@ -55,7 +55,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void set(T value, int index) {
-        if (index < 0 || index >= size) {
+        if (checkIndex(index)) {
             throw new ArrayListIndexOutOfBoundsException("Illegal index");
         } else {
             elementData[index] = value;
@@ -64,16 +64,16 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(int index) {
-        if (index < 0 || index >= size) {
+        if (checkIndex(index)) {
             throw new ArrayListIndexOutOfBoundsException("Illegal index");
         } else {
-            Object[] es = elementData;
+            Object[] copyElements = elementData;
             T oldValue = (T) elementData[index];
             final int newSize = size - 1;
             if (newSize > index) {
-                System.arraycopy(es, index + 1, es, index, newSize - index);
+                System.arraycopy(copyElements, index + 1, copyElements, index, newSize - index);
             }
-            es[size = newSize] = null;
+            copyElements[size = newSize] = null;
             return oldValue;
         }
     }
@@ -82,24 +82,19 @@ public class ArrayList<T> implements List<T> {
     public T remove(T element) {
         final Object[] copyElements = elementData;
         int i = 0;
-        foundElement :
-        {
+        for (; i < size; i++) {
             if (element == null) {
-                for (; i < size; i++) {
-                    if (copyElements[i] == null) {
-                        break foundElement;
-                    }
+                if (copyElements[i] == null) {
+                    break;
                 }
-            } else {
-                for (; i < size; i++) {
-                    if (element.equals(copyElements[i])) {
-                        break foundElement;
-                    }
-                }
+            } else if (element.equals(copyElements[i])) {
+                break;
             }
-            throw new NoSuchElementException("There is no such element");
-        }
 
+            if (i == size - 1) {
+                throw new NoSuchElementException("There is no such element");
+            }
+        }
         Object oldElement = elementData[i];
         int newSize = size - 1;
         if ((size - 1) > i) {
@@ -125,5 +120,9 @@ public class ArrayList<T> implements List<T> {
         Object[] newElementData = new Object[newCapacity];
         System.arraycopy(elementData, 0, newElementData, 0, elementData.length);
         return newElementData;
+    }
+
+    private boolean checkIndex(int index) {
+        return index < 0 || index >= size;
     }
 }
