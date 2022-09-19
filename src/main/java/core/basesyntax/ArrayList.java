@@ -3,7 +3,6 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-
     private static final int START_CAPASITY = 10;
     private static final double INCREASE_RATE = 1.5;
     private T[] array;
@@ -15,7 +14,6 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-
         if (array.length == size) {
             grow();
         }
@@ -61,14 +59,14 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         checkIndex(index);
         T removed = array[index];
-        System.arraycopy(array, index + 1, array, index,size - index - 1);
+        System.arraycopy(array, index + 1, array, index, size - index - 1);
         size--;
         return removed;
     }
 
     @Override
     public T remove(T element) {
-        int index = findValue(element);
+        int index = findIndex(element);
         return remove(index);
     }
 
@@ -94,7 +92,7 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private int findValue(T element) {
+    private int findIndex(T element) {
         for (int i = 0; i < size; i++) {
             if (array[i] == element || (array[i] != null && array[i].equals(element))) {
                 return i;
