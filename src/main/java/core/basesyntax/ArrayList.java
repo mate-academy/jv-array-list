@@ -4,20 +4,20 @@ import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    private static final int E_ARRAY_LENGTH_DEFAULT = 10;
-    private static final double E_ARRAY_LENGTH_MULTIPLIER = 1.5;
+    private static final int DEFAULT_LENGTH = 10;
+    private static final double LENGTH_MULTIPLIER = 1.5;
     private Object[] elementsArray;
     private int size;
 
-    ArrayList() {
-        this.elementsArray = new Object[E_ARRAY_LENGTH_DEFAULT];
+    public ArrayList() {
+        this.elementsArray = new Object[DEFAULT_LENGTH];
         this.size = 0;
     }
 
     @Override
     public void add(T value) {
         if (size == elementsArray.length) {
-            increaseEArrayLength();
+            increaseArrayLength();
         }
         elementsArray[size] = value;
         size++;
@@ -27,7 +27,7 @@ public class ArrayList<T> implements List<T> {
     public void add(T value, int index) {
         checkIndexForAdd(index);
         if (size == elementsArray.length) {
-            increaseEArrayLength();
+            increaseArrayLength();
         }
         System.arraycopy(elementsArray, index, elementsArray, index + 1, size - index);
         elementsArray[index] = value;
@@ -36,10 +36,8 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        if ((list != null) && (list.size() > 0)) {
-            for (int i = 0; i < list.size(); i++) {
-                this.add(list.get(i));
-            }
+        for (int i = 0; i < list.size(); i++) {
+            this.add(list.get(i));
         }
     }
 
@@ -92,13 +90,13 @@ public class ArrayList<T> implements List<T> {
         return (size == 0);
     }
 
-    private void increaseEArrayLength() {
+    private void increaseArrayLength() {
         Object[] newElementsArr = Arrays.copyOf(elementsArray, calcNewLength());
         this.elementsArray = newElementsArr;
     }
 
     private int calcNewLength() {
-        return (int) (elementsArray.length * E_ARRAY_LENGTH_MULTIPLIER);
+        return (int) (elementsArray.length * LENGTH_MULTIPLIER);
     }
 
     private void checkIndexForAdd(int index) {
