@@ -34,48 +34,35 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        int newSize = size + list.size();
-        if (newSize > elementData.length) {
-            elementData = grow();
-        } else {
-            for (int i = 0; i < list.size(); i++) {
-                elementData[size] = list.get(i);
-                size++;
-            }
+        for (int i = 0; i < list.size(); i++) {
+            add(list.get(i));
         }
     }
 
     @Override
     public T get(int index) {
-        if (checkIndex(index)) {
-            throw new ArrayListIndexOutOfBoundsException("Illegal index");
-        }
+        checkIndex(index);
         return (T) elementData[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (checkIndex(index)) {
-            throw new ArrayListIndexOutOfBoundsException("Illegal index");
-        } else {
-            elementData[index] = value;
-        }
+        checkIndex(index);
+        elementData[index] = value;
+
     }
 
     @Override
     public T remove(int index) {
-        if (checkIndex(index)) {
-            throw new ArrayListIndexOutOfBoundsException("Illegal index");
-        } else {
-            Object[] copyElements = elementData;
-            T oldValue = (T) elementData[index];
-            final int newSize = size - 1;
-            if (newSize > index) {
-                System.arraycopy(copyElements, index + 1, copyElements, index, newSize - index);
-            }
-            copyElements[size = newSize] = null;
-            return oldValue;
+        checkIndex(index);
+        Object[] copyElements = elementData;
+        T oldValue = (T) elementData[index];
+        final int newSize = size - 1;
+        if (newSize > index) {
+            System.arraycopy(copyElements, index + 1, copyElements, index, newSize - index);
         }
+        copyElements[size = newSize] = null;
+        return oldValue;
     }
 
     @Override
@@ -122,7 +109,9 @@ public class ArrayList<T> implements List<T> {
         return newElementData;
     }
 
-    private boolean checkIndex(int index) {
-        return index < 0 || index >= size;
+    private void checkIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Illegal index");
+        }
     }
 }
