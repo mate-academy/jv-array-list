@@ -9,14 +9,14 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        checkExtention();
+        resize();
         values[counter++] = value;
     }
 
     @Override
     public void add(T value, int index) {
         verifyIndexInBound(index);
-        checkExtention();
+        resize();
         if (index == counter) {
             add(value);
             return;
@@ -62,7 +62,7 @@ public class ArrayList<T> implements List<T> {
                 return remove(i);
             }
         }
-        throw new NoSuchElementException();
+        throw new NoSuchElementException("There is no element in collection: " + element);
     }
 
     @Override
@@ -75,7 +75,7 @@ public class ArrayList<T> implements List<T> {
         return counter == 0;
     }
 
-    private void checkExtention() {
+    private void resize() {
         if (counter == values.length) {
             T[] copy = values.clone();
             double capacityMultiplier = 1.5;
