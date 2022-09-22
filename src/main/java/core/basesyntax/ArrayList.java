@@ -86,7 +86,7 @@ public class ArrayList<T> implements List<T> {
 
     private void verifyIndexInBound(int index) {
         if (index < 0 || index > counter) {
-            throw new ArrayListIndexOutOfBoundsException("incorrect index");
+            throw new ArrayListIndexOutOfBoundsException("incorrect index: " + index);
         }
     }
 
