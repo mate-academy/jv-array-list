@@ -10,20 +10,20 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value) {
         resize();
-        values[counter++] = value;
+        values[size++] = value;
     }
 
     @Override
     public void add(T value, int index) {
         verifyIndexInBound(index);
         resize();
-        if (index == counter) {
+        if (index == size) {
             add(value);
             return;
         }
-        System.arraycopy(values, index, values, index + 1, counter - index);
+        System.arraycopy(values, index, values, index + 1, size - index);
         values[index] = value;
-        counter++;
+        size++;
     }
 
     @Override
@@ -49,14 +49,14 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         verifyIndexInBoundOrEmpty(index);
         T removedValue = values[index];
-        System.arraycopy(values, index + 1, values, index, counter - index - 1);
-        counter--;
+        System.arraycopy(values, index + 1, values, index, size - index - 1);
+        size--;
         return removedValue;
     }
 
     @Override
     public T remove(T element) {
-        for (int i = 0; i < counter; i++) {
+        for (int i = 0; i < size; i++) {
             if (element != null && element.equals(values[i])
                     || (element == null && values[i] == null)) {
                 return remove(i);
@@ -67,16 +67,16 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public int size() {
-        return counter;
+        return size;
     }
 
     @Override
     public boolean isEmpty() {
-        return counter == 0;
+        return size == 0;
     }
 
     private void resize() {
-        if (counter == values.length) {
+        if (size == values.length) {
             T[] copy = values.clone();
             double capacityMultiplier = 1.5;
             values = (T[]) new Object[(int) (values.length * capacityMultiplier)];
@@ -85,13 +85,13 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void verifyIndexInBound(int index) {
-        if (index < 0 || index > counter) {
+        if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException("incorrect index: " + index + " for size " + size);
         }
     }
 
     private void verifyIndexInBoundOrEmpty(int index) {
-        if (isEmpty() || (index < 0 || index >= counter)) {
+        if (isEmpty() || (index < 0 || index >= size)) {
             throw new ArrayListIndexOutOfBoundsException("Incorrect index: " + index);
         }
     }
