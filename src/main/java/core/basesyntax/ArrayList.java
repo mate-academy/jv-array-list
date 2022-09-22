@@ -3,7 +3,6 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-
     private static final int DEFAULT_CAPACITY = 10;
     private int counter;
     private T[] values = (T[]) new Object[DEFAULT_CAPACITY];
@@ -22,7 +21,6 @@ public class ArrayList<T> implements List<T> {
             add(value);
             return;
         }
-
         System.arraycopy(values, index, values, index + 1, counter - index);
         values[index] = value;
         counter++;
@@ -51,9 +49,7 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         verifyIndexInBoundOrEmpty(index);
         T removedValue = values[index];
-
         System.arraycopy(values, index + 1, values, index, counter - index - 1);
-
         counter--;
         return removedValue;
     }
@@ -61,9 +57,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < counter; i++) {
-            if (element != null && element.equals(values[i])) {
-                return remove(i);
-            } else if (element == null && values[i] == null) {
+            if (element != null && element.equals(values[i])
+                    || (element == null && values[i] == null)) {
                 return remove(i);
             }
         }
@@ -82,7 +77,10 @@ public class ArrayList<T> implements List<T> {
 
     private void checkExtention() {
         if (counter == values.length) {
-            extend();
+            T[] copy = values.clone();
+            double capacityMultiplier = 1.5;
+            values = (T[]) new Object[(int) (values.length * capacityMultiplier)];
+            System.arraycopy(copy, 0, values, 0, copy.length);
         }
     }
 
@@ -96,18 +94,5 @@ public class ArrayList<T> implements List<T> {
         if (isEmpty() || (index < 0 || index >= counter)) {
             throw new ArrayListIndexOutOfBoundsException("Incorrect index: " + index);
         }
-    }
-
-    private void verifyIsNotEmpty() {
-        if (isEmpty()) {
-            throw new ArrayListIndexOutOfBoundsException("Arraylist is empty");
-        }
-    }
-
-    private void extend() {
-        T[] copy = values.clone();
-        double capacityMultiplier = 1.5;
-        values = (T[]) new Object[(int) (values.length * capacityMultiplier)];
-        System.arraycopy(copy, 0, values, 0, copy.length);
     }
 }
