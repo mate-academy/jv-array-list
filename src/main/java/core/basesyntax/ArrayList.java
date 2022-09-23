@@ -72,24 +72,17 @@ public class ArrayList<T> implements List<T> {
         for (; i < size; i++) {
             if (element == null) {
                 if (copyElements[i] == null) {
-                    break;
+                    return remove(i);
                 }
             } else if (element.equals(copyElements[i])) {
-                break;
+                return remove(i);
             }
 
-            if (i == size - 1) {
-                throw new NoSuchElementException("There is no such element");
-            }
         }
-        Object oldElement = elementData[i];
-        int newSize = size - 1;
-        if ((size - 1) > i) {
-            System.arraycopy(elementData, i + 1, elementData, i, newSize - 1);
-            size--;
+        if (i == size) {
+            throw new NoSuchElementException("There is no such element");
         }
-        elementData[size] = null;
-        return (T) oldElement;
+        return null;
     }
 
     @Override
