@@ -22,10 +22,10 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (size == elementData.length) {
-            elementData = grow();
-        } else if (index > size || index < 0) {
+        if (index > size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Illegal index");
+        } else if (size == elementData.length) {
+            elementData = grow();
         }
         System.arraycopy(elementData, index, elementData, index + 1, size - index);
         elementData[index] = value;
@@ -67,22 +67,18 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        final Object[] copyElements = elementData;
-        int i = 0;
-        for (; i < size; i++) {
+        for (int i = 0; i < size; i++) {
             if (element == null) {
-                if (copyElements[i] == null) {
+                if (elementData[i] == null) {
                     return remove(i);
                 }
-            } else if (element.equals(copyElements[i])) {
+            } else if (element.equals(elementData[i])) {
                 return remove(i);
             }
 
         }
-        if (i == size) {
-            throw new NoSuchElementException("There is no such element");
-        }
-        return null;
+
+        throw new NoSuchElementException("There is no such element");
     }
 
     @Override
