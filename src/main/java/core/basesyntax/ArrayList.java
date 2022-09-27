@@ -14,13 +14,11 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (checkSize()) {
-            array[currentSize] = value;
-            currentSize++;
-        } else {
+        if (!checkSize()) {
             resizeArray();
-            add(value);
         }
+        array[currentSize] = value;
+        currentSize++;
     }
 
     @Override
@@ -43,12 +41,9 @@ public class ArrayList<T> implements List<T> {
         while (list.size() > (array.length - currentSize)) {
             resizeArray();
         }
-        T[] listCopyArray = (T[]) new Object[list.size()];
         for (int i = 0; i < list.size(); i++) {
-            listCopyArray[i] = list.get(i);
+            add(list.get(i));
         }
-        System.arraycopy(listCopyArray, 0, array, currentSize, listCopyArray.length);
-        currentSize += listCopyArray.length;
     }
 
     @Override
