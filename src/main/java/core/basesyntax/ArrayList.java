@@ -24,7 +24,8 @@ public class ArrayList<T> implements List<T> {
     public void add(T value, int index) {
         if (index > size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Illegal index");
-        } else if (size == elementData.length) {
+        }
+        if (size == elementData.length) {
             elementData = grow();
         }
         System.arraycopy(elementData, index, elementData, index + 1, size - index);
@@ -49,35 +50,24 @@ public class ArrayList<T> implements List<T> {
     public void set(T value, int index) {
         checkIndex(index);
         elementData[index] = value;
-
     }
 
     @Override
     public T remove(int index) {
         checkIndex(index);
-        Object[] copyElements = elementData;
         T oldValue = (T) elementData[index];
-        final int newSize = size - 1;
-        if (newSize > index) {
-            System.arraycopy(copyElements, index + 1, copyElements, index, newSize - index);
-        }
-        copyElements[size = newSize] = null;
+        System.arraycopy(elementData, index + 1, elementData, index, size - index - 1);
+        size--;
         return oldValue;
     }
 
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if (element == null) {
-                if (elementData[i] == null) {
-                    return remove(i);
-                }
-            } else if (element.equals(elementData[i])) {
+            if (elementData[i] == element || (element != null && element.equals(elementData[i]))) {
                 return remove(i);
             }
-
         }
-
         throw new NoSuchElementException("There is no such element");
     }
 
