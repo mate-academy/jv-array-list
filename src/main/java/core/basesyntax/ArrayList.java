@@ -7,36 +7,8 @@ public class ArrayList<T> implements List<T> {
     private T[] values;
     private int size;
 
-    public ArrayList(int initCapacity) {
-        if (initCapacity < 0) {
-            throw new ArrayListIndexOutOfBoundsException("this index is invalid");
-        }
-        values = (T[]) new Object[MAX_ARRAY_LENGTH];
-    }
-
     public ArrayList() {
-        this(MAX_ARRAY_LENGTH);
-    }
-
-    private void resizeArray() {
-        if (size == values.length) {
-            int sizeNewArray = (int) (values.length * 1.5);
-            T[] newArray = (T[]) new Object[(int) (sizeNewArray)];
-            System.arraycopy(values, 0, newArray, 0, size);
-            values = newArray;
-        }
-    }
-
-    private void checkIndex(int index, int size) throws ArrayListIndexOutOfBoundsException {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("This index is incorrect: " + index);
-        }
-    }
-
-    private void removeValue(int index) {
-        System.arraycopy(values, index + 1, values, index, size - index - 1);
-        size--;
-        values[size] = null;
+        values = (T[]) new Object[MAX_ARRAY_LENGTH];
     }
 
     @Override
@@ -48,11 +20,11 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        checkIndex(index, size + 1);
+        size++;
+        checkIndex(index);
         resizeArray();
         System.arraycopy(values, index, values, index + 1, size - index);
         values[index] = value;
-        size++;
     }
 
     @Override
@@ -65,37 +37,34 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        checkIndex(index, size);
+        checkIndex(index);
         return (T) values[index];
     }
 
     @Override
     public void set(T value, int index) {
-        checkIndex(index, size);
+        checkIndex(index);
         values[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        checkIndex(index, size);
+        checkIndex(index);
         T removedValue = values[index];
-        removeValue(index);
+        System.arraycopy(values, index + 1, values, index, size - index - 1);
+        size--;
+        values[size] = null;
         return removedValue;
     }
 
     @Override
     public T remove(T element) {
-        int index = -1;
         for (int i = 0; i < size; i++) {
             if (values[i] == element || values[i] != null && values[i].equals(element)) {
-                index = i;
+                return remove(i);
             }
         }
-        if (index < 0) {
-            throw new NoSuchElementException("Element " + element + "is not find");
-        }
-        remove(index);
-        return element;
+        throw new NoSuchElementException("Element " + element + " is not find");
     }
 
     @Override
@@ -106,5 +75,20 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return (size == 0);
+    }
+
+    private void resizeArray() {
+        if (size == values.length) {
+            int sizeNewArray = (int) (values.length * 1.5);
+            T[] newArray = (T[]) new Object[(int) (sizeNewArray)];
+            System.arraycopy(values, 0, newArray, 0, size);
+            values = newArray;
+        }
+    }
+
+    private void checkIndex(int index) throws ArrayListIndexOutOfBoundsException {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("This index is incorrect: " + index);
+        }
     }
 }
