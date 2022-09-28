@@ -43,7 +43,7 @@ public class ArrayListTest {
         Assert.assertEquals("Test failed! Size of array should be " + 5 + "but it is "
                 + arrayList.size(), 5, arrayList.size());
         Assert.assertNull(arrayList.get(0));
-        arrayList.add("value", 5);
+        arrayList.add("value", 5); // { 1,2,3,4, __ length 4  size == index
         Assert.assertEquals("Test failed! Can't correctly add element by index " + 5,
                 "value", arrayList.get(5));
         Assert.assertEquals("Test failed! Size of array should be " + 6 + "but it is "
@@ -99,7 +99,7 @@ public class ArrayListTest {
     public void checkingResizeInAddByIndex() {
         ArrayList<String> arrayList = new ArrayList<>();
         for (int i = 0; i < ELEMENTS_COUNT; i++) {
-            arrayList.add("First + " + i, 0);
+            arrayList.add("First + " + i, 0);  // 10 1 2 3 4 5 6
             Assert.assertEquals("Test failed! Size of array should be " + (i + 1) + "but it is "
                     + arrayList.size(), i + 1, arrayList.size());
         }
