@@ -5,7 +5,7 @@ import java.util.NoSuchElementException;
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private T[] values;
-    private int mSize;
+    private int size;
 
     public ArrayList() {
         values = (T[]) new Object[DEFAULT_CAPACITY];
@@ -13,25 +13,25 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (values.length == mSize) {
+        if (values.length == size) {
             resize();
         }
-        values[mSize] = value;
-        mSize++;
+        values[size] = value;
+        size++;
     }
 
     @Override
     public void add(T value, int index) {
-        if (index > mSize || index < 0) {
+        if (index > size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Index " + index
-                    + " out of bounds for length " + mSize);
+                    + " out of bounds for length " + size);
         }
-        if (values.length == mSize) {
+        if (values.length == size) {
             resize();
         }
-        System.arraycopy(values, index, values, index + 1, mSize - index);
+        System.arraycopy(values, index, values, index + 1, size - index);
         values[index] = value;
-        mSize++;
+        size++;
     }
 
     @Override
@@ -57,15 +57,15 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         checkIndex(index);
         T value = values[index];
-        mSize--;
-        System.arraycopy(values, index + 1, values, index, mSize - index);
+        size--;
+        System.arraycopy(values, index + 1, values, index, size - index);
         return value;
     }
 
     @Override
     public T remove(T element) {
         T result;
-        for (int i = 0; i < mSize; i++) {
+        for (int i = 0; i < size; i++) {
             if (element == values[i] || element != null && element.equals(values[i])) {
                 result = values[i];
                 remove(i);
@@ -78,24 +78,24 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public int size() {
-        return mSize;
+        return size;
     }
 
     @Override
     public boolean isEmpty() {
-        return mSize == 0;
+        return size == 0;
     }
 
     public void resize() {
         T[] data = values;
-        values = (T[]) new Object[mSize + (mSize >> 1)];
-        System.arraycopy(data, 0, values, 0, mSize);
+        values = (T[]) new Object[size + (size >> 1)];
+        System.arraycopy(data, 0, values, 0, size);
     }
 
     public void checkIndex(int index) {
-        if (index < 0 || index >= mSize) {
+        if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException("Index"
-                    + index + " out of bounds for length" + mSize);
+                    + index + " out of bounds for length" + size);
         }
     }
 }
