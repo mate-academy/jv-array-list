@@ -1,48 +1,107 @@
 package core.basesyntax;
 
+import java.util.NoSuchElementException;
+
+@SuppressWarnings("unchecked")
 public class ArrayList<T> implements List<T> {
+    private static final int INITIAL_CAPACITY = 10;
+    private Object[] content;
+    private int size;
+
+    public ArrayList() {
+        content = new Object[INITIAL_CAPACITY];
+        size = 0;
+    }
+
     @Override
     public void add(T value) {
-
+        resize();
+        content[size] = value;
+        size++;
     }
 
     @Override
     public void add(T value, int index) {
+        if (index > size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
+        }
+        resize();
+        System.arraycopy(content, index, content, index + 1, content.length - index - 1);
+        content[index] = value;
+        size++;
+    }
 
+    private void resize() {
+        if (content.length == size) {
+            Object[] newContent = new Object[(int) (size * 1.5)];
+            System.arraycopy(content, 0, newContent, 0, content.length);
+            content = newContent;
+        }
+    }
+
+    private void checkIndex(int index) {
+        if (index >= size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
+        }
     }
 
     @Override
     public void addAll(List<T> list) {
-
+        for (int i = 0; i < list.size(); i++) {
+            add(list.get(i));
+        }
     }
 
     @Override
     public T get(int index) {
-        return null;
+        checkIndex(index);
+        return (T) content[index];
     }
 
     @Override
     public void set(T value, int index) {
-
+        checkIndex(index);
+        content[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        return null;
+        T toRemove = get(index);
+        if (index == content.length - 1) {
+            content[content.length - 1] = null;
+            size--;
+            return toRemove;
+        }
+        System.arraycopy(content, index + 1, content, index, content.length - (index + 1));
+        size--;
+        content[size] = null;
+        return toRemove;
     }
 
     @Override
     public T remove(T element) {
-        return null;
+        for (int i = 0; i < size; i++) {
+            if (content[i] == null) {
+                if (element == null) {
+                    size--;
+                    return null;
+                }
+                continue;
+            }
+            if (content[i] == element || content[i].equals(element)) {
+                return remove(i);
+            }
+        }
+        throw new NoSuchElementException("There's no such element in list");
     }
 
     @Override
     public int size() {
-        return 0;
+        return size;
     }
 
     @Override
     public boolean isEmpty() {
-        return false;
+        return size == 0;
     }
 }
