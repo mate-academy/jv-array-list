@@ -5,8 +5,13 @@ import java.util.NoSuchElementException;
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private static final double GROW_TIMES_VALUE = 1.5;
-    private Object[] data = new Object[DEFAULT_CAPACITY];
-    private int size = 0;
+    private Object[] data;
+    private int size;
+
+    public ArrayList() {
+        this.data = new Object[DEFAULT_CAPACITY];
+        this.size = 0;
+    }
 
     @Override
     public void add(T value) {
