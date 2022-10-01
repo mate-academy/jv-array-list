@@ -17,7 +17,7 @@ public class ArrayList<T> implements List<T> {
     private void checkIndex(int index) {
         if (index == size) {
             throw new ArrayListIndexOutOfBoundsException("Index "
-                    + index + " more then size of array: " + size);
+                    + index + " out of array`s bounds: " + (size - 1));
         } else if (index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Index can`t be less then 0");
         }
@@ -36,7 +36,7 @@ public class ArrayList<T> implements List<T> {
     public void add(T value, int index) {
         if (index > size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Index " + index
-                    + " more then size of array: " + size + " or less then 0");
+                    + "out of array`s bounds: " + (size - 1) + " or less then 0");
         }
         if (size + 1 == arrayList.length) {
             grow();
@@ -79,10 +79,12 @@ public class ArrayList<T> implements List<T> {
     public T remove(T element) {
         Object result;
         for (int i = 0; i <= size; i++) {
-            if (arrayList[i] == null && element == null) {
-                remove(i);
-                return null;
-            } else if (arrayList[i] != null) {
+            if (arrayList[i] == null) {
+                if (element == null) {
+                    remove(i);
+                    return null;
+                }
+            } else {
                 if ((arrayList[i]).equals(element)) {
                     result = arrayList[i];
                     remove(i);
