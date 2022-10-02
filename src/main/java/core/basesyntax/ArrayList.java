@@ -1,7 +1,6 @@
 package core.basesyntax;
 
 import java.util.NoSuchElementException;
-import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
     private static final int MAX_ELEMENTS = 10;
@@ -68,7 +67,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i <= size; i++) {
-            if (Objects.equals(element, arrayList[i])) {
+            if (arrayList[i] == element || element != null && element.equals(arrayList[i])) {
                 return remove(i);
             }
         }
