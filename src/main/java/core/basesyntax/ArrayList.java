@@ -24,15 +24,18 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        size++;
-        checkIndex(index);
+        if (index < 0 || index > this.size) {
+            throw new ArrayListIndexOutOfBoundsException("index <" + index
+                    + "> out of ArrayList current size bounds <" + this.size + ">");
+        }
         if (data.length == this.size) {
             resize();
         }
-        for (int i = this.size - 2; i >= index; i--) {
+        for (int i = this.size - 1; i >= index; i--) {
             data[i + 1] = data[i];
         }
         this.data[index] = value;
+        this.size++;
     }
 
     @Override
@@ -57,12 +60,9 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
-        this.size--;
         T removedData = (T) data[index];
-        for (int i = index; i < this.size; i++) {
-            this.data[i] = this.data[i + 1];
-        }
-        this.data[size] = null;
+        System.arraycopy(this.data, index + 1, this.data, index, this.size - 1 - index);
+        this.size--;
         return removedData;
     }
 
@@ -90,17 +90,17 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void checkIndex(int index) {
-        if (index < 0 || index >= this.size) {
-            throw new ArrayListIndexOutOfBoundsException("index <" + index
-                    + "> out of ArrayList current size bounds <" + this.size + ">");
-        }
-    }
-
     private void resize() {
         int newCapacity = (int)(data.length * GROW_TIMES_VALUE);
         Object[] resizedData = new Object[newCapacity];
         System.arraycopy(this.data, 0, resizedData, 0, this.data.length);
         this.data = resizedData;
+    }
+
+    private void checkIndex(int index) {
+        if (index < 0 || index >= this.size) {
+            throw new ArrayListIndexOutOfBoundsException("index <" + index
+                    + "> out of ArrayList current size bounds <" + this.size + ">");
+        }
     }
 }
