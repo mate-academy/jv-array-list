@@ -94,10 +94,9 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void resizeStorage() {
-        T[] storageCopy = (T[]) new Object[size];
+        T[] storageCopy = (T[]) new Object[storage.length + (storage.length >> 1)];
         System.arraycopy(storage, 0, storageCopy, 0, size);
-        storage = (T[]) new Object[storage.length + (storage.length >> 1)];
-        System.arraycopy(storageCopy, 0, storage, 0, size);
+        storage = storageCopy;
     }
 
     private void moveLeft(int fromIndex) {
