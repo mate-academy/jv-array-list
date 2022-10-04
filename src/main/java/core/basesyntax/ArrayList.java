@@ -6,10 +6,10 @@ import java.util.Objects;
 public class ArrayList<T> implements List<T> {
     private static final int INITIAL_CAPACITY = 10;
     private int size;
-    private T[] storage;
+    private Object[] storage;
 
     public ArrayList() {
-        this.storage = (T[]) new Object[INITIAL_CAPACITY];
+        this.storage = new Object[INITIAL_CAPACITY];
     }
 
     @Override
@@ -43,7 +43,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         checkIndex(index, false);
-        return storage[index];
+        return (T) storage[index];
     }
 
     @Override
@@ -55,7 +55,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         checkIndex(index, false);
-        return remove(storage[index]);
+        return remove((T) storage[index]);
     }
 
     @Override
@@ -94,7 +94,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void resizeStorage() {
-        T[] storageCopy = (T[]) new Object[storage.length + (storage.length >> 1)];
+        Object[] storageCopy = new Object[storage.length + (storage.length >> 1)];
         System.arraycopy(storage, 0, storageCopy, 0, size);
         storage = storageCopy;
     }
