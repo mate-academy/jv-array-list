@@ -68,13 +68,15 @@ public class ArrayList<T> implements List<T> {
 
     private void rangeChecker(int index) {
         if ((index < 0 || index >= sizeCounter) && index != DEFAULT_INDEX) {
-            throw new ArrayListIndexOutOfBoundsException("Out of bounds");
+            throw new ArrayListIndexOutOfBoundsException("Index: " + index
+                    + " out of bounds, for length " + size());
         }
     }
 
     private void rangeCheckerForAdding(int index) {
         if ((index < 0 || index > sizeCounter) && index != DEFAULT_INDEX) {
-            throw new ArrayListIndexOutOfBoundsException("Out of bounds");
+            throw new ArrayListIndexOutOfBoundsException("Index: " + index
+                    + " out of bounds, for length " + size());
         }
     }
 
@@ -122,7 +124,8 @@ public class ArrayList<T> implements List<T> {
                 return removedElement;
             }
         }
-        throw new NoSuchElementException("No such element");
+        throw new NoSuchElementException("Can not remove. The element "
+                + "\"" + element + "\"" + " does not exist");
     }
 
     @Override
