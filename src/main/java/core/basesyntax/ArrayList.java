@@ -32,7 +32,7 @@ public class ArrayList<T> implements List<T> {
         size++;
     }
 
-    private void resize() {
+    private void resizeIfNecessary() {
         if (content.length == size) {
             Object[] newContent = new Object[(int) (size * RESIZE_FACTOR)];
             System.arraycopy(content, 0, newContent, 0, content.length);
