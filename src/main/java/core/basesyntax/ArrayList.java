@@ -1,7 +1,10 @@
 package core.basesyntax;
 
+import java.util.NoSuchElementException;
+
 public class ArrayList<T> implements List<T> {
-    private static final String ERROR_MESSAGE = "Array list index out of bounds";
+    private static final String INDEX_ERROR_MESSAGE = "Array list index out of bounds";
+    private static final String ELEMENT_ERROR_MESSAGE = "No such element in list";
     private int size = 0;
     private int capacity = 10;
     private Object[] listArr;
@@ -9,7 +12,6 @@ public class ArrayList<T> implements List<T> {
     public ArrayList() {
         listArr = new Object[capacity];
     }
-
 
     @Override
     public void add(T value) {
@@ -22,21 +24,17 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        checkRange(index);
+        if (index > size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException(INDEX_ERROR_MESSAGE);
+        }
         if (size >= capacity) {
             extendCapacity();
         }
         Object[] tempArr = new Object[++size];
-        for (int i = 0; i < index; i++) {
-            tempArr[i] = listArr[i];
-        }
+        System.arraycopy(listArr, 0, tempArr, 0, index);
         tempArr[index] = value;
-        for (int i = index + 1; i < size; i++) {
-            tempArr[i] = listArr[i - 1];
-        }
-        for (int i = 0; i < size; i++) {
-            listArr[i] = tempArr[i];
-        }
+        System.arraycopy(listArr, index, tempArr, index + 1, size - (index + 1));
+        System.arraycopy(tempArr, 0, listArr, 0, size);
     }
 
     @Override
@@ -58,34 +56,63 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void checkRange(int index) {
-        if (index > size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException(ERROR_MESSAGE);
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException(INDEX_ERROR_MESSAGE);
         }
     }
 
     @Override
     public T get(int index) {
+        checkRange(index);
+        T element = null;
         for (int i = 0; i < size; i++) {
             if (i == index) {
-                return (T) listArr[i];
+                element = (T) listArr[i];
             }
         }
-        throw new ArrayListIndexOutOfBoundsException("bound");
+        return element;
     }
 
     @Override
     public void set(T value, int index) {
-
+        checkRange(index);
+        for (int i = 0; i < size; i++) {
+            if (index == i) {
+                listArr[i] = value;
+            }
+        }
     }
 
     @Override
     public T remove(int index) {
-        return null;
+        checkRange(index);
+        T foundElement = null;
+        for (int i = 0; i < size; i++) {
+            if (i == index) {
+                foundElement = getRemovedElementAndRemove(i);
+            }
+        }
+        return foundElement;
     }
 
     @Override
     public T remove(T element) {
-        return null;
+        for (int i = 0; i < size; i++) {
+            if ((element == null && listArr[i] == null)
+                    || (listArr[i] != null && listArr[i].equals(element))) {
+                return getRemovedElementAndRemove(i);
+            }
+        }
+        throw new NoSuchElementException(ELEMENT_ERROR_MESSAGE);
+    }
+
+    private T getRemovedElementAndRemove(int i) {
+        Object[] temp = new Object[--size];
+        final T foundElement = (T) listArr[i];
+        System.arraycopy(listArr, 0, temp, 0, i);
+        System.arraycopy(listArr, i + 1, temp, i, size - i);
+        System.arraycopy(temp, 0, listArr, 0, size);
+        return foundElement;
     }
 
     @Override
