@@ -4,6 +4,9 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
+    private static final int RESIZE_FACTOR = 1;
+    private static final boolean ADD = true;
+    private static final boolean DELETE = false;
     private T[] storage;
     private int size;
 
@@ -31,7 +34,7 @@ public class ArrayList<T> implements List<T> {
         if (size >= storage.length) {
             grow();
         }
-        moveAdd(index);
+        moveAdd(index, ADD);
         storage[index] = value;
         size++;
     }
@@ -46,11 +49,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
-        Object[] replaceStorage = new Object[storage.length];
-        System.arraycopy(storage, 0, replaceStorage, 0, index);
-        System.arraycopy(storage, index + 1, replaceStorage, index, (storage.length - index - 1));
         T oldValue = storage[index];
-        updateStorage(replaceStorage);
+        moveAdd(index, DELETE);
         size--;
         return oldValue;
     }
@@ -97,20 +97,22 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void grow() {
-        int newLength = storage.length + (storage.length >> 1);
+        int newLength = storage.length + (storage.length >> RESIZE_FACTOR);
         Object[] replaceStorage = new Object[newLength];
         System.arraycopy(storage, 0, replaceStorage, 0, storage.length);
         updateStorage(replaceStorage);
     }
 
-    private void moveAdd(int index) {
+    private void moveAdd(int index, boolean check) {
         Object[] replaceStorage = new Object[storage.length];
         System.arraycopy(storage, 0, replaceStorage, 0, index);
-        System.arraycopy(storage, index, replaceStorage, index + 1, (storage.length - index - 1));
+        int srcPos = index + (check ? 0 : 1);
+        int destPos = index + (check ? 1 : 0);
+        System.arraycopy(storage, srcPos, replaceStorage, destPos, (storage.length - index - 1));
         updateStorage(replaceStorage);
     }
 
-    private void updateStorage(Object [] replaceStorage) {
+    private void updateStorage(Object[] replaceStorage) {
         storage = (T[]) replaceStorage.clone();
     }
 }
