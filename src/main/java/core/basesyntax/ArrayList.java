@@ -68,11 +68,6 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         T toRemove = get(index);
-        if (index == content.length - 1) {
-            content[content.length - 1] = null;
-            size--;
-            return toRemove;
-        }
         System.arraycopy(content, index + 1, content, index, content.length - (index + 1));
         size--;
         content[size] = null;
