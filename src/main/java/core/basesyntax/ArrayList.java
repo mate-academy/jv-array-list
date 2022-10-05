@@ -7,13 +7,13 @@ public class ArrayList<T> implements List<T> {
     private static final int INITIAL_CAPACITY = 10;
     private Object[] defaultArray = new Object[INITIAL_CAPACITY];
     private int sizeCounter = 0;
-    private int newCapacity = 10;
+    private int arrayLength = 10;
 
     @Override
     public void add(T value) {
-        if (sizeCounter >= newCapacity) {
-            newCapacity = grow();
-            increaseArray();
+        if (sizeCounter >= arrayLength) {
+            arrayLength = grow();
+            defaultArray = increaseArray(defaultArray);
         }
         defaultArray[sizeCounter++] = value;
     }
@@ -22,40 +22,48 @@ public class ArrayList<T> implements List<T> {
     public void add(T value, int index) {
         rangeCheckerForAdding(index);
         sizeCounter++;
-        if (sizeCounter >= newCapacity) {
-            newCapacity = grow();
+        if (sizeCounter >= arrayLength) {
+            arrayLength = grow();
         }
-        increaseArray(value, index);
+        defaultArray = increaseArray(defaultArray,value, index);
     }
 
-    private void increaseArray() {
-        Object[] temp = defaultArray.clone();
-        defaultArray = new Object[newCapacity];
-        System.arraycopy(temp, DEFAULT_INDEX, defaultArray, DEFAULT_INDEX, sizeCounter);
+    @Override
+    public void addAll(List<T> list) {
+        if (sizeCounter + list.size() > arrayLength) {
+            arrayLength = grow();
+        }
+        defaultArray = increaseArray(list);
     }
 
-    private void increaseArray(T value, int index) {
-        Object[] temp = defaultArray.clone();
-        defaultArray = new Object[newCapacity];
-        System.arraycopy(temp, DEFAULT_INDEX, defaultArray, DEFAULT_INDEX, index);
-        defaultArray[index] = value;
-        System.arraycopy(temp, index, defaultArray, index + 1, sizeCounter - index);
+    private Object[] increaseArray(Object[] array) {
+        Object[] temp = new Object[arrayLength];
+        System.arraycopy(array, DEFAULT_INDEX, temp, DEFAULT_INDEX, sizeCounter);
+        return temp;
     }
 
-    private void increaseArray(List<T> list) {
+    private Object[] increaseArray(Object[] array, T value, int index) {
+        Object[] temp = new Object[arrayLength];
+        System.arraycopy(array,DEFAULT_INDEX, temp, DEFAULT_INDEX, index);
+        System.arraycopy(array, index, temp, index + 1, sizeCounter - index);
+        temp[index] = value;
+        return temp;
+    }
+
+    private Object[] increaseArray(List<T> list) {
         Object[] tempList = new Object[list.size()];
         for (int i = 0; i < list.size(); i++) {
             tempList[i] = list.get(i);
         }
-        Object[] temp = defaultArray.clone();
-        defaultArray = new Object[newCapacity];
-        System.arraycopy(temp, DEFAULT_INDEX, defaultArray, DEFAULT_INDEX, sizeCounter);
-        System.arraycopy(tempList, DEFAULT_INDEX, defaultArray, sizeCounter, tempList.length);
+        Object[] temp = new Object[arrayLength];
+        System.arraycopy(defaultArray, DEFAULT_INDEX, temp, DEFAULT_INDEX, sizeCounter);
+        System.arraycopy(tempList, DEFAULT_INDEX, temp, sizeCounter, tempList.length);
         sizeCounter += list.size();
+        return temp;
     }
 
     public int grow() {
-        return newCapacity + (newCapacity / 2);
+        return arrayLength + (arrayLength / 2);
     }
 
     private void rangeChecker(int index) {
@@ -68,14 +76,6 @@ public class ArrayList<T> implements List<T> {
         if ((index < 0 || index > sizeCounter) && index != DEFAULT_INDEX) {
             throw new ArrayListIndexOutOfBoundsException("Out of bounds");
         }
-    }
-
-    @Override
-    public void addAll(List<T> list) {
-        if (sizeCounter + list.size() > newCapacity) {
-            newCapacity = grow();
-        }
-        increaseArray(list);
     }
 
     @Override
@@ -96,19 +96,16 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         rangeChecker(index);
+        T removedElement = (T) defaultArray[index];
         if (index == sizeCounter - 1) {
-            Object[] temp = defaultArray.clone();
-            defaultArray = new Object[newCapacity];
-            System.arraycopy(temp, DEFAULT_INDEX, defaultArray, DEFAULT_INDEX, index);
+            System.arraycopy(defaultArray, DEFAULT_INDEX, defaultArray,
+                    DEFAULT_INDEX, sizeCounter - 1);
             sizeCounter--;
-            return (T)temp[index];
+            return removedElement;
         }
-        Object[] temp = defaultArray.clone();
-        defaultArray = new Object[newCapacity];
-        System.arraycopy(temp, DEFAULT_INDEX, defaultArray, DEFAULT_INDEX, index);
-        System.arraycopy(temp, index + 1, defaultArray, index, sizeCounter);
+        System.arraycopy(defaultArray, index + 1, defaultArray, index, sizeCounter - index);
         sizeCounter--;
-        return (T)temp[index];
+        return removedElement;
     }
 
     @Override
@@ -119,12 +116,10 @@ public class ArrayList<T> implements List<T> {
                 return null;
             }
             if (element.equals(defaultArray[i])) {
-                Object[] temp = defaultArray.clone();
-                defaultArray = new Object[newCapacity];
-                System.arraycopy(temp, DEFAULT_INDEX, defaultArray, DEFAULT_INDEX, i);
-                System.arraycopy(temp, i + 1, defaultArray, i, sizeCounter);
+                T removedElement = (T)defaultArray[i];
+                System.arraycopy(defaultArray, i + 1, defaultArray, i,sizeCounter - i);
                 sizeCounter--;
-                return (T)temp[i];
+                return removedElement;
             }
         }
         throw new NoSuchElementException("No such element");
@@ -138,14 +133,5 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return sizeCounter == DEFAULT_INDEX;
-    }
-
-    @Override
-    public ArrayList<T> clone() {
-        try {
-            return (ArrayList<T>) super.clone();
-        } catch (CloneNotSupportedException e) {
-            throw new RuntimeException("Can not clone", e);
-        }
     }
 }
