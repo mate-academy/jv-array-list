@@ -30,11 +30,9 @@ public class ArrayList<T> implements List<T> {
         if (size >= capacity) {
             extendCapacity();
         }
-        Object[] tempArr = new Object[++size];
-        System.arraycopy(listArr, 0, tempArr, 0, index);
-        tempArr[index] = value;
-        System.arraycopy(listArr, index, tempArr, index + 1, size - (index + 1));
-        System.arraycopy(tempArr, 0, listArr, 0, size);
+        System.arraycopy(listArr, index, listArr, index + 1, size - index);
+        listArr[index] = value;
+        size++;
     }
 
     @Override
@@ -51,8 +49,7 @@ public class ArrayList<T> implements List<T> {
         capacity = capacity + 1 + (capacity >> 1);
         Object[] tempArray = new Object[capacity];
         System.arraycopy(listArr, 0, tempArray, 0, size);
-        listArr = new Object[capacity];
-        System.arraycopy(tempArray, 0, listArr, 0, size);
+        listArr = tempArray;
     }
 
     private void checkRange(int index) {
@@ -107,11 +104,9 @@ public class ArrayList<T> implements List<T> {
     }
 
     private T getRemovedElementAndRemove(int i) {
-        Object[] temp = new Object[--size];
         final T foundElement = (T) listArr[i];
-        System.arraycopy(listArr, 0, temp, 0, i);
-        System.arraycopy(listArr, i + 1, temp, i, size - i);
-        System.arraycopy(temp, 0, listArr, 0, size);
+        size--;
+        System.arraycopy(listArr, i + 1, listArr, i, size - i);
         return foundElement;
     }
 
