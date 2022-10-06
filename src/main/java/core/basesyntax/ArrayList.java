@@ -62,10 +62,9 @@ public class ArrayList<T> implements List<T> {
     public T get(int index) {
         checkRange(index);
         T element = null;
-        for (int i = 0; i < size; i++) {
-            if (i == index) {
-                element = (T) listArr[i];
-            }
+        int i = getIndexIfFind(size, index);
+        if (i != -1) {
+            element = (T) listArr[i];
         }
         return element;
     }
@@ -73,10 +72,9 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void set(T value, int index) {
         checkRange(index);
-        for (int i = 0; i < size; i++) {
-            if (index == i) {
-                listArr[i] = value;
-            }
+        int i = getIndexIfFind(size, index);
+        if (i != -1) {
+            listArr[i] = value;
         }
     }
 
@@ -84,10 +82,9 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         checkRange(index);
         T foundElement = null;
-        for (int i = 0; i < size; i++) {
-            if (i == index) {
-                foundElement = getRemovedElementAndRemove(i);
-            }
+        int i = getIndexIfFind(size, index);
+        if (i != -1) {
+            foundElement = getRemovedElementAndRemove(i);
         }
         return foundElement;
     }
@@ -101,6 +98,15 @@ public class ArrayList<T> implements List<T> {
             }
         }
         throw new NoSuchElementException(ELEMENT_ERROR_MESSAGE);
+    }
+
+    private int getIndexIfFind(int size, int index) {
+        for (int i = 0; i < size; i++) {
+            if (i == index) {
+                return i;
+            }
+        }
+        return -1;
     }
 
     private T getRemovedElementAndRemove(int i) {
