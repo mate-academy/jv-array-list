@@ -6,6 +6,8 @@ import java.util.NoSuchElementException;
 public class ArrayList<T> implements List<T> {
     private static final int INITIAL_CAPACITY = 10;
     private static final double RESIZE_FACTOR = 1.5;
+    private static final int ARRAY_DIRECTION_RIGHT = 1;
+    private static final int ARRAY_DIRECTION_LEFT = -1;
     private Object[] content;
     private int size;
 
@@ -27,9 +29,15 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
         }
         resizeIfNecessary();
-        System.arraycopy(content, index, content, index + 1, content.length - index - 1);
+        shiftArray(index, ARRAY_DIRECTION_RIGHT);
         content[index] = value;
         size++;
+    }
+
+    private void shiftArray(int indexFrom, int direction) {
+        int srcPos = direction > 0 ? indexFrom : indexFrom + 1;
+        int destPost = direction > 0 ? indexFrom + 1 : indexFrom;
+        System.arraycopy(content, srcPos, content, destPost, content.length - (indexFrom + 1));
     }
 
     private void resizeIfNecessary() {
@@ -68,7 +76,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         final T toRemove = get(index);
-        System.arraycopy(content, index + 1, content, index, content.length - (index + 1));
+        shiftArray(index, ARRAY_DIRECTION_LEFT);
         size--;
         content[size] = null;
         return toRemove;
