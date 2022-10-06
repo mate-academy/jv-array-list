@@ -21,13 +21,6 @@ public class ArrayList<T> implements List<T> {
         numberOfObjects++;
     }
 
-    private void ensureCapasity() {
-        if (numberOfObjects >= elementData.length) {
-            int newSize =(int) (numberOfObjects * resizeCoefficient);
-            elementData = Arrays.copyOf(elementData, newSize);
-        }
-    }
-
     @Override
     public void add(T value, int index) {
         if (index < 0 || index > numberOfObjects) {
@@ -58,7 +51,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        for(int i = 0; i < list.size(); i++) {
+        for (int i = 0; i < list.size(); i++) {
             add(list.get(i));
         }
     }
@@ -75,18 +68,12 @@ public class ArrayList<T> implements List<T> {
         elementData[index] = value;
     }
 
-    private void checkIndex(int index) {
-        if (index < 0 || index >= numberOfObjects) {
-            throw new ArrayListIndexOutOfBoundsException("Out of bound execution");
-        }
-    }
-
     @Override
     public T remove(int index) {
         checkIndex(index);
 
         Object[] tempFirstPart = Arrays.copyOfRange(elementData, 0, index);
-        Object[] tempSecondPart = Arrays.copyOfRange(elementData, index+1, elementData.length);
+        Object[] tempSecondPart = Arrays.copyOfRange(elementData, index + 1, elementData.length);
         numberOfObjects--;
         Object result = elementData[index];
         int counterForSecondArray = 0;
@@ -98,7 +85,6 @@ public class ArrayList<T> implements List<T> {
             if (i >= index && i < tempSecondPart.length) {
                 elementData[i] = tempSecondPart[counterForSecondArray];
                 counterForSecondArray++;
-                continue;
             }
         }
         return (T) result;
@@ -108,7 +94,8 @@ public class ArrayList<T> implements List<T> {
     public T remove(T element) {
         Object result = null;
         for (int i = 0; i < elementData.length; i++) {
-            if (elementData[i] == null ? element == elementData[i] : elementData[i].equals(element)) {
+            if (elementData[i] == null
+                    ? element == elementData[i] : elementData[i].equals(element)) {
                 result = elementData[i];
                 remove(i);
                 return (T) result;
@@ -131,5 +118,18 @@ public class ArrayList<T> implements List<T> {
             return false;
         }
         return true;
+    }
+
+    private void checkIndex(int index) {
+        if (index < 0 || index >= numberOfObjects) {
+            throw new ArrayListIndexOutOfBoundsException("Out of bound execution");
+        }
+    }
+
+    private void ensureCapasity() {
+        if (numberOfObjects >= elementData.length) {
+            int newSize = (int) (numberOfObjects * resizeCoefficient);
+            elementData = Arrays.copyOf(elementData, newSize);
+        }
     }
 }
