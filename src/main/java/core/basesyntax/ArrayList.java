@@ -4,19 +4,18 @@ import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    private static final Object[] DEFAULT_CAPACITY_EMPTY_ELEMENT_DATA = {};
     private static final int DEFAULT_CAPACITY = 10;
     private Object[] elementData;
     private int size = 0;
 
     public ArrayList() {
-        this.elementData = DEFAULT_CAPACITY_EMPTY_ELEMENT_DATA;
+        this.elementData = new Object[DEFAULT_CAPACITY];
     }
 
     private Object[] grow(int minCapacity) {
         int oldCapacity = elementData.length;
-        if (oldCapacity > 0 || elementData != DEFAULT_CAPACITY_EMPTY_ELEMENT_DATA) {
-            int newCapacity = oldCapacity + Math.max(minCapacity - oldCapacity, oldCapacity >> 1);
+        if (oldCapacity > 0 || elementData != new Object[DEFAULT_CAPACITY]) {
+            int newCapacity = oldCapacity + (int) (oldCapacity * 1.5);
             return elementData = Arrays.copyOf(elementData, newCapacity);
         } else {
             return elementData = new Object[Math.max(DEFAULT_CAPACITY, minCapacity)];
@@ -36,7 +35,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void fastRemove(int index) {
-        size -= 1;
+        size--;
         Object[] tmpArray = new Object[size];
         System.arraycopy(elementData, 0, tmpArray, 0, index);
         System.arraycopy(elementData, index + 1, tmpArray, index, size - index);
@@ -55,8 +54,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         checkBoundsIndex(index);
-        Object[] elementData;
-        if (size == (elementData = this.elementData).length) {
+        Object[] elementData = this.elementData;
+        if (size == elementData.length) {
             elementData = grow(size + 1);
         }
         System.arraycopy(elementData, index, elementData, index + 1,size - index);
@@ -66,18 +65,8 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        Object[] tmpList = new Object[list.size()];
         for (int i = 0; i < list.size(); i++) {
-            tmpList[i] = list.get(i);
-        }
-        int numNew = tmpList.length;
-        if (numNew != 0) {
-            Object[] elementData;
-            if (numNew > (elementData = this.elementData).length - size) {
-                elementData = grow(size + numNew);
-            }
-            System.arraycopy(tmpList, 0, elementData, size, numNew);
-            size += numNew;
+            add(list.get(i));
         }
     }
 
