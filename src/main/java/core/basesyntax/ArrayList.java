@@ -24,15 +24,13 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("Element is not exists by index " + index);
-        }
+        size++;
+        checkIndex(index);
         if (arrayList.length == size) {
             resizeArrayList();
         }
         System.arraycopy(arrayList, index, arrayList, index + ONE, size - index);
         arrayList[index] = value;
-        size++;
     }
 
     @Override
