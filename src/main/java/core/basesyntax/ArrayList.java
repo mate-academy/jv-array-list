@@ -2,7 +2,6 @@ package core.basesyntax;
 
 import java.util.Arrays;
 import java.util.NoSuchElementException;
-import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
     private static final Object[] DEFAULT_CAPACITY_EMPTY_ELEMENT_DATA = {};
@@ -24,19 +23,24 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private void checkIndex(int index) {
+    private void checkBoundsIndex(int index) {
         if (index > size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Invalid index");
         }
     }
 
-    private void fastRemove(Object[] tmpList, int index) {
-        final int newSize = size - 1;
-        if (newSize > index) {
-            System.arraycopy(tmpList, index + 1, tmpList, index, newSize - index);
+    private void checkIndex(int index) {
+        if (index >= size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Invalid index");
         }
-        size = newSize;
-        tmpList[size] = null;
+    }
+
+    private void fastRemove(int index) {
+        size -= 1;
+        Object[] tmpArray = new Object[size];
+        System.arraycopy(elementData, 0, tmpArray, 0, index);
+        System.arraycopy(elementData, index + 1, tmpArray, index, size - index);
+        elementData = tmpArray;
     }
 
     @Override
@@ -50,7 +54,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        checkIndex(index);
+        checkBoundsIndex(index);
         Object[] elementData;
         if (size == (elementData = this.elementData).length) {
             elementData = grow(size + 1);
@@ -92,26 +96,28 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
-        final Object[] tmpArray = elementData;
-        T oldValue = (T) tmpArray[index];
-        fastRemove(tmpArray, index);
+        T oldValue = (T) elementData[index];
+        fastRemove(index);
         return oldValue;
     }
 
     @Override
     public T remove(T element) {
-        Object[] tmpList = elementData;
-        int index = -1;
-        for (int i = 0; i < size(); i++) {
-            if (Objects.equals(element, elementData[i])) {
-                fastRemove(tmpList, i);
-                index = i;
+        boolean noSuchElement = true;
+        T oldValue = null;
+        for (int i = 0; i < size; i++) {
+            if ((element == elementData[i]) || (element != null
+                    && element.equals(elementData[i]))) {
+                oldValue = (T) elementData[i];
+                noSuchElement = false;
+                fastRemove(i);
+                break;
             }
         }
-        if (index == -1) {
+        if (noSuchElement) {
             throw new NoSuchElementException("No such element");
         } else {
-            return (T) elementData[index];
+            return oldValue;
         }
     }
 
