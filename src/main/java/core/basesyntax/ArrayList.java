@@ -11,9 +11,8 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (sizeCounter >= arrayLength) {
-            arrayLength = grow();
-            defaultArray = increaseArray(defaultArray);
+        if (sizeCounter == arrayLength) {
+            defaultArray = grow(defaultArray);
         }
         defaultArray[sizeCounter++] = value;
     }
@@ -21,9 +20,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         rangeCheckerForAdding(index);
-        sizeCounter++;
-        if (sizeCounter >= arrayLength) {
-            arrayLength = grow();
+        if (++sizeCounter == arrayLength) {
+            defaultArray = grow(defaultArray);
         }
         defaultArray = increaseArray(defaultArray,value, index);
     }
@@ -31,20 +29,13 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void addAll(List<T> list) {
         if (sizeCounter + list.size() > arrayLength) {
-            arrayLength = grow();
+            defaultArray = grow(defaultArray);
         }
         defaultArray = increaseArray(list);
     }
 
-    private Object[] increaseArray(Object[] array) {
-        Object[] temp = new Object[arrayLength];
-        System.arraycopy(array, DEFAULT_INDEX, temp, DEFAULT_INDEX, sizeCounter);
-        return temp;
-    }
-
     private Object[] increaseArray(Object[] array, T value, int index) {
-        Object[] temp = new Object[arrayLength];
-        System.arraycopy(array,DEFAULT_INDEX, temp, DEFAULT_INDEX, index);
+        Object[] temp = defaultArray;
         System.arraycopy(array, index, temp, index + 1, sizeCounter - index);
         temp[index] = value;
         return temp;
@@ -55,15 +46,17 @@ public class ArrayList<T> implements List<T> {
         for (int i = 0; i < list.size(); i++) {
             tempList[i] = list.get(i);
         }
-        Object[] temp = new Object[arrayLength];
-        System.arraycopy(defaultArray, DEFAULT_INDEX, temp, DEFAULT_INDEX, sizeCounter);
+        Object[] temp = defaultArray;
         System.arraycopy(tempList, DEFAULT_INDEX, temp, sizeCounter, tempList.length);
         sizeCounter += list.size();
         return temp;
     }
 
-    public int grow() {
-        return arrayLength + (arrayLength / 2);
+    public Object[] grow(Object[] array) {
+        arrayLength = arrayLength + (arrayLength / 2);
+        Object[] temp = new Object[arrayLength];
+        System.arraycopy(array, DEFAULT_INDEX, temp, DEFAULT_INDEX, sizeCounter);
+        return temp;
     }
 
     private void rangeChecker(int index) {
