@@ -3,15 +3,14 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    private static final int DEFAULT_CAPACITY = 10;
+    private static final int INITIAL_CAPACITY = 10;
     private static final double GROW_INDEX = 1.5;
-    private static final int ONE = 1;
     private int size;
 
     private Object[] arrayList;
 
     public ArrayList() {
-        this.arrayList = new Object[DEFAULT_CAPACITY];
+        arrayList = new Object[INITIAL_CAPACITY];
     }
 
     @Override
@@ -29,7 +28,7 @@ public class ArrayList<T> implements List<T> {
         if (arrayList.length == size) {
             resizeArrayList();
         }
-        System.arraycopy(arrayList, index, arrayList, index + ONE, size - index);
+        System.arraycopy(arrayList, index, arrayList, index + 1, size - index);
         arrayList[index] = value;
     }
 
@@ -57,7 +56,7 @@ public class ArrayList<T> implements List<T> {
         checkIndex(index);
         size--;
         T value = (T) arrayList[index];
-        System.arraycopy(arrayList, index + ONE, arrayList, index, size - index);
+        System.arraycopy(arrayList, index + 1, arrayList, index, size - index);
         return value;
     }
 
@@ -98,6 +97,6 @@ public class ArrayList<T> implements List<T> {
     }
 
     private boolean equalsObjects(Object a, Object b) {
-        return a == b || (a != null && a.equals(b));
+        return a == b || a != null && a.equals(b);
     }
 }
