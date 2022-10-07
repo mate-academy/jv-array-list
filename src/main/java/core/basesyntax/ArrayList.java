@@ -5,6 +5,7 @@ import java.util.NoSuchElementException;
 public class ArrayList<T> implements List<T> {
     private static final String INDEX_ERROR_MESSAGE = "Array list index out of bounds";
     private static final String ELEMENT_ERROR_MESSAGE = "No such element in list";
+    private static final int INCREASE_FACTOR = 1;
     private int size = 0;
     private int capacity = 10;
     private Object[] listArr;
@@ -15,9 +16,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (size >= capacity) {
-            extendCapacity();
-        }
+        extendIfNecessary();
         listArr[size] = value;
         size++;
     }
@@ -27,9 +26,7 @@ public class ArrayList<T> implements List<T> {
         if (index > size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException(INDEX_ERROR_MESSAGE);
         }
-        if (size >= capacity) {
-            extendCapacity();
-        }
+        extendIfNecessary();
         System.arraycopy(listArr, index, listArr, index + 1, size - index);
         listArr[index] = value;
         size++;
@@ -45,8 +42,14 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
+    private void extendIfNecessary() {
+        if (size >= capacity) {
+            extendCapacity();
+        }
+    }
+
     private void extendCapacity() {
-        capacity = capacity + 1 + (capacity >> 1);
+        capacity = capacity + INCREASE_FACTOR + (capacity >> 1);
         Object[] tempArray = new Object[capacity];
         System.arraycopy(listArr, 0, tempArray, 0, size);
         listArr = tempArray;
