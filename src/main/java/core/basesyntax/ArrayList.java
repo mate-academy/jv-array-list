@@ -80,8 +80,10 @@ public class ArrayList<T> implements List<T> {
         numberOfObjects--;
         Object result = elementData[index];
 
-        System.arraycopy(tempFirstPart, 0, elementData, 0, tempFirstPart.length);
-        System.arraycopy(tempSecondPart, 0, elementData, tempFirstPart.length, tempSecondPart.length);
+        System.arraycopy(tempFirstPart, 0, elementData,
+                0, tempFirstPart.length);
+        System.arraycopy(tempSecondPart, 0, elementData,
+                tempFirstPart.length, tempSecondPart.length);
 
         return (T) result;
     }
