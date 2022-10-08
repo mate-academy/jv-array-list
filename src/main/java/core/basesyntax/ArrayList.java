@@ -21,12 +21,20 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        final Object[] newElems = new Object[elements.length];
-        System.arraycopy(elements, 0, newElems, 0, index);
-        newElems[index] = value;
-        System.arraycopy(elements, index, newElems, index + 1, elements.length - index - 1);
-        elements = newElems;
-        this.index++;
+        if (index > this.index) {
+            throw new ArrayListIndexOutOfBoundsException("we cant initialise current index "
+                    + index + " while index " + this.index + " is null");
+        }
+        if (elements[index] != null) {
+            final Object[] newElems = new Object[elements.length];
+            System.arraycopy(elements, 0, newElems, 0, index);
+            newElems[index] = value;
+            System.arraycopy(elements, index, newElems, index + 1, elements.length - index - 1);
+            elements = newElems;
+            this.index++;;
+            return;
+        }
+        add(value);
     }
 
     @Override
@@ -38,27 +46,56 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index >= 0) {
-            return (T) elements[index];
+        if (index > this.index - 1) {
+            throw new ArrayListIndexOutOfBoundsException("we cant get value on index "
+                    + index + " while index " + (this.index - 1)+ " is null");
         }
-        return null;
+        if (index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("we cant get value on index "
+                    + index + "because current index is negative");
+        }
+        if (index + 1 == elements.length) {
+            resize();
+        }
+        return (T) elements[index];
     }
 
     @Override
     public void set(T value, int index) {
+        if (index > this.index) {
+            throw new ArrayListIndexOutOfBoundsException("we cant set value on current index "
+                    + index + " while index " + this.index + " is null");
+        }
+        if (index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("we cant set value on index "
+                    + index + " because current index is negative");
+        }
+        if (elements[index] != null) {
+            final Object[] newElems = new Object[elements.length];
+            System.arraycopy(elements, 0, newElems, 0, index);
+            newElems[index] = value;
+            System.arraycopy(elements, index  + 1, newElems, index + 1, elements.length - index - 1);
+            elements = newElems;
+            return;
+        }
 
     }
 
     @Override
     public T remove(int index) {
-        if (IndexIsCorrect(index)) {
+        if (index > this.index - 1) {
+            throw new ArrayListIndexOutOfBoundsException("we cant remove value on current index "
+                    + index + " while index " + (this.index - 1)+ " is null");
+        }
+        if (index < 0) {
+            throw  new ArrayListIndexOutOfBoundsException("we cant remove value on index "
+                    + index + "because current index is negative");
+        }
             final Object[] es = elements;
             T oldValue = (T) es[index];
             fastRemove(es, index);
 
-
-        }
-        return null;
+        return oldValue;
     }
     private void fastRemove(Object[] es, int i) {
         final int newSize;
