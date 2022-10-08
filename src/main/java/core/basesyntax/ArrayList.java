@@ -25,6 +25,10 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayListIndexOutOfBoundsException("we cant initialise current index "
                     + index + " while index " + this.index + " is null");
         }
+        if (index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("we cant add value on index "
+                    + index + "because this index is negative");
+        }
         if (elements[index] != null) {
             final Object[] newElems = new Object[elements.length];
             System.arraycopy(elements, 0, newElems, 0, index);
@@ -52,7 +56,7 @@ public class ArrayList<T> implements List<T> {
         }
         if (index < 0) {
             throw new ArrayListIndexOutOfBoundsException("we cant get value on index "
-                    + index + "because current index is negative");
+                    + index + "because this index is negative");
         }
         if (index + 1 == elements.length) {
             resize();
@@ -62,7 +66,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void set(T value, int index) {
-        if (index > this.index) {
+        if (index > this.index - 1) {
             throw new ArrayListIndexOutOfBoundsException("we cant set value on current index "
                     + index + " while index " + this.index + " is null");
         }
@@ -119,10 +123,9 @@ public class ArrayList<T> implements List<T> {
                     if (element.equals(es[i]))
                         break found;
             }
-            return null;
         }
         fastRemove(es, i);
-        return null;
+        return element;
     }
 
     @Override
