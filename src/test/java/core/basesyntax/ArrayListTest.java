@@ -7,6 +7,43 @@ import org.junit.Test;
 public class ArrayListTest {
     private static final int ELEMENTS_COUNT = 1000;
 
+    // My test
+//    @Test
+//    public void customAddElementToArrayList() {
+//        ArrayList<String> arrayList = new ArrayList<>();
+//        arrayList.add("Test");
+//        arrayList.add(null);
+//        arrayList.add("for");
+//        arrayList.add("Mate");
+//        arrayList.add("Test");
+//        arrayList.add(null);
+//        arrayList.add("for");
+//        arrayList.add("Mate");
+//        arrayList.add("Test");
+//        arrayList.add(null);
+//        arrayList.add("for");
+//        arrayList.add("Mate");
+//        arrayList.add("Test");
+//        arrayList.add(null);
+//        arrayList.add("for");
+//        arrayList.add("Mate");
+//        Assert.assertEquals("Test failed! Size of array should be " + 4 + "but it is "
+//                + arrayList.size(), 16, arrayList.size());
+//        arrayList.remove(null);
+//        arrayList.remove(null);
+//        arrayList.remove(null);
+//        arrayList.remove(null);
+//        Assert.assertEquals("Test failed! Size of array should be " + 4 + "but it is "
+//                + arrayList.size(), 12, arrayList.size());
+//        Assert.assertEquals("Test failed! Element is not added correctly",
+//                "Test", arrayList.get(0));
+//        Assert.assertNull("Test failed! Element is not added correctly", arrayList.get(1));
+//        Assert.assertEquals("Test failed! Element is not added correctly",
+//                "for", arrayList.get(2));
+//        Assert.assertEquals("Test failed! Element is not added correctly",
+//                "Mate", arrayList.get(3));
+//    }
+
     @Test
     public void addElementToArrayList() {
         ArrayList<String> arrayList = new ArrayList<>();

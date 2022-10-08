@@ -1,11 +1,9 @@
 package core.basesyntax;
 
 import java.util.NoSuchElementException;
-import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
     public static final int INITIAL_CAPACITY = 10;
-    public static final String NEGATIVE_CAPACITY_MESSAGE = "Cannot create ArrayList with negative capacity";
     public static final String NO_SUCH_ELEMENT_MESSAGE = "There is no such element in the list - ";
     public static final String OUT_OF_BOUNDS_MESSAGE = "Index out of bounds";
 
@@ -20,56 +18,63 @@ public class ArrayList<T> implements List<T> {
         if (capacity >= 0) {
             storage = new Object[capacity];
         } else {
-            throw new NegativeCapacityException(NEGATIVE_CAPACITY_MESSAGE);
+            throw new ArrayListIndexOutOfBoundsException(OUT_OF_BOUNDS_MESSAGE);
         }
     }
 
     @Override
     public void add(T value) {
-    //TODO Appends the specified element to the end of this list.
-
+        ensureCapacity();
+        storage[size] = value;
+        size++;
     }
 
     @Override
     public void add(T value, int index) {
-    //TODO Inserts the specified element at the specified position in this list.
+        ensureCapacity();
+        ensurePosition(index - 1);
+        Object[] temp = new Object[storage.length];
+        System.arraycopy(storage, 0, temp, 0, index);
+        temp[index] = value;
+        System.arraycopy(storage, index, temp, index + 1, size - index);
+        storage = temp;
+        size++;
     }
 
     @Override
     public void addAll(List<T> list) {
-    // Appends all of the elements in the specified collection to the end of this list,
-        //  in the order that they are returned by the specified collection's Iterator.
         int requiredSize = size + list.size();
         if (requiredSize > storage.length) {
             increaseCapacity(requiredSize);
         }
-        Object[] temp = new Object[storage.length];
-        System.arraycopy(storage, 0, temp, 0, size);
-        storage = temp;
+        for (int i = 0; i < list.size(); i++) {
+            add(list.get(i));
+        }
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public T get(int index) {
-        return null;
+        ensurePosition(index);
+        return (T) storage[index];
     }
 
     @Override
     public void set(T value, int index) {
-
+        ensurePosition(index);
+        storage[index] = value;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public T remove(int index) {
-        T obj;
-        if (index >= size) {
-            throw new ArrayListIndexOutOfBoundsException(OUT_OF_BOUNDS_MESSAGE);
-        } else {
-            obj = (T) storage[index];
-            reduceCapacity(index);
-        }
+        ensurePosition(index);
+        T obj = (T) storage[index];
+        reduceCapacity(index);
         return obj;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public T remove(T element) {
         T obj;
@@ -92,8 +97,20 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
+    private void ensureCapacity() {
+        if (size == storage.length) {
+            increaseCapacity(storage.length);
+        }
+    }
+
+    private void ensurePosition(int index) {
+        if (index + 1 < 0 || index + 1 > size) {
+            throw new ArrayListIndexOutOfBoundsException(OUT_OF_BOUNDS_MESSAGE);
+        }
+    }
+
     private void reduceCapacity(int index) {
-        Objects[] temp = new Objects[storage.length];
+        Object[] temp = new Object[storage.length - 1];
         System.arraycopy(storage, 0, temp, 0, index);
         System.arraycopy(storage, index + 1, temp, index, size - index - 1);
         storage = temp;
