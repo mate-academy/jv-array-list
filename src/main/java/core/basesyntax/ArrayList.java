@@ -15,21 +15,18 @@ public class ArrayList<T> implements List<T> {
         if (index + 1 > elements.length) {
             resize();
         }
-        try {
-            elements[index] = value;
-            index++;
-        } catch (ArrayListIndexOutOfBoundsException e) {
-            throw new ArrayListIndexOutOfBoundsException("Cant add");
-        }
+        elements[index] = value;
+        index++;
     }
 
     @Override
     public void add(T value, int index) {
-        if (index > 0 & index < elements.length) {
-            this.index = index;
-            add(value);
-        }
-
+        final Object[] newElems = new Object[elements.length];
+        System.arraycopy(elements, 0, newElems, 0, index);
+        newElems[index] = value;
+        System.arraycopy(elements, index, newElems, index + 1, elements.length - index - 1);
+        elements = newElems;
+        this.index++;
     }
 
     @Override
