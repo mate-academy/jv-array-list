@@ -32,7 +32,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         if (index < 0 || index > size()) {
-            throw new ArrayListIndexOutOfBoundsException("IndexOutOfBound");
+            throw new ArrayListIndexOutOfBoundsException(
+                    "Can't find such index " + index + " in this array");
         }
 
         if (values.length == size) {
@@ -56,7 +57,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("IndexOutOfBound");
+            throw new ArrayListIndexOutOfBoundsException(
+                    "Can't find such index " + index + " in this array");
         }
         return (T) values[index];
     }
@@ -64,9 +66,9 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void set(T value, int index) {
         if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Can't set");
+            throw new ArrayListIndexOutOfBoundsException(
+                    "Can't find such index " + index + " in this array");
         }
-        T oldValue = (T) values[index];
         values[index] = value;
     }
 
@@ -81,7 +83,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Can't remove");
+            throw new ArrayListIndexOutOfBoundsException(
+                    "Can't find such index " + index + " in this array");
         }
         final Object[] helpToRemoveArray = values;
         T oldValue = (T) helpToRemoveArray[index];
@@ -99,9 +102,7 @@ public class ArrayList<T> implements List<T> {
                 return element;
             }
         }
-
-        throw new NoSuchElementException("Not found such element");
-
+        throw new NoSuchElementException("Not found such element " + element);
     }
 
     @Override
