@@ -6,23 +6,17 @@ public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_SIZE = 10;
     private static final int firstArrayIndex = 0;
     private int size;
-    private Object[] oldArray;
     private Object[] array;
 
     public ArrayList() {
         array = new Object[DEFAULT_SIZE];
-        oldArray = new Object[DEFAULT_SIZE];
         size = 0;
     }
 
     @Override
     public void add(T value) {
         if (size == array.length) {
-            reSize();
-        }
-        if (value == null) {
-            size++;
-            return;
+            resize(firstArrayIndex);
         }
         array[size] = value;
         size++;
@@ -32,16 +26,11 @@ public class ArrayList<T> implements List<T> {
     public void add(T value, int index) {
         checkForIndex(index);
         if (size == array.length) {
-            reSize(index);
+            resize(index);
         }
         if (array[index] != null) {
-            oldArray = array;
+            Object[] oldArray = array;
             System.arraycopy(oldArray, index, array, index + 1, size - index);
-        }
-        if (value == null) {
-            reSize(index);
-            size++;
-            return;
         }
         array[index] = value;
         size++;
@@ -56,18 +45,18 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        checkForIndexGetAndSet(index);
+        checkForIndexRemoveGetSet(index);
         return (T) array[index];
     }
 
     public void set(T value, int index) {
-        checkForIndexGetAndSet(index);
+        checkForIndexRemoveGetSet(index);
         array[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        checkForIndexRemove(index);
+        checkForIndexRemoveGetSet(index);
         Object removedObject = array[index];
         removeIndex(index);
         size--;
@@ -77,8 +66,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < array.length; i++) {
-            if ((array[i] == null && element == null)
-                    || (array[i] != null && array[i].equals(element))) {
+            if (array[i] == element || array[i] != null && array[i].equals(element)) {
                 return remove(i);
             }
         }
@@ -95,45 +83,30 @@ public class ArrayList<T> implements List<T> {
         return array[firstArrayIndex] == null;
     }
 
-    public void reSize() {
-        oldArray = array;
+    public void resize(int index) {
+        Object[] oldArray = array;
         array = new Object[oldArray.length + (oldArray.length / 2)];
-        System.arraycopy(oldArray, firstArrayIndex, array, firstArrayIndex, size);
-    }
-
-    public void reSize(int index) {
-        oldArray = array;
-        array = new Object[oldArray.length + (oldArray.length / 2)];
-        System.arraycopy(oldArray, index, array, index + 1, size);
+        System.arraycopy(oldArray, index, array, index, size);
     }
 
     public void removeIndex(int index) {
-        checkForIndexRemove(index);
-        oldArray = array;
-        if (index == 0) {
-            System.arraycopy(oldArray, index + 1, array, index, size);
-            return;
+        checkForIndexRemoveGetSet(index);
+        Object[] oldArray = array;
+        int lengthNumber = 1;
+        if (size == 1) {
+            lengthNumber--;
         }
-        if (size == array.length) {
-            index = 0;
-        }
-        System.arraycopy(oldArray, index + 1, array, index, size - 1);
+        System.arraycopy(oldArray, index + 1, array, index, size - index - lengthNumber);
     }
 
     public void checkForIndex(int index) {
-        if (index - 1 > size() || index < 0) {
+        if (index - 1 > size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("ArrayList index out of bounds");
         }
     }
 
-    public void checkForIndexRemove(int index) {
-        if (index + 1 > size() || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("ArrayList index out of bounds");
-        }
-    }
-
-    public void checkForIndexGetAndSet(int index) {
-        if (index == size || index < 0) {
+    public void checkForIndexRemoveGetSet(int index) {
+        if (index >= size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("ArrayList index out of bounds");
         }
     }
