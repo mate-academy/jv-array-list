@@ -30,28 +30,6 @@ public class ArrayList<T> implements List<T> {
         addElementInsideData(value, index);
     }
 
-    private void addElementInsideData(T value, int index) {
-        Object[] tempFirstPart = Arrays.copyOfRange(elementData, 0, index);
-        Object[] tempSecondPart = Arrays.copyOfRange(elementData, index, elementData.length);
-
-        int counterForSecondArray = 0;
-        for (int i = 0; i < elementData.length; i++) {
-            if (i == index) {
-                numberOfObjects++;
-                elementData[i] = value;
-                continue;
-            }
-            if (i < index) {
-                elementData[i] = tempFirstPart[i];
-                continue;
-            }
-            if (i > index) {
-                elementData[i] = tempSecondPart[counterForSecondArray];
-                counterForSecondArray++;
-            }
-        }
-    }
-
     @Override
     public void addAll(List<T> list) {
         for (int i = 0; i < list.size(); i++) {
@@ -74,17 +52,10 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
-
-        Object[] tempFirstPart = Arrays.copyOfRange(elementData, 0, index);
-        Object[] tempSecondPart = Arrays.copyOfRange(elementData, index + 1, elementData.length);
-        numberOfObjects--;
         Object result = elementData[index];
-
-        System.arraycopy(tempFirstPart, 0, elementData,
-                0, tempFirstPart.length);
-        System.arraycopy(tempSecondPart, 0, elementData,
-                tempFirstPart.length, tempSecondPart.length);
-
+        System.arraycopy(elementData, Math.min(index + 1, size()), elementData, index,
+                size() - index - 1);
+        numberOfObjects--;
         return (T) result;
     }
 
@@ -99,7 +70,7 @@ public class ArrayList<T> implements List<T> {
                 return (T) result;
             }
         }
-        throw new NoSuchElementException("Can`t find file " + element + " in list");
+        throw new NoSuchElementException("Can`t find element " + element + " in list");
     }
 
     @Override
@@ -110,6 +81,12 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return numberOfObjects <= 0;
+    }
+
+    private void addElementInsideData(T value, int index) {
+        System.arraycopy(elementData, index, elementData, index + 1, size() - index);
+        elementData[index] = value;
+        numberOfObjects++;
     }
 
     private void checkIndex(int index) {
