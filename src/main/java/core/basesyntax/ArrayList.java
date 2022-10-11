@@ -22,9 +22,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (size == elements.length) {
-            grow();
-        }
+        checkSize();
         elements[size] = value;
         size++;
     }
@@ -32,9 +30,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         checkIndexForAdd(index);
-        if (size == elements.length) {
-            grow();
-        }
+        checkSize();
         System.arraycopy(elements, index, elements, index + 1, size - index);
         elements[index] = value;
         size++;
@@ -67,7 +63,6 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(int index) {
-        checkIndex(index);
         T element = this.get(index);
         System.arraycopy(elements, index + 1, elements, index, size - index - 1);
         size--;
@@ -77,17 +72,10 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         int i = 0;
-        if (element == null) {
-            for (; i < size; i++) {
-                if (elements[i] == null) {
-                    return remove(i);
-                }
-            }
-        } else {
-            for (; i < size; i++) {
-                if (element.equals(elements[i])) {
-                    return remove(i);
-                }
+        for (; i < size; i++) {
+            if (element == elements[i]
+                    || (element != null && element.equals(elements[i]))) {
+                return remove(i);
             }
         }
         throw new NoSuchElementException("Such element doesn't exist");
@@ -126,5 +114,11 @@ public class ArrayList<T> implements List<T> {
         Object[] newElements = new Object[requiredSize];
         System.arraycopy(elements, 0, newElements, 0, elements.length);
         elements = newElements;
+    }
+
+    private void checkSize() {
+        if (size == elements.length) {
+            grow();
+        }
     }
 }
