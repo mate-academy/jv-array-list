@@ -2,9 +2,10 @@ package core.basesyntax;
 
 import java.util.Arrays;
 import java.util.NoSuchElementException;
-import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
+    public static final String WRONG_INDEX_MSG = "Invalid index. Check the list size";
+    public static final String NO_SUCH_ELEMENT = "Can't find such element";
     public static final int INITIAL_SIZE = 10;
 
     private T[] array = (T[]) new Object[INITIAL_SIZE];
@@ -19,9 +20,9 @@ public class ArrayList<T> implements List<T> {
     }
 
     @Override
-    public void add(T value, int index) throws ArrayListIndexOutOfBoundsException {
+    public void add(T value, int index) {
         if (index < 0 || index > currentSize) {
-            throw new ArrayListIndexOutOfBoundsException("Can't add element on this position");
+            throw new ArrayListIndexOutOfBoundsException(WRONG_INDEX_MSG);
         }
         sizeCheck();
         if (index <= currentSize) {
@@ -41,27 +42,20 @@ public class ArrayList<T> implements List<T> {
     }
 
     @Override
-    public T get(int index) throws ArrayListIndexOutOfBoundsException {
-        if (index >= currentSize || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Can't find element with this index");
-        }
+    public T get(int index) {
+        indexCheck(index);
         return array[index];
     }
 
     @Override
-    public void set(T value, int index) throws ArrayListIndexOutOfBoundsException {
-        if (index < 0 || index > currentSize - 1) {
-            throw new ArrayListIndexOutOfBoundsException("Incorrect index");
-        }
+    public void set(T value, int index) {
+        indexCheck(index);
         array[index] = value;
     }
 
     @Override
-    public T remove(int index) throws ArrayListIndexOutOfBoundsException {
-        if (index < 0 || index >= currentSize) {
-            throw new ArrayListIndexOutOfBoundsException("Can't delete element "
-                    + "on this position. Incorrect position");
-        }
+    public T remove(int index) {
+        indexCheck(index);
         T deletedValue = get(index);
         System.arraycopy(array, index + 1, array, index, currentSize - index - 1);
         currentSize--;
@@ -69,15 +63,15 @@ public class ArrayList<T> implements List<T> {
     }
 
     @Override
-    public T remove(T element) throws NoSuchElementException {
+    public T remove(T element) {
         for (int i = 0; i < currentSize; i++) {
-            if (Objects.equals(element, array[i])) {
+            if (element == array[i] || (element != null && element.equals(array[i]))) {
                 System.arraycopy(array, i + 1, array, i, currentSize - i - 1);
                 currentSize--;
                 return element;
             }
         }
-        throw new NoSuchElementException("Can't find element");
+        throw new NoSuchElementException(NO_SUCH_ELEMENT);
     }
 
     @Override
@@ -98,6 +92,12 @@ public class ArrayList<T> implements List<T> {
     private void sizeCheck() {
         if (currentSize == maxSize) {
             grow();
+        }
+    }
+
+    private void indexCheck(int index) {
+        if (index < 0 || index >= currentSize) {
+            throw new ArrayListIndexOutOfBoundsException(WRONG_INDEX_MSG);
         }
     }
 }
