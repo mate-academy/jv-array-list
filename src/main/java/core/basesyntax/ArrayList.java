@@ -65,8 +65,7 @@ public class ArrayList<T> implements List<T> {
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
             if (element == values[i] || element != null && element.equals(values[i])) {
-                T remotedElement;
-                remotedElement = (T) values[i];
+                T remotedElement = (T) values[i];
                 remove(i);
                 return remotedElement;
             }
