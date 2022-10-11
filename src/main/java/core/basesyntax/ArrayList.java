@@ -78,14 +78,14 @@ public class ArrayList<T> implements List<T> {
         return size == THIS_IS_ZERO;
     }
 
-    public void checkGrow() {
+    private void checkGrow() {
         if (size == currentArray.length) {
             currentArray = Arrays.copyOf(currentArray, currentArray.length
                     + currentArray.length / THIS_IS_TWO);
         }
     }
 
-    public void chekIndex(int index) {
+    private void chekIndex(int index) {
         if (index >= size || index < THIS_IS_ZERO) {
             throw new ArrayListIndexOutOfBoundsException("Array list index of bound");
         }
