@@ -6,21 +6,13 @@ import java.util.NoSuchElementException;
 @SuppressWarnings("unchecked")
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
+    private static final String INDEX_EXCEPTION = "Index is incorrect";
+    private static final String ELEMENT_EXCEPTION = "Can't find this element: ";
     private int size;
     private T[] elementData;
 
     public ArrayList() {
         elementData = (T[]) new Object[DEFAULT_CAPACITY];
-    }
-
-    private void grow() {
-        if (size == elementData.length) {
-            int oldCapacity = elementData.length;
-            if (oldCapacity > 0) {
-                int newCapacity = elementData.length + (elementData.length >> 1);
-                elementData = Arrays.copyOf(elementData, newCapacity);
-            }
-        }
     }
 
     @Override
@@ -33,7 +25,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("Index is incorrect");
+            throw new ArrayListIndexOutOfBoundsException(INDEX_EXCEPTION);
         }
         grow();
         T[] newElementData = (T[]) new Object[elementData.length];
@@ -65,7 +57,6 @@ public class ArrayList<T> implements List<T> {
         newElementData[index] = value;
         System.arraycopy(elementData, index + 1, newElementData, index + 1, size - index);
         elementData = newElementData;
-
     }
 
     @Override
@@ -91,7 +82,7 @@ public class ArrayList<T> implements List<T> {
             size--;
             return element;
         }
-        throw new NoSuchElementException("Can't find this element: " + element);
+        throw new NoSuchElementException(ELEMENT_EXCEPTION + element);
     }
 
     private void fastRemove(Object[] es, int i) {
@@ -114,7 +105,16 @@ public class ArrayList<T> implements List<T> {
 
     private void rangeCheck(int index) {
         if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index is incorrect");
+            throw new ArrayListIndexOutOfBoundsException(INDEX_EXCEPTION);
+        }
+    }
+    private void grow() {
+        if (size == elementData.length) {
+            int oldCapacity = elementData.length;
+            if (oldCapacity > 0) {
+                int newCapacity = elementData.length + (elementData.length >> 1);
+                elementData = Arrays.copyOf(elementData, newCapacity);
+            }
         }
     }
 }
