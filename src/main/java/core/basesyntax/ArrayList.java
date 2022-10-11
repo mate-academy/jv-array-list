@@ -63,12 +63,12 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        T res;
         for (int i = 0; i < size; i++) {
             if (element == values[i] || element != null && element.equals(values[i])) {
-                res = (T) values[i];
+                T remotedElement;
+                remotedElement = (T) values[i];
                 remove(i);
-                return res;
+                return remotedElement;
             }
         }
         throw new NoSuchElementException("Element " + element + " absent in ArrayList");
