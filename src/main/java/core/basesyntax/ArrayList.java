@@ -5,8 +5,12 @@ import java.util.NoSuchElementException;
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private static final float GROW_MULTIPLYER = 1.5f;
-    private Object[] elements = new Object[DEFAULT_CAPACITY];
+    private Object[] elements;
     private int size;
+
+    public ArrayList() {
+        elements = new Object[DEFAULT_CAPACITY];
+    }
 
     @Override
     public void add(T value) {
@@ -39,34 +43,34 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    public Object[] grow() {
+    private void grow() {
         Object[] resizedElements = new Object[Math.round(elements.length * GROW_MULTIPLYER)];
         System.arraycopy(elements, 0,
                 resizedElements,0, elements.length);
-        return elements = resizedElements;
+        elements = resizedElements;
+    }
+
+    private void isInRange(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Index out of bound of list size");
+        }
     }
 
     @Override
     public T get(int index) {
-        if (index < 0 || index > size - 1) {
-            throw new ArrayListIndexOutOfBoundsException("Index out of bound of list size");
-        }
+        isInRange(index);
         return (T) elements[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index < 0 || index > size - 1) {
-            throw new ArrayListIndexOutOfBoundsException("Index out of bound of list size");
-        }
+        isInRange(index);
         elements[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index < 0 || index > size - 1) {
-            throw new ArrayListIndexOutOfBoundsException("Incorrect index input");
-        }
+        isInRange(index);
         size--;
         T desiredValue = (T) elements[index];
         System.arraycopy(elements, index + 1,
