@@ -31,11 +31,10 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index < 0 || index > size()) {
+        if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException(
                     "Can't find such index " + index + " in this array");
         }
-
         if (values.length == size) {
             values = grow();
         }
@@ -56,19 +55,13 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException(
-                    "Can't find such index " + index + " in this array");
-        }
+        checkIndex(index);
         return (T) values[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException(
-                    "Can't find such index " + index + " in this array");
-        }
+        checkIndex(index);
         values[index] = value;
     }
 
@@ -82,10 +75,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException(
-                    "Can't find such index " + index + " in this array");
-        }
+        checkIndex(index);
         final Object[] helpToRemoveArray = values;
         T oldValue = (T) helpToRemoveArray[index];
         fastRemove(helpToRemoveArray, index);
@@ -113,5 +103,12 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    public void checkIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException(
+                    "Can't find such index " + index + " in this array");
+        }
     }
 }
