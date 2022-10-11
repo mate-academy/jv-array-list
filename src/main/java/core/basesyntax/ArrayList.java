@@ -12,43 +12,13 @@ public class ArrayList<T> implements List<T> {
         this.elementData = new Object[DEFAULT_CAPACITY];
     }
 
-    private Object[] grow(int minCapacity) {
-        int oldCapacity = elementData.length;
-        if (oldCapacity > 0 || elementData != new Object[DEFAULT_CAPACITY]) {
-            int newCapacity = oldCapacity + (int) (oldCapacity * 1.5);
-            return elementData = Arrays.copyOf(elementData, newCapacity);
-        } else {
-            return elementData = new Object[Math.max(DEFAULT_CAPACITY, minCapacity)];
-        }
-    }
-
-    private void checkBoundsIndex(int index) {
-        if (index > size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index");
-        }
-    }
-
-    private void checkIndex(int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index");
-        }
-    }
-
-    private void fastRemove(int index) {
-        size--;
-        Object[] tmpArray = new Object[size];
-        System.arraycopy(elementData, 0, tmpArray, 0, index);
-        System.arraycopy(elementData, index + 1, tmpArray, index, size - index);
-        elementData = tmpArray;
-    }
-
     @Override
     public void add(T value) {
         if (size == elementData.length) {
             elementData = grow(size + 1);
         }
         elementData[size] = value;
-        size += 1;
+        size++;
     }
 
     @Override
@@ -60,7 +30,7 @@ public class ArrayList<T> implements List<T> {
         }
         System.arraycopy(elementData, index, elementData, index + 1,size - index);
         elementData[index] = value;
-        size += 1;
+        size++;
     }
 
     @Override
@@ -92,22 +62,16 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        boolean noSuchElement = true;
         T oldValue = null;
         for (int i = 0; i < size; i++) {
-            if ((element == elementData[i]) || (element != null
-                    && element.equals(elementData[i]))) {
+            if (element == elementData[i] || element != null
+                    && element.equals(elementData[i])) {
                 oldValue = (T) elementData[i];
-                noSuchElement = false;
                 fastRemove(i);
-                break;
+                return oldValue;
             }
         }
-        if (noSuchElement) {
-            throw new NoSuchElementException("No such element");
-        } else {
-            return oldValue;
-        }
+        throw new NoSuchElementException("No such element");
     }
 
     @Override
@@ -118,5 +82,34 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private Object[] grow(int minCapacity) {
+        int oldCapacity = elementData.length;
+        if (oldCapacity > 0 || elementData != new Object[DEFAULT_CAPACITY]) {
+            int newCapacity = oldCapacity + (int) (oldCapacity * 0.5);
+            return elementData = Arrays.copyOf(elementData, newCapacity);
+        }
+        return elementData;
+    }
+
+    private void checkBoundsIndex(int index) {
+        if (index > size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Invalid index");
+        }
+    }
+
+    private void checkIndex(int index) {
+        if (index >= size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Invalid index");
+        }
+    }
+
+    private void fastRemove(int index) {
+        size--;
+        Object[] tmpArray = elementData;
+        System.arraycopy(elementData, 0, tmpArray, 0, index);
+        System.arraycopy(elementData, index + 1, tmpArray, index, size - index);
+        elementData = tmpArray;
     }
 }
