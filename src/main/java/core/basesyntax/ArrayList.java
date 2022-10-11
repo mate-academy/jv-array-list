@@ -44,7 +44,7 @@ public class ArrayList<T> implements List<T> {
         }
         for (int i = 0; i < length; i++) {
             T element = list.get(i);
-            this.add(element);
+            add(element);
         }
     }
 
@@ -63,7 +63,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(int index) {
-        T element = this.get(index);
+        T element = get(index);
         System.arraycopy(elements, index + 1, elements, index, size - index - 1);
         size--;
         return element;
