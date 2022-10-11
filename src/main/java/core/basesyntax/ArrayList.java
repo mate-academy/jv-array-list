@@ -24,7 +24,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         if (index > size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("error");
+            throw new ArrayListIndexOutOfBoundsException("going beyond array");
         }
         if (size == obj.length) {
             grow();
@@ -90,7 +90,7 @@ public class ArrayList<T> implements List<T> {
 
     private void checkValidIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("out");
+            throw new ArrayListIndexOutOfBoundsException("going beyond array");
         }
     }
 }
