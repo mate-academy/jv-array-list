@@ -38,10 +38,6 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    T elementData(int index) {
-        return (T) elementData[index];
-    }
-
     @Override
     public void add(T value) {
         if (size == elementData.length) {
@@ -87,19 +83,16 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         indexCheck(index);
-        return elementData(index);
+        return (T) elementData[index];
     }
 
     @Override
     public void set(T value, int index) {
         indexCheck(index);
-        Object[] elementData = this.elementData;
         System.arraycopy(elementData, index,
                 elementData, index + 1,
                 size);
         elementData[index] = value;
-        size = size;
-        this.elementData = elementData;
     }
 
     private void fastRemove(Object[] es, int i) {
@@ -122,20 +115,11 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         T oldValue = element;
-        final int size = this.size;
-        if (element == null) {
-            for (int i = 0; i < size; i++) {
-                if (elementData[i] == null) {
-                    fastRemove(elementData, i);
-                    return oldValue;
-                }
-            }
-        } else {
-            for (int j = 0; j < size; j++) {
-                if (element.equals(elementData[j])) {
-                    fastRemove(elementData, j);
-                    return oldValue;
-                }
+        for (int j = 0; j < size; j++) {
+            if (element == null && elementData[j] == null
+                    || (element != null && element.equals(elementData[j]))) {
+                fastRemove(elementData, j);
+                return oldValue;
             }
         }
         throw new NoSuchElementException("Such element hasn't been found " + element);
