@@ -5,6 +5,7 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
+    private int actualCapacity = DEFAULT_CAPACITY;
     private Object[] elementData;
     private int size = 0;
 
@@ -14,9 +15,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (size == elementData.length) {
-            elementData = grow(size + 1);
-        }
+        grow();
         elementData[size] = value;
         size++;
     }
@@ -25,9 +24,7 @@ public class ArrayList<T> implements List<T> {
     public void add(T value, int index) {
         checkBoundsIndex(index);
         Object[] elementData = this.elementData;
-        if (size == elementData.length) {
-            elementData = grow(size + 1);
-        }
+        grow();
         System.arraycopy(elementData, index, elementData, index + 1,size - index);
         elementData[index] = value;
         size++;
@@ -84,13 +81,13 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private Object[] grow(int minCapacity) {
+    private void grow() {
         int oldCapacity = elementData.length;
-        if (oldCapacity > 0 || elementData != new Object[DEFAULT_CAPACITY]) {
+        if (oldCapacity >= actualCapacity) {
             int newCapacity = oldCapacity + (int) (oldCapacity * 0.5);
-            return elementData = Arrays.copyOf(elementData, newCapacity);
+            actualCapacity += newCapacity;
+            elementData = Arrays.copyOf(elementData, newCapacity);
         }
-        return elementData;
     }
 
     private void checkBoundsIndex(int index) {
@@ -107,7 +104,7 @@ public class ArrayList<T> implements List<T> {
 
     private void fastRemove(int index) {
         size--;
-        Object[] tmpArray = elementData;
+        Object[] tmpArray = new Object[size];
         System.arraycopy(elementData, 0, tmpArray, 0, index);
         System.arraycopy(elementData, index + 1, tmpArray, index, size - index);
         elementData = tmpArray;
