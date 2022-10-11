@@ -108,6 +108,7 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayListIndexOutOfBoundsException(INDEX_EXCEPTION);
         }
     }
+
     private void grow() {
         if (size == elementData.length) {
             int oldCapacity = elementData.length;
