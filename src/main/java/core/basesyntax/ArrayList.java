@@ -7,11 +7,11 @@ public class ArrayList<T> implements List<T> {
     private static final String ARRAY_LIST_IOOB_EXCEPTION_TEXT
             = "No element with such index";
     private static final int WRONG_INDEX = -1;
-    private T[] data;
+    private Object[] data;
     private int size;
 
     public ArrayList() {
-        this.data = (T[]) new Object[DEFAULT_CAPACITY];
+        this.data = new Object[DEFAULT_CAPACITY];
     }
 
     @Override
@@ -46,7 +46,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         checkIndex(index);
-        return data[index];
+        return (T) data[index];
     }
 
     @Override
@@ -58,7 +58,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
-        T oldValue = data[index];
+        T oldValue = (T) data[index];
         size--;
         System.arraycopy(data, index + 1, data, index, size - index);
         return oldValue;
@@ -66,8 +66,13 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        int index = indexOf(element);
-        if (index != -1) {
+        int index = WRONG_INDEX;
+        for (int i = 0; i < size; i++) {
+            if (element == data[i] || element != null && element.equals(data[i])) {
+                index = i;
+            }
+        }
+        if (index != WRONG_INDEX) {
             return remove(index);
         }
         throw new NoSuchElementException("No such element: " + element + " in ArrayList");
@@ -84,8 +89,8 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void grow() {
-        T[] temp = data;
-        data = (T[]) new Object[size + (size >> 1)];
+        Object[] temp = data;
+        data = new Object[size + (size >> 1)];
         System.arraycopy(temp, 0, data, 0, size);
     }
 
@@ -93,14 +98,5 @@ public class ArrayList<T> implements List<T> {
         if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException(ARRAY_LIST_IOOB_EXCEPTION_TEXT);
         }
-    }
-
-    public int indexOf(T value) {
-        for (int i = 0; i < size; i++) {
-            if (value == data[i] || value != null && value.equals(data[i])) {
-                return i;
-            }
-        }
-        return WRONG_INDEX;
     }
 }
