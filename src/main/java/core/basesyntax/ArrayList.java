@@ -67,7 +67,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         rangeCheckForAdd(index);
-        if (size == 0 || index == size) {
+        if (index == size) {
             add(value);
             return;
         }
@@ -81,7 +81,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        if (list == null || list.isEmpty()) {
+        if (list == null) {
             return;
         }
         for (int i = 0; i < list.size(); i++) {
@@ -97,7 +97,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     @Override
-    public void set(T value, int index) { //++
+    public void set(T value, int index) {
         checkIndex(index);
         elementData[index] = value;
     }
@@ -116,7 +116,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     @Override
-    public T remove(T element) { //++
+    public T remove(T element) {
         int index = indexOf(element);
         if (index > INDEX_NOT_FOUND) {
             return remove(index);
