@@ -5,6 +5,8 @@ import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
+    private static final int SRC_POSITION = 0;
+    private static final int DESC_POSITION = 0;
     private int size;
     private Object[] dataArray;
 
@@ -84,14 +86,14 @@ public class ArrayList<T> implements List<T> {
 
     private void growLength() {
         int newLength = (dataArray.length + (dataArray.length >> 1));
-        T[] newArray = (T[]) new Object[newLength];
-        System.arraycopy(dataArray, 0, newArray, 0, size);
+        Object[] newArray = (T[]) new Object[newLength];
+        System.arraycopy(dataArray, SRC_POSITION, newArray, DESC_POSITION, size);
         dataArray = newArray;
     }
 
     private void checkIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Element is`nt exist by index " + index);
+            throw new ArrayListIndexOutOfBoundsException("Element does`nt exist by index " + index);
         }
     }
 }
