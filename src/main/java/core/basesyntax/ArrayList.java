@@ -2,6 +2,7 @@ package core.basesyntax;
 
 import java.util.NoSuchElementException;
 
+@SuppressWarnings("unchecked")
 public class ArrayList<T> implements List<T> {
     public static final int INITIAL_CAPACITY = 10;
     public static final String NO_SUCH_ELEMENT_MESSAGE = "There is no such element in the list - ";
@@ -31,14 +32,18 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        ensureCapacity();
-        ensurePosition(index - 1);
-        Object[] temp = new Object[storage.length];
-        System.arraycopy(storage, 0, temp, 0, index);
-        temp[index] = value;
-        System.arraycopy(storage, index, temp, index + 1, size - index);
-        storage = temp;
-        size++;
+        if (index - 1 == size) {
+            add(value);
+        } else {
+            ensureCapacity();
+            ensurePosition(index - 1);
+            Object[] temp = new Object[storage.length];
+            System.arraycopy(storage, 0, temp, 0, index);
+            temp[index] = value;
+            System.arraycopy(storage, index, temp, index + 1, size - index);
+            storage = temp;
+            size++;
+        }
     }
 
     @Override
@@ -52,7 +57,6 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public T get(int index) {
         ensurePosition(index);
@@ -65,7 +69,6 @@ public class ArrayList<T> implements List<T> {
         storage[index] = value;
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public T remove(int index) {
         ensurePosition(index);
@@ -74,7 +77,6 @@ public class ArrayList<T> implements List<T> {
         return obj;
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public T remove(T element) {
         T obj;
