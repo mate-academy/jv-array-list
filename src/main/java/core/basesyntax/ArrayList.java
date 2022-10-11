@@ -4,7 +4,7 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_SIZE = 10;
-    private static final int firstArrayIndex = 0;
+    private static final int FIRST_ARRAY_INDEX = 0;
     private int size;
     private Object[] array;
 
@@ -16,7 +16,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value) {
         if (size == array.length) {
-            resize(firstArrayIndex);
+            resize(FIRST_ARRAY_INDEX);
         }
         array[size] = value;
         size++;
@@ -28,10 +28,8 @@ public class ArrayList<T> implements List<T> {
         if (size == array.length) {
             resize(index);
         }
-        if (array[index] != null) {
-            Object[] oldArray = array;
-            System.arraycopy(oldArray, index, array, index + 1, size - index);
-        }
+        Object[] oldArray = array;
+        System.arraycopy(oldArray, index, array, index + 1, size - index);
         array[index] = value;
         size++;
     }
@@ -80,7 +78,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public boolean isEmpty() {
-        return array[firstArrayIndex] == null;
+        return array[FIRST_ARRAY_INDEX] == null;
     }
 
     public void resize(int index) {
