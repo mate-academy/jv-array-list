@@ -89,9 +89,6 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void set(T value, int index) {
         indexCheck(index);
-        System.arraycopy(elementData, index,
-                elementData, index + 1,
-                size);
         elementData[index] = value;
     }
 
