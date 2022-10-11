@@ -12,7 +12,7 @@ public class ArrayList<T> implements List<T> {
         elements = new Object[DEFAULT_CAPACITY];
     }
 
-    private void checkException(int index) {
+    private void checkIndex(int index) {
         if (size != 0 && (index >= size || index < 0)) {
             throw new ArrayListIndexOutOfBoundsException("Index " + index
                     + " out of bounds for length " + size);
@@ -38,7 +38,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         if (index != size) {
-            checkException(index);
+            checkIndex(index);
         }
 
         if (size >= DEFAULT_CAPACITY) {
@@ -59,26 +59,22 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        checkException(index);
+        checkIndex(index);
         return (T) elements[index];
     }
 
     @Override
     public void set(T value, int index) {
-        checkException(index);
+        checkIndex(index);
         elements[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        checkException(index);
+        checkIndex(index);
         T removedElement = (T) elements[index];
-        if (index + 1 < size) {
-            System.arraycopy(elements, index + 1, elements, index, size - index);
-        } else {
-            System.arraycopy(elements, index, elements, index, size - index);
-        }
         size--;
+        System.arraycopy(elements, index + 1, elements, index, size - index);
         return removedElement;
     }
 
@@ -96,7 +92,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public int size() {
-        return size > Integer.MAX_VALUE ? Integer.MAX_VALUE : size;
+        return size;
     }
 
     @Override
