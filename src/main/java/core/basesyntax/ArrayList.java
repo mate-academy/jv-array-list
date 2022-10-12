@@ -1,48 +1,106 @@
 package core.basesyntax;
 
+import java.util.NoSuchElementException;
+import java.util.Objects;
+
 public class ArrayList<T> implements List<T> {
+    private static final int INITIAL_CAPACITY = 10;
+    private Object[] elementsData = new Object[INITIAL_CAPACITY];
+
+    private int actualSize;
+
     @Override
     public void add(T value) {
-
+        add(value, actualSize);
     }
 
     @Override
     public void add(T value, int index) {
-
+        if (checkIndexBounds(index)) {
+            throw new ArrayListIndexOutOfBoundsException("");
+        }
+        ensureCapacity();
+        actualSize++;
+        if (index != actualSize) {
+            System.arraycopy(elementsData, index, elementsData, index + 1, actualSize - index);
+        }
+        elementsData[index] = value;
     }
 
     @Override
     public void addAll(List<T> list) {
-
+        for (int i = 0; i != list.size(); i++) {
+            add(list.get(i));
+        }
     }
 
     @Override
     public T get(int index) {
-        return null;
+        if (checkIndexBounds(index + 1)) {
+            throw new ArrayListIndexOutOfBoundsException("");
+        }
+        return (T) elementsData[index];
     }
 
     @Override
     public void set(T value, int index) {
-
+        if (checkIndexBounds(index + 1)) {
+            throw new ArrayListIndexOutOfBoundsException("");
+        }
+        elementsData[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        return null;
+        if (checkIndexBounds(index + 1)) {
+            throw new ArrayListIndexOutOfBoundsException("");
+        }
+
+        return removeByIndex(index);
     }
 
     @Override
     public T remove(T element) {
-        return null;
+        for (int i = 0; i != actualSize; i++) {
+            if (Objects.equals(elementsData[i], element)) {
+                return removeByIndex(i);
+            }
+        }
+        throw new NoSuchElementException("");
     }
 
     @Override
     public int size() {
-        return 0;
+        return actualSize;
     }
 
     @Override
     public boolean isEmpty() {
-        return false;
+        return actualSize == 0;
+    }
+
+    private T removeByIndex(int index) {
+        int numMoved = elementsData.length - index - 1;
+        T removed = (T) elementsData[index];
+        System.arraycopy(elementsData, index + 1, elementsData, index, numMoved);
+        --actualSize;
+        return removed;
+    }
+
+    private boolean checkIndexBounds(int index) {
+        return index > actualSize || index < 0;
+    }
+
+    private void ensureCapacity() {
+        int minCapacity = actualSize + 1;
+        if (minCapacity >= elementsData.length) {
+            Object[] newArray = new Object[calculateNewCapacity(minCapacity)];
+            System.arraycopy(elementsData, 0, newArray, 0, elementsData.length);
+            elementsData = newArray;
+        }
+    }
+
+    private static int calculateNewCapacity(int oldCapacity) {
+        return oldCapacity * 3 / 2;
     }
 }
