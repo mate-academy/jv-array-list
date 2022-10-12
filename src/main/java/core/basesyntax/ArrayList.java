@@ -80,13 +80,7 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         rangeChecker(index);
         T removedElement = (T) defaultArray[index];
-        if (index == sizeCounter - 1) {
-            System.arraycopy(defaultArray, DEFAULT_INDEX, defaultArray,
-                    DEFAULT_INDEX, sizeCounter - 1);
-            sizeCounter--;
-            return removedElement;
-        }
-        System.arraycopy(defaultArray, index + 1, defaultArray, index, sizeCounter - index);
+        System.arraycopy(defaultArray, index + 1, defaultArray, index, sizeCounter - index - 1);
         sizeCounter--;
         return removedElement;
     }
@@ -96,10 +90,7 @@ public class ArrayList<T> implements List<T> {
         for (int i = 0; i < sizeCounter; i++) {
             if ((element != null && element.equals(defaultArray[i]))
                     || element == defaultArray[i]) {
-                T removedElement = (T)defaultArray[i];
-                System.arraycopy(defaultArray, i + 1, defaultArray, i,sizeCounter - i);
-                sizeCounter--;
-                return removedElement;
+                return remove(i);
             }
         }
         throw new NoSuchElementException("Can not remove. The element "
