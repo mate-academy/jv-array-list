@@ -14,19 +14,15 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (size == elements.length) {
-            resize();
-        }
+        resize();
         elements[size] = value;
         size++;
     }
 
     @Override
     public void add(T value, int index) {
-        checkIndex(index, 0, size);
-        if (size == elements.length) {
-            resize();
-        }
+        checkIndex(index, size);
+        resize();
         System.arraycopy(elements, index, elements, index + 1, size - index);
         elements[index] = value;
         size++;
@@ -41,19 +37,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        checkIndex(index, 0, size - 1);
+        checkIndex(index, size - 1);
         return (T) elements[index];
     }
 
     @Override
     public void set(T value, int index) {
-        checkIndex(index, 0, size - 1);
+        checkIndex(index, size - 1);
         elements[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        checkIndex(index, 0, size - 1);
+        checkIndex(index, size - 1);
         T removedValue = (T) elements[index];
         System.arraycopy(elements, index + 1, elements, index, size - index - 1);
         size--;
@@ -67,7 +63,7 @@ public class ArrayList<T> implements List<T> {
                 return remove(i);
             }
         }
-        throw new NoSuchElementException("Element: " + element);
+        throw new NoSuchElementException("Element is not valid: " + element);
     }
 
     @Override
@@ -81,16 +77,18 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void resize() {
-        int newSize = (int) (elements.length * MULTIPLIER_TO_ARRAY_GROW);
-        Object[] expandedArray = new Object[newSize];
-        System.arraycopy(elements, 0, expandedArray, 0, elements.length);
-        elements = expandedArray;
+        if (size == elements.length) {
+            int newSize = (int) (elements.length * MULTIPLIER_TO_ARRAY_GROW);
+            Object[] expandedArray = new Object[newSize];
+            System.arraycopy(elements, 0, expandedArray, 0, elements.length);
+            elements = expandedArray;
+        }
     }
 
-    private void checkIndex(int index, int lowerBound, int upperBound) {
-        if (index < lowerBound || index > upperBound) {
+    private void checkIndex(int index, int upperBound) {
+        if (index < 0 || index > upperBound) {
             throw new ArrayListIndexOutOfBoundsException("Index not valid: " + index
-                    + ", for lower bound: " + lowerBound + ", and upper bound: " + upperBound);
+                    + ", upper bound: " + upperBound);
         }
     }
 }
