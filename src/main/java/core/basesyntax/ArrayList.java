@@ -11,7 +11,7 @@ public class ArrayList<T> implements List<T> {
         array = new Object[DEFAULT_INDEX];
     }
 
-    public void exception() {
+    public void throwException() {
         throw new ArrayListIndexOutOfBoundsException("Index out of bounds for length");
     }
 
@@ -27,7 +27,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         if (index > size || index < 0) {
-            exception();
+            throwException();
         }
         if (size == array.length) {
             grow();
@@ -47,7 +47,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         if (index >= size || index < 0) {
-            exception();
+            throwException();
         }
         return (T) array[index];
     }
@@ -55,7 +55,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void set(T value, int index) {
         if (index >= size || index < 0) {
-            exception();
+            throwException();
         }
         array[index] = value;
     }
@@ -63,7 +63,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         if (index >= size || index < 0) {
-            exception();
+            throwException();
         }
         T oldValue = (T) array[index];
         size--;
