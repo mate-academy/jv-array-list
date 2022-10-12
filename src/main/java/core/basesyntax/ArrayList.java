@@ -1,7 +1,6 @@
 package core.basesyntax;
 
 import java.util.NoSuchElementException;
-import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
@@ -14,7 +13,9 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        checkSize();
+        if (++size == elementData.length) {
+            grow();
+        }
         elementData[size - 1] = value;
     }
 
@@ -23,7 +24,9 @@ public class ArrayList<T> implements List<T> {
         if (index != size) {
             rangeCheck(index);
         }
-        checkSize();
+        if (++size == elementData.length) {
+            grow();
+        }
         System.arraycopy(elementData, index, elementData, index + 1, size - index);
         elementData[index] = value;
     }
@@ -59,7 +62,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if (Objects.equals(elementData[i], element)) {
+            if (element == get(i) || (element != null && element.equals(get(i)))) {
                 return remove(i);
             }
         }
@@ -83,14 +86,8 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void rangeCheck(int index) {
-        if ((size != 0 || index != size) && (index >= size || index < 0)) {
+        if (index >= size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Index out of range: " + index);
-        }
-    }
-
-    private void checkSize() {
-        if (++size == elementData.length) {
-            grow();
         }
     }
 }
