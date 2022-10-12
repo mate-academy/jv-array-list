@@ -1,22 +1,22 @@
 package core.basesyntax;
 
-import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final double RESIZE_COUNT = 1.5;
+    private static final int START_SIZE = 10;
     private Object[] elementData;
-    private int startSize;
+    private int resizeValue;
     private int count;
 
     public ArrayList() {
-        startSize = 10;
-        elementData = new Object[startSize];
+        resizeValue = START_SIZE;
+        elementData = new Object[START_SIZE];
     }
 
     @Override
     public void add(T value) {
-        checkArrayLength(count);
+        resize(count);
         elementData[count] = value;
         count++;
     }
@@ -27,11 +27,8 @@ public class ArrayList<T> implements List<T> {
             add(value);
         } else {
             rangeCheckForCount(index);
-            checkArrayLength(count);
-            Object[] localeOne = Arrays.copyOfRange(elementData, 0, index);
-            Object[] localeTwo = Arrays.copyOfRange(elementData, index, count);
-            System.arraycopy(localeOne, 0, elementData, 0, localeOne.length);
-            System.arraycopy(localeTwo, 0, elementData, localeOne.length + 1, count - index);
+            resize(count);
+            System.arraycopy(elementData, index, elementData, index + 1, count - index);
             elementData[index] = value;
             count++;
         }
@@ -60,28 +57,19 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         rangeCheckForCount(index);
         final Object deletedElement = elementData[index];
-        Object[] localeOne = Arrays.copyOfRange(elementData, 0, index);
-        Object[] localeTwo = Arrays.copyOfRange(elementData, index + 1, count);
-        System.arraycopy(localeOne, 0, elementData, 0, localeOne.length);
-        System.arraycopy(localeTwo, 0, elementData, localeOne.length, localeTwo.length);
+        System.arraycopy(elementData, index + 1, elementData, index, count - index - 1);
         count--;
         return (T) deletedElement;
     }
 
     @Override
     public T remove(T element) {
-        boolean isDelete = false;
         for (int i = 0; i < count; i++) {
             if (checkValue(element, i)) {
-                remove(i);
-                isDelete = true;
-                break;
+                return remove(i);
             }
         }
-        if (!isDelete) {
-            throw new NoSuchElementException("ELement not found " + element);
-        }
-        return element;
+        throw new NoSuchElementException("ELement not found " + element);
     }
 
     @Override
@@ -101,10 +89,10 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private void checkArrayLength(int count) {
-        if (count >= startSize) {
+    private void resize(int count) {
+        if (count >= resizeValue) {
             Object[] localeData = elementData;
-            elementData = new Object[startSize *= RESIZE_COUNT];
+            elementData = new Object[resizeValue *= RESIZE_COUNT];
             System.arraycopy(localeData, 0, elementData, 0, localeData.length);
         }
     }
