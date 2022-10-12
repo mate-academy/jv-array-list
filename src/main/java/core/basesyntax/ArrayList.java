@@ -64,18 +64,17 @@ public class ArrayList<T> implements List<T> {
         values[index] = value;
     }
 
-    private void fastRemove(Object[] values, int i) {
+    private void fastRemove(int i) {
         System.arraycopy(values, i + 1, values, i, size - 1 - i);
         size--;
-        values[size] = null;
     }
 
     @Override
     public T remove(int index) {
         checkIndex(index);
         final Object[] helpToRemoveArray = values;
-        T oldValue = (T) helpToRemoveArray[index];
-        fastRemove(helpToRemoveArray, index);
+        T oldValue = (T) values[index];
+        fastRemove(index);
         return oldValue;
     }
 
