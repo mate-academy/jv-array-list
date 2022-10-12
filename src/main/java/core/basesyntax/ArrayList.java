@@ -15,14 +15,6 @@ public class ArrayList<T> implements List<T> {
         storage = new Object[INITIAL_CAPACITY];
     }
 
-    public ArrayList(int capacity) {
-        if (capacity >= 0) {
-            storage = new Object[capacity];
-        } else {
-            throw new ArrayListIndexOutOfBoundsException(OUT_OF_BOUNDS_MESSAGE);
-        }
-    }
-
     @Override
     public void add(T value) {
         ensureCapacity();
@@ -36,7 +28,7 @@ public class ArrayList<T> implements List<T> {
             add(value);
         } else {
             ensureCapacity();
-            ensurePosition(index - 1);
+            ensureAddition(index);
             Object[] temp = new Object[storage.length];
             System.arraycopy(storage, 0, temp, 0, index);
             temp[index] = value;
@@ -106,9 +98,19 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void ensurePosition(int index) {
-        if (index + 1 < 0 || index + 1 > size) {
-            throw new ArrayListIndexOutOfBoundsException(OUT_OF_BOUNDS_MESSAGE);
+        if (index < 0 || index > size - 1) {
+            showOutOfBounds();
         }
+    }
+
+    private void ensureAddition(int index) {
+        if (index < 0 || index > size) {
+            showOutOfBounds();
+        }
+    }
+
+    private void showOutOfBounds() {
+        throw new ArrayListIndexOutOfBoundsException(OUT_OF_BOUNDS_MESSAGE);
     }
 
     private void reduceCapacity(int index) {
