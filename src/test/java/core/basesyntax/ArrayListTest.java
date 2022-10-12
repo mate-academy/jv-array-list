@@ -314,4 +314,17 @@ public class ArrayListTest {
         arrayList.remove(0);
         Assert.assertTrue("Test failed! ArrayList should be empty", arrayList.isEmpty());
     }
+
+    @Test
+    public void getSizeAfterOptimization() {
+        ArrayList<Integer> arrayList = new ArrayList<>();
+        for (int i = 0; i < 50; i++) {
+            arrayList.add(i);
+        }
+        for (int i = 0; i < 35; i++) {
+            arrayList.remove(Integer.valueOf(i));
+        }
+        arrayList.optimizeSize();
+        Assert.assertEquals(15, arrayList.size());
+    }
 }

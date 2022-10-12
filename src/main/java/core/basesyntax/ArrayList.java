@@ -28,7 +28,7 @@ public class ArrayList<T> implements List<T> {
             add(value);
         } else {
             ensureCapacity();
-            ensureAddition(index);
+            checkAddPosition(index);
             Object[] temp = new Object[storage.length];
             System.arraycopy(storage, 0, temp, 0, index);
             temp[index] = value;
@@ -42,7 +42,7 @@ public class ArrayList<T> implements List<T> {
     public void addAll(List<T> list) {
         int requiredSize = size + list.size();
         if (requiredSize > storage.length) {
-            increaseCapacity(requiredSize);
+            changeCapacity(requiredSize);
         }
         for (int i = 0; i < list.size(); i++) {
             add(list.get(i));
@@ -51,21 +51,21 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        ensurePosition(index);
+        checkGetPosition(index);
         return (T) storage[index];
     }
 
     @Override
     public void set(T value, int index) {
-        ensurePosition(index);
+        checkGetPosition(index);
         storage[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        ensurePosition(index);
+        checkGetPosition(index);
         T obj = (T) storage[index];
-        reduceCapacity(index);
+        removeBy(index);
         return obj;
     }
 
@@ -91,19 +91,32 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void ensureCapacity() {
-        if (size == storage.length) {
-            increaseCapacity(storage.length);
+    public void optimizeSize() {
+        if (size < storage.length) {
+            changeCapacity(size);
         }
     }
 
-    private void ensurePosition(int index) {
+    private void changeCapacity(int requiredSize) {
+        int capacity = requiredSize + requiredSize / 2;
+        Object[] temp = new Object[capacity];
+        System.arraycopy(storage, 0, temp, 0, size);
+        storage = temp;
+    }
+
+    private void ensureCapacity() {
+        if (size == storage.length) {
+            changeCapacity(storage.length);
+        }
+    }
+
+    private void checkGetPosition(int index) {
         if (index < 0 || index > size - 1) {
             showOutOfBounds();
         }
     }
 
-    private void ensureAddition(int index) {
+    private void checkAddPosition(int index) {
         if (index < 0 || index > size) {
             showOutOfBounds();
         }
@@ -113,18 +126,11 @@ public class ArrayList<T> implements List<T> {
         throw new ArrayListIndexOutOfBoundsException(OUT_OF_BOUNDS_MESSAGE);
     }
 
-    private void reduceCapacity(int index) {
-        Object[] temp = new Object[storage.length - 1];
+    private void removeBy(int index) {
+        Object[] temp = new Object[storage.length];
         System.arraycopy(storage, 0, temp, 0, index);
         System.arraycopy(storage, index + 1, temp, index, size - index - 1);
         storage = temp;
         size--;
-    }
-
-    private void increaseCapacity(int requiredSize) {
-        int capacity = requiredSize + requiredSize / 2;
-        Object[] temp = new Object[capacity];
-        System.arraycopy(storage, 0, temp, 0, size);
-        storage = temp;
     }
 }
