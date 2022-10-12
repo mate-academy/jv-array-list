@@ -17,9 +17,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (size == elementData.length) {
-            enlarge();
-        }
+        enlarge();
         elementData[size] = value;
         size++;
     }
@@ -29,25 +27,18 @@ public class ArrayList<T> implements List<T> {
         if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException("Invalid index");
         }
-        if (size == elementData.length) {
-            enlarge();
-        }
-        for (int i = size - EXTRA_NUMBER; i >= index; i--) {
-            elementData[i + EXTRA_NUMBER] = elementData[i];
-        }
+        enlarge();
+        System.arraycopy(elementData, index, elementData, index + EXTRA_NUMBER,
+                elementData.length - index - EXTRA_NUMBER);
         elementData[index] = value;
         size++;
     }
 
     @Override
     public void addAll(List<T> list) {
-        if (size == elementData.length) {
-            enlarge();
-        }
-
+        enlarge();
         for (int i = 0; i < list.size(); i++) {
-            elementData[size] = (list.get(i));
-            size++;
+            add(list.get(i));
         }
     }
 
@@ -59,7 +50,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void set(T value, int index) {
-        checkIndex(index,size);
+        checkIndex(index, size);
         elementData[index] = value;
     }
 
@@ -67,7 +58,7 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         checkIndex(index, size);
         T removed = (T) elementData[index];
-        System.arraycopy(elementData,index + EXTRA_NUMBER, elementData, index,
+        System.arraycopy(elementData, index + EXTRA_NUMBER, elementData, index,
                 elementData.length - index - EXTRA_NUMBER);
         size--;
         return removed;
@@ -76,7 +67,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if (elementData[i] == element || (element != null && element.equals(elementData[i]))) {
+            if (elementData[i] == element || element != null && element.equals(elementData[i])) {
                 return remove(i);
             }
         }
@@ -101,9 +92,11 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void enlarge() {
-        int newLength = (int) (elementData.length * ENLARGE_INDEX);
-        Object[] newArray = new Object[newLength];
-        System.arraycopy(elementData,0,newArray,0,elementData.length);
-        elementData = newArray;
+        if (size == elementData.length) {
+            int newLength = (int) (elementData.length * ENLARGE_INDEX);
+            Object[] newArray = new Object[newLength];
+            System.arraycopy(elementData, 0, newArray, 0, elementData.length);
+            elementData = newArray;
+        }
     }
 }
