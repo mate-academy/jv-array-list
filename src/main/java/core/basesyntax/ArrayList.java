@@ -12,14 +12,6 @@ public class ArrayList<T> implements List<T> {
         elements = new Object[DEFAULT_CAPACITY];
     }
 
-    public ArrayList(int initialCapacity) {
-        if (initialCapacity > 0) {
-            elements = new Object[initialCapacity];
-        } else {
-            throw new IllegalArgumentException("Illegal initial capacity " + initialCapacity);
-        }
-    }
-
     @Override
     public void add(T value) {
         checkSize();
@@ -39,9 +31,6 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void addAll(List<T> list) {
         int length = list.size();
-        if (size + length >= elements.length) {
-            grow(size + length);
-        }
         for (int i = 0; i < length; i++) {
             T element = list.get(i);
             add(element);
@@ -71,10 +60,9 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        int i = 0;
-        for (; i < size; i++) {
+        for (int i = 0; i < size; i++) {
             if (element == elements[i]
-                    || (element != null && element.equals(elements[i]))) {
+                    || element != null && element.equals(elements[i])) {
                 return remove(i);
             }
         }
@@ -106,12 +94,6 @@ public class ArrayList<T> implements List<T> {
     private void grow() {
         int newCapacity = (int) (elements.length * GROW_FACTOR);
         Object[] newElements = new Object[newCapacity];
-        System.arraycopy(elements, 0, newElements, 0, elements.length);
-        elements = newElements;
-    }
-
-    private void grow(int requiredSize) {
-        Object[] newElements = new Object[requiredSize];
         System.arraycopy(elements, 0, newElements, 0, elements.length);
         elements = newElements;
     }
