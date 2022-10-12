@@ -66,17 +66,11 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        if (element != null) {
-            for (int i = 0; i < size; i++) {
-                if (element.equals(elementData[i])) {
-                    remove(i);
-                    return element;
-                }
+        for (int i = 0; i < size; i++) {
+            if (element == elementData[i] || element != null && element.equals(elementData[i])) {
+                remove(i);
+                return element;
             }
-        }
-        if (element == null) {
-            size--;
-            return null;
         }
         throw new NoSuchElementException(ELEMENT_EXCEPTION + element);
     }
