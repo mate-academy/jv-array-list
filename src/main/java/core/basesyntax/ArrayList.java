@@ -11,7 +11,7 @@ public class ArrayList<T> implements List<T> {
         array = new Object[DEFAULT_ARRAY_LENGTH];
     }
 
-    public void ensureSize() {
+    private void ensureSize() {
         if (size == array.length) {
             Object[] newArray = new Object[(int) (size * 1.5)];
             for (int i = 0; i < array.length; i++) {
@@ -21,7 +21,7 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    public void isIndexValid(int index) {
+    private void isIndexValid(int index) {
         if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException("There is no such element as " + index);
         }
