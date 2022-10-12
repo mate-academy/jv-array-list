@@ -13,9 +13,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (values.length == size) {
-            resize();
-        }
+        resize();
         values[size] = value;
         size++;
     }
@@ -55,19 +53,19 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
-        T remoteElement = (T) values[index];
+        T removedElement = (T) values[index];
         System.arraycopy(values, index + 1, values, index, size - 1 - index);
         size--;
-        return remoteElement;
+        return removedElement;
     }
 
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
             if (element == values[i] || element != null && element.equals(values[i])) {
-                T remotedElement = (T) values[i];
+                T removedElement = (T) values[i];
                 remove(i);
-                return remotedElement;
+                return removedElement;
             }
         }
         throw new NoSuchElementException("Element " + element + " absent in ArrayList");
@@ -84,9 +82,11 @@ public class ArrayList<T> implements List<T> {
     }
 
     public void resize() {
-        T[] data = (T[]) values;
-        values = new Object[size + (size >> 1)];
-        System.arraycopy(data, 0, values, 0, size);
+        if (values.length == size) {
+            T[] data = (T[]) values;
+            values = new Object[size + (size >> 1)];
+            System.arraycopy(data, 0, values, 0, size);
+        }
     }
 
     public void checkIndex(int index) {
