@@ -79,10 +79,9 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        final Object[] helpToRemoveArray = values;
         for (int i = 0; i < size; i++) {
-            if (element == helpToRemoveArray[i]
-                    || element != null && element.equals(helpToRemoveArray[i])) {
+            if (element == values[i]
+                    || element != null && element.equals(values[i])) {
                 return remove(i);
             }
         }
