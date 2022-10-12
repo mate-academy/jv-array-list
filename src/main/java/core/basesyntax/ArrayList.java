@@ -92,7 +92,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     public void increaseSize() {
-        Object[] newArray = (T[]) new Object[(int) (currentSize * 1.5)];
+        Object[] newArray = (T[]) new Object[(int) (currentSize * AMMOUT_OF_INCREASE)];
         System.arraycopy(array, 0, newArray, 0, currentSize);
         array = newArray;
     }
