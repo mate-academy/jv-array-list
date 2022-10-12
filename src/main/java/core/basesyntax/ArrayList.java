@@ -7,11 +7,10 @@ public class ArrayList<T> implements List<T> {
     private static final int INITIAL_CAPACITY = 10;
     private Object[] defaultArray = new Object[INITIAL_CAPACITY];
     private int sizeCounter = 0;
-    private int arrayLength = 10;
 
     @Override
     public void add(T value) {
-        if (sizeCounter == arrayLength) {
+        if (sizeCounter == defaultArray.length) {
             defaultArray = grow(defaultArray);
         }
         defaultArray[sizeCounter++] = value;
@@ -20,54 +19,46 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         rangeCheckerForAdding(index);
-        if (++sizeCounter == arrayLength) {
+        if (++sizeCounter == defaultArray.length) {
             defaultArray = grow(defaultArray);
         }
-        defaultArray = increaseArray(defaultArray,value, index);
+        System.arraycopy(defaultArray, index, defaultArray, index + 1, sizeCounter - index);
+        defaultArray[index] = value;
     }
 
     @Override
     public void addAll(List<T> list) {
-        if (sizeCounter + list.size() > arrayLength) {
+        if (sizeCounter + list.size() > defaultArray.length) {
             defaultArray = grow(defaultArray);
         }
-        defaultArray = increaseArray(list);
+        increaseArray(list);
     }
 
-    private Object[] increaseArray(Object[] array, T value, int index) {
-        Object[] temp = defaultArray;
-        System.arraycopy(array, index, temp, index + 1, sizeCounter - index);
-        temp[index] = value;
-        return temp;
-    }
-
-    private Object[] increaseArray(List<T> list) {
+    private void increaseArray(List<T> list) {
         Object[] tempList = new Object[list.size()];
         for (int i = 0; i < list.size(); i++) {
             tempList[i] = list.get(i);
         }
-        Object[] temp = defaultArray;
-        System.arraycopy(tempList, DEFAULT_INDEX, temp, sizeCounter, tempList.length);
+        System.arraycopy(tempList, DEFAULT_INDEX, defaultArray, sizeCounter, tempList.length);
         sizeCounter += list.size();
-        return temp;
     }
 
     public Object[] grow(Object[] array) {
-        arrayLength = arrayLength + (arrayLength / 2);
+        int arrayLength = defaultArray.length + (defaultArray.length / 2);
         Object[] temp = new Object[arrayLength];
         System.arraycopy(array, DEFAULT_INDEX, temp, DEFAULT_INDEX, sizeCounter);
         return temp;
     }
 
     private void rangeChecker(int index) {
-        if ((index < 0 || index >= sizeCounter) && index != DEFAULT_INDEX) {
+        if (index < 0 || index >= sizeCounter) {
             throw new ArrayListIndexOutOfBoundsException("Index: " + index
                     + " out of bounds, for length " + size());
         }
     }
 
     private void rangeCheckerForAdding(int index) {
-        if ((index < 0 || index > sizeCounter) && index != DEFAULT_INDEX) {
+        if (index < 0 || index > sizeCounter) {
             throw new ArrayListIndexOutOfBoundsException("Index: " + index
                     + " out of bounds, for length " + size());
         }
@@ -82,9 +73,6 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void set(T value, int index) {
         rangeChecker(index);
-        if (index == sizeCounter) {
-            sizeCounter++;
-        }
         defaultArray[index] = value;
     }
 
@@ -105,12 +93,9 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        for (int i = 0; i <= sizeCounter; i++) {
-            if (element == null) {
-                sizeCounter--;
-                return null;
-            }
-            if (element.equals(defaultArray[i])) {
+        for (int i = 0; i < sizeCounter; i++) {
+            if ((element != null && element.equals(defaultArray[i]))
+                    || element == defaultArray[i]) {
                 T removedElement = (T)defaultArray[i];
                 System.arraycopy(defaultArray, i + 1, defaultArray, i,sizeCounter - i);
                 sizeCounter--;
