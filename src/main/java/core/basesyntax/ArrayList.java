@@ -5,7 +5,7 @@ import java.util.NoSuchElementException;
 public class ArrayList<T> implements List<T> {
     private static int INITIAL_CAPACITY = 10;
     private int currentNumberOfMembers = 0;
-    private Object [] elementData;
+    private Object[] elementData;
 
     ArrayList() {
         elementData = new Object[INITIAL_CAPACITY];
@@ -24,7 +24,7 @@ public class ArrayList<T> implements List<T> {
         if (index < 0 || index > size()) {
             throw new ArrayListIndexOutOfBoundsException("Incorrect index exception");
         }
-        if (currentNumberOfMembers >= INITIAL_CAPACITY) {
+        if (currentNumberOfMembers >= elementData.length) {
             grow();
         }
         System.arraycopy(elementData, index, elementData,
@@ -66,13 +66,10 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        int index;
-        boolean isFound = false;
         for (int i = 0; i < currentNumberOfMembers; i++) {
             if (elementData[i] == element || elementData[i] != null
                     && elementData[i].equals(element)) {
-                index = i;
-                return remove(index);
+                return remove(i);
 
             }
         }
