@@ -22,11 +22,11 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        size++;
-        chekIndex(index);
+        chekIndexAdd(index);
         checkGrow();
         System.arraycopy(currentArray, index, currentArray, index + ONE, size - index);
         currentArray[index] = value;
+        size++;
     }
 
     @Override
@@ -86,6 +86,12 @@ public class ArrayList<T> implements List<T> {
             T[] newArr = (T[]) new Object[(int) (currentArray.length * INCREASE_INDEX)];
             System.arraycopy(currentArray, FIRST_INDEX, newArr, FIRST_INDEX, currentArray.length);
             currentArray = newArr;
+        }
+    }
+
+    private void chekIndexAdd(int index) {
+        if (index > size || index < FIRST_INDEX) {
+            throw new ArrayListIndexOutOfBoundsException("Array list index of bound");
         }
     }
 
