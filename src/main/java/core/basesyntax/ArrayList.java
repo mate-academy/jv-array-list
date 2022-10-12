@@ -25,11 +25,8 @@ public class ArrayList<T> implements List<T> {
     public void add(T value, int index) {
         checkIndexInAdd(index);
         checkSize();
-        Object[] newArray = new Object[array.length];
-        System.arraycopy(array, 0, newArray, 0, index);
-        newArray[index] = value;
-        System.arraycopy(array, index, newArray, index + 1, array.length - index - 1);
-        array = newArray;
+        System.arraycopy(array, index, array, index + 1, array.length - index - 1);
+        array[index] = value;
         size++;
     }
 
@@ -37,9 +34,7 @@ public class ArrayList<T> implements List<T> {
     public void addAll(List<T> list) {
         int newSize = size + list.size();
         if (array.length < newSize) {
-            Object[] newArray = new Object[newSize];
-            System.arraycopy(array, 0, newArray, 0, array.length);
-            array = newArray;
+            grow(newSize);
         }
         int counter = 0;
         for (int i = size; i < newSize; i++) {
@@ -90,8 +85,8 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void grow() {
-        int extendedArrayCapacity = (int) (array.length * ARRAY_GROWTH);
+    private void grow(int minLength) {
+        int extendedArrayCapacity = (int) (minLength * ARRAY_GROWTH);
         Object[] extendedArray = new Object[extendedArrayCapacity];
         System.arraycopy(array, 0, extendedArray, 0, array.length);
         array = extendedArray;
@@ -105,7 +100,7 @@ public class ArrayList<T> implements List<T> {
 
     private void checkSize() {
         if (size + 1 > array.length) {
-            grow();
+            grow(array.length);
         }
     }
 
@@ -116,11 +111,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void removeElement(int index) {
-        int arrayLength = array.length;
-        Object[] newArray = new Object[arrayLength];
-        System.arraycopy(array, 0, newArray, 0, index);
-        System.arraycopy(array, index + 1, newArray, index, arrayLength - (index + 1));
-        array = newArray;
+        System.arraycopy(array, index + 1, array, index, array.length - (index + 1));
         size--;
     }
 }
