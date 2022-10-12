@@ -32,7 +32,6 @@ public class ArrayList<T> implements List<T> {
         System.arraycopy(elementData, 0, newElementData, 0, index);
         newElementData[index] = value;
         System.arraycopy(elementData, index, newElementData, index + 1, size - index);
-        //elementData[index] = value;
         elementData = newElementData;
         size += 1;
     }
