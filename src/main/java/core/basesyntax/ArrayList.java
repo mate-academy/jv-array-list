@@ -72,7 +72,6 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
-        final Object[] helpToRemoveArray = values;
         T oldValue = (T) values[index];
         fastRemove(index);
         return oldValue;
