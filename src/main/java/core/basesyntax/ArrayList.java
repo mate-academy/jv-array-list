@@ -4,18 +4,17 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    private static final Object[] DEFAULTCAPACITY_EMPTY_ELEMENTDATA = {};
     private Object[] elementData;
     private int size;
 
     public ArrayList() {
-        this.elementData = DEFAULTCAPACITY_EMPTY_ELEMENTDATA;
+        this.elementData = new Object[DEFAULT_CAPACITY];
     }
 
     private Object[] grow(int minCapacity) {
         int oldCapacity = elementData.length;
         Object[] oldElement = elementData;
-        if (oldCapacity > 0 || elementData != DEFAULTCAPACITY_EMPTY_ELEMENTDATA) {
+        if (oldCapacity > 0) {
             int prefLength = oldCapacity + Math.max(minCapacity - oldCapacity, oldCapacity >> 1);
             elementData = new Object[prefLength];
             System.arraycopy(oldElement, 0, elementData, 0, oldCapacity);
@@ -56,28 +55,24 @@ public class ArrayList<T> implements List<T> {
         System.arraycopy(elementData, index,
                 elementData, index + 1,
                 size - index);
-        elementData[index] = (T) value;
+        elementData[index] = value;
         size = size + 1;
     }
 
     @Override
     public void addAll(List<T> list) {
-        Object[] a = new Object[list.size()];
-        for (int i = 0; i < a.length; i++) {
-            a[i] = list.get(i);
+        Object[] addingObject = new Object[list.size()];
+        for (int i = 0; i < addingObject.length; i++) {
+            addingObject[i] = list.get(i);
         }
-        int numNew = a.length;
-        if (numNew == 0) {
+        if (addingObject.length == 0) {
             return;
         }
-        Object[] elementData = this.elementData;
-        final int s = size;
-        if (numNew > elementData.length - s) {
-            elementData = grow(s + numNew);
+        if (addingObject.length > elementData.length - size) {
+            elementData = grow(size + addingObject.length);
         }
-        System.arraycopy(a, 0, elementData, s, numNew);
-        size = s + numNew;
-        this.elementData = elementData;
+        System.arraycopy(addingObject, 0, elementData, size, addingObject.length);
+        size += addingObject.length;
     }
 
     @Override
@@ -93,30 +88,27 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void fastRemove(Object[] es, int i) {
-        final int newSize;
-        if ((newSize = size - 1) > i) {
-            System.arraycopy(es, i + 1, es, i, newSize - i);
+        size--;
+        if (size > i) {
+            System.arraycopy(es, i + 1, es, i, size - i);
         }
-        es[size = newSize] = null;
+        es[size] = null;
     }
 
     @Override
     public T remove(int index) {
         indexCheck(index);
-        final Object[] es = elementData;
-        T oldValue = (T) es[index];
-        fastRemove(es, index);
+        T oldValue = (T) elementData[index];
+        fastRemove(elementData, index);
         return oldValue;
     }
 
     @Override
     public T remove(T element) {
-        T oldValue = element;
         for (int j = 0; j < size; j++) {
             if (element == null && elementData[j] == null
                     || (element != null && element.equals(elementData[j]))) {
-                fastRemove(elementData, j);
-                return oldValue;
+                return remove(j);
             }
         }
         throw new NoSuchElementException("Such element hasn't been found " + element);
