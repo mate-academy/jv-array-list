@@ -37,15 +37,9 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        Object[] array = new Object[list.size()];
-        for (int i = 0; i <= list.size(); i++) {
-            array[i] = list.remove(0);
+        for (int i = 0; i < list.size(); i++) {
+            add(list.get(i));
         }
-        if (list.size() + size >= elementData.length) {
-            elementData = grow();
-        }
-        System.arraycopy(array, 0, elementData, size, array.length);
-        size += array.length;
     }
 
     @Override
