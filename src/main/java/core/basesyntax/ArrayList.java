@@ -13,10 +13,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        int currentSize = size;
-        if (currentSize == array.length) {
-            array = (T[]) resize();
-        }
+        checkSize();
         array[size] = value;
         size++;
     }
@@ -24,14 +21,11 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         checkForAdd(index);
-        int currentSize = size;
-        if (currentSize == array.length) {
-            array = (T[]) resize();
-        }
+        checkSize();
         System.arraycopy(array, index, array, index + 1,
-                    currentSize - index);
+                    size - index);
         array[index] = value;
-        size = currentSize + 1;
+        size++;
     }
 
     @Override
@@ -58,11 +52,10 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         checkForGetAndSet(index);
         T oldValue = array[index];
-        int newSize;
-        if ((newSize = size - 1) > index) {
-            System.arraycopy(array, index + 1, array, index, newSize - index);
+        if ((size - 1) > index) {
+            System.arraycopy(array, index + 1, array, index, size - index - 1);
         }
-        array[size = newSize] = null;
+        array[--size] = null;
         return oldValue;
     }
 
@@ -100,10 +93,16 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
+    private void checkSize() {
+        if (size == array.length) {
+            resize();
+        }
+    }
+
     private Object[] resize() {
         int newSize = size + (size >> 1);
         Object[] newArray = (T[]) new Object[newSize];
         System.arraycopy(array, 0, newArray, 0, array.length);
-        return newArray;
+        return array = (T[]) newArray;
     }
 }
