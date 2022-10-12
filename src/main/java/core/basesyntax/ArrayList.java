@@ -7,8 +7,6 @@ public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_SIZE = 0;
     private static final int EXTRA_NUMBER = 1;
     private static final double ENLARGE_INDEX = 1.5;
-    private T value;
-    private int index;
     private Object[] elementData;
     private int size;
 
@@ -43,13 +41,13 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        if ((size += list.size()) >= elementData.length) {
+        if (size == elementData.length) {
             enlarge();
         }
-        int counter = size - list.size();
+
         for (int i = 0; i < list.size(); i++) {
-            elementData[counter] = (list.get(i));
-            counter++;
+            elementData[size] = (list.get(i));
+            size++;
         }
     }
 
