@@ -4,6 +4,8 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int INITIALIZATION_LENGTH = 10;
+    private static final String ERROR_MESSAGE_INDEX = "Your index is incorrect";
+    private static final String ERROR_MESSAGE_ELEMENT = "Can't remove element for such";
     private T[] array;
     private int size = 0;
 
@@ -26,10 +28,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         size++;
-        if (checkIndex(index)) {
-            throw new ArrayListIndexOutOfBoundsException("Cant add element"
-                    + "for such index");
-        }
+        checkIndex(index);
         if (array.length == size) {
             makeBiggerArray();
         }
@@ -46,28 +45,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (checkIndex(index)) {
-            throw new ArrayListIndexOutOfBoundsException("Cant get element"
-                    + "for such index");
-        }
+        checkIndex(index);
         return (T)array[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (checkIndex(index)) {
-            throw new ArrayListIndexOutOfBoundsException("Cant set element"
-                    + "for such index");
-        }
+        checkIndex(index);
         array[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (checkIndex(index)) {
-            throw new ArrayListIndexOutOfBoundsException("Cant remove element"
-                    + "for such index to add");
-        }
+        checkIndex(index);
         size--;
         T returnValue = array[index];
         System.arraycopy(array, index + 1, array, index, size - index);
@@ -88,8 +78,7 @@ public class ArrayList<T> implements List<T> {
                 return remove(i);
             }
         }
-        throw new NoSuchElementException("Can't remove element for such"
-                + " value " + element);
+        throw new NoSuchElementException(ERROR_MESSAGE_ELEMENT + element);
     }
 
     @Override
@@ -102,8 +91,10 @@ public class ArrayList<T> implements List<T> {
         return size == 0 ? true : false;
     }
 
-    public boolean checkIndex(int index) {
-        return (index >= size || index < 0);
+    public void checkIndex(int index) {
+        if (index >= size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException(ERROR_MESSAGE_INDEX);
+        }
     }
 
     public void makeBiggerArray() {
@@ -111,9 +102,6 @@ public class ArrayList<T> implements List<T> {
         T[] newArray = (T[])new Object[newSize];
         System.arraycopy(array,0,newArray,0,array.length);
         array = newArray;
-    }
-
-    public static void main(String[] args) {
     }
 }
 
