@@ -10,7 +10,7 @@ public class ArrayList<T> implements List<T> {
     private T[] array;
     private int size = 0;
 
-    ArrayList() {
+    public ArrayList() {
         array = (T[])new Object[INITIALIZATION_LENGTH];
     }
 
