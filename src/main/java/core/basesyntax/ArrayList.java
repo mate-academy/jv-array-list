@@ -29,10 +29,8 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayListIndexOutOfBoundsException(WRONG_INDEX_MSG);
         }
         sizeCheck();
-        T[] buffer = (T[]) new Object[currentSize - index];
-        System.arraycopy(array, index, buffer, 0, buffer.length);
+        System.arraycopy(array, index, array, index + 1,currentSize - index);
         array[index] = value;
-        System.arraycopy(buffer, 0, array, index + 1, buffer.length);
         currentSize++;
     }
 
