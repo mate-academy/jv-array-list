@@ -1,6 +1,5 @@
 package core.basesyntax;
 
-import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 @SuppressWarnings("unchecked")
@@ -17,7 +16,9 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        grow();
+        if (size == elementData.length) {
+            grow();
+        }
         elementData[size] = value;
         size += 1;
     }
@@ -27,8 +28,9 @@ public class ArrayList<T> implements List<T> {
         if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException(INDEX_EXCEPTION);
         }
-        grow();
-        T[] newElementData = (T[]) new Object[elementData.length];
+        if (size == elementData.length) {
+            grow();
+        }
         System.arraycopy(elementData, index, elementData, index + 1, size - index);
         elementData[index] = value;
         size += 1;
@@ -79,12 +81,15 @@ public class ArrayList<T> implements List<T> {
         throw new NoSuchElementException(ELEMENT_EXCEPTION + element);
     }
 
-    private void fastRemove(Object[] es, int i) {
+    private void fastRemove(Object[] elementDataBefRem, int index) {
         final int newSize;
-        if ((newSize = size - 1) > i) {
-            System.arraycopy(es, i + 1, es, i, newSize - i);
+        newSize = size - 1;
+        if (newSize > index) {
+            System.arraycopy(elementDataBefRem, index + 1,
+                    elementDataBefRem, index, newSize - index);
         }
-        es[size = newSize] = null;
+        size = newSize;
+        elementDataBefRem[size] = null;
     }
 
     @Override
@@ -104,12 +109,12 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void grow() {
-        if (size == elementData.length) {
-            int oldCapacity = elementData.length;
-            if (oldCapacity > 0) {
-                int newCapacity = elementData.length + (elementData.length >> 1);
-                elementData = Arrays.copyOf(elementData, newCapacity);
-            }
+        int oldCapacity = elementData.length;
+        if (oldCapacity > 0) {
+            int newCapacity = elementData.length + (elementData.length >> 1);
+            T[] newElementData = (T[]) new Object[newCapacity];
+            System.arraycopy(elementData,0, newElementData,0, size);
+            elementData = newElementData;
         }
     }
 }
