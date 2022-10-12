@@ -29,10 +29,7 @@ public class ArrayList<T> implements List<T> {
         } else {
             ensureCapacity();
             checkAddPosition(index);
-            Object[] temp = new Object[storage.length];
-            System.arraycopy(storage, 0, temp, 0, index);
-            System.arraycopy(storage, index, temp, index + 1, size - index);
-            storage = temp;
+            System.arraycopy(storage, index, storage, index + 1, size - index);
             storage[index] = value;
             size++;
         }
@@ -127,10 +124,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void removeBy(int index) {
-        Object[] temp = new Object[storage.length];
-        System.arraycopy(storage, 0, temp, 0, index);
-        System.arraycopy(storage, index + 1, temp, index, size - index - 1);
-        storage = temp;
+        System.arraycopy(storage, index + 1, storage, index, size - index - 1);
         size--;
     }
 }
