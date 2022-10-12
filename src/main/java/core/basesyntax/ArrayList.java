@@ -1,7 +1,6 @@
 package core.basesyntax;
 
 import java.util.NoSuchElementException;
-import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_SIZE = 10;
@@ -16,9 +15,6 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (array.length == size) {
-            resize();
-        }
         array[this.size] = value;
         size++;
     }
@@ -28,12 +24,8 @@ public class ArrayList<T> implements List<T> {
         if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException("Index is out of bounds");
         }
-        if (array.length == size) {
-            resize();
-        }
-        for (int i = size - 1; i >= index; i--) {
-            array[i + 1] = array[i];
-        }
+        Object[] oldArray = array;
+        System.arraycopy(oldArray, index, array, index + 1, size - index);
         array[index] = value;
         size++;
     }
@@ -59,6 +51,9 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(int index) {
+        if (array.length == size) {
+            resize();
+        }
         checkIndex(index);
         T removedArray = (T) array[index];
         System.arraycopy(array, index + 1, array, index, size - 1 - index);
@@ -69,7 +64,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < array.length; i++) {
-            if (Objects.equals(array[i], element)) {
+            if (array[i] == element || array[i] != null && array[i].equals(element)) {
                 return remove(i);
             }
         }
