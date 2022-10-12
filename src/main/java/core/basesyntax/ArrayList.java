@@ -17,7 +17,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         if (checkIndexBounds(index)) {
-            throw new ArrayListIndexOutOfBoundsException("");
+            throw new ArrayListIndexOutOfBoundsException("Cannot add element to index: "
+                    + index + ", list size: " + actualSize);
         }
         ensureCapacity();
         actualSize++;
@@ -37,7 +38,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         if (checkIndexBounds(index + 1)) {
-            throw new ArrayListIndexOutOfBoundsException("");
+            throw new ArrayListIndexOutOfBoundsException("Cannot get element with index: "
+                    + index + ", list size: " + actualSize);
         }
         return (T) elementsData[index];
     }
@@ -45,7 +47,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void set(T value, int index) {
         if (checkIndexBounds(index + 1)) {
-            throw new ArrayListIndexOutOfBoundsException("");
+            throw new ArrayListIndexOutOfBoundsException("Cannot set value to the element with index: "
+                    + index + ", list size: " + actualSize);
         }
         elementsData[index] = value;
     }
@@ -53,7 +56,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         if (checkIndexBounds(index + 1)) {
-            throw new ArrayListIndexOutOfBoundsException("");
+            throw new ArrayListIndexOutOfBoundsException("Cannot remove element with index: "
+                    + index + ", list size: " + actualSize);
         }
 
         return removeByIndex(index);
@@ -66,7 +70,7 @@ public class ArrayList<T> implements List<T> {
                 return removeByIndex(i);
             }
         }
-        throw new NoSuchElementException("");
+        throw new NoSuchElementException("That element does not exist");
     }
 
     @Override
