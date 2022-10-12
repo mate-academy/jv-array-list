@@ -26,12 +26,12 @@ public class ArrayList<T> implements List<T> {
         if (index > size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException(OUT_OF_BOUNDS_MESSAGE);
         } else {
+            elementDataGrow(size);
             System.arraycopy(elementData, index,
                     elementData, index + 1,
                     size - index);
             elementData[index] = value;
             size++;
-            elementDataGrow(size);
         }
     }
 
@@ -59,13 +59,8 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         checkIndex(index);
         T removedElement;
-        if ((size == elementData.length) && index + 1 == size) {
-            size--;
-            removedElement = elementData[index];
-            return removedElement;
-        }
         removedElement = elementData[index];
-        System.arraycopy(elementData, index + 1, elementData, index, size - index);
+        System.arraycopy(elementData, index + 1, elementData, index, size - index - 1);
         size--;
         return removedElement;
     }
@@ -73,11 +68,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if (elementData[i] == null && element == null) {
-                size--;
-                return null;
-            }
-            if (elementData[i] != null && elementData[i].equals(element)) {
+            if (elementData[i] == element || element != null && element.equals(elementData[i])) {
                 return remove(i);
             }
         }
@@ -112,4 +103,3 @@ public class ArrayList<T> implements List<T> {
         }
     }
 }
-
