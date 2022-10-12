@@ -6,7 +6,6 @@ import java.util.Objects;
 public class ArrayList<T> implements List<T> {
     private static final int INITIAL_CAPACITY = 10;
     private Object[] elementsData;
-
     private int actualSize;
 
     public ArrayList() {
