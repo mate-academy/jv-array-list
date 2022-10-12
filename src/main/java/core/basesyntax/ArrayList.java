@@ -30,13 +30,10 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        Object[] newElements = new Object[list.size()];
         checkCapacity(list.size());
-        for (int i = 0; i < newElements.length; i++) {
-            newElements[i] = list.get(i);
+        for (int i = 0; i < list.size(); i++) {
+            add(list.get(i));
         }
-        System.arraycopy(newElements, 0, elementData, size, newElements.length);
-        size += newElements.length;
     }
 
     @Override
@@ -68,7 +65,8 @@ public class ArrayList<T> implements List<T> {
 
     private int getIndexByValue(T value) {
         for (int i = 0; i < size; i++) {
-            if (Objects.equals(value, elementData[i])) {
+            if (value == elementData[i]
+                    || (value != null && Objects.equals(value, elementData[i]))) {
                 return i;
             }
         }
