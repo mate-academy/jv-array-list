@@ -1,6 +1,5 @@
 package core.basesyntax;
 
-import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
@@ -15,7 +14,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (size + 1 < elementData.length) {
+        if (size + 1 <= elementData.length) {
             elementData[size++] = value;
             return;
         }
@@ -30,11 +29,10 @@ public class ArrayList<T> implements List<T> {
             add(value);
             return;
         }
-        final int newSize = size + 1;
-        final Object[] newArray = new Object[newSize];
-        System.arraycopy(elementData, index, newArray, index + 1, size - index);
-        System.arraycopy(elementData, 0, newArray, 0, index);
-        elementData = Arrays.copyOf(newArray, size = newSize);
+        if (size + 1 > elementData.length) {
+            grow();
+        }
+        System.arraycopy(elementData, index, elementData, index + 1, size++ - index);
         elementData[index] = value;
     }
 
@@ -66,11 +64,8 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         checkIndex(index);
         T removedValue = (T) elementData[index];
-        final int newSize = size - 1;
-        if (newSize > index) {
-            System.arraycopy(elementData, index + 1, elementData, index, newSize - index);
-        }
-        elementData = Arrays.copyOf(elementData, size = newSize);
+        System.arraycopy(elementData, index + 1, elementData, index, size - 1 - index);
+        size--;
         return removedValue;
     }
 
@@ -94,7 +89,9 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void grow() {
-        elementData = Arrays.copyOf(elementData, elementData.length + (elementData.length >> 1));
+        Object[] curElements = elementData;
+        elementData = new Object[size + (size >> 1)];
+        System.arraycopy(curElements, 0, elementData, 0, size);
     }
 
     private void checkIndex(int index) {
@@ -113,25 +110,12 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private int indexOf(Object o) {
-        int index = 0;
-        boolean found = false;
-        if (o == null) {
-            for (; index < size; index++) {
-                if (elementData[index] == null) {
-                    found = true;
-                    break;
-                }
-            }
-        } else {
-            for (; index < size; index++) {
-                if (o.equals(elementData[index])) {
-                    found = true;
-                    break;
-                }
+    private int indexOf(Object obj) {
+        for (int i = 0; i < size; i++) {
+            if (obj == elementData[i] || (obj != null && obj.equals(elementData[i]))) {
+                return i;
             }
         }
-        return found ? index : INDEX_NOT_FOUND;
+        return INDEX_NOT_FOUND;
     }
-
 }
