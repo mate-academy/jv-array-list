@@ -31,9 +31,9 @@ public class ArrayList<T> implements List<T> {
             checkAddPosition(index);
             Object[] temp = new Object[storage.length];
             System.arraycopy(storage, 0, temp, 0, index);
-            temp[index] = value;
             System.arraycopy(storage, index, temp, index + 1, size - index);
             storage = temp;
+            storage[index] = value;
             size++;
         }
     }
