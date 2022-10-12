@@ -64,10 +64,10 @@ public class ArrayList<T> implements List<T> {
         values[index] = value;
     }
 
-    private void fastRemove(Object[] helpToRemoveArray, int i) {
-        System.arraycopy(helpToRemoveArray, i + 1, helpToRemoveArray, i, size - 1 - i);
+    private void fastRemove(Object[] values, int i) {
+        System.arraycopy(values, i + 1, values, i, size - 1 - i);
         size--;
-        helpToRemoveArray[size] = null;
+        values[size] = null;
     }
 
     @Override
