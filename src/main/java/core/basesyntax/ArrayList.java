@@ -53,7 +53,8 @@ public class ArrayList<T> implements List<T> {
         checkIndex(index);
         Object result = elementOfObjets[index];
         System.arraycopy(elementOfObjets, Math.min(index + 1, size()), elementOfObjets, index,
-                size() - index - 1);
+                size() - index - 1
+        );
         numObjects--;
         return (T) result;
     }
@@ -63,7 +64,8 @@ public class ArrayList<T> implements List<T> {
         Object result = null;
         for (int i = 0; i < elementOfObjets.length; i++) {
             if (elementOfObjets[i] == null
-                ? element == elementOfObjets[i] : elementOfObjets[i].equals(element)) {
+                    ? element == elementOfObjets[i]
+                    : elementOfObjets[i].equals(element)) {
                 result = elementOfObjets[i];
                 remove(i);
                 return (T) result;
