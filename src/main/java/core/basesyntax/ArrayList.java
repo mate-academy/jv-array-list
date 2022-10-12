@@ -89,10 +89,10 @@ public class ArrayList<T> implements List<T> {
     }
 
     private T removeByIndex(int index) {
-        int numMoved = elementsData.length - index - 1;
         T removed = (T) elementsData[index];
+        int numMoved = elementsData.length - index - 1;
         System.arraycopy(elementsData, index + 1, elementsData, index, numMoved);
-        --actualSize;
+        actualSize--;
         return removed;
     }
 
