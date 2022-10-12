@@ -24,7 +24,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         if (index < 0 || index > currentSize) {
-            throw new ArrayListIndexOutOfBoundsException();
+            throw new ArrayListIndexOutOfBoundsException("Incorrect index");
         }
         if (currentSize == array.length) {
             increaseSize();
@@ -70,7 +70,7 @@ public class ArrayList<T> implements List<T> {
                 return remove(i);
             }
         }
-        throw new NoSuchElementException();
+        throw new NoSuchElementException("Can`t find element " + element +" in list");
     }
 
     @Override
