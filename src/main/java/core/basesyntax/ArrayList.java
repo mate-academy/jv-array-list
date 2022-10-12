@@ -3,17 +3,17 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    private int capacity = 10;
+    private static int INITIAL_CAPACITY = 10;
     private int currentNumberOfMembers = 0;
     private Object [] elementData;
 
     ArrayList() {
-        elementData = new Object[capacity];
+        elementData = new Object[INITIAL_CAPACITY];
     }
 
     @Override
     public void add(T value) {
-        if (currentNumberOfMembers >= capacity) {
+        if (currentNumberOfMembers >= elementData.length) {
             grow();
         }
         elementData[currentNumberOfMembers++] = value;
@@ -24,7 +24,7 @@ public class ArrayList<T> implements List<T> {
         if (index < 0 || index > size()) {
             throw new ArrayListIndexOutOfBoundsException("Incorrect index exception");
         }
-        if (currentNumberOfMembers >= capacity) {
+        if (currentNumberOfMembers >= INITIAL_CAPACITY) {
             grow();
         }
         System.arraycopy(elementData, index, elementData,
@@ -72,15 +72,11 @@ public class ArrayList<T> implements List<T> {
             if (elementData[i] == element || elementData[i] != null
                     && elementData[i].equals(element)) {
                 index = i;
-                isFound = true;
-                remove(index);
-                break;
+                return remove(index);
+
             }
         }
-        if (!isFound) {
-            throw new NoSuchElementException();
-        }
-        return element;
+        throw new NoSuchElementException();
     }
 
     @Override
@@ -102,8 +98,8 @@ public class ArrayList<T> implements List<T> {
     private void grow() {
         double increaseValue = 1.5;
         Object[] temp = elementData;
-        capacity *= increaseValue;
-        elementData = new Object[capacity];
+        INITIAL_CAPACITY *= increaseValue;
+        elementData = new Object[INITIAL_CAPACITY];
         System.arraycopy(temp, 0, elementData, 0, temp.length);
     }
 }
