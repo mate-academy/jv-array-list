@@ -40,9 +40,7 @@ public class ArrayList<T> implements List<T> {
             isIndexValid(index);
         }
         ensureSize();
-        for (int i = size - 1; i >= index; i--) {
-            array[i + 1] = array[i];
-        }
+        System.arraycopy(array, index, array, index + 1, size - index);
         array[index] = value;
         size++;
     }
@@ -70,9 +68,7 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         isIndexValid(index);
         Object remove = array[index];
-        for (int i = index; i < size - 1; i++) {
-            array[i] = array[i + 1];
-        }
+        System.arraycopy(array, index + 1, array, index, size - index - 1);
         size--;
         return (T) remove;
     }
