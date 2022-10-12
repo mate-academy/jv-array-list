@@ -38,19 +38,22 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        indexCheck(index + 1);
+        indexCheck(index);
+        indexOutofUpperBoundCheck(index);
         return (T) elementData[index];
     }
 
     @Override
     public void set(T value, int index) {
-        indexCheck(index + 1);
+        indexCheck(index);
+        indexOutofUpperBoundCheck(index);
         elementData[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        indexCheck(index + 1);
+        indexCheck(index);
+        indexOutofUpperBoundCheck(index);
         T element = (T) elementData[index];
         System.arraycopy(elementData, index + 1, elementData, index, size - index - 1);
         size--;
@@ -84,10 +87,13 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void indexCheck(int index) {
-        if (index < 0 || index > elementData.length) {
-            throw new ArrayListIndexOutOfBoundsException("Index is out of bounds");
+        if (index < 0 || index > size) {
+            throw new ArrayListIndexOutOfBoundsException("Index out of bounds");
         }
-        if (index > size) {
+    }
+
+    private void indexOutofUpperBoundCheck(int index) {
+        if (index == size) {
             throw new ArrayListIndexOutOfBoundsException("Invalid index");
         }
     }
