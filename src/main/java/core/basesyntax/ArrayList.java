@@ -11,8 +11,10 @@ public class ArrayList<T> implements List<T> {
         array = new Object[DEFAULT_INDEX];
     }
 
-    public void throwException() {
-        throw new ArrayListIndexOutOfBoundsException("Index out of bounds for length");
+    private void throwException(int index) {
+        if (index >= size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Index out of bounds for length");
+        }
     }
 
     @Override
@@ -27,7 +29,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         if (index > size || index < 0) {
-            throwException();
+            throwException(index);
         }
         if (size == array.length) {
             grow();
@@ -46,25 +48,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index >= size || index < 0) {
-            throwException();
-        }
+        throwException(index);
         return (T) array[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index >= size || index < 0) {
-            throwException();
-        }
+        throwException(index);
         array[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index >= size || index < 0) {
-            throwException();
-        }
+        throwException(index);
         T oldValue = (T) array[index];
         size--;
         System.arraycopy(array, index + 1, array, index, size - index);
@@ -76,9 +72,7 @@ public class ArrayList<T> implements List<T> {
         T findElement;
         for (int i = 0; i <= size; i++) {
             if (element == array[i] || element != null && element.equals(array[i])) {
-                findElement = (T) array[i];
-                remove(i);
-                return findElement;
+                return remove(i);
             }
         }
         throw new NoSuchElementException("There is no such element in this ArrayList");
@@ -94,10 +88,10 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    public void grow() {
-        T[] newData = (T[]) array;
+    private void grow() {
+        Object[] oldData = array;
         array = new Object[size + (size >> 1)];
-        System.arraycopy(newData, 0, array, 0, size);
+        System.arraycopy(oldData, 0, array, 0, size);
 
     }
 }
