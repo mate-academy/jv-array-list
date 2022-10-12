@@ -48,8 +48,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void addAll(List<T> list) {
         for (int i = 0; i < list.size(); i++) {
-            values[size] = list.get(i);
-            size++;
+            add(list.get(i));
         }
     }
 
@@ -66,11 +65,9 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void fastRemove(Object[] helpToRemoveArray, int i) {
-        final int newSize;
-        if ((newSize = size - 1) > i) {
-            System.arraycopy(helpToRemoveArray, i + 1, helpToRemoveArray, i, newSize - i);
-        }
-        helpToRemoveArray[size = newSize] = null;
+        System.arraycopy(helpToRemoveArray, i + 1, helpToRemoveArray, i, size - 1 - i);
+        size--;
+        helpToRemoveArray[size] = null;
     }
 
     @Override
@@ -88,8 +85,7 @@ public class ArrayList<T> implements List<T> {
         for (int i = 0; i < size; i++) {
             if (element == helpToRemoveArray[i]
                     || element != null && element.equals(helpToRemoveArray[i])) {
-                fastRemove(helpToRemoveArray, i);
-                return element;
+                return remove(i);
             }
         }
         throw new NoSuchElementException("Not found such element " + element);
