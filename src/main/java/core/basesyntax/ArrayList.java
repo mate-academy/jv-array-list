@@ -1,15 +1,18 @@
 package core.basesyntax;
 
-import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    private static final int THIS_IS_ZERO = 0;
-    private static final int THIS_IS_ONE = 1;
-    private static final int THIS_IS_TWO = 2;
-    private T[] currentArray = (T[]) new Object[DEFAULT_CAPACITY];
+    private static final int FIRST_INDEX = 0;
+    private static final int ONE = 1;
+    private static final double INCREASE_INDEX = 1.5;
+    private T[] currentArray;
     private int size;
+
+    public ArrayList() {
+        this.currentArray = (T[]) new Object[DEFAULT_CAPACITY];
+    }
 
     @Override
     public void add(T value) {
@@ -22,13 +25,13 @@ public class ArrayList<T> implements List<T> {
         size++;
         chekIndex(index);
         checkGrow();
-        System.arraycopy(currentArray, index, currentArray, index + THIS_IS_ONE, size - index);
+        System.arraycopy(currentArray, index, currentArray, index + ONE, size - index);
         currentArray[index] = value;
     }
 
     @Override
     public void addAll(List<T> list) {
-        for (int i = THIS_IS_ZERO; i < list.size(); i++) {
+        for (int i = FIRST_INDEX; i < list.size(); i++) {
             add(list.get(i));
         }
     }
@@ -49,8 +52,8 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         chekIndex(index);
         T removedData = currentArray[index];
-        System.arraycopy(currentArray, index + THIS_IS_ONE, currentArray,
-                index, size - THIS_IS_ONE - index);
+        System.arraycopy(currentArray, index + ONE, currentArray,
+                index, size - ONE - index);
         size--;
         return removedData;
     }
@@ -58,7 +61,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         T removedElement;
-        for (int i = THIS_IS_ZERO; i < size; i++) {
+        for (int i = FIRST_INDEX; i < size; i++) {
             if (element == currentArray[i] || element != null && element.equals(currentArray[i])) {
                 removedElement = currentArray[i];
                 remove(i);
@@ -75,18 +78,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public boolean isEmpty() {
-        return size == THIS_IS_ZERO;
+        return size == FIRST_INDEX;
     }
 
     private void checkGrow() {
-        if (size == currentArray.length) {
-            currentArray = Arrays.copyOf(currentArray, currentArray.length
-                    + currentArray.length / THIS_IS_TWO);
+        if (size >= currentArray.length) {
+            T[] newArr = (T[]) new Object[(int) (currentArray.length * INCREASE_INDEX)];
+            System.arraycopy(currentArray, FIRST_INDEX, newArr, FIRST_INDEX, currentArray.length);
+            currentArray = newArr;
         }
     }
 
     private void chekIndex(int index) {
-        if (index >= size || index < THIS_IS_ZERO) {
+        if (index >= size || index < FIRST_INDEX) {
             throw new ArrayListIndexOutOfBoundsException("Array list index of bound");
         }
     }
