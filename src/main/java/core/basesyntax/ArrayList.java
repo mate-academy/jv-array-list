@@ -77,7 +77,7 @@ public class ArrayList<T> implements List<T> {
                 return remove(i);
             }
         }
-        throw new NoSuchElementException("No such element on this list");
+        throw new NoSuchElementException("No such element on this list like " + element);
     }
 
     @Override
@@ -98,13 +98,15 @@ public class ArrayList<T> implements List<T> {
 
     private void rangeCheckForAdd(int index) {
         if (index > size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index is not in the range of this list");
+            throw new ArrayListIndexOutOfBoundsException(String
+                    .format("Index %d is not in the range of this list", index));
         }
     }
 
     private void rangeCheck(int index) {
         if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index is not in the range of this list");
+            throw new ArrayListIndexOutOfBoundsException(String
+                    .format("Index %d is not in the range of this list", index));
         }
     }
 
