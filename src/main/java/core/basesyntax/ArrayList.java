@@ -6,8 +6,9 @@ public class ArrayList<T> implements List<T> {
     private static final int INITIALIZATION_LENGTH = 10;
     private static final String ERROR_MESSAGE_INDEX = "Your index is incorrect";
     private static final String ERROR_MESSAGE_ELEMENT = "Can't remove element for such";
-    private T[] array;
-    private int size = 0;
+    private static final double GROW_INDEX = 1.5;
+    protected T[] array;
+    protected int size = 0;
 
     ArrayList() {
         array = (T[])new Object[INITIALIZATION_LENGTH];
@@ -15,12 +16,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (size == array.length) {
-            makeBiggerArray();
-            array[size] = value;
-            size++;
-            return;
-        }
+        makeBiggerArrayIfNeeded();
         array[size] = value;
         size++;
     }
@@ -29,9 +25,7 @@ public class ArrayList<T> implements List<T> {
     public void add(T value, int index) {
         size++;
         checkIndex(index);
-        if (array.length == size) {
-            makeBiggerArray();
-        }
+        makeBiggerArrayIfNeeded();
         System.arraycopy(array,index,array,index + 1, size - index);
         array[index] = value;
     }
@@ -70,11 +64,7 @@ public class ArrayList<T> implements List<T> {
             if (array[i] == null && element != null) {
                 continue;
             }
-            if (array[i] == null && element == null) {
-                remove(i);
-                return null;
-            }
-            if (array[i].equals(element)) {
+            if ((array[i] == null && element == null) || array[i].equals(element)) {
                 return remove(i);
             }
         }
@@ -88,7 +78,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public boolean isEmpty() {
-        return size == 0 ? true : false;
+        return size == 0;
     }
 
     public void checkIndex(int index) {
@@ -97,11 +87,13 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    public void makeBiggerArray() {
-        int newSize = (int) (size * 1.5);
-        T[] newArray = (T[])new Object[newSize];
-        System.arraycopy(array,0,newArray,0,array.length);
-        array = newArray;
+    public void makeBiggerArrayIfNeeded() {
+        if (size == array.length) {
+            int newSize = (int) (size * GROW_INDEX);
+            T[] newArray = (T[]) new Object[newSize];
+            System.arraycopy(array, 0, newArray, 0, array.length);
+            array = newArray;
+        }
     }
 }
 
