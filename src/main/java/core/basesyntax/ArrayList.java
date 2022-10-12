@@ -58,9 +58,9 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         rangeCheck(index);
-        final Object[] elementDataBefRem = elementData;
-        T oldValue = (T) elementDataBefRem[index];
-        fastRemove(elementDataBefRem, index);
+        final T[] elementDataBeforeRemove = elementData;
+        T oldValue = elementDataBeforeRemove[index];
+        fastRemove(elementDataBeforeRemove, index);
         return oldValue;
     }
 
@@ -81,7 +81,7 @@ public class ArrayList<T> implements List<T> {
         throw new NoSuchElementException(ELEMENT_EXCEPTION + element);
     }
 
-    private void fastRemove(Object[] elementDataBefRem, int index) {
+    private void fastRemove(T[] elementDataBefRem, int index) {
         final int newSize;
         newSize = size - 1;
         if (newSize > index) {
