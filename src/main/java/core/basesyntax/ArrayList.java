@@ -6,11 +6,9 @@ public class ArrayList<T> implements List<T> {
     private static int DEFAULT_CAPACITY = 10;
     private Object[] values;
     private int size;
-    private int newCapacity;
 
     public ArrayList() {
         values = (T[]) new Object[DEFAULT_CAPACITY];
-        size = 0;
     }
 
     @Override
@@ -90,10 +88,16 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public boolean isEmpty() {
-        if (size == 0) {
-            return true;
+        return size == 0;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder stringBuilder = new StringBuilder();
+        for (int i = 0; i < size; i++) {
+            stringBuilder.append(values[i]).append(" ");
         }
-        return false;
+        return stringBuilder.toString().trim();
     }
 
     public void resize() {
@@ -104,14 +108,5 @@ public class ArrayList<T> implements List<T> {
 
     private void throwException() {
         throw new ArrayListIndexOutOfBoundsException("Index out of bounds for length: " + size);
-    }
-
-    @Override
-    public String toString() {
-        StringBuilder stringBuilder = new StringBuilder();
-        for (int i = 0; i < size; i++) {
-            stringBuilder.append(values[i]).append(" ");
-        }
-        return stringBuilder.toString().trim();
     }
 }
