@@ -34,13 +34,16 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        size++;
-        checkIndex(index);
+        if (index > size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Index " + index
+                    + " out of bounds for length " + size);
+        }
         if (elements.length == size) {
             resize();
         }
         System.arraycopy(elements, index, elements, index + 1, size - index);
         elements[index] = value;
+        size++;
     }
 
     @Override
