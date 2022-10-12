@@ -29,10 +29,8 @@ public class ArrayList<T> implements List<T> {
         }
         grow();
         T[] newElementData = (T[]) new Object[elementData.length];
-        System.arraycopy(elementData, 0, newElementData, 0, index);
-        newElementData[index] = value;
-        System.arraycopy(elementData, index, newElementData, index + 1, size - index);
-        elementData = newElementData;
+        System.arraycopy(elementData, index, elementData, index + 1, size - index);
+        elementData[index] = value;
         size += 1;
     }
 
@@ -58,9 +56,9 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         rangeCheck(index);
-        final Object[] es = elementData;
-        T oldValue = (T) es[index];
-        fastRemove(es, index);
+        final Object[] elementDataBefRem = elementData;
+        T oldValue = (T) elementDataBefRem[index];
+        fastRemove(elementDataBefRem, index);
         return oldValue;
     }
 
@@ -100,7 +98,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void rangeCheck(int index) {
-        if (index < 0 || index >= size) {
+        if (index < 0 || index > size - 1) {
             throw new ArrayListIndexOutOfBoundsException(INDEX_EXCEPTION);
         }
     }
