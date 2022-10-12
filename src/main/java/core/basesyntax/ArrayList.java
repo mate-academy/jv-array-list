@@ -82,8 +82,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void fastRemove(T[] elementDataBefRem, int index) {
-        final int newSize;
-        newSize = size - 1;
+        final int newSize = size - 1;
         if (newSize > index) {
             System.arraycopy(elementDataBefRem, index + 1,
                     elementDataBefRem, index, newSize - index);
