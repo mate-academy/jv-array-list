@@ -23,11 +23,11 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (size == elements.length) {
-            grow();
-        }
         if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException("Index out of bound of list size");
+        }
+        if (size == elements.length) {
+            grow();
         }
         System.arraycopy(elements, index, elements, index + 1,
                 elements.length - index - 1);
@@ -38,21 +38,11 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void addAll(List<T> list) {
         for (int i = 0; i < list.size(); i++) {
+            if (size == elements.length) {
+                grow();
+            }
             elements[size] = list.get(i);
             size++;
-        }
-    }
-
-    private void grow() {
-        Object[] resizedElements = new Object[Math.round(elements.length * GROW_MULTIPLYER)];
-        System.arraycopy(elements, 0,
-                resizedElements,0, elements.length);
-        elements = resizedElements;
-    }
-
-    private void isInRange(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index out of bound of list size");
         }
     }
 
@@ -71,10 +61,10 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         isInRange(index);
-        size--;
         T desiredValue = (T) elements[index];
         System.arraycopy(elements, index + 1,
                 elements, index, elements.length - index - 1);
+        size--;
         return desiredValue;
     }
 
@@ -82,11 +72,7 @@ public class ArrayList<T> implements List<T> {
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
             if (elements[i] == element || elements[i] != null && elements[i].equals(element)) {
-                size--;
-                T desiredValue = (T) elements[i];
-                System.arraycopy(elements, i + 1,
-                        elements, i, elements.length - i - 1);
-                return desiredValue;
+                return remove(i);
             }
         }
         throw new NoSuchElementException("Incorrect value input");
@@ -100,5 +86,18 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private void grow() {
+        Object[] resizedElements = new Object[Math.round(elements.length * GROW_MULTIPLYER)];
+        System.arraycopy(elements, 0,
+                resizedElements, 0, elements.length);
+        elements = resizedElements;
+    }
+
+    private void isInRange(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Index out of bound of list size");
+        }
     }
 }
