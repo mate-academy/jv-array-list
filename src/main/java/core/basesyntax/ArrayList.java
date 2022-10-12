@@ -14,9 +14,7 @@ public class ArrayList<T> implements List<T> {
     private void ensureSize() {
         if (size == array.length) {
             Object[] newArray = new Object[(int) (size * 1.5)];
-            for (int i = 0; i < array.length; i++) {
-                newArray[i] = array[i];
-            }
+            System.arraycopy(array, 0, newArray, 0, size);
             array = newArray;
         }
     }
