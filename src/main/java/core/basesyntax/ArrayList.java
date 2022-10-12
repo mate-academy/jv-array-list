@@ -13,47 +13,6 @@ public class ArrayList<T> implements List<T> {
         elementData = new Object[DEFAULT_CAPACITY];
     }
 
-    private void grow() {
-        elementData = Arrays.copyOf(elementData, elementData.length + (elementData.length >> 1));
-    }
-
-    private void checkIndex(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException(
-                    String.format("Array index %d out of bounds", index)
-            );
-        }
-    }
-
-    private void rangeCheckForAdd(int index) {
-        if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException(
-                    String.format("Index %d not suitable for add", index)
-            );
-        }
-    }
-
-    private int indexOf(Object o) {
-        int index = 0;
-        boolean found = false;
-        if (o == null) {
-            for (; index < size; index++) {
-                if (elementData[index] == null) {
-                    found = true;
-                    break;
-                }
-            }
-        } else {
-            for (; index < size; index++) {
-                if (o.equals(elementData[index])) {
-                    found = true;
-                    break;
-                }
-            }
-        }
-        return found ? index : INDEX_NOT_FOUND;
-    }
-
     @Override
     public void add(T value) {
         if (size + 1 < elementData.length) {
@@ -133,4 +92,46 @@ public class ArrayList<T> implements List<T> {
     public boolean isEmpty() {
         return size == 0;
     }
+
+    private void grow() {
+        elementData = Arrays.copyOf(elementData, elementData.length + (elementData.length >> 1));
+    }
+
+    private void checkIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException(
+                    String.format("Array index %d out of bounds", index)
+            );
+        }
+    }
+
+    private void rangeCheckForAdd(int index) {
+        if (index < 0 || index > size) {
+            throw new ArrayListIndexOutOfBoundsException(
+                    String.format("Index %d not suitable for add", index)
+            );
+        }
+    }
+
+    private int indexOf(Object o) {
+        int index = 0;
+        boolean found = false;
+        if (o == null) {
+            for (; index < size; index++) {
+                if (elementData[index] == null) {
+                    found = true;
+                    break;
+                }
+            }
+        } else {
+            for (; index < size; index++) {
+                if (o.equals(elementData[index])) {
+                    found = true;
+                    break;
+                }
+            }
+        }
+        return found ? index : INDEX_NOT_FOUND;
+    }
+
 }
