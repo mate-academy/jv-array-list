@@ -70,7 +70,7 @@ public class ArrayList<T> implements List<T> {
                 return remove(i);
             }
         }
-        throw new NoSuchElementException("Can`t find element " + element +" in list");
+        throw new NoSuchElementException("Can`t find element " + element + " in list");
     }
 
     @Override
