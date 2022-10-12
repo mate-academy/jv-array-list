@@ -47,7 +47,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void set(T value, int index) {
         if (checkIndexBounds(index + 1)) {
-            throw new ArrayListIndexOutOfBoundsException("Cannot set value to the element with index: "
+            throw new ArrayListIndexOutOfBoundsException("Cannot set value to the "
+                    + "element with index: "
                     + index + ", list size: " + actualSize);
         }
         elementsData[index] = value;
