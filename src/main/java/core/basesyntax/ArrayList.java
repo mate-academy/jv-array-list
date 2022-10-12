@@ -76,7 +76,7 @@ public class ArrayList<T> implements List<T> {
         }
         if (element == null) {
             size--;
-            return element;
+            return null;
         }
         throw new NoSuchElementException(ELEMENT_EXCEPTION + element);
     }
