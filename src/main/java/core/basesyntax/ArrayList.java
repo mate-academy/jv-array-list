@@ -15,13 +15,15 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
+        resizeCheck();
         array[this.size] = value;
         size++;
     }
 
     @Override
     public void add(T value, int index) {
-        if (index < 0 || index > size) {
+        resizeCheck();
+        if (index < 0 || index > this.size) {
             throw new ArrayListIndexOutOfBoundsException("Index is out of bounds");
         }
         Object[] oldArray = array;
@@ -51,9 +53,6 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(int index) {
-        if (array.length == size) {
-            resize();
-        }
         checkIndex(index);
         T removedArray = (T) array[index];
         System.arraycopy(array, index + 1, array, index, size - 1 - index);
@@ -86,6 +85,12 @@ public class ArrayList<T> implements List<T> {
         Object[] resizedSize = new Object[newSize];
         System.arraycopy(array, 0, resizedSize, 0, array.length);
         this.array = resizedSize;
+    }
+
+    private void resizeCheck() {
+        if (array.length == this.size) {
+            resize();
+        }
     }
 
     private void checkIndex(int index) {
