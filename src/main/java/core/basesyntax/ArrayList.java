@@ -13,12 +13,6 @@ public class ArrayList<T> implements List<T> {
         arrList = new Object[DEFAULT_CAPACITY];
     }
 
-    public void grow() {
-        T[] tempArrList = (T[]) arrList;
-        arrList = new Object[(int) (size * SCALE_FACTOR)];
-        System.arraycopy(tempArrList, FIRST_INDEX, arrList, FIRST_INDEX, size);
-    }
-
     @Override
     public void add(T value) {
         if (arrList.length == size) {
@@ -52,25 +46,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index " + index + " out of size " + size);
-        }
+        indexCheck(index);
         return (T)arrList[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index:" + index + " out of size " + size);
-        }
+        indexCheck(index);
         arrList[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index:" + index + " out of size " + size);
-        }
+        indexCheck(index);
         T value = (T) arrList[index];
         size--;
         System.arraycopy(arrList, index + 1, arrList, index, size - index);
@@ -98,5 +86,17 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private void grow() {
+        T[] tempArrList = (T[]) arrList;
+        arrList = new Object[(int) (size * SCALE_FACTOR)];
+        System.arraycopy(tempArrList, FIRST_INDEX, arrList, FIRST_INDEX, size);
+    }
+
+    private void indexCheck(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Index:" + index + " out of size " + size);
+        }
     }
 }
