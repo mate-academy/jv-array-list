@@ -23,11 +23,14 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        size++;
-        checkIndex(index);
+        if (index > size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException(ERROR_MESSAGE_INDEX);
+        }
         makeBiggerArrayIfNeeded();
-        System.arraycopy(array,index,array,index + 1, size - index - 1);
+        System.arraycopy(array,index,array,index + 1, size - index);
         array[index] = value;
+        size++;
+
     }
 
     @Override
@@ -60,11 +63,8 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        for (int i = 0; i < array.length; i++) {
-            if (array[i] == null && element != null) {
-                continue;
-            }
-            if ((array[i] == null && element == null) || array[i].equals(element)) {
+        for (int i = 0; i < size; i++) {
+            if (array[i] == element || element != null && element.equals(array[i])) {
                 return remove(i);
             }
         }
@@ -81,13 +81,13 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    public void checkIndex(int index) {
+    private void checkIndex(int index) {
         if (index >= size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException(ERROR_MESSAGE_INDEX);
         }
     }
 
-    public void makeBiggerArrayIfNeeded() {
+    private void makeBiggerArrayIfNeeded() {
         if (size == array.length) {
             int newSize = (int) (size * 1.5);
             T[] newArray = (T[]) new Object[newSize];
