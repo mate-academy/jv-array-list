@@ -58,17 +58,12 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        int index = -1;
         for (int i = 0; i < array.length; i++) {
             if (element == array[i] || element != null && element.equals(array[i])) {
-                index = i;
-                break;
+                return remove(i);
             }
         }
-        if (index == -1) {
-            throw new NoSuchElementException("There is no such element present");
-        }
-        return doRemove(index);
+        throw new NoSuchElementException("There is no such element present");
     }
 
     @Override
