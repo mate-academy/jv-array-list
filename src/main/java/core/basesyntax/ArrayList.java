@@ -7,13 +7,15 @@ public class ArrayList<T> implements List<T> {
     private static final String INVALID_INDEX_MSG = "The index passed to the method is invalid";
     private int defaultLength = 10;
     private int size;
-    private Object[] array = new Object[defaultLength];
+    private Object[] array;
+
+    public ArrayList() {
+        array = new Object[defaultLength];
+    }
 
     @Override
     public void add(T value) {
-        if (size >= array.length) {
-            resizing();
-        }
+        resizing();
         array[size] = value;
         size++;
     }
@@ -23,9 +25,7 @@ public class ArrayList<T> implements List<T> {
         if (index > size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException(INVALID_INDEX_MSG);
         }
-        if (size >= array.length) {
-            resizing();
-        }
+        resizing();
         System.arraycopy(array, index, array, index + 1, size - index);
         array[index] = value;
         size++;
@@ -88,10 +88,12 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void resizing() {
-        defaultLength = (int) (array.length * DEFAULT_COEFFICIENT);
-        Object[] arrayNew = new Object[defaultLength];
-        System.arraycopy(array, 0, arrayNew, 0, array.length);
-        array = arrayNew;
+        if (size >= array.length) {
+            defaultLength = (int) (array.length * DEFAULT_COEFFICIENT);
+            Object[] arrayNew = new Object[defaultLength];
+            System.arraycopy(array, 0, arrayNew, 0, array.length);
+            array = arrayNew;
+        }
     }
 
     private T doRemove(int index) {
