@@ -5,6 +5,7 @@ import java.util.NoSuchElementException;
 public class ArrayList<T> implements List<T> {
     private static int DEFAULT_ARRAY_SIZE = 10;
     private static String INVALID_INDEX_MESSAGE = "Invalid index";
+    private static String NO_SUCH_ELEMENT_MESSAGE = "No such element found";
 
     private T[] array;
     private int size;
@@ -64,7 +65,7 @@ public class ArrayList<T> implements List<T> {
                 return removeElement(i);
             }
         }
-        throw new NoSuchElementException("No such element");
+        throw new NoSuchElementException(NO_SUCH_ELEMENT_MESSAGE);
     }
 
     @Override
