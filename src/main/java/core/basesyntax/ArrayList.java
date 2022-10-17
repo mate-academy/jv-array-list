@@ -5,12 +5,13 @@ import java.util.NoSuchElementException;
 public class ArrayList<T> implements List<T> {
     private static final double DEFAULT_COEFFICIENT = 1.5;
     private static final String INVALID_INDEX_MSG = "The index passed to the method is invalid";
-    private int defaultLength = 10;
+    private static final int DEFAULT_LENGTH = 10;
+    private int arrayLength = DEFAULT_LENGTH;
     private int size;
     private Object[] array;
 
     public ArrayList() {
-        array = new Object[defaultLength];
+        array = new Object[arrayLength];
     }
 
     @Override
@@ -84,8 +85,8 @@ public class ArrayList<T> implements List<T> {
 
     private void resizing() {
         if (size >= array.length) {
-            defaultLength = (int) (array.length * DEFAULT_COEFFICIENT);
-            Object[] arrayNew = new Object[defaultLength];
+            arrayLength = (int) (array.length * DEFAULT_COEFFICIENT);
+            Object[] arrayNew = new Object[arrayLength];
             System.arraycopy(array, 0, arrayNew, 0, array.length);
             array = arrayNew;
         }
