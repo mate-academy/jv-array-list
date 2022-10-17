@@ -6,12 +6,11 @@ public class ArrayList<T> implements List<T> {
     private static final double DEFAULT_COEFFICIENT = 1.5;
     private static final String INVALID_INDEX_MSG = "The index passed to the method is invalid";
     private static final int DEFAULT_LENGTH = 10;
-    private int arrayLength = DEFAULT_LENGTH;
     private int size;
     private Object[] array;
 
     public ArrayList() {
-        array = new Object[arrayLength];
+        array = new Object[DEFAULT_LENGTH];
     }
 
     @Override
@@ -85,7 +84,7 @@ public class ArrayList<T> implements List<T> {
 
     private void resizing() {
         if (size >= array.length) {
-            arrayLength = (int) (array.length * DEFAULT_COEFFICIENT);
+            int arrayLength = (int) (array.length * DEFAULT_COEFFICIENT);
             Object[] arrayNew = new Object[arrayLength];
             System.arraycopy(array, 0, arrayNew, 0, array.length);
             array = arrayNew;
