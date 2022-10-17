@@ -2,10 +2,10 @@ package core.basesyntax;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_SIZE = 10;
+    int activationFlag = 0;
     private Object[] defaultNewCapacity;
     private T[] elementArray;
     private int size = 0;
-    private int activationFlag = 0;
 
     public ArrayList() {
         elementArray = (T[]) new Object[DEFAULT_SIZE];
@@ -14,7 +14,6 @@ public class ArrayList<T> implements List<T> {
     public ArrayList(int capacity) {
         elementArray = (T[]) new Object[capacity];
     }
-
 
     @Override
     public void add(T value) {
@@ -31,7 +30,6 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayListIndexOutOfBoundsException(" no index in array " + index);
         }
         defaultNewCapacity = new Object[size + 1];
-        activationFlag = 0;
         for (int i = 0; i < defaultNewCapacity.length; i++) {
             if (i < index) {
                 defaultNewCapacity[i] = elementArray[i];
@@ -61,7 +59,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         if (index > size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index " + index + " out of bounds for length " + size);
+            throw new ArrayListIndexOutOfBoundsException("Index " + index
+                    + " out of bounds for length " + size);
         }
         return elementArray[index];
     }
@@ -69,7 +68,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void set(T value, int index) {
         if (index > size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index " + index + " out of bounds for length " + size);
+            throw new ArrayListIndexOutOfBoundsException("Index " + index
+                    + " out of bounds for length " + size);
         }
         elementArray[index] = value;
     }
@@ -77,11 +77,11 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         if (index > size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index " + index + " out of bounds for length " + size);
+            throw new ArrayListIndexOutOfBoundsException("Index " + index
+                    + " out of bounds for length " + size);
         }
         defaultNewCapacity = new Object[size - 1];
         T result = get(index);
-        activationFlag = 0;
         for (int i = 0; i < defaultNewCapacity.length; i++) {
             if (i < index) {
                 defaultNewCapacity[i] = elementArray[i];
@@ -100,7 +100,6 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-
         defaultNewCapacity = new Object[size];
         T result = null;
         activationFlag = 0;
