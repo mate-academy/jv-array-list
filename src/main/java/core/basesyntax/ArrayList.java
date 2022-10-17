@@ -22,11 +22,9 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-
         if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException(INVALID_INDEX_MESSAGE);
         }
-
         addSize();
         System.arraycopy(array, index, array, index + 1, size - index);
         array[index] = value;
@@ -59,7 +57,6 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-
         for (int i = 0; i < size; i++) {
             if ((element == array[i]) || (element != null && element.equals(array[i]))) {
                 return removeElement(i);
