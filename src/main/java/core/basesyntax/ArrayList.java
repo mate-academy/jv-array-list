@@ -19,14 +19,6 @@ public class ArrayList<T> implements List<T> {
         this(DEFAULT_CAPACITY);
     }
 
-    public void growIfNeeded() {
-        if (values.length == size) {
-            Object[] newArray = new Object[values.length + (values.length >> 1)];
-            System.arraycopy(values, 0, newArray, 0, size);
-            values = newArray;
-        }
-    }
-
     @Override
     public void add(T value) {
         growIfNeeded();
@@ -36,51 +28,20 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        growIfNeeded();
-        if (index > size) {
+        if (index > size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException(
-                    "Cannot add value on index that is larger than size of list");
+                    "Cannot add value on index that is out of size");
         }
-        if (index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Cannot add value on negative index");
-        }
+        growIfNeeded();
         System.arraycopy(values, index, values, index + 1, size - index);
         values[index] = value;
         size++;
     }
 
-    public Object[] convertFromListToArray(List<T> list) {
-        Object[] listArray = new Object[list.size()];
-        for (int i = 0; i < list.size(); i++) {
-            listArray[i] = list.get(i);
-        }
-        return listArray;
-    }
-
-    public void growIfNeededForAddAll(List<T> list) {
-        Object[] listArray = convertFromListToArray(list);
-        while ((size + listArray.length) >= values.length) {
-            Object[] newArray = new Object[values.length + (values.length >> 1)];
-            System.arraycopy(values, 0, newArray, 0, size);
-            values = newArray;
-        }
-    }
-
     @Override
     public void addAll(List<T> list) {
-        Object[] listArray = convertFromListToArray(list);
-        growIfNeededForAddAll(list);
-        System.arraycopy(listArray,0, values, size, listArray.length);
-        size += list.size();
-    }
-
-    public void checkIndex(int index) {
-        if (index > size - 1) {
-            throw new ArrayListIndexOutOfBoundsException(
-                    "Cannot get value on index that is larger than size of list");
-        }
-        if (index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Cannot get value on negative index");
+        for (int i = 0; i < list.size(); i++) {
+            add(list.get(i));
         }
     }
 
@@ -108,23 +69,13 @@ public class ArrayList<T> implements List<T> {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public T remove(T element) {
-        boolean isElement = false;
-        T removedElement = null;
         for (int i = 0; i < size; i++) {
             if (element == values[i] || element != null && element.equals(values[i])) {
-                removedElement = (T) values[i];
-                System.arraycopy(values, i + 1, values, i, size - i - 1);
-                size--;
-                isElement = true;
-                break;
+                return remove(i);
             }
         }
-        if (!isElement) {
-            throw new NoSuchElementException("Not found " + element + " in the list");
-        }
-        return removedElement;
+        throw new NoSuchElementException("Not found " + element + " in the list");
     }
 
     @Override
@@ -135,5 +86,20 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private void growIfNeeded() {
+        if (values.length == size) {
+            Object[] newArray = new Object[values.length + (values.length >> 1)];
+            System.arraycopy(values, 0, newArray, 0, size);
+            values = newArray;
+        }
+    }
+
+    private void checkIndex(int index) {
+        if ((index > size - 1) || (index < 0)) {
+            throw new ArrayListIndexOutOfBoundsException(
+                    "The index passed to the method is invalid");
+        }
     }
 }
