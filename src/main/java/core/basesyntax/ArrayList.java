@@ -3,6 +3,7 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
+    private static final double GROW_MULTIPLIER = 1.5;
     private static final int NEGATIVE_INDEX = -1;
     private static final int DEFAULT_SIZE = 10;
     private int size;
@@ -86,7 +87,7 @@ public class ArrayList<T> implements List<T> {
     private void grow() {
         if (size == values.length) {
             Object[] draft = values;
-            values = new Object[(int) (size * 1.5)];
+            values = new Object[(int) (size * GROW_MULTIPLIER)];
             System.arraycopy(draft, 0, values, 0, draft.length);
         }
     }
