@@ -3,7 +3,7 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    private static final int DEFAULT_SIZE = 10;
+    private static final int DEFAULT_SIZE = 5;
     private Object[] defaultNewCapacity;
     private T[] elementArray;
     private int size = 0;
@@ -83,7 +83,7 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayListIndexOutOfBoundsException("Index " + index
                     + " out of bounds for length " + size);
         }
-        defaultNewCapacity = new Object[size];
+        defaultNewCapacity = new Object[size - 1];
         T result = get(index);
         for (int i = 0; i < defaultNewCapacity.length; i++) {
             if (i < index) {
