@@ -1,8 +1,9 @@
 package core.basesyntax;
 
+import java.util.NoSuchElementException;
+
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_SIZE = 10;
-    int activationFlag = 0;
     private Object[] defaultNewCapacity;
     private T[] elementArray;
     private int size = 0;
@@ -27,7 +28,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         if (index > size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException(" no index in array " + index);
+            throw new ArrayListIndexOutOfBoundsException(" Index " + index
+                    + " out of bounds for length " + size);
         }
         defaultNewCapacity = new Object[size + 1];
         for (int i = 0; i < defaultNewCapacity.length; i++) {
@@ -48,7 +50,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void addAll(List<T> list) {
         if (list.size() > size || list.size() < 0) {
-            throw new ArrayListIndexOutOfBoundsException("no index in array " + list.size());
+            throw new ArrayListIndexOutOfBoundsException("list " + list.size()
+                    + " out of bounds for length " + size);
         }
         for (int i = 0; i < list.size(); i++) {
             elementArray[size + i] = list.get(i);
@@ -58,16 +61,16 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index > size || index < 0) {
+        if (index >= size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Index " + index
-                    + " out of bounds for length " + size);
+                    + " out of bounds for length " + elementArray.length);
         }
         return elementArray[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index > size || index < 0) {
+        if (index >= size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Index " + index
                     + " out of bounds for length " + size);
         }
@@ -76,17 +79,17 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(int index) {
-        if (index > size || index < 0) {
+        if (index >= size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Index " + index
                     + " out of bounds for length " + size);
         }
-        defaultNewCapacity = new Object[size - 1];
+        defaultNewCapacity = new Object[size];
         T result = get(index);
         for (int i = 0; i < defaultNewCapacity.length; i++) {
             if (i < index) {
                 defaultNewCapacity[i] = elementArray[i];
             }
-            if (i == index) {
+            if (result.equals(elementArray[i]) || i == index) {
                 defaultNewCapacity[i] = elementArray[i + 1];
             }
             if (i > index) {
@@ -100,22 +103,13 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        defaultNewCapacity = new Object[size];
-        T result = null;
-        activationFlag = 0;
-        for (int i = 0; i < size; ++i) {
-            if (element == null) {
-                size--;
-                return null;
-            } else if (element.equals(elementArray[i])) {
-                result = elementArray[i];
-                defaultNewCapacity[i] = elementArray[i + 1];
-                activationFlag = 1;
-                size--;
-            }
-            defaultNewCapacity[i] = elementArray[i + activationFlag];
+        int index = findIndexElement(element);
+        if (index >= size || index < 0) {
+            throw new NoSuchElementException("Element " + element
+                    + " out of bounds for length " + size);
         }
-        elementArray = (T[]) defaultNewCapacity;
+        T result = elementArray[index];
+        elementArray = (T[]) removeElementArray(element);
         return result;
     }
 
@@ -138,4 +132,35 @@ public class ArrayList<T> implements List<T> {
             elementArray = (T[]) defaultNewCapacity;
         }
     }
+
+    private int findIndexElement(T element) {
+        for (int i = 0; i < size; i++) {
+            if (element == null && elementArray[i] == null) {
+                return i;
+            } else if (element != null && element.equals(elementArray[i])) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    private T removeElementArray(T element) {
+        if (element == null) {
+            size--;
+            return null;
+        } else {
+            int activationFlag = 0;
+            defaultNewCapacity = new Object[size];
+            for (int i = 0; i < defaultNewCapacity.length; i++) {
+                if (element.equals(elementArray[i])) {
+                    defaultNewCapacity[i] = elementArray[i + 1];
+                    activationFlag = 1;
+                    size--;
+                }
+                defaultNewCapacity[i] = elementArray[i + activationFlag];
+            }
+            return (T) defaultNewCapacity;
+        }
+    }
 }
+
