@@ -4,8 +4,12 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int CAPACITY = 10;
+    private T[] array;
     private int size;
-    private T[] array = (T[]) new Object[CAPACITY];
+
+    public ArrayList() {
+        array = (T[]) new Object[CAPACITY];
+    }
 
     @Override
     public void add(T value) {
@@ -43,11 +47,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void set(T value, int index) {
         checkIndex(index);
-        for (int i = 0; i < size; i++) {
-            if (i == index) {
-                array[i] = value;
-            }
-        }
+        array[index] = value;
     }
 
     @Override
