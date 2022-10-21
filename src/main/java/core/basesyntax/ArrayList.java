@@ -79,9 +79,9 @@ public class ArrayList<T> implements List<T> {
         for (int i = 0; i < size; i++) {
             if ((element == null && elementData[i] == null)
                     || element != null && (element.equals(elementData[i]))) {
-                    index = i;
+                index = i;
                 return remove(index);
-                }
+            }
         }
         throw new NoSuchElementException("Can`t find this element: " + element);
     }
