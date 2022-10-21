@@ -3,13 +3,14 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    private static final int DEFAULT_SIZE = 5;
+
+    private final int default_size = 5;
     private Object[] defaultNewCapacity;
     private T[] elementArray;
-    private int size = 0;
+    private int size;
 
     public ArrayList() {
-        elementArray = (T[]) new Object[DEFAULT_SIZE];
+        elementArray = (T[]) new Object[default_size];
     }
 
     public ArrayList(int capacity) {
@@ -18,9 +19,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (size == elementArray.length) {
-            regenerationSizeArray();
-        }
+        grow();
         elementArray[size] = value;
         size++;
     }
@@ -28,8 +27,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         if (index > size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException(" Index " + index
-                    + " out of bounds for length " + size);
+            throw new ArrayListIndexOutOfBoundsException(" Index "
+                    + index + " out of bounds for length " + size);
         }
         defaultNewCapacity = new Object[size + 1];
         for (int i = 0; i < defaultNewCapacity.length; i++) {
@@ -49,40 +48,30 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        if (list.size() > size || list.size() < 0) {
-            throw new ArrayListIndexOutOfBoundsException("list " + list.size()
+        if (list.size() <= 0) {
+            throw new IndexOutOfBoundsException("list " + list.size()
                     + " out of bounds for length " + size);
         }
         for (int i = 0; i < list.size(); i++) {
-            elementArray[size + i] = list.get(i);
+            this.add(list.get(i));
         }
-        size = size + list.size();
     }
 
     @Override
     public T get(int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index " + index
-                    + " out of bounds for length " + elementArray.length);
-        }
+        checkIndexSizeArray(index);
         return elementArray[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index " + index
-                    + " out of bounds for length " + size);
-        }
+        checkIndexSizeArray(index);
         elementArray[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index " + index
-                    + " out of bounds for length " + size);
-        }
+        checkIndexSizeArray(index);
         defaultNewCapacity = new Object[size - 1];
         T result = get(index);
         for (int i = 0; i < defaultNewCapacity.length; i++) {
@@ -123,12 +112,11 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void regenerationSizeArray() {
-        if (size == elementArray.length) {
-            defaultNewCapacity = new Object[size * 2];
-            for (int i = 0; i < elementArray.length; i++) {
-                defaultNewCapacity[i] = elementArray[i];
-            }
+    private void grow() {
+        if (elementArray.length == size) {
+            defaultNewCapacity = new Object[elementArray.length * 2];
+            System.arraycopy(elementArray, 0,
+                    defaultNewCapacity, 0, size);
             elementArray = (T[]) defaultNewCapacity;
         }
     }
@@ -160,6 +148,13 @@ public class ArrayList<T> implements List<T> {
                 defaultNewCapacity[i] = elementArray[i + activationFlag];
             }
             return (T) defaultNewCapacity;
+        }
+    }
+
+    private void checkIndexSizeArray(int index) {
+        if (index >= size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Index " + index
+                    + " out of bounds for length " + size);
         }
     }
 }
