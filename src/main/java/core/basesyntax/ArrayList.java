@@ -4,13 +4,13 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
 
-    private final int default_size = 5;
+    private final int defaultSize = 5;
     private Object[] defaultNewCapacity;
     private T[] elementArray;
     private int size;
 
     public ArrayList() {
-        elementArray = (T[]) new Object[default_size];
+        elementArray = (T[]) new Object[defaultSize];
     }
 
     public ArrayList(int capacity) {
