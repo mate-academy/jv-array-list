@@ -11,12 +11,29 @@ public class ArrayList<T> implements List<T> {
         values = new Object[DEFAULT_CAPACITY];
     }
 
+    public T [] grow() {
+        T[] sourceArray = (T[]) values;
+        values = new Object[size + (size >> 1)];
+        System.arraycopy(sourceArray, 0, values, 0, size);
+        return sourceArray;
+    }
+
+    public void chekIndex(int index) {
+        if (index >= size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Index:" + index + "out of size" + size);
+        }
+    }
+
+    public void checkIndexForAdd(int index) {
+        if (index > size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Index:" + index + "out of size" + size);
+        }
+    }
+
     @Override
     public void add(T value) {
         if (values.length == size) {
-            T[] sourceArray = (T[]) values;
-            values = new Object[size + (size >> 1)];
-            System.arraycopy(sourceArray, 0, values, 0, size);
+            grow();
         }
         values[size] = value;
         size++;
@@ -24,13 +41,9 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index > size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index:" + index + "out of size" + size);
-        }
+        checkIndexForAdd(index);
         if (values.length == size) {
-            T[] sourceArray = (T[]) values;
-            values = new Object[size + (size >> 1)];
-            System.arraycopy(sourceArray, 0, values, 0, size);
+            grow();
         }
         System.arraycopy(values, index, values, index + 1, size - index);
         values[index] = value;
@@ -46,26 +59,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index:" + index + "out of size" + size);
-        }
+        chekIndex(index);
         return (T)values[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException(
-                    "Index:" + index + "out of size" + size);
-        }
+        chekIndex(index);
         values[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index:" + index + "out of size" + size);
-        }
+        chekIndex(index);
         T value = (T) values[index];
         size--;
         System.arraycopy(values, index + 1, values, index, size - index);
