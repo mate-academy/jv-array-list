@@ -3,8 +3,7 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-
-    private final int defaultSize = 5;
+    private final int defaultSize = 10;
     private Object[] defaultNewCapacity;
     private T[] elementArray;
     private int size;
@@ -27,23 +26,15 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         if (index > size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException(" Index "
-                    + index + " out of bounds for length " + size);
+            checkIndex(index);
         }
-        defaultNewCapacity = new Object[size + 1];
-        for (int i = 0; i < defaultNewCapacity.length; i++) {
-            if (i < index) {
-                defaultNewCapacity[i] = elementArray[i];
-            }
-            if (i == index) {
-                defaultNewCapacity[i] = value;
-            }
-            if (i > index) {
-                defaultNewCapacity[i] = elementArray[i - 1];
-            }
+        final int s = size;
+        if (s == this.elementArray.length) {
+            grow();
         }
-        size++;
-        elementArray = (T[]) defaultNewCapacity;
+        System.arraycopy(elementArray, index, elementArray, index + 1, s - index);
+        elementArray[index] = value;
+        size = s + 1;
     }
 
     @Override
@@ -59,34 +50,22 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        checkIndexSizeArray(index);
+        checkIndex(index);
         return elementArray[index];
     }
 
     @Override
     public void set(T value, int index) {
-        checkIndexSizeArray(index);
+        checkIndex(index);
         elementArray[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        checkIndexSizeArray(index);
-        defaultNewCapacity = new Object[size - 1];
+        checkIndex(index);
         T result = get(index);
-        for (int i = 0; i < defaultNewCapacity.length; i++) {
-            if (i < index) {
-                defaultNewCapacity[i] = elementArray[i];
-            }
-            if (result.equals(elementArray[i]) || i == index) {
-                defaultNewCapacity[i] = elementArray[i + 1];
-            }
-            if (i > index) {
-                defaultNewCapacity[i] = elementArray[i + 1];
-            }
-        }
+        System.arraycopy(elementArray, index + 1, elementArray, index, size - index - 1);
         size--;
-        elementArray = (T[]) defaultNewCapacity;
         return result;
     }
 
@@ -94,11 +73,12 @@ public class ArrayList<T> implements List<T> {
     public T remove(T element) {
         int index = findIndexElement(element);
         if (index >= size || index < 0) {
-            throw new NoSuchElementException("Element " + element
+            throw new NoSuchElementException("Index " + index
                     + " out of bounds for length " + size);
         }
         T result = elementArray[index];
-        elementArray = (T[]) removeElementArray(element);
+        System.arraycopy(elementArray, index + 1, elementArray, index, size - index - 1);
+        size--;
         return result;
     }
 
@@ -132,26 +112,7 @@ public class ArrayList<T> implements List<T> {
         return -1;
     }
 
-    private T removeElementArray(T element) {
-        if (element == null) {
-            size--;
-            return null;
-        } else {
-            int activationFlag = 0;
-            defaultNewCapacity = new Object[size];
-            for (int i = 0; i < defaultNewCapacity.length; i++) {
-                if (element.equals(elementArray[i])) {
-                    defaultNewCapacity[i] = elementArray[i + 1];
-                    activationFlag = 1;
-                    size--;
-                }
-                defaultNewCapacity[i] = elementArray[i + activationFlag];
-            }
-            return (T) defaultNewCapacity;
-        }
-    }
-
-    private void checkIndexSizeArray(int index) {
+    private void checkIndex(int index) {
         if (index >= size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Index " + index
                     + " out of bounds for length " + size);
