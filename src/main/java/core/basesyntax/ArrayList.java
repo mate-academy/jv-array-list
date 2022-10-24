@@ -3,13 +3,13 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    private final int defaultSize = 10;
+    private final int DEFAULT_CAPACITY = 10;
     private Object[] defaultNewCapacity;
     private T[] elementArray;
     private int size;
 
     public ArrayList() {
-        elementArray = (T[]) new Object[defaultSize];
+        elementArray = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
     public ArrayList(int capacity) {
@@ -18,29 +18,32 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        grow();
+        if (size == elementArray.length) {
+            grow();
+        }
         elementArray[size] = value;
         size++;
     }
 
     @Override
     public void add(T value, int index) {
-        if (index > size || index < 0) {
+        if (index == size) {
+            add(value);
+        } else {
             checkIndex(index);
+            if (size == this.elementArray.length) {
+                grow();
+            }
+            System.arraycopy(elementArray, index, elementArray, index + 1, size - index);
+            elementArray[index] = value;
+            size++;
         }
-        final int s = size;
-        if (s == this.elementArray.length) {
-            grow();
-        }
-        System.arraycopy(elementArray, index, elementArray, index + 1, s - index);
-        elementArray[index] = value;
-        size = s + 1;
     }
 
     @Override
     public void addAll(List<T> list) {
         if (list.size() <= 0) {
-            throw new IndexOutOfBoundsException("list " + list.size()
+            throw new ArrayListIndexOutOfBoundsException("list " + list.size()
                     + " out of bounds for length " + size);
         }
         for (int i = 0; i < list.size(); i++) {
@@ -93,12 +96,10 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void grow() {
-        if (elementArray.length == size) {
-            defaultNewCapacity = new Object[elementArray.length * 2];
-            System.arraycopy(elementArray, 0,
-                    defaultNewCapacity, 0, size);
-            elementArray = (T[]) defaultNewCapacity;
-        }
+        defaultNewCapacity = new Object[elementArray.length * 2];
+        System.arraycopy(elementArray, 0,
+                defaultNewCapacity, 0, size);
+        elementArray = (T[]) defaultNewCapacity;
     }
 
     private int findIndexElement(T element) {
