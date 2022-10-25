@@ -11,29 +11,9 @@ public class ArrayList<T> implements List<T> {
         values = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
-    private void checkIndex(int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index" + index + "out of size" + size);
-        }
-    }
-
-    private void checkIndexForAdd(int index) {
-        if (index > size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index" + index + "out of size" + size);
-        }
-    }
-
-    private void grow() {
-        T[] tempArray = (T[]) new Object[values.length + (values.length >> 1)];
-        System.arraycopy(values,0,tempArray,0,size);
-        values = tempArray;
-    }
-
     @Override
     public void add(T value) {
-        if (values.length == size) {
-            grow();
-        }
+        grow();
         values[size] = value;
         size++;
     }
@@ -45,9 +25,7 @@ public class ArrayList<T> implements List<T> {
             add(value);
             return;
         }
-        if (values.length == size) {
-            grow();
-        }
+        grow();
         System.arraycopy(values, index, values, index + 1, size - index);
         values[index] = value;
         size++;
@@ -63,7 +41,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         checkIndex(index);
-        return values [index];
+        return values[index];
     }
 
     @Override
@@ -86,11 +64,9 @@ public class ArrayList<T> implements List<T> {
         int index;
         for (index = 0; index < size; index++) {
             if (values[index] == element
-                    || (values[index] != null && element != null
+                    || (values[index] != null
                     && values[index].equals(element))) {
-                T value = values[index];
-                remove(index);
-                return value;
+                return remove(index);
             }
         }
         throw new NoSuchElementException("Element " + element + " does not found");
@@ -105,5 +81,26 @@ public class ArrayList<T> implements List<T> {
     public boolean isEmpty() {
         return (size == 0);
     }
+
+    private void checkIndex(int index) {
+        if (index >= size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Index" + index + "out of size" + size);
+        }
+    }
+
+    private void checkIndexForAdd(int index) {
+        if (index > size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Index" + index + "out of size" + size);
+        }
+    }
+
+    private void grow() {
+        if (values.length == size) {
+            T[] tempArray = (T[]) new Object[values.length + (values.length >> 1)];
+            System.arraycopy(values, 0, tempArray, 0, size);
+            values = tempArray;
+        }
+    }
+
 }
 
