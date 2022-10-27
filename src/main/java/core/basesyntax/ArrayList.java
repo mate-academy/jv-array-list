@@ -26,7 +26,9 @@ public class ArrayList<T> implements List<T> {
         if (size == elements.length) {
             expandCapacity();
         }
-        checkIndexElements(index);
+        if (index > size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Index is invalid." + index);
+        }
         System.arraycopy(elements,index,elements,index + 1,size - index);
         elements[index] = value;
         size++;
@@ -37,10 +39,9 @@ public class ArrayList<T> implements List<T> {
         if (list == null) {
             return;
         }
-        int delta = elements.length - size - list.size();
-        while (delta < 0) {
+        int delta;
+        while ((delta = elements.length - size - list.size()) < 0) {
             expandCapacity();
-            delta = elements.length - size - list.size();
         }
         for (int i = 0; i < list.size(); i++) {
             add(list.get(i));
@@ -63,11 +64,7 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         checkIndex(index);
         T deleted = (T) elements[index];
-        if (index == size - 1) {
-            System.arraycopy(elements, index, elements, index, size - index);
-        } else {
-            System.arraycopy(elements, index + 1, elements, index, size - index);
-        }
+        System.arraycopy(elements, index + 1, elements, index, size - index - 1);
         size--;
         return deleted;
     }
@@ -76,13 +73,10 @@ public class ArrayList<T> implements List<T> {
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
             if (Objects.equals(element, elements[i])) {
-                T deleted = (T) elements[i];
-                System.arraycopy(elements,i + 1,elements,i,size - 1);
-                size--;
-                return deleted;
+                return remove(i);
             }
         }
-        throw new NoSuchElementException("NonExistentValue.");
+        throw new NoSuchElementException("No such element in list: " + element);
     }
 
     @Override
@@ -92,7 +86,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public boolean isEmpty() {
-        return size == 0 ? true : false;
+        return size == 0;
     }
 
     private void expandCapacity() {
@@ -104,12 +98,6 @@ public class ArrayList<T> implements List<T> {
 
     private void checkIndex(int index) {
         if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index is invalid." + index);
-        }
-    }
-
-    private void checkIndexElements(int index) {
-        if (index >= size + 1 || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Index is invalid." + index);
         }
     }
