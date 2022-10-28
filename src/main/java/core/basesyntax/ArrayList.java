@@ -6,18 +6,14 @@ public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_SIZE = 10;
     private T[] values;
     private int size;
-    private final int currentLength;
 
     public ArrayList() {
         values = (T[]) new Object[DEFAULT_SIZE];
-        currentLength = values.length;
     }
 
     @Override
     public void add(T value) {
-        if (size >= currentLength) {
-            resize();
-        }
+        resize();
         values[size] = value;
         size++;
     }
@@ -25,11 +21,12 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         if (index > size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("index is not valid");
+            throw new ArrayListIndexOutOfBoundsException("Index: "
+                    + index
+                    + ", Size: "
+                    + size);
         }
-        if (size >= currentLength) {
-            resize();
-        }
+        resize();
         System.arraycopy(values, index, values, index + 1, size - index);
         values[index] = value;
         ++size;
@@ -37,14 +34,9 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        if (size >= currentLength) {
-            resize();
-        }
-        int counter = size;
+        resize();
         for (int i = 0; i < list.size(); i++) {
-            values[counter] = list.get(i);
-            size++;
-            counter++;
+            add(list.get(i));
         }
     }
 
@@ -53,23 +45,22 @@ public class ArrayList<T> implements List<T> {
         if (index < size && index >= 0) {
             return values[index];
         } else {
-            throw new ArrayListIndexOutOfBoundsException("index is not valid");
+            throw new ArrayListIndexOutOfBoundsException("Index: "
+                    + index
+                    + ", Size: "
+                    + size);
         }
     }
 
     @Override
     public void set(T value, int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("index is not valid");
-        }
+        checkIndex(index);
         values[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("index is not valid");
-        }
+        checkIndex(index);
         T removedElement = values[index];
         System.arraycopy(values, index + 1, values, index, size - index - 1);
         values[--size] = null;
@@ -78,13 +69,27 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        int index = indexOf(element);
+        int index = -1;
+        for (int i = 0; i < size; i++) {
+            if (values[i] == null ? element == null : values[i].equals(element)) {
+                index = i;
+            }
+        }
         if (index >= size || index < 0) {
             throw new NoSuchElementException("There is no element like this: "
                     + element
                     + " in storage");
         }
         return remove(index);
+    }
+
+    private void checkIndex(int index) {
+        if (index >= size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Index: "
+                    + index
+                    + ", Size: "
+                    + size);
+        }
     }
 
     @Override
@@ -97,18 +102,11 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    public int indexOf(T element) {
-        for (int i = 0; i < size; i++) {
-            if (values[i] == null ? element == null : values[i].equals(element)) {
-                return i;
-            }
-        }
-        return -1;
-    }
-
     private void resize() {
-        T[] newValues = (T[]) new Object[size * 3 / 2 + 1];
-        System.arraycopy(values, 0, newValues, 0, size);
-        values = newValues;
+        if (size >= values.length) {
+            T[] newValues = (T[]) new Object[size * 3 / 2 + 1];
+            System.arraycopy(values, 0, newValues, 0, size);
+            values = newValues;
+        }
     }
 }
