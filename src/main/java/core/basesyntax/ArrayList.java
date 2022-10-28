@@ -28,9 +28,7 @@ public class ArrayList<T> implements List<T> {
         if (size == array.length) {
             getNewSizeArray();
         }
-        if (index < size) {
-            System.arraycopy(array, index, array, index + 1, size - index);
-        }
+        System.arraycopy(array, index, array, index + 1, size - index);
         array[index] = value;
         size++;
     }
@@ -71,9 +69,7 @@ public class ArrayList<T> implements List<T> {
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
             if (element == array[i] || element != null && element.equals(array[i])) {
-                System.arraycopy(array, i + 1, array, i, size - i - 1);
-                size--;
-                return element;
+                return remove(i);
             }
         }
         throw new NoSuchElementException("Cannot find this element!");
