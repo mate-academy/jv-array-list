@@ -78,11 +78,11 @@ public class ArrayList<T> implements List<T> {
 
     private void changeLength(int length) {
         int capacity = length + (length >> 1);
-        if (capacity > DEFAULT_CAPACITY) {
+        
             T[] newStorage = (T[]) new Object[capacity];
             System.arraycopy(storage,0, newStorage,0, storage.length);
             storage = newStorage;
-        }
+     
     }
 
     @Override
