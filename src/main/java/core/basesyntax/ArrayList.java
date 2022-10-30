@@ -45,8 +45,9 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(int index) {
+        T tmp;
         if (checkIndex(index)) {
-            T tmp = storage[index];
+            tmp = storage[index];
             for (int i = index; i < storage.length - 1; i++) {
                 storage[i] = storage[i + 1];
             }
