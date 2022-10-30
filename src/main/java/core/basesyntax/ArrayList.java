@@ -4,9 +4,12 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 8;
-    private T[] storage = (T[])new Object[DEFAULT_CAPACITY];
+    private T[] storage;
     private int size;
 
+    public ArrayList(){
+        storage = (T[]) new Object[DEFAULT_CAPACITY];
+    }
     @Override
     public void add(T value) {
         if (size == storage.length) {
@@ -17,13 +20,11 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index >= 0 && index <= size) {
+        if (checkIndex(index) || index == size) {
             if (size == storage.length) {
-                changeLength(size + 1);
+                changeLength(size);
             }
-            for (int i = size; i > index; i--) {
-                storage[i] = storage[i - 1];
-            }
+            System.arraycopy(storage, index, storage,index + 1, size - index);
             storage[index] = value;
             size++;
             return;
@@ -34,7 +35,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void addAll(List<T> list) {
         if (list.size() + size > storage.length) {
-            changeLength(list.size() + size + 1);
+            changeLength(list.size() + size);
         }
         int newSize = list.size() + size;
         for (int i = size, j = 0; i < newSize; i++, j++) {
@@ -46,11 +47,9 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         T tmp;
-        if (index >= 0 && index < size) {
+        if (checkIndex(index)) {
             tmp = storage[index];
-            for (int i = index; i < size - 1; i++) {
-                storage[i] = storage[i + 1];
-            }
+            System.arraycopy(storage, index + 1, storage, index, size - (index + 1));
             storage[--size] = null;
             changeLength(size);
             return tmp;
@@ -76,18 +75,9 @@ public class ArrayList<T> implements List<T> {
         throw new NoSuchElementException("Element not founded");
     }
 
-    private void changeLength(int length) {
-        int capacity = length + (length >> 1);
-        if (capacity > DEFAULT_CAPACITY) {
-            T[] newStorage = (T[]) new Object[capacity];
-            System.arraycopy(storage,0, newStorage,0, storage.length);
-            storage = newStorage;
-        }
-    }
-
     @Override
     public T get(int index) {
-        if (index >= 0 && index < size) {
+        if (checkIndex(index)) {
             return storage[index];
         }
         throw new ArrayListIndexOutOfBoundsException("Wrong index");
@@ -95,7 +85,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void set(T value, int index) {
-        if (index >= 0 && index < size) {
+        if (checkIndex(index)) {
             storage[index] = value;
             return;
         }
@@ -110,5 +100,16 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private void changeLength(int length) {
+        int capacity = length + (length >> 1);
+        T[] newStorage = (T[]) new Object[capacity];
+        System.arraycopy(storage,0, newStorage,0, size);
+        storage = newStorage;
+    }
+
+    private boolean checkIndex(int index) {
+        return index >= 0 && index < size;
     }
 }
