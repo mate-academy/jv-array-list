@@ -7,13 +7,14 @@ public class ArrayList<T> implements List<T> {
     private T[] storage;
     private int size;
 
-    public ArrayList(){
+    public ArrayList() {
         storage = (T[]) new Object[DEFAULT_CAPACITY];
     }
+
     @Override
     public void add(T value) {
         if (size == storage.length) {
-            changeLength(size + 1);
+            changeLength(size);
         }
         storage[size++] = value;
     }
