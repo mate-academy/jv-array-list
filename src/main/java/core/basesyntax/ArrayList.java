@@ -2,7 +2,6 @@ package core.basesyntax;
 
 import java.util.Arrays;
 import java.util.NoSuchElementException;
-import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
@@ -13,36 +12,9 @@ public class ArrayList<T> implements List<T> {
         elementData = new Object[DEFAULT_CAPACITY];
     }
 
-    private void checkingListToFullness() {
-        if (size >= elementData.length) {
-            elementData = Arrays.copyOf(elementData, size + size / 2);
-        }
-    }
-
-    private void checkIndex(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Can't find element at index: " + index);
-        }
-    }
-
-    private void removeElement(int index) {
-        elementData[index] = null;
-        System.arraycopy(elementData, index + 1, elementData, index, size - index - 1);
-        size--;
-    }
-
-    private int findIndexByElement(T element) {
-        for (int i = 0; i < size; i++) {
-            if (Objects.equals(elementData[i], element)) {
-                return i;
-            }
-        }
-        return -1;
-    }
-
     @Override
     public void add(T value) {
-        checkingListToFullness();
+        growIfNeeded();
         elementData[size] = value;
         size++;
     }
@@ -52,7 +24,7 @@ public class ArrayList<T> implements List<T> {
         if (index > size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Index out of bound");
         }
-        checkingListToFullness();
+        growIfNeeded();
         System.arraycopy(elementData, index, elementData, index + 1, size - index);
         elementData[index] = value;
         size++;
@@ -89,7 +61,7 @@ public class ArrayList<T> implements List<T> {
     public T remove(T element) {
         int index = findIndexByElement(element);
         if (index == -1) {
-            throw new NoSuchElementException("Can't find element by index" + index);
+            throw new NoSuchElementException("Incorrect index: " + index + ". Size: " + size);
         }
         T removedElement = (T) elementData[index];
         removeElement(index);
@@ -104,5 +76,33 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private void growIfNeeded() {
+        if (size >= elementData.length) {
+            elementData = Arrays.copyOf(elementData, size + size / 2);
+        }
+    }
+
+    private void removeElement(int index) {
+        elementData[index] = null;
+        System.arraycopy(elementData, index + 1, elementData, index, size - index - 1);
+        size--;
+    }
+
+    private void checkIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Can't find element at index: " + index);
+        }
+    }
+
+    private int findIndexByElement(T element) {
+        for (int i = 0; i < size; i++) {
+            if (element == elementData[i] || (elementData[i] != null
+                    && elementData[i].equals(element))) {
+                return i;
+            }
+        }
+        return -1;
     }
 }
