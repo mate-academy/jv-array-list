@@ -21,24 +21,24 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (checkIndex(index) || index == size) {
+        if (index >= 0 && index <= size) {
             if (size == storage.length) {
                 changeLength(size);
             }
             System.arraycopy(storage, index, storage,index + 1, size - index);
             storage[index] = value;
             size++;
-            return;
+        } else {
+            checkIndex(index);
         }
-        throw new ArrayListIndexOutOfBoundsException("Wrong index");
     }
 
     @Override
     public void addAll(List<T> list) {
-        if (list.size() + size > storage.length) {
-            changeLength(list.size() + size);
-        }
         int newSize = list.size() + size;
+        if (newSize > storage.length) {
+            changeLength(newSize);
+        }
         for (int i = size, j = 0; i < newSize; i++, j++) {
             storage[i] = list.get(j);
         }
@@ -52,6 +52,9 @@ public class ArrayList<T> implements List<T> {
         tmp = storage[index];
         System.arraycopy(storage, index + 1, storage, index, size - (index + 1));
         storage[--size] = null;
+        if (size < storage.length / 2) {
+            changeLength(size);
+        }
         return tmp;
     }
 
@@ -95,8 +98,8 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void checkIndex(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayIndexOutOfBoundsException("Index: " + index + ", Size: " + size);
+        if (index < 0 && index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Index: " + index + ", Size: " + size);
         }
     }
 }
