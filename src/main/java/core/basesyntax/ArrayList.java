@@ -1,5 +1,8 @@
 package core.basesyntax;
 
+import java.lang.reflect.Array;
+import java.util.Arrays;
+
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 8;
     private T[] storage = (T[])new Object[DEFAULT_CAPACITY];
@@ -15,7 +18,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index >= 0 && index <= size) {
+        if (checkIndex(index)) {
             if (size == storage.length) {
                 increase(size + 1);
             }
@@ -44,15 +47,13 @@ public class ArrayList<T> implements List<T> {
     private void increase(int lenght) {
         int capacity = lenght + (lenght >> 1);
         T[] newStorage = (T[]) new Object[capacity];
-        for (int i = 0; i < size; i++) {
-            newStorage[i] = storage[i];
-        }
+        System.arraycopy(storage,0, newStorage,0, storage.length);
         storage = newStorage;
     }
 
     @Override
     public T get(int index) {
-        if (index >= 0 && index < size) {
+        if (checkIndex(index)) {
             return storage[index];
         }
         throw new ArrayListIndexOutOfBoundsException("Wrong index");
@@ -60,7 +61,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void set(T value, int index) {
-        if (index >= 0 && index < size) {
+        if (checkIndex(index)) {
             storage[index] = value;
             return;
         }
@@ -69,6 +70,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(int index) {
+
         return null;
     }
 
@@ -85,5 +87,9 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private boolean checkIndex(int index) {
+        return index >= 0 && index < size;
     }
 }
