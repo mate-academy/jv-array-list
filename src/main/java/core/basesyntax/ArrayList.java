@@ -13,18 +13,14 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (size == storage.length) {
-            changeLength(size);
-        }
+        checkLength();
         storage[size++] = value;
     }
 
     @Override
     public void add(T value, int index) {
         if (index >= 0 && index <= size) {
-            if (size == storage.length) {
-                changeLength(size);
-            }
+            checkLength();
             System.arraycopy(storage, index, storage,index + 1, size - index);
             storage[index] = value;
             size++;
@@ -48,20 +44,16 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
-        T tmp;
-        tmp = storage[index];
+        T tmp = storage[index];
         System.arraycopy(storage, index + 1, storage, index, size - (index + 1));
         storage[--size] = null;
-        if (size < storage.length / 2) {
-            changeLength(size);
-        }
         return tmp;
     }
 
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; ++i) {
-            if (element == null || storage[i] != null && storage[i].equals(element)) {
+            if (element == storage[i] || storage[i] != null && storage[i].equals(element)) {
                 return remove(i);
             }
         }
@@ -90,6 +82,11 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
+    private void checkLength(){
+        if (size == storage.length) {
+            changeLength(size);
+        }
+    }
     private void changeLength(int length) {
         int capacity = length + (length >> 1);
         T[] newStorage = (T[]) new Object[capacity];
@@ -98,7 +95,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void checkIndex(int index) {
-        if (index < 0 && index >= size) {
+        if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException("Index: " + index + ", Size: " + size);
         }
     }
