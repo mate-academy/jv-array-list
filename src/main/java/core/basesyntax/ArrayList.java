@@ -110,7 +110,9 @@ public class ArrayList<T> implements List<T> {
         storage = newStorage;
     }
 
-    private boolean checkIndex(int index) {
-        return index >= 0 && index < size;
+    private void checkIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayIndexOutOfBoundsException("Index: " + index + ", Size: " + size);
+        }
     }
 }
