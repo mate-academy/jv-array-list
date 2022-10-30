@@ -47,30 +47,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(int index) {
+        checkIndex(index);
         T tmp;
-        if (checkIndex(index)) {
-            tmp = storage[index];
-            System.arraycopy(storage, index + 1, storage, index, size - (index + 1));
-            storage[--size] = null;
-            changeLength(size);
-            return tmp;
-        }
-        throw new ArrayListIndexOutOfBoundsException("Wrong index");
+        tmp = storage[index];
+        System.arraycopy(storage, index + 1, storage, index, size - (index + 1));
+        storage[--size] = null;
+        return tmp;
     }
 
     @Override
     public T remove(T element) {
-        if (element != null) {
-            for (int i = 0; i < size; ++i) {
-                if (storage[i] != null && storage[i].equals(element)) {
-                    return remove(i);
-                }
-            }
-        } else {
-            for (int i = 0; i < size; ++i) {
-                if (storage[i] == null) {
-                    return remove(i);
-                }
+        for (int i = 0; i < size; ++i) {
+            if (element == null || storage[i] != null && storage[i].equals(element)) {
+                return remove(i);
             }
         }
         throw new NoSuchElementException("Element not founded");
@@ -78,19 +67,14 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (checkIndex(index)) {
-            return storage[index];
-        }
-        throw new ArrayListIndexOutOfBoundsException("Wrong index");
+        checkIndex(index);
+        return storage[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (checkIndex(index)) {
-            storage[index] = value;
-            return;
-        }
-        throw new ArrayListIndexOutOfBoundsException("Wrong index");
+        checkIndex(index);
+        storage[index] = value;
     }
 
     @Override
