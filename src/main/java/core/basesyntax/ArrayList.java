@@ -66,8 +66,7 @@ public class ArrayList<T> implements List<T> {
                     return remove(i);
                 }
             }
-        }
-        else {
+        } else {
             for (int i = 0; i < size; ++i) {
                 if (storage[i] == null) {
                     return remove(i);
