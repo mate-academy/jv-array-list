@@ -82,11 +82,12 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void checkLength(){
+    private void checkLength() {
         if (size == storage.length) {
             changeLength(size);
         }
     }
+
     private void changeLength(int length) {
         int capacity = length + (length >> 1);
         T[] newStorage = (T[]) new Object[capacity];
