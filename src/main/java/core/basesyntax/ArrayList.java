@@ -1,7 +1,6 @@
 package core.basesyntax;
 
-import java.lang.reflect.Array;
-import java.util.Arrays;
+import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 8;
@@ -11,7 +10,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value) {
         if (size == storage.length) {
-            increase(size + 1);
+            changeLength(size + 1);
         }
         storage[size++] = value;
     }
@@ -20,7 +19,7 @@ public class ArrayList<T> implements List<T> {
     public void add(T value, int index) {
         if (checkIndex(index)) {
             if (size == storage.length) {
-                increase(size + 1);
+                changeLength(size + 1);
             }
             for (int i = size; i > index; i--) {
                 storage[i] = storage[i - 1];
@@ -35,7 +34,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void addAll(List<T> list) {
         if (list.size() + size > storage.length) {
-            increase(list.size() + size + 1);
+            changeLength(list.size() + size + 1);
         }
         int newSize = list.size() + size;
         for (int i = size, j = 0; i < newSize; i++, j++) {
@@ -44,11 +43,44 @@ public class ArrayList<T> implements List<T> {
         size = newSize;
     }
 
-    private void increase(int lenght) {
-        int capacity = lenght + (lenght >> 1);
-        T[] newStorage = (T[]) new Object[capacity];
-        System.arraycopy(storage,0, newStorage,0, storage.length);
-        storage = newStorage;
+    @Override
+    public T remove(int index) {
+        if (checkIndex(index)) {
+            T tmp = storage[index];
+            for (int i = index; i < storage.length - 1; i++) {
+                storage[i] = storage[i + 1];
+            }
+            storage[++size] = null;
+            changeLength(size);
+            return tmp;
+        }
+        throw new ArrayListIndexOutOfBoundsException("Wrong index");
+    }
+
+    @Override
+    public T remove(T element) {
+        boolean flag = false;
+        int i = 0;
+        for (T t: storage) {
+            if (t.equals(element)) {
+                flag = true;
+                break;
+            }
+            i++;
+        }
+        if (flag) {
+            return remove(i);
+        }
+        throw new NoSuchElementException("Element not founded");
+    }
+
+    private void changeLength(int length) {
+        int capacity = length + (length >> 1);
+        if (capacity > DEFAULT_CAPACITY) {
+            T[] newStorage = (T[]) new Object[capacity];
+            System.arraycopy(storage,0, newStorage,0, storage.length);
+            storage = newStorage;
+        }
     }
 
     @Override
@@ -66,17 +98,6 @@ public class ArrayList<T> implements List<T> {
             return;
         }
         throw new ArrayListIndexOutOfBoundsException("Wrong index");
-    }
-
-    @Override
-    public T remove(int index) {
-
-        return null;
-    }
-
-    @Override
-    public T remove(T element) {
-        return null;
     }
 
     @Override
