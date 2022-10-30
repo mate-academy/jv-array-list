@@ -17,7 +17,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (checkIndex(index)) {
+        if (index >= 0 && index <= size) {
             if (size == storage.length) {
                 changeLength(size + 1);
             }
@@ -46,12 +46,12 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         T tmp;
-        if (checkIndex(index)) {
+        if (index >= 0 && index < size) {
             tmp = storage[index];
-            for (int i = index; i < storage.length - 1; i++) {
+            for (int i = index; i < size - 1; i++) {
                 storage[i] = storage[i + 1];
             }
-            storage[++size] = null;
+            storage[--size] = null;
             changeLength(size);
             return tmp;
         }
@@ -60,17 +60,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        boolean flag = false;
-        int i = 0;
-        for (T t: storage) {
-            if (t.equals(element)) {
-                flag = true;
-                break;
+        if (element != null) {
+            for (int i = 0; i < size; ++i) {
+                if (storage[i] != null && storage[i].equals(element)) {
+                    return remove(i);
+                }
             }
-            i++;
         }
-        if (flag) {
-            return remove(i);
+        else {
+            for (int i = 0; i < size; ++i) {
+                if (storage[i] == null) {
+                    return remove(i);
+                }
+            }
         }
         throw new NoSuchElementException("Element not founded");
     }
@@ -86,7 +88,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (checkIndex(index)) {
+        if (index >= 0 && index < size) {
             return storage[index];
         }
         throw new ArrayListIndexOutOfBoundsException("Wrong index");
@@ -94,7 +96,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void set(T value, int index) {
-        if (checkIndex(index)) {
+        if (index >= 0 && index < size) {
             storage[index] = value;
             return;
         }
@@ -109,9 +111,5 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
-    }
-
-    private boolean checkIndex(int index) {
-        return index >= 0 && index < size;
     }
 }
