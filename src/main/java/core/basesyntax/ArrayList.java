@@ -12,28 +12,6 @@ public class ArrayList<T> implements List<T> {
         arrayList = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
-    private void resizeIfArrayIsFull() {
-        if (arrayList.length == size) {
-            T[] newArrayList = (T[]) new Object[(int) (arrayList.length * CAPACITY_MULTIPLIER)];
-            System.arraycopy(arrayList, 0, newArrayList, 0, arrayList.length);
-            arrayList = newArrayList;
-        }
-    }
-
-    private void checkIndex(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Incorrect index: " + index
-                    + ". Index should be inclusively between 0 and " + size);
-        }
-    }
-
-    private void checkIndexAddByIndex(int index) {
-        if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("Incorrect index: " + index
-                    + ". Index should be negative and not greater than " + size);
-        }
-    }
-
     @Override
     public void add(T value) {
         resizeIfArrayIsFull();
@@ -96,5 +74,27 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private void resizeIfArrayIsFull() {
+        if (arrayList.length == size) {
+            T[] newArrayList = (T[]) new Object[(int) (arrayList.length * CAPACITY_MULTIPLIER)];
+            System.arraycopy(arrayList, 0, newArrayList, 0, arrayList.length);
+            arrayList = newArrayList;
+        }
+    }
+
+    private void checkIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Incorrect index: " + index
+                    + ". Index should be inclusively between 0 and " + size);
+        }
+    }
+
+    private void checkIndexAddByIndex(int index) {
+        if (index < 0 || index > size) {
+            throw new ArrayListIndexOutOfBoundsException("Incorrect index: " + index
+                    + ". Index should be negative and not greater than " + size);
+        }
     }
 }
