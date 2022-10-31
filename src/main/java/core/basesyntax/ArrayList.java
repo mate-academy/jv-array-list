@@ -6,46 +6,45 @@ public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private static final double CAPACITY_MULTIPLIER = 1.5;
     private T[] arrayList;
-    private int size = 0;
+    private int size;
 
     public ArrayList() {
         arrayList = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
-    public void resizeArray() {
+    private void resizeIfArrayIsFull() {
         if (arrayList.length == size) {
             T[] newArrayList = (T[]) new Object[(int) (arrayList.length * CAPACITY_MULTIPLIER)];
-            System.arraycopy(arrayList,0, newArrayList, 0, arrayList.length);
+            System.arraycopy(arrayList, 0, newArrayList, 0, arrayList.length);
             arrayList = newArrayList;
         }
     }
 
-    public void checkIndex(int index) {
+    private void checkIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Incorrect index: index should be "
-                    + "inclusively between 0 and " + size);
+            throw new ArrayListIndexOutOfBoundsException("Incorrect index: " + index
+                    + ". Index should be inclusively between 0 and " + size);
         }
     }
 
-    public void checkIndexAddByIndex(int index) {
+    private void checkIndexAddByIndex(int index) {
         if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("Incorrect index: index should be not "
-                    + "negative and not greater than " + size);
+            throw new ArrayListIndexOutOfBoundsException("Incorrect index: " + index
+                    + ". Index should be negative and not greater than " + size);
         }
     }
 
     @Override
     public void add(T value) {
-        resizeArray();
+        resizeIfArrayIsFull();
         arrayList[size] = value;
         size++;
-
     }
 
     @Override
     public void add(T value, int index) {
         checkIndexAddByIndex(index);
-        resizeArray();
+        resizeIfArrayIsFull();
         System.arraycopy(arrayList, index, arrayList, index + 1, size - index);
         arrayList[index] = value;
         size++;
@@ -56,7 +55,6 @@ public class ArrayList<T> implements List<T> {
         for (int i = 0; i < list.size(); i++) {
             add(list.get(i));
         }
-
     }
 
     @Override
@@ -84,13 +82,10 @@ public class ArrayList<T> implements List<T> {
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
             if (element == arrayList[i] || element != null && element.equals(arrayList[i])) {
-                T removedValue = arrayList[i];
-                System.arraycopy(arrayList, i + 1, arrayList, i, arrayList.length - size);
-                size--;
-                return removedValue;
+                return remove(i);
             }
         }
-        throw new NoSuchElementException("There is no such element in the list");
+        throw new NoSuchElementException("There is no such element in the list: " + element);
     }
 
     @Override
