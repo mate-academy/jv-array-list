@@ -19,14 +19,13 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index >= 0 && index <= size) {
-            checkLength();
-            System.arraycopy(storage, index, storage,index + 1, size - index);
-            storage[index] = value;
-            size++;
-        } else {
-            checkIndex(index);
+        if (index < 0 || index > size) {
+            throw new ArrayListIndexOutOfBoundsException("Index: " + index + ", Size: " + size);
         }
+        checkLength();
+        System.arraycopy(storage, index, storage,index + 1, size - index);
+        storage[index] = value;
+        size++;
     }
 
     @Override
