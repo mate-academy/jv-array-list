@@ -1,5 +1,7 @@
 package core.basesyntax;
 
+import java.util.NoSuchElementException;
+
 public class ArrayList<T> implements List<T> {
     private static final int INIT_SIZE = 10;
     private static Object[] array = new Object[INIT_SIZE];
@@ -15,7 +17,9 @@ public class ArrayList<T> implements List<T> {
     
     @Override
     public void add(T value, int index) {
-        checkIndex(index);
+        if (size != index) {
+            checkIndex(index);
+        }
         if (size == array.length - 1) {
             increaseArray(array.length + array.length / 2 + 1);
         }
@@ -68,13 +72,18 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < array.length; i++) {
-            if (element == array[i]) {
+            if (element == null && null == array[i]) {
                 System.arraycopy(array, i + 1, array, i, size - i);
-                break;
+                array[size--] = null;
+                return null;
+            }
+            if (element != null && element.equals(array[i])) {
+                System.arraycopy(array, i + 1, array, i, size - i);
+                array[size--] = null;
+                return element;
             }
         }
-        array[size--] = null;
-        return element;
+        throw new NoSuchElementException("element is absant");
     }
     
     @Override
@@ -94,7 +103,7 @@ public class ArrayList<T> implements List<T> {
     }
     
     public void checkIndex(int index) {
-        if (index > size || index < 0) {
+        if (index >= size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Index out of array");
         }
     }
