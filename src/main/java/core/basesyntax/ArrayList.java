@@ -3,9 +3,13 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    private static final int INIT_SIZE = 10;
-    private static Object[] array = new Object[INIT_SIZE];
-    private int size = 0;
+    private static final int INITIAL_SIZE = 10;
+    private Object[] array;
+    private int size;
+    
+    public ArrayList() {
+        this.array = new Object[INITIAL_SIZE];
+    }
     
     @Override
     public void add(T value) {
@@ -30,34 +34,21 @@ public class ArrayList<T> implements List<T> {
     
     @Override
     public void addAll(List<T> list) {
-        Object[] a = new Object[list.size()];
-        for (int i = 0; i < a.length; i++) {
-            a[i] = list.get(i);
+        for (int i = 0; i < list.size(); i++) {
+            add(list.get(i));
         }
-        if (list.size() > array.length - size) {
-            increaseArray(list.size() + size);
-        }
-        
-        System.arraycopy(a, 0, array, size, list.size());
-        size = list.size() + size;
     }
     
     @Override
     public T get(int index) {
         checkIndex(index);
-        for (int i = 0; i < array.length; i++) {
-            if (index == i) {
-                return (T) array[i];
-            }
-        }
-        return null;
+        return (T) array[index];
     }
     
     @Override
     public void set(T value, int index) {
         checkIndex(index);
         array[index] = value;
-        
     }
     
     @Override
@@ -72,18 +63,13 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < array.length; i++) {
-            if (element == null && null == array[i]) {
-                System.arraycopy(array, i + 1, array, i, size - i);
-                array[size--] = null;
-                return null;
-            }
-            if (element != null && element.equals(array[i])) {
+            if (element == array[i] || element != null && element.equals(array[i])) {
                 System.arraycopy(array, i + 1, array, i, size - i);
                 array[size--] = null;
                 return element;
             }
         }
-        throw new NoSuchElementException("element is absant");
+        throw new NoSuchElementException("element is absant value : " + element.toString());
     }
     
     @Override
@@ -96,8 +82,8 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
     
-    public void increaseArray(int s) {
-        Object[] newArray = new Object[s];
+    public void increaseArray(int newCapacity) {
+        Object[] newArray = new Object[newCapacity];
         System.arraycopy(array, 0, newArray, 0, size);
         array = newArray;
     }
