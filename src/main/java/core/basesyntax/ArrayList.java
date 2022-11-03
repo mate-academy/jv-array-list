@@ -40,10 +40,6 @@ public class ArrayList<T> implements List<T> {
         if (list == null) {
             return;
         }
-        int delta;
-        while ((delta = elements.length - size - list.size()) < 0) {
-            expandCapacity();
-        }
         for (int i = 0; i < list.size(); i++) {
             add(list.get(i));
         }
