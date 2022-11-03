@@ -13,36 +13,28 @@ public class ArrayList<T> implements List<T> {
         elementData = new Object[DEFAULT_CAPACITY];
     }
 
-    public void resize() {
-        if (elementData.length == size) {
-            Object[] newArray = new Object[(int) (elementData.length * GROW_COEFFICIENT)];
-            System.arraycopy(elementData, 0, newArray, 0, size);
-            elementData = newArray;
-        }
-    }
-
-    public void checkArray(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("No element with index:" + index);
-        }
-    }
-
     @Override
     public void add(T value) {
-        resize();
+        if (elementData.length == size) {
+            resize();
+        }
         elementData[size] = value;
         size++;
     }
 
     @Override
     public void add(T value, int index) {
-        if (index != size) {
+        if (index == size) {
+            add(value);
+        } else {
             checkArray(index);
+            if (elementData.length == size) {
+                resize();
+            }
+            System.arraycopy(elementData, index, elementData, index + 1, size - index);
+            elementData[index] = value;
+            size++;
         }
-        resize();
-        System.arraycopy(elementData, index, elementData, index + 1, size - index);
-        elementData[index] = value;
-        size++;
     }
 
     @Override
@@ -77,9 +69,7 @@ public class ArrayList<T> implements List<T> {
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
             if (Objects.equals(element, elementData[i])) {
-                T value = (T) elementData[i];
-                remove(i);
-                return value;
+                return remove(i);
             }
         }
         throw new NoSuchElementException("Element not found:" + element);
@@ -93,5 +83,18 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private void resize() {
+        Object[] newArray = new Object[(int) (elementData.length * GROW_COEFFICIENT)];
+        System.arraycopy(elementData, 0, newArray, 0, size);
+        elementData = newArray;
+    }
+
+    private void checkArray(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("No element with index: "
+                    + index + ". Size: " + size + ".");
+        }
     }
 }
