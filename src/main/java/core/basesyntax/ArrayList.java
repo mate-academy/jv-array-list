@@ -13,19 +13,20 @@ public class ArrayList<T> implements List<T> {
     
     @Override
     public void add(T value) {
-        if (size == array.length - 1) {
-            increaseArray(array.length + array.length / 2 + 1);
+        if (size == array.length) {
+            increaseArray();
         }
-        array[size++] = value;
+        array[size] = value;
+        size++;
     }
     
     @Override
     public void add(T value, int index) {
+        if (size == array.length) {
+            increaseArray();
+        }
         if (size != index) {
             checkIndex(index);
-        }
-        if (size == array.length - 1) {
-            increaseArray(array.length + array.length / 2 + 1);
         }
         System.arraycopy(array, index, array, index + 1, size - index);
         array[index] = value;
@@ -55,8 +56,10 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         checkIndex(index);
         T element = (T) array[index];
-        System.arraycopy(array, index + 1, array, index, size - index);
-        array[size--] = null;
+        if (index < size - 1) {
+            System.arraycopy(array, index + 1, array, index, size - index);
+        }
+        array[--size] = null;
         return element;
     }
     
@@ -65,11 +68,11 @@ public class ArrayList<T> implements List<T> {
         for (int i = 0; i < array.length; i++) {
             if (element == array[i] || element != null && element.equals(array[i])) {
                 System.arraycopy(array, i + 1, array, i, size - i);
-                array[size--] = null;
+                array[--size] = null;
                 return element;
             }
         }
-        throw new NoSuchElementException("element is absant value : " + element.toString());
+        throw new NoSuchElementException("element is absant value : " + element);
     }
     
     @Override
@@ -82,15 +85,17 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
     
-    public void increaseArray(int newCapacity) {
+    public void increaseArray() {
+        int newCapacity = array.length + array.length / 2;
         Object[] newArray = new Object[newCapacity];
         System.arraycopy(array, 0, newArray, 0, size);
         array = newArray;
     }
     
     public void checkIndex(int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index out of array");
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Index " + index
+                    + " is out of array. Size: " + size);
         }
     }
 }
