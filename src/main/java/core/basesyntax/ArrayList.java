@@ -5,27 +5,27 @@ import java.util.NoSuchElementException;
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private int size;
-    private Storage<T>[] dataStorage;
+    private T[] dataStorage;
 
     public ArrayList() {
-        dataStorage = new Storage[DEFAULT_CAPACITY];
+        dataStorage = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
     @Override
     public void add(T value) {
-        sizeCheck();
-        dataStorage[size] = new Storage<>(value);
+        checkSizeForGrow();
+        dataStorage[size] = value;
         size++;
     }
 
     @Override
     public void add(T value, int index) {
         if (index != size) {
-            indexCheck(index);
+            checkIndex(index);
         }
-        sizeCheck();
+        checkSizeForGrow();
         System.arraycopy(dataStorage, index, dataStorage, index + 1, size - index);
-        dataStorage[index] = new Storage<>(value);
+        dataStorage[index] = value;
         size++;
     }
 
@@ -34,39 +34,36 @@ public class ArrayList<T> implements List<T> {
         if (list.size() > dataStorage.length - size) {
             grow(size + list.size());
         }
-        Storage<T>[] newStorages = new Storage[list.size()];
+        T[] newStorage = (T[]) new Object[list.size()];
         for (int i = 0; i < list.size(); i++) {
-            newStorages[i] = new Storage<>(list.get(i));
+            newStorage[i] = list.get(i);
         }
-        System.arraycopy(newStorages, 0, dataStorage, size, list.size());
+        System.arraycopy(newStorage, 0, dataStorage, size, list.size());
         size += list.size();
     }
 
     @Override
     public T get(int index) {
-        indexCheck(index);
-        return dataStorage[index].object;
+        checkIndex(index);
+        return dataStorage[index];
     }
 
     @Override
     public void set(T value, int index) {
-        indexCheck(index);
-        dataStorage[index].object = value;
+        checkIndex(index);
+        dataStorage[index] = value;
     }
 
     @Override
     public T remove(T element) {
-        if (element == null) {
-            for (int i = 0; i < size; i++) {
-                if (dataStorage[i].object == null) {
-                    return remove(i);
-                }
+        for (int i = 0; i < size; i++) {
+            if (dataStorage[i] == element) {
+                return remove(i);
             }
-        } else {
-            for (int i = 0; i < size; i++) {
-                if (element.equals(dataStorage[i].object)) {
-                    return remove(i);
-                }
+        }
+        for (int i = 0; i < size; i++) {
+            if (element != null && element.equals(dataStorage[i])) {
+                return remove(i);
             }
         }
         throw new NoSuchElementException("Element not found");
@@ -74,24 +71,22 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(int index) {
-        indexCheck(index);
-        final T object = dataStorage[index] == null ? null : dataStorage[index].object;
+        checkIndex(index);
+        final T object = dataStorage[index];
         size--;
         System.arraycopy(dataStorage, index + 1, dataStorage, index, size - index);
         dataStorage[size] = null;
         return object;
     }
 
-    private void indexCheck(int index) {
-        if (index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index less than zero");
-        } else if (index != 0 && index >= size) {
+    private void checkIndex(int index) {
+        if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException(
-                    "Not found element with index: " + index);
+                    "Wrong index: " + index + ", current size:" + size);
         }
     }
 
-    private void sizeCheck() {
+    private void checkSizeForGrow() {
         if (size == dataStorage.length) {
             grow();
         }
@@ -104,9 +99,9 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void grow(int newCapacity) {
-        Storage<T>[] newStorages = new Storage[newCapacity];
-        System.arraycopy(dataStorage, 0, newStorages, 0, size);
-        dataStorage = newStorages;
+        T[] newStorage = (T[]) new Object[newCapacity];
+        System.arraycopy(dataStorage, 0, newStorage, 0, size);
+        dataStorage = newStorage;
     }
 
     @Override
@@ -117,13 +112,5 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
-    }
-
-    private static class Storage<T> {
-        private T object;
-
-        public Storage(T object) {
-            this.object = object;
-        }
     }
 }
