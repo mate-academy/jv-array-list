@@ -34,12 +34,9 @@ public class ArrayList<T> implements List<T> {
         if (list.size() > dataStorage.length - size) {
             grow(size + list.size());
         }
-        T[] newStorage = (T[]) new Object[list.size()];
         for (int i = 0; i < list.size(); i++) {
-            newStorage[i] = list.get(i);
+            dataStorage[size++] = list.get(i);
         }
-        System.arraycopy(newStorage, 0, dataStorage, size, list.size());
-        size += list.size();
     }
 
     @Override
@@ -79,6 +76,16 @@ public class ArrayList<T> implements List<T> {
         return object;
     }
 
+    @Override
+    public int size() {
+        return size;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return size == 0;
+    }
+
     private void checkIndex(int index) {
         if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException(
@@ -102,15 +109,5 @@ public class ArrayList<T> implements List<T> {
         T[] newStorage = (T[]) new Object[newCapacity];
         System.arraycopy(dataStorage, 0, newStorage, 0, size);
         dataStorage = newStorage;
-    }
-
-    @Override
-    public int size() {
-        return size;
-    }
-
-    @Override
-    public boolean isEmpty() {
-        return size == 0;
     }
 }
