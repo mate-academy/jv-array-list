@@ -31,11 +31,8 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        if (list.size() > dataStorage.length - size) {
-            grow(size + list.size());
-        }
         for (int i = 0; i < list.size(); i++) {
-            dataStorage[size++] = list.get(i);
+            add(list.get(i));
         }
     }
 
@@ -54,12 +51,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if (dataStorage[i] == element) {
-                return remove(i);
-            }
-        }
-        for (int i = 0; i < size; i++) {
-            if (element != null && element.equals(dataStorage[i])) {
+            if ((dataStorage[i] == element)
+                    || (element != null && element.equals(dataStorage[i]))) {
                 return remove(i);
             }
         }
@@ -95,19 +88,12 @@ public class ArrayList<T> implements List<T> {
 
     private void checkSizeForGrow() {
         if (size == dataStorage.length) {
-            grow();
+            int oldCapacity = dataStorage.length;
+            int newCapacity = oldCapacity + (oldCapacity >> 1);
+            T[] newStorage = (T[]) new Object[newCapacity];
+            System.arraycopy(dataStorage, 0, newStorage, 0, size);
+            dataStorage = newStorage;
         }
     }
-
-    private void grow() {
-        int oldCapacity = dataStorage.length;
-        int newCapacity = oldCapacity + (oldCapacity >> 1);
-        grow(newCapacity);
-    }
-
-    private void grow(int newCapacity) {
-        T[] newStorage = (T[]) new Object[newCapacity];
-        System.arraycopy(dataStorage, 0, newStorage, 0, size);
-        dataStorage = newStorage;
-    }
 }
+
