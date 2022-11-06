@@ -22,7 +22,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("index: " + index + " out of size " + size);
+            throw new ArrayListIndexOutOfBoundsException("index: " + index
+                    + " out of size " + size);
         }
         resize();
         System.arraycopy(arrList, index, arrList, index + 1, size - index);
