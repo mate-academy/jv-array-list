@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
+    private static final double MULTIPLIER_TO_INCREASE_THE_ARRAY = 1.5;
     private static final int DEFAULT_CAPACITY = 10;
     private T[] arrayList;
     private int size;
@@ -20,8 +21,10 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         boundsCheckForAdd(index);
-        if (size == arrayList.length) {
-            arrayList = grow(1);
+        if (size >= index) {
+            if (size == arrayList.length) {
+                arrayList = grow(1);
+            }
         }
         System.arraycopy(arrayList, index,
                 arrayList, index + 1,
@@ -32,22 +35,9 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        T[] a = (T[]) new Object[list.size()];
-        int minGrow;
         for (int i = 0; i < list.size(); i++) {
-            a[i] = list.get(i);
+            add(list.get(i));
         }
-        if (a.length > (arrayList.length - size)) {
-            minGrow = a.length - (arrayList.length - size);
-            arrayList = grow(minGrow);
-        }
-        System.arraycopy(a, 0, arrayList, size, a.length);
-        size += a.length;
-    }
-
-    private T[] grow(int minGrow) {
-        return arrayList = Arrays.copyOf(arrayList,
-                Math.max(arrayList.length + (arrayList.length >> 1), minGrow));
     }
 
     @Override
@@ -75,21 +65,10 @@ public class ArrayList<T> implements List<T> {
         for (int i = 0; i < arrayList.length; i++) {
             if (element == arrayList[i]
                     || element != null && element.equals(arrayList[i])) {
-                T oldValue = arrayList[i];
-                fastRemove(i);
-                return oldValue;
+                return remove(i);
             }
         }
         throw new NoSuchElementException("there is no such element present:" + element);
-    }
-
-    private void fastRemove(int i) {
-        final int newSize = size - 1;
-        if (newSize > i) {
-            System.arraycopy(arrayList, i + 1, arrayList, i, newSize - i);
-        }
-        arrayList[newSize] = null;
-        size = newSize;
     }
 
     @Override
@@ -100,6 +79,21 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return (size == 0);
+    }
+
+    private T[] grow(int minGrow) {
+        return arrayList = Arrays.copyOf(arrayList,
+                (int) Math.max(arrayList.length + (arrayList.length
+                        * MULTIPLIER_TO_INCREASE_THE_ARRAY), minGrow));
+    }
+
+    private void fastRemove(int i) {
+        final int newSize = size - 1;
+        if (newSize > i) {
+            System.arraycopy(arrayList, i + 1, arrayList, i, newSize - i);
+        }
+        arrayList[newSize] = null;
+        size = newSize;
     }
 
     private void boundsCheckForAdd(int index) {
