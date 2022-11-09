@@ -8,7 +8,7 @@ public class ArrayList<T> implements List<T> {
     private static final int INIT_SIZE = 10;
     private static final double ZOOM_SIZE = 1.5;
     private Object[] elementData = new Object[INIT_SIZE];
-    private int size = 0;
+    private int size;
 
     @Override
     public void add(T value) {
@@ -63,21 +63,14 @@ public class ArrayList<T> implements List<T> {
     }
 
     @Override
-    public T remove(T element) {
-        int index = -1;
+    public T remove(T t) {
         for (int i = 0; i < size; i++) {
-            if (((element == null) && (elementData[i] == null))
-                    || ((element != null) && (element.equals(elementData[i])))) {
-                index = i;
-                break;
+            if (elementData[i] == t || elementData[i] != null
+                    && elementData[i].equals(t)) {
+                return remove(i);
             }
         }
-        try {
-            T result = (T) elementData[index];
-        } catch (IndexOutOfBoundsException e) {
-            throw new NoSuchElementException("Specified element not found: " + element);
-        }
-        return remove(index);
+        throw new NoSuchElementException("No such element in list: " + t);
     }
 
     @Override
