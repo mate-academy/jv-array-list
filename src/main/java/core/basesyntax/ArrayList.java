@@ -39,7 +39,7 @@ public class ArrayList<T> implements List<T> {
             data = expandedData();
             System.arraycopy(tempData, 0, data, 0, tempData.length);
         }
-        if (index > size) {
+        if (index > size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("TEMPORARY Can`t added!!");
         }
         System.arraycopy(data, index, data, index + 1, data.length - index - 1);
@@ -54,7 +54,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index > size - 1) {
+        if (index > size - 1 || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("TEMPORARY Can`t get value!!");
         }
         return data[index];
@@ -62,20 +62,51 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void set(T value, int index) {
-        if (index > size - 1) {
-            throw new ArrayListIndexOutOfBoundsException("TAMPORARY Can`t set value!!");
+        if (index > size - 1 || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("TEMPORARY Can`t set value!!");
         }
         data[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        System.arraycopy(data, index, data, index - 1, size - index);
-        return (T) data;
+        if (index > size - 1 || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("TEMPORARY Can`t remove!!");
+        }
+        T temp = data[index];
+        if (index == 0) {
+            System.arraycopy(data, 1, data, 0, size);
+            size--;
+            return temp;
+        }
+        if (size == data.length) {
+            System.arraycopy(data, index + 1, data, index, data.length - 1 - index);
+            size--;
+            data[size] = null;
+            return temp;
+        }
+        if (index < size) {
+            System.arraycopy(data, index + 1, data, index, size - index);
+            size--;
+            data[size] = null;
+        }
+        return temp;
     }
 
     @Override
     public T remove(T element) {
+        if (element == null) {
+            return null;
+        }
+        for (int i = 0; i < size; i++) {
+            if (data[i] != null && data[i].equals(element)) {
+                T temp = data[i];
+                System.arraycopy(data, i + 1, data, i, size - 1 - i);
+                size--;
+                data[size] = null;
+                return temp;
+            }
+        }
         return null;
     }
 
