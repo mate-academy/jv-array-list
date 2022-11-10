@@ -1,7 +1,6 @@
 package core.basesyntax;
 
 import java.util.NoSuchElementException;
-import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_SIZE = 10;
@@ -10,13 +9,12 @@ public class ArrayList<T> implements List<T> {
 
     public ArrayList() {
         values = new Object[DEFAULT_SIZE];
-        size = 0;
     }
 
     @Override
     public void add(T value) {
         if (size == values.length) {
-            getNewSize();
+            grow();
         }
         values[size] = value;
         size++;
@@ -28,7 +26,7 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayListIndexOutOfBoundsException("Index is invalid");
         }
         if (size == values.length) {
-            getNewSize();
+            grow();
         }
         System.arraycopy(values, index, values, index + 1, size - index);
         values[index] = value;
@@ -38,11 +36,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void addAll(List<T> list) {
         for (int i = 0; i < list.size(); i++) {
-            values[size] = list.get(i);
-            size++;
-            if (size == values.length) {
-                getNewSize();
-            }
+            add(list.get(i));
         }
 
     }
@@ -72,11 +66,11 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if (Objects.equals(element, values[i])) {
+            if (element == values[i] || values[i] != null && values[i].equals(element)) {
                 return remove(i);
             }
         }
-        throw new NoSuchElementException("Elemnt does not exist");
+        throw new NoSuchElementException("Element does not exist");
     }
 
     @Override
@@ -89,7 +83,7 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    public void getNewSize() {
+    public void grow() {
         T[] newArray = (T[]) new Object[size + ((int) (size * 1.5))];
         System.arraycopy(values, 0, newArray, 0, size);
         values = newArray;
