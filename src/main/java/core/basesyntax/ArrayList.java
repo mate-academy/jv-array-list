@@ -12,13 +12,6 @@ public class ArrayList<T> implements List<T> {
         array = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
-    @Override
-    public void add(T value) {
-        grow();
-        array[size] = value;
-        size++;
-    }
-
     private void grow() {
         if (array.length == size) {
             T[] newArray = (T[]) new Object[(int) (array.length * 1.5)];
@@ -27,18 +20,11 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private void checkIndexForAdd(int index) {
-        if (index > size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index: "
-                    + index + " doesn't exist or less than 0");
-        }
-    }
-
-    private void checkIndex(int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index: "
-                    + index + " doesn't exist or less than 0");
-        }
+    @Override
+    public void add(T value) {
+        grow();
+        array[size] = value;
+        size++;
     }
 
     @Override
@@ -102,5 +88,19 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private void checkIndexForAdd(int index) {
+        if (index > size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Index: "
+                    + index + " doesn't exist or less than 0");
+        }
+    }
+
+    private void checkIndex(int index) {
+        if (index >= size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Index: "
+                    + index + " doesn't exist or less than 0");
+        }
     }
 }
