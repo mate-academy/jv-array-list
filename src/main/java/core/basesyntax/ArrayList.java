@@ -3,7 +3,7 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    private static int INITIAL_CAPACITY = 10;
+    private static final int INITIAL_CAPACITY = 10;
     private static final double COEFFICIENT_GROWING = 1.5;
     private T[] array;
     private int size;
@@ -14,7 +14,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (size < INITIAL_CAPACITY) {
+        if (size < array.length) {
             array[size] = value;
             size++;
         } else {
@@ -26,20 +26,29 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (size < INITIAL_CAPACITY - 1) {
-            if (index > -1 && index <= size) {
-                System.arraycopy(array, index, array, index + 1, size - index);
-                array[index] = value;
-                size++;
-            } else {
-                throw new ArrayListIndexOutOfBoundsException("Index is not valid");
-            }
-        } else {
-            grow();
-            System.arraycopy(array, index, array, index + 1, size - index);
-            array[index] = value;
-            size++;
+        if(index < 0 || index > size) {
+            throw new ArrayListIndexOutOfBoundsException("Index is not valid");
         }
+        if(size == array.length) {
+            grow();
+        }
+        System.arraycopy(array, index, array, index + 1, size - index);
+        array[index] = value;
+        size ++;
+//        if (size < array.length - 1) {
+//            if (index > -1 && index <= size) {
+//                System.arraycopy(array, index, array, index + 1, size - index);
+//                array[index] = value;
+//                size++;
+//            } else {
+//                throw new ArrayListIndexOutOfBoundsException("Index is not valid");
+//            }
+//        } else {
+//            grow();
+//            System.arraycopy(array, index, array, index + 1, size - index);
+//            array[index] = value;
+//            size++;
+//        }
     }
 
     @Override
@@ -97,11 +106,10 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void grow() {
-        int newCapacity = (int) (INITIAL_CAPACITY * COEFFICIENT_GROWING);
+        int newCapacity = (int) (array.length * COEFFICIENT_GROWING);
         T[] arrayWithNewCapacity = (T[]) new Object[newCapacity];
         System.arraycopy(array, 0, arrayWithNewCapacity, 0, size);
         array = arrayWithNewCapacity;
-        INITIAL_CAPACITY = newCapacity;
     }
 
     private boolean checkIndex(int index) {
