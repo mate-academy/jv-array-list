@@ -1,20 +1,19 @@
 package core.basesyntax;
 
-import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    T[] data;
-    T[] tempData;
+    private T[] data;
+    private T[] tempData;
+    private T temp;
+    private int size;
 
     public ArrayList() {
         data = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
-    private int size;
-
-    private int newCapacity () {
+    private int newCapacity() {
         return data.length + (data.length >> 1);
     }
 
@@ -41,7 +40,8 @@ public class ArrayList<T> implements List<T> {
             System.arraycopy(tempData, 0, data, 0, tempData.length);
         }
         if (index > size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("TEMPORARY Can`t added!!");
+            throw new ArrayListIndexOutOfBoundsException("Can't correctly add element by index "
+                    + index + "!");
         }
         System.arraycopy(data, index, data, index + 1, data.length - index - 1);
         data[index] = value;
@@ -51,15 +51,15 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void addAll(List<T> list) {
         for (int i = 0; i < list.size(); i++) {
-            data[size] = list.get(i);
-            size++;
+            add(list.get(i));
         }
     }
 
     @Override
     public T get(int index) {
         if (index > size - 1 || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("TEMPORARY Can`t get value!!");
+            throw new ArrayListIndexOutOfBoundsException("Can't correctly get element by index "
+                    + index + "!");
         }
         return data[index];
     }
@@ -67,7 +67,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void set(T value, int index) {
         if (index > size - 1 || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("TEMPORARY Can`t set value!!");
+            throw new ArrayListIndexOutOfBoundsException("Can't correctly replace element by index "
+                    + index + "!");
         }
         data[index] = value;
     }
@@ -75,9 +76,10 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         if (index > size - 1 || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("TEMPORARY Can`t remove!!");
+            throw new ArrayListIndexOutOfBoundsException("Can't correctly delete element by index "
+                    + index + "!");
         }
-        T temp = data[index];
+        temp = data[index];
         if (index == 0) {
             System.arraycopy(data, 1, data, 0, size);
             size--;
@@ -105,7 +107,7 @@ public class ArrayList<T> implements List<T> {
         }
         for (int i = 0; i < size; i++) {
             if (data[i] != null && data[i].equals(element)) {
-                T temp = data[i];
+                temp = data[i];
                 System.arraycopy(data, i + 1, data, i, size - 1 - i);
                 size--;
                 data[size] = null;
@@ -114,7 +116,7 @@ public class ArrayList<T> implements List<T> {
         }
         for (T t : data) {
             if (t != null && !t.equals(element)) {
-                throw new NoSuchElementException();
+                throw new NoSuchElementException("Item not found!");
             }
         }
         return null;
@@ -127,14 +129,6 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public boolean isEmpty() {
-        //if (size !=0) {return true;}
         return size == 0;
-    }
-    ///////////////////////////DELETE "TO STRING" !!!!!!!////////////////////////
-    @Override
-    public String toString() {
-        return "ArrayList{" +
-                "data=" + Arrays.toString(data) +
-                '}';
     }
 }
