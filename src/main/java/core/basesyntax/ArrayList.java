@@ -9,7 +9,6 @@ public class ArrayList<T> implements List<T> {
 
     public ArrayList() {
         elementData = (T[]) new Object[CAPACITY_SIZE];
-        size = 0;
     }
 
     @Override
