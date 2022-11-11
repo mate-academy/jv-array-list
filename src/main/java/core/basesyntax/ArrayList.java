@@ -26,29 +26,15 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if(index < 0 || index > size) {
+        if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException("Index is not valid");
         }
-        if(size == array.length) {
+        if (size == array.length) {
             grow();
         }
         System.arraycopy(array, index, array, index + 1, size - index);
         array[index] = value;
-        size ++;
-//        if (size < array.length - 1) {
-//            if (index > -1 && index <= size) {
-//                System.arraycopy(array, index, array, index + 1, size - index);
-//                array[index] = value;
-//                size++;
-//            } else {
-//                throw new ArrayListIndexOutOfBoundsException("Index is not valid");
-//            }
-//        } else {
-//            grow();
-//            System.arraycopy(array, index, array, index + 1, size - index);
-//            array[index] = value;
-//            size++;
-//        }
+        size++;
     }
 
     @Override
