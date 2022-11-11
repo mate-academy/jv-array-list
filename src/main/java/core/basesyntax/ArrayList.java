@@ -21,7 +21,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("Index is out of bound");
+            throw new ArrayListIndexOutOfBoundsException("Index" + index + "is out of bound");
         }
         resizeIfNeeded();
         System.arraycopy(elementData, index, elementData, index + 1, size - index);
@@ -38,25 +38,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index is out of bound");
-        }
+        checkIndexOutBound(index);
         return elementData[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index is out of bound");
-        }
+        checkIndexOutBound(index);
         elementData[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index is out of bound");
-        }
+        checkIndexOutBound(index);
         T value = elementData[index];
         System.arraycopy(elementData, index + 1, elementData, index, size - index - 1);
         size--;
@@ -66,7 +60,6 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         int index = -1;
-        T value;
         for (int i = 0; i < size; i++) {
             if (elementData[i] == element || element != null && element.equals(elementData[i])) {
                 return remove(i);
@@ -95,4 +88,11 @@ public class ArrayList<T> implements List<T> {
             elementData = newArray;
         }
     }
+
+    private void checkIndexOutBound(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Index " + index + " is out of bound");
+        }
+    }
 }
+
