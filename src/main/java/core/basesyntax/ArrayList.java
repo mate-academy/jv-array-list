@@ -1,7 +1,6 @@
 package core.basesyntax;
 
 import java.util.NoSuchElementException;
-import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
@@ -10,14 +9,6 @@ public class ArrayList<T> implements List<T> {
 
     public ArrayList() {
         array = (T[]) new Object[DEFAULT_CAPACITY];
-    }
-
-    private void grow() {
-        if (array.length == size) {
-            T[] newArray = (T[]) new Object[(int) (array.length * 1.5)];
-            System.arraycopy(array, 0, newArray, 0, size);
-            array = (T[]) newArray;
-        }
     }
 
     @Override
@@ -67,17 +58,12 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        int index = 0;
-        T elem = array[index];
         for (int i = 0; i < size; i++) {
-            if (Objects.equals(element, array[i])) {
-                elem = array[i];
-                index = i;
-                remove(index);
-                return elem;
+            if (element != null && element.equals(array[i]) || element == array[i]) {
+                return remove(i);
             }
         }
-        throw new NoSuchElementException("Can't find the element " + elem + " in this list");
+        throw new NoSuchElementException("Can't find the element " + element + " in this list");
     }
 
     @Override
@@ -101,6 +87,14 @@ public class ArrayList<T> implements List<T> {
         if (index >= size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Index: "
                     + index + " doesn't exist or less than 0");
+        }
+    }
+
+    private void grow() {
+        if (array.length == size) {
+            T[] newArray = (T[]) new Object[(int) (array.length * 1.5)];
+            System.arraycopy(array, 0, newArray, 0, size);
+            array = (T[]) newArray;
         }
     }
 }
