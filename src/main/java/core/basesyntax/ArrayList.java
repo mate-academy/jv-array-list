@@ -13,14 +13,14 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        checkResize();
+        checkAndResize();
         data[size] = value;
         size++;
     }
 
     @Override
     public void add(T value, int index) {
-        checkResize();
+        checkAndResize();
         if (index > size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Can't correctly add element by index "
                     + index + "!");
@@ -39,28 +39,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (checkIndex(index)) {
-            throw new ArrayListIndexOutOfBoundsException("Can't correctly get element by index "
-                    + index + "!");
-        }
+        checkIndex(index, "get");
         return data[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (checkIndex(index)) {
-            throw new ArrayListIndexOutOfBoundsException("Can't correctly replace element by index "
-                    + index + "!");
-        }
+        checkIndex(index, "replace");
         data[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (checkIndex(index)) {
-            throw new ArrayListIndexOutOfBoundsException("Can't correctly delete element by index "
-                    + index + "!");
-        }
+        checkIndex(index, "delete");
         T temp = data[index];
         if (index == 0 || size == data.length || index < size) {
             System.arraycopy(data,index + 1, data, index, size - (index + 1));
@@ -79,11 +70,8 @@ public class ArrayList<T> implements List<T> {
             if (data[i] != null && data[i].equals(element)) {
                 return remove(i);
             }
-            if (i == size - 1 && data[i] != null && !data[i].equals(element)) {
-                throw new NoSuchElementException("Item not found!");
-            }
         }
-        return null;
+        throw new NoSuchElementException("Item not found!");
     }
 
     @Override
@@ -96,23 +84,27 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private int newCapacity() {
+    private int getNewCapacity() {
         return data.length + (data.length >> 1);
     }
 
-    private T[] expandedData() {
-        return (T[]) new Object[newCapacity()];
+    private T[] expandData() {
+        return (T[]) new Object[getNewCapacity()];
     }
 
-    private boolean checkIndex(int index) {
-        return index > size - 1 || index < 0;
+    private void checkIndex(int index, String action) {
+        if (index > size - 1 || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Can't correctly "
+                    + action + "  element by index "
+                    + index + "!");
+        }
     }
 
-    private void checkResize() {
+    private void checkAndResize() {
         T[] tempData;
         if (size == data.length) {
             tempData = data;
-            data = expandedData();
+            data = expandData();
             System.arraycopy(tempData, 0, data, 0, tempData.length);
         }
     }
