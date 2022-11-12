@@ -5,45 +5,27 @@ import java.util.NoSuchElementException;
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private T[] data;
-    private T[] tempData;
-    private T temp;
     private int size;
 
     public ArrayList() {
         data = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
-    private int newCapacity() {
-        return data.length + (data.length >> 1);
-    }
-
-    private T[] expandedData() {
-        return (T[]) new Object[newCapacity()];
-    }
-
     @Override
     public void add(T value) {
-        if (size == data.length) {
-            tempData = data;
-            data = expandedData();
-            System.arraycopy(tempData, 0, data, 0, tempData.length);
-        }
+        checkResize();
         data[size] = value;
         size++;
     }
 
     @Override
     public void add(T value, int index) {
-        if (size == data.length) {
-            tempData = data;
-            data = expandedData();
-            System.arraycopy(tempData, 0, data, 0, tempData.length);
-        }
+        checkResize();
         if (index > size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Can't correctly add element by index "
                     + index + "!");
         }
-        System.arraycopy(data, index, data, index + 1, data.length - index - 1);
+        System.arraycopy(data, index, data, index + 1, data.length - (index + 1));
         data[index] = value;
         size++;
     }
@@ -57,7 +39,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index > size - 1 || index < 0) {
+        if (checkIndex(index)) {
             throw new ArrayListIndexOutOfBoundsException("Can't correctly get element by index "
                     + index + "!");
         }
@@ -66,7 +48,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void set(T value, int index) {
-        if (index > size - 1 || index < 0) {
+        if (checkIndex(index)) {
             throw new ArrayListIndexOutOfBoundsException("Can't correctly replace element by index "
                     + index + "!");
         }
@@ -75,26 +57,14 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(int index) {
-        if (index > size - 1 || index < 0) {
+        if (checkIndex(index)) {
             throw new ArrayListIndexOutOfBoundsException("Can't correctly delete element by index "
                     + index + "!");
         }
-        temp = data[index];
-        if (index == 0) {
-            System.arraycopy(data, 1, data, 0, size);
+        T temp = data[index];
+        if (index == 0 || size == data.length || index < size) {
+            System.arraycopy(data,index + 1, data, index, size - (index + 1));
             size--;
-            return temp;
-        }
-        if (size == data.length) {
-            System.arraycopy(data, index + 1, data, index, data.length - 1 - index);
-            size--;
-            data[size] = null;
-            return temp;
-        }
-        if (index < size) {
-            System.arraycopy(data, index + 1, data, index, size - index);
-            size--;
-            data[size] = null;
         }
         return temp;
     }
@@ -107,15 +77,9 @@ public class ArrayList<T> implements List<T> {
         }
         for (int i = 0; i < size; i++) {
             if (data[i] != null && data[i].equals(element)) {
-                temp = data[i];
-                System.arraycopy(data, i + 1, data, i, size - 1 - i);
-                size--;
-                data[size] = null;
-                return temp;
+                return remove(i);
             }
-        }
-        for (T t : data) {
-            if (t != null && !t.equals(element)) {
+            if (i == size - 1 && data[i] != null && !data[i].equals(element)) {
                 throw new NoSuchElementException("Item not found!");
             }
         }
@@ -130,5 +94,26 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private int newCapacity() {
+        return data.length + (data.length >> 1);
+    }
+
+    private T[] expandedData() {
+        return (T[]) new Object[newCapacity()];
+    }
+
+    private boolean checkIndex(int index) {
+        return index > size - 1 || index < 0;
+    }
+
+    private void checkResize() {
+        T[] tempData;
+        if (size == data.length) {
+            tempData = data;
+            data = expandedData();
+            System.arraycopy(tempData, 0, data, 0, tempData.length);
+        }
     }
 }
