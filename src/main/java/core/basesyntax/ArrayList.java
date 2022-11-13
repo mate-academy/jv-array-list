@@ -39,19 +39,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        checkIndex(index, "get");
+        checkIndex(index);
         return data[index];
     }
 
     @Override
     public void set(T value, int index) {
-        checkIndex(index, "replace");
+        checkIndex(index);
         data[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        checkIndex(index, "delete");
+        checkIndex(index);
         T temp = data[index];
         if (index == 0 || size == data.length || index < size) {
             System.arraycopy(data,index + 1, data, index, size - (index + 1));
@@ -62,11 +62,12 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        if (element == null) {
-            size--;
-            return null;
-        }
         for (int i = 0; i < size; i++) {
+            if (element == null && data[i] == null) {
+                System.arraycopy(data,i + 1, data, i, size - i);
+                size--;
+                return null;
+            }
             if (data[i] != null && data[i].equals(element)) {
                 return remove(i);
             }
@@ -92,11 +93,9 @@ public class ArrayList<T> implements List<T> {
         return (T[]) new Object[getNewCapacity()];
     }
 
-    private void checkIndex(int index, String action) {
+    private void checkIndex(int index) {
         if (index > size - 1 || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Can't correctly "
-                    + action + "  element by index "
-                    + index + "!");
+            throw new ArrayListIndexOutOfBoundsException("Index is out of bounds " + index + "!");
         }
     }
 
