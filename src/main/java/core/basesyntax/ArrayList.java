@@ -9,7 +9,6 @@ public class ArrayList<T> implements List<T> {
 
     public ArrayList() {
         elements = new Object[ORIGINAL_SIZE];
-            
     }
 
     @Override
@@ -65,11 +64,10 @@ public class ArrayList<T> implements List<T> {
         for (int i = 0; i < size; i++) {
             if (element == elements[i] || element != null && element.equals(elements[i])) {
                 T value = (T) elements[i];
-                remove(i);
-                return value;
+                return remove(i);
             }
         }
-        throw new NoSuchElementException("Doesn't exist elements");
+        throw new NoSuchElementException("Elements do not exist" + element);
     }
 
     @Override
