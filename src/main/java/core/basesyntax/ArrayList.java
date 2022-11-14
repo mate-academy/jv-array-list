@@ -1,21 +1,21 @@
 package core.basesyntax;
 
-
 import java.util.NoSuchElementException;
+
 public class ArrayList<T> implements List<T> {
     private static final int ORIGINAL_SIZE = 10;
-    private Object[] elements ;
+    private Object[] elements;
     private int size;
 
     public ArrayList() {
         elements = new Object[ORIGINAL_SIZE];
             
-        }
+    }
 
     @Override
     public void add(T value) {
         if (elements.length == size) {
-             grow();
+            grow();
         }
         elements[size] = value;
         size++;
@@ -81,6 +81,7 @@ public class ArrayList<T> implements List<T> {
     public boolean isEmpty() {
         return size == 0;
     }
+
     private T [] grow() {
         T[] sourceArray = (T[]) elements;
         elements = new Object[size + (size >> 1)];
