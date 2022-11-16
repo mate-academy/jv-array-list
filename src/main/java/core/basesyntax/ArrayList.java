@@ -76,28 +76,25 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        final Object[] es = elementData;
-        final int size = this.size;
         int i = 0;
         found:
         {
             if (element == null) {
                 for (; i < size; i++) {
-                    if (es[i] == null) {
+                    if (elementData[i] == null) {
                         break found;
                     }
                 }
             } else {
                 for (; i < size; i++) {
-                    if (element.equals(es[i])) {
+                    if (element.equals(elementData[i])) {
                         break found;
                     }
                 }
             }
-            throw new NoSuchElementException();
+            throw new NoSuchElementException("Failed remove, because no such element " + element);
         }
-        fastRemove(es, i);
-        return element;
+        return remove(i);
     }
 
     @Override
@@ -111,14 +108,6 @@ public class ArrayList<T> implements List<T> {
     }
 
     //////////////////////////////////////////////////////////////////////////////
-
-    private void fastRemove(Object[] es, int i) {
-        final int newSize;
-        if ((newSize = size - 1) > i) {
-            System.arraycopy(es, i + 1, es, i, newSize - i);
-        }
-        es[size = newSize] = null;
-    }
 
     private Object[] grow() {
         Object[] growElementData = new Object[newCapacity()];
