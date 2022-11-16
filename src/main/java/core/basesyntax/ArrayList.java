@@ -77,19 +77,10 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         int i = 0;
-        if (element == null) {
-            for (; i < size; i++) {
-                if (elementData[i] == null) {
-                    return remove(i);
-                }
+        for (; i < size; i++) {
+            if (elementData[i] == element || element != null && element.equals(elementData[i])) {
+                return remove(i);
             }
-        } else {
-            for (; i < size; i++) {
-                if (element.equals(elementData[i])) {
-                    return remove(i);
-                }
-            }
-
         }
         throw new NoSuchElementException("Could not be removed because no such item "
                 + element);
