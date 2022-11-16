@@ -13,11 +13,11 @@ public class ArrayList<T> implements List<T> {
     }
 
     @Override
-    public boolean add(T e) {
+    public boolean add(T value) {
         if (size == elementData.length) {
             elementData = grow();
         }
-        elementData[size] = e;
+        elementData[size] = value;
         size++;
         return true;
     }
