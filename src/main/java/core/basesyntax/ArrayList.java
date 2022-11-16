@@ -70,11 +70,10 @@ public class ArrayList<T> implements List<T> {
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
             if (element == elements[i] || element != null && element.equals(elements[i])) {
-                remove(i);
-                return element;
+                return remove(i);
             }
         }
-        throw new NoSuchElementException("No value was found");
+        throw new NoSuchElementException("No value was found" + element);
     }
 
     @Override
@@ -97,7 +96,8 @@ public class ArrayList<T> implements List<T> {
 
     private void checkIndex(int index) {
         if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("The index exceeds the array length!");
+            throw new ArrayListIndexOutOfBoundsException("The index: " + index
+                    + " exceeds the array size: " + size);
         }
     }
 }
