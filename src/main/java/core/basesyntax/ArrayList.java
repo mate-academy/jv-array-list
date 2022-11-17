@@ -1,15 +1,21 @@
 package core.basesyntax;
 
 import java.util.NoSuchElementException;
-import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
     private static final int MAX_NUMBER = 10;
     private Object[] data;
     private int size;
 
+    public ArrayList(int number) {
+        if (number <= 0) {
+            throw new ArrayListIndexOutOfBoundsException("Element can't be zero or less");
+        }
+        data = new Object[number];
+    }
+
     public ArrayList() {
-        data = (T[]) new Object[MAX_NUMBER];
+        this(MAX_NUMBER);
     }
 
     @Override
@@ -54,20 +60,20 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         overrideIndex(index);
-        Object remove = data[index];
-        System.arraycopy(data, index + 1, data, index + 1, size - index - 1);
+        Object removeData = data[index];
+        System.arraycopy(data, index + 1, data, index, size - index - 1);
         size--;
-        return (T) remove;
+        return (T) removeData;
     }
 
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if (Objects.equals(data, data[i]) || data == data[i]) {
+            if (element == data[i] || element != null && element.equals(data[i])) {
                 return remove(i);
             }
         }
-        throw new NoSuchElementException("This element not found");
+        throw new NoSuchElementException("This element not found " + element);
     }
 
     @Override
@@ -90,7 +96,7 @@ public class ArrayList<T> implements List<T> {
 
     private void overrideIndex(int index) {
         if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("This index is more than size " + index);
+            throw new ArrayListIndexOutOfBoundsException("This index is more than size");
         }
     }
 }
