@@ -5,13 +5,12 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     public static final int DEFAULT_CAPACITY = 10;
-    private static final Object[] EMPTY_ELEMENT_DATA = {};
+    public static final double GROW_COEFFICIENT = 1.5;
     private Object[] elementData;
     private int size;
 
     public ArrayList() {
-        elementData = EMPTY_ELEMENT_DATA;
-        size = 0;
+        elementData = new Object[DEFAULT_CAPACITY];
     }
 
     @Override
@@ -27,8 +26,7 @@ public class ArrayList<T> implements List<T> {
     public void add(T value, int index) {
         rangeCheckForAdd(index);
         int countElementsAfterIndex = size - index;
-        Object[] elementData;
-        if (size == (elementData = this.elementData).length) {
+        if (elementData.length == size) {
             elementData = grow();
         }
         System.arraycopy(elementData, index,
@@ -41,14 +39,12 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void addAll(List<T> list) {
         int amountListElements = list.size();
-        Object [] arrayFromList = toArray(list, amountListElements);
-        Object[] elementData;
-        final int s;
-        if (amountListElements > (elementData = this.elementData).length - (s = size)) {
-            elementData = grow(s + amountListElements);
+        Object [] arrayFromList = toArray(list);
+        if (amountListElements > (elementData.length - size)) {
+            elementData = grow();
         }
-        System.arraycopy(arrayFromList, 0, elementData, s, amountListElements);
-        size = s + amountListElements;
+        System.arraycopy(arrayFromList, 0, elementData, size, amountListElements);
+        size += amountListElements;
     }
 
     @Override
@@ -91,17 +87,9 @@ public class ArrayList<T> implements List<T> {
     }
 
     private Object[] grow() {
-        return grow(size + 1);
-    }
-
-    private Object[] grow(int minCapacity) {
         int oldCapacity = elementData.length;
-        if (oldCapacity > 0 || elementData != EMPTY_ELEMENT_DATA) {
-            int newCapacity = (int) (oldCapacity * 1.5);
-            return elementData = Arrays.copyOf(elementData, newCapacity);
-        } else {
-            return elementData = new Object[Math.max(DEFAULT_CAPACITY, minCapacity)];
-        }
+        int newCapacity = (int) (oldCapacity * GROW_COEFFICIENT);
+        return elementData = Arrays.copyOf(elementData, newCapacity);
     }
 
     private void rangeCheckForAdd(int index) {
@@ -110,7 +98,8 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private Object[] toArray(List<T> list, int arrayLength) {
+    private Object[] toArray(List<T> list) {
+        int arrayLength = list.size();
         Object [] arrayFromList = new Object[arrayLength];
         for (int i = 0; i < arrayLength; i++) {
             arrayFromList[i] = list.get(i);
@@ -126,9 +115,8 @@ public class ArrayList<T> implements List<T> {
 
     private int findElementIndex(T element) {
         for (int i = 0; i < elementData.length; i++) {
-            if (element != null && elementData[i] != null && element.equals(elementData[i])) {
-                return i;
-            } else if (element == null && elementData[i] == null) {
+            if (element != null && elementData[i] != null
+                    && element.equals(elementData[i]) || element == elementData[i]) {
                 return i;
             }
         }
