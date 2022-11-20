@@ -41,24 +41,23 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        chackIndex(index);
+        checkIndex(index);
         return array[index];
     }
 
     @Override
     public void set(T value, int index) {
-        chackIndex(index);
+        checkIndex(index);
         array[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        chackIndex(index);
-        grow();
-        T remuveElement = array[index];
-        System.arraycopy(array, index + 1, array, index, size - index);
+        checkIndex(index);
+        T removeElement = array[index];
+        System.arraycopy(array, index + 1, array, index, size - index - 1);
         size--;
-        return remuveElement;
+        return removeElement;
     }
 
     @Override
@@ -96,7 +95,7 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private void chackIndex(int index) {
+    private void checkIndex(int index) {
         if (index >= size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Index"
                     + index + "doesn't exist or is less than 0");
