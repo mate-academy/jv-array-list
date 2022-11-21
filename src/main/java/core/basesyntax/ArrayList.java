@@ -55,12 +55,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        int index;
-        try {
-            index = findElementForRemove(element);
-        } catch (NoSuchMethodException e) {
-            throw new NoSuchElementException();
-        }
+        int index = getIndex(element);
         return removeElementFromList(index);
     }
 
@@ -81,24 +76,18 @@ public class ArrayList<T> implements List<T> {
             return result;
         }
         System.arraycopy(array, index + 1, array, index, array.length - index - 1);
+        array[size - 1] = null;
         size--;
         return result;
     }
 
-    private int findElementForRemove(T element) throws NoSuchMethodException {
-        boolean isPresent = false;
-        int index = 0;
+    private int getIndex(T element) {
         for (int i = 0; i < array.length; i++) {
             if (Objects.equals(array[i], element)) {
-                isPresent = true;
-                index = i;
-                break;
+                return i;
             }
         }
-        if (!isPresent) {
-            throw new NoSuchMethodException();
-        }
-        return index;
+        throw new NoSuchElementException("List not contains this element");
     }
 
     private void checkIndexForAddByIndex(int index) {
