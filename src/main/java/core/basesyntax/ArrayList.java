@@ -7,11 +7,11 @@ public class ArrayList<T> implements List<T> {
     private int size;
     private T[] elements;
 
-    public ArrayList(int s) {
-        if (s <= 0) {
+    public ArrayList(int initialCapacity) {
+        if (initialCapacity <= 0) {
             throw new IllegalArgumentException("the size of the array cannot be below zero");
         }
-        elements = (T[]) new Object[s];
+        elements = (T[]) new Object[initialCapacity];
     }
 
     public ArrayList() {
@@ -34,7 +34,8 @@ public class ArrayList<T> implements List<T> {
             return;
         }
         if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("Index is out of range!");
+            throw new ArrayListIndexOutOfBoundsException("Index " + index
+                    + " is out of range " + size);
         }
         capacityCheck();
         System.arraycopy(elements, index, elements, index + 1, size - index);
@@ -52,7 +53,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index is out of range!");
+            throw new ArrayListIndexOutOfBoundsException("Index " + index
+                    + " is out of range " + size);
         }
         return elements[index];
     }
@@ -94,7 +96,8 @@ public class ArrayList<T> implements List<T> {
 
     private void isIndexExist(int index) {
         if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index is out of range!");
+            throw new ArrayListIndexOutOfBoundsException("Index " + index
+                    + " is out of range " + size);
         }
     }
 
