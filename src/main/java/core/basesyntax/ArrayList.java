@@ -2,16 +2,21 @@ package core.basesyntax;
 
 import java.util.Arrays;
 import java.util.NoSuchElementException;
-import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_ARRAY_LENGTH = 6;
-    private T[] array = (T[]) new Object[DEFAULT_ARRAY_LENGTH];
-    private int size = 0;
+    private T[] array;
+    private int size;
+
+    public ArrayList() {
+        this.array = (T[]) new Object[DEFAULT_ARRAY_LENGTH];
+    }
 
     @Override
     public void add(T value) {
-        resize();
+        if (array.length <= size) {
+            resize();
+        }
         array[size] = value;
         size++;
     }
@@ -19,7 +24,9 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         checkIndexForAddByIndex(index);
-        resize();
+        if (array.length <= size) {
+            resize();
+        }
 
         if (index < size) {
             System.arraycopy(array, index, array, index + 1, array.length - index - 1);
@@ -83,7 +90,7 @@ public class ArrayList<T> implements List<T> {
 
     private int getIndex(T element) {
         for (int i = 0; i < array.length; i++) {
-            if (Objects.equals(array[i], element)) {
+            if (element == array[i] || element != null && element.equals(array[i])) {
                 return i;
             }
         }
@@ -103,9 +110,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void resize() {
-        if (array.length <= size) {
-            int newSize = (int) (array.length * 1.5);
-            array = Arrays.copyOf(array, newSize);
-        }
+        int newSize = (int) (array.length * 1.5);
+        array = Arrays.copyOf(array, newSize);
     }
 }
