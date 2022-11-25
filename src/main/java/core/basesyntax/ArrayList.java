@@ -10,12 +10,11 @@ public class ArrayList<T> implements List<T> {
 
     public ArrayList() {
         this.elementsData = (T[]) new Object[DEFAULT_SIZE];
-        this.size = 0;
     }
 
     @Override
     public void add(T value) {
-        resize();
+        createNewArray();
         elementsData[size] = value;
         size++;
     }
@@ -23,7 +22,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         checkIndexOutOfBoundForAdd(index);
-        resize();
+        createNewArray();
         System.arraycopy(elementsData, index, elementsData, index + 1, size - index);
         elementsData[index] = value;
         size++;
@@ -31,7 +30,6 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        resize();
         for (int i = 0; i < list.size(); i++) {
             add(list.get(i));
         }
@@ -61,15 +59,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        boolean res = containsElement(element);
         T removeElement = null;
-        if (!res) {
-            throw new NoSuchElementException("This element is absent in elementsData " + element);
+        if (elementsData != null) {
+            for (int i = 0; i < size; i++) {
+                if ((element == null && elementsData[i] == null)
+                        || (elementsData[i] != null && element != null
+                        && element.equals(elementsData[i]))) {
+                    removeElement = remove(i);
+                    break;
+                }
+            }
         }
-        if (res) {
-            int indexOfElement = findIndexForDelete(element);
-            removeElement = remove(indexOfElement);
-
+        if (element != null && removeElement == null) {
+            throw new NoSuchElementException("This element is absent in elementsData " + element);
         }
         return removeElement;
     }
@@ -96,39 +98,11 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private void resize() {
+    private void createNewArray() {
         if (size == elementsData.length) {
             Object[] newElementsData = new Object[(int) (elementsData.length * MULTIPLIER)];
             System.arraycopy(elementsData, 0, newElementsData, 0, size);
             elementsData = newElementsData;
         }
-    }
-
-    public boolean containsElement(T element) {
-        if (elementsData != null) {
-            for (int i = 0; i < size; i++) {
-                if (element == null && elementsData[i] == null) {
-                    return true;
-                }
-                if (elementsData[i] != null && element != null && element.equals(elementsData[i])) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    public int findIndexForDelete(T element) {
-        int index = 0;
-        boolean res = containsElement(element);
-        if (res) {
-            for (int i = 0; i < size; i++) {
-                if ((element == null && elementsData[i] == null)
-                        || (element != null && element.equals(elementsData[i]))) {
-                    index = i;
-                }
-            }
-        }
-        return index;
     }
 }
