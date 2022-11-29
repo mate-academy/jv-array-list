@@ -4,29 +4,18 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_SIZE = 10;
-    private static final int DEF_POS = 0;
 
     private int size;
     private Object[] elements;
 
     public ArrayList() {
         elements = new Object[DEFAULT_SIZE];
-        size = 0;
-    }
-
-    private Object[] grow() {
-        final int newSize = elements.length + elements.length / 2;
-        final int currentSize = elements.length;
-
-        Object[] newArray = new Object[newSize];
-        System.arraycopy(elements, DEF_POS, newArray, DEF_POS, currentSize);
-        return newArray;
     }
 
     @Override
     public void add(T value) {
         if (size == elements.length) {
-            elements = grow();
+            grow();
         }
         elements[size] = value;
         size++;
@@ -41,7 +30,7 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayListIndexOutOfBoundsException("Index is invalid");
         }
         if (size == elements.length) {
-            elements = grow();
+            grow();
         }
         System.arraycopy(elements, index, elements, newIndex, copiedLength);
         elements[index] = value;
@@ -99,7 +88,16 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public boolean isEmpty() {
-        return (size == 0) ? true : false;
+        return size == 0;
+    }
+
+    private void grow() {
+        final int newSize = elements.length + elements.length / 2;
+        final int currentSize = elements.length;
+
+        Object[] newArray = new Object[newSize];
+        System.arraycopy(elements, 0, newArray, 0, currentSize);
+        elements = newArray;
     }
 
     private void checkIndexValidity(int index) {
@@ -110,9 +108,8 @@ public class ArrayList<T> implements List<T> {
 
     private int getElementIndex(Object element) {
         for (int i = 0; i < size; i++) {
-            if ((elements[i] == null && element == null)
-                    || (elements[i] != null && element != null 
-                    && elements[i].equals(element))) {
+            if ((elements[i] == element)
+                    || (elements[i] != null && elements[i].equals(element))) {
                 return i;
             }
         }
