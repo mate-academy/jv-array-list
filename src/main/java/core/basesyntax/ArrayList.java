@@ -12,15 +12,9 @@ public class ArrayList<T> implements List<T> {
         array = (T[]) new Object[CAPACITY];
     }
 
-    public void increaseArray() {
-        T[] arrayCopy = (T[]) new Object[(int) (array.length * INCREASE_RATE)];
-        System.arraycopy(array, 0, arrayCopy, 0, array.length);
-        array = arrayCopy;
-    }
-
     @Override
     public void add(T value) {
-        if (size() >= array.length) {
+        if (size == array.length) {
             increaseArray();
         }
         array[size] = value;
@@ -29,21 +23,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index < 0 || index > size()) {
-            throw new ArrayListIndexOutOfBoundsException("Index passed to the method is invalid");
+        if (index == size) {
+            add(value);
+            return;
         }
-        if (size() >= array.length) {
+        checkIndex(index);
+        if (size == array.length) {
             increaseArray();
         }
-        if (index < size()) {
-            System.arraycopy(array, index, array, index + 1, size() - index);
+        if (index < size) {
+            System.arraycopy(array, index, array, index + 1, size - index);
             array[index] = value;
             size++;
         }
-        if (index == size()) {
-            add(value);
-        }
-
     }
 
     @Override
@@ -55,45 +47,34 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        T value = null;
-        if (index < 0 || index >= size()) {
-            throw new ArrayListIndexOutOfBoundsException("Index passed to the method is invalid");
-        } else {
-            value = array[index];
-        }
-        return value;
+        checkIndex(index);
+        return array[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index < 0 || index >= size()) {
-            throw new ArrayListIndexOutOfBoundsException("Index passed to the method is invalid");
-        } else {
-            array[index] = value;
-        }
+        checkIndex(index);
+        array[index] = value;
     }
 
     @Override
     public T remove(int index) {
         Object removeElement;
-        if (index < 0 || index > size()) {
-            throw new ArrayListIndexOutOfBoundsException("Index passed to the method is invalid");
-        } else {
-            removeElement = get(index);
-            System.arraycopy(array, index + 1, array, index, size - index - 1);
-            size--;
-        }
+        checkIndex(index);
+        removeElement = get(index);
+        System.arraycopy(array, index + 1, array, index, size - index - 1);
+        size--;
         return (T) removeElement;
     }
 
     @Override
     public T remove(T element) {
-        for (int i = 0; i < size(); i++) {
+        for (int i = 0; i < size; i++) {
             if (array[i] != null && array[i].equals(element) || array[i] == element) {
                 return remove(i);
             }
         }
-        throw new NoSuchElementException("Element not found");
+        throw new NoSuchElementException("Element not found" + element);
     }
 
     @Override
@@ -103,6 +84,18 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public boolean isEmpty() {
-        return size() == 0;
+        return size == 0;
+    }
+
+    private void increaseArray() {
+        T[] arrayCopy = (T[]) new Object[(int) (array.length * INCREASE_RATE)];
+        System.arraycopy(array, 0, arrayCopy, 0, array.length);
+        array = arrayCopy;
+    }
+
+    private void checkIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Index passed to the method is invalid");
+        }
     }
 }
