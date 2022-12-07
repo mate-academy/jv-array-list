@@ -66,18 +66,16 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        for (int i = 0; i < elements.length; i++) {
-            if (element != null) {
-                if (element.equals(elements[i])) {
-                    removeElement(i);
-                    return element;
-                }
-            } else if (elements[i] == null) {
+        for (int i = 0; i < size; i++) {
+            if (element != null && element.equals(elements[i])) {
+                removeElement(i);
+                return element;
+            } else if (elements[i] == null && element == null) {
                 removeElement(i);
                 return null;
             }
         }
-        throw new NoSuchElementException("There is no element int array list " + element);
+        throw new NoSuchElementException("There is no such element in array list " + element);
     }
 
     @Override
@@ -91,12 +89,8 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void removeElement(int index) {
-        if (index == size - 1) {
-            size--;
-        } else if (index <= size) {
-            System.arraycopy(elements, index + 1, elements, index, elements.length - index - 1);
-            size--;
-        }
+        System.arraycopy(elements, index + 1, elements, index, size - index - 1);
+        elements[--size] = null;
     }
 
     private void grow() {
@@ -108,7 +102,7 @@ public class ArrayList<T> implements List<T> {
     public void checkIndex(int index) {
         if (index >= size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Index "
-                    + index + " is out of bounds: " + (size - 1));
+                    + index + " is out of bounds: Size: " + size);
         }
     }
 }
