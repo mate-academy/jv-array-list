@@ -23,8 +23,8 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index < 0 || index != 0 && size < index) {
-            throw new ArrayListIndexOutOfBoundsException("Index does not exist");
+        if (index < 0 || size < index) {
+            throw new ArrayListIndexOutOfBoundsException("Index does not exist: " + index);
         }
         if (size == elements.length) {
             elements = grow();
@@ -43,25 +43,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (size < index + 1 || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index does not exist");
-        }
+        checkIndex(index);
         return elements[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index < 0 || size < index + 1) {
-            throw new ArrayListIndexOutOfBoundsException("Index does not exist");
-        }
+        checkIndex(index);
         elements[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (size < index + 1 || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index does not exist");
-        }
+        checkIndex(index);
         T deletedElement = elements[index];
         size--;
         System.arraycopy(elements, index + 1, elements, index, size - index);
@@ -97,5 +91,11 @@ public class ArrayList<T> implements List<T> {
             }
         }
         throw new NoSuchElementException("There is no such element as " + element);
+    }
+
+    private void checkIndex(int index) {
+        if (size < index + 1 || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Index does not exist: " + index);
+        }
     }
 }
