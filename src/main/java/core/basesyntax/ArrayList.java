@@ -3,11 +3,26 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    private static final int INITIAL_CAPACITY = 10;
-    private static final double GROWTH_FACTOR = 1.5;
-    private int currentCapacity = INITIAL_CAPACITY;
-    private Object[] array = new Object[INITIAL_CAPACITY];
-    private int size = 0;
+    private static final int DEFAULT_INITIAL_CAPACITY = 10;
+    private static final double DEFAULT_GROWTH_FACTOR = 1.5;
+    private int capacity;
+    private double growthFactor;
+    private Object[] array;
+    private int size;
+
+    public ArrayList() {
+        this(DEFAULT_INITIAL_CAPACITY);
+    }
+
+    public ArrayList(int initialCapacity) {
+        this(initialCapacity, DEFAULT_GROWTH_FACTOR);
+    }
+
+    public ArrayList(int initialCapacity, double growthFactor) {
+        this.capacity = initialCapacity;
+        this.growthFactor = growthFactor;
+        array = new Object[initialCapacity];
+    }
 
     @Override
     public void add(T value) {
@@ -30,7 +45,7 @@ public class ArrayList<T> implements List<T> {
     public void addAll(List<T> list) {
         int listSize = list.size();
         int minCapacity = size + listSize;
-        if (minCapacity > currentCapacity) {
+        if (minCapacity > capacity) {
             grow(minCapacity);
         }
         for (int i = 0; i < listSize; i++) {
@@ -73,7 +88,7 @@ public class ArrayList<T> implements List<T> {
                 return remove(i);
             }
         }
-        throw new NoSuchElementException("Element not found");
+        throw new NoSuchElementException("Element not found: " + element);
     }
 
     @Override
@@ -87,14 +102,14 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void checkCapacity() {
-        if (size == currentCapacity) {
+        if (size == capacity) {
             grow();
         }
     }
 
     private void grow() {
-        currentCapacity *= GROWTH_FACTOR;
-        grow(currentCapacity);
+        capacity *= growthFactor;
+        grow(capacity);
     }
 
     private void grow(int newCapacity) {
@@ -110,7 +125,7 @@ public class ArrayList<T> implements List<T> {
 
     private void checkIfIndexIsValid(int index, int size) {
         if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid Index");
+            throw new ArrayListIndexOutOfBoundsException("Invalid Index: " + index);
         }
     }
 }
