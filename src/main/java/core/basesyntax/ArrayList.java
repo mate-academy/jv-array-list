@@ -9,11 +9,11 @@ public class ArrayList<T> implements List<T> {
     private Object[] elementData;
     private int size;
 
-    public ArrayList(int number) {
-        if (number <= 0) {
+    public ArrayList(int initialCapacity) {
+        if (initialCapacity <= 0) {
             throw new ArrayListIndexOutOfBoundsException("can't be 0 or less");
         }
-        elementData = new Object[number];
+        elementData = new Object[initialCapacity];
     }
 
     public ArrayList() {
@@ -22,7 +22,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        grow();
+        checkSizeAndGrow();
         elementData[size] = value;
         size++;
     }
@@ -34,7 +34,7 @@ public class ArrayList<T> implements List<T> {
             return;
         }
         checkIndex(index);
-        grow();
+        checkSizeAndGrow();
         System.arraycopy(elementData, index, elementData, index + 1, size - index);
         elementData[index] = value;
         size++;
@@ -63,7 +63,7 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         checkIndex(index);
         Object remove = elementData[index];
-        System.arraycopy(elementData, index + 1, elementData, index,size - index - 1);
+        System.arraycopy(elementData, index + 1, elementData, index, size - index - 1);
         size--;
         return (T) remove;
     }
@@ -88,7 +88,7 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    public void grow() {
+    public void checkSizeAndGrow() {
         if (elementData.length == size) {
             Object[] object = new Object[(int) (elementData.length
                     + elementData.length * LIST_EXPAND)];
@@ -99,10 +99,12 @@ public class ArrayList<T> implements List<T> {
 
     public void checkIndex(int index) {
         if (index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index can`t be more than size");
+            throw new ArrayListIndexOutOfBoundsException("Index can`t be more than size. Index = "
+                    + index);
         }
         if (index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index can`t be less than 0");
+            throw new ArrayListIndexOutOfBoundsException("Index can`t be less than 0. Index = "
+                    + index);
         }
     }
 }
