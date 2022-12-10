@@ -102,7 +102,7 @@ public class ArrayList<T> implements List<T> {
         if (index >= size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("index exception");
         }
-        T removeElement = (T) elementArray[index];
+        final T removeElement = (T) elementArray[index];
         Object[] beforeArray = cutBefore(index);
         Object[] afterArray = cutAfter(index + 1);
         Object[] newArray = new Object[elementArray.length];
