@@ -117,8 +117,8 @@ public class ArrayList<T> implements List<T> {
     public T remove(T element) {
         int beforeSize = size;
         for (int i = 0; i < size; i++) {
-            if (elementArray[i] == null && element == null ||
-                    elementArray[i] != null && elementArray[i].equals(element)) {
+            if (elementArray[i] == null && element == null
+                    || elementArray[i] != null && elementArray[i].equals(element)) {
                 remove(i);
                 break;
             }
