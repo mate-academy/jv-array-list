@@ -77,7 +77,7 @@ public class ArrayList<T> implements List<T> {
         System.arraycopy(elementArray, 0, newArray, 0, size);
         System.arraycopy(listArray, 0, newArray, size, list.size());
         elementArray = newArray;
-        size+= list.size();
+        size += list.size();
     }
 
     @Override
