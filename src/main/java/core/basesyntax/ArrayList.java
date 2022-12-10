@@ -5,7 +5,7 @@ import java.util.NoSuchElementException;
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
 
-    public Object[] elementArray;
+    private Object[] elementArray;
     private int size;
 
 
@@ -138,5 +138,9 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    public void setElementArray(Object[] elementArray) {
+        this.elementArray = elementArray;
     }
 }
