@@ -4,7 +4,8 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-
+    private static final String SCAN_INDEX_MESSAGE = "Invalid index";
+    private static final String INDEX_EQUALS_SIZE = "Index equals with size";
     private Object[] elementArray;
     private int size;
 
@@ -12,23 +13,35 @@ public class ArrayList<T> implements List<T> {
         this.elementArray = new Object[DEFAULT_CAPACITY];
     }
 
-    private Object[] grow() {
-        int newLength = (size * 3) / 2 + 1;
+    public Object[] grow() {
+        int newLength = size * 3 / 2;
         Object[] newArray = new Object[newLength];
         System.arraycopy(elementArray, 0, newArray, 0, size);
         return elementArray = newArray;
     }
 
-    private Object[] cutBefore(int index) {
+    public Object[] cutBefore(int index) {
         Object[] cutArray = new Object[index];
         System.arraycopy(elementArray, 0, cutArray, 0, index);
         return cutArray;
     }
 
-    private Object[] cutAfter(int index) {
+    public Object[] cutAfter(int index) {
         Object[] cutArray = new Object[size - index];
         System.arraycopy(elementArray, index, cutArray, 0, size - index);
         return cutArray;
+    }
+
+    public void scanIndex(int index) {
+        if (index < 0 || index > size) {
+            throw new ArrayListIndexOutOfBoundsException(SCAN_INDEX_MESSAGE);
+        }
+    }
+
+    public void indexEqualsSize(int index) {
+        if (index == size) {
+            throw new ArrayListIndexOutOfBoundsException(INDEX_EQUALS_SIZE);
+        }
     }
 
     @Override
@@ -45,20 +58,10 @@ public class ArrayList<T> implements List<T> {
         if (elementArray.length == size) {
             grow();
         }
-        if (index == size) {
-            add(value);
-        } else if (index < size && index >= 0) {
-            Object[] beforeArray = cutBefore(index);
-            Object[] afterArray = cutAfter(index);
-            Object[] newArray = new Object[elementArray.length];
-            System.arraycopy(beforeArray, 0, newArray, 0, beforeArray.length);
-            newArray[index] = value;
-            System.arraycopy(afterArray, 0, newArray, index + 1, afterArray.length);
-            elementArray = newArray;
-            size++;
-        } else {
-            throw new ArrayListIndexOutOfBoundsException("index exception");
-        }
+        scanIndex(index);
+        System.arraycopy(elementArray, index, elementArray, index + 1, size - index);
+        elementArray[index] = value;
+        size++;
     }
 
     @Override
@@ -66,42 +69,29 @@ public class ArrayList<T> implements List<T> {
         if (list == null) {
             return;
         }
-        while (list.size() + size > elementArray.length) {
-            grow();
-        }
-        Object[] newArray = new Object[elementArray.length];
-        Object[] listArray = new Object[list.size()];
         for (int i = 0; i < list.size(); i++) {
-            listArray[i] = list.get(i);
+            add(list.get(i));
         }
-        System.arraycopy(elementArray, 0, newArray, 0, size);
-        System.arraycopy(listArray, 0, newArray, size, list.size());
-        elementArray = newArray;
-        size += list.size();
     }
 
     @Override
     public T get(int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("index exception");
-        }
+        scanIndex(index);
+        indexEqualsSize(index);
         return (T) elementArray[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("index exception");
-        } else {
-            elementArray[index] = value;
-        }
+        scanIndex(index);
+        indexEqualsSize(index);
+        elementArray[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("index exception");
-        }
+        scanIndex(index);
+        indexEqualsSize(index);
         final T removeElement = (T) elementArray[index];
         Object[] beforeArray = cutBefore(index);
         Object[] afterArray = cutAfter(index + 1);
