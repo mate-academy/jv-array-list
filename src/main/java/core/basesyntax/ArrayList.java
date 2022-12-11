@@ -1,48 +1,118 @@
 package core.basesyntax;
 
+import java.util.Arrays;
+import java.util.NoSuchElementException;
+
 public class ArrayList<T> implements List<T> {
+    private static final int DEFAULT_CAPACITY = 10;
+    private int size;
+    private Object[] data;
+
+    public ArrayList() {
+        this(DEFAULT_CAPACITY);
+    }
+
+    public ArrayList(int capacity) {
+        if (capacity < 0) {
+            throw new IllegalArgumentException("Illegal Capacity: " + capacity);
+        }
+        data = new Object[capacity];
+    }
+
     @Override
     public void add(T value) {
-
+        add(value, size);
     }
 
     @Override
     public void add(T value, int index) {
-
+        if (index > size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Can't add element. Illegal index: "
+                    + index);
+        }
+        if (size == data.length) {
+            grow(size + 1);
+        }
+        if (size > index) {
+            System.arraycopy(data, index, data, index + 1,size - index);
+        }
+        data[index] = value;
+        size++;
     }
 
     @Override
     public void addAll(List<T> list) {
-
+        if (data.length < size + list.size()) {
+            grow(size + list.size());
+        }
+        for (int i = 0; i < list.size(); i++) {
+            this.add(list.get(i));
+        }
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public T get(int index) {
-        return null;
+        if (index >= size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Can't get element. Illegal index: "
+                    + index);
+        }
+        return (T) data[index];
     }
 
     @Override
     public void set(T value, int index) {
-
+        if (index >= size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Can't set element. Illegal index: "
+                    + index);
+        }
+        data[index] = value;
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public T remove(int index) {
-        return null;
+        if (index >= size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Can't remove element. Illegal index: "
+                    + index);
+        }
+        T element = (T) data[index];
+        if (--size >= index) {
+            System.arraycopy(data, index + 1, data, index, size - index);
+        }
+        data[size] = null;
+        return element;
     }
 
     @Override
     public T remove(T element) {
-        return null;
+        for (int i = 0; i < size; i++) {
+            if (equals(element, data[i])) {
+                return remove(i);
+            }
+        }
+        throw new NoSuchElementException("Can't remove element: " + element);
     }
 
     @Override
     public int size() {
-        return 0;
+        return size;
     }
 
     @Override
     public boolean isEmpty() {
-        return false;
+        return (size == 0);
+    }
+
+    private void grow(int requiredCapacity) {
+        if (requiredCapacity < DEFAULT_CAPACITY) {
+            data = Arrays.copyOf(data, DEFAULT_CAPACITY);
+        } else {
+            data = Arrays.copyOf(data, Math.max(requiredCapacity, data.length + data.length >> 1));
+        }
+    }
+
+    private boolean equals(Object a, Object b) {
+        return (a == b) || (a != null && a.equals(b));
     }
 }
