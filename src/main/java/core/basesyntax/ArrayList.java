@@ -73,7 +73,7 @@ public class ArrayList<T> implements List<T> {
                 return remove(i);
             }
         }
-        throw new NoSuchElementException("No such element in list: " + element );
+        throw new NoSuchElementException("No such element in list: " + element);
     }
 
     @Override
