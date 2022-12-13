@@ -14,11 +14,14 @@ public class ArrayList<T> implements List<T> {
         values = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
-    public void arrayCopy() {
-        values = Arrays.copyOf(values, (int) (size * INCREASE_RATE));
+    private void arrayCopy() {
+        T[] valuesCopy = (T[]) new Object[(int) ( values.length * INCREASE_RATE)];
+        System.arraycopy(values,0,valuesCopy, 0, values.length);
+        values = valuesCopy;
+
     }
 
-    public void checkIndex(int index) throws ArrayListIndexOutOfBoundsException {
+    private void checkIndex(int index) {
         if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException("This index does not exist");
         }
