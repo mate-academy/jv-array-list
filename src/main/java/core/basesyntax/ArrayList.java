@@ -26,15 +26,12 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index > size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Can't add element. Illegal index: "
-                    + index);
-        }
+        checkIndexForAdd(index);
         if (size == data.length) {
             grow(size + 1);
         }
         if (size > index) {
-            System.arraycopy(data, index, data, index + 1,size - index);
+            System.arraycopy(data, index, data, index + 1, size - index);
         }
         data[index] = value;
         size++;
@@ -53,31 +50,22 @@ public class ArrayList<T> implements List<T> {
     @Override
     @SuppressWarnings("unchecked")
     public T get(int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Can't get element. Illegal index: "
-                    + index);
-        }
+        checkIndex(index);
         return (T) data[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Can't set element. Illegal index: "
-                    + index);
-        }
+        checkIndex(index);
         data[index] = value;
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public T remove(int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Can't remove element. Illegal index: "
-                    + index);
-        }
+        checkIndex(index);
         T element = (T) data[index];
-        if (--size >= index) {
+        if (--size > index) {
             System.arraycopy(data, index + 1, data, index, size - index);
         }
         data[size] = null;
@@ -114,5 +102,19 @@ public class ArrayList<T> implements List<T> {
 
     private boolean equals(Object a, Object b) {
         return (a == b) || (a != null && a.equals(b));
+    }
+
+    private void checkIndexForAdd(int index) {
+        if (index > size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Can't add element. Illegal index: "
+                    + index);
+        }
+    }
+
+    private void checkIndex(int index) {
+        if (index >= size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Can't remove element. Illegal index: "
+                    + index);
+        }
     }
 }
