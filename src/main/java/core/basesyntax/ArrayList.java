@@ -113,7 +113,7 @@ public class ArrayList<T> implements List<T> {
 
     private void checkIndex(int index) {
         if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Can't remove element. Illegal index: "
+            throw new ArrayListIndexOutOfBoundsException("Illegal index: "
                     + index);
         }
     }
