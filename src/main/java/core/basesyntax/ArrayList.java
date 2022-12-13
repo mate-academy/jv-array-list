@@ -1,6 +1,5 @@
 package core.basesyntax;
 
-import java.util.Arrays;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 
@@ -15,10 +14,9 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void arrayCopy() {
-        T[] valuesCopy = (T[]) new Object[(int) ( values.length * INCREASE_RATE)];
+        T[] valuesCopy = (T[]) new Object[(int) (values.length * INCREASE_RATE)];
         System.arraycopy(values,0,valuesCopy, 0, values.length);
         values = valuesCopy;
-
     }
 
     private void checkIndex(int index) {
