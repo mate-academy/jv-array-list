@@ -37,9 +37,6 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        while ((list.size() + size) >= values.length) {
-            grow();
-        }
         for (int i = 0; i < list.size(); i++) {
             add(list.get(i));
         }
@@ -60,11 +57,12 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
+        int startPosition = index + 1;
         if (index == size - 1) {
-            grow();
+            startPosition = index;
         }
         Object value = values[index];
-        System.arraycopy(values, index + 1,
+        System.arraycopy(values, startPosition,
                 values, index, size - index);
         size--;
         return (T) value;
@@ -74,16 +72,12 @@ public class ArrayList<T> implements List<T> {
     public T remove(T element) {
         int index = -1;
         for (int i = 0; i < values.length; i++) {
-            if ((element == null && values[i] == null)
-                    || element != null && (element.equals(values[i]))) {
+            if (element == values[i] || element != null && element.equals(values[i])) {
                 index = i;
-                break;
+                return remove(index);
             }
         }
-        if (index == -1) {
-            throw new NoSuchElementException("Element does not exist");
-        }
-        return remove(index);
+        throw new NoSuchElementException("Element does not exist");
     }
 
     @Override
