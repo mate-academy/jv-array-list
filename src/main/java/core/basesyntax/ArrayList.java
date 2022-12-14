@@ -5,9 +5,13 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
+    private static final Object[] EMPTY_ELEMENTDATA = {};
     private Object[] elementData;
     private int size;
-    private static final Object[] EMPTY_ELEMENTDATA = {};
+
+    public ArrayList() {
+        this.elementData = EMPTY_ELEMENTDATA;
+    }
 
     public ArrayList(int initialCapacity) {
         if (initialCapacity > 0) {
@@ -31,10 +35,6 @@ public class ArrayList<T> implements List<T> {
         return grow(size + 1);
     }
 
-    public ArrayList() {
-        this.elementData = EMPTY_ELEMENTDATA;
-    }
-
     @Override
     public void add(T value) {
         add(value, size);
@@ -55,13 +55,15 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void rangeCheckForAdd(int index) {
-        if (index > size || index < 0)
+        if (index > size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException(outOfBoundsMsg(index));
+        }
     }
 
     private void checkIndex(int index) {
-        if (index < 0 || index >= size)
+        if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException(outOfBoundsMsg(index));
+        }
     }
 
     private String outOfBoundsMsg(int index) {
@@ -104,16 +106,12 @@ public class ArrayList<T> implements List<T> {
         checkIndex(index);
         final Object[] es = elementData;
         @SuppressWarnings("unchecked") T oldValue = (T) es[index];
-        fastRemove(es, index);
-        return oldValue;
-    }
-
-    private void fastRemove(Object[] es, int i) {
         final int newSize;
-        if ((newSize = size - 1) > i) {
-            System.arraycopy(es, i + 1, es, i, newSize - i);
+        if ((newSize = size - 1) > index) {
+            System.arraycopy(es, index + 1, es, index, newSize - index);
         }
         es[size = newSize] = null;
+        return oldValue;
     }
 
     @Override
@@ -125,11 +123,12 @@ public class ArrayList<T> implements List<T> {
         found:
         {
             if (element == null) {
-                for (; i < size; i++)
+                for (; i < size; i++) {
                     if (es[i] == null) {
                         flag = true;
                         break found;
                     }
+                }
             } else {
                 for (; i < size; i++) {
                     if (element.equals(es[i])) {
@@ -144,7 +143,7 @@ public class ArrayList<T> implements List<T> {
         if (!flag) {
             throw new NoSuchElementException();
         }
-        fastRemove(es, i);
+        remove(i);
         return oldValue;
     }
 
