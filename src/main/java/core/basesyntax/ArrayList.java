@@ -1,7 +1,6 @@
 package core.basesyntax;
 
 import java.util.NoSuchElementException;
-import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
@@ -11,18 +10,6 @@ public class ArrayList<T> implements List<T> {
 
     public ArrayList() {
         values = (T[]) new Object[DEFAULT_CAPACITY];
-    }
-
-    private void arrayCopy() {
-        T[] valuesCopy = (T[]) new Object[(int) (values.length * INCREASE_RATE)];
-        System.arraycopy(values,0,valuesCopy, 0, values.length);
-        values = valuesCopy;
-    }
-
-    private void checkIndex(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("This index does not exist");
-        }
     }
 
     @Override
@@ -78,9 +65,10 @@ public class ArrayList<T> implements List<T> {
     }
 
     @Override
-    public T remove(T element) throws NoSuchElementException {
-        for (int i = 0; i <= size; i++) {
-            if (Objects.equals(values[i], element)) {
+    public T remove(T element) {
+        for (int i = 0; i < size; i++) {
+            if (values[i] == null && element == null
+                    || values[i] != null && values[i].equals(element)) {
                 size--;
                 System.arraycopy(values, i + 1, values, i, size - i);
                 return element;
@@ -97,5 +85,17 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private void arrayCopy() {
+        T[] valuesCopy = (T[]) new Object[(int) (values.length * INCREASE_RATE)];
+        System.arraycopy(values,0,valuesCopy, 0, values.length);
+        values = valuesCopy;
+    }
+
+    private void checkIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("This index does not exist");
+        }
     }
 }
