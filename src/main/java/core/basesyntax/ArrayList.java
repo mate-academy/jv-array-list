@@ -135,7 +135,6 @@ public class ArrayList<T> implements List<T> {
         return grow(size + 1);
     }
 
-
     private void rangeCheckForAdd(int index) {
         if (index > size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException(outOfBoundsMsg(index));
