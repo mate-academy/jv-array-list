@@ -1,38 +1,18 @@
 package core.basesyntax;
 
-import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    private static final Object[] EMPTY_ELEMENTDATA = {};
     private Object[] elementData;
     private int size;
 
     public ArrayList() {
-        this.elementData = EMPTY_ELEMENTDATA;
+        this.elementData = new Object[DEFAULT_CAPACITY];
     }
 
     public ArrayList(int initialCapacity) {
-        if (initialCapacity > 0) {
-            this.elementData = new Object[initialCapacity];
-        } else {
-            this.elementData = EMPTY_ELEMENTDATA;
-        }
-    }
-
-    private Object[] grow(int minCapacity) {
-        int oldCapacity = elementData.length;
-        if (oldCapacity > 0 || elementData != EMPTY_ELEMENTDATA) {
-            int newCapacity = (int) (oldCapacity * 1.5);
-            return elementData = Arrays.copyOf(elementData, newCapacity);
-        } else {
-            return elementData = new Object[Math.max(DEFAULT_CAPACITY, minCapacity)];
-        }
-    }
-
-    private Object[] grow() {
-        return grow(size + 1);
+        this.elementData = new Object[Math.max(DEFAULT_CAPACITY, initialCapacity)];
     }
 
     @Override
@@ -43,31 +23,14 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         rangeCheckForAdd(index);
-        final int s;
-        if ((s = size) == this.elementData.length) {
+        if (size == this.elementData.length) {
             elementData = grow();
         }
         System.arraycopy(elementData, index,
                 elementData, index + 1,
-                s - index);
+                size - index);
         elementData[index] = value;
-        size = s + 1;
-    }
-
-    private void rangeCheckForAdd(int index) {
-        if (index > size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException(outOfBoundsMsg(index));
-        }
-    }
-
-    private void checkIndex(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException(outOfBoundsMsg(index));
-        }
-    }
-
-    private String outOfBoundsMsg(int index) {
-        return "Index: " + index + ", Size: " + size;
+        size = size + 1;
     }
 
     @Override
@@ -80,12 +43,11 @@ public class ArrayList<T> implements List<T> {
         if (numNew == 0) {
             return;
         }
-        final int s;
-        if (numNew > (elementData.length - (s = size))) {
-            elementData = grow(s + numNew);
+        if (numNew > (elementData.length - size)) {
+            elementData = grow(size + numNew);
         }
-        System.arraycopy(tempArray, 0, elementData, s, numNew);
-        size = s + numNew;
+        System.arraycopy(tempArray, 0, elementData, size, numNew);
+        size = size + numNew;
     }
 
     @Override
@@ -155,5 +117,38 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private Object[] grow(int minCapacity) {
+        int oldCapacity = elementData.length;
+        if (oldCapacity > 0) {
+            int newCapacity = (int) (oldCapacity * 1.5);
+            Object[] tempArray = new Object[newCapacity];
+            System.arraycopy(elementData, 0, tempArray, 0, size);
+            return elementData = tempArray;
+        } else {
+            return elementData = new Object[Math.max(DEFAULT_CAPACITY, minCapacity)];
+        }
+    }
+
+    private Object[] grow() {
+        return grow(size + 1);
+    }
+
+
+    private void rangeCheckForAdd(int index) {
+        if (index > size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException(outOfBoundsMsg(index));
+        }
+    }
+
+    private void checkIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException(outOfBoundsMsg(index));
+        }
+    }
+
+    private String outOfBoundsMsg(int index) {
+        return "Index: " + index + ", Size: " + size;
     }
 }
