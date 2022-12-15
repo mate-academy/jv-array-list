@@ -23,14 +23,14 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         rangeCheckForAdd(index);
-        if (size == this.elementData.length) {
+        if (size == elementData.length) {
             elementData = grow();
         }
         System.arraycopy(elementData, index,
                 elementData, index + 1,
                 size - index);
         elementData[index] = value;
-        size = size + 1;
+        size++;
     }
 
     @Override
@@ -66,42 +66,31 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
-        final Object[] es = elementData;
-        @SuppressWarnings("unchecked") T oldValue = (T) es[index];
-        final int newSize;
-        if ((newSize = size - 1) > index) {
-            System.arraycopy(es, index + 1, es, index, newSize - index);
+        final Object[] newElementData = elementData;
+        @SuppressWarnings("unchecked") T oldValue = (T) newElementData[index];
+        size--;
+        if (size > index) {
+            System.arraycopy(newElementData, index + 1, newElementData, index, size - index);
         }
-        es[size = newSize] = null;
+        newElementData[size] = null;
         return oldValue;
     }
 
     @Override
     public T remove(T element) {
-        final Object[] es = elementData;
-        final int size = this.size;
+        final Object[] newElementData = elementData;
         int i = 0;
         boolean flag = false;
-        found:
-        {
-            if (element == null) {
-                for (; i < size; i++) {
-                    if (es[i] == null) {
-                        flag = true;
-                        break found;
-                    }
-                }
-            } else {
-                for (; i < size; i++) {
-                    if (element.equals(es[i])) {
-                        flag = true;
-                        break found;
-                    }
-                }
+        for (; i < size; i++) {
+            if (element == null && newElementData[i] == null) {
+                flag = true;
+                break;
+            } else if (element != null && element.equals(newElementData[i])) {
+                flag = true;
+                break;
             }
         }
-
-        @SuppressWarnings("unchecked") T oldValue = (T) es[i];
+        @SuppressWarnings("unchecked") T oldValue = (T) newElementData[i];
         if (!flag) {
             throw new NoSuchElementException();
         }
