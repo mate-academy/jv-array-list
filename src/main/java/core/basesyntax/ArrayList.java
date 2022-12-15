@@ -67,7 +67,7 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         checkIndex(index);
         final Object[] newElementData = elementData;
-        @SuppressWarnings("unchecked") T oldValue = (T) newElementData[index];
+        @SuppressWarnings("unchecked") final T oldValue = (T) newElementData[index];
         size--;
         if (size > index) {
             System.arraycopy(newElementData, index + 1, newElementData, index, size - index);
