@@ -100,13 +100,13 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void ensureCapacity() {
+        // default method works for processing single element
         if (size + 1 > elementData.length) {
             grow();
         }
     }
 
     private void ensureCapacity(int newElementsToAdd) {
-
         if (size + newElementsToAdd >= elementData.length) {
             grow(size + newElementsToAdd);
         }
