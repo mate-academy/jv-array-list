@@ -4,6 +4,7 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int INITIAL_CAPACITY = 10;
+    private static final int FIRST_ELEMENT_OF_ARRAY = 0;
     private Object[] elements;
     private int size;
 
@@ -22,9 +23,9 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index > size || index < 0) {
+        if (index > size || index < FIRST_ELEMENT_OF_ARRAY) {
             throw new ArrayListIndexOutOfBoundsException(
-                    "Index " + index + " is incorect");
+                    "Index " + index + " is incorrect");
         }
         if (isFull()) {
             resizeArray();
@@ -47,7 +48,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index >= size || index < 0) {
+        if (index >= size || index < FIRST_ELEMENT_OF_ARRAY) {
             throw new ArrayListIndexOutOfBoundsException(
                     "Element by index " + index + " is not exist");
         }
@@ -56,19 +57,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void set(T value, int index) {
-        if (index < size && index >= 0) {
+        if (index < size && index >= FIRST_ELEMENT_OF_ARRAY) {
             elements[index] = value;
         } else {
             throw new ArrayListIndexOutOfBoundsException(
-                    "Index " + index + " is incorect");
+                    "Index " + index + " is incorrect");
         }
     }
 
     @Override
     public T remove(int index) {
-        if (index >= size || index < 0) {
+        if (index >= size || index < FIRST_ELEMENT_OF_ARRAY) {
             throw new ArrayListIndexOutOfBoundsException(
-                    "Index " + index + " is incorect");
+                    "Index " + index + " is incorrect");
         }
         T value = (T) elements[index];
         if (index == size - 1) {
@@ -114,8 +115,7 @@ public class ArrayList<T> implements List<T> {
     private void resizeArray() {
         Object[] temporary = elements;
         elements = new Object[capacity() + (capacity() / 2)];
-        for (int i = 0; i < size; i++) {
-            elements[i] = temporary[i];
-        }
+        System.arraycopy(temporary, FIRST_ELEMENT_OF_ARRAY,
+                    elements, FIRST_ELEMENT_OF_ARRAY, size);
     }
 }
