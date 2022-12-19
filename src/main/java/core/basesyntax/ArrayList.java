@@ -5,18 +5,10 @@ import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    private static final double ARRAY_GROW = 0.5;
-    private static final int STARTING_POSITION = 0;
+    private static final double ARRAY_GROW_COEFFICIENT = 0.5;
+    private static final int INDEX_OF_ARRAY_STARTING_POSITION = 0;
     private T[] elements;
     private int size;
-
-    public ArrayList(int initialCapacity) {
-        if (initialCapacity > 0) {
-            elements = (T[]) new Object[initialCapacity];
-        } else {
-            throw new IllegalArgumentException("The size is incorrect");
-        }
-    }
 
     public ArrayList() {
         elements = (T[]) new Object[DEFAULT_CAPACITY];
@@ -77,7 +69,7 @@ public class ArrayList<T> implements List<T> {
                 return remove(i);
             }
         }
-        throw new NoSuchElementException("This collection doesn't have element");
+        throw new NoSuchElementException("This collection doesn't have element: " + element);
     }
 
     @Override
@@ -92,15 +84,16 @@ public class ArrayList<T> implements List<T> {
 
     private void checkIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("This index is incorrect");
+            throw new ArrayListIndexOutOfBoundsException("This index is incorrect: " + index);
         }
     }
 
     private void grow() {
         if (size == elements.length) {
             T[] newElements = (T[]) new Object[(int) (elements.length
-                    + elements.length * ARRAY_GROW)];
-            System.arraycopy(elements, STARTING_POSITION, newElements, STARTING_POSITION, size);
+                    + elements.length * ARRAY_GROW_COEFFICIENT)];
+            System.arraycopy(elements, INDEX_OF_ARRAY_STARTING_POSITION, newElements,
+                    INDEX_OF_ARRAY_STARTING_POSITION, size);
             elements = newElements;
         }
     }
