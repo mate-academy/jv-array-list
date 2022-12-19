@@ -55,10 +55,10 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         runArrayListIndexOutOfBoundsException(index);
-        T element = array[index];
+        T indexElement = array[index];
         System.arraycopy(array, index + 1, array, index, array.length - index - 1);
         size--;
-        return element;
+        return indexElement;
     }
 
     @Override
