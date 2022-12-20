@@ -1,5 +1,6 @@
 package core.basesyntax;
 
+import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
@@ -40,21 +41,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        runArrayListIndexOutOfBoundsException(index);
+        checkIndex(index);
         return array[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index < 0 || index > size() - 1) {
-            throw new ArrayListIndexOutOfBoundsException(index + "out of bounds");
-        }
+        checkIndex(index);
         array[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        runArrayListIndexOutOfBoundsException(index);
+        checkIndex(index);
         T indexElement = array[index];
         System.arraycopy(array, index + 1, array, index, array.length - index - 1);
         size--;
@@ -63,47 +62,43 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        int index = -1;
         for (int i = 0; i < size(); i++) {
-            if (array[i] == null || array[i] == element || array[i].equals(element)) {
-                index = i;
-                break;
+            if (element == null && array[i] == null) {
+                return remove(i);
+            }
+            if (array[i] != null && array[i].equals(element)) {
+                return remove(i);
             }
         }
-        if (index == -1) {
-            throw new NoSuchElementException(element + " doesn't exist");
-        }
-        remove(index);
-        return element;
+        throw new NoSuchElementException(element + " doesn't exist");
     }
 
     @Override
     public int size() {
-        if (array == null) {
-            return 0;
-        }
         return size;
     }
 
     @Override
     public boolean isEmpty() {
-        if (size > 0) {
-            return false;
-        }
-        return true;
+        return size == 0;
     }
 
     private void checkAndIncreaseArrayLength() {
-        if (size() == array.length) {
+        if (size == array.length) {
             T[] increasedArray = (T[]) new Object[(int) (array.length * ARRAY_INCREMENT_VALUE)];
             System.arraycopy(array, 0, increasedArray, 0, array.length);
             array = increasedArray;
         }
     }
 
-    private void runArrayListIndexOutOfBoundsException(int index) {
+    private void checkIndex(int index) {
         if (index < 0 || index >= size()) {
             throw new ArrayListIndexOutOfBoundsException(index + "out of bounds");
         }
+    }
+
+    @Override
+    public String toString() {
+        return Arrays.toString(Arrays.copyOf(array, size));
     }
 }
