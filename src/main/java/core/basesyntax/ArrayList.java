@@ -115,6 +115,7 @@ public class ArrayList<T> implements List<T> {
                 return i;
             }
         }
-        throw new NoSuchElementException();
+        throw new NoSuchElementException("There is no element with value " + element
+                + " in ArrayList");
     }
 }
