@@ -70,7 +70,7 @@ public class ArrayList<T> implements List<T> {
                 return remove(i);
             }
         }
-        throw new NoSuchElementException("222");
+        throw new NoSuchElementException("No such element");
     }
 
     @Override
@@ -85,7 +85,7 @@ public class ArrayList<T> implements List<T> {
 
     public void checkIndex(int index) {
         if (!(index >= 0 && index < size)) {
-            throw new ArrayListIndexOutOfBoundsException("111");
+            throw new ArrayListIndexOutOfBoundsException("Index is out of bounds");
         }
     }
 
