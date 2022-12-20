@@ -6,27 +6,23 @@ import java.util.NoSuchElementException;
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_LENGTH = 10;
     private static final double MULTIPLIER = 1.5;
-    private int size = 0;
+    private int size;
     private Object[] array;
 
     public ArrayList() {
         array = new Object[DEFAULT_LENGTH];
     }
 
-    public ArrayList(int length) {
-        array = new Object[length];
-    }
-
     @Override
     public void add(T value) {
-        fixSize();
+        checkSize();
         array[size] = value;
         size++;
     }
 
     @Override
     public void add(T value, int index) {
-        fixSize();
+        checkSize();
         if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException("" + index);
         }
@@ -74,8 +70,7 @@ public class ArrayList<T> implements List<T> {
                 continue;
             }
             if (array[i].equals(element)) {
-                remove(i);
-                return element;
+                return remove(i);
             }
         }
         throw new NoSuchElementException();
@@ -91,7 +86,7 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void fixSize() {
+    private void checkSize() {
         if (array.length < size + 2) {
             array = Arrays.copyOf(array, (int) (array.length * MULTIPLIER));
         }
