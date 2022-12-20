@@ -90,8 +90,10 @@ public class ArrayList<T> implements List<T> {
     }
 
     public void indexCheck(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("");
+        if (index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Negative index: index = " + index);
+        } else if (index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Index out of bounds: index = " + index);
         }
     }
 
