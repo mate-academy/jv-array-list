@@ -1,6 +1,6 @@
 package core.basesyntax;
 
-import java.util.Objects;
+import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
@@ -21,100 +21,64 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        // TODO проверка нра увеличение размера массива и копирование х1.5
-        if (size == elementData.length) {
-            elementData = grow(elementData);
-        }
-
-        // проверка на переполнение, если полный, то пересоздать массив и изменить capacity х1.5
+        providingListCapacity();
         elementData[size++] = value;
-    }
-
-    private T[] grow(T[] oldList) {
-        //todo (elementData.length * 1.5)
-        T[] newList = (T[]) new Object[10];
-        if (size >= 0) System.arraycopy(oldList, 0, newList, 0, size);
-        return newList;
     }
 
     @Override
     public void add(T value, int index) {
-        if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("The index must be equal to or greater than 0 and not greater than the size (actual size = " + size + " of the array.");
-        }
-        for (int i = size; i > index; i--) {
-            elementData[i] = elementData[i - 1];
-        }
+        rangeCheckForAdd(index);
+        providingListCapacity();
+        System.arraycopy(elementData, index, elementData, index + 1, size++ - index);
         elementData[index] = value;
-        size++;
     }
 
     @Override
     public void addAll(List<T> list) {
-        int newCapacity = size + list.size();
-        T[] newList;
-        if (elementData.length < newCapacity) {
-            newList = (T[]) new Object[(int) (newCapacity * 1.5)];
-        } else {
-            newList = (T[]) new Object[elementData.length];
+        providingListCapacity();
+        for (int i = 0; i < list.size(); i++) {
+            T newElement = list.get(i);
+            this.add(newElement);
         }
-        for (int i = 0; i < size; i++) {
-            newList[i] = elementData[i];
-        }
-        for (int i = size; i < newCapacity; i++) {
-            newList[i] = list.get(i - size);
-        }
-        elementData = (T[]) new Object[(int) (newCapacity * 1.5)];
-        for (int i = 0; i < newCapacity; i++) {
-            elementData[i] = newList[i];
-        }
-        size = newCapacity;
     }
 
     @Override
     public T get(int index) {
-        if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("The index must be equal to or greater than 0 and not greater than the size (actual size = + " + size + " of the array.");
-        }
+        checkIndex(index);
         return elementData[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("The index must be equal to or greater than 0 and not greater than the size (actual size = + " + size + " of the array.");
-        }
+        checkIndex(index);
         elementData[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("The index must be equal to or greater than 0 and not greater than the size (actual size = + " + size + " of the array.");
-        }
-        // TODO заменить Objects
-        Objects.checkIndex(index, size);
-        T oldValue = (T) elementData[index];
-        for (int i = index; i < size; i++) {
-            elementData[i] = elementData[i + 1];
-        }
-        size--;
+        checkIndex(index);
+        T oldValue = get(index);
+        fastRemove(index);
         return oldValue;
     }
 
     @Override
     public T remove(T element) {
-        // size = 8
-        // i = 6
-        // j = i - 1 = 5
+        int index = -1;
         for (int i = 0; i < size; i++) {
-            if (element.equals(elementData[i])) {
-                for (int j = i - 1; i < size; i++) {
-                    elementData[j] = elementData[j + 1];
-                }
+            if (element == null && elementData[i] == null) {
+                index = i;
+            }
+            if (element != null && element.equals(elementData[i])) {
+                index = i;
             }
         }
-        return element;
+        if (index == -1) {
+            throw new NoSuchElementException("Can't find the element \"" + element + "\"");
+        }
+        T oldValue = elementData[index];
+        fastRemove(index);
+        return oldValue;
     }
 
     @Override
@@ -125,5 +89,45 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private void providingListCapacity() {
+        if (size >= elementData.length) {
+            grow();
+        }
+    }
+
+    private void rangeCheckForAdd(int index) {
+        if (index < 0 || index > this.size) {
+            throw new ArrayListIndexOutOfBoundsException("The index " + index + " is invalid");
+        }
+    }
+
+    private void grow() {
+        grow(size + 1);
+    }
+
+    private void grow(int minNewCapacity) {
+        int currentCapacity = elementData.length;
+        int newCapacity;
+        int bufferCellsRemain;
+        do {
+            newCapacity = currentCapacity + (currentCapacity >> 1);
+            bufferCellsRemain = newCapacity - minNewCapacity;
+            currentCapacity = newCapacity;
+        } while (bufferCellsRemain < 0);
+        T[] newElementData = (T[]) new Object[newCapacity];
+        System.arraycopy(elementData, 0, newElementData, 0, elementData.length);
+        this.elementData = newElementData;
+    }
+
+    private void checkIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("The index " + index + " is invalid");
+        }
+    }
+
+    private void fastRemove(int index) {
+        System.arraycopy(elementData, index + 1, elementData, index, size-- - index - 1);
     }
 }
