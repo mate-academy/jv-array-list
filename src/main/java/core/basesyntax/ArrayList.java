@@ -57,11 +57,13 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
-        T removedElement = (T) elements[index];
-        for (int i = index; i < size - 1; i++) {
-            elements[i] = elements[i + 1];
-        }
         size--;
+        T removedElement = (T) elements[index];
+        if (size > index) {
+            System.arraycopy(elements, index + 1,
+                    elements, index, size - index);
+        }
+        elements[size] = null;
         return removedElement;
     }
 
