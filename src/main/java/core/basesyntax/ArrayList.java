@@ -4,12 +4,12 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    private static final double COEFFICIENT_GROW = 1.5;
-    private Object[] elementData;
+    private static final double GROWTH_COEFFICIENT = 1.5;
+    private Object[] elements;
     private int size;
 
     public ArrayList() {
-        elementData = new Object[DEFAULT_CAPACITY];
+        elements = new Object[DEFAULT_CAPACITY];
     }
 
     @Override
@@ -22,16 +22,16 @@ public class ArrayList<T> implements List<T> {
         if (index != size) {
             checkIndex(index);
         }
-        checkAndGrow();
-        System.arraycopy(elementData, index, elementData, index + 1, size - index);
-        elementData[index] = value;
+        grow();
+        System.arraycopy(elements, index, elements, index + 1, size - index);
+        elements[index] = value;
         size++;
     }
 
     @Override
     public void addAll(List<T> list) {
         for (int i = 0; i < list.size(); i++) {
-            checkAndGrow();
+            grow();
             add(list.get(i));
         }
     }
@@ -39,29 +39,32 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         checkIndex(index);
-        return (T) elementData[index];
+        return (T) elements[index];
     }
 
     @Override
     public void set(T value, int index) {
         checkIndex(index);
-        elementData[index] = value;
+        elements[index] = value;
     }
 
     @Override
     public T remove(int index) {
         checkIndex(index);
-        final Object[] withoutChanges = elementData;
-        T oldValue = (T) withoutChanges[index];
-        fastRemove(withoutChanges, index);
-        return oldValue;
+        T deletedElement = (T) elements[index];
+        size--;
+        if (size > index) {
+            System.arraycopy(elements, index + 1, elements, index, size - index);
+        }
+        elements[size] = null;
+        return deletedElement;
     }
 
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if ((element != null && element.equals(elementData[i])) || (element == null && element
-                    == elementData[i])) {
+            if ((element != null && element.equals(elements[i])) || (element == null && element
+                    == elements[i])) {
                 return remove(i);
             }
         }
@@ -84,20 +87,11 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private void checkAndGrow() {
-        if (size == elementData.length) {
-            Object[] newElement = new Object[(int) (elementData.length * COEFFICIENT_GROW)];
-            System.arraycopy(elementData, 0, newElement,
-                    0, size);
-            elementData = newElement;
+    private void grow() {
+        if (size == elements.length) {
+            Object[] newElements = new Object[(int) (elements.length * GROWTH_COEFFICIENT)];
+            System.arraycopy(elements, 0, newElements, 0, size);
+            elements = newElements;
         }
-    }
-
-    private void fastRemove(Object[] withoutChanges, int index) {
-        final int newSize;
-        if ((newSize = (size - 1)) > index) {
-            System.arraycopy(withoutChanges, index + 1, withoutChanges, index, newSize - index);
-        }
-        withoutChanges[size = newSize] = null;
     }
 }
