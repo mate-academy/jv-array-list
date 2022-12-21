@@ -1,9 +1,11 @@
 package core.basesyntax;
 
+import java.util.NoSuchElementException;
+
 public class ArrayList<T> implements List<T> {
-    private final int INIT_SIZE = 10;
-    private final double RESIZE_LIST = 1.5;
-    private final int FIRST_ELEMENT = 0;
+    private static final int INIT_SIZE = 10;
+    private static final double RESIZE_LIST = 1.5;
+    private static final int FIRST_ELEMENT = 0;
     private int size;
     private T[] elementsData = (T[]) new Object[INIT_SIZE];
 
@@ -14,9 +16,8 @@ public class ArrayList<T> implements List<T> {
                 newElementsData.length);
     }
 
-
-    public boolean findIndexOfList (int index) {
-        if (index >= size || index < FIRST_ELEMENT){
+    public boolean findIndexOfList(int index) {
+        if (index >= size || index < FIRST_ELEMENT) {
             throw new ArrayListIndexOutOfBoundsException("Index not found");
         }
         return true;
@@ -43,11 +44,11 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    public void deleteElementOfList (int index) {
-        if (index == elementsData.length - 1){
-            elementsData[elementsData.length - 1] = null;
+    public void deleteElementOfList(int index) {
+        if (index == elementsData.length - 1) {
+            elementsData[index - 1] = null;
+            return;
         }
-        System.arraycopy(elementsData, index + 1, elementsData, index, size - index);
     }
 
     @Override
@@ -59,7 +60,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (findIndexOfList(index)){
+        if (findIndexOfList(index)) {
             return elementsData[index];
         }
         return null;
@@ -74,7 +75,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(int index) {
-        if (findIndexOfList(index)){
+        if (findIndexOfList(index)) {
             T deleted = elementsData[index];
             deleteElementOfList(index);
             size = size - 1;
@@ -85,12 +86,12 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T t) {
-        for (int i = 0; i < size; i++){
-            if (elementsData[i] != null && elementsData[i].equals(t)) {
+        for (int i = 0; i < size; i++) {
+            if (elementsData[i] == t || elementsData[i] != null && elementsData[i].equals(t)) {
                 return remove(i);
             }
         }
-        return null;
+        throw new NoSuchElementException("No such element");
     }
 
     @Override
