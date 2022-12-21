@@ -26,7 +26,8 @@ public class ArrayList<T> implements List<T> {
     public void add(T value, int index) {
         if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException("Index "
-                    + index + " is not valid for size " + size + ".");
+                    + index + " is not valid for size "
+                    + size + ".");
         }
         if (checkSize()) {
             grow();
