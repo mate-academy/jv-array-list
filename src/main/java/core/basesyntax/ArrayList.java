@@ -3,68 +3,64 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    private static final int INITIAL_LIST_SIZE = 10;
-    private static final int FIRST_ELEMENT = 0;
-    private static final double LIST_GROW_COEFFICIENT = 1.5;
+    private static final int DEFAULT_CAPACITY = 10;
+    private static final int INDEX_OF_FIRST_ELEMENT = 0;
+    private static final double GROWTH_COEFFICIENT = 1.5;
     private int size;
-    private T[] elementData;
+    private T[] elements;
 
     public ArrayList() {
-        elementData = (T[]) new Object[INITIAL_LIST_SIZE];
+        elements = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
     @Override
     public void add(T value) {
-        if (size >= elementData.length) {
+        if (size >= elements.length) {
             grow();
         }
-        elementData[size] = value;
+        elements[size] = value;
         size++;
     }
 
     @Override
     public void add(T value, int index) {
-        if (checkAddIndex(index)) {
-            if (size >= elementData.length) {
+        if (index == size || checkIndex(index)) {
+            if (size >= elements.length) {
                 grow();
             }
-            System.arraycopy(elementData, index, elementData, index + 1, size - index);
-            elementData[index] = value;
+            System.arraycopy(elements, index, elements, index + 1, size - index);
+            elements[index] = value;
             size++;
         }
     }
 
     @Override
     public void addAll(List<T> list) {
-        if (size + list.size() >= elementData.length) {
-            grow();
-        }
         for (int i = 0; i < list.size(); i++) {
-            elementData[size] = list.get(i);
-            size++;
+            add(list.get(i));
         }
     }
 
     @Override
     public T get(int index) {
-        if (checkNotAddIndex(index)) {
-            return elementData[index];
+        if (checkIndex(index)) {
+            return elements[index];
         }
         return null;
     }
 
     @Override
     public void set(T value, int index) {
-        if (checkNotAddIndex(index)) {
-            elementData[index] = value;
+        if (checkIndex(index)) {
+            elements[index] = value;
         }
     }
 
     @Override
     public T remove(int index) {
-        if (checkNotAddIndex(index)) {
-            T result = elementData[index];
-            removingResize(index);
+        if (checkIndex(index)) {
+            T result = elements[index];
+            removeElementByIndex(index);
             size--;
             return result;
         }
@@ -73,12 +69,13 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        if (checkElement(element)) {
-            removingResize(getIndex(element));
-            size--;
-            return element;
+        for (int i = 0; i < size; i++) {
+            if (elements[i] == element || elements[i] != null
+                    && elements[i].equals(element)) {
+                return remove(i);
+            }
         }
-        return null;
+        throw new NoSuchElementException("No such element in the list: " + element);
     }
 
     @Override
@@ -92,52 +89,25 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void grow() {
-        T[] temporaryCopy = elementData;
-        elementData = (T[]) new Object[(int) (elementData.length * LIST_GROW_COEFFICIENT)];
-        System.arraycopy(temporaryCopy, FIRST_ELEMENT, elementData, FIRST_ELEMENT,
+        T[] temporaryCopy = elements;
+        elements = (T[]) new Object[(int) (elements.length * GROWTH_COEFFICIENT)];
+        System.arraycopy(temporaryCopy, INDEX_OF_FIRST_ELEMENT, elements, INDEX_OF_FIRST_ELEMENT,
                 temporaryCopy.length);
     }
 
-    private boolean checkAddIndex(int index) {
-        if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("Index is greater than List length");
-        }
-        return index <= size;
-    }
-
-    private boolean checkNotAddIndex(int index) {
+    private boolean checkIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index is greater than List size");
+            throw new ArrayListIndexOutOfBoundsException("Index is invalid" + index);
         }
         return index < size;
     }
 
-    private boolean checkElement(T element) {
-        for (int i = 0; i < size; i++) {
-            if (elementData[i] == element || elementData[i] != null
-                    && elementData[i].equals(element)) {
-                return true;
-            }
-        }
-        throw new NoSuchElementException("No such element in the list");
-    }
-
-    private int getIndex(T element) {
-        for (int i = 0; i < elementData.length; i++) {
-            if (elementData[i] == element || elementData[i] != null
-                    && elementData[i].equals(element)) {
-                return i;
-            }
-        }
-        throw new NoSuchElementException("No such element in the list");
-    }
-
-    private void removingResize(int indexOfMovedElement) {
-        if (indexOfMovedElement == elementData.length - 1) {
-            elementData[indexOfMovedElement] = null;
+    private void removeElementByIndex(int index) {
+        if (index == elements.length - 1) {
+            elements[index] = null;
             return;
         }
-        System.arraycopy(elementData, indexOfMovedElement + 1, elementData, indexOfMovedElement,
-                    size - indexOfMovedElement);
+        System.arraycopy(elements, index + 1, elements, index,
+                    size - index);
     }
 }
