@@ -1,22 +1,22 @@
 package core.basesyntax;
 
-import java.util.Arrays;
 import java.util.NoSuchElementException;
 
+@SuppressWarnings("unchecked")
 public class ArrayList<T> implements List<T> {
     private static final int INITIAL_CAPACITY = 10;
-    private static final double GROW_STEP = 1.5;
-    private Object[] elementData;
+    private static final double GROW_COEFFICIENT = 1.5;
+    private Object[] elements;
     private int size;
 
     public ArrayList() {
-        elementData = new Object[INITIAL_CAPACITY];
+        elements = new Object[INITIAL_CAPACITY];
     }
 
     @Override
     public void add(T value) {
-        sizeCheck();
-        elementData[size++] = value;
+        checkSize();
+        elements[size++] = value;
     }
 
     @Override
@@ -25,10 +25,10 @@ public class ArrayList<T> implements List<T> {
             add(value);
             return;
         }
-        indexCheck(index);
-        sizeCheck();
-        System.arraycopy(elementData, index, elementData, index + 1, size - index);
-        elementData[index] = value;
+        checkIndex(index);
+        checkSize();
+        System.arraycopy(elements, index, elements, index + 1, size - index);
+        elements[index] = value;
         size++;
     }
 
@@ -39,26 +39,24 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public T get(int index) {
-        indexCheck(index);
-        return (T) elementData[index];
+        checkIndex(index);
+        return (T) elements[index];
     }
 
     @Override
     public void set(T value, int index) {
-        indexCheck(index);
-        elementData[index] = value;
+        checkIndex(index);
+        elements[index] = value;
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public T remove(int index) {
-        indexCheck(index);
-        Object removedElement = elementData[index];
+        checkIndex(index);
+        Object removedElement = elements[index];
         if (size - 1 - index >= 0) {
-            System.arraycopy(elementData, index + 1, elementData, index, size - 1 - index);
+            System.arraycopy(elements, index + 1, elements, index, size - 1 - index);
         }
         size--;
         return (T) removedElement;
@@ -68,9 +66,9 @@ public class ArrayList<T> implements List<T> {
     public T remove(T element) {
         int index = indexOf(element);
         if (index >= 0) {
-            System.arraycopy(elementData, index + 1, elementData, index, size - index - 1);
+            System.arraycopy(elements, index + 1, elements, index, size - index - 1);
             size--;
-            elementData[size] = null;
+            elements[size] = null;
             return element;
         }
         return null;
@@ -86,33 +84,28 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    public void indexCheck(int index) {
+    public void checkIndex(int index) {
         if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException("Invalid index = " + index);
         }
     }
 
-    public void sizeCheck() {
-        if (size == elementData.length) {
-            ensureCapacity();
+    public void checkSize() {
+        if (size == elements.length) {
+            grow();
         }
     }
 
-    public void ensureCapacity() {
-        int newIncreasedCapacity = (int) (elementData.length * GROW_STEP);
-        elementData = Arrays.copyOf(elementData, newIncreasedCapacity);
+    public void grow() {
+        int newIncreasedCapacity = (int) (elements.length * GROW_COEFFICIENT);
+        Object[] newArray = new Object[newIncreasedCapacity];
+        System.arraycopy(elements, 0, newArray, 0, size);
+        elements = newArray;
     }
 
     public int indexOf(T element) {
         for (int i = 0; i < size; i++) {
-            //don't know how to improve
-            if (element == null) {
-                if (element == elementData[i]) {
-                    return i;
-                }
-                continue;
-            }
-            if (element.equals(elementData[i])) {
+            if (element == elements[i] || element != null && element.equals(elements[i])) {
                 return i;
             }
         }
