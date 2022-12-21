@@ -65,7 +65,7 @@ public class ArrayList<T> implements List<T> {
                 return remove(i);
             }
         }
-        throw new NoSuchElementException("No such elements here!");
+        throw new NoSuchElementException("No such elements here:" + element);
     }
 
     @Override
@@ -80,7 +80,7 @@ public class ArrayList<T> implements List<T> {
 
     private void checkIndex(int i) {
         if (i >= size || i < 0) {
-            throw new ArrayListIndexOutOfBoundsException("INVALID INDEX!!!");
+            throw new ArrayListIndexOutOfBoundsException("INVALID INDEX:" + i);
         }
     }
 
