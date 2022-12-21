@@ -1,22 +1,22 @@
 package core.basesyntax;
 
 import java.util.NoSuchElementException;
-import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
-    private static final int MIN_LENGTH = 10;
-    private static final double MULTIPLIER = 1.5;
-    private Object[] defaultArray;
+    private static final int DEFAULT_CAPACITY = 10;
+    private static final double GROWTH_COEFFICIENT = 1.5;
+    private Object[] elements;
     private int size;
 
     public ArrayList() {
-        defaultArray = new Object[MIN_LENGTH];
+        elements = new Object[DEFAULT_CAPACITY];
     }
 
     @Override
     public void add(T value) {
         grow();
-        defaultArray[size++] = value;
+        elements[size] = value;
+        size++;
     }
 
     @Override
@@ -27,8 +27,8 @@ public class ArrayList<T> implements List<T> {
         }
         checkIndex(index);
         grow();
-        System.arraycopy(defaultArray, index, defaultArray, index + 1, size - index);
-        defaultArray[index] = value;
+        System.arraycopy(elements, index, elements, index + 1, size - index);
+        elements[index] = value;
         size++;
     }
 
@@ -36,41 +36,42 @@ public class ArrayList<T> implements List<T> {
     public void addAll(List<T> list) {
         for (int i = 0; i < list.size(); i++) {
             grow();
-            defaultArray[size++] = list.get(i);
+            elements[size++] = list.get(i);
         }
     }
 
     @Override
     public T get(int index) {
         checkIndex(index);
-        return (T) defaultArray[index];
+        return (T) elements[index];
     }
 
     @Override
     public void set(T value, int index) {
         checkIndex(index);
-        defaultArray[index] = value;
+        elements[index] = value;
     }
 
     @Override
     public T remove(int index) {
         checkIndex(index);
         size--;
-        Object item = defaultArray[index];
+        Object deletedElement = elements[index];
         if (size > index) {
-            System.arraycopy(defaultArray, index + 1, defaultArray, index, size - index);
+            System.arraycopy(elements, index + 1, elements, index, size - index);
         }
-        return (T) item;
+        return (T) deletedElement;
     }
 
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if (Objects.equals(defaultArray[i], element)) {
+            if ((element == null && elements[i] == null)
+                    || element != null && element.equals(elements[i])) {
                 return remove(i);
             }
         }
-        throw new NoSuchElementException("No such element");
+        throw new NoSuchElementException("No such element " + element);
     }
 
     @Override
@@ -80,22 +81,21 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public boolean isEmpty() {
-        return size() == 0;
+        return size == 0;
     }
 
     public void checkIndex(int index) {
         if (!(index >= 0 && index < size)) {
-            throw new ArrayListIndexOutOfBoundsException("Index is out of bounds");
+            throw new ArrayListIndexOutOfBoundsException("Index is out of bounds " + index);
         }
     }
 
     public void grow() {
-        if (size == defaultArray.length) {
-            int newLength = (int) (defaultArray.length * MULTIPLIER);
-            Object[] newArray = new Object[newLength];
-            System.arraycopy(defaultArray, 0, newArray, 0, size);
-            defaultArray = newArray;
+        if (size == elements.length) {
+            int newLength = (int) (elements.length * GROWTH_COEFFICIENT);
+            Object[] newElements = new Object[newLength];
+            System.arraycopy(elements, 0, newElements, 0, size);
+            elements = newElements;
         }
     }
-
 }
