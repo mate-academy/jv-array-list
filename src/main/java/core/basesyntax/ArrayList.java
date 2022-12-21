@@ -5,7 +5,7 @@ import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    private static final int GROW_STEP = 1;
+    private static final double GROWTH_COEFFICIENT = 1.5;
     private int size;
     private Object[] elements;
 
@@ -55,21 +55,21 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
-        Object element = elements[index];
+        Object deletedElement = elements[index];
         size--;
         System.arraycopy(elements, index + 1, elements, index, size - index);
-        return (T)element;
+        return (T)deletedElement;
     }
 
     @Override
-    public T remove(T element) {
+    public T remove(T deletedElement) {
         for (int i = 0; i < size; i++) {
-            if ((elements[i] == null && element == null)
-                    || element != null && Objects.equals(element, elements[i])) {
+            if ((elements[i] == null && deletedElement == null)
+                    || deletedElement != null && Objects.equals(deletedElement, elements[i])) {
                 return remove(i);
             }
         }
-        throw new NoSuchElementException();
+        throw new NoSuchElementException("There is no such element.");
     }
 
     @Override
@@ -83,9 +83,9 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void grow() {
-        Object[] temporary = elements;
-        elements = new Object[size + (size >> GROW_STEP)];
-        System.arraycopy(temporary, 0, elements, 0, size);
+        Object[] oldElements = elements;
+        elements = new Object[(int) (size * GROWTH_COEFFICIENT)]; ////////////////////////////
+        System.arraycopy(oldElements, 0, elements, 0, size);
     }
 
     private void checkIndex(int index) {
