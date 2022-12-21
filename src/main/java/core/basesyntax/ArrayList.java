@@ -87,7 +87,7 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void checkSize() {
+    private void checkCapacity() {
         if (size == elements.length) {
             grow();
         }
