@@ -52,11 +52,11 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
-        final T object = elements[index];
         size--;
+        T deletedElement = elements[index];
         System.arraycopy(elements, index + 1, elements, index, size - index);
         elements[size] = null;
-        return object;
+        return deletedElement;
     }
 
     @Override
@@ -87,14 +87,14 @@ public class ArrayList<T> implements List<T> {
 
     private void checkCapacity() {
         if (size == elements.length) {
-            elements = grow();
+            grow();
         }
     }
 
-    private T[] grow() {
+    private void grow() {
         int newCapacity = (int) (elements.length * CAPACITY_MULTIPLIER);
         T[] newObjects = (T[]) new Object[newCapacity];
         System.arraycopy(elements, 0, newObjects, 0, size);
-        return newObjects;
+        elements = newObjects;
     }
 }
