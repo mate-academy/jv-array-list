@@ -47,8 +47,8 @@ public class ArrayList<T> implements List<T> {
     public void deleteElementOfList(int index) {
         if (index == elementsData.length - 1) {
             elementsData[index - 1] = null;
-            return;
         }
+        System.arraycopy(elementsData, index + 1, elementsData, index, size - index - 1);
     }
 
     @Override
@@ -104,4 +104,3 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 }
-
