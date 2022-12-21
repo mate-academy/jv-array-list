@@ -1,7 +1,6 @@
 package core.basesyntax;
 
 import java.util.NoSuchElementException;
-import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
@@ -12,7 +11,6 @@ public class ArrayList<T> implements List<T> {
     public ArrayList() {
         elementData = new Object[DEFAULT_CAPACITY];
     }
-
 
     @Override
     public void add(T value) {
@@ -28,15 +26,6 @@ public class ArrayList<T> implements List<T> {
         System.arraycopy(elementData, index, elementData, index + 1, size - index);
         elementData[index] = value;
         size++;
-    }
-
-    private void checkAndGrow() {
-        if (size == elementData.length){
-            Object[] newElement = new Object[(int) (elementData.length * COEFFICIENT_GROW)];
-            System.arraycopy(elementData, 0, newElement,
-                    0, size);
-            elementData = newElement;
-        }
     }
 
     @Override
@@ -68,17 +57,11 @@ public class ArrayList<T> implements List<T> {
         return oldValue;
     }
 
-    private void fastRemove(Object[] withoutChanges, int index) {
-        final int newSize;
-        if ((newSize = (size - 1)) > index)
-            System.arraycopy(withoutChanges, index + 1, withoutChanges, index, newSize - index);
-        withoutChanges[size = newSize] = null;
-    }
-
     @Override
     public T remove(T element) {
-        for (int i  = 0; i < size; i++) {
-            if ((element != null && element.equals(elementData[i])) || (element == null && element == elementData[i])) {
+        for (int i = 0; i < size; i++) {
+            if ((element != null && element.equals(elementData[i])) || (element == null && element
+                    == elementData[i])) {
                 return remove(i);
             }
         }
@@ -99,5 +82,22 @@ public class ArrayList<T> implements List<T> {
         if (i >= size || i < 0) {
             throw new ArrayListIndexOutOfBoundsException("INVALID INDEX!!!");
         }
+    }
+
+    private void checkAndGrow() {
+        if (size == elementData.length) {
+            Object[] newElement = new Object[(int) (elementData.length * COEFFICIENT_GROW)];
+            System.arraycopy(elementData, 0, newElement,
+                    0, size);
+            elementData = newElement;
+        }
+    }
+
+    private void fastRemove(Object[] withoutChanges, int index) {
+        final int newSize;
+        if ((newSize = (size - 1)) > index) {
+            System.arraycopy(withoutChanges, index + 1, withoutChanges, index, newSize - index);
+        }
+        withoutChanges[size = newSize] = null;
     }
 }
