@@ -11,14 +11,6 @@ public class ArrayList<T> implements List<T> {
         elementData = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
-    public void ArrayList(int capacity) {
-        if (capacity <= 0) {
-            throw new IllegalArgumentException("Capacity <= 0");
-        } else {
-            elementData = (T[]) new Object[capacity];
-        }
-    }
-
     @Override
     public void add(T value) {
         providingListCapacity();
