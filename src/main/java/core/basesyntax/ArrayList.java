@@ -4,7 +4,7 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    private static final double INCREASE_FACTOR = 1.5;
+    private static final double GROWTH_COEFFICIENT = 1.5;
     private int size;
     private Object[] elements;
 
@@ -98,7 +98,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void grow() {
-        int newCapacity = (int) (elements.length * INCREASE_FACTOR);
+        int newCapacity = (int) (elements.length * GROWTH_COEFFICIENT);
         Object[] newArray = new Object[newCapacity];
         System.arraycopy(elements, 0, newArray, 0, size);
         elements = newArray;
