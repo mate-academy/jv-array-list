@@ -7,18 +7,18 @@ public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private static final int GROW_STEP = 1;
     private int size;
-    private Object[] array;
+    private Object[] elements;
 
     public ArrayList() {
-        array = new Object[DEFAULT_CAPACITY];
+        elements = new Object[DEFAULT_CAPACITY];
     }
 
     @Override
     public void add(T value) {
-        if (size == array.length) {
+        if (checkSize()) {
             grow();
         }
-        array[size] = value;
+        elements[size] = value;
         size++;
     }
 
@@ -28,11 +28,11 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayListIndexOutOfBoundsException("Index "
                     + index + " is not valid for size " + size + ".");
         }
-        if (size == array.length) {
+        if (checkSize()) {
             grow();
         }
-        System.arraycopy(array, index, array, index + 1, size - index);
-        array[index] = value;
+        System.arraycopy(elements, index, elements, index + 1, size - index);
+        elements[index] = value;
         size++;
     }
 
@@ -45,29 +45,30 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        validateIndex(index);
-        return (T) array[index];
+        checkIndex(index);
+        return (T) elements[index];
     }
 
     @Override
     public void set(T value, int index) {
-        validateIndex(index);
-        array[index] = value;
+        checkIndex(index);
+        elements[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        validateIndex(index);
-        Object removed = array[index];
+        checkIndex(index);
+        Object element = elements[index];
         size--;
-        System.arraycopy(array, index + 1, array, index, size - index);
-        return (T)removed;
+        System.arraycopy(elements, index + 1, elements, index, size - index);
+        return (T)element;
     }
 
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if (Objects.equals(element, array[i])) {
+            if ((elements[i] == null && element == null)
+                    || element != null && Objects.equals(element, elements[i])) {
                 return remove(i);
             }
         }
@@ -85,15 +86,19 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void grow() {
-        Object[] temporary = array;
-        array = new Object[size + (size >> GROW_STEP)];
-        System.arraycopy(temporary, 0, array, 0, size);
+        Object[] temporary = elements;
+        elements = new Object[size + (size >> GROW_STEP)];
+        System.arraycopy(temporary, 0, elements, 0, size);
     }
 
-    private void validateIndex(int index) {
+    private void checkIndex(int index) {
         if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException("Index "
                     + index + " is not valid for size " + size + ".");
         }
+    }
+
+    private boolean checkSize() {
+        return size == elements.length;
     }
 }
