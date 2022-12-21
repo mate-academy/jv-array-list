@@ -87,11 +87,14 @@ public class ArrayList<T> implements List<T> {
 
     private void checkCapacity() {
         if (size == elements.length) {
-            int oldCapacity = elements.length;
-            int newCapacity = (int) (oldCapacity * CAPACITY_MULTIPLIER);
-            T[] newObjects = (T[]) new Object[newCapacity];
-            System.arraycopy(elements, 0, newObjects, 0, size);
-            elements = newObjects;
+            elements = grow();
         }
+    }
+
+    private T[] grow() {
+        int newCapacity = (int) (elements.length * CAPACITY_MULTIPLIER);
+        T[] newObjects = (T[]) new Object[newCapacity];
+        System.arraycopy(elements, 0, newObjects, 0, size);
+        return newObjects;
     }
 }
