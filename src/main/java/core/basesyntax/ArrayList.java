@@ -1,6 +1,12 @@
 package core.basesyntax;
 
 public class ArrayList<T> implements List<T> {
+    private final int INIT_SIZE = 10;
+    private final double RESIZE_BOUND = 1.5;
+    private int size;
+    private Object[] array = new Object[INIT_SIZE];
+    private void resize(int newLength) {
+    }
     @Override
     public void add(T value) {
 
@@ -32,17 +38,18 @@ public class ArrayList<T> implements List<T> {
     }
 
     @Override
-    public T remove(T element) {
+    public T remove(T t) {
         return null;
     }
 
     @Override
     public int size() {
-        return 0;
+        return size;
     }
 
     @Override
     public boolean isEmpty() {
-        return false;
+        return size == 0;
     }
 }
+
