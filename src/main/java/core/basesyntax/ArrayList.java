@@ -3,8 +3,7 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-
-    public static final double GROWTH_FACTOR = 1.5;
+    private static final double GROWTH_FACTOR = 1.5;
     private static final int DEFAULT_CAPACITY = 10;
     private Object[] elements;
     private int size;
@@ -15,7 +14,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        checkCapacity();
+        grow();
         elements[size] = value;
         size++;
     }
@@ -27,7 +26,7 @@ public class ArrayList<T> implements List<T> {
             return;
         }
         checkIndex(index);
-        checkCapacity();
+        grow();
         System.arraycopy(elements, index,
                 elements, index + 1, size - index);
         elements[index] = value;
@@ -68,7 +67,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        for (int i = 0; i < size - 1; i++) {
+        for (int i = 0; i <= size; i++) {
             if (element == null && elements[i] == null
                     || element != null && element.equals(elements[i])) {
                 return remove(i);
@@ -87,16 +86,11 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private Object[] grow() {
-        Object[] grownArray = new Object[(int) (elements.length * GROWTH_FACTOR)];
-        System.arraycopy(elements, 0,
-                grownArray, 0, size);
-        return grownArray;
-    }
-
-    private void checkCapacity() {
+    private void grow() {
         if (size == elements.length) {
-            elements = grow();
+            Object[] grownArray = new Object[(int) (elements.length * GROWTH_FACTOR)];
+            System.arraycopy(elements, 0, grownArray, 0, size);
+            elements = grownArray;
         }
     }
 
