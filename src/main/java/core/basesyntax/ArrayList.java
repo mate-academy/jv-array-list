@@ -21,9 +21,11 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index != size) {
-            checkIndex(index);
+        if (index == size) {
+            add(value);
+            return;
         }
+        checkIndex(index);
         checkCapacity();
         System.arraycopy(elements, index, elements, index + 1, size - index);
         elements[index] = value;
@@ -67,7 +69,7 @@ public class ArrayList<T> implements List<T> {
                 return remove(i);
             }
         }
-        throw new NoSuchElementException("Can`t find element");
+        throw new NoSuchElementException("Can`t find element" + element);
     }
 
     @Override
