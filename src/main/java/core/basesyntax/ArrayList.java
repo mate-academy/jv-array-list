@@ -5,8 +5,9 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int INITIAL_CAPACITY = 10;
-    private int size;
+    private static final double GROW_STEP = 1.5;
     private Object[] elementData;
+    private int size;
 
     public ArrayList() {
         elementData = new Object[INITIAL_CAPACITY];
@@ -14,9 +15,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (size == elementData.length) {
-            ensureCapacity();
-        }
+        sizeCheck();
         elementData[size++] = value;
     }
 
@@ -27,9 +26,7 @@ public class ArrayList<T> implements List<T> {
             return;
         }
         indexCheck(index);
-        if (size == elementData.length) {
-            ensureCapacity();
-        }
+        sizeCheck();
         System.arraycopy(elementData, index, elementData, index + 1, size - index);
         elementData[index] = value;
         size++;
@@ -90,15 +87,19 @@ public class ArrayList<T> implements List<T> {
     }
 
     public void indexCheck(int index) {
-        if (index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Negative index: index = " + index);
-        } else if (index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index out of bounds: index = " + index);
+        if (index < 0  ||  index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Invalid index = " + index);
+        }
+    }
+
+    public void sizeCheck() {
+        if (size == elementData.length) {
+            ensureCapacity();
         }
     }
 
     public void ensureCapacity() {
-        int newIncreasedCapacity = (int) (elementData.length * 1.5);
+        int newIncreasedCapacity = (int) (elementData.length * GROW_STEP);
         elementData = Arrays.copyOf(elementData, newIncreasedCapacity);
     }
 
