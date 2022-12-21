@@ -4,7 +4,7 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    private static final double GROW_STEP = 1.5;
+    private static final double GROWTH_COEFFICIENT = 1.5;
     private T[] elements;
     private int size;
 
@@ -37,7 +37,7 @@ public class ArrayList<T> implements List<T> {
     public void addAll(List<T> list) {
         for (int i = 0; i < list.size(); i++) {
             checkSize();
-            elements[size++] = list.get(i);
+            add(list.get(i));;
         }
     }
 
@@ -49,7 +49,6 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void set(T value, int index) {
-
         checkIndex(index);
         elements[index] = value;
     }
@@ -58,13 +57,13 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         checkIndex(index);
         size--;
-        Object element = elements[index];
+        Object deletedElement = elements[index];
         if (size > index) {
             System.arraycopy(elements, index + 1, elements,
                     index, size - index);
         }
         elements[size] = null;
-        return (T) element;
+        return (T) deletedElement;
     }
 
     @Override
@@ -95,10 +94,9 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void grow() {
-        int newCapacity = (int) (elements.length * GROW_STEP);
+        int newCapacity = (int) (elements.length * GROWTH_COEFFICIENT);
         Object[] newArray = new Object[newCapacity];
-        System.arraycopy(elements, 0,
-                newArray, 0, size);
+        System.arraycopy(elements, 0, newArray, 0, size);
         elements = (T[]) newArray;
     }
 
