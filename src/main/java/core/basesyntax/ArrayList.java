@@ -1,49 +1,103 @@
 package core.basesyntax;
 
+import java.util.NoSuchElementException;
+import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
+    private static final int DEFAULT_CAPACITY = 10;
+    private static final double COEFFICIENT_GROW = 1.5;
+    private Object[] elementData;
+    private int size;
+
+    public ArrayList() {
+        elementData = new Object[DEFAULT_CAPACITY];
+    }
+
+
     @Override
     public void add(T value) {
-
+        add(value, size);
     }
 
     @Override
     public void add(T value, int index) {
+        if (index != size) {
+            checkIndex(index);
+        }
+        checkAndGrow();
+        System.arraycopy(elementData, index, elementData, index + 1, size - index);
+        elementData[index] = value;
+        size++;
+    }
 
+    private void checkAndGrow() {
+        if (size == elementData.length){
+            Object[] newElement = new Object[(int) (elementData.length * COEFFICIENT_GROW)];
+            System.arraycopy(elementData, 0, newElement,
+                    0, size);
+            elementData = newElement;
+        }
     }
 
     @Override
     public void addAll(List<T> list) {
-
+        for (int i = 0; i < list.size(); i++) {
+            checkAndGrow();
+            add(list.get(i));
+        }
     }
 
     @Override
     public T get(int index) {
-        return null;
+        checkIndex(index);
+        return (T) elementData[index];
     }
 
     @Override
     public void set(T value, int index) {
-
+        checkIndex(index);
+        elementData[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        return null;
+        checkIndex(index);
+        final Object[] withoutChanges = elementData;
+        T oldValue = (T) withoutChanges[index];
+        fastRemove(withoutChanges, index);
+        return oldValue;
+    }
+
+    private void fastRemove(Object[] withoutChanges, int index) {
+        final int newSize;
+        if ((newSize = (size - 1)) > index)
+            System.arraycopy(withoutChanges, index + 1, withoutChanges, index, newSize - index);
+        withoutChanges[size = newSize] = null;
     }
 
     @Override
     public T remove(T element) {
-        return null;
+        for (int i  = 0; i < size; i++) {
+            if ((element != null && element.equals(elementData[i])) || (element == null && element == elementData[i])) {
+                return remove(i);
+            }
+        }
+        throw new NoSuchElementException("No such elements here!");
     }
 
     @Override
     public int size() {
-        return 0;
+        return size;
     }
 
     @Override
     public boolean isEmpty() {
-        return false;
+        return size == 0;
+    }
+
+    private void checkIndex(int i) {
+        if (i >= size || i < 0) {
+            throw new ArrayListIndexOutOfBoundsException("INVALID INDEX!!!");
+        }
     }
 }
