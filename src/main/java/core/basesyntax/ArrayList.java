@@ -14,14 +14,14 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        checkSize();
+        grow();
         elements[size] = value;
         size++;
     }
 
     @Override
     public void add(T value, int index) {
-        checkSize();
+        grow();
         if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException("" + index);
         }
@@ -39,19 +39,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        grow(index);
+        checkIndex(index);
         return (T) elements[index];
     }
 
     @Override
     public void set(T value, int index) {
-        grow(index);
+        checkIndex(index);
         elements[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        grow(index);
+        checkIndex(index);
         T value = (T) elements[index];
         System.arraycopy(elements, index + 1, elements, index, size - index);
         size--;
@@ -79,7 +79,7 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void checkSize() {
+    private void grow() {
         if (size >= elements.length - 1) {
             Object[] currentArray = new Object[(int) (elements.length * GROWTH_COEFFICIENT)];
             System.arraycopy(elements, 0, currentArray, 0, size);
@@ -87,7 +87,7 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private void grow(int index) {
+    private void checkIndex(int index) {
         if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException("Index not found " + index);
         }
