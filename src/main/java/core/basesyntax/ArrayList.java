@@ -69,18 +69,18 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         checkIndex(index);
         size--;
-        T removedValue = (T) elementData[index];
+        Object removedValue = elementData[index];
         if (size > index) {
             System.arraycopy(elementData, index + 1, elementData, index, size - index);
         }
         elementData[size] = null;
-        return removedValue;
+        return (T) removedValue;
     }
 
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if (elementData[i] == null && element == null
+            if (elementData[i] == element
                     || element != null && element.equals(elementData[i])) {
                 return remove(i);
             }
