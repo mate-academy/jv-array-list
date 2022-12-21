@@ -13,21 +13,21 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        providingListCapacity();
+        extendCapacityIfListFull();
         elementData[size++] = value;
     }
 
     @Override
     public void add(T value, int index) {
         rangeCheckForAdd(index);
-        providingListCapacity();
+        extendCapacityIfListFull();
         System.arraycopy(elementData, index, elementData, index + 1, size++ - index);
         elementData[index] = value;
     }
 
     @Override
     public void addAll(List<T> list) {
-        providingListCapacity();
+        extendCapacityIfListFull();
         for (int i = 0; i < list.size(); i++) {
             T newElement = list.get(i);
             this.add(newElement);
@@ -56,21 +56,13 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        int index = -1;
         for (int i = 0; i < size; i++) {
-            if (element == null && elementData[i] == null) {
-                index = i;
-            }
-            if (element != null && element.equals(elementData[i])) {
-                index = i;
+            if (element == null && elementData[i] == null
+                    || element != null && element.equals(elementData[i])) {
+                return remove(i);
             }
         }
-        if (index == -1) {
-            throw new NoSuchElementException("Can't find the element \"" + element + "\"");
-        }
-        T oldValue = elementData[index];
-        fastRemove(index);
-        return oldValue;
+        throw new NoSuchElementException("Can't find the element \"" + element + "\"");
     }
 
     @Override
@@ -83,7 +75,7 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void providingListCapacity() {
+    private void extendCapacityIfListFull() {
         if (size >= elementData.length) {
             grow();
         }
@@ -96,18 +88,9 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void grow() {
-        grow(size + 1);
-    }
-
-    private void grow(int minNewCapacity) {
         int currentCapacity = elementData.length;
         int newCapacity;
-        int bufferCellsRemain;
-        do {
-            newCapacity = currentCapacity + (currentCapacity >> 1);
-            bufferCellsRemain = newCapacity - minNewCapacity;
-            currentCapacity = newCapacity;
-        } while (bufferCellsRemain < 0);
+        newCapacity = currentCapacity + (currentCapacity >> 1);
         T[] newElementData = (T[]) new Object[newCapacity];
         System.arraycopy(elementData, 0, newElementData, 0, elementData.length);
         this.elementData = newElementData;
