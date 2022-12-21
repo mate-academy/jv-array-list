@@ -5,19 +5,19 @@ import java.util.NoSuchElementException;
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_SIZE_CAPACITY = 10;
     private static final double MAGNIFICATION_FACTOR = 1.5;
-    private T[] someData;
+    private T[] elements;
     private int size;
 
     public ArrayList() {
-        someData = (T[]) new Object[DEFAULT_SIZE_CAPACITY];
+        elements = (T[]) new Object[DEFAULT_SIZE_CAPACITY];
     }
 
     @Override
     public void add(T value) {
-        if (size == someData.length) {
+        if (size == elements.length) {
             arrayCopy();
         }
-        someData[size] = value;
+        elements[size] = value;
         size++;
     }
 
@@ -26,11 +26,11 @@ public class ArrayList<T> implements List<T> {
         if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException("This index does not exist");
         }
-        if (size == someData.length) {
+        if (size == elements.length) {
             arrayCopy();
         }
-        System.arraycopy(someData, index, someData, index + 1, size - index);
-        someData[index] = value;
+        System.arraycopy(elements, index, elements, index + 1, size - index);
+        elements[index] = value;
         size++;
     }
 
@@ -44,20 +44,20 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         checkIndex(index);
-        return someData[index];
+        return elements[index];
     }
 
     @Override
     public void set(T value, int index) {
         checkIndex(index);
-        someData[index] = value;
+        elements[index] = value;
     }
 
     @Override
     public T remove(int index) {
         checkIndex(index);
-        T removedValue = someData[index];
-        System.arraycopy(someData, index + 1, someData, index, size - index - 1);
+        T removedValue = elements[index];
+        System.arraycopy(elements, index + 1, elements, index, size - index - 1);
         size--;
         return removedValue;
     }
@@ -65,14 +65,14 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if (someData[i] == null && element == null
-                    || someData[i] != null && someData[i].equals(element)) {
+            if (elements[i] == null && element == null
+                    || elements[i] != null && elements[i].equals(element)) {
                 size--;
-                System.arraycopy(someData, i + 1, someData, i, size - i);
+                System.arraycopy(elements, i + 1, elements, i, size - i);
                 return element;
             }
         }
-        throw new NoSuchElementException("There is no such element in this array");
+        throw new NoSuchElementException("There is no such element in this array" + element);
     }
 
     @Override
@@ -82,27 +82,27 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public boolean isEmpty() {
-        return size == 0 ? true : false;
+        return size == 0;
     }
 
     private void checkIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Wrong index: " + index);
+            throw new ArrayListIndexOutOfBoundsException("This index does not exist " + index);
         }
     }
 
     private void grow() {
-        int newCapacity = (int) (someData.length * MAGNIFICATION_FACTOR);
+        int newCapacity = (int) (elements.length * MAGNIFICATION_FACTOR);
         Object[] newArray = new Object[newCapacity];
-        System.arraycopy(someData, 0,
+        System.arraycopy(elements, 0,
                 newArray, 0, size);
-        someData = (T[]) newArray;
+        elements = (T[]) newArray;
     }
 
     private void arrayCopy() {
-        T[] someDataCopy = (T[]) new Object[(int) (someData.length * MAGNIFICATION_FACTOR)];
-        System.arraycopy(someData,0,someDataCopy, 0, someData.length);
-        someData = someDataCopy;
+        T[] someDataCopy = (T[]) new Object[(int) (elements.length * MAGNIFICATION_FACTOR)];
+        System.arraycopy(elements,0,someDataCopy, 0, elements.length);
+        elements = someDataCopy;
     }
 
 }
