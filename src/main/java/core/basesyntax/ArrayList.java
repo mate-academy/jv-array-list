@@ -15,9 +15,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (checkSize()) {
-            grow();
-        }
+        checkNgrow();
         elements[size] = value;
         size++;
     }
@@ -29,9 +27,7 @@ public class ArrayList<T> implements List<T> {
                     + index + " is not valid for size "
                     + size + ".");
         }
-        if (checkSize()) {
-            grow();
-        }
+        checkNgrow();
         System.arraycopy(elements, index, elements, index + 1, size - index);
         elements[index] = value;
         size++;
@@ -99,7 +95,9 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private boolean checkSize() {
-        return size == elements.length;
+    private void checkNgrow() {
+        if (size == elements.length) {
+            grow();
+        }
     }
 }
