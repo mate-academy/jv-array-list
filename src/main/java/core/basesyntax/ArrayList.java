@@ -3,22 +3,25 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    private static final int INIT_SIZE = 10;
-    private static final double RESIZE_LIST = 1.5;
+    private static final int DEFAULT_CAPACITY = 10;
+    private static final double GROWTH_COEFFICIENT = 1.5;
     private static final int FIRST_ELEMENT = 0;
     private int size;
-    private T[] elementsData = (T[]) new Object[INIT_SIZE];
+    private T[] elementsData;
+    public ArrayList() {
+        this.elementsData = (T[]) new Object[DEFAULT_CAPACITY];
+    }
 
     private void grow() {
         T[] newElementsData = elementsData;
-        elementsData = (T[]) new Object[(int) (elementsData.length * RESIZE_LIST)];
+        elementsData = (T[]) new Object[(int) (elementsData.length * GROWTH_COEFFICIENT)];
         System.arraycopy(newElementsData, FIRST_ELEMENT, elementsData, FIRST_ELEMENT,
                 newElementsData.length);
     }
 
     public boolean findIndexOfList(int index) {
         if (index >= size || index < FIRST_ELEMENT) {
-            throw new ArrayListIndexOutOfBoundsException("Index not found");
+            throw new ArrayListIndexOutOfBoundsException("Invalid Index " + index);
         }
         return true;
     }
@@ -91,7 +94,7 @@ public class ArrayList<T> implements List<T> {
                 return remove(i);
             }
         }
-        throw new NoSuchElementException("No such element");
+        throw new NoSuchElementException("Element not found " + t);
     }
 
     @Override
