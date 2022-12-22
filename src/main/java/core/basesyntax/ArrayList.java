@@ -8,6 +8,7 @@ public class ArrayList<T> implements List<T> {
     private static final int FIRST_ELEMENT = 0;
     private int size;
     private T[] elementsData;
+
     public ArrayList() {
         this.elementsData = (T[]) new Object[DEFAULT_CAPACITY];
     }
