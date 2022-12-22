@@ -3,19 +3,19 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    private static final int DEFAULT_SIZE_CAPACITY = 10;
+    private static final int DEFAULT_CAPACITY = 10;
     private static final double MAGNIFICATION_FACTOR = 1.5;
     private T[] elements;
     private int size;
 
     public ArrayList() {
-        elements = (T[]) new Object[DEFAULT_SIZE_CAPACITY];
+        elements = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
     @Override
     public void add(T value) {
         if (size == elements.length) {
-            arrayCopy();
+            grow();
         }
         elements[size] = value;
         size++;
@@ -27,7 +27,7 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayListIndexOutOfBoundsException("This index does not exist" + index);
         }
         if (size == elements.length) {
-            arrayCopy();
+            grow();
         }
         System.arraycopy(elements, index, elements, index + 1, size - index);
         elements[index] = value;
@@ -72,7 +72,7 @@ public class ArrayList<T> implements List<T> {
                 return element;
             }
         }
-        throw new NoSuchElementException("There is no such element in this array" + element);
+        throw new NoSuchElementException("There is no such element in this array " + element);
     }
 
     @Override
@@ -94,15 +94,7 @@ public class ArrayList<T> implements List<T> {
     private void grow() {
         int newCapacity = (int) (elements.length * MAGNIFICATION_FACTOR);
         Object[] newArray = new Object[newCapacity];
-        System.arraycopy(elements, 0,
-                newArray, 0, size);
+        System.arraycopy(elements, 0, newArray, 0, size);
         elements = (T[]) newArray;
     }
-
-    private void arrayCopy() {
-        T[] someDataCopy = (T[]) new Object[(int) (elements.length * MAGNIFICATION_FACTOR)];
-        System.arraycopy(elements,0,someDataCopy, 0, elements.length);
-        elements = someDataCopy;
-    }
-
 }
