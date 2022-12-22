@@ -13,20 +13,6 @@ public class ArrayList<T> implements List<T> {
         this.elements = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
-    public boolean isValidIndex(int index) {
-        if (index >= size || index < INDEX_FIRST_ELEMENT) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid Index " + index);
-        }
-        return true;
-    }
-
-    private void grow() {
-        T[] newElements = elements;
-        elements = (T[]) new Object[(int) (elements.length * GROWTH_COEFFICIENT)];
-        System.arraycopy(newElements, INDEX_FIRST_ELEMENT, elements, INDEX_FIRST_ELEMENT,
-                newElements.length);
-    }
-
     @Override
     public void add(T value) {
         if (size >= elements.length) {
@@ -46,13 +32,6 @@ public class ArrayList<T> implements List<T> {
             elements[index] = value;
             size++;
         }
-    }
-
-    private void deleteElement(int index) {
-        if (index == elements.length - 1) {
-            elements[index - 1] = null;
-        }
-        System.arraycopy(elements, index + 1, elements, index, size - index - 1);
     }
 
     @Override
@@ -106,5 +85,26 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private boolean isValidIndex(int index) {
+        if (index >= size || index < INDEX_FIRST_ELEMENT) {
+            throw new ArrayListIndexOutOfBoundsException("Invalid Index " + index);
+        }
+        return true;
+    }
+
+    private void grow() {
+        T[] newElements = elements;
+        elements = (T[]) new Object[(int) (elements.length * GROWTH_COEFFICIENT)];
+        System.arraycopy(newElements, INDEX_FIRST_ELEMENT, elements, INDEX_FIRST_ELEMENT,
+                newElements.length);
+    }
+
+    private void deleteElement(int index) {
+        if (index == elements.length - 1) {
+            elements[index - 1] = null;
+        }
+        System.arraycopy(elements, index + 1, elements, index, size - index - 1);
     }
 }
