@@ -5,54 +5,54 @@ import java.util.NoSuchElementException;
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private static final double GROWTH_COEFFICIENT = 1.5;
-    private static final int FIRST_ELEMENT = 0;
+    private static final int INDEX_FIRST_ELEMENT = 0;
     private int size;
-    private T[] elementsData;
+    private T[] elements;
 
     public ArrayList() {
-        this.elementsData = (T[]) new Object[DEFAULT_CAPACITY];
+        this.elements = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
-    private void grow() {
-        T[] newElementsData = elementsData;
-        elementsData = (T[]) new Object[(int) (elementsData.length * GROWTH_COEFFICIENT)];
-        System.arraycopy(newElementsData, FIRST_ELEMENT, elementsData, FIRST_ELEMENT,
-                newElementsData.length);
-    }
-
-    public boolean findIndexOfList(int index) {
-        if (index >= size || index < FIRST_ELEMENT) {
+    public boolean isValidIndex(int index) {
+        if (index >= size || index < INDEX_FIRST_ELEMENT) {
             throw new ArrayListIndexOutOfBoundsException("Invalid Index " + index);
         }
         return true;
     }
 
+    private void grow() {
+        T[] newElements = elements;
+        elements = (T[]) new Object[(int) (elements.length * GROWTH_COEFFICIENT)];
+        System.arraycopy(newElements, INDEX_FIRST_ELEMENT, elements, INDEX_FIRST_ELEMENT,
+                newElements.length);
+    }
+
     @Override
     public void add(T value) {
-        if (size >= elementsData.length) {
+        if (size >= elements.length) {
             grow();
         }
-        elementsData[size] = value;
+        elements[size] = value;
         size++;
     }
 
     @Override
     public void add(T value, int index) {
-        if (index == size || findIndexOfList(index)) {
-            if (size >= elementsData.length) {
+        if (index == size || isValidIndex(index)) {
+            if (size >= elements.length) {
                 grow();
             }
-            System.arraycopy(elementsData, index, elementsData, index + 1, size - index);
-            elementsData[index] = value;
+            System.arraycopy(elements, index, elements, index + 1, size - index);
+            elements[index] = value;
             size++;
         }
     }
 
-    public void deleteElementOfList(int index) {
-        if (index == elementsData.length - 1) {
-            elementsData[index - 1] = null;
+    private void deleteElement(int index) {
+        if (index == elements.length - 1) {
+            elements[index - 1] = null;
         }
-        System.arraycopy(elementsData, index + 1, elementsData, index, size - index - 1);
+        System.arraycopy(elements, index + 1, elements, index, size - index - 1);
     }
 
     @Override
@@ -64,24 +64,24 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (findIndexOfList(index)) {
-            return elementsData[index];
+        if (isValidIndex(index)) {
+            return elements[index];
         }
         return null;
     }
 
     @Override
     public void set(T value, int index) {
-        if (findIndexOfList(index)) {
-            elementsData[index] = value;
+        if (isValidIndex(index)) {
+            elements[index] = value;
         }
     }
 
     @Override
     public T remove(int index) {
-        if (findIndexOfList(index)) {
-            T deleted = elementsData[index];
-            deleteElementOfList(index);
+        if (isValidIndex(index)) {
+            T deleted = elements[index];
+            deleteElement(index);
             size = size - 1;
             return deleted;
         }
@@ -89,13 +89,13 @@ public class ArrayList<T> implements List<T> {
     }
 
     @Override
-    public T remove(T t) {
+    public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if (elementsData[i] == t || elementsData[i] != null && elementsData[i].equals(t)) {
+            if (elements[i] == element || elements[i] != null && elements[i].equals(element)) {
                 return remove(i);
             }
         }
-        throw new NoSuchElementException("Element not found " + t);
+        throw new NoSuchElementException("Element not found " + element);
     }
 
     @Override
