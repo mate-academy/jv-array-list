@@ -4,7 +4,7 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    private transient Object[] elementData;
+    private Object[] elementData;
     private int size;
 
     public ArrayList() {
@@ -63,35 +63,31 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         final int size = this.size;
-        int i = 0;
-        found:
-        {
+        int index = 0;
+        for (; index <= size; index++) {
             if (element == null) {
-                for (; i < size; i++) {
-                    if (elementData[i] == null) {
-                        break found;
-                    }
+                if (elementData[index] == null) {
+                    break;
                 }
-            } else {
-                for (; i < size; i++) {
-                    if (element.equals(elementData[i])) {
-                        break found;
-                    }
-                }
+                continue;
             }
-            throw new NoSuchElementException();
+            if ((element.equals(elementData[index]))) {
+                break;
+            } else if (index == size) {
+                throw new NoSuchElementException();
+            }
         }
-        T oldValue = (T) elementData[i];
-        removeElement(elementData, i);
+        T oldValue = (T) elementData[index];
+        removeElement(elementData, index);
         return oldValue;
     }
 
-    private void removeElement(Object[] es, int i) {
+    private void removeElement(Object[] removeFromArray, int index) {
         final int newSize;
-        if ((newSize = size - 1) > i) {
-            System.arraycopy(es, i + 1, es, i, newSize - i);
+        if ((newSize = size - 1) > index) {
+            System.arraycopy(removeFromArray, index + 1, removeFromArray, index, newSize - index);
         }
-        es[size = newSize] = null;
+        removeFromArray[size = newSize] = null;
     }
 
     @Override
@@ -117,8 +113,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void rangeCheck(int index, boolean isAdd) {
-        int i = isAdd ? 0 : 1;
-        if ((index > size - i && size != 0) || index < 0) {
+        if ((index > size - (isAdd ? 0 : 1) && size != 0) || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Index: "
                     + index + " more then size " + size);
         }
