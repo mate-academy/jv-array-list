@@ -3,98 +3,65 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-
     private static final int DEFAULT_CAPACITY = 10;
-
-    private static final Object[] DEFAULTCAPACITY_EMPTY_ELEMENTDATA = {};
     private transient Object[] elementData;
     private int size;
 
     public ArrayList() {
-        this.elementData = DEFAULTCAPACITY_EMPTY_ELEMENTDATA;
+        elementData = new Object[DEFAULT_CAPACITY];
     }
 
     @Override
     public void add(T value) {
-        add(value, elementData, size);
-    }
-
-    private void add(T e, Object[] elementData, int s) {
-        if (s == elementData.length) {
-            elementData = grow();
+        if (size == elementData.length) {
+            growElementData();
         }
-        elementData[s] = e;
-        size = s + 1;
+        elementData[size] = value;
+        size++;
     }
 
     @Override
     public void add(T value, int index) {
-        rangeCheckForAdd(index);
-        final int s;
-        Object[] elementData;
-        if ((s = size) == (elementData = this.elementData).length) {
-            elementData = grow();
+        rangeCheck(index, true);
+        if (size == elementData.length) {
+            growElementData();
         }
         System.arraycopy(elementData, index,
                 elementData, index + 1,
-                s - index);
+                size - index);
         elementData[index] = value;
-        size = s + 1;
-
+        size++;
     }
 
     @Override
     public void addAll(List<T> list) {
-
-        Object[] a = new Object[list.size()];
         for (int i = 0; i < list.size(); i++) {
-            a[i] = list.get(i);
+            add(list.get(i));
         }
-        int numNew = a.length;
-        if (numNew == 0) {
-            return;
-        }
-        Object[] elementData;
-        final int s;
-        if (numNew > (elementData = this.elementData).length - (s = size)) {
-            elementData = grow(s + numNew);
-        }
-        int numMoved = s - 1;
-        if (numMoved > 0) {
-            System.arraycopy(elementData, size - 1,
-                    elementData, numNew,
-                    numMoved);
-        }
-        System.arraycopy(a, 0, elementData, size, numNew);
-        size = s + numNew;
     }
 
     @Override
     public T get(int index) {
-        rangeCheckForAdd(index + 1);
+        rangeCheck(index, false);
         return (T) elementData[index];
     }
 
     @Override
     public void set(T value, int index) {
-        rangeCheckForAdd(index + 1);
-
-        //  T oldValue = elementData[index];
+        rangeCheck(index, false);
         elementData[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        rangeCheckForAdd(index + 1);
-        final Object[] es = elementData;
-        @SuppressWarnings("unchecked") T oldValue = (T) es[index];
-        fastRemove(es, index);
+        rangeCheck(index, false);
+        T oldValue = (T) elementData[index];
+        removeElement(elementData, index);
         return oldValue;
     }
 
     @Override
     public T remove(T element) {
-        Object result;
         final int size = this.size;
         int i = 0;
         found:
@@ -114,12 +81,12 @@ public class ArrayList<T> implements List<T> {
             }
             throw new NoSuchElementException();
         }
-        result = elementData[i];
-        fastRemove(elementData, i);
-        return (T) result;
+        T oldValue = (T) elementData[i];
+        removeElement(elementData, i);
+        return oldValue;
     }
 
-    private void fastRemove(Object[] es, int i) {
+    private void removeElement(Object[] es, int i) {
         final int newSize;
         if ((newSize = size - 1) > i) {
             System.arraycopy(es, i + 1, es, i, newSize - i);
@@ -137,29 +104,23 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private Object[] grow(int minCapacity) {
+    private void growElementData() {
         int oldCapacity = elementData.length;
-        int i = elementData.length * 2;
-        Object[] newElementData = new Object[i];
-        if (oldCapacity > 0 || elementData != DEFAULTCAPACITY_EMPTY_ELEMENTDATA) {
+        int futureCapacity = elementData.length * 2;
+        Object[] newElementData = new Object[futureCapacity];
+        if (oldCapacity > 0) {
             System.arraycopy(elementData, 0, newElementData, 0, elementData.length);
-            return elementData = newElementData;
-            //= Arrays.copyOf(elementData, newCapacity);
+            elementData = newElementData;
         } else {
-            return elementData = new Object[Math.max(DEFAULT_CAPACITY, minCapacity)];
+            elementData = new Object[Math.max(DEFAULT_CAPACITY, size + 1)];
         }
     }
 
-    private Object[] grow() {
-        return grow(size + 1);
-    }
-
-    private void rangeCheckForAdd(int index) {
-        if (index == size) {
-            return;
-        }
-        if ((index > size - 1 && size != 0) || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index more then size");
+    private void rangeCheck(int index, boolean isAdd) {
+        int i = isAdd ? 0 : 1;
+        if ((index > size - i && size != 0) || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Index: "
+                    + index + " more then size " + size);
         }
     }
 }
