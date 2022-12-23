@@ -6,7 +6,6 @@ public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private int size;
     private T[] elementData;
-    private int arraySize = DEFAULT_CAPACITY;
 
     public ArrayList() {
         elementData = (T[]) new Object[DEFAULT_CAPACITY];
@@ -84,7 +83,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void resize() {
-        if (size >= arraySize) {
+        if (size >= elementData.length) {
             T[] newValues = (T[]) new Object[size + (size >> 1)];
             System.arraycopy(elementData, 0, newValues, 0, size);
             elementData = newValues;
@@ -104,7 +103,7 @@ public class ArrayList<T> implements List<T> {
         if (index >= size || index < 0) {
             throw new
                     ArrayListIndexOutOfBoundsException(
-                    "The index that you specified is not within bounds.");
+                    "The index " + index + ", that you specified, is out of size " + size);
         }
     }
 }
