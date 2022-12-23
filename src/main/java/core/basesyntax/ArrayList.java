@@ -22,7 +22,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         if (index != size) {
-            indexValidation(index);
+            checkIndex(index);
         }
         resize();
         System.arraycopy(elementData, index, elementData, index + 1, size - index);
@@ -39,19 +39,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        indexValidation(index);
+        checkIndex(index);
         return elementData[index];
     }
 
     @Override
     public void set(T value, int index) {
-        indexValidation(index);
+        checkIndex(index);
         elementData[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        indexValidation(index);
+        checkIndex(index);
         final T oldObject = elementData[index];
         System.arraycopy(
                 elementData, index + 1, elementData, index, size - index - 1);
@@ -62,16 +62,15 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        if (element != null) {
-            int index = indexOf(element);
-            if (index == -1) {
-                throw new NoSuchElementException(
-                        "Can't remove non-existing element: " + element);
+        for (int i = 0; i < size; i++) {
+            if (elementData[i] == null && element != null) {
+                continue;
             }
-            return remove(index);
+            if (elementData[i] == element || elementData[i].equals(element)) {
+                return remove(i);
+            }
         }
-        size--;
-        return null;
+        throw new NoSuchElementException("Can't remove non-existing element: " + element);
     }
 
     @Override
@@ -101,15 +100,11 @@ public class ArrayList<T> implements List<T> {
         return -1;
     }
 
-    private boolean indexValidation(int index) {
+    private void checkIndex(int index) {
         if (index >= size || index < 0) {
             throw new
                     ArrayListIndexOutOfBoundsException(
                     "The index that you specified is not within bounds.");
         }
-        if (index < size && index >= 0) {
-            return true;
-        }
-        return false;
     }
 }
