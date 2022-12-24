@@ -28,8 +28,7 @@ public class ArrayList<T> implements List<T> {
         }
         checkIndex(index);
         sizeCheck();
-        System.arraycopy(elements, index,
-                elements, index + 1, size - index);
+        System.arraycopy(elements, index, elements, index + 1, size - index);
         elements[index] = value;
         size++;
     }
@@ -60,8 +59,7 @@ public class ArrayList<T> implements List<T> {
         size--;
         Object element = elements[index];
         if (size > index) {
-            System.arraycopy(elements, index + 1, elements,
-                    index, size - index);
+            System.arraycopy(elements, index + 1, elements, index, size - index);
         }
         elements[size] = null;
         return (T) element;
@@ -96,8 +94,7 @@ public class ArrayList<T> implements List<T> {
     private void resize() {
         int newCapacity = (int) (elements.length * SIZE_MULTIPLIER);
         Object[] newArray = new Object[newCapacity];
-        System.arraycopy(elements, 0,
-                newArray, 0, size);
+        System.arraycopy(elements, 0, newArray, 0, size);
         elements = newArray;
     }
 
