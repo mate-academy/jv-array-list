@@ -1,6 +1,7 @@
 package core.basesyntax;
 
 import java.util.NoSuchElementException;
+import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
@@ -22,10 +23,10 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        rangeCheck(index, true);
         if (size == elementData.length) {
             growElementData();
         }
+        rangeCheck(index, true);
         System.arraycopy(elementData, index,
                 elementData, index + 1,
                 size - index);
@@ -56,38 +57,22 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         rangeCheck(index, false);
         T oldValue = (T) elementData[index];
-        removeElement(elementData, index);
+        int newSize;
+        if ((newSize = size - 1) > index) {
+            System.arraycopy(elementData, index + 1, elementData, index, newSize - index);
+        }
+        elementData[size = newSize] = null;
         return oldValue;
     }
 
     @Override
     public T remove(T element) {
-        final int size = this.size;
-        int index = 0;
-        for (; index <= size; index++) {
-            if (element == null) {
-                if (elementData[index] == null) {
-                    break;
-                }
-                continue;
-            }
-            if ((element.equals(elementData[index]))) {
-                break;
-            } else if (index == size) {
-                throw new NoSuchElementException();
+        for (int i = 0; i < size; i++) {
+            if (Objects.equals(element, elementData[i])) {
+                return remove(i);
             }
         }
-        T oldValue = (T) elementData[index];
-        removeElement(elementData, index);
-        return oldValue;
-    }
-
-    private void removeElement(Object[] removeFromArray, int index) {
-        final int newSize;
-        if ((newSize = size - 1) > index) {
-            System.arraycopy(removeFromArray, index + 1, removeFromArray, index, newSize - index);
-        }
-        removeFromArray[size = newSize] = null;
+        throw new NoSuchElementException("Value does not exist");
     }
 
     @Override
