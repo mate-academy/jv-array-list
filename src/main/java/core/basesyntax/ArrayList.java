@@ -55,13 +55,12 @@ public class ArrayList<T> implements List<T> {
         return temp;
     }
 
-    private void checkIndex (int index) {
+    private void checkIndex(int index) {
         if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException("Index: " + index
                     + " out of bounds, for length " + size());
         }
     }
-
 
     @Override
     public T get(int index) {
@@ -93,7 +92,7 @@ public class ArrayList<T> implements List<T> {
             }
         }
         throw new NoSuchElementException("Can not remove. The element "
-                + element +  " does not exist");
+                + element + " does not exist");
     }
 
     @Override
