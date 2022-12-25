@@ -5,105 +5,104 @@ import java.util.NoSuchElementException;
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_INDEX = 0;
     private static final int INITIAL_CAPACITY = 10;
-    private Object[] defaultArray = new Object[INITIAL_CAPACITY];
-    private int sizeCounter = 0;
+    private T[] defaultArray;
+    private int size = 0;
+
+    @SuppressWarnings("unchecked")
+    public ArrayList() {
+        defaultArray = (T[]) new Object[INITIAL_CAPACITY];
+    }
 
     @Override
     public void add(T value) {
-        if (sizeCounter == defaultArray.length) {
-            defaultArray = grow(defaultArray);
+        if (size == defaultArray.length) {
+            defaultArray = (T[]) grow(defaultArray);
         }
-        defaultArray[sizeCounter++] = value;
+        defaultArray[size++] = value;
     }
 
     @Override
     public void add(T value, int index) {
-        rangeCheckerForAdding(index);
-        if (++sizeCounter == defaultArray.length) {
-            defaultArray = grow(defaultArray);
+        checkIndex(index);
+        if (++size == defaultArray.length) {
+            defaultArray = (T[]) grow(defaultArray);
         }
-        System.arraycopy(defaultArray, index, defaultArray, index + 1, sizeCounter - index);
+        System.arraycopy(defaultArray, index, defaultArray, index + 1, size - index);
         defaultArray[index] = value;
     }
 
     @Override
     public void addAll(List<T> list) {
-        if (sizeCounter + list.size() > defaultArray.length) {
-            defaultArray = grow(defaultArray);
+        if (size + list.size() > defaultArray.length) {
+            defaultArray = (T[]) grow(defaultArray);
         }
-        increaseArray(list);
+        addElementArray(list);
     }
 
-    private void increaseArray(List<T> list) {
+    private void addElementArray(List<T> list) {
         Object[] tempList = new Object[list.size()];
         for (int i = 0; i < list.size(); i++) {
-            tempList[i] = list.get(i);
+            add(list.get(i));
         }
-        System.arraycopy(tempList, DEFAULT_INDEX, defaultArray, sizeCounter, tempList.length);
-        sizeCounter += list.size();
+        System.arraycopy(tempList, DEFAULT_INDEX, defaultArray, size, tempList.length);
+        size += list.size();
     }
 
     public Object[] grow(Object[] array) {
         int arrayLength = defaultArray.length + (defaultArray.length / 2);
         Object[] temp = new Object[arrayLength];
-        System.arraycopy(array, DEFAULT_INDEX, temp, DEFAULT_INDEX, sizeCounter);
+        System.arraycopy(array, DEFAULT_INDEX, temp, DEFAULT_INDEX, size);
         return temp;
     }
 
-    private void rangeChecker(int index) {
-        if (index < 0 || index >= sizeCounter) {
+    private void checkIndex (int index) {
+        if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException("Index: " + index
                     + " out of bounds, for length " + size());
         }
     }
 
-    private void rangeCheckerForAdding(int index) {
-        if (index < 0 || index > sizeCounter) {
-            throw new ArrayListIndexOutOfBoundsException("Index: " + index
-                    + " out of bounds, for length " + size());
-        }
-    }
 
     @Override
     public T get(int index) {
-        rangeChecker(index);
+        checkIndex(index);
         return (T)defaultArray[index];
     }
 
     @Override
     public void set(T value, int index) {
-        rangeChecker(index);
+        checkIndex(index);
         defaultArray[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        rangeChecker(index);
+        checkIndex(index);
         T removedElement = (T) defaultArray[index];
-        System.arraycopy(defaultArray, index + 1, defaultArray, index, sizeCounter - index - 1);
-        sizeCounter--;
+        System.arraycopy(defaultArray, index + 1, defaultArray, index, size - index - 1);
+        size--;
         return removedElement;
     }
 
     @Override
     public T remove(T element) {
-        for (int i = 0; i < sizeCounter; i++) {
+        for (int i = 0; i < size; i++) {
             if ((element != null && element.equals(defaultArray[i]))
                     || element == defaultArray[i]) {
                 return remove(i);
             }
         }
         throw new NoSuchElementException("Can not remove. The element "
-                + "\"" + element + "\"" + " does not exist");
+                + element +  " does not exist");
     }
 
     @Override
     public int size() {
-        return sizeCounter;
+        return size;
     }
 
     @Override
     public boolean isEmpty() {
-        return sizeCounter == DEFAULT_INDEX;
+        return size == DEFAULT_INDEX;
     }
 }
