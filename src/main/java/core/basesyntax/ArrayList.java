@@ -67,7 +67,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if (Objects.equals(element, elements[i])) {
+            if ((element == null && elements[i] == null)
+                    || element != null && element.equals(elements[i])) {
                 return remove(i);
             }
         }
@@ -86,12 +87,12 @@ public class ArrayList<T> implements List<T> {
 
     private void sizeCheck() {
         if (size == elements.length) {
-            resize();
+            grow();
         }
     }
 
-    private void  grow() {
-        int newCapacity = (int) (elements.length * SIZE_MULTIPLIER);
+    private void grow() {
+        int newCapacity = (int) (elements.length * GROWTH_FACTOR);
         Object[] newArray = new Object[newCapacity];
         System.arraycopy(elements, 0, newArray, 0, size);
         elements = newArray;
@@ -103,3 +104,4 @@ public class ArrayList<T> implements List<T> {
         }
     }
 }
+
