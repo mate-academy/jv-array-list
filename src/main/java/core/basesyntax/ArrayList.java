@@ -5,7 +5,7 @@ import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    private static final double SIZE_MULTIPLIER = 1.5;
+    private static final double GROWTH_FACTOR = 1.5;
     private Object[] elements;
     private int size;
 
