@@ -91,7 +91,7 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private void resize() {
+    private void  grow() {
         int newCapacity = (int) (elements.length * SIZE_MULTIPLIER);
         Object[] newArray = new Object[newCapacity];
         System.arraycopy(elements, 0, newArray, 0, size);
