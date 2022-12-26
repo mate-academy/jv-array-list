@@ -3,17 +3,17 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    private Object[] internalArray = new Object[10];
-    private int size = 0;
+    private static final Double MULTIPLIER = 1.5;
+    private Object[] internalArray;
+    private int size;
+
+    public ArrayList() {
+        this.internalArray = new Object[10];
+    }
 
     @Override
     public void add(T value) {
-        if (size == internalArray.length) {
-            int newLength = (int) (internalArray.length * 1.5);
-            Object[] internalArrayTemp = new Object[newLength];
-            System.arraycopy(internalArray,0, internalArrayTemp, 0, internalArray.length);
-            internalArray = internalArrayTemp;
-        }
+        grow();
         internalArray[size] = value;
         size++;
     }
@@ -24,12 +24,7 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayListIndexOutOfBoundsException("Index doesn't exist, size of array = "
                     + size);
         }
-        if (size == internalArray.length) {
-            int newLength = (int) (internalArray.length * 1.5);
-            Object[] internalArrayTemp = new Object[newLength];
-            System.arraycopy(internalArray,0, internalArrayTemp, 0, internalArray.length);
-            internalArray = internalArrayTemp;
-        }
+        grow();
         if (size == index) {
             internalArray[size] = value;
         } else {
@@ -47,47 +42,26 @@ public class ArrayList<T> implements List<T> {
         if (list == null) {
             throw new NullPointerException("List<> shouldn't be null");
         }
-        if (list.size() + size > internalArray.length) {
-            Object[] internalArrayTemp = new Object[list.size() + size];
-            System.arraycopy(internalArray,0, internalArrayTemp, 0, size);
-            System.arraycopy(toArray(list),0, internalArrayTemp, size, list.size());
-            internalArray = internalArrayTemp;
-            size = internalArray.length;
-            return;
+        for (int i = 0; i < list.size(); i++) {
+            add(list.get(i));
         }
-        System.arraycopy(toArray(list),0, internalArray, size, list.size());
-        size += list.size();
     }
 
     @Override
     public T get(int index) {
-        if (index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index can't be negative");
-        }
-        if (index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Element with index " + index
-                    + " doesn't exist. Size of array is only " + size);
-        }
+        checkIndex(index);
         return (T) internalArray[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index can't be negative");
-        }
-        if (index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Element with index " + index
-                    + " doesn't exist. Size of array is only " + size);
-        }
+        checkIndex(index);
         internalArray[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index can't be negative");
-        }
+        checkIndex(index);
         if (index < internalArray.length) {
             Object[] internalArrayTemp = new Object[internalArray.length];
             size = size - 1;
@@ -106,7 +80,8 @@ public class ArrayList<T> implements List<T> {
     public T remove(T element) {
         Object[] internalArrayTemp = new Object[internalArray.length];
         for (int i = 0; i < size; i++) {
-            if (equals(element, (T) internalArray[i])) {
+            if (element == (T) internalArray[i] || (element != null
+                    && element.equals((T) internalArray[i]))) {
                 System.arraycopy(internalArray,0, internalArrayTemp, 0, i);
                 System.arraycopy(internalArray,i + 1, internalArrayTemp, i,
                         size - i - 1);
@@ -129,15 +104,22 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private Object[] toArray(List<T> list) {
-        Object[] result = new Object[list.size()];
-        for (int i = 0; i < list.size(); i++) {
-            result[i] = list.get(i);
+    private void grow() {
+        if (size == internalArray.length) {
+            int newLength = (int) (internalArray.length * MULTIPLIER);
+            Object[] internalArrayTemp = new Object[newLength];
+            System.arraycopy(internalArray,0, internalArrayTemp, 0, internalArray.length);
+            internalArray = internalArrayTemp;
         }
-        return result;
     }
 
-    private boolean equals(T value1, T value2) {
-        return value1 == value2 || (value1 != null && value1.equals(value2));
+    private void checkIndex(int index) {
+        if (index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Index can't be negative");
+        }
+        if (index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Element with index " + index
+                    + " doesn't exist. Size of array is only " + size);
+        }
     }
 }
