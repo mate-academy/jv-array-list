@@ -3,45 +3,37 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
+    private static final int DEFAULT_CAPACITY = 10;
     private static final Double MULTIPLIER = 1.5;
     private Object[] internalArray;
     private int size;
 
     public ArrayList() {
-        this.internalArray = new Object[10];
+        this.internalArray = new Object[DEFAULT_CAPACITY];
     }
 
     @Override
     public void add(T value) {
-        grow();
+        checkLengthAndGrow();
         internalArray[size] = value;
         size++;
     }
 
     @Override
     public void add(T value, int index) {
-        if (index > size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index doesn't exist, size of array = "
-                    + size);
+        if (index == size) {
+            add(value);
+            return;
         }
-        grow();
-        if (size == index) {
-            internalArray[size] = value;
-        } else {
-            Object[] internalArrayTemp = new Object[internalArray.length];
-            System.arraycopy(internalArray,0, internalArrayTemp, 0, index);
-            System.arraycopy(internalArray,index, internalArrayTemp, index + 1, size - index);
-            internalArrayTemp[index] = value;
-            internalArray = internalArrayTemp;
-        }
+        checkIndex(index);
+        checkLengthAndGrow();
+        System.arraycopy(internalArray, index, internalArray, index + 1, size - index);
+        internalArray[index] = value;
         size++;
     }
 
     @Override
     public void addAll(List<T> list) {
-        if (list == null) {
-            throw new NullPointerException("List<> shouldn't be null");
-        }
         for (int i = 0; i < list.size(); i++) {
             add(list.get(i));
         }
@@ -62,33 +54,19 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
-        if (index < internalArray.length) {
-            Object[] internalArrayTemp = new Object[internalArray.length];
-            size = size - 1;
-            System.arraycopy(internalArray,0, internalArrayTemp, 0, index);
-            System.arraycopy(internalArray,index + 1, internalArrayTemp, index,
+        size--;
+        T removalElement = (T) internalArray[index];
+        System.arraycopy(internalArray,index + 1, internalArray, index,
                     internalArray.length - index - 1);
-            T removableElement = (T) internalArray[index];
-            internalArray = internalArrayTemp;
-            return removableElement;
-        }
-        throw new ArrayListIndexOutOfBoundsException("Element with index " + index
-                + " doesn't exist. Size of array is only " + size);
+        return removalElement;
     }
 
     @Override
     public T remove(T element) {
-        Object[] internalArrayTemp = new Object[internalArray.length];
         for (int i = 0; i < size; i++) {
             if (element == (T) internalArray[i] || (element != null
                     && element.equals((T) internalArray[i]))) {
-                System.arraycopy(internalArray,0, internalArrayTemp, 0, i);
-                System.arraycopy(internalArray,i + 1, internalArrayTemp, i,
-                        size - i - 1);
-                T removeThisElement = (T) internalArray[i];
-                size = size - 1;
-                internalArray = internalArrayTemp;
-                return removeThisElement;
+                return remove(i);
             }
         }
         throw new NoSuchElementException("Element " + element + " doesn't exist.");
@@ -104,7 +82,7 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void grow() {
+    private void checkLengthAndGrow() {
         if (size == internalArray.length) {
             int newLength = (int) (internalArray.length * MULTIPLIER);
             Object[] internalArrayTemp = new Object[newLength];
@@ -115,7 +93,8 @@ public class ArrayList<T> implements List<T> {
 
     private void checkIndex(int index) {
         if (index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index can't be negative");
+            throw new ArrayListIndexOutOfBoundsException("Index = " + index
+                    + ". Index can't be negative");
         }
         if (index >= size) {
             throw new ArrayListIndexOutOfBoundsException("Element with index " + index
