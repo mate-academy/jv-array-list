@@ -3,13 +3,13 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    private static final double DEFAULT_COEFFICIENT = 1.5;
-    private static final int DEFAULT_ARRAY_LENGTH = 10;
-    private Object[] elements;
+    private static final double GROWTH_COEFFICIENT = 1.5;
+    private static final int DEFAULT_CAPACITY = 10;
+    private T[] elements;
     private int size;
 
     public ArrayList() {
-        elements = new Object[DEFAULT_ARRAY_LENGTH];
+        elements = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
     @Override
@@ -23,7 +23,7 @@ public class ArrayList<T> implements List<T> {
     public void add(T value, int index) {
         if (index > size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException(
-                    "The index passed to the method is invalid");
+                    "The index " + index + " passed to the method is invalid");
         }
         resizing();
         System.arraycopy(elements, index, elements, index + 1, size - index);
@@ -40,20 +40,23 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        checkIndexValidity(index);
+        indexValidation(index);
         return (T) elements[index];
     }
 
     @Override
     public void set(T value, int index) {
-        checkIndexValidity(index);
+        indexValidation(index);
         elements[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        checkIndexValidity(index);
-        return doRemove(index);
+        indexValidation(index);
+        T value = (T) elements[index];
+        size--;
+        System.arraycopy(elements, index + 1, elements, index, size - index);
+        return value;
     }
 
     @Override
@@ -63,7 +66,7 @@ public class ArrayList<T> implements List<T> {
                 return remove(i);
             }
         }
-        throw new NoSuchElementException("There is no such element present");
+        throw new NoSuchElementException("There is no such element " + element + " present");
     }
 
     @Override
@@ -76,26 +79,18 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void checkIndexValidity(int index) {
+    private void indexValidation(int index) {
         if (index >= size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException(
-                    "The index passed to the method is invalid");
+                    "The index " + index + " passed to the method is invalid");
         }
     }
 
     private void resizing() {
         if (size >= elements.length) {
-            int arrayLength = (int) (elements.length * DEFAULT_COEFFICIENT);
-            Object[] arrayNew = new Object[arrayLength];
+            Object[] arrayNew = new Object[(int) (elements.length * GROWTH_COEFFICIENT)];
             System.arraycopy(elements, 0, arrayNew, 0, elements.length);
-            elements = arrayNew;
+            elements = (T[]) arrayNew;
         }
-    }
-
-    private T doRemove(int index) {
-        T value = (T) elements[index];
-        size--;
-        System.arraycopy(elements, index + 1, elements, index, size - index);
-        return value;
     }
 }
