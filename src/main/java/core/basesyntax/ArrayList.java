@@ -5,54 +5,31 @@ import java.util.NoSuchElementException;
 @SuppressWarnings("unchecked")
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    private T[] values;
+    private T[] elements;
     private int size;
 
     public ArrayList() {
-        values = (T[]) new Object[DEFAULT_CAPACITY];
-    }
-
-    private void resize() {
-        if (size == values.length) {
-            T[] buffer = (T[]) new Object[values.length + values.length / 2];
-            System.arraycopy(values, 0, buffer, 0, size);
-            values = buffer;
-        }
-    }
-
-    private void indexCheck(int index, int rangeMax) {
-        if (index < 0 || index > rangeMax) {
-            throw new ArrayListIndexOutOfBoundsException("The passed index is wrong");
-        }
-    }
-
-    public int indexOf(T element) {
-        int index = -1;
-        for (int i = 0; i < size(); i++) {
-            if (values[i] == element || values[i] != null && values[i].equals(element)) {
-                index = i;
-            }
-        }
-        if (index == -1) {
-            throw new NoSuchElementException();
-        }
-        return index;
+        elements = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
     @Override
     public void add(T value) {
         resize();
-        values[size] = value;
+        elements[size] = value;
         size++;
     }
 
     @Override
     public void add(T value, int index) {
-        indexCheck(index, size);
-        resize();
-        System.arraycopy(values, index, values, index + 1, size - index);
-        values[index] = value;
-        size++;
+        if (index == size) {
+            add(value);
+        } else {
+            indexCheck(index);
+            resize();
+            System.arraycopy(elements, index, elements, index + 1, size - index);
+            elements[index] = value;
+            size++;
+        }
     }
 
     @Override
@@ -64,31 +41,33 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        indexCheck(index, size - 1);
-        return values[index];
+        indexCheck(index);
+        return elements[index];
     }
 
     @Override
     public void set(T value, int index) {
-        indexCheck(index, size - 1);
-        values[index] = value;
+        indexCheck(index);
+        elements[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        indexCheck(index, size - 1);
+        indexCheck(index);
         T element = get(index);
-        System.arraycopy(values, index + 1, values, index, size - index - 1);
+        System.arraycopy(elements, index + 1, elements, index, size - index - 1);
         size--;
         return element;
     }
 
     @Override
     public T remove(T element) {
-        int index = indexOf(element);
-        System.arraycopy(values, index + 1, values, index, size - index - 1);
-        size--;
-        return element;
+        for (int i = 0; i < size(); i++) {
+            if (elements[i] == element || elements[i] != null && elements[i].equals(element)) {
+                return remove(i);
+            }
+        }
+        throw new NoSuchElementException();
     }
 
     @Override
@@ -99,5 +78,19 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private void resize() {
+        if (size == elements.length) {
+            T[] buffer = (T[]) new Object[elements.length + elements.length / 2];
+            System.arraycopy(elements, 0, buffer, 0, size);
+            elements = buffer;
+        }
+    }
+
+    private void indexCheck(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("The passed index " + index + " is wrong");
+        }
     }
 }
