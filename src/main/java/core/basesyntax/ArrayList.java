@@ -5,11 +5,11 @@ import java.util.NoSuchElementException;
 public class ArrayList<T> implements List<T> {
     private static final double GROWTH_COEFFICIENT = 1.5;
     private static final int DEFAULT_CAPACITY = 10;
-    private T[] elements;
+    private Object[] elements;
     private int size;
 
     public ArrayList() {
-        elements = (T[]) new Object[DEFAULT_CAPACITY];
+        elements = new Object[DEFAULT_CAPACITY];
     }
 
     @Override
@@ -90,7 +90,7 @@ public class ArrayList<T> implements List<T> {
         if (size >= elements.length) {
             Object[] arrayNew = new Object[(int) (elements.length * GROWTH_COEFFICIENT)];
             System.arraycopy(elements, 0, arrayNew, 0, elements.length);
-            elements = (T[]) arrayNew;
+            elements = arrayNew;
         }
     }
 }
