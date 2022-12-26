@@ -13,11 +13,11 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
+        elementData[size] = value;
+        size++;
         if (size == elementData.length) {
             growElementData();
         }
-        elementData[size] = value;
-        size++;
     }
 
     @Override
@@ -26,10 +26,10 @@ public class ArrayList<T> implements List<T> {
             add(value);
             return;
         }
+        rangeCheck(index);
         if (size == elementData.length) {
             growElementData();
         }
-        rangeCheck(index, true);
         System.arraycopy(elementData, index,
                 elementData, index + 1,
                 size - index);
@@ -46,19 +46,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        rangeCheck(index, false);
+        rangeCheck(index);
         return (T) elementData[index];
     }
 
     @Override
     public void set(T value, int index) {
-        rangeCheck(index, false);
+        rangeCheck(index);
         elementData[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        rangeCheck(index, false);
+        rangeCheck(index);
         T oldValue = (T) elementData[index];
         int newSize;
         if ((newSize = size - 1) > index) {
@@ -89,19 +89,14 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void growElementData() {
-        int oldCapacity = elementData.length;
         int futureCapacity = elementData.length * 2;
         Object[] newElementData = new Object[futureCapacity];
-        if (oldCapacity > 0) {
-            System.arraycopy(elementData, 0, newElementData, 0, elementData.length);
-            elementData = newElementData;
-        } else {
-            elementData = new Object[Math.max(DEFAULT_CAPACITY, size + 1)];
-        }
+        System.arraycopy(elementData, 0, newElementData, 0, elementData.length);
+        elementData = newElementData;
     }
 
-    private void rangeCheck(int index, boolean isAdd) {
-        if ((index > size - (isAdd ? 0 : 1) && size != 0) || index < 0) {
+    private void rangeCheck(int index) {
+        if ((index > size - 1 && size != 0) || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Index: "
                     + index + " more then size " + size);
         }
