@@ -5,32 +5,28 @@ import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    private static final double GROWTH_CAPACITY = 1.5;
+    private static final double GROWTH_FACTOR = 1.5;
 
-    private Object[] elementData;
+    private Object[] elements;
     private int size;
 
     public ArrayList() {
-        elementData = new Object[DEFAULT_CAPACITY];
+        elements = new Object[DEFAULT_CAPACITY];
     }
 
     @Override
     public void add(T value) {
         checkCapacity();
-        elementData[size] = value;
+        elements[size] = value;
         size++;
     }
 
     @Override
     public void add(T value, int index) {
-        if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("Index "
-                    + index + " is not valid for size "
-                    + size + ".");
-        }
+        checkIndex(index, true);
         checkCapacity();
-        System.arraycopy(elementData, index, elementData, index + 1, size - index);
-        elementData[index] = value;
+        System.arraycopy(elements, index, elements, index + 1, size - index);
+        elements[index] = value;
         size++;
     }
 
@@ -42,33 +38,31 @@ public class ArrayList<T> implements List<T> {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public T get(int index) {
-        checkIndex(index);
-        return (T) elementData[index];
+        checkIndex(index, false);
+        return (T) elements[index];
     }
 
     @Override
     public void set(T value, int index) {
-        checkIndex(index);
-        elementData[index] = value;
+        checkIndex(index, false);
+        elements[index] = value;
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public T remove(int index) {
-        checkIndex(index);
-        Object deletedValue = elementData[index];
+        checkIndex(index, false);
+        Object deletedValue = elements[index];
         size--;
-        System.arraycopy(elementData, index + 1, elementData, index, size - index);
+        System.arraycopy(elements, index + 1, elements, index, size - index);
         return (T) deletedValue;
     }
 
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if ((elementData[i] == null && element == null)
-                    || element != null && Objects.equals(element, elementData[i])) {
+            if ((elements[i] == null && element == null)
+                    || element != null && Objects.equals(element, elements[i])) {
                 return remove(i);
             }
         }
@@ -85,25 +79,27 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    public void grow() {
-        int newCapacity = (int) (elementData.length * GROWTH_CAPACITY);
+    private void grow() {
+        int newCapacity = (int) (elements.length * GROWTH_FACTOR);
         Object[] newArray = new Object[newCapacity];
-        System.arraycopy(elementData, 0, newArray, 0, size);
-        elementData = newArray;
+        System.arraycopy(elements, 0, newArray, 0, size);
+        elements = newArray;
     }
 
-    public void checkCapacity() {
-        if (size == elementData.length) {
+    private void checkCapacity() {
+        if (size == elements.length) {
             grow();
         }
     }
 
-    public void checkIndex(int index) {
-        if (index < 0 || index >= size) {
+    private void checkIndex(int index, boolean add) {
+        boolean checkIndex = index >= size;
+        if (add) {
+            checkIndex = index > size;
+        }
+        if (index < 0 || checkIndex) {
             throw new ArrayListIndexOutOfBoundsException("Index " + index
                     + " is not valid for size " + size + ".");
         }
     }
 }
-
-
