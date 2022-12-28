@@ -15,7 +15,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value) {
         if (elements.length == size) {
-            grow(elements);
+            grow();
         }
         elements[size] = value;
         size++;
@@ -26,8 +26,8 @@ public class ArrayList<T> implements List<T> {
         if (index > size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Index Out Of Bounds Exception " + index);
         }
-        if (index == size || elements.length == size) {
-            grow(elements);
+        if (elements.length == size) {
+            grow();
         }
         System.arraycopy(elements, index, elements, index + 1, size - index);
         elements[index] = value;
@@ -42,7 +42,7 @@ public class ArrayList<T> implements List<T> {
         }
         int length = list.size();
         if (length > elements.length - size) {
-            grow(elements, length);
+            grow(length);
         }
         System.arraycopy(addAll, 0, elements, size, length);
         size += length;
@@ -63,23 +63,18 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         indexCheck(index);
-        if (elements.length == size) {
-            grow(elements);
-        }
+        size--;
         T remove = (T) elements[index];
         System.arraycopy(elements, index + 1, elements, index, size - index);
-        size--;
         return remove;
     }
 
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if ((elements[i] != null && elements[i].equals(element))
-                    || (element == null && elements[i] == null)) {
-                System.arraycopy(elements, i + 1, elements, i, size - i);
-                size--;
-                return element;
+            if (element == elements[i]
+                    || (elements[i] != null && elements[i].equals(element))) {
+                return remove(i);
             }
         }
         throw new NoSuchElementException("No Such Element " + element);
@@ -95,17 +90,15 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void grow(Object[] o) {
-        int length = o.length;
-        Object[] newArray = new Object[(int) (length * GROW_FACTOR)];
-        System.arraycopy(elements, 0, newArray, 0, length);
+    private void grow() {
+        Object[] newArray = new Object[(int) (size * GROW_FACTOR)];
+        System.arraycopy(elements, 0, newArray, 0, size);
         elements = newArray;
     }
 
-    private void grow(Object[] o, int addSize) {
-        int length = o.length;
-        Object[] newArray = new Object[(int) (length + addSize)];
-        System.arraycopy(elements, 0, newArray, 0, length);
+    private void grow(int addSize) {
+        Object[] newArray = new Object[(int) (size + addSize)];
+        System.arraycopy(elements, 0, newArray, 0, size);
         elements = newArray;
     }
 
