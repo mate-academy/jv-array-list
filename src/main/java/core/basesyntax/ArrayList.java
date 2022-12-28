@@ -1,6 +1,5 @@
 package core.basesyntax;
 
-import java.util.Arrays;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 
@@ -17,86 +16,71 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (elementData.length == size) {
-            elementData = grow();
-        }
+        checkSize();
         elementData[size] = value;
         size++;
     }
 
     @Override
     public void add(T value, int index) {
-        if (index > size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Incorrect index");
-        }
-        if (elementData.length == size) {
-            elementData = grow();
+        checkSize();
+        if (index != size) {
+            indexCheck(index);
         }
         System.arraycopy(elementData, index,
                 elementData, index + 1,
                 size - index);
         elementData[index] = value;
         size++;
+
     }
 
     @Override
     public void addAll(List<T> list) {
-        Object[] listToArray = list.toArray();
-        while (size + listToArray.length >= elementData.length) {
-            elementData = grow();
+        for (int i = 0; i < list.size(); i++) {
+            add(list.get(i));
         }
-        System.arraycopy(listToArray, 0, elementData, size, listToArray.length);
-        size += listToArray.length;
     }
 
     @Override
     public T get(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Incorrect index");
-        }
+        indexCheck(index);
         Objects.checkIndex(index, size);
         return (T) elementData[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Incorrect index");
-        }
+        indexCheck(index);
         Objects.checkIndex(index, size);
         elementData[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Incorrect index");
-        }
+        indexCheck(index);
         Objects.checkIndex(index, size);
-        final Object[] es = elementData;
-        T oldValue = (T) es[index];
-        fastRemove(es, index);
-        return oldValue;
+        T removedElement = (T) elementData[index];
+        final int newSize;
+        if ((newSize = size - 1) > index) {
+            System.arraycopy(elementData, index + 1, elementData, index, newSize - index);
+        }
+        elementData[size = newSize] = null;
+        return removedElement;
     }
 
     @Override
     public T remove(T element) {
-        final Object[] es = elementData;
-        final int size = this.size;
         if (element == null) {
             for (int i = 0; i < size; i++) {
-                if (es[i] == null) {
-                    T removedElement = (T) es[i];
-                    fastRemove(es, i);
-                    return removedElement;
+                if (elementData[i] == null) {
+                    return remove(i);
                 }
             }
         } else {
             for (int i = 0; i < size; i++) {
-                if (element.equals(es[i])) {
-                    T removedElement = (T) es[i];
-                    fastRemove(es, i);
-                    return removedElement;
+                if (element.equals(elementData[i])) {
+                    return remove(i);
                 }
             }
         }
@@ -113,22 +97,23 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    @Override
-    public Object[] toArray() {
-        return Arrays.copyOf(elementData, size);
-    }
-
-    public Object[] grow() {
+    private void grow() {
         int oldCapacity = elementData.length;
         int newCapacity = oldCapacity + (oldCapacity >> 1);
-        return elementData = Arrays.copyOf(elementData, newCapacity);
+        Object[] ed = new Object[newCapacity];
+        System.arraycopy(elementData, 0, ed, 0, size);
+        elementData = ed;
     }
 
-    private void fastRemove(Object[] es, int i) {
-        final int newSize;
-        if ((newSize = size - 1) > i) {
-            System.arraycopy(es, i + 1, es, i, newSize - i);
+    private void checkSize() {
+        if (size == elementData.length) {
+            grow();
         }
-        es[size = newSize] = null;
+    }
+
+    private void indexCheck(int index) {
+        if (index >= size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Incorrect index");
+        }
     }
 }
