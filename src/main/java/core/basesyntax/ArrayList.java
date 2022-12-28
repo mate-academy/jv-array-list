@@ -8,13 +8,13 @@ public class ArrayList<T> implements List<T> {
     private T[] dataArray;
 
     public ArrayList() {
-        this.dataArray = (T[]) new Object[DEFAULT_ARRAY_SIZE];
+        dataArray = (T[]) new Object[DEFAULT_ARRAY_SIZE];
     }
 
     @Override
     public void add(T value) {
         checkAndGrowArraySize();
-        this.dataArray[size] = value;
+        dataArray[size] = value;
         size++;
     }
 
@@ -27,7 +27,7 @@ public class ArrayList<T> implements List<T> {
         }
         checkAndGrowArraySize();
         System.arraycopy(dataArray, index, dataArray, index + 1, size - index);
-        this.dataArray[index] = value;
+        dataArray[index] = value;
         size++;
     }
 
@@ -50,14 +50,14 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void set(T value, int index) {
         checkIndex(index, size - 1);
-        this.dataArray[index] = value;
+        dataArray[index] = value;
     }
 
     @Override
     public T remove(int index) {
         T removedValue = get(index);
         if (index == size - 1) {
-            this.dataArray[index] = null;
+            dataArray[index] = null;
             size--;
             return removedValue;
         }
@@ -74,7 +74,8 @@ public class ArrayList<T> implements List<T> {
                 return remove(i);
             }
         }
-        throw new NoSuchElementException("The list doesn't contain this element");
+        throw new NoSuchElementException("This list doesn't contain the element ["
+                + element + "]");
     }
 
     @Override
@@ -91,13 +92,15 @@ public class ArrayList<T> implements List<T> {
         if (size == dataArray.length) {
             T[] temporaryArray = (T[]) new Object[size + (size >> 1)];
             System.arraycopy(dataArray, 0, temporaryArray, 0, size);
-            this.dataArray = temporaryArray;
+            dataArray = temporaryArray;
         }
     }
 
     private void checkIndex(int index, int range) {
         if (index < 0 || index > range) {
-            throw new ArrayListIndexOutOfBoundsException("Index is out of available range");
+            throw new ArrayListIndexOutOfBoundsException("The index [" + index
+                    + "] is out of available range!"
+                    + " Available range is [0 - " + range + "]");
         }
     }
 }
