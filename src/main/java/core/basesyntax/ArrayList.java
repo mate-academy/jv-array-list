@@ -1,29 +1,15 @@
 package core.basesyntax;
 
-import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
+    private static final double GROW_FACTOR = 1.5;
     private Object[] elements;
     private int size;
 
     public ArrayList() {
         elements = new Object[DEFAULT_CAPACITY];
-    }
-
-    private void grow(Object[] o) {
-        elements = Arrays.copyOf(o, elements.length + elements.length / 2);
-    }
-
-    private void grow(Object[] o, int addSize) {
-        elements = Arrays.copyOf(o, elements.length + addSize);
-    }
-
-    private void indexCheck(int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index Out Of Bounds Exception");
-        }
     }
 
     @Override
@@ -38,7 +24,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         if (index > size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index Out Of Bounds Exception");
+            throw new ArrayListIndexOutOfBoundsException("Index Out Of Bounds Exception " + index);
         }
         if (index == size || elements.length == size) {
             grow(elements);
@@ -50,15 +36,15 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        Object[] a = new Object[list.size()];
+        Object[] addAll = new Object[list.size()];
         for (int i = 0; i < list.size(); i++) {
-            a[i] = list.get(i);
+            addAll[i] = list.get(i);
         }
         int length = list.size();
         if (length > elements.length - size) {
             grow(elements, length);
         }
-        System.arraycopy(a, 0, elements, size, length);
+        System.arraycopy(addAll, 0, elements, size, length);
         size += length;
     }
 
@@ -96,7 +82,7 @@ public class ArrayList<T> implements List<T> {
                 return element;
             }
         }
-        throw new NoSuchElementException("No Such Element");
+        throw new NoSuchElementException("No Such Element " + element);
     }
 
     @Override
@@ -107,5 +93,25 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private void grow(Object[] o) {
+        int length = o.length;
+        Object[] newArray = new Object[(int) (length * GROW_FACTOR)];
+        System.arraycopy(elements, 0, newArray, 0, length);
+        elements = newArray;
+    }
+
+    private void grow(Object[] o, int addSize) {
+        int length = o.length;
+        Object[] newArray = new Object[(int) (length + addSize)];
+        System.arraycopy(elements, 0, newArray, 0, length);
+        elements = newArray;
+    }
+
+    private void indexCheck(int index) {
+        if (index >= size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Index Out Of Bounds Exception " + index);
+        }
     }
 }
