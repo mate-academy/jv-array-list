@@ -16,7 +16,7 @@ public class ArrayList<T> implements List<T> {
     public void growthArray() {
         T[] arrayCopy = (T[]) new Object[(int) (array.length * GROWTH_CAPACITY)];
         System.arraycopy(array, 0, arrayCopy, 0, array.length);
-            array = arrayCopy;
+        array = arrayCopy;
 
     }
 
@@ -70,7 +70,7 @@ public class ArrayList<T> implements List<T> {
     public T remove(T element) {
         for (int i = 0; i < size(); i++) {
             if ((array[i] == null && element == null)
-            || element != null && Objects.equals(element, array[i])){
+                    || element != null && Objects.equals(element, array[i])) {
                 return remove(i);
             }
         }
