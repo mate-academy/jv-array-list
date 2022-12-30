@@ -23,14 +23,22 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
+        if (index < 0 || index > size) {
+            throw new ArrayListIndexOutOfBoundsException("Index "
+                    + index + " is not valid for size " + size + ".");
+        }
+        if (size == array.length) {
+            grow();
+        }
+
+        if (index < size) {
+            System.arraycopy(array, index, array, index + 1, size() - index);
+            array[index] = value;
+            size++;
+        }
         if (index == size) {
             add(value);
-            return;
         }
-        checkIndex(index);
-        System.arraycopy(array, index, array, index + 1, size - index);
-        array[index] = value;
-        size++;
     }
 
     @Override
