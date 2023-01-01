@@ -16,11 +16,10 @@ public class ArrayList<T> implements List<T> {
         values = (T[]) new Object[initialCapacity];
     }
 
-    public boolean isOutOfBound(int index) {
+    public void checkInBounds(int index) {
         if (index > size - 1 || index < 0) {
-            return true;
+            throw new ArrayListIndexOutOfBoundsException("Index is out of bound!");
         }
-        return false;
     }
 
     @Override
@@ -58,11 +57,8 @@ public class ArrayList<T> implements List<T> {
     }
 
     public T get(int index) {
-        if (!(isOutOfBound(index))) {
-            return (T) values[index];
-        } else {
-            throw new ArrayListIndexOutOfBoundsException("Index is out of bound!");
-        }
+        checkInBounds(index);
+        return (T) values[index];
     }
 
     public int indexOf(T value) {
@@ -76,9 +72,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(int index) {
-        if (isOutOfBound(index)) {
-            throw new ArrayListIndexOutOfBoundsException("Index is out of bound!");
-        }
+        checkInBounds(index);
         removedObject = values[index];
         System.arraycopy(values, index + 1, values, index, size - index - 1);
         values[--size] = null;
@@ -89,17 +83,16 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T value) {
         int index = indexOf(value);
-        if (!isOutOfBound(index)) {
-            remove(index);
-            return value;
+        if (index == -1) {
+            throw new NoSuchElementException("There is no element like this!");
         }
-        throw new NoSuchElementException("There is no element like this!");
+        checkInBounds(index);
+        remove(index);
+        return value;
     }
 
     public void set(T value, int index) {
-        if (isOutOfBound(index)) {
-            throw new ArrayListIndexOutOfBoundsException("Index is out of bound!");
-        }
+        checkInBounds(index);
         values[index] = value;
     }
 
