@@ -49,18 +49,10 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
+    @Override
     public T get(int index) {
         checkInBounds(index);
         return (T) values[index];
-    }
-
-    public int indexOf(T value) {
-        for (int i = 0; i < size; i++) {
-            if (values[i] == value || (values[i] != null && values[i].equals(value))) {
-                return i;
-            }
-        }
-        return -1;
     }
 
     @Override
@@ -78,11 +70,10 @@ public class ArrayList<T> implements List<T> {
         if (index == -1) {
             throw new NoSuchElementException("There is no element like this!");
         }
-        checkInBounds(index);
-        remove(index);
-        return value;
+        return remove(index);
     }
 
+    @Override
     public void set(T value, int index) {
         checkInBounds(index);
         values[index] = value;
@@ -100,5 +91,14 @@ public class ArrayList<T> implements List<T> {
         if (index > size - 1 || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Index" + index + " is out of bound!");
         }
+    }
+
+    private int indexOf(T value) {
+        for (int i = 0; i < size; i++) {
+            if (values[i] == value || (values[i] != null && values[i].equals(value))) {
+                return i;
+            }
+        }
+        return -1;
     }
 }
