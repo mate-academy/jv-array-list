@@ -15,12 +15,6 @@ public class ArrayList<T> implements List<T> {
         values = (T[]) new Object[initialCapacity];
     }
 
-    public void checkInBounds(int index) {
-        if (index > size - 1 || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index is out of bound!");
-        }
-    }
-
     @Override
     public int size() {
         return size;
@@ -99,6 +93,12 @@ public class ArrayList<T> implements List<T> {
             T[] data = values;
             values = (T[]) new Object[size * 3 / 2];
             System.arraycopy(data, 0, values, 0, size);
+        }
+    }
+
+    private void checkInBounds(int index) {
+        if (index > size - 1 || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Index" + index + " is out of bound!");
         }
     }
 }
