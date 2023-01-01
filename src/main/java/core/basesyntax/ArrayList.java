@@ -6,7 +6,6 @@ public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_SIZE = 10;
     private T[] values;
     private int size;
-    private T removedObject;
 
     public ArrayList() {
         values = (T[]) new Object[DEFAULT_SIZE];
@@ -73,10 +72,9 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         checkInBounds(index);
-        removedObject = values[index];
+        T removedObject = values[index];
         System.arraycopy(values, index + 1, values, index, size - index - 1);
         values[--size] = null;
-        resize();
         return removedObject;
     }
 
