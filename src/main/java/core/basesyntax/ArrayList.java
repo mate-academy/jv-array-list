@@ -1,6 +1,7 @@
 package core.basesyntax;
 
 import java.util.NoSuchElementException;
+import java.util.stream.IntStream;
 
 public class ArrayList<T> implements List<T> {
 
@@ -14,43 +15,41 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        arrayCapacityCheck();
+        checkArrayCapacity();
         elementData[size] = value;
         size++;
     }
 
     @Override
     public void add(T value, int index) {
-        size++;
-        indexCheck(index);
-        arrayCapacityCheck();
+        checkIndex(index);
+        checkArrayCapacity();
         System.arraycopy(elementData, index, elementData,
                 (index + 1), elementData.length - index - 1);
         elementData[index] = value;
+        size++;
     }
 
     @Override
     public void addAll(List<T> list) {
-        for (int i = 0; i < list.size();i++) {
-            add(list.get(i));
-        }
+        IntStream.range(0, list.size()).mapToObj(list::get).forEach(this::add);
     }
 
     @Override
     public T get(int index) {
-        indexCheck(index);
+        checkIndex((index + 1));
         return elementData[index];
     }
 
     @Override
     public void set(T value, int index) {
-        indexCheck(index);
+        checkIndex((index + 1));
         elementData[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        indexCheck(index);
+        checkIndex((index + 1));
         T temp = elementData[index];
         System.arraycopy(elementData,(index + 1),
                 elementData, index, (elementData.length - index - 1));
@@ -60,19 +59,12 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        T temp = null;
-        int count = 0;
         for (int i = 0; i < size;i++) {
-            if ((element == null && elementData[i] == null)
-                    || (elementData[i] != null && (elementData[i].equals(element)))) {
-                temp = elementData[i];
-                remove(i);
-                count++;
-                break;
+            if (element == elementData[i] || element != null && element.equals(elementData[i])) {
+                return remove(i);
             }
         }
-        noSuchElementCheck(count);
-        return temp;
+        throw new NoSuchElementException("No such element in current array");
     }
 
     @Override
@@ -85,7 +77,7 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void arrayCapacityCheck() {
+    private void checkArrayCapacity() {
         if (size >= elementData.length) {
             T[] temp = elementData;
             elementData = (T[]) new Object[elementData.length + (elementData.length / 2)];
@@ -93,15 +85,9 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private void indexCheck(int index) {
-        if (index < 0 || (index != 0 && index >= size)) {
-            throw new ArrayListIndexOutOfBoundsException();
-        }
-    }
-
-    private void noSuchElementCheck(int count) {
-        if (count == 0) {
-            throw new NoSuchElementException("No such element in current array");
+    private void checkIndex(int index) {
+        if (index < 0 || index > size) {
+            throw new ArrayListIndexOutOfBoundsException("Wrong index value(Out of bound)");
         }
     }
 }
