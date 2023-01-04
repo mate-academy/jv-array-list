@@ -4,7 +4,6 @@ import java.util.NoSuchElementException;
 import java.util.stream.IntStream;
 
 public class ArrayList<T> implements List<T> {
-
     private static final int DEFAULT_CAPACITY = 10;
     private T[] elementData;
     private int size;
@@ -22,6 +21,10 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
+        if (index == size) {
+            add(value);
+            return;
+        }
         checkIndex(index);
         checkArrayCapacity();
         System.arraycopy(elementData, index, elementData,
@@ -32,27 +35,29 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        IntStream.range(0, list.size()).mapToObj(list::get).forEach(this::add);
+        IntStream.range(0, list.size())
+                .mapToObj(list::get)
+                .forEach(this::add);
     }
 
     @Override
     public T get(int index) {
-        checkIndex((index + 1));
+        checkIndex(index);
         return elementData[index];
     }
 
     @Override
     public void set(T value, int index) {
-        checkIndex((index + 1));
+        checkIndex(index);
         elementData[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        checkIndex((index + 1));
+        checkIndex((index));
         T temp = elementData[index];
         System.arraycopy(elementData,(index + 1),
-                elementData, index, (elementData.length - index - 1));
+                elementData, index, elementData.length - index - 1);
         size--;
         return temp;
     }
@@ -86,8 +91,9 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void checkIndex(int index) {
-        if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("Wrong index value(Out of bound)");
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Wrong index value(Out of bound). "
+                    + "Index should be not less than 0 and not more than " + (size - 1) + ".");
         }
     }
 }
