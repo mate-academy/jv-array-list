@@ -1,71 +1,49 @@
 package core.basesyntax;
 
 import java.util.NoSuchElementException;
+import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
-    private static final int DEFAULT_INDEX = 0;
+    private static final double INCREASING_ARRAY = 1.5;
     private static final int INITIAL_CAPACITY = 10;
     private T[] defaultArray;
     private int size = 0;
 
-    @SuppressWarnings("unchecked")
     public ArrayList() {
         defaultArray = (T[]) new Object[INITIAL_CAPACITY];
     }
 
     @Override
     public void add(T value) {
-        if (size == defaultArray.length) {
-            defaultArray = (T[]) grow(defaultArray);
-        }
-        defaultArray[size++] = value;
+        checkSize();
+        defaultArray[size] = value;
+        size++;
     }
 
     @Override
     public void add(T value, int index) {
-        checkIndex(index);
-        if (++size == defaultArray.length) {
-            defaultArray = (T[]) grow(defaultArray);
+        checkIndexForAdd(index);
+        checkSize();
+        if (index == size) {
+            add(value);
+            return;
         }
         System.arraycopy(defaultArray, index, defaultArray, index + 1, size - index);
         defaultArray[index] = value;
+        size++;
     }
 
     @Override
     public void addAll(List<T> list) {
-        if (size + list.size() > defaultArray.length) {
-            defaultArray = (T[]) grow(defaultArray);
-        }
-        addElementArray(list);
-    }
-
-    private void addElementArray(List<T> list) {
-        Object[] tempList = new Object[list.size()];
-        for (int i = 0; i < list.size(); i++) {
-            add(list.get(i));
-        }
-        System.arraycopy(tempList, DEFAULT_INDEX, defaultArray, size, tempList.length);
-        size += list.size();
-    }
-
-    public Object[] grow(Object[] array) {
-        int arrayLength = defaultArray.length + (defaultArray.length / 2);
-        Object[] temp = new Object[arrayLength];
-        System.arraycopy(array, DEFAULT_INDEX, temp, DEFAULT_INDEX, size);
-        return temp;
-    }
-
-    private void checkIndex(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index: " + index
-                    + " out of bounds, for length " + size());
+        for (int index = 0; index < list.size(); index++) {
+            add(list.get(index));
         }
     }
 
     @Override
     public T get(int index) {
         checkIndex(index);
-        return (T)defaultArray[index];
+        return defaultArray[index];
     }
 
     @Override
@@ -77,22 +55,20 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
-        T removedElement = (T) defaultArray[index];
+        T value = defaultArray[index];
         System.arraycopy(defaultArray, index + 1, defaultArray, index, size - index - 1);
         size--;
-        return removedElement;
+        return value;
     }
 
     @Override
     public T remove(T element) {
-        for (int i = 0; i < size; i++) {
-            if ((element != null && element.equals(defaultArray[i]))
-                    || element == defaultArray[i]) {
-                return remove(i);
+        for (int index = 0; index < size; index++) {
+            if (Objects.equals(defaultArray[index], element)) {
+                return remove(index);
             }
         }
-        throw new NoSuchElementException("Can not remove. The element "
-                + element + " does not exist");
+        throw new NoSuchElementException("No such element in ArrayList");
     }
 
     @Override
@@ -102,6 +78,33 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public boolean isEmpty() {
-        return size == DEFAULT_INDEX;
+        return size == 0;
+    }
+
+    private void checkSize() {
+        if (size + 1 >= defaultArray.length) {
+            increaseCapacity();
+        }
+    }
+
+    private void increaseCapacity() {
+        int newCapacity = (int)(size * INCREASING_ARRAY);
+        T[] newArray = (T[]) new Object[newCapacity];
+        System.arraycopy(defaultArray, 0, newArray, 0, defaultArray.length);
+        defaultArray = newArray;
+    }
+
+    private void checkIndexForAdd(int index) {
+        if (index > size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Your index is out of Bounds; "
+                    + "index: " + index + " size: " + size);
+        }
+    }
+
+    private void checkIndex(int index) {
+        if (index >= size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Your index is out of Bounds; "
+                    + "index: " + index + " size: " + size);
+        }
     }
 }
