@@ -7,7 +7,7 @@ public class ArrayList<T> implements List<T> {
     private static final double INCREASING_ARRAY = 1.5;
     private static final int INITIAL_CAPACITY = 10;
     private T[] defaultArray;
-    private int size = 0;
+    private int size;
 
     public ArrayList() {
         defaultArray = (T[]) new Object[INITIAL_CAPACITY];
@@ -15,19 +15,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        checkSize();
+        increaseCapacityIfFull();
         defaultArray[size] = value;
         size++;
     }
 
     @Override
     public void add(T value, int index) {
-        checkIndexForAdd(index);
-        checkSize();
+        increaseCapacityIfFull();
         if (index == size) {
             add(value);
             return;
         }
+        checkIndex(index);
         System.arraycopy(defaultArray, index, defaultArray, index + 1, size - index);
         defaultArray[index] = value;
         size++;
@@ -81,8 +81,8 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void checkSize() {
-        if (size + 1 >= defaultArray.length) {
+    private void increaseCapacityIfFull() {
+        if (size == defaultArray.length) {
             increaseCapacity();
         }
     }
@@ -94,12 +94,12 @@ public class ArrayList<T> implements List<T> {
         defaultArray = newArray;
     }
 
-    private void checkIndexForAdd(int index) {
-        if (index > size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Your index is out of Bounds; "
-                    + "index: " + index + " size: " + size);
-        }
-    }
+//    private void checkIndexForAdd(int index) {
+//        if (index > size || index < 0) {
+//            throw new ArrayListIndexOutOfBoundsException("Your index is out of Bounds; "
+//                    + "index: " + index + " size: " + size);
+//        }
+//    }
 
     private void checkIndex(int index) {
         if (index >= size || index < 0) {
