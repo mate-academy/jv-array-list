@@ -94,13 +94,6 @@ public class ArrayList<T> implements List<T> {
         defaultArray = newArray;
     }
 
-//    private void checkIndexForAdd(int index) {
-//        if (index > size || index < 0) {
-//            throw new ArrayListIndexOutOfBoundsException("Your index is out of Bounds; "
-//                    + "index: " + index + " size: " + size);
-//        }
-//    }
-
     private void checkIndex(int index) {
         if (index >= size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Your index is out of Bounds; "
