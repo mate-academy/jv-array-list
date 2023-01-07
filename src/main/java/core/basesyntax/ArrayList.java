@@ -7,11 +7,14 @@ public class ArrayList<T> implements List<T> {
 
     private T[] array = (T[]) new Object[ARRAY_MIN_SIZE];
     private int size;
+    private int newCapacity;
+    private T[] arrayGrow;
 
     @Override
     public void add(T value) {
         if (size >= array.length) {
-            array = (T[]) grow();
+            grow(array);
+            array = arrayGrow;
         }
         array[size] = value;
         size++;
@@ -21,13 +24,14 @@ public class ArrayList<T> implements List<T> {
     public void add(T value, int index) {
         if (index >= 0 && index <= size) {
             if (size >= array.length) {
-                array = (T[]) grow();
+                grow(array);
+                array = arrayGrow;
             }
             System.arraycopy(array, index, array, index + 1, size - index);
             array[index] = value;
             size++;
         } else {
-            throw new ArrayListIndexOutOfBoundsException("This index is missing");
+            throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
         }
     }
 
@@ -58,7 +62,7 @@ public class ArrayList<T> implements List<T> {
             size--;
             return removeElement;
         }
-        throw new ArrayListIndexOutOfBoundsException("This index is missing");
+        throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
     }
 
     @Override
@@ -66,12 +70,11 @@ public class ArrayList<T> implements List<T> {
         for (int i = 0; i < size; i++) {
             if (element == array[i] || array[i] != null && array[i].equals(element)) {
                 T removeElement = array[i];
-                System.arraycopy(array, i + 1, array, i, size - i - 1);
-                size--;
+                remove(i);
                 return removeElement;
             }
         }
-        throw new NoSuchElementException("This element is missing");
+        throw new NoSuchElementException("Element: " + element + " is missing");
     }
 
     @Override
@@ -84,17 +87,16 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private Object[] grow() {
-        int newCapacity = array.length + (array.length >> 1);
-        Object[] arrayGrow = new Object[newCapacity];
+    private void grow(T[] array) {
+        newCapacity = array.length + (array.length >> 1);
+        arrayGrow = (T[]) new Object[newCapacity];
         System.arraycopy(array, 0, arrayGrow, 0, size);
-        return arrayGrow;
     }
 
     private boolean isIndexValid(int index) {
         if (index >= 0 && index < size) {
             return true;
         }
-        throw new ArrayListIndexOutOfBoundsException("This index is missing");
+        throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
     }
 }
