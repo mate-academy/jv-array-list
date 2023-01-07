@@ -39,14 +39,18 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (size == array.length) { grow(); }
+        if (size == array.length) {
+            grow();
+        }
         array[size++] = value;
     }
 
     @Override
     public void add(T value, int index) {
         checkAddIndex(index);
-        if (size == array.length) { grow(); }
+        if (size == array.length) {
+            grow();
+        }
         System.arraycopy(array, index, array, index + 1, size - index);
         array[index] = value;
         size++;
@@ -65,8 +69,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     @Override
-    public T get(int index)
-    {
+    public T get(int index) {
         checkIndex(index);
         return (T)array[index];
     }
