@@ -1,5 +1,7 @@
 package core.basesyntax;
 
+import java.util.NoSuchElementException;
+
 public class ArrayList<T> implements List<T> {
     private static final int INITIAL_ARRAY_SIZE = 10;
     private static final int MAX_ARRAY_SIZE = Integer.MAX_VALUE;
@@ -10,14 +12,10 @@ public class ArrayList<T> implements List<T> {
         array = new Object[INITIAL_ARRAY_SIZE];
     }
 
-    private Object[] copyOfRange(Object[] src, int start, int end) {
-        Object[] result = new Object[end - start];
-        for (int i = 0; i < result.length; i++) {
-            result[i] = src[start + i];
-        }
-        return result;
-    }
     private void grow(int value) {
+        if (size + value > MAX_ARRAY_SIZE) {
+            throw new OutOfMemoryError();
+        }
         Object[] temp = new Object[size + value];
         System.arraycopy(array, 0, temp, 0, size);
         array = temp;
@@ -48,16 +46,9 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         checkAddIndex(index);
-        if (index == size) {
-            add(value);
-            return;
-        }
         if (size == array.length) { grow(); }
-        Object[] temp = copyOfRange(array, index, size);
+        System.arraycopy(array, index, array, index + 1, size - index);
         array[index] = value;
-        for (int i = 0; i < temp.length; i++) {
-            array[index + i + 1] = temp[i];
-        }
         size++;
     }
 
@@ -89,14 +80,22 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
-        // temp logic
+        T item = (T)array[index];
+        if (size != index + 1) {
+            System.arraycopy(array, index + 1, array, index, size - index);
+        }
         size--;
-        return (T)array[index];
+        return item;
     }
 
     @Override
     public T remove(T element) {
-        return null;
+        for (int i = 0; i < size; i++) {
+            if (element == null ? array[i] == null : element.equals(array[i])) {
+                return remove(i);
+            }
+        }
+        throw new NoSuchElementException("Such element does not exist in array");
     }
 
     @Override
