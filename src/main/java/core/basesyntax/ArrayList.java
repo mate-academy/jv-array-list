@@ -26,7 +26,7 @@ public class ArrayList<T> implements List<T> {
             add(value);
             return;
         }
-        exceptionIndex(index);
+        checkIndex(index);
         if (elementData.length == size) {
             grow();
         }
@@ -44,23 +44,21 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        exceptionIndex(index);
+        checkIndex(index);
         return (T) elementData[index];
     }
 
     @Override
     public void set(T value, int index) {
-        exceptionIndex(index);
+        checkIndex(index);
         elementData[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        exceptionIndex(index);
+        checkIndex(index);
         Object remove = elementData[index];
-        if (size - 1 - index >= 0) {
-            System.arraycopy(elementData, index + 1, elementData, index, size - 1 - index);
-        }
+        System.arraycopy(elementData, index + 1, elementData, index, size - 1 - index);
         size--;
         return (T) remove;
     }
@@ -93,9 +91,9 @@ public class ArrayList<T> implements List<T> {
         return elementData = arr;
     }
 
-    private void exceptionIndex(int index) {
+    private void checkIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("ArrayListIndexOutOfBoundsException");
+            throw new ArrayListIndexOutOfBoundsException("Index is invalid " + index);
         }
     }
 }
