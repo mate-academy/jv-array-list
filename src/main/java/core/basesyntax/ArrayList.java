@@ -7,14 +7,11 @@ public class ArrayList<T> implements List<T> {
 
     private T[] array = (T[]) new Object[ARRAY_MIN_SIZE];
     private int size;
-    private int newCapacity;
-    private T[] arrayGrow;
 
     @Override
     public void add(T value) {
         if (size >= array.length) {
             grow(array);
-            array = arrayGrow;
         }
         array[size] = value;
         size++;
@@ -25,7 +22,6 @@ public class ArrayList<T> implements List<T> {
         if (index >= 0 && index <= size) {
             if (size >= array.length) {
                 grow(array);
-                array = arrayGrow;
             }
             System.arraycopy(array, index, array, index + 1, size - index);
             array[index] = value;
@@ -69,9 +65,7 @@ public class ArrayList<T> implements List<T> {
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
             if (element == array[i] || array[i] != null && array[i].equals(element)) {
-                T removeElement = array[i];
-                remove(i);
-                return removeElement;
+                return remove(i);
             }
         }
         throw new NoSuchElementException("Element: " + element + " is missing");
@@ -88,9 +82,10 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void grow(T[] array) {
-        newCapacity = array.length + (array.length >> 1);
-        arrayGrow = (T[]) new Object[newCapacity];
+        int newCapacity = array.length + (array.length >> 1);
+        T[] arrayGrow = (T[]) new Object[newCapacity];
         System.arraycopy(array, 0, arrayGrow, 0, size);
+        this.array = arrayGrow;
     }
 
     private boolean isIndexValid(int index) {
