@@ -3,137 +3,118 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    private int maxSize = 10;
-    private int size;
-    private T[] array;
-    private T[] arrayGrow;
+    private static final int DEFAULT_INDEX = 10;
+    private static final double GROW_INDEX = 1.5;
+    private int maxSize = DEFAULT_INDEX;
+    private int sizeOfArray;
+    private T[] arrayDefault;
+    private T[] arrayTemporary;
 
     public ArrayList() {
-        array = (T[]) new Object[maxSize];
+        arrayDefault = (T[]) new Object[maxSize];
+    }
+
+    public void errorCheck(int index, int size) throws ArrayListIndexOutOfBoundsException {
+        if (index >= size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("No such index exception: "
+                    + index + " for size" + size);
+        }
     }
 
     public void resize() {
-        if (size == maxSize) {
-            maxSize = (int) (maxSize * 1.5);
-            arrayGrow = (T[]) new Object[maxSize];
-            System.arraycopy(array, 0, arrayGrow, 0, size);
-            array = arrayGrow;
+        if (sizeOfArray == maxSize) {
+            maxSize = (int) (maxSize * GROW_INDEX);
+            arrayTemporary = (T[]) new Object[maxSize];
+            System.arraycopy(arrayDefault, 0, arrayTemporary, 0, sizeOfArray);
+            arrayDefault = arrayTemporary;
         }
     }
 
     @Override
     public void add(T value) {
         resize();
-        for (int i = 0; i < size; i++) {
-            if ((array[i] != null && array[i] == value)
-                    || (array[i] != null && array[i].equals(value))) {
-                array[i] = value;
+        for (int i = 0; i < sizeOfArray; i++) {
+            if ((arrayDefault[i] != null && arrayDefault[i] == value)
+                    || (arrayDefault[i] != null && arrayDefault[i].equals(value))) {
+                arrayDefault[i] = value;
                 return;
             }
         }
-        array[size] = value;
-        size++;
+        arrayDefault[sizeOfArray] = value;
+        sizeOfArray++;
     }
 
     @Override
     public void add(T value, int index) throws ArrayListIndexOutOfBoundsException {
-        if (index >= size + 1 || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("No such index exception");
+        if (index > sizeOfArray || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("No such index exception: "
+                    + index + " size " + sizeOfArray);
         }
         resize();
-        if (index < size) {
-            T[] arrayGrow = (T[]) new Object[maxSize];
-            System.arraycopy(array, 0, arrayGrow, 0, index);
-            arrayGrow[index] = value;
-            System.arraycopy(array, index, arrayGrow, index + 1, size - index);
-            array = arrayGrow;
-            size++;
+        if (index < sizeOfArray) {
+            System.arraycopy(arrayDefault, index, arrayDefault, index + 1, sizeOfArray - index);
+            arrayDefault[index] = value;
+            sizeOfArray++;
             return;
         }
-        array[index] = value;
-        size++;
+        arrayDefault[index] = value;
+        sizeOfArray++;
     }
 
     @Override
     public void addAll(List<T> list) {
-        while (array.length < size + list.size()) {
-            maxSize = (int) (maxSize * 1.5);
-            arrayGrow = (T[]) new Object[maxSize];
-            System.arraycopy(array, 0, arrayGrow, 0, size);
-            array = arrayGrow;
-        }
         for (int i = 0; i < list.size(); i++) {
-            array[size] = list.get(i);
-            size++;
+            T value = list.get(i);
+            add(value);
+            resize();
         }
     }
 
     @Override
     public T get(int index) throws ArrayListIndexOutOfBoundsException {
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("No such index exception");
-        }
-        return array[index];
+        errorCheck(index, sizeOfArray);
+        return arrayDefault[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("No such index exception");
-        }
-        array[index] = value;
+        errorCheck(index, sizeOfArray);
+        arrayDefault[index] = value;
     }
 
     @Override
     public T remove(int index) throws ArrayListIndexOutOfBoundsException {
-        T[] arrayNew = (T[]) new Object[maxSize];
-        final T result;
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("No such index exception");
-        }
-        System.arraycopy(array, 0, arrayNew, 0, index);
-        System.arraycopy(array, index + 1, arrayNew, index, size - index - 1);
-        result = array[index];
-        array = arrayNew;
-        size--;
+        errorCheck(index, sizeOfArray);
+        T result = arrayDefault[index];
+        System.arraycopy(arrayDefault, index + 1, arrayDefault, index, sizeOfArray - index - 1);
+        sizeOfArray--;
         return result;
     }
 
     @Override
     public T remove(T element) throws NoSuchElementException {
-        T[] arrayNew = (T[]) new Object[maxSize];
         boolean resultElement = false;
-        for (int i = 0; i < size; i++) {
-            if (array[i] == null) {
-                System.arraycopy(array, 0, arrayNew, 0, i);
-                System.arraycopy(array, i + 1, arrayNew, i, size - i - 1);
+        for (int i = 0; i < sizeOfArray; i++) {
+            if ((element != null && element.equals(arrayDefault[i]))
+                    || element == arrayDefault[i]) {
+                remove(i);
                 resultElement = true;
-                array = arrayNew;
-                size--;
-                return element;
-            }
-            if ((element == array[i]) || element != null && array[i].equals(element)) {
-                System.arraycopy(array, 0, arrayNew, 0, i);
-                System.arraycopy(array, i + 1, arrayNew, i, size - i - 1);
-                resultElement = true;
-                array = arrayNew;
-                size--;
                 return element;
             }
         }
-        if (resultElement == false) {
-            throw new NoSuchElementException("No such element exception");
+        if (resultElement != true) {
+            throw new NoSuchElementException("No such index exception: " + element + " is absent");
         }
         return element;
     }
 
     @Override
     public int size() {
-        return size;
+        return sizeOfArray;
     }
 
     @Override
     public boolean isEmpty() {
-        return (size == 0);
+        return sizeOfArray == 0;
     }
 }
