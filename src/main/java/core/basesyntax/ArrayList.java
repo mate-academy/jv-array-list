@@ -13,7 +13,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        checkCapacity(size + 1);
+        checkCapacityAndGrow(size);
         elementData[size++] = value;
     }
 
@@ -23,19 +23,16 @@ public class ArrayList<T> implements List<T> {
             add(value);
         } else {
             checkRange(index);
-            checkCapacity(size + 1);
-            T[] newElementData = generateNewArray(elementData.length);
-            System.arraycopy(elementData, 0, newElementData, 0, (size - 1) - index);
-            newElementData[index] = value;
-            System.arraycopy(elementData, index, newElementData, index + 1, size - index);
-            elementData = newElementData;
+            checkCapacityAndGrow(size);
+            System.arraycopy(elementData, index, elementData, index + 1, size - index);
+            elementData[index] = value;
             size++;
         }
     }
 
     @Override
     public void addAll(List<T> list) {
-        checkCapacity(size + list.size());
+        checkCapacityAndGrow(size + list.size());
         T[] arrayFromList = (T[]) new Object[list.size()];
         for (int i = 0; i < list.size(); i++) {
             arrayFromList[i] = list.get(i);
@@ -47,17 +44,13 @@ public class ArrayList<T> implements List<T> {
     private void grow() {
         int oldCapacity = elementData.length;
         int newCapacity = oldCapacity + (oldCapacity >> 1);
-        T[] newElementData = generateNewArray(newCapacity);
+        T[] newElementData = (T[]) new Object[newCapacity];
         System.arraycopy(elementData, 0, newElementData, 0, size);
         elementData = newElementData;
     }
 
-    private T[] generateNewArray(int newCapacity) {
-        return (T[]) new Object[newCapacity];
-    }
-
-    private void checkCapacity(int capacity) {
-        if (capacity - elementData.length > 0) {
+    private void checkCapacityAndGrow(int capacity) {
+        if (capacity >= elementData.length) {
             grow();
         }
     }
@@ -84,11 +77,10 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         checkRange(index);
         T removeValue = elementData[index];
-        T[] newElementData = generateNewArray(elementData.length);
         if (index == size - 1) {
-            System.arraycopy(elementData, 0, newElementData, 0, size - 1);
+            System.arraycopy(elementData, 0, elementData, 0, size - 1);
         } else {
-            copyArray(index, newElementData);
+            System.arraycopy(elementData, index + 1, elementData, index, size - index);
         }
         size--;
         return removeValue;
@@ -98,20 +90,10 @@ public class ArrayList<T> implements List<T> {
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
             if (element == get(i) || (element != null && element.equals(elementData[i]))) {
-                T removeValue = elementData[i];
-                T[] newElementData = generateNewArray(elementData.length);
-                copyArray(i, newElementData);
-                size--;
-                return removeValue;
+                return remove(i);
             }
         }
         throw new NoSuchElementException("No such element " + element);
-    }
-
-    private void copyArray(int index, T[] newElementData) {
-        System.arraycopy(elementData, 0, newElementData, 0, (size - 1) - index);
-        System.arraycopy(elementData, index + 1, newElementData, index, size - index);
-        elementData = newElementData;
     }
 
     @Override
