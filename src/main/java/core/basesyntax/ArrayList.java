@@ -3,10 +3,14 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    static final int ARRAY_MIN_SIZE = 10;
+    private static final int ARRAY_MIN_SIZE = 10;
 
-    private T[] array = (T[]) new Object[ARRAY_MIN_SIZE];
+    private T[] array;
     private int size;
+
+    public ArrayList() {
+        array = (T[]) new Object[ARRAY_MIN_SIZE];
+    }
 
     @Override
     public void add(T value) {
@@ -58,7 +62,7 @@ public class ArrayList<T> implements List<T> {
             size--;
             return removeElement;
         }
-        throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
+        return null;
     }
 
     @Override
