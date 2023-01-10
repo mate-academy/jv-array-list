@@ -41,26 +41,6 @@ public class ArrayList<T> implements List<T> {
         size = size + list.size();
     }
 
-    private void grow() {
-        int oldCapacity = elementData.length;
-        int newCapacity = oldCapacity + (oldCapacity >> 1);
-        T[] newElementData = (T[]) new Object[newCapacity];
-        System.arraycopy(elementData, 0, newElementData, 0, size);
-        elementData = newElementData;
-    }
-
-    private void checkCapacityAndGrow(int capacity) {
-        if (capacity >= elementData.length) {
-            grow();
-        }
-    }
-
-    private void checkRange(int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Can't add element to index " + index);
-        }
-    }
-
     @Override
     public T get(int index) {
         checkRange(index);
@@ -77,11 +57,7 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         checkRange(index);
         T removeValue = elementData[index];
-        if (index == size - 1) {
-            System.arraycopy(elementData, 0, elementData, 0, size - 1);
-        } else {
-            System.arraycopy(elementData, index + 1, elementData, index, size - index);
-        }
+        System.arraycopy(elementData, index + 1, elementData, index, size - 1 - index);
         size--;
         return removeValue;
     }
@@ -104,5 +80,25 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private void grow() {
+        int oldCapacity = elementData.length;
+        int newCapacity = oldCapacity + (oldCapacity >> 1);
+        T[] newElementData = (T[]) new Object[newCapacity];
+        System.arraycopy(elementData, 0, newElementData, 0, size);
+        elementData = newElementData;
+    }
+
+    private void checkCapacityAndGrow(int capacity) {
+        if (capacity >= elementData.length) {
+            grow();
+        }
+    }
+
+    private void checkRange(int index) {
+        if (index >= size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Can't add element to index " + index);
+        }
     }
 }
