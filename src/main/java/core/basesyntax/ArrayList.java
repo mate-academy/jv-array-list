@@ -2,13 +2,8 @@ package core.basesyntax;
 
 import java.util.Arrays;
 import java.util.NoSuchElementException;
-import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
-    private static final int DIVIDER_FOR_NEW_CAPACITY = 2;
-    private static final int ZERO_INDEX = 0;
-    private static final int FIRST_INDEX = 1;
-    private static final int NON_EXISTING_INDEX = -1;
     private static final int DEFAULT_CAPACITY = 10;
     private int size;
     private Object[] elementData;
@@ -24,40 +19,26 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index != 0 && index != size) {
-            checkIndex(index);
-        }
         if (index == size) {
             add(value);
         } else {
-            if (index + size >= elementData.length || size + 1 == elementData.length) {
+            checkIndex(index);
+            if (size == elementData.length) {
                 elementData = grow();
             }
-            for (int i = 0; i < size; i++) {
-                if (index == i) {
-                    Object[] tempArray = new Object[elementData.length];
-                    tempArray[ZERO_INDEX] = elementData[index];
-                    elementData[index] = value;
-                    index++;
-                    size++;
-                    tempArray = copyToTempArray(index, tempArray, FIRST_INDEX, size);
-                    elementData = copyBackToArray(index, tempArray, size);
-                    break;
-                }
-            }
+            System.arraycopy(elementData, index, elementData, index + 1, size);
+            elementData[index] = value;
+            size++;
         }
     }
 
     @Override
     public void addAll(List<T> list) {
-        if (list.size() + size >= elementData.length) {
+        while (list.size() + size > elementData.length) {
             elementData = grow();
         }
-        for (int i = 0, k = size; i < list.size(); i++, k++) {
-            elementData[k] = list.get(i);
-            if (i == list.size() - FIRST_INDEX) {
-                size = k + FIRST_INDEX;
-            }
+        for (int i = 0; i < list.size(); i++) {
+            elementData[size++] = list.get(i);
         }
     }
 
@@ -70,26 +51,18 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void set(T value, int index) {
         checkIndex(index);
-        int foundIndex = findIndex(elementData, index);
-        if (foundIndex > - 1) {
-            elementData[foundIndex] = value;
-        }
+        elementData[index] = value;
     }
 
     @Override
     public T remove(int index) {
         checkIndex(index);
-        T oldValue = null;
-        oldValue = (T) elementData[index];
-        if (index == size - FIRST_INDEX) {
-            size--;
+        T oldValue = (T) elementData[index];
+        if (index == size - 1) {
+            elementData[--size] = null;
         } else {
-            Object[] tempArray = new Object[size - index];
-            index++;
-            tempArray = copyToTempArray(index, tempArray, ZERO_INDEX, tempArray.length);
-            index--;
-            size--;
-            elementData = copyBackToArray(index, tempArray, tempArray.length);
+            System.arraycopy(elementData, index + 1, elementData, index, size - index);
+            elementData[--size] = null;
         }
         return oldValue;
     }
@@ -97,10 +70,11 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if (Objects.equals(elementData[i], element)) {
+            if (elementData[i] == element
+                    || (elementData[i] != null && elementData[i].equals(element))) {
                 remove(i);
                 break;
-            } else if (i == size - FIRST_INDEX) {
+            } else if (i == size - 1) {
                 throw new NoSuchElementException("Element " + element + " wasn't found");
             }
         }
@@ -114,11 +88,11 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public boolean isEmpty() {
-        return size == ZERO_INDEX;
+        return size == 0;
     }
 
     private void checkIndex(int index) {
-        if (index >= size || index < ZERO_INDEX) {
+        if (index >= size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Index " + index
                     + " out of bounds for length " + size);
         }
@@ -130,7 +104,7 @@ public class ArrayList<T> implements List<T> {
                 return i;
             }
         }
-        return NON_EXISTING_INDEX;
+        return -1;
     }
 
     private Object[] copyBackToArray(int index, Object[] tempArray, int size) {
@@ -156,7 +130,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     private Object[] grow() {
-        return grow(size + FIRST_INDEX);
+        return grow(size + 1);
     }
 
     private Object[] grow(int minCapacity) {
@@ -165,6 +139,6 @@ public class ArrayList<T> implements List<T> {
 
     private int newCapacity(int minCapacity) {
         int oldCapacity = elementData.length;
-        return oldCapacity + (oldCapacity / DIVIDER_FOR_NEW_CAPACITY);
+        return oldCapacity + (oldCapacity / 2);
     }
 }
