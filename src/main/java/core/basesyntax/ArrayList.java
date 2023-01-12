@@ -46,20 +46,20 @@ public class ArrayList<T> implements List<T> {
     }
 
     @Override
-    public T get(int index) throws ArrayListIndexOutOfBoundsException {
-        errorCheck(index);
+    public T get(int index) {
+        checkIndexExeption(index);
         return array[index];
     }
 
     @Override
     public void set(T value, int index) {
-        errorCheck(index);
+        checkIndexExeption(index);
         array[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        errorCheck(index);
+        checkIndexExeption(index);
         T result = array[index];
         System.arraycopy(array, index + 1, array, index, sizeOfArray - index - 1);
         sizeOfArray--;
@@ -97,7 +97,7 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private void errorCheck(int index) {
+    private void checkIndexExeption(int index) {
         if (index >= sizeOfArray || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("No such index exception: "
                     + index + " for size" + sizeOfArray);
