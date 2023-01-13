@@ -91,6 +91,7 @@ public class ArrayList<T> implements List<T> {
         }
         return false;
     }
+
     private boolean checkIndexInRange(int index) {
         if (index < 0 || index >= actualSize) {
             throw new ArrayListIndexOutOfBoundsException("Index is out of bounds Exception");
@@ -105,8 +106,9 @@ public class ArrayList<T> implements List<T> {
     }
 
     private T removeElementAndResize(int index) {
-        T removedElement = arrayOfElements[index];
-        System.arraycopy(arrayOfElements, index + 1, arrayOfElements, index, actualSize - index - 1);
+        final T removedElement = arrayOfElements[index];
+        System.arraycopy(arrayOfElements, index + 1, arrayOfElements,
+                index, actualSize - index - 1);
         arrayOfElements[actualSize - 1] = null;
         actualSize--;
         return removedElement;
