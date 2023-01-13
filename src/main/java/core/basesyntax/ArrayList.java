@@ -4,11 +4,12 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int INITIAL_CAPACITY = 10;
+    private static final double INCREASE_RATE = 1.5;
     private T[] arrayOfElements;
     private int actualSize;
 
     public ArrayList() {
-        this.arrayOfElements = (T[]) new Object[INITIAL_CAPACITY];
+        arrayOfElements = (T[]) new Object[INITIAL_CAPACITY];
     }
 
     @Override
@@ -26,12 +27,12 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         if (index < 0 || index > actualSize) {
-            throw new ArrayListIndexOutOfBoundsException("index is out of bounds Exception");
+            throw new ArrayListIndexOutOfBoundsException("Index: " + index + " is out of bounds");
         }
         if (actualSize == arrayOfElements.length) {
             increaseCapacity();
         }
-        System.arraycopy(arrayOfElements, index, arrayOfElements, index + 1,actualSize - index);
+        System.arraycopy(arrayOfElements, index, arrayOfElements, index + 1, actualSize - index);
         arrayOfElements[index] = value;
         actualSize++;
     }
@@ -61,8 +62,10 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         if (checkIndexInRange(index)) {
-            T removedElement = arrayOfElements[index];
-            removeElementAndResize(index);
+            final T removedElement = arrayOfElements[index];
+            System.arraycopy(arrayOfElements, index + 1, arrayOfElements,
+                    index, actualSize - index - 1);
+            actualSize--;
             return removedElement;
         }
         return null;
@@ -71,12 +74,12 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < actualSize; i++) {
-            if (arrayOfElements[i] != null && arrayOfElements[i].equals(element)
-                    || arrayOfElements[i] == element) {
-                return removeElementAndResize(i);
+            if (arrayOfElements[i] == element || arrayOfElements[i] != null
+                    && arrayOfElements[i].equals(element)) {
+                return remove(i);
             }
         }
-        throw new NoSuchElementException("No element found");
+        throw new NoSuchElementException("Element: " + element + " is not found");
     }
 
     @Override
@@ -86,28 +89,26 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public boolean isEmpty() {
-        if (actualSize == 0) {
-            return true;
-        }
-        return false;
+        return actualSize == 0;
     }
+
     private boolean checkIndexInRange(int index) {
         if (index < 0 || index >= actualSize) {
-            throw new ArrayListIndexOutOfBoundsException("Index is out of bounds Exception");
+            throw new ArrayListIndexOutOfBoundsException("Index: " + index + " is out of bounds");
         }
         return true;
     }
 
     private void increaseCapacity() {
-        T[] temporaryArray = (T[]) new Object[(int) (arrayOfElements.length * 1.5)];
+        T[] temporaryArray = (T[]) new Object[(int) (arrayOfElements.length * INCREASE_RATE)];
         System.arraycopy(arrayOfElements, 0, temporaryArray, 0, actualSize);
         arrayOfElements = temporaryArray;
     }
 
     private T removeElementAndResize(int index) {
-        T removedElement = arrayOfElements[index];
-        System.arraycopy(arrayOfElements, index + 1, arrayOfElements, index, actualSize - index - 1);
-        arrayOfElements[actualSize - 1] = null;
+        final T removedElement = arrayOfElements[index];
+        System.arraycopy(arrayOfElements, index + 1, arrayOfElements,
+                index, actualSize - index - 1);
         actualSize--;
         return removedElement;
     }
