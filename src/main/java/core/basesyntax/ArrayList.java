@@ -5,10 +5,10 @@ import java.util.NoSuchElementException;
 public class ArrayList<T> implements List<T> {
     private static final int INITIAL_ARRAY_SIZE = 10;
     private int size;
-    private Object[] array;
+    private T[] array;
 
     public ArrayList() {
-        array = new Object[INITIAL_ARRAY_SIZE];
+        array = (T[]) new Object[INITIAL_ARRAY_SIZE];
     }
 
     @Override
@@ -50,7 +50,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
-        T item = (T) array[index];
+        T item = array[index];
         if (size != index + 1) {
             System.arraycopy(array, index + 1, array, index, size - index);
         }
@@ -65,7 +65,7 @@ public class ArrayList<T> implements List<T> {
                 return remove(i);
             }
         }
-        throw new NoSuchElementException("Such element does not exist in array");
+        throw new NoSuchElementException(element + " does not exist in array");
     }
 
     @Override
@@ -80,16 +80,18 @@ public class ArrayList<T> implements List<T> {
 
     private void grow() {
         if (size + (size >> 1) > Integer.MAX_VALUE) {
-            throw new ArrayListIndexOutOfBoundsException("The maximum size of the array reached");
+            throw new ArrayListIndexOutOfBoundsException("The maximum size of the array reached - "
+                    + Integer.MAX_VALUE);
         }
-        Object[] newArray = new Object[size + (size >> 1)];
+        T[] newArray = (T[]) new Object[size + (size >> 1)];
         System.arraycopy(array, 0, newArray, 0, size);
         array = newArray;
     }
 
     private void checkIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("The array index is out of bounds");
+            throw new ArrayListIndexOutOfBoundsException("The array index " + index
+                    + " is out of bounds - 0.." + (size - 1));
         }
     }
 
