@@ -3,38 +3,38 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    private static final int DEFAULT_INDEX = 10;
+    private static final int DEFAULT_CAPACITY = 10;
     private static final double GROW_INDEX = 1.5;
-    private int maxSize = DEFAULT_INDEX;
-    private int sizeOfArray;
-    private T[] array;
+    private int maxSize = DEFAULT_CAPACITY;
+    private int size;
+    private T[] values;
 
     public ArrayList() {
-        array = (T[]) new Object[maxSize];
+        values = (T[]) new Object[maxSize];
     }
 
     @Override
     public void add(T value) {
-        resize();
-        array[sizeOfArray] = value;
-        sizeOfArray++;
+        checkSizeOfArray();
+        values[size] = value;
+        size++;
     }
 
     @Override
     public void add(T value, int index) {
-        if (index > sizeOfArray || index < 0) {
+        if (index > size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("No such index exception: "
-                    + index + " size " + sizeOfArray);
+                    + index + " size " + size);
         }
-        resize();
-        if (index < sizeOfArray) {
-            System.arraycopy(array, index, array, index + 1, sizeOfArray - index);
-            array[index] = value;
-            sizeOfArray++;
+        checkSizeOfArray();
+        if (index < size) {
+            System.arraycopy(values, index, values, index + 1, size - index);
+            values[index] = value;
+            size++;
             return;
         }
-        array[index] = value;
-        sizeOfArray++;
+        values[index] = value;
+        size++;
     }
 
     @Override
@@ -48,29 +48,29 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         checkIndexExeption(index);
-        return array[index];
+        return values[index];
     }
 
     @Override
     public void set(T value, int index) {
         checkIndexExeption(index);
-        array[index] = value;
+        values[index] = value;
     }
 
     @Override
     public T remove(int index) {
         checkIndexExeption(index);
-        T result = array[index];
-        System.arraycopy(array, index + 1, array, index, sizeOfArray - index - 1);
-        sizeOfArray--;
+        T result = values[index];
+        System.arraycopy(values, index + 1, values, index, size - index - 1);
+        size--;
         return result;
     }
 
     @Override
     public T remove(T element) {
-        for (int i = 0; i < sizeOfArray; i++) {
-            if ((element != null && element.equals(array[i]))
-                    || element == array[i]) {
+        for (int i = 0; i < size; i++) {
+            if ((element != null && element.equals(values[i]))
+                    || element == values[i]) {
                 remove(i);
                 return element;
             }
@@ -80,27 +80,31 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public int size() {
-        return sizeOfArray;
+        return size;
     }
 
     @Override
     public boolean isEmpty() {
-        return sizeOfArray == 0;
+        return size == 0;
     }
 
-    private void resize() {
-        if (sizeOfArray == maxSize) {
-            maxSize = (int) (maxSize * GROW_INDEX);
-            T[] arrayTemporary = (T[]) new Object[maxSize];
-            System.arraycopy(array, 0, arrayTemporary, 0, sizeOfArray);
-            array = arrayTemporary;
+    private void checkSizeOfArray() {
+        if (size == maxSize) {
+            grow();
         }
     }
 
+    private void grow() {
+        maxSize = (int) (maxSize * GROW_INDEX);
+        T[] arrayTemporary = (T[]) new Object[maxSize];
+        System.arraycopy(values, 0, arrayTemporary, 0, size);
+        values = arrayTemporary;
+    }
+
     private void checkIndexExeption(int index) {
-        if (index >= sizeOfArray || index < 0) {
+        if (index >= size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("No such index exception: "
-                    + index + " for size" + sizeOfArray);
+                    + index + " for size" + size);
         }
     }
 }
