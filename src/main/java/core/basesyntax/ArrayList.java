@@ -74,8 +74,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < actualSize; i++) {
-            if (arrayOfElements[i] == element || arrayOfElements[i] != null
-                    && arrayOfElements[i].equals(element)) {
+            if (arrayOfElements[i] == element || element != null
+                    && element.equals(arrayOfElements[i])) {
                 return remove(i);
             }
         }
@@ -105,11 +105,4 @@ public class ArrayList<T> implements List<T> {
         arrayOfElements = temporaryArray;
     }
 
-    private T removeElementAndResize(int index) {
-        final T removedElement = arrayOfElements[index];
-        System.arraycopy(arrayOfElements, index + 1, arrayOfElements,
-                index, actualSize - index - 1);
-        actualSize--;
-        return removedElement;
-    }
 }
