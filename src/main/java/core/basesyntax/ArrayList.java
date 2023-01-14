@@ -4,20 +4,20 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int CAPACITY_DEFAULT = 10;
-    private static final double CAPACITY_GROW = 1.5;
+    private static final double CAPACITY_GROW_MULTIPLIER = 1.5;
     private int size;
-    private T[] arrayList;
+    private T[] data;
 
     public ArrayList() {
-        arrayList = (T[]) new Object[CAPACITY_DEFAULT];
+        data = (T[]) new Object[CAPACITY_DEFAULT];
     }
 
     @Override
     public void add(T value) {
-        if (size == arrayList.length) {
+        if (size == data.length) {
             grow();
         }
-        arrayList[size] = value;
+        data[size] = value;
         size++;
     }
 
@@ -28,19 +28,16 @@ public class ArrayList<T> implements List<T> {
             return;
         }
         checkIndex(index);
-        if (size == arrayList.length) {
+        if (size == data.length) {
             grow();
         }
-        System.arraycopy(arrayList, index,arrayList, index + 1, size - index);
-        arrayList[index] = value;
+        System.arraycopy(data, index, data, index + 1, size - index);
+        data[index] = value;
         size++;
     }
 
     @Override
     public void addAll(List<T> list) {
-        if (list == null) {
-            return;
-        }
         for (int i = 0; i < list.size(); i++) {
             add(list.get(i));
         }
@@ -49,32 +46,32 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         checkIndex(index);
-        return arrayList[index];
+        return data[index];
     }
 
     @Override
     public void set(T value, int index) {
         checkIndex(index);
-        arrayList[index] = value;
+        data[index] = value;
     }
 
     @Override
     public T remove(int index) {
         checkIndex(index);
-        final T removedArrayList = arrayList[index];
-        System.arraycopy(arrayList, index + 1, arrayList, index, size - 1 - index);
+        final T removedElement = data[index];
+        System.arraycopy(data, index + 1, data, index, size - 1 - index);
         size--;
-        return removedArrayList;
+        return removedElement;
     }
 
     @Override
     public T remove(T element) {
         for (int i = 0; i < this.size; i++) {
-            if (arrayList[i] == element || arrayList[i] != null && arrayList[i].equals(element)) {
+            if (data[i] == element || data[i] != null && data[i].equals(element)) {
                 return remove(i);
             }
         }
-        throw new NoSuchElementException(" The list is empty");
+        throw new NoSuchElementException("Element: " + element + " is not present in this list");
     }
 
     @Override
@@ -87,18 +84,18 @@ public class ArrayList<T> implements List<T> {
         if (size == 0) {
             return true;
         }
-        return false;
+        return size == 0;
     }
 
     private void checkIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("This index is invalid");
+            throw new ArrayListIndexOutOfBoundsException("This index:" + index + " is invalid");
         }
     }
 
     private void grow() {
-        T[] arrayListCopy = (T[]) new Object[(int)(arrayList.length * CAPACITY_GROW)];
-        System.arraycopy(arrayList, 0, arrayListCopy, 0, arrayList.length);
-        arrayList = arrayListCopy;
+        T[] arrayListCopy = (T[]) new Object[(int)(data.length * CAPACITY_GROW_MULTIPLIER)];
+        System.arraycopy(data, 0, arrayListCopy, 0, data.length);
+        data = arrayListCopy;
     }
 }
