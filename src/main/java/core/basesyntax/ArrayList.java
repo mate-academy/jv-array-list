@@ -3,51 +3,37 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    private int stSize = 10;
-    private int realSize = 0;
+    private static final double CHANGES = 1.5;
+    private int sizeThatChanges = 10;
+    private int size = 0;
     private T[] items;
 
     public ArrayList() {
-        items = (T[]) new Object[stSize];
-    }
-
-    private void resize() {
-        if (realSize >= stSize) {
-            stSize *= 1.5;
-            T[] newItems = (T[]) new Object[stSize];
-            System.arraycopy(items, 0, newItems, 0, realSize);
-            items = newItems;
-        }
-    }
-
-    private void testIndexOk(int index) {
-        if (index < 0 || index >= realSize) {
-            throw new ArrayListIndexOutOfBoundsException("index is invalid: " + index);
-        }
+        items = (T[]) new Object[sizeThatChanges];
     }
 
     @Override
     public void add(T value) {
         resize();
-        items[realSize] = value;
-        realSize++;
+        items[size] = value;
+        size++;
     }
 
     @Override
     public void add(T value, int index) {
-        if (index == realSize) {
+        if (index == size) {
             add(value);
             return;
         }
-        testIndexOk(index);
+        checkIndex(index);
         resize();
-        if (index == realSize) {
+        if (index == size) {
             items[index] = value;
-            realSize++;
+            size++;
         } else {
-            System.arraycopy(items, index, items, index + 1, realSize - index);
+            System.arraycopy(items, index, items, index + 1, size - index);
             items[index] = value;
-            realSize++;
+            size++;
         }
     }
 
@@ -60,57 +46,64 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        testIndexOk(index);
+        checkIndex(index);
         return items[index];
     }
 
     @Override
     public void set(T value, int index) {
-        testIndexOk(index);
+        checkIndex(index);
         items[index] = value;
     }
 
     @Override
     public T remove(int index) {
         T value = null;
-        if (index < realSize && index >= 0) {
+        if (index < size && index >= 0) {
             value = items[index];
-            for (int i = (index + 1); i < realSize; i++) {
-                items[i - 1] = items[i];
-            }
-            realSize -= 1;
+            //  for (int i = (index + 1); i < size; i++) {
+            //      items[i - 1] = items[i];}
+            System.arraycopy(items, index + 1, items, index, size - index - 1);
+            size--;
         } else {
             throw new ArrayListIndexOutOfBoundsException("index value: " + index
-                    + "is greater than size(): " + size());
+                    + "is greater than size: " + size);
         }
         return value;
     }
 
     @Override
     public T remove(T element) {
-        int index = -1;
-        for (int i = 0; i < realSize; i++) {
+        for (int i = 0; i < size; i++) {
             if (items[i] == element || (items[i] != null && items[i].equals(element))) {
-                index = i;
-                break;
+                return remove(i);
             }
         }
-        if (index == -1) {
-            throw new NoSuchElementException("value not found");
-        } else {
-            T value = items[index];
-            remove(index);
-            return value;
-        }
+        throw new NoSuchElementException("value not found");
     }
 
     @Override
     public int size() {
-        return realSize;
+        return size;
     }
 
     @Override
     public boolean isEmpty() {
-        return realSize == 0;
+        return size == 0;
+    }
+
+    private void resize() {
+        if (size >= sizeThatChanges) {
+            sizeThatChanges *= CHANGES;
+            T[] newItems = (T[]) new Object[sizeThatChanges];
+            System.arraycopy(items, 0, newItems, 0, size);
+            items = newItems;
+        }
+    }
+
+    private void checkIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("index is invalid: " + index);
+        }
     }
 }
