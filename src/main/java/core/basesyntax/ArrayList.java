@@ -4,7 +4,7 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final double GROW_FACTOR = 1.5;
-    private static final int DEFAULT_CAPACITY = 10; // private int sizeThatChanges = 10;
+    private static final int DEFAULT_CAPACITY = 10;
     private int size = 0;
     private T[] items;
 
@@ -25,16 +25,11 @@ public class ArrayList<T> implements List<T> {
             add(value);
             return;
         }
-        checkIndex(index);
         resize();
-        if (index == size) {
-            items[index] = value;
-            size++;
-        } else {
-            System.arraycopy(items, index, items, index + 1, size - index);
-            items[index] = value;
-            size++;
-        }
+        checkIndex(index);
+        System.arraycopy(items, index, items, index + 1, size - index);
+        items[index] = value;
+        size++;
     }
 
     @Override
@@ -73,7 +68,7 @@ public class ArrayList<T> implements List<T> {
                 return remove(i);
             }
         }
-        throw new NoSuchElementException("value not found" + element);
+        throw new NoSuchElementException("value not found: " + element);
     }
 
     @Override
@@ -97,7 +92,7 @@ public class ArrayList<T> implements List<T> {
     private void checkIndex(int index) {
         if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException("index is invalid: "
-                    + index + "size: " + size);
+                    + index + " ,size: " + size);
         }
     }
 }
