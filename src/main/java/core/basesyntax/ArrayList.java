@@ -3,9 +3,8 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-
     public static final int DEFAULT_SIZE = 10;
-    public static final double INCREASE = 1.5;
+    public static final double GROW_FACTOR = 1.5;
     private int size;
     private T[] elementData;
 
@@ -15,10 +14,9 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (size == elementData.length) {
-            increaseArray();
-        }
-        elementData[size++] = value;
+        growArray();
+        elementData[size] = value;
+        size++;
     }
 
     @Override
@@ -29,7 +27,7 @@ public class ArrayList<T> implements List<T> {
         }
         checkIndex(index);
         if (elementData.length == size) {
-            increaseArray();
+            growArray();
         }
         System.arraycopy(elementData, index, elementData, index + 1, size - index);
         elementData[index] = value;
@@ -39,7 +37,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void addAll(List<T> list) {
         if (list == null) {
-            return;
+            throw new NullPointerException();
         }
 
         for (int i = 0; i < list.size(); i++) {
@@ -89,10 +87,12 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void increaseArray() {
-        T[] newArray = (T[]) new Object[(int) (elementData.length * INCREASE)];
-        System.arraycopy(elementData, 0, newArray, 0, elementData.length);
-        elementData = newArray;
+    private void growArray() {
+        if (size == elementData.length) {
+            T[] newArray = (T[]) new Object[(int) (elementData.length * GROW_FACTOR)];
+            System.arraycopy(elementData, 0, newArray, 0, elementData.length);
+            elementData = newArray;
+        }
     }
 
     private void checkIndex(int index) {
