@@ -3,13 +3,13 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    private static final double CHANGES = 1.5;
-    private int sizeThatChanges = 10;
+    private static final double GROW_FACTOR = 1.5;
+    private static final int DEFAULT_CAPACITY = 10; // private int sizeThatChanges = 10;
     private int size = 0;
     private T[] items;
 
     public ArrayList() {
-        items = (T[]) new Object[sizeThatChanges];
+        items = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
     @Override
@@ -59,16 +59,10 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         T value = null;
-        if (index < size && index >= 0) {
-            value = items[index];
-            //  for (int i = (index + 1); i < size; i++) {
-            //      items[i - 1] = items[i];}
-            System.arraycopy(items, index + 1, items, index, size - index - 1);
-            size--;
-        } else {
-            throw new ArrayListIndexOutOfBoundsException("index value: " + index
-                    + "is greater than size: " + size);
-        }
+        checkIndex(index);
+        value = items[index];
+        System.arraycopy(items, index + 1, items, index, size - index - 1);
+        size--;
         return value;
     }
 
@@ -79,7 +73,7 @@ public class ArrayList<T> implements List<T> {
                 return remove(i);
             }
         }
-        throw new NoSuchElementException("value not found");
+        throw new NoSuchElementException("value not found" + element);
     }
 
     @Override
@@ -93,9 +87,8 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void resize() {
-        if (size >= sizeThatChanges) {
-            sizeThatChanges *= CHANGES;
-            T[] newItems = (T[]) new Object[sizeThatChanges];
+        if (size >= items.length) {
+            T[] newItems = (T[]) new Object[(int) (items.length * GROW_FACTOR)];
             System.arraycopy(items, 0, newItems, 0, size);
             items = newItems;
         }
@@ -103,7 +96,8 @@ public class ArrayList<T> implements List<T> {
 
     private void checkIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("index is invalid: " + index);
+            throw new ArrayListIndexOutOfBoundsException("index is invalid: "
+                    + index + "size: " + size);
         }
     }
 }
