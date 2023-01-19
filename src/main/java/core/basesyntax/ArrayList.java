@@ -25,7 +25,9 @@ public class ArrayList<T> implements List<T> {
             add(value);
             return;
         }
-        checkIndex(index);
+        if (index < 0 || index > size) {
+            throw new ArrayListIndexOutOfBoundsException("Index " + index + " is invalid");
+        }
         if (elementData.length == size) {
             growArray();
         }
