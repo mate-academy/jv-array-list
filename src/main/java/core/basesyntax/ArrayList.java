@@ -39,9 +39,6 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        if (list == null) {
-            return;
-        }
         for (int i = 0; i < list.size(); i++) {
             add(list.get(i));
         }
@@ -90,7 +87,8 @@ public class ArrayList<T> implements List<T> {
 
     private void checkIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index");
+            throw new ArrayListIndexOutOfBoundsException("Invalid index: out of bounds 0-"
+                    + (size - 1));
         }
     }
 
