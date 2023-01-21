@@ -6,16 +6,32 @@ import java.util.stream.IntStream;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    private Object[] elements = new Object[DEFAULT_CAPACITY];
+    private Object[] elements;
     private int size;
 
-    @Override
-    public void add(T value) {
+    public ArrayList(int initialCapacity) {
+        if(initialCapacity <= 0) {
+            throw new IllegalArgumentException();
+        } else {
+            elements = new Object[initialCapacity];
+        }
+    }
+
+    public ArrayList() {
+        this(DEFAULT_CAPACITY);
+    }
+
+    public void resizeIdIndex() {
         if (elements.length == size) {
             Object[] newElements = new Object[elements.length * 3 / 2 + 1];
             System.arraycopy(elements, 0, newElements, 0, size);
             elements = newElements;
         }
+    }
+
+    @Override
+    public void add(T value) {
+        resizeIdIndex();
         elements[size] = value;
         size++;
     }
@@ -23,14 +39,10 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("index is false");
+            throw new ArrayListIndexOutOfBoundsException("index is negative or index is bigger than size");
         }
         Objects.checkIndex(index, size + 1);
-        if (elements.length == size) {
-            Object[] newElements = new Object[elements.length * 3 / 2 + 1];
-            System.arraycopy(elements, 0, newElements, 0, size);
-            elements = newElements;
-        }
+        resizeIdIndex();
         System.arraycopy(elements, index, elements, index + 1, size - index);
         elements[index] = value;
         size++;
@@ -47,7 +59,7 @@ public class ArrayList<T> implements List<T> {
     @SuppressWarnings("unchecked")
     public T get(int index) {
         if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Can't get index");
+            throw new ArrayListIndexOutOfBoundsException("Can't get index,because index is negative or index is bigger than size");
         }
         Objects.checkIndex(index, size);
         return (T) elements[index];
@@ -56,7 +68,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void set(T value, int index) {
         if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Can't set index");
+            throw new ArrayListIndexOutOfBoundsException("Can't set index, because index is negative or index is bigger than size");
         }
         Objects.checkIndex(index, size);
         elements[index] = value;
@@ -66,7 +78,7 @@ public class ArrayList<T> implements List<T> {
     @SuppressWarnings("unchecked")
     public T remove(int index) {
         if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Can't remove index");
+            throw new ArrayListIndexOutOfBoundsException("Can't remove index, because index is negative or index is bigger than size");
         }
         Objects.checkIndex(index, size);
         T removedElements = (T) elements[index];
