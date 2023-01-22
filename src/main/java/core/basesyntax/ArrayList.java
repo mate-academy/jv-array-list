@@ -21,17 +21,28 @@ public class ArrayList<T> implements List<T> {
         this(DEFAULT_CAPACITY);
     }
 
-    public void resizeIdIndex() {
-        if (elements.length == size) {
-            Object[] newElements = new Object[elements.length * 3 / 2 + 1];
-            System.arraycopy(elements, 0, newElements, 0, size);
-            elements = newElements;
+    private void grow() {
+        Object[] newElements = new Object[elements.length * 3 / 2 + 1];
+        System.arraycopy(elements, 0, newElements, 0, size);
+        elements = newElements;
+    }
+
+    private void massageInException() {
+        throw new ArrayListIndexOutOfBoundsException(
+                "index is negative or index is bigger than size");
+    }
+
+    private void checkIndex(int index) {
+        if(index < 0 && index >= size ) {
+            throw new IndexOutOfBoundsException();
         }
     }
 
     @Override
     public void add(T value) {
-        resizeIdIndex();
+        if (elements.length == size) {
+           grow();
+        }
         elements[size] = value;
         size++;
     }
@@ -39,11 +50,12 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException(
-                    "index is negative or index is bigger than size");
+            massageInException();
         }
-        Objects.checkIndex(index, size + 1);
-        resizeIdIndex();
+        checkIndex(index);
+        if (elements.length == size) {
+           grow();
+        }
         System.arraycopy(elements, index, elements, index + 1, size - index);
         elements[index] = value;
         size++;
@@ -60,20 +72,18 @@ public class ArrayList<T> implements List<T> {
     @SuppressWarnings("unchecked")
     public T get(int index) {
         if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException(
-                    "Can't get index,because index is negative or index is bigger than size");
+            massageInException();
         }
-        Objects.checkIndex(index, size);
+        checkIndex(index);
         return (T) elements[index];
     }
 
     @Override
     public void set(T value, int index) {
         if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException(
-                    "Can't set index, because index is negative or index is bigger than size");
+            massageInException();
         }
-        Objects.checkIndex(index, size);
+        checkIndex(index);
         elements[index] = value;
     }
 
@@ -81,10 +91,9 @@ public class ArrayList<T> implements List<T> {
     @SuppressWarnings("unchecked")
     public T remove(int index) {
         if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException(
-                    "Can't remove index, because index is negative or index is bigger than size");
+            massageInException();
         }
-        Objects.checkIndex(index, size);
+        checkIndex(index);
         T removedElements = (T) elements[index];
         System.arraycopy(elements, index + 1, elements, index, size - index - 1);
         size--;
