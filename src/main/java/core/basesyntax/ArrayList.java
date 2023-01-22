@@ -31,14 +31,12 @@ public class ArrayList<T> implements List<T> {
         if (index == size) {
             add(value);
             return;
-        } else if (index >= 0 && index < size) {
-            resizeIdNeeded();
-            System.arraycopy(internalArray, index, internalArray, index + 1, size - index);
-            internalArray[index] = value;
-            size++;
-        } else {
-            throw new ArrayListIndexOutOfBoundsException("Index is out of bound array!");
         }
+        checkIndex(index);
+        resizeIdNeeded();
+        System.arraycopy(internalArray, index, internalArray, index + 1, size - index);
+        internalArray[index] = value;
+        size++;
     }
 
     @Override
@@ -51,43 +49,31 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (checkIndex(index)) {
-            return internalArray[index];
-        } else {
-            throw new ArrayListIndexOutOfBoundsException("Index is out of bound array!");
-        }
+        checkIndex(index);
+        return internalArray[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (checkIndex(index)) {
-            internalArray[index] = value;
-        } else {
-            throw new ArrayListIndexOutOfBoundsException("Index is out of bound array!");
-        }
+        checkIndex(index);
+        internalArray[index] = value;
     }
 
     @Override
     public T remove(int index) {
         T temporaryElement;
-        if (checkIndex(index)) {
-            temporaryElement = internalArray[index];
-            System.arraycopy(internalArray, index + 1, internalArray, index, size - index - 1);
-            size--;
-            return temporaryElement;
-        } else {
-            throw new ArrayListIndexOutOfBoundsException("Index is out of bound array!");
-        }
+        checkIndex(index);
+        temporaryElement = internalArray[index];
+        System.arraycopy(internalArray, index + 1, internalArray, index, size - index - 1);
+        size--;
+        return temporaryElement;
     }
 
     @Override
     public T remove(T element) {
         int index = searchIndex(element);
-        if (index >= 0 && index < size) {
-            return remove(index);
-        } else {
-            throw new NoSuchElementException("Index is out of bound array!");
-        }
+        checkIndex(index);
+        return remove(index);
     }
 
     @Override
@@ -129,10 +115,10 @@ public class ArrayList<T> implements List<T> {
     }
 
     private boolean checkIndex(int index) {
-        if (index >= 0 && index < size) {
-            return true;
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Index is out of bound array!");
         }
-        return false;
+        return true;
     }
 }
 
