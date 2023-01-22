@@ -1,7 +1,6 @@
 package core.basesyntax;
 
 import java.util.NoSuchElementException;
-import java.util.Objects;
 import java.util.stream.IntStream;
 
 public class ArrayList<T> implements List<T> {
@@ -33,7 +32,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void checkIndex(int index) {
-        if(index < 0 && index >= size ) {
+        if (index < 0 && index >= size) {
             throw new IndexOutOfBoundsException();
         }
     }
@@ -41,7 +40,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value) {
         if (elements.length == size) {
-           grow();
+            grow();
         }
         elements[size] = value;
         size++;
@@ -54,7 +53,7 @@ public class ArrayList<T> implements List<T> {
         }
         checkIndex(index);
         if (elements.length == size) {
-           grow();
+            grow();
         }
         System.arraycopy(elements, index, elements, index + 1, size - index);
         elements[index] = value;
