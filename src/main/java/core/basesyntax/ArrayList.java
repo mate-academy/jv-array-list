@@ -71,19 +71,12 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        int counter = 0;
-        for (Object el : elementData) {
-            if (equals(el, element)) {
-                counter++;
+        for (int i = 0; i < elementData.length; i++) {
+            if (equals(elementData[i], element)) {
+                return remove(i);
             }
         }
-        if (counter > 0) {
-            int index = Arrays.asList(elementData).indexOf(element);
-            remove(index);
-        } else {
-            throw new NoSuchElementException("There is no such element in list!");
-        }
-        return element;
+        throw new NoSuchElementException("There is no such element in list!");
     }
 
     @Override
