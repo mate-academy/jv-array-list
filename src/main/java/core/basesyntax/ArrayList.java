@@ -28,22 +28,14 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        int newIndex = index + 1;
         if (index == size) {
             add(value);
             return;
         } else if (index >= 0 && index < size) {
-            T[] newArray = (T[]) new Object[internalArray.length + 1];
-            for (int i = 0; i < index; i++) {
-                newArray[i] = internalArray[i];
-            }
-            newArray[index] = value;
-            int j = index;
-            for (int i = newIndex; i < size + 1; i++, j++) {
-                newArray[i] = internalArray[j];
-            }
+            resizeIdNeeded();
+            System.arraycopy(internalArray, index, internalArray, index + 1, size - index);
+            internalArray[index] = value;
             size++;
-            internalArray = newArray;
         } else {
             throw new ArrayListIndexOutOfBoundsException("Index is out of bound array!");
         }
@@ -51,29 +43,15 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        int sizesSum = size + list.size();
-        int y = size;
-        T[] newArray;
-        if (sizesSum > internalArray.length) {
-            newArray = (T[]) new Object[sizesSum];
-            for (int i = 0; i < size; i++) {
-                newArray[i] = internalArray[i];
-            }
-            for (int i = 0; i < list.size(); i++, y++) {
-                newArray[y] = list.get(i);
-            }
-            internalArray = newArray;
-        } else {
-            for (int i = 0; i < list.size(); i++, y++) {
-                internalArray[y] = list.get(i);
-            }
-            size = sizesSum;
+        int j = size;
+        for (int i = 0; i < list.size(); i++, j++) {
+            this.add(list.get(i));
         }
     }
 
     @Override
     public T get(int index) {
-        if (index >= 0 && index < size) {
+        if (checkIndex(index)) {
             return internalArray[index];
         } else {
             throw new ArrayListIndexOutOfBoundsException("Index is out of bound array!");
@@ -82,7 +60,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void set(T value, int index) {
-        if (index >= 0 && index < size) {
+        if (checkIndex(index)) {
             internalArray[index] = value;
         } else {
             throw new ArrayListIndexOutOfBoundsException("Index is out of bound array!");
@@ -92,11 +70,9 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         T temporaryElement;
-        if (index >= 0 && index < size) {
+        if (checkIndex(index)) {
             temporaryElement = internalArray[index];
-            for (int i = index; i < size - 1; i++) {
-                internalArray[i] = internalArray[i + 1];
-            }
+            System.arraycopy(internalArray, index + 1, internalArray, index, size - index - 1);
             size--;
             return temporaryElement;
         } else {
@@ -127,31 +103,37 @@ public class ArrayList<T> implements List<T> {
         return false;
     }
 
-    public void grow() {
+    private void grow() {
         int newLength = (int) (internalArray.length + DEFAULT_MULTIPLIER);
         T[] newArray = (T[]) new Object[newLength];
-        for (int i = 0; i < size; i++) {
-            newArray[i] = internalArray[i];
-        }
+        System.arraycopy(internalArray, 0, newArray, 0, size);
         internalArray = newArray;
     }
 
-    public int searchIndex(T element) {
-        if (element == null) {
-            for (int i = 0; i < size; i++) {
-                if (internalArray[i] == null) {
-                    return i;
-                }
+    private int searchIndex(T element) {
+        for (int i = 0; i < size; i++) {
+            if (element == null && internalArray[i] == null
+                    || element != null && element.equals(internalArray[i])) {
+                return i;
             }
-        } else if (element != null) {
-            for (int i = 0; i < size; i++) {
-                if (element.equals(internalArray[i])) {
-                    return i;
-                }
-            }
-        } else {
-            throw new NoSuchElementException("Cannot search for a null value!");
         }
-        return -1;
+        throw new NoSuchElementException("Value not found!");
+    }
+
+    private void resizeIdNeeded() {
+        if (internalArray.length == size) {
+            T[] newArray = (T[]) new Object[internalArray.length + 1];
+            System.arraycopy(internalArray, 0, newArray, 0, size);
+            internalArray = newArray;
+        }
+    }
+
+    private boolean checkIndex(int index) {
+        if (index >= 0 && index < size) {
+            return true;
+        }
+        return false;
     }
 }
+
+
