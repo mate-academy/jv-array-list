@@ -11,37 +11,34 @@ public class ArrayList<T> implements List<T> {
     public ArrayList(int initialCapacity) {
         if (initialCapacity <= 0) {
             throw new IllegalArgumentException();
-        } else {
-            elements = new Object[initialCapacity];
         }
+            elements = new Object[initialCapacity];
     }
 
     public ArrayList() {
         this(DEFAULT_CAPACITY);
     }
 
-    private void grow() {
-        Object[] newElements = new Object[elements.length * 3 / 2 + 1];
-        System.arraycopy(elements, 0, newElements, 0, size);
-        elements = newElements;
-    }
-
-    private void massageInException() {
-        throw new ArrayListIndexOutOfBoundsException(
-                "index is negative or index is bigger than size");
-    }
-
-    private void checkIndex(int index) {
-        if (index < 0 && index >= size) {
-            throw new IndexOutOfBoundsException();
+    public void grow() {
+        if (elements.length == size) {
+            Object[] newElements = new Object[elements.length * 3 / 2];
+            System.arraycopy(elements, 0, newElements, 0, size);
+            elements = newElements;
         }
     }
+
+    public void checkIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException(
+                    "index is negative or index is bigger than size");
+        }
+    }
+
+
 
     @Override
     public void add(T value) {
-        if (elements.length == size) {
-            grow();
-        }
+        grow();
         elements[size] = value;
         size++;
     }
@@ -49,12 +46,10 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         if (index < 0 || index > size) {
-            massageInException();
+            throw new ArrayListIndexOutOfBoundsException(
+                    "index is negative or index is bigger than size");
         }
-        checkIndex(index);
-        if (elements.length == size) {
-            grow();
-        }
+        grow();
         System.arraycopy(elements, index, elements, index + 1, size - index);
         elements[index] = value;
         size++;
@@ -65,23 +60,18 @@ public class ArrayList<T> implements List<T> {
         IntStream.range(0, list.size())
                 .mapToObj(list::get)
                 .forEach(this::add);
+
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public T get(int index) {
-        if (index < 0 || index >= size) {
-            massageInException();
-        }
         checkIndex(index);
         return (T) elements[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index < 0 || index >= size) {
-            massageInException();
-        }
         checkIndex(index);
         elements[index] = value;
     }
@@ -89,9 +79,6 @@ public class ArrayList<T> implements List<T> {
     @Override
     @SuppressWarnings("unchecked")
     public T remove(int index) {
-        if (index < 0 || index >= size) {
-            massageInException();
-        }
         checkIndex(index);
         T removedElements = (T) elements[index];
         System.arraycopy(elements, index + 1, elements, index, size - index - 1);
@@ -106,7 +93,7 @@ public class ArrayList<T> implements List<T> {
                 return remove(i);
             }
         }
-        throw new NoSuchElementException("element not found");
+        throw new NoSuchElementException("the element failed one of the three checks in the if block");
     }
 
     @Override
