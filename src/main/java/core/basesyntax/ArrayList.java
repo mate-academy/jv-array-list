@@ -12,7 +12,7 @@ public class ArrayList<T> implements List<T> {
         if (initialCapacity <= 0) {
             throw new IllegalArgumentException();
         }
-            elements = new Object[initialCapacity];
+        elements = new Object[initialCapacity];
     }
 
     public ArrayList() {
@@ -33,8 +33,6 @@ public class ArrayList<T> implements List<T> {
                     "index is negative or index is bigger than size");
         }
     }
-
-
 
     @Override
     public void add(T value) {
@@ -93,7 +91,8 @@ public class ArrayList<T> implements List<T> {
                 return remove(i);
             }
         }
-        throw new NoSuchElementException("the element failed one of the three checks in the if block");
+        throw new NoSuchElementException(
+                "the element failed one of the three checks in the if block");
     }
 
     @Override
