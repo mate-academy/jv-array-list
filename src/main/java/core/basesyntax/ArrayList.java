@@ -14,9 +14,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (size == internalArray.length) {
-            grow();
-        }
+        resizeIfNeeded();
         internalArray[size] = value;
         size++;
     }
@@ -78,13 +76,6 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void grow() {
-        int newLength = (int) (internalArray.length + DEFAULT_MULTIPLIER);
-        T[] newArray = (T[]) new Object[newLength];
-        System.arraycopy(internalArray, 0, newArray, 0, size);
-        internalArray = newArray;
-    }
-
     private int searchIndex(T element) {
         for (int i = 0; i < size; i++) {
             if (element == internalArray[i]
@@ -97,7 +88,7 @@ public class ArrayList<T> implements List<T> {
 
     private void resizeIfNeeded() {
         if (internalArray.length == size) {
-            T[] newArray = (T[]) new Object[internalArray.length + 1];
+            T[] newArray = (T[]) new Object[internalArray.length + DEFAULT_MULTIPLIER];
             System.arraycopy(internalArray, 0, newArray, 0, size);
             internalArray = newArray;
         }
