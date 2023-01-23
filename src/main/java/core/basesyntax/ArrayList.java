@@ -14,16 +14,11 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (size >= 0 && size < internalArray.length) {
-            internalArray[size] = value;
-            size++;
-        } else if (size == internalArray.length) {
+        if (size == internalArray.length) {
             grow();
-            internalArray[size] = value;
-            size++;
-        } else {
-            throw new ArrayListIndexOutOfBoundsException("Index is out of bound array!");
         }
+        internalArray[size] = value;
+        size++;
     }
 
     @Override
@@ -33,7 +28,7 @@ public class ArrayList<T> implements List<T> {
             return;
         }
         checkIndex(index);
-        resizeIdNeeded();
+        resizeIfNeeded();
         System.arraycopy(internalArray, index, internalArray, index + 1, size - index);
         internalArray[index] = value;
         size++;
@@ -41,9 +36,8 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        int j = size;
-        for (int i = 0; i < list.size(); i++, j++) {
-            this.add(list.get(i));
+        for (int i = 0; i < list.size(); i++) {
+            add(list.get(i));
         }
     }
 
@@ -61,9 +55,8 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(int index) {
-        T temporaryElement;
         checkIndex(index);
-        temporaryElement = internalArray[index];
+        T temporaryElement = internalArray[index];
         System.arraycopy(internalArray, index + 1, internalArray, index, size - index - 1);
         size--;
         return temporaryElement;
@@ -72,7 +65,6 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         int index = searchIndex(element);
-        checkIndex(index);
         return remove(index);
     }
 
@@ -83,10 +75,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public boolean isEmpty() {
-        if (size == 0) {
-            return true;
-        }
-        return false;
+        return size == 0;
     }
 
     private void grow() {
@@ -98,7 +87,7 @@ public class ArrayList<T> implements List<T> {
 
     private int searchIndex(T element) {
         for (int i = 0; i < size; i++) {
-            if (element == null && internalArray[i] == null
+            if (element == internalArray[i]
                     || element != null && element.equals(internalArray[i])) {
                 return i;
             }
@@ -106,7 +95,7 @@ public class ArrayList<T> implements List<T> {
         throw new NoSuchElementException("Value not found!");
     }
 
-    private void resizeIdNeeded() {
+    private void resizeIfNeeded() {
         if (internalArray.length == size) {
             T[] newArray = (T[]) new Object[internalArray.length + 1];
             System.arraycopy(internalArray, 0, newArray, 0, size);
