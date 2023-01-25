@@ -131,22 +131,4 @@ public class ArrayList<T> implements List<T> {
     public boolean isEmpty() {
         return size == 0;
     }
-
-    @Override
-    public String toString() {
-        if (values == null) {
-            return "null";
-        }
-        if (size == 0) {
-            return "[]";
-        }
-        StringBuilder stringBuilder = new StringBuilder("[");
-        for (int i = 0; i < size; i++) {
-            stringBuilder.append(" ").append(values[i]).append(",");
-        }
-        stringBuilder.setCharAt(stringBuilder.length() - 1, ']');
-        stringBuilder.append(" [size: ").append(size).append("]");
-        stringBuilder.append(" {values.length : ").append(values.length).append("}");
-        return stringBuilder.toString();
-    }
 }
