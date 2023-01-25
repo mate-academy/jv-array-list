@@ -94,6 +94,7 @@ public class ArrayList<T> implements List<T> {
         }
         return false;
     }
+
     private void increaseCapacity() {
         capacity = capacity + (capacity >> ADD_INDEX_NUMBER);
         T[] newList = (T[]) new Object[capacity];
