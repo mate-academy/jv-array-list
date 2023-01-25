@@ -3,11 +3,11 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    private final static int DEFAULT_CAPACITY = 10;
-    private final static int DEFAULT_SIZE = 0;
-    private final static int START_INDEX = 0;
-    private final static int NAGATIV_INDEX = -1;
-    private final static int ADD_INDEX_NUMBER = 1;
+    private static final int DEFAULT_CAPACITY = 10;
+    private static final int DEFAULT_SIZE = 0;
+    private static final int START_INDEX = 0;
+    private static final int NEGATIVE_INDEX = -1;
+    private static final int ADD_INDEX_NUMBER = 1;
     private int capacity;
     private T[] listT;
     private int size;
@@ -95,16 +95,6 @@ public class ArrayList<T> implements List<T> {
         return false;
     }
 
-    @Override
-    public String toString() {
-        StringBuilder stringBuilder = new StringBuilder("ArrayList {");
-        for (int i = START_INDEX; i < size; i++) {
-            stringBuilder.append(listT[i]).append(", ");
-        }
-        stringBuilder.append("}");
-        return stringBuilder.toString();
-    }
-
     private void increaseCapacity() {
         capacity = capacity +(capacity >> ADD_INDEX_NUMBER);
         T[] newList = (T[]) new Object[capacity];
@@ -115,7 +105,7 @@ public class ArrayList<T> implements List<T> {
 
     private void addToIndex(T value, int index) {
         T[] newList = (T[]) new Object[listT.length];
-        if (index <= size && index > NAGATIV_INDEX) {
+        if (index <= size && index > NEGATIVE_INDEX) {
             System.arraycopy(listT, START_INDEX, newList, START_INDEX, index + ADD_INDEX_NUMBER);
             newList[index] = value;
             System.arraycopy(listT, index, newList, index + ADD_INDEX_NUMBER, size - index);
