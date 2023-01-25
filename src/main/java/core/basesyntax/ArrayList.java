@@ -94,9 +94,8 @@ public class ArrayList<T> implements List<T> {
         }
         return false;
     }
-
     private void increaseCapacity() {
-        capacity = capacity +(capacity >> ADD_INDEX_NUMBER);
+        capacity = capacity + (capacity >> ADD_INDEX_NUMBER);
         T[] newList = (T[]) new Object[capacity];
         System.arraycopy(listT, START_INDEX, newList, START_INDEX, listT.length);
         this.listT = (T[]) new Object[capacity];
