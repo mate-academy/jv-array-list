@@ -21,9 +21,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (size == array.length) {
-            growArray();
-        }
+        checkSizeEquality();
         array[size] = value;
         size++;
     }
@@ -33,9 +31,7 @@ public class ArrayList<T> implements List<T> {
         if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException(EXCEPTION_MESSAGE);
         }
-        if (size == array.length) {
-            growArray();
-        }
+        checkSizeEquality();
         for (int i = size; i > index; i--) {
             array[i] = array[i - 1];
         }
@@ -70,20 +66,15 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        if (element == null) {
-            for (int i = 0; i < size; i++) {
-                if (array[i] == null) {
-                    return rearrangeElements(i);
-                }
-            }
-            return null;
-        }
         for (int i = 0; i < size; i++) {
-            if (array[i] != null && array[i].equals(element)) {
+            if (array[i] == element
+                    || array[i] != null
+                    && array[i].equals(element)) {
                 return rearrangeElements(i);
             }
         }
-        throw new NoSuchElementException("No such element in the list");
+        throw new NoSuchElementException("No such element: "
+                + element + ", in the list");
     }
 
     @Override
@@ -113,6 +104,12 @@ public class ArrayList<T> implements List<T> {
     private void checkIndex(int index) {
         if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException(EXCEPTION_MESSAGE);
+        }
+    }
+
+    private void checkSizeEquality() {
+        if (size == array.length) {
+            growArray();
         }
     }
 }
