@@ -1,33 +1,26 @@
 package core.basesyntax;
 
-import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     public static final int DEFAULT_CAPACITY = 10;
-    public static final double DEFAULT_GROW_RATE = 1.5;
-    private Object[] values;
+    public static final double GROW_RATE = 1.5;
+    private T[] values;
     private int size;
 
     public ArrayList() {
-        values = new Object[DEFAULT_CAPACITY];
-        size = 0;
+        values = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
     private void copyValues(int start, int end, int newStart) {
-        Object[] copy = new Object[end - start + 1];
-        System.arraycopy(values, start, copy, 0, copy.length);
-        System.arraycopy(copy, 0, values, newStart, copy.length);
+        System.arraycopy(values, start, values, newStart, end - start + 1);
     }
 
-    private void checkSizeEnlargeCapacity(int sizeIncrement) {
-        if (size + sizeIncrement > values.length) {
-            int newSize = values.length;
-            while (newSize < size + sizeIncrement) {
-                newSize = (int) (newSize * DEFAULT_GROW_RATE);
-            }
-            values = Arrays.copyOf(values,
-                    (int) (this.values.length * DEFAULT_GROW_RATE));
+    private void checkSizeEnlargeCapacity() {
+        if (size == values.length) {
+            T[] newValues = (T[]) new Object[(int) (size * GROW_RATE)];
+            System.arraycopy(values, 0, newValues, 0, size);
+            values = newValues;
         }
     }
 
@@ -44,9 +37,8 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        checkSizeEnlargeCapacity(1);
-        values[size] = value;
-        size++;
+        checkSizeEnlargeCapacity();
+        values[size++] = value;
     }
 
     @Override
@@ -58,7 +50,7 @@ public class ArrayList<T> implements List<T> {
         if (index == size) {
             add(value);
         } else {
-            checkSizeEnlargeCapacity(1);
+            checkSizeEnlargeCapacity();
             copyValues(index, size - 1, index + 1);
             values[index] = value;
             size++;
@@ -67,8 +59,8 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        checkSizeEnlargeCapacity(list.size());
         for (int i = 0; i < list.size(); i++) {
+            checkSizeEnlargeCapacity();
             add(list.get(i));
         }
     }
@@ -79,7 +71,7 @@ public class ArrayList<T> implements List<T> {
             if (values[index] == null) {
                 return null;
             } else {
-                return (T) values[index];
+                return values[index];
             }
         } else {
             throw new ArrayListIndexOutOfBoundsException(
@@ -104,10 +96,9 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayListIndexOutOfBoundsException(
                     String.format("Index %d out of bounds for length %d", index, size));
         } else {
-            result = (T) values[index];
-            copyValues(index + 1, size - 1, index);
-            values[size - 1] = null;
-            size--;
+            result = values[index];
+            copyValues(index + 1, --size, index);
+            values[size] = null;
         }
         return result;
     }
