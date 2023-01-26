@@ -67,39 +67,31 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index < size && index >= 0) {
-            if (values[index] == null) {
-                return null;
-            } else {
-                return values[index];
-            }
-        } else {
+        if (index >= size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException(
                     String.format("Index %d out of bounds for length %d", index, size));
         }
+        return values[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index < size && index >= 0) {
-            values[index] = value;
-        } else {
+        if (index >= size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException(
                     String.format("Index %d out of bounds for length %d", index, size));
         }
+        values[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        T result;
         if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException(
                     String.format("Index %d out of bounds for length %d", index, size));
-        } else {
-            result = values[index];
-            copyValues(index + 1, --size, index);
-            values[size] = null;
         }
+        T result = values[index];
+        copyValues(index + 1, --size, index);
+        values[size] = null;
         return result;
     }
 
