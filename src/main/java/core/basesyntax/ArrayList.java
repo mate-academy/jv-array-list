@@ -4,8 +4,8 @@ import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    private static final String EXCEPTION_MESSAGE = "Can't operate with the value, "
-            + "index is out of bounds";
+    private static final String EXCEPTION_MESSAGE =
+            "Can't operate with the value, index %s is out of bounds %s";
     private static final int DEFAULT_CAPACITY = 10;
     private static final double GROW_FACTOR = 1.5;
     private T[] array;
@@ -21,9 +21,8 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        checkSizeEquality();
-        array[size] = value;
-        size++;
+        growIfSizeEquals();
+        array[size++] = value;
     }
 
     @Override
@@ -31,7 +30,7 @@ public class ArrayList<T> implements List<T> {
         if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException(EXCEPTION_MESSAGE);
         }
-        checkSizeEquality();
+        growIfSizeEquals();
         for (int i = size; i > index; i--) {
             array[i] = array[i - 1];
         }
@@ -103,11 +102,12 @@ public class ArrayList<T> implements List<T> {
 
     private void checkIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException(EXCEPTION_MESSAGE);
+            throw new ArrayListIndexOutOfBoundsException(
+                    String.format(EXCEPTION_MESSAGE, index, size));
         }
     }
 
-    private void checkSizeEquality() {
+    private void growIfSizeEquals() {
         if (size == array.length) {
             growArray();
         }
