@@ -12,29 +12,6 @@ public class ArrayList<T> implements List<T> {
         values = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
-    private void copyValues(int start, int end, int newStart) {
-        System.arraycopy(values, start, values, newStart, end - start + 1);
-    }
-
-    private void checkSizeEnlargeCapacity() {
-        if (size == values.length) {
-            T[] newValues = (T[]) new Object[(int) (size * GROW_RATE)];
-            System.arraycopy(values, 0, newValues, 0, size);
-            values = newValues;
-        }
-    }
-
-    private int indexOf(T element) {
-        int result = -1;
-        for (int i = 0; i < size; i++) {
-            if (values[i] == null && element == null
-                    || values[i] != null && values[i].equals(element)) {
-                return i;
-            }
-        }
-        return result;
-    }
-
     @Override
     public void add(T value) {
         checkSizeEnlargeCapacity();
@@ -43,10 +20,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index > size + 1 || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException(
-                    String.format("Index %d out of bounds for length %d", index, size));
-        }
+        checkIndex(index, size);
         if (index == size) {
             add(value);
         } else {
@@ -60,35 +34,25 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void addAll(List<T> list) {
         for (int i = 0; i < list.size(); i++) {
-            checkSizeEnlargeCapacity();
             add(list.get(i));
         }
     }
 
     @Override
     public T get(int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException(
-                    String.format("Index %d out of bounds for length %d", index, size));
-        }
+        checkIndex(index, size - 1);
         return values[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException(
-                    String.format("Index %d out of bounds for length %d", index, size));
-        }
+        checkIndex(index, size - 1);
         values[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException(
-                    String.format("Index %d out of bounds for length %d", index, size));
-        }
+        checkIndex(index, size - 1);
         T result = values[index];
         copyValues(index + 1, --size, index);
         values[size] = null;
@@ -113,5 +77,52 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    @Override
+    public String toString() {
+        if (values == null) {
+            return "null";
+        }
+        if (size == 0) {
+            return "[]";
+        }
+        StringBuilder stringBuilder = new StringBuilder("[");
+        for (int i = 0; i < size; i++) {
+            stringBuilder.append(" ").append(values[i]).append(",");
+        }
+        stringBuilder.setCharAt(stringBuilder.length() - 1, ']');
+        stringBuilder.append(" [size: ").append(size).append("]");
+        stringBuilder.append(" {values.length : ").append(values.length).append("}");
+        return stringBuilder.toString();
+    }
+
+    private void checkIndex(int index, int upperBound) {
+        if (index < 0 || index > upperBound) {
+            throw new ArrayListIndexOutOfBoundsException(
+                    String.format("Index %d out of bounds for length %d", index, size));
+        }
+    }
+    private void copyValues(int start, int end, int newStart) {
+        System.arraycopy(values, start, values, newStart, end - start + 1);
+    }
+
+    private int indexOf(T element) {
+        int result = -1;
+        for (int i = 0; i < size; i++) {
+            if (values[i] == null && element == null
+                    || values[i] != null && values[i].equals(element)) {
+                return i;
+            }
+        }
+        return result;
+    }
+
+    private void checkSizeEnlargeCapacity() {
+        if (size == values.length) {
+            T[] newValues = (T[]) new Object[(int) (size * GROW_RATE)];
+            System.arraycopy(values, 0, newValues, 0, size);
+            values = newValues;
+        }
     }
 }
