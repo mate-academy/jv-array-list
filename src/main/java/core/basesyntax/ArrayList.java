@@ -6,9 +6,8 @@ import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    private static final double INCREASING_ARGUMENT = 1.5;
     private Object[] objects = new Object[DEFAULT_CAPACITY];
-    private int size = 0;
+    private int size;
 
     @Override
     public void add(T value) {
@@ -57,23 +56,11 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(int index) {
-        final int newSize;
-        Object oldObject;
-
         checkIndex(index);
-
-        if (objects[index] == null) {
-            oldObject = null;
-        } else {
-            oldObject = objects[index];
-        }
-
-        if ((newSize = size - 1) > index) {
-            System.arraycopy(objects, index + 1, objects, index, size - index);
-        }
-        objects[newSize] = null;
-        size = newSize;
-        return (T) oldObject;
+        T value = (T) objects[index];
+        System.arraycopy(objects, index + 1, objects, index, size - index - 1);
+        objects[--size] = null;
+        return value;
     }
 
     @Override
@@ -103,11 +90,11 @@ public class ArrayList<T> implements List<T> {
 
     private int countNewCapacity() {
         int oldCapacity = objects.length;
-        return (int) (oldCapacity + (oldCapacity * INCREASING_ARGUMENT));
+        return (oldCapacity + (oldCapacity >> 1));
     }
 
     private void checkIndex(int index) {
-        if (index < 0 || index > size - 1) {
+        if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException("Index: "
                     + index + " out of size: " + size);
         }
