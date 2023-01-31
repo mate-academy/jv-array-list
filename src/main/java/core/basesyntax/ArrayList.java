@@ -1,12 +1,11 @@
 package core.basesyntax;
 
-import java.util.Arrays;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    private static final int RESIZE_PERCENTAGE = 150;
+    private static final double GROW_FACTOR = 1.5;
     private T[] elements;
     private int size;
 
@@ -24,7 +23,9 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        checkRangeForAdd(index);
+        if (index < 0 || index > size) {
+            throw new ArrayListIndexOutOfBoundsException("index " + index + "is incorrect");
+        }
         if (isLengthInsufficient(size)) {
             changeCapacity();
         }
@@ -71,13 +72,13 @@ public class ArrayList<T> implements List<T> {
             }
         }
         for (int i = 0; i < this.size; i++) {
-            if (equals(elements[i], element)) {
+            if (Objects.equals(element, elements[i])) {
                 T removedElement = elements[i];
                 removeElement(i);
                 return removedElement;
             }
         }
-        throw new NoSuchElementException("There is no such element in list");
+        throw new NoSuchElementException("There is no such element in list " + element);
     }
 
     @Override
@@ -95,13 +96,13 @@ public class ArrayList<T> implements List<T> {
     }
 
     private int getResizeCapacity() {
-        return elements.length * RESIZE_PERCENTAGE / 100;
+        return (int) (elements.length * GROW_FACTOR);
     }
 
     private void changeCapacity() {
-        Object[] oldElements = this.elements;
-        int capacity = getResizeCapacity();
-        this.elements = (T[]) Arrays.copyOf(oldElements, capacity);
+        T[] temp = (T[]) new Object[getResizeCapacity()];
+        System.arraycopy(elements, 0, temp, 0, elements.length);
+        this.elements = temp;
     }
 
     private void checkRange(int index) {
@@ -111,21 +112,11 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private void checkRangeForAdd(int index) {
-        if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("index " + index + "is incorrect");
-        }
-    }
-
     private void removeElement(int index) {
         size--;
         if ((size - index) > 0) {
             System.arraycopy(this.elements, index + 1, this.elements, index, size - index);
         }
         elements[size] = null;
-    }
-
-    private boolean equals(T a, T b) {
-        return Objects.equals(a, b);
     }
 }
