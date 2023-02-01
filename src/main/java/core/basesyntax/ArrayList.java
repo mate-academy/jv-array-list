@@ -29,9 +29,7 @@ public class ArrayList<T> implements List<T> {
             size++;
             return;
         }
-        if (!indexCheck(index)) {
-            throw new ArrayListIndexOutOfBoundsException("Index " + index + " is not valid.");
-        }
+        checkIndex(index);
         System.arraycopy(elementData, 0, elementData, 0, index);
         System.arraycopy(elementData, index, elementData, index + 1,
                 elementData.length - (index + 1));
@@ -45,8 +43,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void addAll(List<T> list) {
         for (int i = 0; i < list.size(); i++) {
-            elementData[size] = list.get(i);
-            size++;
+            add(list.get(i));
             if (size == elementData.length) {
                 grow();
             }
@@ -55,25 +52,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (!indexCheck(index)) {
-            throw new ArrayListIndexOutOfBoundsException("Index " + index + " is not valid.");
-        }
+        checkIndex(index);
         return (T) elementData[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (!indexCheck(index)) {
-            throw new ArrayListIndexOutOfBoundsException("Index " + index + " is not valid.");
-        }
+        checkIndex(index);
         this.elementData[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (!indexCheck(index)) {
-            throw new ArrayListIndexOutOfBoundsException("Index " + index + " is not valid.");
-        }
+        checkIndex(index);
         Object removedElement = elementData[index];
         System.arraycopy(elementData, index + 1,
                 elementData, index, elementData.length - (index + 1));
@@ -87,16 +78,14 @@ public class ArrayList<T> implements List<T> {
         for (int i = 0; i < size; i++) {
             if ((element == elementData[i])
                     || (elementData[i] != null && elementData[i].equals(element))) {
-                System.arraycopy(elementData, 0, elementData, 0, i);
-                System.arraycopy(elementData, i + 1, elementData, i, elementData.length - (i + 1));
+                remove(i);
                 elementFound = true;
                 break;
             }
         }
         if (!elementFound) {
-            throw new NoSuchElementException("No such element exist.");
+            throw new NoSuchElementException("Element: " + element + " is not found.");
         }
-        size--;
         return element;
     }
 
@@ -117,7 +106,10 @@ public class ArrayList<T> implements List<T> {
         System.arraycopy(updatedData, 0, elementData, 0, size);
     }
 
-    private boolean indexCheck(int index) {
-        return index >= 0 && index < size;
+    private void checkIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Index " + index
+                    + " out of range " + size);
+        }
     }
 }
