@@ -1,47 +1,26 @@
 package core.basesyntax;
 
+import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    private static final int DEFAULT_CAPACITY = 10;
-    private static final int NO_SUCH_ELEMENT_INDEX = -1;
     private static final double MAX_CAPACITY_RAISE_INDEX = 1.5;
 
     private T[] elementData;
-    private T[] rewriteElementData;
-    private int size = 0;
-    private int currentMaxCapacity = DEFAULT_CAPACITY;
+    private int size;
+    private int currentMaxCapacity = 10;
 
     public ArrayList() {
-        elementData = (T[]) new Object[DEFAULT_CAPACITY];
-    }
-
-    private void resizeRewriteElementData(int newSize) {
-        rewriteElementData = (T[]) new Object[newSize];
-    }
-
-    private void resizeElementData(int newSize) {
-        elementData = (T[]) new Object[newSize];
-    }
-
-    private boolean correctIndexCheck(int index) {
-        if (index > size - 1 || index < 0) {
-            return false;
-        }
-        return true;
+        elementData = (T[]) new Object[currentMaxCapacity];
     }
 
     @Override
     public void add(T value) {
-        if (size + 1 <= currentMaxCapacity) {
+        if (size + 1 <= elementData.length) {
             elementData[size] = value;
         } else {
-            currentMaxCapacity *= MAX_CAPACITY_RAISE_INDEX;
-            resizeRewriteElementData(size + 1);
-            System.arraycopy(elementData, 0, rewriteElementData, 0, size);
-            rewriteElementData[size] = value;
-            resizeElementData(currentMaxCapacity);
-            System.arraycopy(rewriteElementData, 0, elementData, 0, rewriteElementData.length);
+            grow();
+            elementData[size] = value;
         }
         size++;
     }
@@ -51,65 +30,46 @@ public class ArrayList<T> implements List<T> {
         if (index > size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Array List shorter then you think");
         }
-        resizeRewriteElementData(size + 1);
-        if (size + 1 <= currentMaxCapacity) {
-            System.arraycopy(elementData, 0, rewriteElementData, 0, index);
-            rewriteElementData[index] = value;
-            System.arraycopy(elementData, index, rewriteElementData, index + 1, size - index);
-        } else {
-            currentMaxCapacity *= MAX_CAPACITY_RAISE_INDEX;
-            System.arraycopy(elementData, 0, rewriteElementData, 0, index);
-            rewriteElementData[index] = value;
-            System.arraycopy(elementData, index, rewriteElementData, index + 1, size - index);
-            resizeElementData(currentMaxCapacity);
+        if (size + 1 > elementData.length) {
+            grow();
         }
-        System.arraycopy(rewriteElementData, 0, elementData, 0, rewriteElementData.length);
+        for (int i = size; i > index; i--) {
+            elementData[i] = elementData[i - 1];
+        }
+        elementData[index] = value;
         size++;
     }
 
     @Override
     public void addAll(List<T> list) {
-        if (size + list.size() < currentMaxCapacity) {
-            for (int i = size; i < (size + list.size()); i++) {
-                elementData[i] = list.get(i - size);
-            }
-        } else {
+        if (size + list.size() > elementData.length) {
             do {
                 currentMaxCapacity *= MAX_CAPACITY_RAISE_INDEX;
             } while (size + list.size() >= currentMaxCapacity);
-            resizeRewriteElementData(size + list.size());
-            System.arraycopy(elementData, 0, rewriteElementData, 0, size);
-            for (int i = size; i < size + list.size(); i++) {
-                rewriteElementData[i] = list.get(i - size);
-            }
-            resizeElementData(currentMaxCapacity);
-            System.arraycopy(rewriteElementData, 0, elementData, 0, rewriteElementData.length);
+            elementData = Arrays.copyOf(elementData, currentMaxCapacity);
+        }
+        for (int i = size; i < (size + list.size()); i++) {
+            elementData[i] = list.get(i - size);
         }
         size += list.size();
     }
 
     @Override
     public T get(int index) {
-        if (correctIndexCheck(index) == false) {
-            throw new ArrayListIndexOutOfBoundsException("Array List shorter then you think");
-        }
+        checkIndex(index);
         return elementData[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (correctIndexCheck(index) == false) {
-            throw new ArrayListIndexOutOfBoundsException("Array List shorter then you think");
-        }
+        checkIndex(index);
         elementData[index] = value;
     }
 
     @Override
     public T remove(int index) {
         T removedObject;
-        if (correctIndexCheck(index) == false) {
-            throw new ArrayListIndexOutOfBoundsException("Array List shorter then you think");
-        }
+        checkIndex(index);
         removedObject = elementData[index];
         System.arraycopy(elementData, index + 1, elementData, index, size - 1 - index);
         elementData[size - 1] = null;
@@ -119,18 +79,13 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) throws NoSuchElementException {
-        int index = NO_SUCH_ELEMENT_INDEX;
         for (int i = 0; i < size; i++) {
             if ((elementData[i] != null && elementData[i].equals(element))
                     || (elementData[i] == null && element == null)) {
-                index = i;
-                break;
+                return remove(i);
             }
         }
-        if (index == NO_SUCH_ELEMENT_INDEX) {
-            throw new NoSuchElementException("NoSuchElementException");
-        }
-        return remove(index);
+        throw new NoSuchElementException("NoSuchElementException");
     }
 
     @Override
@@ -141,5 +96,16 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private void checkIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Array List shorter then you think");
+        }
+    }
+
+    private T[] grow() {
+        return elementData = Arrays.copyOf(elementData,
+                (int) (elementData.length * MAX_CAPACITY_RAISE_INDEX));
     }
 }
