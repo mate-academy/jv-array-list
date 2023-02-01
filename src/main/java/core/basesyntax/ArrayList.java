@@ -11,20 +11,6 @@ public class ArrayList<T> implements List<T> {
         this.elementData = new Object[DEFAULT_CAPACITY];
     }
 
-    private void checkIndex(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("ArrayList index out of bounds");
-        }
-    }
-
-    private Object[] grow() {
-        int oldCapacity = elementData.length;
-        int newCapacity = oldCapacity + oldCapacity / 2;
-        Object[] newArray = new Object[newCapacity];
-        System.arraycopy(elementData, 0, newArray, 0, size);
-        return elementData = newArray;
-    }
-
     @Override
     public void add(T value) {
         if (size == elementData.length) {
@@ -96,5 +82,20 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private void checkIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Index: " + index
+                    + "out of bounds size " + size);
+        }
+    }
+
+    private Object[] grow() {
+        int oldCapacity = elementData.length;
+        int newCapacity = oldCapacity + oldCapacity / 2;
+        Object[] newArray = new Object[newCapacity];
+        System.arraycopy(elementData, 0, newArray, 0, size);
+        return elementData = newArray;
     }
 }
