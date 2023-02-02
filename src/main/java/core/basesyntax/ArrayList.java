@@ -30,7 +30,6 @@ public class ArrayList<T> implements List<T> {
             return;
         }
         checkIndex(index);
-        System.arraycopy(elementData, 0, elementData, 0, index);
         System.arraycopy(elementData, index, elementData, index + 1,
                 elementData.length - (index + 1));
         elementData[index] = value;
@@ -74,18 +73,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        boolean elementFound = false;
-        for (int i = 0; i < size; i++) {
-            if ((element == elementData[i])
-                    || (elementData[i] != null && elementData[i].equals(element))) {
-                remove(i);
-                elementFound = true;
-                break;
-            }
-        }
-        if (!elementFound) {
-            throw new NoSuchElementException("Element: " + element + " is not found.");
-        }
+        remove(checkElement(element));
         return element;
     }
 
@@ -102,8 +90,7 @@ public class ArrayList<T> implements List<T> {
     private void grow() {
         Object[] updatedData = new Object[(int) (elementData.length * CAPACITY_MULTIPLIER)];
         System.arraycopy(elementData, 0, updatedData, 0, size);
-        elementData = new Object[(int) (updatedData.length * CAPACITY_MULTIPLIER)];
-        System.arraycopy(updatedData, 0, elementData, 0, size);
+        elementData = updatedData;
     }
 
     private void checkIndex(int index) {
@@ -111,5 +98,15 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayListIndexOutOfBoundsException("Index " + index
                     + " out of range " + size);
         }
+    }
+
+    private int checkElement(T element) {
+        for (int i = 0; i < size; i++) {
+            if ((element == elementData[i])
+                    || (elementData[i] != null && elementData[i].equals(element))) {
+                return i;
+            }
+        }
+        throw new NoSuchElementException("Element: " + element + " is not found.");
     }
 }
