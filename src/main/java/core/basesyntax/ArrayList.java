@@ -11,7 +11,6 @@ public class ArrayList<T> implements List<T> {
 
     public ArrayList() {
         array = new Object[ARRAY_DEFAULT_LENGTH];
-        currentSize = 0;
     }
 
     @Override
@@ -123,7 +122,9 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void grow() {
-        array = Arrays.copyOf(array, currentSize + (currentSize >> 1));
+        Object[] newArray = new Object[currentSize + (currentSize >> 1)];
+        System.arraycopy(array, 0, newArray, 0, currentSize);
+        array = newArray;
     }
 
     private boolean isIndexValid(int index) {
