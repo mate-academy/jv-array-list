@@ -7,7 +7,7 @@ public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private static final double CAPACITY_MULTIPLIER = 1.5;
     private Object[] elementData;
-    private int size = 0;
+    private int size;
 
     public ArrayList() {
         this.elementData = new Object[DEFAULT_CAPACITY];
@@ -43,9 +43,6 @@ public class ArrayList<T> implements List<T> {
     public void addAll(List<T> list) {
         for (int i = 0; i < list.size(); i++) {
             add(list.get(i));
-            if (size == elementData.length) {
-                grow();
-            }
         }
     }
 
