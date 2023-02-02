@@ -1,13 +1,16 @@
 package core.basesyntax;
 
 import java.util.NoSuchElementException;
-import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private static final double GROW_COEFFICIENT = 1.5;
-    private T[] elementArray = (T[]) new Object[DEFAULT_CAPACITY];
+    private T[] elementArray;
     private int size;
+
+    public ArrayList() {
+        elementArray = (T[]) new Object[DEFAULT_CAPACITY];
+    }
 
     @Override
     public void add(T value) {
@@ -35,10 +38,6 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) throws ArrayListIndexOutOfBoundsException {
-        if (list.size() <= 0) {
-            throw new ArrayListIndexOutOfBoundsException("list " + list.size()
-                    + " out of bounds for length " + size);
-        }
         for (int i = 0; i < list.size(); i++) {
             this.add(list.get(i));
         }
@@ -68,10 +67,6 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         int index = findIndexElement(element);
-        if (index >= size || index < 0) {
-            throw new NoSuchElementException("Index " + index
-                    + " out of bounds for length " + size);
-        }
         T result = elementArray[index];
         System.arraycopy(elementArray, index + 1, elementArray, index, size - index - 1);
         size--;
@@ -96,7 +91,8 @@ public class ArrayList<T> implements List<T> {
 
     private int findIndexElement(T element) {
         for (int i = 0; i < size; i++) {
-            if (Objects.equals(element, elementArray[i])) {
+            if (elementArray[i] == element || elementArray[i] != null
+                    && elementArray[i].equals(element)) {
                 return i;
             }
         }
