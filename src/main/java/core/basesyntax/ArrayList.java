@@ -1,6 +1,5 @@
 package core.basesyntax;
 
-import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
@@ -44,9 +43,8 @@ public class ArrayList<T> implements List<T> {
     public void addAll(List<T> list) {
         if (size + list.size() > elementData.length) {
             do {
-                currentMaxCapacity *= MAX_CAPACITY_RAISE_INDEX;
+                grow();
             } while (size + list.size() >= currentMaxCapacity);
-            elementData = Arrays.copyOf(elementData, currentMaxCapacity);
         }
         for (int i = size; i < (size + list.size()); i++) {
             elementData[i] = list.get(i - size);
@@ -104,8 +102,9 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private T[] grow() {
-        return elementData = Arrays.copyOf(elementData,
-                (int) (elementData.length * MAX_CAPACITY_RAISE_INDEX));
+    private void grow() {
+        T[] rewriteElementData = (T[]) new Object[(int)(elementData.length * 1.5)];
+        System.arraycopy(elementData, 0, rewriteElementData,0,size);
+        elementData = rewriteElementData;
     }
 }
