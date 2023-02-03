@@ -14,20 +14,20 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        lengthCheck(currentSize);
+        lengthCheck();
         array[currentSize] = value;
         currentSize++;
     }
 
     @Override
     public void add(T value, int index) {
-        try {
-            lengthCheck(currentSize);
+        if (index <= currentSize && index >= 0) {
+            lengthCheck();
             T[] arrayTail = Arrays.copyOfRange(array, index, currentSize);
             array[index] = value;
             System.arraycopy(arrayTail, 0, array, index + 1, arrayTail.length);
             currentSize++;
-        } catch (RuntimeException e) {
+        } else {
             throw new ArrayListIndexOutOfBoundsException(
                     "Can't add element. Index " + index + " is out of bounds"
                             + " for the list size " + currentSize);
@@ -36,12 +36,9 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        int newSize = currentSize + list.size();
-        lengthCheck(newSize);
         for (int i = 0; i < list.size(); i++) {
             this.add(list.get(i));
         }
-        currentSize = newSize;
     }
 
     @Override
@@ -95,8 +92,8 @@ public class ArrayList<T> implements List<T> {
         return currentSize == 0;
     }
 
-    private void lengthCheck(int length) {
-        if (array.length <= length) {
+    private void lengthCheck() {
+        if (array.length <= currentSize) {
             grow();
         }
     }
