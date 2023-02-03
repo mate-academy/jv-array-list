@@ -14,7 +14,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (isLengthInsufficient(this.size)) {
+        if (elements.length == size) {
             changeCapacity();
         }
         elements[size++] = value;
@@ -25,7 +25,7 @@ public class ArrayList<T> implements List<T> {
         if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException("index " + index + "is incorrect");
         }
-        if (isLengthInsufficient(size)) {
+        if (elements.length == size) {
             changeCapacity();
         }
         System.arraycopy(elements, index, elements, index + 1, size - index);
@@ -62,7 +62,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        for (int i = 0; i < this.size; i++) {
+        for (int i = 0; i < size; i++) {
             if (element == elements[i] || element != null && element.equals(elements[i])) {
                 T removedElement = elements[i];
                 removeElement(i);
@@ -74,16 +74,12 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public int size() {
-        return this.size;
+        return size;
     }
 
     @Override
     public boolean isEmpty() {
-        return size() == 0;
-    }
-
-    private boolean isLengthInsufficient(int needCapacity) {
-        return needCapacity == elements.length;
+        return size == 0;
     }
 
     private int getResizeCapacity() {
