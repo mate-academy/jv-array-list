@@ -5,18 +5,19 @@ import java.util.NoSuchElementException;
 import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
-    private static final int GROW = 2;
+    private static final double GROW_FACTOR = 1.5;
+    private static final int DEFAULT_SIZE = 10;
     private T[] elements;
-    private int maxSize = 10;
+    private int maxSize = DEFAULT_SIZE;
     private int size = 0;
 
     public ArrayList() {
-        this.elements = (T[]) new Object[maxSize];
+        this.elements = (T[]) new Object[DEFAULT_SIZE];
     }
 
     @Override
     public void add(T value) {
-        grow();
+        checkSize();
         elements[size] = value;
         size++;
     }
@@ -24,7 +25,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         rangeCheckForAdd(index);
-        grow();
+        checkSize();
         System.arraycopy(elements, index, elements, index + 1, size - index);
         elements[index] = value;
         size++;
@@ -80,9 +81,13 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void grow() {
+        maxSize *= GROW_FACTOR;
+        elements = Arrays.copyOf(elements, maxSize);
+    }
+
+    private void checkSize() {
         if (size == maxSize) {
-            maxSize = maxSize + maxSize / GROW;
-            elements = Arrays.copyOf(elements, maxSize);
+            grow();
         }
     }
 
