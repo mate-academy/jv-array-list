@@ -6,74 +6,62 @@ import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
     private static final int GROW = 2;
-    private T[] arrayOfElements;
+    private T[] elements;
     private int maxSize = 10;
     private int size = 0;
 
     public ArrayList() {
-        this.arrayOfElements = (T[]) new Object[maxSize];
+        this.elements = (T[]) new Object[maxSize];
     }
 
     @Override
     public void add(T value) {
-        if (size == maxSize) {
-            grow();
-        }
-        arrayOfElements[size] = value;
+        grow();
+        elements[size] = value;
         size++;
     }
 
     @Override
     public void add(T value, int index) {
         rangeCheckForAdd(index);
-        if (size == maxSize) {
-            grow();
-        }
-        System.arraycopy(arrayOfElements, index, arrayOfElements, index + 1, size - index);
-        arrayOfElements[index] = value;
+        grow();
+        System.arraycopy(elements, index, elements, index + 1, size - index);
+        elements[index] = value;
         size++;
     }
 
     @Override
     public void addAll(List<T> list) {
         for (int i = 0; i < list.size(); i++) {
-            if (size == maxSize) {
-                grow();
-            }
-            this.arrayOfElements[size] = list.get(i);
-            size++;
+            add(list.get(i));
         }
     }
 
     @Override
     public T get(int index) {
         indexExist(index);
-        return arrayOfElements[index];
+        return elements[index];
     }
 
     @Override
     public void set(T value, int index) {
         indexExist(index);
-        arrayOfElements[index] = value;
+        elements[index] = value;
     }
 
     @Override
     public T remove(int index) {
         indexExist(index);
+        T oldValue = elements[index];
+        System.arraycopy(elements, index + 1, elements, index, size - index - 1);
         size--;
-        T oldValue = arrayOfElements[index];
-        if (size > index) {
-            System.arraycopy(arrayOfElements, index + 1, arrayOfElements, index, size - index);
-        }
-        arrayOfElements[size] = null;
         return oldValue;
     }
 
     @Override
     public T remove(T element) {
-        int i = 0;
-        for (; i < size; i++) {
-            if (Objects.equals(arrayOfElements[i], element)) {
+        for (int i = 0; i < size; i++) {
+            if (Objects.equals(elements[i], element)) {
                 remove(i);
                 return element;
             }
@@ -92,8 +80,10 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void grow() {
-        maxSize = maxSize + maxSize / GROW;
-        arrayOfElements = Arrays.copyOf(arrayOfElements, maxSize);
+        if (size == maxSize) {
+            maxSize = maxSize + maxSize / GROW;
+            elements = Arrays.copyOf(elements, maxSize);
+        }
     }
 
     private void indexExist(int index) {
