@@ -65,7 +65,7 @@ public class ArrayList<T> implements List<T> {
         System.arraycopy(elements,index + ARRAYCOPY_MOVE_POSITION,
                 elements,index,elements.length - index - ARRAYCOPY_MOVE_POSITION);
         size--;
-        return (T)removedElement;
+        return (T) removedElement;
     }
 
     @Override
@@ -93,15 +93,10 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void grow() {
-        size *= GROW_SIZE;
-        Object[] tempElements = new Object[size];
+        double newSize = size * GROW_SIZE;
+        Object[] tempElements = new Object[(int) newSize];
         System.arraycopy(elements, ARRAYCOPY_POSITION, tempElements,
                 ARRAYCOPY_POSITION, elements.length);
-        for (int i = 0; i < tempElements.length; i++) {
-            if (tempElements[i] == null) {
-                size--;
-            }
-        }
         elements = tempElements;
     }
 
