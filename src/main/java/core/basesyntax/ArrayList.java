@@ -5,6 +5,7 @@ import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
     static final int MAX_SIZE = 10;
+    static final double GROW_COEFFICIENT = 1.5;
     private T[] array;
     private int size;
 
@@ -15,7 +16,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value) {
         if (array.length == size) {
-            array = grow(array);
+            grow();
         }
         array[size] = value;
         size++;
@@ -27,7 +28,7 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayListIndexOutOfBoundsException("Index do not exist");
         }
         if (array.length == size) {
-            array = grow(array);
+            grow();
         }
         fastValueAdd(value, index);
     }
@@ -98,14 +99,10 @@ public class ArrayList<T> implements List<T> {
         return size <= 0;
     }
 
-    public T[] grow(T[] oldarray) {
-        final int newLength = (int) (oldarray.length * 1.5);
-        T[] newArray = (T[]) new Object[newLength];
-
-        for (int i = 0; i < oldarray.length; i++) {
-            newArray[i] = oldarray[i];
-        }
-        return newArray;
+    public void grow() {
+        T[] newArray = (T[]) new Object[(int) (array.length * GROW_COEFFICIENT)];
+        System.arraycopy(array, 0, newArray, 0, array.length);
+        array = newArray;
     }
 
     public void fastRemove(int index) {
