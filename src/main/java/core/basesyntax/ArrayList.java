@@ -66,8 +66,8 @@ public class ArrayList<T> implements List<T> {
         final int elementIndex;
         final int newSize = size - 1;
 
-        if (element == null) {
-            for (int i = 0; i <= newSize; i++) {
+        for (int i = 0; i <= newSize; i++) {
+            if (element == null) {
                 if (array[i] == null) {
                     result = array[i];
                     elementIndex = i;
@@ -78,14 +78,11 @@ public class ArrayList<T> implements List<T> {
                     throw new NoSuchElementException("Element do not exist");
                 }
             }
-        } else {
-            for (int i = 0; i <= newSize; i++) {
-                if (Objects.equals(array[i], element)) {
-                    result = array[i];
-                    elementIndex = i;
-                    fastRemove(elementIndex);
-                    return result;
-                }
+            if (Objects.equals(array[i], element)) {
+                result = array[i];
+                elementIndex = i;
+                fastRemove(elementIndex);
+                return result;
             }
         }
         throw new NoSuchElementException("Element do not exist");
