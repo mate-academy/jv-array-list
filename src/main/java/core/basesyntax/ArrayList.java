@@ -4,8 +4,8 @@ import java.util.NoSuchElementException;
 import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
-    static final int MAX_SIZE = 10;
-    static final double GROW_COEFFICIENT = 1.5;
+    private static final int MAX_SIZE = 10;
+    private static final double GROW_COEFFICIENT = 1.5;
     private T[] array;
     private int size;
 
@@ -36,8 +36,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void addAll(List<T> list) {
         for (int i = 0; i < list.size(); i++) {
-            array[size] = list.get(i);
-            size++;
+            add(list.get(i));
         }
     }
 
@@ -64,14 +63,12 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         final T result;
-        final int elementIndex;
         final int newSize = size - 1;
 
         for (int i = 0; i <= newSize; i++) {
             if (Objects.equals(array[i], element)) {
                 result = array[i];
-                elementIndex = i;
-                fastRemove(elementIndex);
+                fastRemove(i);
                 return result;
             }
         }
@@ -85,16 +82,16 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public boolean isEmpty() {
-        return size <= 0;
+        return size == 0;
     }
 
-    public void grow() {
+    private void grow() {
         T[] newArray = (T[]) new Object[(int) (array.length * GROW_COEFFICIENT)];
         System.arraycopy(array, 0, newArray, 0, array.length);
         array = newArray;
     }
 
-    public void fastRemove(int index) {
+    private void fastRemove(int index) {
         final int newSize = size - 1;
 
         System.arraycopy(array, index + 1, array, index, newSize - index);
@@ -102,15 +99,13 @@ public class ArrayList<T> implements List<T> {
         array[size] = null;
     }
 
-    public void indexExistCheck(int index) {
-        final int newSize = size - 1;
-
-        if (index < 0 || index > newSize) {
+    private void indexExistCheck(int index) {
+        if (index < 0 || index > size - 1) {
             throw new ArrayListIndexOutOfBoundsException("Index do not exist");
         }
     }
 
-    public void fastValueAdd(T value, int index) {
+    private void fastValueAdd(T value, int index) {
         System.arraycopy(array, index, array, index + 1, size - index);
         array[index] = value;
         size++;
