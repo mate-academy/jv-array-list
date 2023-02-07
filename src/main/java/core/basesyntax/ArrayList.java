@@ -4,14 +4,12 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    private static final int ARRAYCOPY_POSITION = 0;
-    private static final int ARRAYCOPY_MOVE_POSITION = 1;
     private static final double GROW_SIZE = 1.5;
-    private Object[] elements;
+    private T[] elements;
     private int size;
 
     public ArrayList() {
-        elements = new Object[DEFAULT_CAPACITY];
+        elements = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
     @Override
@@ -19,8 +17,7 @@ public class ArrayList<T> implements List<T> {
         if (isFull()) {
             grow();
         }
-        elements[size] = value;
-        size++;
+        elements[size++] = value;
     }
 
     @Override
@@ -34,7 +31,7 @@ public class ArrayList<T> implements List<T> {
             grow();
         }
         System.arraycopy(elements, index, elements,
-                index + ARRAYCOPY_MOVE_POSITION, size - index);
+                index + 1, size - index);
         elements[index] = value;
         size++;
     }
@@ -49,7 +46,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         checkIndex(index);
-        return (T) elements[index];
+        return elements[index];
     }
 
     @Override
@@ -61,11 +58,11 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
-        Object removedElement = elements[index];
-        System.arraycopy(elements,index + ARRAYCOPY_MOVE_POSITION,
-                elements,index,elements.length - index - ARRAYCOPY_MOVE_POSITION);
+        T removedElement = elements[index];
+        System.arraycopy(elements, index + 1,
+                elements, index, elements.length - index - 1);
         size--;
-        return (T) removedElement;
+        return removedElement;
     }
 
     @Override
@@ -94,9 +91,9 @@ public class ArrayList<T> implements List<T> {
 
     private void grow() {
         double newSize = size * GROW_SIZE;
-        Object[] tempElements = new Object[(int) newSize];
-        System.arraycopy(elements, ARRAYCOPY_POSITION, tempElements,
-                ARRAYCOPY_POSITION, elements.length);
+        T[] tempElements = (T[]) new Object[(int) newSize];
+        System.arraycopy(elements, 0,
+                tempElements, 0, elements.length);
         elements = tempElements;
     }
 
