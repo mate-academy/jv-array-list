@@ -68,17 +68,6 @@ public class ArrayList<T> implements List<T> {
         final int newSize = size - 1;
 
         for (int i = 0; i <= newSize; i++) {
-            if (element == null) {
-                if (array[i] == null) {
-                    result = array[i];
-                    elementIndex = i;
-                    fastRemove(elementIndex);
-                    return result;
-                }
-                if (i == newSize) {
-                    throw new NoSuchElementException("Element do not exist");
-                }
-            }
             if (Objects.equals(array[i], element)) {
                 result = array[i];
                 elementIndex = i;
