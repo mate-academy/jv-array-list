@@ -14,9 +14,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (array.length == size) {
-            grow();
-        }
+        sizeCheck();
         array[size] = value;
         size++;
     }
@@ -26,10 +24,8 @@ public class ArrayList<T> implements List<T> {
         if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException("Index do not exist");
         }
-        if (array.length == size) {
-            grow();
-        }
-        fastValueAdd(value, index);
+        sizeCheck();
+        fastAdd(value, index);
     }
 
     @Override
@@ -61,11 +57,9 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        final T result;
-        final int newSize = size - 1;
-
-        for (int i = 0; i <= newSize; i++) {
+        for (int i = 0; i < size; i++) {
             if (element == array[i] || element != null && element.equals(array[i])) {
+                final T result;
                 result = array[i];
                 fastRemove(i);
                 return result;
@@ -91,9 +85,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void fastRemove(int index) {
-        final int newSize = size - 1;
-
-        System.arraycopy(array, index + 1, array, index, newSize - index);
+        System.arraycopy(array, index + 1, array, index, size - 1 - index);
         size--;
         array[size] = null;
     }
@@ -104,9 +96,15 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private void fastValueAdd(T value, int index) {
+    private void fastAdd(T value, int index) {
         System.arraycopy(array, index, array, index + 1, size - index);
         array[index] = value;
         size++;
+    }
+
+    private void sizeCheck() {
+        if (array.length == size) {
+            grow();
+        }
     }
 }
