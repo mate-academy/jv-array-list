@@ -4,108 +4,107 @@ import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-
     private static final int ARRAY_CAPACITY = 10;
     private static final double INCREASE_INDEX = 1.5;
-    private int arrSize;
-    private T[] arrayElements;
+    private int size;
+    private T[] elements;
 
     public ArrayList() {
-        arrayElements = (T[]) new Object[ARRAY_CAPACITY];
+        elements = (T[]) new Object[ARRAY_CAPACITY];
     }
 
     @Override
     public void add(T value) {
         checkSize();
-        arrayElements[arrSize] = value;
-        arrSize++;
+        elements[size++] = value;
     }
 
     @Override
     public void add(T value, int index) {
-        if (index > arrSize) {
+        if (index > size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("current index not found - index "
-                    + index);
+                    + index + " storage size is " + size);
         }
-        arrayElements[index] = value;
+        if (size == elements.length) {
+            elements = grow();
+        }
+        System.arraycopy(elements, index, elements, index + 1, size - index);
+        elements[index] = value;
+        size++;
     }
 
     @Override
     public void addAll(List<T> list) {
         checkSize();
         for (int i = 0; i < list.size(); i++) {
-            arrayElements[arrSize] = list.get(i);
-            arrSize++;
+            add(list.get(i));
         }
     }
 
     @Override
     public T get(int index) {
-        if (index > arrSize) {
+        if (index > size - 1 || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("current index not found - index "
                     + index);
         }
-        return arrayElements[index];
+        return elements[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index > arrSize) {
+        if (index > size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("current index not found - index "
                     + index);
         }
-        arrayElements[index] = value;
+        elements[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index > arrSize) {
+        if (index > size || index < 0) {
             throw new NoSuchElementException("can't remove element by index "
                     + index);
         }
-        while (index != arrSize) {
-            arrayElements[index] = arrayElements[index + 1];
-            System.out.println(arrayElements[index]);
-            index++;
+        T oldValue = (T) elements[index];
+
+        System.arraycopy(elements, index + 1, elements, index, size - 1 - index);
+        if (size != 0) {
+            size--;
         }
-        return (T) arrayElements;
+        return oldValue;
     }
 
     @Override
     public T remove(T element) {
-        int check = 0;
-        for (int i = 0; i < arrSize; i++) {
-            if (arrayElements[i] != null && arrayElements[i].equals(element)) {
-                remove(i);
-                check++;
+        for (int i = 0; i < size; i++) {
+            if (elements[i] != null && elements[i].equals(element)) {
+                return remove(i);
             }
         }
-        if (check == 0) {
-            throw new NoSuchElementException("can't find element - " + element);
-        }
-        return (T) arrayElements;
+
+        throw new NoSuchElementException("can't find element - " + element);
     }
 
     @Override
     public int size() {
-        return arrSize;
+        return size;
     }
 
     @Override
     public boolean isEmpty() {
-        return arrSize == 0;
+        return size == 0;
     }
 
     private void checkSize() {
-        if (arrSize == arrayElements.length) {
+        if (size == elements.length) {
             grow();
         }
     }
 
     private T[] grow() {
-        T[] newArr = (T[]) new Object[(int) (arrayElements.length * INCREASE_INDEX)];
-        newArr = Arrays.copyOf(arrayElements, newArr.length);
-        arrayElements = newArr;
+        T[] newArr = (T[]) new Object[(int) (elements.length * INCREASE_INDEX)];
+        newArr = Arrays.copyOf(elements, newArr.length);
+        elements = newArr;
         return newArr;
     }
 }
