@@ -66,7 +66,7 @@ public class ArrayList<T> implements List<T> {
         final int newSize = size - 1;
 
         for (int i = 0; i <= newSize; i++) {
-            if (Objects.equals(array[i], element)) {
+            if (element == array[i] || element != null && element.equals(array[i])) {
                 result = array[i];
                 fastRemove(i);
                 return result;
