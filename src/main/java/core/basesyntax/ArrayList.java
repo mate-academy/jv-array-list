@@ -1,13 +1,16 @@
 package core.basesyntax;
 
-import java.util.Arrays;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    private Object[] objects = new Object[DEFAULT_CAPACITY];
+    private Object[] objects;
     private int size;
+
+    public ArrayList() {
+        this.objects = new Object[DEFAULT_CAPACITY];
+    }
 
     @Override
     public void add(T value) {
@@ -85,7 +88,8 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void grow() {
-        objects = Arrays.copyOf(objects, countNewCapacity());
+        System.arraycopy(objects,
+                0, objects = new Object[countNewCapacity()], 0, size());
     }
 
     private int countNewCapacity() {
