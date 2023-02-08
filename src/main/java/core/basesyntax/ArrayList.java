@@ -56,9 +56,7 @@ public class ArrayList<T> implements List<T> {
         T oldValue = (T) elements[index];
 
         System.arraycopy(elements, index + 1, elements, index, size - 1 - index);
-        if (size != 0) {
             size--;
-        }
         return oldValue;
     }
 
@@ -83,7 +81,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void checkRemoveElement(int index) {
-        if (index > size || index < 0) {
+        if (index >= size || index < 0) {
             throw new NoSuchElementException("can't remove element by index "
                     + index);
         }
