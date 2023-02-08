@@ -21,10 +21,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index > size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("current index not found - index "
-                    + index + " storage size is " + size);
-        }
+        checkIndex(index);
         if (size == elements.length) {
             elements = grow();
         }
@@ -43,28 +40,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index > size - 1 || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("current index not found - index "
-                    + index);
-        }
+        checkIndex(index);
         return elements[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index > size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("current index not found - index "
-                    + index);
-        }
+        checkIndex(index);
         elements[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index > size || index < 0) {
-            throw new NoSuchElementException("can't remove element by index "
-                    + index);
-        }
+        checkRemoveElement(index);
         T oldValue = (T) elements[index];
 
         System.arraycopy(elements, index + 1, elements, index, size - 1 - index);
@@ -81,7 +69,6 @@ public class ArrayList<T> implements List<T> {
                 return remove(i);
             }
         }
-
         throw new NoSuchElementException("can't find element - " + element);
     }
 
@@ -93,6 +80,20 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private void checkRemoveElement(int index) {
+        if (index > size || index < 0) {
+            throw new NoSuchElementException("can't remove element by index "
+                    + index);
+        }
+    }
+
+    private void checkIndex(int index) {
+        if (index >= size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("current index not found - index "
+                    + index);
+        }
     }
 
     private void checkSize() {
