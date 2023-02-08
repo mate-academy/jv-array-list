@@ -8,7 +8,7 @@ public class ArrayList<T> implements List<T> {
 
     private static final int DEFAULT_CAPACITY = 10;
     private static final Object[] DEFAULT_ARRAYLIST = {};
-    private Object[] objectArray = {};
+    private Object[] objectArray;
 
     private int size;
 
@@ -22,8 +22,8 @@ public class ArrayList<T> implements List<T> {
         } else if (initialCapacity == 0) {
             this.objectArray = DEFAULT_ARRAYLIST;
         } else {
-            throw new IllegalArgumentException("Illegal Capacity: " +
-                    initialCapacity);
+            throw new IllegalArgumentException("Illegal Capacity: "
+                    + initialCapacity);
         }
     }
 
@@ -35,16 +35,16 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         if (size < index || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Cen`t add element. " +
-                    "Index " + index + " is out of range 0 - " + size);
+            throw new ArrayListIndexOutOfBoundsException("Cen`t add element. "
+                    + "Index " + index + " is out of range 0 - " + size);
         }
         if (objectArray.length == 0) {
             objectArray = new Object[DEFAULT_CAPACITY];
         }
 
         if (objectArray.length < size + 1) {
-            objectArray = Arrays.copyOf(objectArray, objectArray.length +
-                    (objectArray.length >> 1));
+            objectArray = Arrays.copyOf(objectArray, objectArray.length
+                    + (objectArray.length >> 1));
         }
         System.arraycopy(objectArray, index, objectArray, index + 1,
                 (objectArray.length - 1) - index);
@@ -63,8 +63,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         if (index > (size - 1) || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Cen`t get element. " +
-                    "Index " + index + " is out of range 0 - " + (size - 1));
+            throw new ArrayListIndexOutOfBoundsException("Cen`t get element. "
+                    + "Index " + index + " is out of range 0 - " + (size - 1));
         }
         return (T) objectArray[index];
     }
@@ -72,8 +72,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void set(T value, int index) {
         if (index > (size - 1) || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Can`t set element. " +
-                    "Index " + index + " is out of range 0 - " + (size - 1));
+            throw new ArrayListIndexOutOfBoundsException("Can`t set element. "
+                    + "Index " + index + " is out of range 0 - " + (size - 1));
         }
         objectArray[index] = value;
     }
@@ -82,14 +82,13 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         if (index > (size - 1) || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Can`t remove element. " +
-                    "Index " + index + " is out of range 0 - " + (size - 1));
+            throw new ArrayListIndexOutOfBoundsException("Can`t remove element. "
+                    + "Index " + index + " is out of range 0 - " + (size - 1));
         }
         T result = (T) objectArray[index];
         System.arraycopy(objectArray, index + 1, objectArray, index,
                 (objectArray.length - 1) - index);
-        size--;
-        objectArray[size] = null;
+        objectArray[size = size - 1] = null;
         return result;
     }
 
