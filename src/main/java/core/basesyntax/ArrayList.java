@@ -21,10 +21,10 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        checkIndex(index);
-        if (size == elements.length) {
-            elements = grow();
+        if (index > size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Index:" + index + "out of size" + size);
         }
+        checkSize();
         System.arraycopy(elements, index, elements, index + 1, size - index);
         elements[index] = value;
         size++;
@@ -52,18 +52,18 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(int index) {
-        checkRemoveElement(index);
+        checkIndex(index);
         T oldValue = (T) elements[index];
-
         System.arraycopy(elements, index + 1, elements, index, size - 1 - index);
-            size--;
+        size--;
         return oldValue;
     }
 
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if (elements[i] != null && elements[i].equals(element)) {
+            if (element == elements[i] || element != null && element.equals(elements[i])) {
+                T value = (T) elements[i];
                 return remove(i);
             }
         }
@@ -80,17 +80,9 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void checkRemoveElement(int index) {
-        if (index >= size || index < 0) {
-            throw new NoSuchElementException("can't remove element by index "
-                    + index);
-        }
-    }
-
     private void checkIndex(int index) {
         if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("current index not found - index "
-                    + index);
+            throw new ArrayListIndexOutOfBoundsException("Index:" + index + "out of size" + size);
         }
     }
 

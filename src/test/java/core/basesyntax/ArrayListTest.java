@@ -164,7 +164,7 @@ public class ArrayListTest {
         arrayList.add("String");
         arrayList.add("Java");
         arrayList.add("Private");
-        arrayList.remove(3);
+        arrayList.  remove(3);
     }
 
     @Test(expected = ArrayListIndexOutOfBoundsException.class)
