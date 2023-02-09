@@ -10,15 +10,8 @@ public class ArrayList<T> implements List<T> {
 
     private int size;
 
-    private void checkIndex(int index) {
-        if ((size - 1) < index || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Can`t set,get or remove element, /n"
-                    + "index " + index + " is out of range 0 - " + (size - 1));
-        }
-    }
-
     public ArrayList() {
-        objectArray = new Object[DEFAULT_CAPACITY];
+        this.objectArray = new Object[DEFAULT_CAPACITY];
     }
 
     public ArrayList(int initialCapacity) {
@@ -30,14 +23,21 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    @Override
-    public void add(T value) {
-        add(value, size);
-    }
-
     public void grow() {
         objectArray = Arrays.copyOf(objectArray, objectArray.length
                 + (objectArray.length >> 1));
+    }
+
+    private void checkIndex(int index) {
+        if ((size - 1) < index || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Can`t set,get or remove element, /n"
+                    + "index " + index + " is out of range 0 - " + (size - 1));
+        }
+    }
+
+    @Override
+    public void add(T value) {
+        add(value, size);
     }
 
     @Override
