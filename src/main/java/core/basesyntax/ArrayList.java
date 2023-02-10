@@ -4,18 +4,18 @@ import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    private static final int START_ARRAY_SIZE = 10;
-    private int size = 0;
+    private static final int DEFAULT_SIZE = 10;
+    private int size;
     private int index;
-    private Object[] array = new Object[START_ARRAY_SIZE];
+    private final Object[] array1 = new Object[DEFAULT_SIZE];
+    private T[] values = (T[]) array1;
 
     @Override
     public void add(T value) {
-        if (size >= array.length) {
-            array = Arrays.copyOf(array, (int) (array.length * 1.5));
+        if (size >= values.length) {
+            values = Arrays.copyOf(values, (int) (values.length * 1.5));
         }
-        array[size] = value;
-        size++;
+        values[size++] = value;
     }
 
     @Override
@@ -23,80 +23,66 @@ public class ArrayList<T> implements List<T> {
         if (index > size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Index: "
                     + index + ", Size: " + size);
-        } else {
-            if (size == array.length) {
-                array = Arrays.copyOf(array, (int) (array.length * 1.5));
-            }
-            Object[] secondPart = Arrays.copyOfRange(array, index, size);
-            array[index] = value;
-            System.arraycopy(secondPart, 0, array, index + 1, secondPart.length);
-            size++;
         }
+        if (size == values.length) {
+            values = Arrays.copyOf(values, (int) (values.length * 1.5));
+        }
+        System.arraycopy(values, index, values, index + 1, size - index);
+        values[index] = value;
+        size++;
     }
 
     @Override
     public void addAll(List<T> list) {
-        while (size + list.size() >= array.length) {
-            array = Arrays.copyOf(array, (int) (array.length * 1.5));
-        }
-        for (int i = size, q = 0; q < list.size(); i++, q++) {
-            array[i] = list.get(q);
-            size++;
+        for (int i = 0; i < list.size(); i++) {
+            add(list.get(i));
         }
     }
 
     @Override
     public T get(int index) {
         this.index = index;
-        callArrayListIndexOutOfBoundsExceptionIfNeeded();
-        return (T) array[index];
+        checkIndexInBounds();
+        return values[index];
     }
 
     @Override
     public void set(T value, int index) {
         this.index = index;
-        callArrayListIndexOutOfBoundsExceptionIfNeeded();
-        array[index] = value;
+        checkIndexInBounds();
+        values[index] = value;
     }
 
     @Override
     public T remove(int index) {
         this.index = index;
-        callArrayListIndexOutOfBoundsExceptionIfNeeded();
-        T oldValue = (T) array[index];
-        Object[] secondPart = Arrays.copyOfRange(array, index + 1, size);
-        System.arraycopy(secondPart, 0, array, index, secondPart.length);
-        size--;
+        checkIndexInBounds();
+        T oldValue = values[index];
+        System.arraycopy(values, index + 1, values, index, size - index - 1);
+        values[--size] = null;
         return oldValue;
     }
 
     @Override
     public T remove(T element) {
-        T oldValue = null;
-        int counter = 0;
-        for (int i = 0; i < array.length; i++) {
+        T oldValue;
+        for (int i = 0; i < values.length; i++) {
             if (element == null) {
-                if (array[i] == null) {
+                if (values[i] == null) {
                     remove(i);
-                    counter++;
-                    break;
+                    return null;
                 }
             } else {
-                if (array[i] == null) {
-                    continue;
-                }
-                if (array[i].equals(element)) {
-                    oldValue = (T) array[i];
-                    remove(i);
-                    counter++;
-                    break;
+                if (values[i] != null) {
+                    if (values[i].equals(element)) {
+                        oldValue = values[i];
+                        remove(i);
+                        return oldValue;
+                    }
                 }
             }
         }
-        if (counter == 0) {
-            throw new NoSuchElementException("no such element in List");
-        }
-        return oldValue;
+        throw new NoSuchElementException("no such element in List");
     }
 
     @Override
@@ -109,7 +95,7 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void callArrayListIndexOutOfBoundsExceptionIfNeeded() {
+    private void checkIndexInBounds() {
         if (size <= index || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Index: "
                     + index + ", Size: " + size);
