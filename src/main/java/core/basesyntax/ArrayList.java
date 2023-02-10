@@ -2,80 +2,71 @@ package core.basesyntax;
 
 import java.util.Arrays;
 import java.util.NoSuchElementException;
-import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
-    private int indexOfLastAddedElement = 0;
-    private Object[] array = new Object[10];
+    private static final int START_ARRAY_SIZE = 10;
+    private int size = 0;
+    private int index;
+    private Object[] array = new Object[START_ARRAY_SIZE];
 
     @Override
     public void add(T value) {
-        if (indexOfLastAddedElement >= array.length) {
+        if (size >= array.length) {
             array = Arrays.copyOf(array, (int) (array.length * 1.5));
         }
-        array[indexOfLastAddedElement] = value;
-        indexOfLastAddedElement++;
+        array[size] = value;
+        size++;
     }
 
     @Override
     public void add(T value, int index) {
-        if (index > indexOfLastAddedElement || index < 0) {
+        if (index > size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Index: "
-                    + index + ", Size: " + indexOfLastAddedElement);
+                    + index + ", Size: " + size);
         } else {
-            if (indexOfLastAddedElement == array.length) {
+            if (size == array.length) {
                 array = Arrays.copyOf(array, (int) (array.length * 1.5));
             }
-            Object[] secondPart = Arrays.copyOfRange(array, index, indexOfLastAddedElement);
+            Object[] secondPart = Arrays.copyOfRange(array, index, size);
             array[index] = value;
-            indexOfLastAddedElement++;
-            for (int i = index + 1, q = 0; i < indexOfLastAddedElement; i++, q++) {
-                array[i] = secondPart[q];
-            }
+            System.arraycopy(secondPart, 0, array, index + 1, secondPart.length);
+            size++;
         }
     }
 
     @Override
     public void addAll(List<T> list) {
-        while (indexOfLastAddedElement + list.size() >= array.length) {
+        while (size + list.size() >= array.length) {
             array = Arrays.copyOf(array, (int) (array.length * 1.5));
         }
-        for (int i = indexOfLastAddedElement, q = 0; q < list.size(); i++, q++) {
+        for (int i = size, q = 0; q < list.size(); i++, q++) {
             array[i] = list.get(q);
-            indexOfLastAddedElement++;
+            size++;
         }
     }
 
     @Override
     public T get(int index) {
-        if (indexOfLastAddedElement <= index || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index: "
-                    + index + ", Size: " + indexOfLastAddedElement);
-        }
+        this.index = index;
+        callArrayListIndexOutOfBoundsExceptionIfNeeded();
         return (T) array[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (indexOfLastAddedElement <= index || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index: "
-                    + index + ", Size: " + indexOfLastAddedElement);
-        }
+        this.index = index;
+        callArrayListIndexOutOfBoundsExceptionIfNeeded();
         array[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (indexOfLastAddedElement <= index || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index: "
-                    + index + ", Size: " + indexOfLastAddedElement);
-        }
+        this.index = index;
+        callArrayListIndexOutOfBoundsExceptionIfNeeded();
         T oldValue = (T) array[index];
-        Object[] secondPart = Arrays.copyOfRange(array, index + 1, indexOfLastAddedElement);
-        indexOfLastAddedElement--;
-        for (int i = index, q = 0; i < indexOfLastAddedElement; i++, q++) {
-            array[i] = secondPart[q];
-        }
+        Object[] secondPart = Arrays.copyOfRange(array, index + 1, size);
+        System.arraycopy(secondPart, 0, array, index, secondPart.length);
+        size--;
         return oldValue;
     }
 
@@ -84,11 +75,22 @@ public class ArrayList<T> implements List<T> {
         T oldValue = null;
         int counter = 0;
         for (int i = 0; i < array.length; i++) {
-            if (Objects.equals(array[i], element)) {
-                oldValue = (T) array[i];
-                remove(i);
-                counter++;
-                break;
+            if (element == null) {
+                if (array[i] == null) {
+                    remove(i);
+                    counter++;
+                    break;
+                }
+            } else {
+                if (array[i] == null) {
+                    continue;
+                }
+                if (array[i].equals(element)) {
+                    oldValue = (T) array[i];
+                    remove(i);
+                    counter++;
+                    break;
+                }
             }
         }
         if (counter == 0) {
@@ -99,11 +101,18 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public int size() {
-        return indexOfLastAddedElement;
+        return size;
     }
 
     @Override
     public boolean isEmpty() {
-        return indexOfLastAddedElement <= 0;
+        return size == 0;
+    }
+
+    private void callArrayListIndexOutOfBoundsExceptionIfNeeded() {
+        if (size <= index || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Index: "
+                    + index + ", Size: " + size);
+        }
     }
 }
