@@ -1,8 +1,5 @@
 package core.basesyntax;
 
-import java.sql.SQLOutput;
-import java.util.Arrays;
-
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_SIZE = 10;
     private T[] values;
@@ -33,7 +30,13 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-
+        if (list.size() > values.length - size) {
+            resize((int) Math.ceil((values.length + list.size()) * 1.5));
+        }
+        for (int i =0; i < list.size(); i++) {
+            values[size + i] = list.get(i);
+        }
+        size += list.size();
     }
 
     @Override
@@ -44,30 +47,33 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void set(T value, int index) {
         values[index] = value;
-
     }
 
     // С какого м, С какого э, В какой м, С какого э, сколько элементов.
     @Override
     public T remove(int index) {
+        if (size > 0) {
             T[] temp = (T[]) new Object[values.length];
-            System.arraycopy(values, 0, temp,0,values.length);
-            // копирование в временный массив
+            System.arraycopy(values, 0, temp, 0, values.length);
             values = (T[]) new Object[values.length - 1];
             System.arraycopy(temp, 0, values, 0, index);
-            // скопировал первую часть. 01234
             int amountElementAfterIndex = size - index;
             System.arraycopy(temp, index + 1, values, index, amountElementAfterIndex);
             size--;
+        }
 
         return (T) values;
     }
 
     @Override
     public T remove(T element) {
-        return null;
+        for (int i = 0; i < size; i++) {
+            if (values[i].equals(element)) {
+                remove(i);
+            }
+        }
+        return (T) values;
     }
-    // С какого м, С какого э, В какой м, С какого э, сколько элементов.
 
     @Override
     public int size() {
@@ -79,13 +85,25 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
+    private void resize(int newSize) {
+        T[] temp = (T[]) new Object[values.length];
+        System.arraycopy(values, 0, temp, 0, values.length);
+        values = (T[]) new Object[(int) (newSize)];
+        System.arraycopy(temp, 0, values, 0, temp.length);
+    }
+
     private void increaseSize() {
         if (size == values.length - 1) {
-            T[] temp = (T[]) new Object[values.length];
-            System.arraycopy(values, 0, temp, 0, values.length);
-            values = (T[]) new Object[(int) (Math.ceil(values.length * 1.5))];
-            System.arraycopy(temp, 0, values, 0, temp.length);
+            resize((int) Math.ceil(values.length * 1.5));
         }
         size++;
+    }
+    public String toString() {
+        StringBuilder string = new StringBuilder();
+        for (int i = 0; i < size; i++) {
+            string.append(values[i]);
+            string.append(", ");
+        }
+        return string.toString();
     }
 }
