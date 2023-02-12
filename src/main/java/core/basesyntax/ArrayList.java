@@ -67,7 +67,6 @@ public class ArrayList<T> implements List<T> {
                     elementData, index,
                     elementData.length - index - 1);
             size--;
-            return element;
         } else {
             indexOutOfBounds(index);
         }
