@@ -1,15 +1,14 @@
 package core.basesyntax;
 
 public class ArrayList<T> implements List<T> {
-    private static final int DEFAULT_CAPACITY = 10;
-    private int newCapacity = DEFAULT_CAPACITY;
+    private int newCapacity = 10;
     private T[] elementData;
     private int size = 0;
 
     @Override
     public void add(T value) {
         if (isEmpty()) {
-            elementData = (T[]) new Object[DEFAULT_CAPACITY];
+            elementData = (T[]) new Object[newCapacity];
             elementData[size] = value;
             size++;
         } else if (chekArraySize()) {
@@ -91,7 +90,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     private boolean chekArraySize() {
-        if (size + 1 == DEFAULT_CAPACITY || size + 1 == newCapacity) {
+        if (size + 1 > newCapacity) {
             return false;
         } else {
             return true;
