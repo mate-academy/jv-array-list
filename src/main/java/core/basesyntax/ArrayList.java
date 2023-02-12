@@ -3,28 +3,24 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-
-    private static final int DEFAULT_CAPACITY = 10;
-    private T [] arr;
+    private T[] elements;
     private int size;
-    private int currentCapacity = DEFAULT_CAPACITY;
+    private int currentCapacity = 10;
 
     public ArrayList() {
-        arr = (T[]) new Object [DEFAULT_CAPACITY];
+        elements = (T[]) new Object [currentCapacity];
     }
 
-    public void increaseCapacity() {
-        T[] old = arr;
+    private void increaseCapacity() {
+        T[] old = elements;
         currentCapacity = currentCapacity + (currentCapacity >> 1);
-        arr = (T[]) new Object[currentCapacity];
-        for (int i = 0; i < size(); i++) {
-            arr[i] = old[i];
-        }
+        elements = (T[]) new Object[currentCapacity];
+        System.arraycopy(old,0,elements,0,size);
     }
 
     public int check(T element) {
         for (int i = 0; i < size; i++) {
-            if ((arr[i] == element || (element != null && element.equals(arr[i])))) {
+            if ((elements[i] == element || (element != null && element.equals(elements[i])))) {
                 return i;
             }
         }
@@ -39,16 +35,16 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         if (index < 0 || index > size()) {
-            throw new ArrayListIndexOutOfBoundsException("");
+            throw new ArrayListIndexOutOfBoundsException("Index is incorect");
         }
-        if (arr.length == size) {
+        if (elements.length == size) {
             increaseCapacity();
         }
         for (int i = size; i > index; i--) {
-            arr[i] = arr[i - 1];
+            elements[i] = elements[i - 1];
         }
 
-        arr[index] = value;
+        elements[index] = value;
         size++;
 
     }
@@ -60,7 +56,7 @@ public class ArrayList<T> implements List<T> {
             increaseCapacity();
         }
         for (int i = size(); i < size() + list.size();i++) {
-            arr[i] = list.get(k++);
+            elements[i] = list.get(k++);
         }
         size += list.size();
     }
@@ -68,27 +64,27 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         if (index < 0 || index >= size()) {
-            throw new ArrayListIndexOutOfBoundsException("");
+            throw new ArrayListIndexOutOfBoundsException("Index is incorect");
         }
-        return arr[index];
+        return elements[index];
     }
 
     @Override
     public void set(T value, int index) {
         if (index < 0 || index >= size()) {
-            throw new ArrayListIndexOutOfBoundsException("");
+            throw new ArrayListIndexOutOfBoundsException("Index is incorect");
         }
-        arr[index] = value;
+        elements[index] = value;
     }
 
     @Override
     public T remove(int index) {
         if (index < 0 || index >= size()) {
-            throw new ArrayListIndexOutOfBoundsException("");
+            throw new ArrayListIndexOutOfBoundsException("Index is incorect");
         }
-        T removeItem = arr[index];
+        T removeItem = elements[index];
         for (int i = index; i < size() - 1; i++) {
-            arr[i] = arr[i + 1];
+            elements[i] = elements[i + 1];
         }
         size--;
         return removeItem;
@@ -97,7 +93,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         if (check(element) == -1) {
-            throw new NoSuchElementException("");
+            throw new NoSuchElementException("Element doesnt exist");
         }
         return remove(check(element));
     }
