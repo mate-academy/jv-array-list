@@ -3,10 +3,9 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    private final static int DEFAULT_CAPACITY = 10;
+    private static final int DEFAULT_CAPACITY = 10;
     private T[] elements;
     private int size;
-
 
     public ArrayList() {
         elements = (T[]) new Object [DEFAULT_CAPACITY];
@@ -17,6 +16,15 @@ public class ArrayList<T> implements List<T> {
         int capacity = old.length + (old.length >> 1);
         elements = (T[]) new Object[capacity];
         System.arraycopy(old,0, elements,0, size);
+    }
+
+    private int getIndex(T element) {
+        for (int i = 0; i < size; i++) {
+            if ((elements[i] == element || (element != null && element.equals(elements[i])))) {
+                return i;
+            }
+        }
+        return -1;
     }
 
     @Override
@@ -81,14 +89,6 @@ public class ArrayList<T> implements List<T> {
         }
         size--;
         return removeItem;
-    }
-    private int getIndex(T element) {
-        for (int i = 0; i < size; i++) {
-            if ((elements[i] == element || (element != null && element.equals(elements[i])))) {
-                return i;
-            }
-        }
-        return -1;
     }
 
     @Override
