@@ -110,7 +110,7 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private void updateLengthArray(int capacity) {
+    private void updateLengthArray() {
         T[] list = (T[]) new Object[newCapacity];
         System.arraycopy(elementData, 0, list, 0, size);
         elementData = (T[]) new Object[newCapacity];
