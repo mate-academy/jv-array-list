@@ -5,12 +5,16 @@ import java.util.NoSuchElementException;
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private static final double MULTIPLICATION_FACTOR = 1.5;
-    private int size = 0;
-    private T[] elementData = (T[]) new Object[DEFAULT_CAPACITY];
+    private int size;
+    private T[] elementData;
+
+    public ArrayList() {
+        this.elementData = (T[]) new Object[DEFAULT_CAPACITY];
+    }
 
     @Override
     public void add(T value) {
-        grow();
+        checkSizeAndGrow();
         elementData[size] = value;
         size++;
     }
@@ -18,7 +22,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         rangeCheckForAdd(index);
-        grow();
+        checkSizeAndGrow();
         System.arraycopy(elementData, index, elementData, index + 1, size - index);
         elementData[index] = value;
         size++;
@@ -54,11 +58,9 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if (element == null && elementData[i] != null) {
+            if (element == elementData[i]
+                    || elementData[i] != null && elementData[i].equals(element)) {
                 remove(i);
-                return element;
-            } else if (elementData[i] != null && elementData[i].equals(element)) {
-                removeOneElement(i);
                 return element;
             }
         }
@@ -75,7 +77,7 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void grow() {
+    private void checkSizeAndGrow() {
         if (size == elementData.length) {
             T[] newElementData = (T[]) new Object[(int)
                     (elementData.length * MULTIPLICATION_FACTOR)];
