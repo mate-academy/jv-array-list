@@ -47,6 +47,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
+        validIndex(index);
         return elementData[index];
     }
 
