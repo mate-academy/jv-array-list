@@ -132,5 +132,6 @@ public class ArrayList<T> implements List<T> {
         for (int i = 0; i < list.size(); i++) {
             elementData[size + i] = list.get(i);
         }
+        size += list.size();
     }
 }
