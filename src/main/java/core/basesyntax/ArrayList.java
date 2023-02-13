@@ -110,6 +110,12 @@ public class ArrayList<T> implements List<T> {
         if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException("Not valid index");
         }
+        if (index == 0) {
+            startIndex = true;
+        }
+        if (index + 1 == size) {
+            lastIndex = true;
+        }
     }
 
     private void updateLengthArray() {
