@@ -39,7 +39,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        if (size - list.size() >= 0) {
+        if (newCapacity - size - list.size() >= 0) {
             copyValueInArray(list);
         } else {
             newCapacity = (int) (size * 1.5) + size + list.size();
