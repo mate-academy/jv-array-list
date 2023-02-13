@@ -66,14 +66,16 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         validIndex(index);
         T[] list = (T[]) new Object[newCapacity];
-        System.arraycopy(elementData, 0, list, 0, index);
-        final T removeElement = elementData[index];
-        if (index + 1 != size) {
-            System.arraycopy(elementData, index + 1, list, index, size);
+        T removeElement = elementData[index];
+        if (!startIndex) {
+            System.arraycopy(elementData, 0, list, 0, index);
+            if (lastIndex) {
+                System.arraycopy(elementData, index + 1, list, index, size);
+            }
+            copyArraysAfterRemove(list, 0);
+        } else {
+            copyArraysAfterRemove(list, 1);
         }
-        size--;
-        elementData = (T[]) new Object[size];
-        System.arraycopy(list, 0, elementData, 0, size);
         return removeElement;
     }
 
