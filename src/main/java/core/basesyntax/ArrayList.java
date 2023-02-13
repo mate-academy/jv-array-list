@@ -15,7 +15,7 @@ public class ArrayList<T> implements List<T> {
             elementData[size] = value;
             size++;
         } else {
-            newCapacity = (int) (size * 1.5) + size;
+            setNewCapacity();
             updateLengthArray(newCapacity);
             elementData[size] = value;
             size++;
