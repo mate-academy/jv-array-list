@@ -28,9 +28,11 @@ public class ArrayList<T> implements List<T> {
         if (isEmpty()) {
             elementData = (T[]) new Object[newCapacity];
             addValueToIndex(value, index);
-        } else {
-            newCapacity = (int) (size * 1.5) + size;
+        } else if (!chekArraySize()) {
+            setNewCapacity();
             updateLengthArray(newCapacity);
+            addValueToIndex(value, index);
+        } else {
             addValueToIndex(value, index);
         }
     }
