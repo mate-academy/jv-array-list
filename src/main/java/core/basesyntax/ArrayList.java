@@ -25,7 +25,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         validIndex(index);
-        if (chekArraySize()) {
+        if (isEmpty()) {
+            elementData = (T[]) new Object[newCapacity];
             addValueToIndex(value, index);
         } else {
             newCapacity = (int) (size * 1.5) + size;
@@ -94,7 +95,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     private boolean chekArraySize() {
-        if (size + 1 > newCapacity) {
+        if (size + 1 == newCapacity) {
             return false;
         } else {
             return true;
