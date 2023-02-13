@@ -140,4 +140,8 @@ public class ArrayList<T> implements List<T> {
         }
         size += list.size();
     }
+
+    private void setNewCapacity() {
+        newCapacity = (int) (size * 1.5) + size;
+    }
 }
