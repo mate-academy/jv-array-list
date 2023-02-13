@@ -146,4 +146,10 @@ public class ArrayList<T> implements List<T> {
     private void setNewCapacity() {
         newCapacity = (int) (size * 1.5) + size;
     }
+
+    private void copyArraysAfterRemove(T[] list, int posSource) {
+        size--;
+        elementData = (T[]) new Object[size];
+        System.arraycopy(list, posSource, elementData, 0, size);
+    }
 }
