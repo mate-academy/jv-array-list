@@ -15,7 +15,7 @@ public class ArrayList<T> implements List<T> {
     
     @Override
     public void add(T value) {
-        checkSizeAndGro(size);
+        checkSizeAndGrow(size);
         elementData[size] = value;
         size++;
     }
@@ -24,7 +24,7 @@ public class ArrayList<T> implements List<T> {
     public void add(T value, int index) {
         if (index >= 0 && index <= size) {
             size++;
-            checkSizeAndGro(size);
+            checkSizeAndGrow(size);
             System.arraycopy(elementData, index,
                     elementData, index + 1,
                     elementData.length - index - 1);
@@ -43,33 +43,24 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (checkValidIndex(index) == -1) {
-            indexOutOfBounds(index);
-        }
+        checkValidIndex(index);
         return elementData[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (checkValidIndex(index) != -1) {
-            elementData[index] = value;
-        } else {
-            indexOutOfBounds(index);
-        }
+        checkValidIndex(index);
+        elementData[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        T element = null;
-        if (checkValidIndex(index) != -1) {
-            element = elementData[index];
-            System.arraycopy(elementData, index + 1,
-                    elementData, index,
-                    elementData.length - index - 1);
-            size--;
-        } else {
-            indexOutOfBounds(index);
-        }
+        checkValidIndex(index);
+        T element = elementData[index];
+        System.arraycopy(elementData, index + 1,
+                elementData, index,
+                elementData.length - index - 1);
+        size--;
         return element;
     }
 
@@ -94,7 +85,7 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
     
-    private void checkSizeAndGro(int size) {
+    private void checkSizeAndGrow(int size) {
         if (size == newDefaultCapacity) {
             newDefaultCapacity = (int) (elementData.length * 1.5);
             elementData = Arrays.copyOf(elementData, newDefaultCapacity);
@@ -108,6 +99,8 @@ public class ArrayList<T> implements List<T> {
     private int checkValidIndex(int index) {
         if (index >= 0 && index < size) {
             return index;
+        } else {
+            indexOutOfBounds(index);
         }
         return -1;
     }
