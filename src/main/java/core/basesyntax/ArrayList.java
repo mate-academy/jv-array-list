@@ -67,9 +67,6 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        if (getIndex(element) == -1) {
-            throw new NoSuchElementException("Element doesnt exist");
-        }
         return remove(getIndex(element));
     }
 
@@ -92,7 +89,7 @@ public class ArrayList<T> implements List<T> {
 
     private void validationOfIndex(int index) {
         if (index < 0 || index >= size()) {
-            throw new ArrayListIndexOutOfBoundsException("Index is incorect");
+            throw new ArrayListIndexOutOfBoundsException("Index is out of bounds of ArrayList");
         }
     }
 
@@ -102,6 +99,6 @@ public class ArrayList<T> implements List<T> {
                 return i;
             }
         }
-        return -1;
+        throw new NoSuchElementException("Element with that index doesnt exist");
     }
 }
