@@ -43,7 +43,7 @@ public class ArrayList<T> implements List<T> {
             copyValueInArray(list);
         } else {
             newCapacity = (int) (size * 1.5) + size + list.size();
-            updateLengthArray(newCapacity);
+            updateLengthArray();
             copyValueInArray(list);
         }
     }
