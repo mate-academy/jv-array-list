@@ -63,7 +63,7 @@ public class ArrayList<T> implements List<T> {
         T[] list = (T[]) new Object[newCapacity];
         System.arraycopy(elementData, 0, list, 0, index);
         final T removeElement = elementData[index];
-        if (index + 1 != size){
+        if (index + 1 != size) {
             System.arraycopy(elementData, index + 1, list, index, size);
         }
         size--;
