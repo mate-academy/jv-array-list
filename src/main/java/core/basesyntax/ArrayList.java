@@ -69,8 +69,8 @@ public class ArrayList<T> implements List<T> {
         T removeElement = elementData[index];
         if (startIndex) {
             System.arraycopy(elementData, 1, list, 0, size);
-            copyArraysAfterRemove(list);}
-        else if (lastIndex){
+            copyArraysAfterRemove(list);
+        } else if (lastIndex) {
             System.arraycopy(elementData, 0, list, 0, index);
             copyArraysAfterRemove(list);
         } else {
