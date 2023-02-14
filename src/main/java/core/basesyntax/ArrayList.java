@@ -4,33 +4,17 @@ import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    private Object[] arrayMain = new Object[10];
-    private int size = 0;
+    static final int INITIAL_SIZE = 10;
+    private boolean switchNewArray = true;
+    private int size;
+    private Object[] arrayMain;
 
-    private void grow() {
-        int newSize = (size * 3) / 2 + 1;
-        Object[] newArray = new Object[newSize];
-        System.arraycopy(arrayMain, 0, newArray, 0, size);
-        arrayMain = newArray;
+    public ArrayList() {
+        arrayMain = new Object[INITIAL_SIZE];
     }
 
-    private Object[] cutBefore(int index) {
-        Object[] cutArray1 = new Object[index];
-        System.arraycopy(arrayMain, 0, cutArray1, 0, index);
-        return cutArray1;
-    }
-
-    private Object[] cutAfter(int index) {
-        Object[] cutArray2 = new Object[size - index];
-        System.arraycopy(arrayMain, index, cutArray2, 0, size - index);
-        return cutArray2;
-    }
-
-    private Object[] newArray(Object[] before, Object[] after, int index) {
-        Object[] newArray = new Object[arrayMain.length];
-        System.arraycopy(before, 0, newArray, 0, before.length);
-        System.arraycopy(after, 0, newArray, index + 1, after.length);
-        return newArray;
+    public void arrayCopies(Object[] array1, int srcPost, Object[] array2, int destPos, int size) {
+        System.arraycopy(array1, srcPost, array2, destPos, size);
     }
 
     @Override
@@ -50,7 +34,8 @@ public class ArrayList<T> implements List<T> {
         if (index == size) {
             add(value);
         } else if (index < size && index >= 0) {
-            Object[] arrayFinished = newArray(cutBefore(index), cutAfter(index), index);
+            switchNewArray = true;
+            Object[] arrayFinished = newArray(index);
             arrayFinished[index] = value;
             arrayMain = arrayFinished;
             size++;
@@ -72,36 +57,37 @@ public class ArrayList<T> implements List<T> {
         for (int i = 0; i < list.size(); i++) {
             listArray[i] = list.get(i);
         }
-        System.arraycopy(arrayMain, 0, newArray, 0, size);
-        System.arraycopy(listArray, 0, newArray, size, list.size());
+        arrayCopies(arrayMain, 0, newArray, 0, size);
+        arrayCopies(listArray, 0, newArray, size, list.size());
+
         arrayMain = newArray;
         size += list.size();
     }
 
-    @Override
-    public T get(int index) {
+    public void exclusionIndex(int index) {
         if (index >= size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("index exception");
         }
+    }
+
+    @Override
+    public T get(int index) {
+        exclusionIndex(index);
         return (T) arrayMain[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("index exception");
-        } else {
-            arrayMain[index] = value;
-        }
+        exclusionIndex(index);
+        arrayMain[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("index exception");
-        }
+        exclusionIndex(index);
         final T removeElement = (T) arrayMain[index];
-        arrayMain = newArray(cutBefore(index), cutAfter(index + 1), index - 1);
+        switchNewArray = false;
+        arrayMain = newArray(index);
         size--;
         return removeElement;
     }
@@ -109,7 +95,6 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         int beforeSize = size;
-
         for (int i = 0; i < size; i++) {
             if (arrayMain[i] == null && element == null
                     || arrayMain[i] != null && arrayMain[i].equals(element)) {
@@ -144,5 +129,30 @@ public class ArrayList<T> implements List<T> {
                 + ", size=" + size
                 + '}';
     }
+
+    private void grow() {
+        int newSize = (size * 3) / 2 + 1;
+        Object[] newSizeArray = new Object[newSize];
+        arrayCopies(arrayMain, 0, newSizeArray, 0, size);
+        arrayMain = newSizeArray;
+    }
+
+    private Object[] newArray(int index) {
+        int srcPos = index;
+        int destPos = index + 1;
+        if (!switchNewArray) {
+            srcPos = 2;
+            destPos = 1;
+        }
+        Object[] newArray = new Object[arrayMain.length];
+        if (index > 0) {
+            arrayCopies(arrayMain, 0, newArray, 0, index);
+        }
+        if (size - index > 0) {
+            arrayCopies(arrayMain, srcPos, newArray, destPos, size - index);
+        }
+        return newArray;
+    }
 }
+
 
