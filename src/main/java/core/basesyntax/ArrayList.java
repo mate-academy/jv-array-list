@@ -157,9 +157,9 @@ public class ArrayList<T> implements List<T> {
         newCapacity = (int) (size * 1.5) + size;
     }
 
-    private void copyArraysAfterRemove(T[] list, int posSource) {
+    private void copyArraysAfterRemove(T[] list) {
         size--;
         elementData = (T[]) new Object[size];
-        System.arraycopy(list, posSource, elementData, 0, size);
+        System.arraycopy(list, 0, elementData, 0, size);
     }
 }
