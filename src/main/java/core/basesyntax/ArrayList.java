@@ -115,7 +115,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void validIndex(int index) {
-        if (index < 0 || index >= size) {
+        if (((isEmpty()) && (index != 0)) || ((!isEmpty()) && (index < 0 || index >= size))) {
             throw new ArrayListIndexOutOfBoundsException("Not valid index");
         }
         if (index == 0) {
