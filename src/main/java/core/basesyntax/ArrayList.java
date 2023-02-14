@@ -22,15 +22,15 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index >= 0 && index <= size) {
+        if (index < 0 || index > size) {
+            throwIndexOutOfBounds(index);
+        } else {
             size++;
             checkSizeAndGrow(size);
             System.arraycopy(elementData, index,
                     elementData, index + 1,
                     elementData.length - index - 1);
             elementData[index] = value;
-        } else {
-            indexOutOfBounds(index);
         }
     }
 
@@ -92,16 +92,13 @@ public class ArrayList<T> implements List<T> {
         }
     }
     
-    private void indexOutOfBounds(int index) {
+    private void throwIndexOutOfBounds(int index) {
         throw new ArrayListIndexOutOfBoundsException("Index " + index + " out of bounds array");
     }
     
-    private int checkValidIndex(int index) {
-        if (index >= 0 && index < size) {
-            return index;
-        } else {
-            indexOutOfBounds(index);
+    private void checkValidIndex(int index) {
+        if (index < 0 || index >= size) {
+            throwIndexOutOfBounds(index);
         }
-        return -1;
     }
 }
