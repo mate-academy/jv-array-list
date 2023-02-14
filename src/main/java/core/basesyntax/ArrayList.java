@@ -90,7 +90,7 @@ public class ArrayList<T> implements List<T> {
                 removeValue(element, i);
                 return element;
             } else {
-                throw  new NoSuchElementException("Not valid element");
+                throw new NoSuchElementException("Not valid element");
             }
         }
         return null;
