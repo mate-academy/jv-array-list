@@ -4,130 +4,111 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int INITIAL_LENGTH = 10;
-    private T[] tempMainArrayRightSide;
-    private T[] tempMainArrayLeftSide;
-    private T[] mainArray;
-    private int length = 0;
-    private int fullLength = 10;
+    private T[] elements;
+    private int size;
 
     public ArrayList() {
-        this.mainArray = (T[]) new Object[INITIAL_LENGTH];
+        elements = (T[]) new Object[INITIAL_LENGTH];
     }
 
     @Override
     public void add(T value) {
-        if (length == fullLength) {
+        if (size() == elements.length) {
             expandMainArray();
         }
-        mainArray[length] = value;
-        length++;
+        elements[size] = value;
+        size++;
     }
 
     @Override
     public void add(T value, int index) {
-        if (length == fullLength) {
+        if (size == elements.length) {
             expandMainArray();
         }
-        if (index > length || index < 0) {
+        if (index > size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Index out of bound");
         }
-        int rightIndex = index;
-        int leftIndex = length - index;
-        splitMainArray(rightIndex, leftIndex, index, 0);
-        mainArray = (T[]) new Object[++length];
-        mainArray[index] = value;
-        joinMainArray(rightIndex, leftIndex, index, 1);
+        T[] tempArr1 = (T[]) new Object[index];
+        System.arraycopy(elements, 0, tempArr1, 0, index);
+        T[] tempArr2 = (T[]) new Object[size - index];
+        System.arraycopy(elements, index, tempArr2, 0, size - index);
+        elements = (T[]) new Object[++size];
+        elements[index] = value;
+        System.arraycopy(tempArr1, 0, elements, 0, index);
+        System.arraycopy(tempArr2, 0, elements, index + 1, size - index - 1);
     }
 
     @Override
     public void addAll(List<T> list) {
-        if (list.size() + length > fullLength) {
+        if (list.size() + size > elements.length) {
             expandMainArray();
         }
         for (int i = 0; i < list.size(); i++) {
-            mainArray[length + i] = list.get(i);
+            add(list.get(i));
         }
-        length += list.size();
     }
 
     @Override
     public T get(int index) {
         checkIndexRange(index);
-        return mainArray[index];
+        return elements[index];
     }
 
     @Override
     public void set(T value, int index) {
         checkIndexRange(index);
-        mainArray[index] = value;
+        elements[index] = value;
     }
 
     @Override
     public T remove(int index) {
         checkIndexRange(index);
-        int rightIndex = index;
-        int leftIndex = length - index - 1;
-        splitMainArray(rightIndex, leftIndex, index, 1);
-        T elementToReturn = mainArray[index];
-        mainArray = (T[]) new Object[--length];
-        joinMainArray(rightIndex, leftIndex, index, 0);
+        T[] tempArr1 = (T[]) new Object[index];
+        System.arraycopy(elements, 0, tempArr1, 0,index);
+        T[] tempArr2 = (T[]) new Object[size - index - 1];
+        System.arraycopy(elements, index + 1, tempArr2, 0, size - index - 1);
+        final T elementToReturn = elements[index];
+        elements = (T[]) new Object[--size];
+        System.arraycopy(tempArr1, 0, elements, 0, index);
+        System.arraycopy(tempArr2, 0, elements, index + 0, size - index);
         return elementToReturn;
     }
 
     @Override
     public T remove(T element) {
-        return remove(getIndex(element));
-    }
-
-    @Override
-    public int size() {
-        return length;
-    }
-
-    @Override
-    public boolean isEmpty() {
-        return length == 0;
-    }
-
-    private void splitMainArray(int rightIndex, int leftIndex, int index, int moveLeftIndexTo) {
-        tempMainArrayRightSide = (T[]) new Object[rightIndex];
-        tempMainArrayLeftSide = (T[]) new Object[leftIndex];
-        System.arraycopy(mainArray, 0, tempMainArrayRightSide, 0, rightIndex);
-        System.arraycopy(mainArray, index + moveLeftIndexTo, tempMainArrayLeftSide, 0, leftIndex);
-    }
-
-    private void joinMainArray(int rightIndex, int leftIndex, int index, int moveLeftIndexTo) {
-        System.arraycopy(tempMainArrayRightSide, 0, mainArray, 0, rightIndex);
-        System.arraycopy(tempMainArrayLeftSide, 0, mainArray, index + moveLeftIndexTo, leftIndex);
-        tempMainArrayRightSide = null;
-        tempMainArrayLeftSide = null;
-    }
-
-    private void expandMainArray() {
-        int nextLength = fullLength + (fullLength >> 1);
-        T[] tempMainArrayStore = (T[]) new Object[fullLength];
-        for (int i = 0; i < fullLength; i++) {
-            tempMainArrayStore[i] = mainArray[i];
-        }
-        mainArray = (T[]) new Object[nextLength];
-        for (int i = 0; i < fullLength; i++) {
-            mainArray[i] = tempMainArrayStore[i];
-        }
-        fullLength = nextLength;
-    }
-
-    private int getIndex(T value) {
-        for (int i = 0; i < length; i++) {
-            if ((mainArray[i] == null && value == null)
-                    ^ (mainArray[i] != null && mainArray[i].equals(value))) {
-                return i;
+        for (int i = 0; i < size; i++) {
+            if (elements[i] == element
+                    || (elements[i] != null && elements[i].equals(element))) {
+                return remove(i);
             }
         }
         throw new NoSuchElementException("No such element");
     }
 
+    @Override
+    public int size() {
+        return size;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return size == 0;
+    }
+
+    private void expandMainArray() {
+        int nextLength = elements.length + (elements.length >> 1);
+        T[] tempMainArrayStore = (T[]) new Object[elements.length];
+        for (int i = 0; i < elements.length; i++) {
+            tempMainArrayStore[i] = elements[i];
+        }
+        elements = (T[]) new Object[nextLength];
+        for (int i = 0; i < tempMainArrayStore.length; i++) {
+            elements[i] = tempMainArrayStore[i];
+        }
+    }
+
     private void checkIndexRange(int index) {
-        if (index >= length || index < 0) {
+        if (index >= size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Index out of bounds");
         }
     }
