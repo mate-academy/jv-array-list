@@ -1,5 +1,7 @@
 package core.basesyntax;
 
+import java.util.NoSuchElementException;
+
 public class ArrayList<T> implements List<T> {
     private int newCapacity = 10;
     private T[] elementData;
@@ -87,6 +89,8 @@ public class ArrayList<T> implements List<T> {
             if (elementData[i].equals(element)) {
                 removeValue(element, i);
                 return element;
+            } else {
+                throw  new NoSuchElementException("Not valid element");
             }
         }
         return null;
