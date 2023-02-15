@@ -4,7 +4,6 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int BASIC_LENGTH = 10;
-    private static final int LENGTH_STEP = 5;
     private T[] list;
     private int size;
 
@@ -42,7 +41,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void addSpase() {
-        T[] array = (T[]) new Object[list.length + LENGTH_STEP];
+        T[] array = (T[]) new Object[list.length + (list.length >> 1)];
         System.arraycopy(list, 0, array, 0, list.length);
         list = array;
     }
