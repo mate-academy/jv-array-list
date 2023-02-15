@@ -6,7 +6,7 @@ public class ArrayList<T> implements List<T> {
     private static final int BASIC_LENGTH = 10;
     private static final int LENGTH_STEP = 5;
     private T[] list;
-    private int index;
+    private int size;
 
     public ArrayList() {
         list = (T[]) new Object[BASIC_LENGTH];
@@ -14,24 +14,21 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (index == list.length) {
+        if (size == list.length) {
             addSpase();
         }
-        list[index] = value;
-        index++;
+        list[size] = value;
+        size++;
     }
 
     @Override
     public void add(T value, int index) {
-        if (index >= 0) {
-            if (index > this.index) {
-                /* If index of element doesn`t fall into the array */
-                throw new ArrayListIndexOutOfBoundsException("Incorrect index of list");
-            } else if (index == this.index) {
+        if (!(index > size || index < 0)) {
+            if (index == size) {
                 /* If index of element fall into the end of array */
                 add(value);
             } else {
-                if (list.length == this.index) {
+                if (list.length == size) {
                     /* If array is overflowing, we need increase the array */
                     addSpase();
                     addByIndex(value, index);
@@ -40,31 +37,23 @@ public class ArrayList<T> implements List<T> {
                 }
             }
         } else {
-            throw new ArrayListIndexOutOfBoundsException("Index is negative!");
+            throw new ArrayListIndexOutOfBoundsException("Incorrect index of list");
         }
     }
 
     private void addSpase() {
         T[] array = (T[]) new Object[list.length + LENGTH_STEP];
-        for (int i = 0; i < list.length; i++) {
-            array[i] = list[i];
-        }
-        this.list = array;
+        System.arraycopy(list, 0, array, 0, list.length);
+        list = array;
     }
 
     private void addByIndex(T value, int index) {
         T[] array = (T[]) new Object[list.length];
-        for (int i = 0; i < index; i++) {
-            array[i] = list[i];
-        }
+        System.arraycopy(list,0,array,0,index);
         array[index] = value;
-        this.index++;
-        for (int i = index + 1; i < this.index; i++) {
-            array[i] = list[i - 1];
-        }
-        for (int i = 0; i < this.index; i++) {
-            list[i] = array[i];
-        }
+        System.arraycopy(list,index,array,index + 1,size - index);
+        System.arraycopy(array,0,list,0,array.length);
+        size++;
     }
 
     @Override
@@ -74,9 +63,13 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
+    private boolean indexIsValid(int index) {
+        return index < size && index >= 0;
+    }
+
     @Override
     public T get(int index) {
-        if (index < this.index && index >= 0) {
+        if (indexIsValid(index)) {
             return list[index];
         } else {
             throw new ArrayListIndexOutOfBoundsException("Incorrect index of list");
@@ -85,7 +78,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void set(T value, int index) {
-        if (index < this.index && index >= 0) {
+        if (indexIsValid(index)) {
             list[index] = value;
         } else {
             throw new ArrayListIndexOutOfBoundsException("Incorrect index of list");
@@ -94,12 +87,12 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(int index) {
-        if (index < this.index && index >= 0) {
-            T temp = list[index];
-            for (int i = index; i < list.length - 1; i++) {
-                list[i] = list[i + 1];
-            }
-            this.index--;
+        if (indexIsValid(index)) {
+            T[] array = (T[]) new Object[list.length];
+            System.arraycopy(list,0,array,0,size);
+            System.arraycopy(array,index + 1,list,index,size - index - 1);
+            size--;
+            T temp = array[index];
             return temp;
         } else {
             throw new ArrayListIndexOutOfBoundsException("Incorrect index of list");
@@ -119,7 +112,7 @@ public class ArrayList<T> implements List<T> {
 
     private int foundIndexByElement(T element) {
         int index = -1;
-        for (int i = 0; i < this.index; i++) {
+        for (int i = 0; i < size; i++) {
             if (compare(list[i], element)) {
                 index = i;
                 break;
@@ -129,20 +122,16 @@ public class ArrayList<T> implements List<T> {
     }
 
     private boolean compare(T element1, T element2) {
-        if (element1 == null || element2 == null) {
-            return element1 == element2 ? true : false;
-        } else {
-            return element1.equals(element2);
-        }
+        return element1 == element2 || (element1 != null) && element1.equals(element2);
     }
 
     @Override
     public int size() {
-        return index;
+        return size;
     }
 
     @Override
     public boolean isEmpty() {
-        return index == 0 ? true : false;
+        return size == 0;
     }
 }
