@@ -28,14 +28,6 @@ public class ArrayList<T> implements List<T> {
         if (index > size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Index out of bound");
         }
-//        T[] tempArr1 = (T[]) new Object[index];
-//        System.arraycopy(elements, 0, tempArr1, 0, index);
-//        T[] tempArr2 = (T[]) new Object[size - index];
-//        System.arraycopy(elements, index, tempArr2, 0, size - index);
-//        elements = (T[]) new Object[++size];
-//        elements[index] = value;
-//        System.arraycopy(tempArr1, 0, elements, 0, index);
-//        System.arraycopy(tempArr2, 0, elements, index + 1, size - index - 1);
         System.arraycopy(elements, index, elements, index + 1, size - index);
         elements[index] = value;
         size++;
