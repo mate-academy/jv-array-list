@@ -92,14 +92,9 @@ public class ArrayList<T> implements List<T> {
 
     private void expandMainArray() {
         int nextLength = elements.length + (elements.length >> 1);
-        T[] tempMainArrayStore = (T[]) new Object[elements.length];
-        for (int i = 0; i < elements.length; i++) {
-            tempMainArrayStore[i] = elements[i];
-        }
-        elements = (T[]) new Object[nextLength];
-        for (int i = 0; i < tempMainArrayStore.length; i++) {
-            elements[i] = tempMainArrayStore[i];
-        }
+        T[] resizedElements = (T[]) new Object[nextLength];
+        System.arraycopy(elements, 0, resizedElements, 0, elements.length);
+        elements = resizedElements;
     }
 
     private void checkIndexRange(int index) {
