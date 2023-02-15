@@ -57,7 +57,7 @@ public class ArrayList<T> implements List<T> {
         checkIndexRange(index);
         final T elementToReturn = elements[index];
         System.arraycopy(elements, index + 1, elements, index, size - index - 1);
-        --size;
+        elements[--size] = null;
         return elementToReturn;
     }
 
