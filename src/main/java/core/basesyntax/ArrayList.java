@@ -22,7 +22,9 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (!(index > size || index < 0)) {
+        if (index > size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Incorrect index of list");
+        } else {
             if (index == size) {
                 /* If index of element fall into the end of array */
                 add(value);
@@ -31,12 +33,10 @@ public class ArrayList<T> implements List<T> {
                     /* If array is overflowing, we need increase the array */
                     addSpase();
                     addByIndex(value, index);
-                } else {
-                    addByIndex(value, index);
+                    return;
                 }
+                addByIndex(value, index);
             }
-        } else {
-            throw new ArrayListIndexOutOfBoundsException("Incorrect index of list");
         }
     }
 
@@ -47,11 +47,8 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void addByIndex(T value, int index) {
-        T[] array = (T[]) new Object[list.length];
-        System.arraycopy(list,0,array,0,index);
-        array[index] = value;
-        System.arraycopy(list,index,array,index + 1,size - index);
-        System.arraycopy(array,0,list,0,array.length);
+        System.arraycopy(list,index,list,index + 1,size - index);
+        list[index] = value;
         size++;
     }
 
@@ -87,11 +84,9 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         if (indexIsValid(index)) {
-            T[] array = (T[]) new Object[list.length];
-            System.arraycopy(list,0,array,0,size);
-            System.arraycopy(array,index + 1,list,index,size - index - 1);
+            T temp = list[index];
+            System.arraycopy(list,index + 1,list,index,size - index - 1);
             size--;
-            T temp = array[index];
             return temp;
         } else {
             throw new ArrayListIndexOutOfBoundsException("Incorrect index of list");
