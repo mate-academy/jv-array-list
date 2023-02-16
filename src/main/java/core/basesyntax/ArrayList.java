@@ -4,10 +4,11 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_SIZE = 10;
-    private T[] values;
+    private Object[] values;
     private int size;
+
     ArrayList() {
-        values = (T[])new Object[DEFAULT_SIZE];
+        values = new Object[DEFAULT_SIZE];
     }
 
     @Override
@@ -15,19 +16,17 @@ public class ArrayList<T> implements List<T> {
         values[size] = value;
         increaseSize();
     }
+
     @Override
     public void add(T value, int index) {
-            if (index >= 0 && index <= size) {
-                T[] temp = (T[]) new Object[values.length];
-                int amountElementSecondPartOfArray = size - index;
-                System.arraycopy(values, 0, temp, 0, values.length);
-                System.arraycopy(temp, 0, values, 0, index);
-                values[index] = value;
-                System.arraycopy(temp, index, values, index + 1, amountElementSecondPartOfArray);
-                increaseSize();
-            } else {
-                throw new ArrayListIndexOutOfBoundsException("No such element exist");
-            }
+        checkSizeForAdd(index);
+        Object[] temp = new Object[values.length];
+        System.arraycopy(values, 0, temp, 0, values.length);
+        System.arraycopy(temp, 0, values, 0, index);
+        values[index] = value;
+        int amountElementSecondPartOfArray = size - index;
+        System.arraycopy(temp, index, values, index + 1, amountElementSecondPartOfArray);
+        increaseSize();
     }
 
     @Override
@@ -41,47 +40,43 @@ public class ArrayList<T> implements List<T> {
         size += list.size();
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public T get(int index) {
-        if (index >= 0 && index <= size) {
-            return (T) values[index];
-        }
-        throw new ArrayListIndexOutOfBoundsException("No such element exist");
+        checkSize(index);
+        return (T) values[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index >= 0 && index <= size) {
-            values[index] = value;
-        } else
-            throw new ArrayListIndexOutOfBoundsException("No such element exist");
+        checkSize(index);
+        values[index] = value;
     }
 
-
+    @SuppressWarnings("unchecked")
     @Override
     public T remove(int index) {
-        if (index >= 0 && index <= size) {
-            T[] temp = (T[]) new Object[values.length];
-            System.arraycopy(values, 0, temp, 0, values.length);
-            values = (T[]) new Object[values.length - 1];
-            System.arraycopy(temp, 0, values, 0, index);
-            int amountElementAfterIndex = size - index;
-            System.arraycopy(temp, index + 1, values, index, amountElementAfterIndex);
-            size--;
-        } else {
-            throw new ArrayListIndexOutOfBoundsException("No such element exist");
-        }
-        return (T) values;
+        checkSize(index);
+        Object[] temp = new Object[values.length];
+        final T oldValue = (T) values[index];
+        System.arraycopy(values, 0, temp, 0, values.length);
+        values = new Object[values.length - 1];
+        System.arraycopy(temp, 0, values, 0, index);
+        int amountElementAfterIndex = size - index;
+        System.arraycopy(temp, index + 1, values, index, amountElementAfterIndex);
+        size--;
+        return oldValue;
     }
-    @SuppressWarnings("unchecked")
+
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if (values[i] != null && values[i].equals(element)) {
+            if (values[i] != null && values[i].equals(element) || values[i] == element) {
                 remove(i);
+                return element;
             }
         }
-        return (T) values;
+        throw new NoSuchElementException();
     }
 
     @Override
@@ -93,9 +88,19 @@ public class ArrayList<T> implements List<T> {
     public boolean isEmpty() {
         return size == 0;
     }
+
+    public String toString() {
+        StringBuilder string = new StringBuilder();
+        for (int i = 0; i < size; i++) {
+            string.append(values[i]);
+            string.append(", ");
+        }
+        return string.toString();
+    }
+
     @SuppressWarnings("unchecked")
     private void resize(int newSize) {
-        T[] temp = (T[]) new Object[values.length];
+        Object[] temp = new Object[values.length];
         System.arraycopy(values, 0, temp, 0, values.length);
         values = (T[]) new Object[(int) (newSize)];
         System.arraycopy(temp, 0, values, 0, temp.length);
@@ -108,12 +113,15 @@ public class ArrayList<T> implements List<T> {
         size++;
     }
 
-    public String toString() {
-        StringBuilder string = new StringBuilder();
-        for (int i = 0; i < size; i++) {
-            string.append(values[i]);
-            string.append(", ");
+    private void checkSizeForAdd(int index) {
+        if (index < 0 || index > size) {
+            throw new ArrayListIndexOutOfBoundsException("No such element exist");
         }
-        return string.toString();
+    }
+
+    private void checkSize(int index) {
+        if (index < 0 || index > size - 1) {
+            throw new ArrayListIndexOutOfBoundsException("No such element exist");
+        }
     }
 }
