@@ -6,22 +6,16 @@ public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private static final double CAPACITY_INCRICE = 1.5;
     private int size;
-    private T[] elementT;
+    private T[] elements;
 
     public ArrayList() {
-        elementT = (T[]) new Object[DEFAULT_CAPACITY];
-    }
-
-    public void resize() {
-        int capacity = (int) (elementT.length * CAPACITY_INCRICE);
-        T[] tempArray = (T[]) new Object[capacity];
-        System.arraycopy(elementT, 0, tempArray, 0, size);
-        elementT = tempArray;
+        elements = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
     @Override
     public void add(T value) {
-        add(value, size);
+        resize();
+        elements[size++] = value;
     }
 
     @Override
@@ -29,11 +23,9 @@ public class ArrayList<T> implements List<T> {
         if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException("Can't add element on position " + index);
         }
-        if (size == elementT.length) {
-            resize();
-        }
-        System.arraycopy(elementT, index, elementT, index + 1,size - index);
-        elementT[index] = value;
+        resize();
+        System.arraycopy(elements, index, elements, index + 1,size - index);
+        elements[index] = value;
         size++;
     }
 
@@ -46,39 +38,31 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index < 0 || index > size - 1) {
-            throw new ArrayListIndexOutOfBoundsException("No such index " + index);
-        } else {
-            return elementT[index];
-        }
+        checkCapacity(index);
+        return elements[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index < 0 || index > size - 1) {
-            throw new ArrayListIndexOutOfBoundsException("Can't set element on position " + index);
-        } else {
-            elementT[index] = value;
-        }
+        checkCapacity(index);
+        elements[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("No such index " + index);
-        }
-        final T temp = elementT[index];
-        System.arraycopy(elementT, index + 1, elementT, index, size - index - 1);
-        elementT[--size] = null;
+        checkCapacity(index);
+        final T temp = elements[index];
+        System.arraycopy(elements, index + 1, elements, index, size - index - 1);
+        elements[--size] = null;
         return temp;
     }
 
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if ((elementT[i] == element)
-                    || ((elementT[i] == element)
-                    || (elementT[i] != null && elementT[i].equals(element)))) {
+            if ((elements[i] == element)
+                    || ((elements[i] == element)
+                    || (elements[i] != null && elements[i].equals(element)))) {
                 return remove(i);
             }
         }
@@ -93,5 +77,20 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private void resize() {
+        if (size == elements.length) {
+            int capacity = (int) (elements.length * CAPACITY_INCRICE);
+            T[] tempArray = (T[]) new Object[capacity];
+            System.arraycopy(elements, 0, tempArray, 0, size);
+            elements = tempArray;
+        }
+    }
+
+    private void checkCapacity(int index) {
+        if (index >= size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Index out of bounds");
+        }
     }
 }
