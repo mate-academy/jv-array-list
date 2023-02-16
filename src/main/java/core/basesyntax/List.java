@@ -18,10 +18,4 @@ public interface List<T> {
     int size();
 
     boolean isEmpty();
-
-    Object[] grow();
-
-    Object[] grow(int minCapacity);
-
-    void rangeCheckForAdd(int index);
 }
