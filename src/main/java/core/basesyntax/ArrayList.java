@@ -69,7 +69,7 @@ public class ArrayList<T> implements List<T> {
         final Object oldObject = storage[index];
         System.arraycopy(storage, 0, copy, 0, index);
         if (size - (index + 1) >= 0) {
-            System.arraycopy(storage, index + 1, copy, index + 1 - 1, size - (index + 1));
+            System.arraycopy(storage, index + 1, copy, index, size - (index + 1));
         }
         storage = copy;
         size--;
