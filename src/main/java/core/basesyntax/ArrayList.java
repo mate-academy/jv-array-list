@@ -41,26 +41,20 @@ public class ArrayList<T> implements List<T> {
     @Override
     @SuppressWarnings("unchecked")
     public T get(int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index: " + index + ", Size: " + size);
-        }
+        indexValidityCheck(index);
         return (T) elements[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index: " + index + ", Size: " + size);
-        }
+        indexValidityCheck(index);
         elements[index] = value;
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public T remove(int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index: " + index + ", Size: " + size);
-        }
+        indexValidityCheck(index);
         final Object[] es = elements;
         T oldValue = (T) es[index];
         final int newSize;
@@ -98,9 +92,15 @@ public class ArrayList<T> implements List<T> {
         return elements = newArray;
     }
 
+    private void indexValidityCheck(int index) {
+        if (index >= size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Index: " + index + ", Size: " + size);
+        }
+    }
+
     private void rangeCheckForAdd(int index) {
         if (index > size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Wrong index:" + index);
+            throw new ArrayListIndexOutOfBoundsException("Index: " + index + ", Size: " + size);
         }
     }
 }
