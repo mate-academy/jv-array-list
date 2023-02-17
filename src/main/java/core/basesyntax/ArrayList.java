@@ -13,8 +13,8 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (size == list.length) {
-            addSpase();
+        if (checkSize()) {
+            resize();
         }
         list[size] = value;
         size++;
@@ -29,21 +29,9 @@ public class ArrayList<T> implements List<T> {
             add(value);
             return;
         } else if (list.length == size) {
-            addSpase();
+            resize();
         }
         addByIndex(value, index);
-    }
-
-    private void addSpase() {
-        T[] array = (T[]) new Object[list.length + (list.length >> 1)];
-        System.arraycopy(list, 0, array, 0, list.length);
-        list = array;
-    }
-
-    private void addByIndex(T value, int index) {
-        System.arraycopy(list,index,list,index + 1,size - index);
-        list[index] = value;
-        size++;
     }
 
     @Override
@@ -51,13 +39,6 @@ public class ArrayList<T> implements List<T> {
         for (int i = 0; i < list.size(); i++) {
             add(list.get(i));
         }
-    }
-
-    private boolean indexIsValid(int index) {
-        if (index < size && index >= 0) {
-            return true;
-        }
-        throw new ArrayListIndexOutOfBoundsException("Incorrect index of list");
     }
 
     @Override
@@ -83,30 +64,12 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        int elementIndex = foundIndexByElement(element);
-        if (isValueByIndex(elementIndex)) {
-            return remove(elementIndex);
-        }
-        throw new NoSuchElementException("ArrayList don`t have this element!");
-    }
-
-    private boolean isValueByIndex(int index) {
-        return index == -1 ? false : true;
-    }
-
-    private int foundIndexByElement(T element) {
-        int index = -1;
         for (int i = 0; i < size; i++) {
             if (compare(list[i], element)) {
-                index = i;
-                break;
+                return remove(i);
             }
         }
-        return index;
-    }
-
-    private boolean compare(T element1, T element2) {
-        return element1 == element2 || (element1 != null) && element1.equals(element2);
+        throw new NoSuchElementException("ArrayList don`t have this element!");
     }
 
     @Override
@@ -117,5 +80,31 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private void indexIsValid(int index) {
+        if (!(index < size && index >= 0)) {
+            throw new ArrayListIndexOutOfBoundsException("Incorrect index of list");
+        }
+    }
+
+    private boolean compare(T element1, T element2) {
+        return element1 == element2 || (element1 != null) && element1.equals(element2);
+    }
+
+    private boolean checkSize() {
+        return size == list.length;
+    }
+
+    private void addByIndex(T value, int index) {
+        System.arraycopy(list,index,list,index + 1,size - index);
+        list[index] = value;
+        size++;
+    }
+
+    private void resize() {
+        T[] array = (T[]) new Object[list.length + (list.length >> 1)];
+        System.arraycopy(list, 0, array, 0, list.length);
+        list = array;
     }
 }
