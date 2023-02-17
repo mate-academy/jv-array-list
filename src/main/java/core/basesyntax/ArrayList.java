@@ -4,7 +4,7 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    private static final double CAPACITY_INCRICE = 1.5;
+    private static final double GROW_MULTIPLIER = 1.5;
     private int size;
     private T[] elements;
 
@@ -14,7 +14,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        resize();
+        ensureCapacity();
         elements[size++] = value;
     }
 
@@ -23,8 +23,8 @@ public class ArrayList<T> implements List<T> {
         if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException("Can't add element on position " + index);
         }
-        resize();
-        System.arraycopy(elements, index, elements, index + 1,size - index);
+        ensureCapacity();
+        System.arraycopy(elements, index, elements, index + 1, size - index);
         elements[index] = value;
         size++;
     }
@@ -61,12 +61,11 @@ public class ArrayList<T> implements List<T> {
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
             if ((elements[i] == element)
-                    || ((elements[i] == element)
-                    || (elements[i] != null && elements[i].equals(element)))) {
+                    || (elements[i] != null && elements[i].equals(element))) {
                 return remove(i);
             }
         }
-        throw new NoSuchElementException("Can't found element by value");
+        throw new NoSuchElementException("Can't found element by value " + element);
     }
 
     @Override
@@ -80,17 +79,21 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void resize() {
+        int capacity = (int) (elements.length * GROW_MULTIPLIER);
+        T[] tempArray = (T[]) new Object[capacity];
+        System.arraycopy(elements, 0, tempArray, 0, size);
+        elements = tempArray;
+    }
+
+    private void ensureCapacity() {
         if (size == elements.length) {
-            int capacity = (int) (elements.length * CAPACITY_INCRICE);
-            T[] tempArray = (T[]) new Object[capacity];
-            System.arraycopy(elements, 0, tempArray, 0, size);
-            elements = tempArray;
+            resize();
         }
     }
 
     private void checkCapacity(int index) {
         if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index out of bounds");
+            throw new ArrayListIndexOutOfBoundsException("This index out of bounds " + index);
         }
     }
 }
