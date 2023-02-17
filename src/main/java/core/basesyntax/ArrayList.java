@@ -8,6 +8,7 @@ public class ArrayList<T> implements List<T> {
     private T[] listArray;
     private int size;
 
+    @SuppressWarnings("unchecked")
     public ArrayList() {
         this.listArray = (T[]) new Object[DEFAULT_CAPACITY];
         size = 0;
@@ -20,6 +21,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public void add(T value, int index) {
         if ((size == 0 && index == 0) || (index >= 0 && index <= size)) {
             if (size == currentCapacity) {
@@ -38,7 +40,6 @@ public class ArrayList<T> implements List<T> {
         } else {
             throw new ArrayListIndexOutOfBoundsException("Can't add to index " + index);
         }
-
     }
 
     @Override
