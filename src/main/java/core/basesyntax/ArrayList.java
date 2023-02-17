@@ -65,9 +65,7 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayListIndexOutOfBoundsException(OF_BOUND_MESSAGE);
         }
         T result = storage[index];
-        for (int k = index; k < pointer - 1; k++) {
-            storage[k] = storage[k + 1];
-        }
+        System.arraycopy(storage, index + 1, storage, index, pointer - index - 1);
         storage[--pointer] = null;
         return result;
     }
@@ -77,9 +75,7 @@ public class ArrayList<T> implements List<T> {
         for (int i = 0; i < pointer; i++) {
             if (storage[i] == element || (storage[i] != null && storage[i].equals(element))) {
                 T result = storage[i];
-                for (int k = i; k < pointer - 1; k++) {
-                    storage[k] = storage[k + 1];
-                }
+                System.arraycopy(storage, i + 1, storage, i, pointer - i - 1);
                 storage[--pointer] = null;
                 return result;
             }
@@ -100,45 +96,7 @@ public class ArrayList<T> implements List<T> {
     private void increaseSize() {
         int extendSize = (int) (INCREASE_VOLUME * pointer);
         T[] tempStorage = (T[]) new Object[extendSize];
-        for (int i = 0; i < storage.length; i++) {
-            tempStorage[i] = storage[i];
-        }
+        System.arraycopy(storage, 0, tempStorage, 0, storage.length);
         storage = tempStorage;
-    }
-
-    public static void main(String[] args) {
-        List<Integer> ar = new ArrayList<>();
-        System.out.println(ar.size());
-        System.out.println(ar.isEmpty());
-        ar.add(1);
-        ar.add(-1);
-        ar.add(0);
-        ar.add(-25);
-        ar.add(8);
-        ar.add(-6);
-        ar.add(10);
-        ar.add(-251);
-        ar.add(41);
-        ar.add(-71);
-        ar.add(20);
-        ar.add(-125);
-        System.out.println(ar.size());
-        System.out.println(ar.isEmpty());
-        System.out.println(ar.get(0));
-        Integer f = 0;
-        ar.remove(f);
-        System.out.println(ar.size());
-        ar.remove(0);
-        System.out.println(ar.size());
-        ar.add(150, 0);
-        System.out.println(ar.get(0));
-        System.out.println(ar.size());
-        List<String> arrayList = new ArrayList<>();
-        arrayList.add("Test");
-        arrayList.add("for");
-        arrayList.add("Mate");
-        arrayList.add("Academy", 1);
-        arrayList.add(null, 0);
-        arrayList.add("value", 5);
     }
 }
