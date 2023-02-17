@@ -21,7 +21,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        rangeCheckForAdd(index);
+        checkIndexForAdd(index);
         if (size == elements.length) {
             grow();
         }
@@ -41,27 +41,26 @@ public class ArrayList<T> implements List<T> {
     @Override
     @SuppressWarnings("unchecked")
     public T get(int index) {
-        indexValidityCheck(index);
+        checkIndexValidity(index);
         return (T) elements[index];
     }
 
     @Override
     public void set(T value, int index) {
-        indexValidityCheck(index);
+        checkIndexValidity(index);
         elements[index] = value;
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public T remove(int index) {
-        indexValidityCheck(index);
-        final Object[] es = elements;
-        T oldValue = (T) es[index];
+        checkIndexValidity(index);
+        T oldValue = (T) elements[index];
         final int newSize;
         if ((newSize = size - 1) > index) {
-            System.arraycopy(es, index + 1, es, index, newSize - index);
+            System.arraycopy(elements, index + 1, elements, index, newSize - index);
         }
-        es[size = newSize] = null;
+        elements[size = newSize] = null;
         return oldValue;
     }
 
@@ -92,13 +91,13 @@ public class ArrayList<T> implements List<T> {
         return elements = newArray;
     }
 
-    private void indexValidityCheck(int index) {
+    private void checkIndexValidity(int index) {
         if (index >= size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Index: " + index + ", Size: " + size);
         }
     }
 
-    private void rangeCheckForAdd(int index) {
+    private void checkIndexForAdd(int index) {
         if (index > size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Index: " + index + ", Size: " + size);
         }
