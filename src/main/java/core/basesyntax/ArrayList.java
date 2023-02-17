@@ -1,41 +1,40 @@
 package core.basesyntax;
 
+import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_SIZE = 10;
-    private Object[] values;
+    private Object[] elementData;
     private int size;
 
     ArrayList() {
-        values = new Object[DEFAULT_SIZE];
+        elementData = new Object[DEFAULT_SIZE];
     }
 
     @Override
     public void add(T value) {
-        values[size] = value;
-        increaseSize();
+        if (size == elementData.length) {
+            grow();
+        }
+        elementData[size++] = value;
     }
 
     @Override
     public void add(T value, int index) {
         checkSizeForAdd(index);
-        Object[] temp = new Object[values.length];
-        System.arraycopy(values, 0, temp, 0, values.length);
-        System.arraycopy(temp, 0, values, 0, index);
-        values[index] = value;
-        int amountElementSecondPartOfArray = size - index;
-        System.arraycopy(temp, index, values, index + 1, amountElementSecondPartOfArray);
-        increaseSize();
+        System.arraycopy(elementData,index,elementData,index + 1, size  - index);
+        elementData[index] = value;
+        size++;
     }
 
     @Override
     public void addAll(List<T> list) {
-        if (list.size() > values.length - size) {
-            resize((int) Math.ceil((values.length + list.size()) * 1.5));
+        if (list.size() > elementData.length - size) {
+            grow();
         }
         for (int i = 0; i < list.size(); i++) {
-            values[size + i] = list.get(i);
+            elementData[size + i] = list.get(i);
         }
         size += list.size();
     }
@@ -43,35 +42,30 @@ public class ArrayList<T> implements List<T> {
     @SuppressWarnings("unchecked")
     @Override
     public T get(int index) {
-        checkSize(index);
-        return (T) values[index];
+        checkIndex(index);
+        return (T) elementData[index];
     }
 
     @Override
     public void set(T value, int index) {
-        checkSize(index);
-        values[index] = value;
+        checkIndex(index);
+        elementData[index] = value;
     }
 
     @SuppressWarnings("unchecked")
     @Override
     public T remove(int index) {
-        checkSize(index);
-        Object[] temp = new Object[values.length];
-        final T oldValue = (T) values[index];
-        System.arraycopy(values, 0, temp, 0, values.length);
-        values = new Object[values.length - 1];
-        System.arraycopy(temp, 0, values, 0, index);
-        int amountElementAfterIndex = size - index;
-        System.arraycopy(temp, index + 1, values, index, amountElementAfterIndex);
-        size--;
-        return oldValue;
+        checkIndex(index);
+        T removed = (T) elementData[index];
+        System.arraycopy(elementData, index + 1, elementData, index, size - 1 - index);
+        elementData[--size] = null;
+        return removed;
     }
 
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if (values[i] != null && values[i].equals(element) || values[i] == element) {
+            if (elementData[i] != null && elementData[i].equals(element) || elementData[i] == element) {
                 remove(i);
                 return element;
             }
@@ -89,39 +83,34 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
+    @Override
     public String toString() {
         StringBuilder string = new StringBuilder();
         for (int i = 0; i < size; i++) {
-            string.append(values[i]);
+            string.append(elementData[i]);
             string.append(", ");
         }
         return string.toString();
     }
 
     @SuppressWarnings("unchecked")
-    private void resize(int newSize) {
-        Object[] temp = new Object[values.length];
-        System.arraycopy(values, 0, temp, 0, values.length);
-        values = (T[]) new Object[(int) (newSize)];
-        System.arraycopy(temp, 0, values, 0, temp.length);
+    private void grow() {
+        Object[] temp = new Object[elementData.length];
+        System.arraycopy(elementData, 0, temp, 0, elementData.length);
+        elementData = Arrays.copyOf(temp, (int) Math.ceil(elementData.length * 1.5));
     }
-
-    private void increaseSize() {
-        if (size == values.length - 1) {
-            resize((int) Math.ceil(values.length * 1.5));
-        }
-        size++;
-    }
-
     private void checkSizeForAdd(int index) {
+        if (size == elementData.length) {
+            grow();
+        }
         if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("No such element exist");
+            throw new ArrayListIndexOutOfBoundsException("The element at the given index does not exist.");
         }
     }
 
-    private void checkSize(int index) {
+    private void checkIndex(int index) {
         if (index < 0 || index > size - 1) {
-            throw new ArrayListIndexOutOfBoundsException("No such element exist");
+            throw new ArrayListIndexOutOfBoundsException("The element at the given index does not exist.");
         }
     }
 }
