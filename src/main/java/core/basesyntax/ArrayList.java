@@ -1,7 +1,6 @@
 package core.basesyntax;
 
 import java.util.NoSuchElementException;
-import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
     public static final int INITIAL_CAPACITY = 10;
@@ -14,7 +13,9 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        add(value, size);
+        checkSize();
+        list[size] = value;
+        size++;
     }
 
     @Override
@@ -22,9 +23,7 @@ public class ArrayList<T> implements List<T> {
         if (index != size) {
             checkIndex(index);
         }
-        if (size == list.length) {
-            grow();
-        }
+        checkSize();
         System.arraycopy(list, index, list, index + 1, size - index);
         list[index] = value;
         size++;
@@ -59,11 +58,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        int index = indexOf(element);
-        if (index == -1) {
-            throw new NoSuchElementException("Element no found");
-        }
-        return remove(index);
+        return remove(indexOf(element));
     }
 
     @Override
@@ -76,20 +71,26 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
+    public int indexOf(Object obj) {
+        for (int i = 0; i < list.length; i++) {
+            if (list[i] == null ? obj == null : list[i].equals(obj)) {
+                return i;
+            }
+        }
+        throw new NoSuchElementException("Element no found");
+    }
+
+    private void checkSize() {
+        if (size == list.length) {
+            grow();
+        }
+    }
+
     private void grow() {
         int newCapacity = (list.length + list.length / 2);
         Object[] newArray = new Object[newCapacity];
         System.arraycopy(list, 0, newArray, 0, list.length);
         list = newArray;
-    }
-
-    public int indexOf(Object obj) {
-        for (int i = 0; i < list.length; i++) {
-            if (Objects.equals(obj, list[i])) {
-                return i;
-            }
-        }
-        return -1;
     }
 
     private void checkIndex(int index) {
