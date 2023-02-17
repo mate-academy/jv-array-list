@@ -1,7 +1,6 @@
 package core.basesyntax;
 
 import java.util.NoSuchElementException;
-import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_SIZE = 10;
@@ -22,11 +21,8 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index can't be less than 0 " + index);
-        } else if (index > size + 1) {
-            throw new ArrayListIndexOutOfBoundsException("You can add an element from 0 to "
-                    + (size + 1) + " index!");
+        if (index < 0 || index > size + 1) {
+            throw new ArrayListIndexOutOfBoundsException("Index must be from 0 to " + index);
         }
         checkCapacity();
         Object[] tempArray = new Object[size + 1];
@@ -49,7 +45,6 @@ public class ArrayList<T> implements List<T> {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public T get(int index) {
         checkIndex(index);
         return (T) storage[index];
@@ -62,7 +57,6 @@ public class ArrayList<T> implements List<T> {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public T remove(int index) {
         if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException("Wrong index " + index);
@@ -81,7 +75,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i <= size; i++) {
-            if (Objects.equals(storage[i], element)) {
+            if ((storage[i] == element || (storage[i] != null && storage[i].equals(element)))) {
                 return remove(i);
             }
         }
