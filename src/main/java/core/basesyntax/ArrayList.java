@@ -6,12 +6,11 @@ public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private int currentCapacity;
     private T[] listArray;
-    private int size;
+    private int size = 0;
 
     @SuppressWarnings("unchecked")
     public ArrayList() {
         this.listArray = (T[]) new Object[DEFAULT_CAPACITY];
-        size = 0;
         currentCapacity = DEFAULT_CAPACITY;
     }
 
