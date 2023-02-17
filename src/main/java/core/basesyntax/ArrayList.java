@@ -68,11 +68,11 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayListIndexOutOfBoundsException("Wrong index " + index);
         }
         Object[] copy = new Object[size - 1];
-        final Object oldObject = storage[index];
         System.arraycopy(storage, 0, copy, 0, index);
         if (size - (index + 1) >= 0) {
             System.arraycopy(storage, index + 1, copy, index, size - (index + 1));
         }
+        Object oldObject = storage[index];
         storage = copy;
         size--;
         return (T) oldObject;
@@ -98,16 +98,16 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private Object[] grow() {
+    private void grow() {
         capacity = size + (size >> 1);
         Object[] biggerStorage = new Object[capacity];
         System.arraycopy(storage, 0, biggerStorage, 0, size);
-        return biggerStorage;
+        storage = biggerStorage;
     }
 
     private void checkCapacity() {
         if (size == capacity) {
-            storage = grow();
+            grow();
         }
     }
 
@@ -116,7 +116,7 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayListIndexOutOfBoundsException("Index can't be less than 0 " + index);
         } else if (index > size - 1) {
             throw new ArrayListIndexOutOfBoundsException("Our storage has only "
-                    + (size) + " objects!");
+                    + size + " objects!");
         }
     }
 }
