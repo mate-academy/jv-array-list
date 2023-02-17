@@ -5,7 +5,12 @@ import java.util.NoSuchElementException;
 import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
-    private Object[] objects = new Object[0];
+    private static final int START_ARRAY_LENGTH = 0;
+    private Object[] objects;
+
+    public ArrayList() {
+        objects = new Object[START_ARRAY_LENGTH];
+    }
 
     @Override
     public void add(T value) {
