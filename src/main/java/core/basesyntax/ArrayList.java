@@ -15,14 +15,13 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        checkCapacity();
-        storage[size++] = value;
+        add(value, size);
     }
 
     @Override
     public void add(T value, int index) {
-        if (index < 0 || index > size + 1) {
-            throw new ArrayListIndexOutOfBoundsException("Index must be from 0 to " + index);
+        if (index < 0 || index > size) {
+            throw new ArrayListIndexOutOfBoundsException("Index must be from 0 to " + size);
         }
         checkCapacity();
         Object[] tempArray = new Object[size + 1];
@@ -58,7 +57,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(int index) {
-        if (index < 0 || index >= size) {
+        if (size == 0 || index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException("Wrong index " + index);
         }
         Object[] copy = new Object[size - 1];
@@ -74,7 +73,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        for (int i = 0; i <= size; i++) {
+        for (int i = 0; i < size; i++) {
             if ((storage[i] == element || (storage[i] != null && storage[i].equals(element)))) {
                 return remove(i);
             }
