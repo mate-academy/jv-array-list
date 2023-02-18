@@ -117,7 +117,7 @@ public class ArrayList<T> implements List<T> {
         return (buildMsg.append("index ")
                 .append(index)
                 .append(" out of range. ")
-                .append( "ArrayList size = ")
+                .append("ArrayList size = ")
                 .append(size)).toString();
     }
 }
