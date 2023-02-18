@@ -5,11 +5,12 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_SIZE = 10;
-    private Object[] elementData;
+    private T[] elementData;
     private int size;
 
+    @SuppressWarnings("unchecked")
     ArrayList() {
-        elementData = new Object[DEFAULT_SIZE];
+        elementData = (T[]) new Object[DEFAULT_SIZE];
     }
 
     @Override
@@ -22,24 +23,22 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        checkSizeForAdd(index);
-        System.arraycopy(elementData,index,elementData,index + 1, size - index);
+        rangeCheckForAdd(index);
+        if (size == elementData.length) {
+            grow();
+        }
+        System.arraycopy(elementData, index, elementData, index + 1, size - index);
         elementData[index] = value;
         size++;
     }
 
     @Override
     public void addAll(List<T> list) {
-        if (list.size() > elementData.length - size) {
-            grow();
-        }
         for (int i = 0; i < list.size(); i++) {
-            elementData[size + i] = list.get(i);
+            add(list.get(i));
         }
-        size += list.size();
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public T get(int index) {
         checkIndex(index);
@@ -52,7 +51,6 @@ public class ArrayList<T> implements List<T> {
         elementData[index] = value;
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public T remove(int index) {
         checkIndex(index);
@@ -99,23 +97,27 @@ public class ArrayList<T> implements List<T> {
     private void grow() {
         Object[] temp = new Object[elementData.length];
         System.arraycopy(elementData, 0, temp, 0, elementData.length);
-        elementData = Arrays.copyOf(temp, (int) Math.ceil(elementData.length * 1.5));
+        elementData = (T[]) Arrays.copyOf(temp, (int) Math.ceil(elementData.length * 1.5));
     }
 
-    private void checkSizeForAdd(int index) {
-        if (size == elementData.length) {
-            grow();
-        }
+    private void rangeCheckForAdd(int index) {
         if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("The element at the "
-                   + "given index does not exist.");
+            throw new ArrayListIndexOutOfBoundsException(outOfBoundsMsg(index));
         }
     }
 
     private void checkIndex(int index) {
-        if (index < 0 || index > size - 1) {
-            throw new ArrayListIndexOutOfBoundsException("The element at the "
-                   + "given index does not exist.");
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException(outOfBoundsMsg(index));
         }
+    }
+
+    private String outOfBoundsMsg(int index) {
+        StringBuilder buildMsg = new StringBuilder();
+        return (buildMsg.append("index ")
+                .append(index)
+                .append(" out of range. ")
+                .append( "ArrayList size = ")
+                .append(size)).toString();
     }
 }
