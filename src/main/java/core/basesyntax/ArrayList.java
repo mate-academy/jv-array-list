@@ -16,11 +16,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (size == currentCapacity) {
-            grow();
-        }
-        entries[size] = value;
-        size++;
+        add(value, size);
     }
 
     @Override
@@ -38,6 +34,9 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
+        if (list == null) {
+            throw new RuntimeException("List can't be null!");
+        }
         for (int i = 0; i < list.size(); i++) {
             add(list.get(i));
         }
