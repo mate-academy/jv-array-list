@@ -17,10 +17,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value) {
         if (size == currentCapacity) {
-            growSimple();
-            T[] tempEntries = (T[]) new Object[currentCapacity];
-            System.arraycopy(entries, 0, tempEntries, 0, size);
-            entries = tempEntries;
+            grow();
         }
         entries[size] = value;
         size++;
@@ -28,23 +25,14 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index == size && size < currentCapacity) {
-            entries[index] = value;
-        } else if (size == currentCapacity) {
-            checkIndex(index);
-            growSimple();
-            T[] tempEntries = (T[]) new Object[currentCapacity];
-            System.arraycopy(entries, index, tempEntries, index + 1, size - index);
-            if (index > 0) {
-                System.arraycopy(entries, 0, tempEntries, index - 1, index - 1);
-            }
-            tempEntries[index] = value;
-            entries = tempEntries;
-        } else {
+        if (size == currentCapacity) {
+            grow();
+        }
+        if (index != size) {
             checkIndex(index);
             System.arraycopy(entries, index, entries, index + 1, size - index);
-            entries[index] = value;
         }
+        entries[index] = value;
         size++;
     }
 
@@ -102,7 +90,10 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private void growSimple() {
+    private void grow() {
         currentCapacity += (currentCapacity >> 1);
+        T[] tempEntries = (T[]) new Object[currentCapacity];
+        System.arraycopy(entries, 0, tempEntries, 0, size);
+        entries = tempEntries;
     }
 }
