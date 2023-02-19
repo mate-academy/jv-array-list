@@ -1,15 +1,14 @@
 package core.basesyntax;
 
 import java.util.NoSuchElementException;
-import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
-    private static final int CAPACITY = 10;
-    private T[] list;
+    private static final int DEFAULT_CAPACITY = 10;
+    private T[] arrayList;
     private int size;
 
     ArrayList() {
-        list = (T[]) new Object[CAPACITY];
+        arrayList = (T[]) new Object[DEFAULT_CAPACITY];
         size = 0;
     }
 
@@ -23,9 +22,9 @@ public class ArrayList<T> implements List<T> {
         grow();
         if (index != size) {
             indexCheck(index);
-            System.arraycopy(list, index, list, index + 1, size - index);
+            System.arraycopy(arrayList, index, arrayList, index + 1, size - index);
         }
-        list[index] = value;
+        arrayList[index] = value;
         size++;
     }
 
@@ -39,28 +38,28 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         indexCheck(index);
-        return list[index];
+        return arrayList[index];
     }
 
     @Override
     public void set(T value, int index) {
         indexCheck(index);
-        list[index] = value;
+        arrayList[index] = value;
     }
 
     @Override
     public T remove(int index) {
         indexCheck(index);
-        T element = list[index];
+        T element = arrayList[index];
         size--;
-        System.arraycopy(list, index + 1, list, index, size - index);
+        System.arraycopy(arrayList, index + 1, arrayList, index, size - index);
         return element;
     }
 
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if (Objects.equals(element, list[i])) {
+            if (element == arrayList[i] || element != null && element.equals(arrayList[i])) {
                 return remove(i);
             }
         }
@@ -85,13 +84,13 @@ public class ArrayList<T> implements List<T> {
     private int indexOfRange(T element, int end) {
         if (element == null) {
             for (int i = 0; i < end; i++) {
-                if (list[i] == null) {
+                if (arrayList[i] == null) {
                     return i;
                 }
             }
         } else {
             for (int i = 0; i < end; i++) {
-                if (element.equals(list[i])) {
+                if (element.equals(arrayList[i])) {
                     return i;
                 }
             }
@@ -106,11 +105,11 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void grow() {
-        if (size == list.length) {
-            int newCapacity = list.length + (list.length >> 1);
+        if (size == arrayList.length) {
+            int newCapacity = arrayList.length + (arrayList.length >> 1);
             Object[] newList = new Object[newCapacity];
-            System.arraycopy(list, 0, newList, 0, size);
-            list = (T[]) newList;
+            System.arraycopy(arrayList, 0, newList, 0, size);
+            arrayList = (T[]) newList;
         }
     }
 }
