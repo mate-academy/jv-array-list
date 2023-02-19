@@ -40,11 +40,8 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        if (storage.length < size + list.size()) {
-            increaseCapacity(size + list.size());
-        }
         for (int i = 0; i < list.size(); i++) {
-            storage[size++] = list.get(i);
+            add(list.get(i));
         }
     }
 
@@ -101,14 +98,10 @@ public class ArrayList<T> implements List<T> {
 
     private void increaseCapacity() {
         int newCapacity = storage.length / 2 + storage.length;
-        createNewStorage(newCapacity);
+        updateStorage(newCapacity);
     }
 
-    private void increaseCapacity(int newCapacity) {
-        createNewStorage(newCapacity);
-    }
-
-    private void createNewStorage(int newCapacity) {
+    private void updateStorage(int newCapacity) {
         Object[] destination = new Object[newCapacity];
         System.arraycopy(storage, 0, destination,0, size);
         storage = destination;
@@ -127,14 +120,10 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void moveToRight(int from) {
-        for (int i = size - 1; i >= from; i--) {
-            storage[i + 1] = storage[i];
-        }
+        System.arraycopy(storage, from, storage, from + 1, size - from);
     }
 
     private void moveToLeft(int from) {
-        for (int i = from; i < size - 1; i++) {
-            storage[i] = storage[i + 1];
-        }
+        System.arraycopy(storage, from + 1, storage, from, size - from - 1);
     }
 }
