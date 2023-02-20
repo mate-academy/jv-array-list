@@ -60,21 +60,16 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(int index) {
-        validIndex(index);
-        T[] list = (T[]) new Object[newCapacity];
-        T removeElement = elementData[index];
-        if (startIndex) {
-            System.arraycopy(elementData, 1, list, 0, size - 1);
-            copyArraysAfterRemove(list);
-        } else if (lastIndex) {
-            System.arraycopy(elementData, 0, list, 0, index);
-            copyArraysAfterRemove(list);
-        } else {
-            System.arraycopy(elementData, 0, list, 0, index);
-            System.arraycopy(elementData, index + 1, list, index, size);
-            copyArraysAfterRemove(list);
+        T value = null;
+        if (checkIndex(index)) {
+            value = elementData[index];
+            T[] newElementData = (T[]) new Object[elementData.length];
+            System.arraycopy(elementData, 0, newElementData, 0, index);
+            System.arraycopy(elementData, index + 1, newElementData, index, size);
+            System.arraycopy(newElementData, 0, elementData, 0, size);
+            size--;
         }
-        return removeElement;
+        return value;
     }
 
     @Override
