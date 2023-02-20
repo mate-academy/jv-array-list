@@ -89,21 +89,20 @@ public class ArrayList<T> implements List<T> {
             newArray();
         }
         T[] tempArray = newTemporaryArray();
-        for (int i = index + 1; i <= numberOfElements; i++) {
-            tempArray[i] = array[i - 1];
-        }
+        System.arraycopy(array, 0, tempArray, 0, index);
         tempArray[index] = value;
+        if (index < arraySize - 1) {
+            System.arraycopy(array, index, tempArray, index + 1, numberOfElements - index);
+        }
         numberOfElements++;
         array = tempArray;
     }
 
     private void shiftLeftAndRemoveElement(int index) {
         T[] tempArray = newTemporaryArray();
-        for (int i = numberOfElements - 1; i > index; i--) {
-            if (i == numberOfElements - 1) {
-                tempArray[i] = null;
-            }
-            tempArray[i - 1] = array[i];
+        System.arraycopy(array, 0, tempArray, 0, index);
+        if (index < arraySize - 1) {
+            System.arraycopy(array, index + 1, tempArray, index, numberOfElements - index);
         }
         numberOfElements--;
         array = tempArray;
