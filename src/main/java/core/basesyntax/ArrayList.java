@@ -5,7 +5,7 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
 
-    public static final double GROW_INDEX = 1.5;
+    private static final double GROW_INDEX = 1.5;
     private static final int DEFAULT_CAPACITY = 10;
     private Object[] data;
     private int size;
