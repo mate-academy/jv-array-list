@@ -8,16 +8,12 @@ public class ArrayList<T> implements List<T> {
     private int size;
 
     public ArrayList() {
-
         elements = (T[]) new Object[CAPACITY];
     }
 
     @Override
     public void add(T value) {
-        if (size == elements.length) {
-            grow();
-        }
-        elements[size++] = value;
+        add(value, size);
     }
 
     @Override
@@ -35,8 +31,10 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        for (int i = 0; i < list.size(); i++) {
-            add(list.get(i));
+        if (list != null) {
+            for (int i = 0; i < list.size(); i++) {
+                add(list.get(i));
+            }
         }
     }
 
