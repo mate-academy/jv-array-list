@@ -13,19 +13,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (isEmpty()) {
-            elementData = (T[]) new Object[newCapacity];
-            elementData[size] = value;
-            size++;
-        } else if (chekArraySize()) {
-            elementData[size] = value;
-            size++;
-        } else {
-            setNewCapacity();
-            updateLengthArray();
-            elementData[size] = value;
-            size++;
-        }
+        add(value, size);
     }
 
     @Override
