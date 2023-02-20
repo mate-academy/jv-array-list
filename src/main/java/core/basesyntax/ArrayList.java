@@ -27,7 +27,7 @@ public class ArrayList<T> implements List<T> {
             System.arraycopy(elementData, 0, newElementData, 0, index);
             newElementData[index] = value;
             System.arraycopy(elementData, index, newElementData, index + 1, size);
-            System.arraycopy(newElementData, 0, elementData, 0, size);
+            System.arraycopy(newElementData, 0, elementData, 0, newElementData.length);
             size++;
         }
     }
@@ -66,7 +66,7 @@ public class ArrayList<T> implements List<T> {
             T[] newElementData = (T[]) new Object[elementData.length];
             System.arraycopy(elementData, 0, newElementData, 0, index);
             System.arraycopy(elementData, index + 1, newElementData, index, size);
-            System.arraycopy(newElementData, 0, elementData, 0, newElementData.length);
+            System.arraycopy(newElementData, 0, elementData, 0, size);
             size--;
         }
         return value;
