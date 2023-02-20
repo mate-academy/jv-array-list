@@ -103,7 +103,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public boolean isEmpty() {
-        return (size == 0) ? true : false;
+        return size == 0;
     }
 
     private boolean chekArraySize() {
