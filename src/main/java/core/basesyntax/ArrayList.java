@@ -15,9 +15,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (size == elements.length) {
-            elements = grow();
-        }
+        isFull();
         elements[size] = value;
         size++;
     }
@@ -25,34 +23,12 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         checkAddIndex(index);
-        if (size == elements.length) {
-            elements = grow();
-        }
+        isFull();
         System.arraycopy(elements, index,
                 elements, index + 1,
                 size - index);
         elements[index] = value;
         size++;
-    }
-
-    public T[] grow() {
-        T[] elements = (T[]) new Object[size * SIZE_MULTIPLIER];
-        System.arraycopy(this.elements, 0, elements, 0, size);
-        return elements;
-    }
-
-    public void checkAddIndex(int index) {
-        if (index > size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Your index was " + index
-                    + ", but size is " + size);
-        }
-    }
-
-    public void checkIndex(int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Your index was " + index
-                    + ", but size is " + size);
-        }
     }
 
     @Override
@@ -77,20 +53,36 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
-        return removalLogic(index);
+        return removeElementByIndex(index);
     }
 
     @Override
     public T remove(T element) {
         int index = findIndexByElement(element);
         if (index >= 0) {
-            return removalLogic(index);
+            return removeElementByIndex(index);
         }
         throw new NoSuchElementException("There is no such element ["
                 + element + "] in the list");
     }
 
-    private T removalLogic(int index) {
+    @Override
+    public int size() {
+        return size;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return size == 0;
+    }
+
+    private void isFull() {
+        if (size == elements.length) {
+            grow();
+        }
+    }
+
+    private T removeElementByIndex(int index) {
         size--;
         T element = elements[index];
         System.arraycopy(elements, index + 1,
@@ -117,13 +109,23 @@ public class ArrayList<T> implements List<T> {
         return NON_EXISTENT_INDEX;
     }
 
-    @Override
-    public int size() {
-        return size;
+    private void grow() {
+        T[] elements = (T[]) new Object[size * SIZE_MULTIPLIER];
+        System.arraycopy(this.elements, 0, elements, 0, size);
+        this.elements = elements;
     }
 
-    @Override
-    public boolean isEmpty() {
-        return size == 0;
+    private void checkAddIndex(int index) {
+        if (index > size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Your index was " + index
+                    + ", but size is " + size);
+        }
+    }
+
+    private void checkIndex(int index) {
+        if (index >= size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Your index was " + index
+                    + ", but size is " + size);
+        }
     }
 }
