@@ -7,6 +7,10 @@ public class ArrayList<T> implements List<T> {
     private T[] elementData;
     private int size = 0;
 
+    public ArrayList() {
+        elementData = (T[]) new Object[DEFAULT_CAPACITY];
+    }
+
     @Override
     public void add(T value) {
         if (isEmpty()) {
