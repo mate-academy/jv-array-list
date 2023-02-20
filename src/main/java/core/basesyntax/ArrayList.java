@@ -3,11 +3,9 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    private int newCapacity = 10;
+    private static final int DEFAULT_CAPACITY = 10;
     private T[] elementData;
     private int size = 0;
-    private boolean startIndex = false;
-    private boolean lastIndex = false;
 
     @Override
     public void add(T value) {
