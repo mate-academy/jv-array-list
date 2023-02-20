@@ -53,8 +53,9 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void set(T value, int index) {
-        validIndex(index);
-        elementData[index] = value;
+        if (checkIndex(index)) {
+            elementData[index] = value;
+        }
     }
 
     @Override
