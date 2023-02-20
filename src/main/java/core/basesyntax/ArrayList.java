@@ -74,15 +74,26 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        for (int i = 0; i < size; i++) {
-            if (elementData[i].equals(element)) {
-                removeValue(element, i);
-                return element;
-            } else {
-                throw new NoSuchElementException("Not valid element");
+        T value = null;
+        int index = -1;
+        if (null == element) {
+            for (int i = 0; i < size; i++) {
+                if (elementData[i] == null) {
+                    index = i;
+                    break;
+                }
             }
+            value = checkRemoveIndex(index);
+        } else {
+            for (int i = 0; i < size; i++) {
+                if (element.equals(elementData[i])) {
+                    index = i;
+                    break;
+                }
+            }
+            value = checkRemoveIndex(index);
         }
-        return null;
+        return value;
     }
 
     @Override
