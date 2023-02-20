@@ -18,16 +18,17 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        validIndex(index);
-        if (isEmpty()) {
-            elementData = (T[]) new Object[newCapacity];
-            addValueToIndex(value, index);
-        } else if (!chekArraySize()) {
-            setNewCapacity();
-            updateLengthArray();
-            addValueToIndex(value, index);
+        if (checkIndex(index) && index == size) {
+            grow();
+            elementData[index] = value;
+            size++;
         } else {
-            addValueToIndex(value, index);
+            T[] newElementData = (T[]) new Object[elementData.length];
+            System.arraycopy(elementData, 0, newElementData, 0, index);
+            newElementData[index] = value;
+            System.arraycopy(elementData, index, newElementData, index + 1, size);
+            System.arraycopy(newElementData, 0, elementData, 0, size);
+            size++;
         }
     }
 
