@@ -85,9 +85,9 @@ public class ArrayList<T> implements List<T> {
 
     private void growDataLength() {
         int newCapacity = data.length + (data.length >> 1);
-        T[] updatedData = (T[]) new Object[newCapacity];
-        System.arraycopy(data, 0, updatedData, 0, data.length);
-        data = updatedData;
+        T[] newData = (T[]) new Object[newCapacity];
+        System.arraycopy(data, 0, newData, 0, data.length);
+        data = newData;
     }
 
     private void checkIndex(int index) {
