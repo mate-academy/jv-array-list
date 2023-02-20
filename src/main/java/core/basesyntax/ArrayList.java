@@ -91,7 +91,8 @@ public class ArrayList<T> implements List<T> {
     }
 
     private boolean equalElement(T elementFromArray, T element) {
-        return elementFromArray == element || elementFromArray != null && (elementFromArray.equals(element));
+        return elementFromArray == element
+                || elementFromArray != null && (elementFromArray.equals(element));
     }
 
     private void fullArray() {
