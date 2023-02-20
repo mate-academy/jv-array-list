@@ -24,7 +24,7 @@ public class ArrayList<T> implements List<T> {
     public void add(T value, int index) {
         if (index > currentSize || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Input index : " + index
-                    + " less than ArrayList size: " + currentSize);
+                    + " out of bonds: [" + 0 + ", " + currentSize + "]");
         } else if (index == currentSize) {
             add(value);
             return;
@@ -101,7 +101,7 @@ public class ArrayList<T> implements List<T> {
     private void checkIndexLimits(int index) {
         if (index >= currentSize || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Input index : " + index
-                    + " more than ArrayList size: " + currentSize);
+                    + " out of bonds: [" + 0 + ", " + currentSize + "]");
         }
     }
 }
