@@ -7,6 +7,7 @@ import java.util.Objects;
 public class ArrayList<T> implements List<T> {
     private static final int INITIAL_SIZE = 10;
     private static final int EMPTY_SIZE = 0;
+    private static final int CAPACITY_DIVISOR = 2;
     private Object[] dataElement = new Object[INITIAL_SIZE];
     private int size;
 
@@ -86,7 +87,7 @@ public class ArrayList<T> implements List<T> {
 
     private void grow() {
         int oldCapacity = dataElement.length;
-        int newCapacity = oldCapacity + (oldCapacity / 2);
+        int newCapacity = oldCapacity + (oldCapacity / CAPACITY_DIVISOR);
         if (newCapacity < 0) {
             newCapacity = Integer.MAX_VALUE;
         }
