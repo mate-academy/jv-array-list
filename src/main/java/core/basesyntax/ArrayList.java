@@ -90,9 +90,9 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private boolean equalsForTtypeElements(T elementFromArray, T element) {
-        return elementFromArray == element
-                || elementFromArray != null && (elementFromArray.equals(element));
+    private boolean equalsForTtypeElements(T element1, T element2) {
+        return element1 == element2
+                || element1 != null && (element1.equals(element2));
     }
 
     private void ifArrayIsFull() {
