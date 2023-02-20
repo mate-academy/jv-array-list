@@ -105,4 +105,31 @@ public class ArrayList<T> implements List<T> {
     public boolean isEmpty() {
         return size == 0;
     }
+
+    private boolean checkIndex(int index) {
+        if (index < 0 || index > size) {
+            throw new ArrayListIndexOutOfBoundsException("Index not valid");
+        }
+        return true;
+    }
+
+    private void grow() {
+        int newCapacity = size;
+        T[] newElementData;
+        if (size == elementData.length) {
+            newCapacity += newCapacity / 2;
+            newElementData = (T[]) new Object[newCapacity];
+            System.arraycopy(elementData, 0, newElementData, 0, size);
+            elementData = (T[]) new Object[newCapacity];
+            System.arraycopy(newElementData, 0, elementData, 0, size);
+        }
+    }
+
+    private T checkRemoveIndex(int index) {
+        if (index > -1) {
+            return remove(index);
+        } else {
+            throw new NoSuchElementException("Not such element to remove");
+        }
+    }
 }
