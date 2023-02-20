@@ -22,7 +22,7 @@ public class ArrayList<T> implements List<T> {
     public void add(T value, int index) {
         checkCapacity();
         if (index > size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index out of bounds");
+            throw new ArrayListIndexOutOfBoundsException(arrayListIndexOutOfBoundsMessage(index));
         }
         System.arraycopy(data, index, data, index + 1, size - index);
         data[index] = value;
@@ -51,7 +51,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
-        final T removingElement = data[index];
+        final T removingElement = get(index);
         System.arraycopy(data, index + 1, data, index, size - index - 1);
         data[--size] = null;
         return removingElement;
@@ -64,7 +64,7 @@ public class ArrayList<T> implements List<T> {
                 return remove(i);
             }
         }
-        throw new NoSuchElementException("Element not found");
+        throw new NoSuchElementException(noSuchElementMessage(element));
     }
 
     @Override
@@ -92,7 +92,15 @@ public class ArrayList<T> implements List<T> {
 
     private void checkIndex(int index) {
         if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index out of bounds");
+            throw new ArrayListIndexOutOfBoundsException(arrayListIndexOutOfBoundsMessage(index));
         }
+    }
+
+    private String arrayListIndexOutOfBoundsMessage(int index) {
+        return String.format("Index %d out of bounds. Size of list: %d", index, size);
+    }
+
+    private String noSuchElementMessage(T element) {
+        return "Element " + element + " not found!";
     }
 }
