@@ -13,17 +13,17 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        ifArrayIsFull();
+        checkArraySize();
         elements[size] = value;
         size++;
     }
 
     @Override
     public void add(T value, int index) {
-        ifArrayIsFull();
         if (index > size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Index out of bounds");
         }
+        checkArraySize();
         System.arraycopy(elements, index, elements, index + 1, size - index);
         elements[index] = value;
         size++;
@@ -60,7 +60,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if (equalsForTtypeElements(elements[i], element)) {
+            if (elementsEqual(elements[i], element)) {
                 return remove(i);
             }
         }
@@ -77,7 +77,7 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void oldArrayCopy() {
+    private void grow() {
         int nextLength = elements.length + (elements.length >> 1);
         T[] resizedElements = (T[]) new Object[nextLength];
         System.arraycopy(elements, 0, resizedElements, 0, elements.length);
@@ -90,14 +90,14 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private boolean equalsForTtypeElements(T element1, T element2) {
+    private boolean elementsEqual(T element1, T element2) {
         return element1 == element2
                 || element1 != null && (element1.equals(element2));
     }
 
-    private void ifArrayIsFull() {
+    private void checkArraySize() {
         if (size == elements.length) {
-            oldArrayCopy();
+            grow();
         }
     }
 }
