@@ -19,11 +19,11 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        checkIndex(index);
         grow();
-        System.arraycopy(values, index,
-                values, index + 1,
-                size - index);
+        if (index != size) {
+            checkIndexWithSameSize(index);
+            System.arraycopy(values, index, values, index + 1, size - index);
+        }
         values[index] = value;
         size++;
     }
@@ -91,12 +91,6 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
-    }
-
-    private void checkIndex(int index) {
-        if (index > size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Incorrect index: " + index);
-        }
     }
 
     private void checkIndexWithSameSize(int index) {
