@@ -34,12 +34,12 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        if (newCapacity - size - list.size() >= 0) {
-            copyValueInArray(list);
-        } else {
-            newCapacity = (int) (size * 1.5) + size + list.size();
-            updateLengthArray();
-            copyValueInArray(list);
+        if (elementData.length - size < list.size()) {
+            grow();
+        }
+        for (int i = 0; i < list.size(); i++) {
+            elementData[size] = list.get(i);
+            size++;
         }
     }
 
