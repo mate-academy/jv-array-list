@@ -13,7 +13,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (size() == elements.length) {
+        if (size == elements.length) {
             expandMainArray();
         }
         elements[size] = value;
@@ -26,7 +26,7 @@ public class ArrayList<T> implements List<T> {
             expandMainArray();
         }
         if (index > size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index out of bound");
+            throw new ArrayListIndexOutOfBoundsException("Index out of bound at:" + index);
         }
         System.arraycopy(elements, index, elements, index + 1, size - index);
         elements[index] = value;
@@ -42,19 +42,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        indexRange(index);
+        checkIndex(index);
         return elements[index];
     }
 
     @Override
     public void set(T value, int index) {
-        indexRange(index);
+        checkIndex(index);
         elements[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        indexRange(index);
+        checkIndex(index);
         final T elementToReturn = elements[index];
         System.arraycopy(elements, index + 1, elements, index, size - index - 1);
         elements[--size] = null;
@@ -89,9 +89,9 @@ public class ArrayList<T> implements List<T> {
         elements = resizedElements;
     }
 
-    private void indexRange(int index) {
+    private void checkIndex(int index) {
         if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index out of bounds");
+            throw new ArrayListIndexOutOfBoundsException("Index out of bounds at:" + index);
         }
     }
 }
