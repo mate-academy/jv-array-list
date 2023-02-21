@@ -40,7 +40,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         checkIndex(index);
-        return (T) values[index];
+        return values[index];
     }
 
     @Override
@@ -53,11 +53,10 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         checkIndex(index);
         final T value = (T) values[index];
-        int newLengthCounter = size - 1;
-        if (newLengthCounter >= index) {
-            System.arraycopy(values, index + 1, values, index, newLengthCounter - index);
+        if (size > index) {
+            System.arraycopy(values, index + 1, values, index, size - 1 - index);
         }
-        values[newLengthCounter] = null;
+        values[size - 1] = null;
         size--;
         return value;
     }
