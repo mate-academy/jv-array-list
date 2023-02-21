@@ -1,10 +1,9 @@
 package core.basesyntax;
 
-import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    private final int DEFAULT_CAPACITY = 10;
+    private static final int DEFAULT_CAPACITY = 10;
     private static final double MULTIPLICATION_CAPACITY = 1.5;
     private static final String EXCEPTION_MESSAGE = "Index of the bounds. Check your input index";
     private T[] values;
