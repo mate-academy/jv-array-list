@@ -12,7 +12,6 @@ public class ArrayList<T> implements List<T> {
 
     public ArrayList() {
         size = 0;
-        capacity = 10;
         values = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
