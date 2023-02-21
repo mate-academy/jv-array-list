@@ -8,8 +8,15 @@ public class ArrayList<T> implements List<T> {
     private T[] values;
     private int size;
 
+    public ArrayList(int initCapacity) {
+        if (initCapacity <= 0) {
+            throw new IllegalArgumentException();
+        }
+        values = (T[]) new Object[initCapacity];
+    }
+
     public ArrayList() {
-        values = (T[]) new Object[DEFAULT_CAPACITY];
+        this(DEFAULT_CAPACITY);
     }
 
     @Override
@@ -38,7 +45,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         checkIndex(index, size);
-        return values[index];
+        return (T) values[index];
     }
 
     @Override
@@ -50,7 +57,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         checkIndex(index, size);
-        T removedValue = values[index];
+        T removedValue = (T) values[index];
         System.arraycopy(values, index + 1, values, index, size - index - 1);
         size--;
         return removedValue;
@@ -78,9 +85,9 @@ public class ArrayList<T> implements List<T> {
 
     private void resizeIfNeeded() {
         if (values.length == size) {
-            T[] newArray = (T[]) new Object[values.length + (values.length >> 2)];
+            Object[] newArray = new Object[values.length + (values.length >> 2)];
             System.arraycopy(values, 0, newArray, 0, size);
-            values = newArray;
+            values = (T[]) newArray;
         }
     }
 
