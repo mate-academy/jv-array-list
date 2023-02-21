@@ -5,7 +5,6 @@ import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
     private static final int START_SIZE = 10;
-    private static final String OF_BOUND_MESSAGE = "Out of bound index in ArrayList";
     private static final String OF_ABSENT_MESSAGE = "Element of ArrayList ain't present";
     private T[] storage;
     private int size;
@@ -86,7 +85,7 @@ public class ArrayList<T> implements List<T> {
 
     private void inspectIndex(int index, int bound) {
         if (index < 0 || index >= bound) {
-            throw new ArrayListIndexOutOfBoundsException(OF_BOUND_MESSAGE);
+            throw new ArrayListIndexOutOfBoundsException(OF_ABSENT_MESSAGE);
         }
     }
 
@@ -96,21 +95,4 @@ public class ArrayList<T> implements List<T> {
         System.arraycopy(storage, 0, tempStorage, 0, storage.length);
         storage = tempStorage;
     }
-
-    public static void main(String[] args) {
-        ArrayList<String> arrayList = new ArrayList<>();
-        arrayList.add("String");
-        arrayList.add("Another string");
-        arrayList.add(null);
-        arrayList.add("Java");
-        arrayList.add("Private");
-        arrayList.add(null);
-        arrayList.remove("Java");
-        System.out.println(arrayList.size());
-        System.out.println(arrayList.get(3));
-        arrayList.remove("String");
-        System.out.println(arrayList.size());
-        System.out.println(arrayList.get(2));
-    }
-
 }
