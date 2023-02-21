@@ -4,7 +4,7 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_LIST_CAPACITY = 10;
-    private static final int HALF_FROM_DEFAULT_LIST_CAPACITY = DEFAULT_LIST_CAPACITY / 2;
+    public static final double CAPACITY_MULTIPLIER = 1.5;
     private T[] list;
     private int size;
 
@@ -97,7 +97,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     public void resizeList() {
-        T[] array = (T[]) new Object[list.length + HALF_FROM_DEFAULT_LIST_CAPACITY];
+        T[] array = (T[]) new Object[(int) (list.length * CAPACITY_MULTIPLIER)];
         System.arraycopy(list, 0, array, 0, list.length);
         list = array;
     }
