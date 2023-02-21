@@ -6,10 +6,10 @@ public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_SIZE = 10;
     private static final double MULTIPLIER = 1.5;
     private int size;
-    private Object[] array;
+    private T[] array;
 
     public ArrayList() {
-        array = new Object[DEFAULT_SIZE];
+        array = (T[]) new Object[DEFAULT_SIZE];
     }
 
     @Override
@@ -37,7 +37,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         checkIndex(index, size);
-        return (T) array[index];
+        return array[index];
     }
 
     @Override
@@ -49,7 +49,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         checkIndex(index, size);
-        T removedElement = (T) array[index];
+        T removedElement = array[index];
         System.arraycopy(array, index + 1, array, index, size - index - 1);
         size--;
         return removedElement;
@@ -78,7 +78,7 @@ public class ArrayList<T> implements List<T> {
 
     private void resize() {
         if (array.length == size) {
-            Object[] newArray = new Object[(int) (array.length * MULTIPLIER)];
+            T[] newArray = (T[]) new Object[(int) (array.length * MULTIPLIER)];
             System.arraycopy(array, 0, newArray, 0, size);
             array = newArray;
         }
