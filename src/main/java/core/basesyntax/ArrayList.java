@@ -14,8 +14,11 @@ public class ArrayList<T> implements List<T> {
     public ArrayList(int capacity) {
         if (capacity < 0) {
             throw new RuntimeException("Incorrect capacity value " + capacity);
+        } else if (capacity == 0) {
+            storage = (T[]) new Object[DEFAULT_CAPACITY];
+        } else {
+            storage = (T[]) new Object[capacity];
         }
-        storage = (T[]) new Object[capacity];
     }
 
     @Override
