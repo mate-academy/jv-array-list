@@ -2,37 +2,40 @@ package core.basesyntax;
 
 import java.util.Arrays;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    private T[] elements;
+    private static final int EMPTY_SIZE = 0;
+    private static final int CAPACITY_DIVISOR = 2;
+    private Object[] dataElement = new Object[DEFAULT_CAPACITY];
     private int size;
-
-    @SuppressWarnings("unchecked")
-    public ArrayList() {
-        elements = (T[]) new Object[DEFAULT_CAPACITY];
-        size = 0;
-    }
 
     @Override
     public void add(T value) {
-        ensureCapacity(size + 1);
-        elements[size] = value;
-        size++;
+
+        if (size == dataElement.length) {
+            grow();
+        }
+        dataElement[size++] = value;
     }
 
     @Override
     public void add(T value, int index) {
-        checkIndexForAdd(index);
-        ensureCapacity(size + 1);
-        System.arraycopy(elements, index, elements, index + 1, size - index);
-        elements[index] = value;
-        size++;
+
+        if (index < 0 || index > size) {
+            throw new ArrayListIndexOutOfBoundsException("Can't add to index " + index);
+        }
+        if (size == dataElement.length) {
+            grow();
+        }
+        System.arraycopy(dataElement, index, dataElement, index + 1, size++ - index);
+        dataElement[index] = value;
     }
 
     @Override
     public void addAll(List<T> list) {
-        ensureCapacity(size + list.size());
+
         for (int i = 0; i < list.size(); i++) {
             add(list.get(i));
         }
@@ -40,37 +43,40 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        checkIndex(index);
-        return elements[index];
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Can't get from index " + index);
+        }
+        return (T) dataElement[index];
     }
 
     @Override
     public void set(T value, int index) {
-        checkIndex(index);
-        elements[index] = value;
+
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Can't set to index " + index);
+        }
+        dataElement[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        checkIndex(index);
-        T removed = elements[index];
-        int numMoved = size - index - 1;
-        if (numMoved > 0) {
-            System.arraycopy(elements, index + 1, elements, index, numMoved);
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Can't remove from index "
+                    + index);
         }
-        elements[size - 1] = null;
-        size--;
-        return removed;
+        final T element = (T) dataElement[index];
+        System.arraycopy(dataElement, index + 1, dataElement, index, size-- - index - 1);
+        return element;
     }
 
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if (elements[i].equals(element)) {
+            if (Objects.equals(element, dataElement[i])) {
                 return remove(i);
             }
         }
-        throw new NoSuchElementException();
+        throw new NoSuchElementException("Not found element in the list");
     }
 
     @Override
@@ -80,31 +86,15 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public boolean isEmpty() {
-        return size == 0;
+        return size == EMPTY_SIZE;
     }
 
-    private void ensureCapacity(int minCapacity) {
-        if (minCapacity > elements.length) {
-            int newCapacity = Math.max(elements.length + (elements.length >> 1), minCapacity);
-            elements = Arrays.copyOf(elements, newCapacity);
+    private void grow() {
+        int oldCapacity = dataElement.length;
+        int newCapacity = oldCapacity + (oldCapacity / CAPACITY_DIVISOR);
+        if (newCapacity < 0) {
+            newCapacity = Integer.MAX_VALUE;
         }
-    }
-
-    private void checkIndex(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException(index);
-        }
-    }
-
-    private void checkIndexForAdd(int index) {
-        if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException(index);
-        }
-    }
-
-    private static class ArrayListIndexOutOfBoundsException extends IndexOutOfBoundsException {
-        ArrayListIndexOutOfBoundsException(int index) {
-            super("Index out of range: " + index);
-        }
+        dataElement = Arrays.copyOf(dataElement, newCapacity);
     }
 }
