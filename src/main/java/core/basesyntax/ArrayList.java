@@ -1,5 +1,7 @@
 package core.basesyntax;
 
+import java.util.NoSuchElementException;
+
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private T[] elementData;
@@ -127,7 +129,7 @@ public class ArrayList<T> implements List<T> {
         if (index > -1) {
             return remove(index);
         } else {
-            throw new ArrayListIndexOutOfBoundsException("Not such element to remove");
+            throw new NoSuchElementException("Not such element to remove");
         }
     }
 }
