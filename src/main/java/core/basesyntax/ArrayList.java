@@ -1,7 +1,6 @@
 package core.basesyntax;
 
 import java.util.NoSuchElementException;
-import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
     public static final double INCREASE_COEFF = 1.5;
@@ -66,7 +65,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < currentSize; i++) {
-            if (Objects.equals(element, elements[i])) {
+            if (equal(element, elements[i])) {
                 return remove(i);
             }
         }
@@ -96,5 +95,9 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayListIndexOutOfBoundsException("Input index : " + index
                     + " out of bonds: [" + 0 + ", " + currentSize + "]");
         }
+    }
+
+    private boolean equal(T a, T b) {
+        return a == b || a != null && a.equals(b);
     }
 }
