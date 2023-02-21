@@ -25,7 +25,7 @@ public class ArrayList<T> implements List<T> {
         while (size >= array.length) {
             grow();
         }
-        System.arraycopy(Arrays.copyOfRange(array, index, array.length - 1), 0,
+        System.arraycopy(array, index,
                 array, index + 1, array.length - index - 1);
         array[index] = value;
         size++;
@@ -62,8 +62,8 @@ public class ArrayList<T> implements List<T> {
             return value;
         }
         T value = array[index];
-        System.arraycopy(Arrays.copyOfRange(array, index + 1, array.length - 1),
-                0, array, index, array.length - index - 2);
+        System.arraycopy(array,
+                index + 1, array, index, array.length - index - 2);
         size--;
         return value;
     }
