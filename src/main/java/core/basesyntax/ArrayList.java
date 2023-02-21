@@ -13,16 +13,21 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        add(value, size);
+        if (size == elementData.length) {
+            grow();
+        }
+        elementData[size] = value;
+        size++;
     }
 
     @Override
     public void add(T value, int index) {
         if (checkIndex(index) && index == size) {
-            grow();
-            elementData[index] = value;
-            size++;
+            add(value);
         } else {
+            if (size == elementData.length) {
+                grow();
+            }
             T[] newElementData = (T[]) new Object[elementData.length];
             System.arraycopy(elementData, 0, newElementData, 0, index);
             newElementData[index] = value;
