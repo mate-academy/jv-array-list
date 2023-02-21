@@ -55,16 +55,16 @@ public class ArrayList<T> implements List<T> {
     }
 
     @Override
-    public T remove(T element) {
+    public T remove(T value) {
         for (int i = 0; i < size; i++) {
             if (values[i] == null) {
-                if (element == null) {
+                if (value == null) {
                     T removed = values[i];
                     remove(i);
                     return removed;
                 }
             } else {
-                if (values[i].equals(element)) {
+                if (values[i].equals(value)) {
                     T removed = values[i];
                     remove(i);
                     return removed;
