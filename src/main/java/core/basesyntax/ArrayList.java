@@ -21,14 +21,11 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
+        checkIndex(index, size + 1);
         grow();
-        if (index >= 0 && index <= size) {
-            System.arraycopy(elementData, index, elementData, index + 1, size - index);
-            elementData[index] = value;
-            size++;
-        } else {
-            throw new ArrayListIndexOutOfBoundsException(index + "out of bound");
-        }
+        System.arraycopy(elementData, index, elementData, index + 1, size - index);
+        elementData[index] = value;
+        size++;
     }
 
     @Override
@@ -40,32 +37,23 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index >= 0 && index < size) {
-            return (T) elementData[index];
-        } else {
-            throw new ArrayListIndexOutOfBoundsException(index + "out of bound");
-        }
+        checkIndex(index, size);
+        return elementData[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index >= 0 && index < size) {
-            elementData[index] = value;
-        } else {
-            throw new ArrayListIndexOutOfBoundsException(index + "out of bound");
-        }
+        checkIndex(index, size);
+        elementData[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index >= 0 && index < size) {
-            T oldValue = elementData[index];
-            System.arraycopy(elementData, index + 1, elementData, index, size - index - 1);
-            size--;
-            return (T) oldValue;
-        } else {
-            throw new ArrayListIndexOutOfBoundsException(index + "out of bound");
-        }
+        checkIndex(index, size);
+        T oldValue = elementData[index];
+        System.arraycopy(elementData, index + 1, elementData, index, size - index - 1);
+        size--;
+        return oldValue;
     }
 
     @Override
@@ -91,9 +79,15 @@ public class ArrayList<T> implements List<T> {
 
     private void grow() {
         if (elementData.length == size) {
-            int newElementDataCapasity = (int) (elementData.length * ARRAY_INCREASE_COEFFICIENT);
-            T[] newElementData = Arrays.copyOf(elementData, newElementDataCapasity);
+            int newCapasity = (int) (elementData.length * ARRAY_INCREASE_COEFFICIENT);
+            T[] newElementData = Arrays.copyOf(elementData, newCapasity);
             elementData = newElementData;
+        }
+    }
+
+    private void checkIndex(int index, int size) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Wrong index, check it please");
         }
     }
 }
