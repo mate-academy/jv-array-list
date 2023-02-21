@@ -4,34 +4,28 @@ import java.util.NoSuchElementException;
 import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
+    private static final int START_CAPACITY = 10;
     private T[] values;
     private int size;
 
     public ArrayList() {
-        values = (T[]) new Object[10];
+        values = (T[]) new Object[START_CAPACITY];
     }
 
     @Override
     public void add(T value) {
-        if (size == values.length) {
-            grow();
-        }
+        addFreeSpace(values.length);
         values[size] = value;
         size++;
     }
 
     @Override
     public void add(T value, int index) {
-        if (index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Can't add element by negative index");
-        } else if (index > size) {
-            throw new ArrayListIndexOutOfBoundsException("Index is too much");
-        } else if (index == size) {
+        if (index == size) {
             add(value);
         } else {
-            if (values.length == size) {
-                grow();
-            }
+            checkIndex(index);
+            addFreeSpace(values.length);
             T[] newValues = (T[]) new Object[values.length];
             for (int i = 0; i < index; i++) {
                 newValues[i] = values[i];
@@ -54,31 +48,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("No such element exists");
-        } else if (index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Can't get element by negative index");
-        }
+        checkIndex(index);
         return values[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("No such index exists");
-        } else if (index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Can't set to negative position");
-        }
+        checkIndex(index);
         values[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Can't remove by negative index");
-        } else if (index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("No such element exists");
-        }
+        checkIndex(index);
         T[] newValues = (T[]) new Object[values.length];
         for (int i = 0; i < index; i++) {
             newValues[i] = values[i];
@@ -94,26 +76,12 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        T[] newValues = (T[]) new Object[values.length];
-        int elementIndex = 0;
         for (int i = 0; i < size; i++) {
             if (Objects.equals(values[i], element)) {
-                elementIndex = i;
-                break;
-            }
-            if (i == size - 1) {
-                throw new NoSuchElementException("No such element exists");
+                return remove(i);
             }
         }
-        for (int i = 0; i < elementIndex; i++) {
-            newValues[i] = values[i];
-        }
-        for (int i = elementIndex + 1; i < size; i++) {
-            newValues[i - 1] = values[i];
-        }
-        values = newValues;
-        size--;
-        return element;
+        throw new NoSuchElementException("There is no such element: " + element);
     }
 
     @Override
@@ -126,12 +94,23 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    public void grow() {
+    private void grow() {
         int newLength = values.length + (values.length >> 1);
         T[] newArray = (T[]) new Object[newLength];
-        for (int i = 0; i < values.length; i++) {
-            newArray[i] = values[i];
-        }
+        System.arraycopy(values, 0, newArray, 0, values.length);
         values = newArray;
+    }
+
+    private void checkIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("index " + index
+              + " is out of bound for length " + size);
+        }
+    }
+
+    private void addFreeSpace(int index) {
+        if (index == size) {
+            grow();
+        }
     }
 }
