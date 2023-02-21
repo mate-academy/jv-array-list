@@ -1,7 +1,6 @@
 package core.basesyntax;
 
 import java.util.NoSuchElementException;
-import java.util.Objects;
 
 @SuppressWarnings("unchecked")
 public class ArrayList<T> implements List<T> {
@@ -29,6 +28,10 @@ public class ArrayList<T> implements List<T> {
         if (index >= size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Index out of ArrayList bound!");
         }
+    }
+
+    public boolean isEquals(Object first, Object second) {
+        return first == second || first != null && first.equals(second);
     }
 
     @Override
@@ -90,7 +93,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if (Objects.equals(elementData[i], element)) {
+            if (isEquals(elementData[i], element)) {
                 return remove(i);
             }
         }
