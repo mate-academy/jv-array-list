@@ -55,18 +55,11 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T value) {
         for (int i = 0; i < size; i++) {
-            if (values[i] == null) {
-                if (value == null) {
-                    T removed = values[i];
-                    remove(i);
-                    return removed;
-                }
-            } else {
-                if (values[i].equals(value)) {
-                    T removed = values[i];
-                    remove(i);
-                    return removed;
-                }
+            if (((values[i] == null) && (value == null))
+                    || (values[i] != null && values[i].equals(value))) {
+                T removed = values[i];
+                remove(i);
+                return removed;
             }
         }
         throw new NoSuchElementException("No such element");
