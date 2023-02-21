@@ -14,7 +14,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        capEnsures();
+        capacityEnsures();
         elements[size++] = value;
     }
 
@@ -23,7 +23,7 @@ public class ArrayList<T> implements List<T> {
         if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException("Can't add element on position " + index);
         }
-        capEnsures();
+        capacityEnsures();
         System.arraycopy(elements, index, elements, index + 1, size - index);
         elements[index] = value;
         size++;
@@ -38,19 +38,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        capChecking(index);
+        capacityChecking(index);
         return elements[index];
     }
 
     @Override
     public void set(T value, int index) {
-        capChecking(index);
+        capacityChecking(index);
         elements[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        capChecking(index);
+        capacityChecking(index);
         final T temp = elements[index];
         System.arraycopy(elements, index + 1, elements, index, size - index - 1);
         elements[--size] = null;
@@ -79,7 +79,7 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void capEnsures() {
+    private void capacityEnsures() {
         if (size == elements.length) {
             int capacity = (int) (elements.length * STANDART_GROW);
             T[] tempArray = (T[]) new Object[capacity];
@@ -88,7 +88,7 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private void capChecking(int index) {
+    private void capacityChecking(int index) {
         if (index >= size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("This index out of bounds " + index);
         }
