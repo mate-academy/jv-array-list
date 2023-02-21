@@ -9,7 +9,7 @@ public class ArrayList<T> implements List<T> {
     private int size;
 
     public ArrayList() {
-        elements = (T[])new Object[DEFAULT_CAPACITY];
+        elements = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
     @Override
@@ -34,12 +34,9 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void addAll(List<T> list) {
         int additionalLength = list.size();
-        T[] listToArray = (T[]) new Object[list.size()];
-        for (int i = 0; i < list.size(); i++) {
-            listToArray[i] = list.get(i);
+        for (int i = 0; i < additionalLength; i++) {
+            add(list.get(i));
         }
-        System.arraycopy(listToArray, 0, elements, size, additionalLength);
-        size += additionalLength;
     }
 
     @Override
@@ -99,7 +96,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void insureDefaultInternalCapacity() {
-        T[] newArray = (T[])new Object[elements.length
+        T[] newArray = (T[]) new Object[elements.length
                 + (int)(elements.length * INCREASE_MULTIPLIER)];
         System.arraycopy(elements, 0, newArray, 0, elements.length);
         elements = newArray;
