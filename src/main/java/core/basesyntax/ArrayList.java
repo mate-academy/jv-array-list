@@ -3,7 +3,7 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    private static final double MULTIPLIER_FOR_ARRAY_SIZE = 10;
+    private static final double MULTIPLIER_FOR_ARRAY_SIZE = 1.5;
     private int arraySize = 10;
     private T[] array;
     private int numberOfElements;
