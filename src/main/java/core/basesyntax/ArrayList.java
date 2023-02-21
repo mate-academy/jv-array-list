@@ -97,24 +97,14 @@ public class ArrayList<T> implements List<T> {
         if (numberOfElements >= arraySize) {
             newArray();
         }
-        T[] tempArray = newTemporaryArray();
-        System.arraycopy(array, 0, tempArray, 0, index);
-        tempArray[index] = value;
-        if (index < arraySize - 1) {
-            System.arraycopy(array, index, tempArray, index + 1, numberOfElements - index);
-        }
+        System.arraycopy(array, index, array, index + 1, numberOfElements - index);
+        array[index] = value;
         numberOfElements++;
-        array = tempArray;
     }
 
     private void shiftLeftAndRemoveElement(int index) {
-        T[] tempArray = newTemporaryArray();
-        System.arraycopy(array, 0, tempArray, 0, index);
-        if (index < arraySize - 1) {
-            System.arraycopy(array, index + 1, tempArray, index, numberOfElements - index);
-        }
+        System.arraycopy(array, index + 1, array, index, numberOfElements - index - 1);
         numberOfElements--;
-        array = tempArray;
     }
 
     private void checkIfIndexCorrect(int index) {
