@@ -4,19 +4,17 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final double MULTIPLIER_FOR_ARRAY_SIZE = 1.5;
-    private int arrayCapacity = 10;
+    private static final int ARRAY_CAPACITY = 10;
     private T[] array;
     private int size;
 
     public ArrayList() {
-        array = (T[]) new Object[arrayCapacity];
+        array = (T[]) new Object[ARRAY_CAPACITY];
     }
 
     @Override
     public void add(T value) {
-        if (size >= arrayCapacity) {
-            newArray();
-        }
+        resizeArrayIfNeeded();
         array[size] = value;
         size++;
     }
@@ -24,13 +22,11 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         if (index > size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("incorrect index");
-        } else if (index < size) {
+            throw new ArrayListIndexOutOfBoundsException("index you want to add value is incorrect "
+                    + "(greater than number of elements or less than zero)");
+        } else {
             shiftRightAndAddElement(value, index);
-            return;
         }
-        array[size] = value;
-        size++;
     }
 
     @Override
@@ -80,21 +76,16 @@ public class ArrayList<T> implements List<T> {
         return size < 1;
     }
 
-    private T[] newTemporaryArray() {
-        T[] tempArray = (T[]) new Object[arrayCapacity];
-        System.arraycopy(array, 0, tempArray, 0, array.length);
-        return tempArray;
-    }
-
-    private void newArray() {
-        arrayCapacity *= MULTIPLIER_FOR_ARRAY_SIZE;
-        array = newTemporaryArray();
+    private void resizeArrayIfNeeded() {
+        if (size >= array.length) {
+            T[] tempArray = (T[]) new Object[(int) (array.length * MULTIPLIER_FOR_ARRAY_SIZE)];
+            System.arraycopy(array, 0, tempArray, 0, array.length);
+            array = tempArray;
+        }
     }
 
     private void shiftRightAndAddElement(T value, int index) {
-        if (size >= arrayCapacity) {
-            newArray();
-        }
+        resizeArrayIfNeeded();
         System.arraycopy(array, index, array, index + 1, size - index);
         array[index] = value;
         size++;
@@ -103,11 +94,13 @@ public class ArrayList<T> implements List<T> {
     private void shiftLeftAndRemoveElement(int index) {
         System.arraycopy(array, index + 1, array, index, size - index - 1);
         size--;
+        array[size] = null;
     }
 
     private void checkIfIndexCorrect(int index) {
         if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("incorrect index");
+            throw new ArrayListIndexOutOfBoundsException("index you want to reach is incorrect "
+                    + "(greater or equal than number of elements or less than zero)");
         }
     }
 }
