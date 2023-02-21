@@ -24,8 +24,13 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (!adding(value, index)) {
-            throw new ArrayListIndexOutOfBoundsException(OF_BOUND_MESSAGE);
+        inspectIndex(index, size + 1);
+        T[] tempStorage = (T[]) new Object[size - index];
+        System.arraycopy(storage, index, tempStorage, 0, tempStorage.length);
+        size = index;
+        add(value);
+        for (int i = 0; i < tempStorage.length; i++) {
+            add(tempStorage[i]);
         }
     }
 
@@ -40,26 +45,22 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        T result = getting(index);
-        if (result != null && result.getClass().getGenericSuperclass() == null) {
-            throw new ArrayListIndexOutOfBoundsException(OF_BOUND_MESSAGE);
-        }
-        return result;
+        inspectIndex(index, size);
+        return storage[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (!setting(value, index)) {
-            throw new ArrayListIndexOutOfBoundsException(OF_BOUND_MESSAGE);
-        }
+        inspectIndex(index, size);
+        storage[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        T result = removing(index);
-        if (result == null) {
-            throw new ArrayListIndexOutOfBoundsException(OF_BOUND_MESSAGE);
-        }
+        inspectIndex(index, size);
+        T result = storage[index];
+        System.arraycopy(storage, index + 1, storage, index, size - index - 1);
+        storage[--size] = null;
         return result;
     }
 
@@ -67,7 +68,7 @@ public class ArrayList<T> implements List<T> {
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
             if (Objects.equals(storage[i], element)) {
-                return removing(i);
+                return remove(i);
             }
         }
         throw new NoSuchElementException(OF_ABSENT_MESSAGE);
@@ -83,41 +84,10 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private boolean adding(T value, int index) {
-        if (index >= 0 && index <= size) {
-            List<T> tempList = null;
-            if (index < size) {
-                tempList = new ArrayList<>();
-                for (int i = index; i < size; i++) {
-                    tempList.add(get(i));
-                }
-            }
-            size = index;
-            add(value);
-            addAll(tempList);
+    private void inspectIndex(int index, int bound) {
+        if (index < 0 || index >= bound) {
+            throw new ArrayListIndexOutOfBoundsException(OF_BOUND_MESSAGE);
         }
-        return index >= 0 && index < size;
-    }
-
-    private T getting(int index) {
-        return index < 0 || index >= size ? (T) new Object() : storage[index];
-    }
-
-    private T removing(int index) {
-        T result = null;
-        if (index >= 0 && index < size) {
-            result = storage[index];
-            System.arraycopy(storage, index + 1, storage, index, size - index - 1);
-            storage[--size] = null;
-        }
-        return result;
-    }
-
-    private boolean setting(T value, int index) {
-        if (index >= 0 && index < size) {
-            storage[index] = value;
-        }
-        return index >= 0 && index < size;
     }
 
     private void increaseSize() {
@@ -126,4 +96,21 @@ public class ArrayList<T> implements List<T> {
         System.arraycopy(storage, 0, tempStorage, 0, storage.length);
         storage = tempStorage;
     }
+
+    public static void main(String[] args) {
+        ArrayList<String> arrayList = new ArrayList<>();
+        arrayList.add("String");
+        arrayList.add("Another string");
+        arrayList.add(null);
+        arrayList.add("Java");
+        arrayList.add("Private");
+        arrayList.add(null);
+        arrayList.remove("Java");
+        System.out.println(arrayList.size());
+        System.out.println(arrayList.get(3));
+        arrayList.remove("String");
+        System.out.println(arrayList.size());
+        System.out.println(arrayList.get(2));
+    }
+
 }
