@@ -57,17 +57,10 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         checkIndexLimits(index);
-        if (index == currentSize - 1) {
-            T elementToReturn = elements[index];
-            elements[index] = null;
-            currentSize--;
-            return elementToReturn;
-        } else {
-            T elementToReturn = elements[index];
-            System.arraycopy(elements, index + 1, elements, index, currentSize - index);
-            currentSize--;
-            return elementToReturn;
-        }
+        T elementToReturn = elements[index];
+        System.arraycopy(elements, index + 1, elements, index, currentSize - 1 - index);
+        currentSize--;
+        return elementToReturn;
     }
 
     @Override
