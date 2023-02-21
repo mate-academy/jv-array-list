@@ -24,13 +24,12 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         inspectIndex(index, size + 1);
-        T[] tempStorage = (T[]) new Object[size - index];
-        System.arraycopy(storage, index, tempStorage, 0, tempStorage.length);
-        size = index;
-        add(value);
-        for (int i = 0; i < tempStorage.length; i++) {
-            add(tempStorage[i]);
+        if (storage.length < size + 1) {
+            increaseSize();
         }
+        System.arraycopy(storage, index, storage, index + 1, size - index);
+        storage[index] = value;
+        size++;
     }
 
     @Override
