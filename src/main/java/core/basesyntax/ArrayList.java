@@ -23,14 +23,11 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("Can't add element on position " + index);
-        }
+        checkIndex(index, size + 1);
         ensureCapacity(size + 1);
         System.arraycopy(elements, index, elements, index + 1, size - index);
         elements[index] = value;
         size++;
-
     }
 
     @Override
@@ -38,24 +35,23 @@ public class ArrayList<T> implements List<T> {
         for (int i = 0; i < list.size(); i++) {
             add(list.get(i));
         }
-
     }
 
     @Override
     public T get(int index) {
-        checkIndex(index);
+        checkIndex(index, size);
         return elements[index];
     }
 
     @Override
     public void set(T value, int index) {
-        checkIndex(index);
+        checkIndex(index, size);
         elements[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        checkIndex(index);
+        checkIndex(index, size);
         T oldValue = elements[index];
         int numMoved = size - index - 1;
         if (numMoved > 0) {
@@ -86,7 +82,7 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void checkIndex(int index) {
+    private void checkIndex(int index, int size) {
         if (index >= size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
         }
