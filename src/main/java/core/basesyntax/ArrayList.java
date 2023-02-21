@@ -4,10 +4,7 @@ import java.util.NoSuchElementException;
 import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
-    private static final String ADD_MESSAGE_EXCEPTION = "Can't add to index ";
-    private static final String REMOVE_MESSAGE_EXCEPTION = "Can't remove to index ";
-    private static final String SET_MESSAGE_EXCEPTION = "Can't set to index ";
-    private static final String GET_MESSAGE_EXCEPTION = "Can't get to index ";
+    private static final String INDEX_MESSAGE = "Wrong index ";
     private static final String NO_SUCH_MESSAGE = "No such element in array list";
     private static final int DEFAULT_CAPACITY = 10;
     private T[] listArray;
@@ -25,7 +22,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        checkIndexInclusiveSize(index, ADD_MESSAGE_EXCEPTION + index);
+        checkIndexInclusiveSize(index);
         if (size == listArray.length) {
             resizeListArray(index);
         } else {
@@ -33,26 +30,6 @@ public class ArrayList<T> implements List<T> {
         }
         listArray[index] = value;
         size++;
-    }
-
-    private void checkIndex(int index, String message) {
-        if (!(index >= 0 && index < size)) {
-            throw new ArrayListIndexOutOfBoundsException(message);
-        }
-    }
-
-    private void checkIndexInclusiveSize(int index, String message) {
-        if (!(index >= 0 && index <= size)) {
-            throw new ArrayListIndexOutOfBoundsException(message);
-        }
-    }
-
-    @SuppressWarnings("unchecked")
-    private void resizeListArray(int index) {
-        T[] temp = (T[]) new Object[listArray.length + (listArray.length >> 1)];
-        System.arraycopy(listArray, 0, temp, 0, index);
-        System.arraycopy(listArray, index, temp, index + 1, size - index);
-        listArray = temp;
     }
 
     @Override
@@ -66,19 +43,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        checkIndex(index, GET_MESSAGE_EXCEPTION + index);
+        checkIndex(index);
         return listArray[index];
     }
 
     @Override
     public void set(T value, int index) {
-        checkIndex(index, SET_MESSAGE_EXCEPTION + index);
+        checkIndex(index);
         listArray[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        checkIndex(index, REMOVE_MESSAGE_EXCEPTION + index);
+        checkIndex(index);
         T temp = listArray[index];
         if (index < size - 1) {
             System.arraycopy(listArray, index + 1, listArray, index, size - index - 1);
@@ -105,5 +82,25 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private void checkIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException(INDEX_MESSAGE + index);
+        }
+    }
+
+    private void checkIndexInclusiveSize(int index) {
+        if (index < 0 || index > size) {
+            throw new ArrayListIndexOutOfBoundsException(INDEX_MESSAGE + index);
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private void resizeListArray(int index) {
+        T[] temp = (T[]) new Object[listArray.length + (listArray.length >> 1)];
+        System.arraycopy(listArray, 0, temp, 0, index);
+        System.arraycopy(listArray, index, temp, index + 1, size - index);
+        listArray = temp;
     }
 }
