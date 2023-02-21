@@ -13,13 +13,13 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        grow();
+        isNeadToResize();
         values[size++] = value;
     }
 
     @Override
     public void add(T value, int index) {
-        grow();
+        isNeadToResize();
         if (index != size) {
             checkIndexWithSameSize(index);
             System.arraycopy(values, index, values, index + 1, size - index);
@@ -30,14 +30,9 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        T[] a = (T[]) new Object[list.size()];
         for (int i = 0; i < list.size(); i++) {
-            a[i] = list.get(i);
+            add(list.get(i));
         }
-        int varLength = a.length;
-        grow();
-        System.arraycopy(a,0,values,size, varLength);
-        size += varLength;
     }
 
     @Override
@@ -59,15 +54,14 @@ public class ArrayList<T> implements List<T> {
         System.arraycopy(values, index + 1,
                 values, index,
                 values.length - index - 1);
-        values[values.length - 1] = null;
-        size--;
+        values[--size] = null;
         return removedElement;
     }
 
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if (customEquals(element, values[i])) {
+            if (isEquals(element, values[i])) {
                 return remove(i);
             }
         }
@@ -75,12 +69,10 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void grow() {
-        if (size == values.length) {
-            T[] temp = (T[]) new Object[values.length];
-            System.arraycopy(values, 0, temp, 0, size);
-            values = (T[]) new Object[values.length << 1];
-            System.arraycopy(temp, 0, values, 0, size);
-        }
+        int newCapacity = (int) (values.length * 1.5);
+        T[] newValues = (T[]) new Object[newCapacity];
+        System.arraycopy(values, 0, newValues, 0, size);
+        values = newValues;
     }
 
     @Override
@@ -93,13 +85,19 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
+    private void isNeadToResize() {
+        if (size == values.length || (size - 1) == values.length) {
+            grow();
+        }
+    }
+
     private void checkIndexWithSameSize(int index) {
         if (index >= size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Incorrect index: " + index);
         }
     }
 
-    private boolean customEquals(Object a, Object b) {
+    private boolean isEquals(T a, T b) {
         return a == null ? a == b : a.equals(b);
     }
 }
