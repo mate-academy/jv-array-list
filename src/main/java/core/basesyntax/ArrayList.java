@@ -22,7 +22,9 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         if (index > size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("index" + index + "you want to add value is incorrect "
+            throw new ArrayListIndexOutOfBoundsException("index"
+                    + index
+                    + "you want to add value is incorrect "
                     + "(greater than number of elements or less than zero)");
         } else {
             shiftRightAndAddElement(value, index);
@@ -99,7 +101,9 @@ public class ArrayList<T> implements List<T> {
 
     private void checkIfIndexCorrect(int index) {
         if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("index" + index + "you want to reach is incorrect "
+            throw new ArrayListIndexOutOfBoundsException("index"
+                    + index
+                    + "you want to reach is incorrect "
                     + "(greater or equal than number of elements or less than zero)");
         }
     }
