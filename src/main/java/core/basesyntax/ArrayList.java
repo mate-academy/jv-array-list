@@ -4,12 +4,12 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    private static final int ARRAY_MULTIPLIER = 2;
-    private Object[] elements;
+    private static final double ARRAY_MULTIPLIER = 1.5;
+    private T[] elements;
     private int size;
 
     public ArrayList() {
-        elements = new Object[DEFAULT_CAPACITY];
+        elements = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
     @Override
@@ -21,7 +21,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index >= (size + 1) || index < 0) {
+        if (index > size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException(index + " out of bounds!");
         }
         resizeIfNeeded();
@@ -40,7 +40,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         checkIndex(index);
-        return (T) elements[index];
+        return elements[index];
     }
 
     @Override
@@ -52,7 +52,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
-        T removedElement = (T) elements[index];
+        T removedElement = elements[index];
         System.arraycopy(elements, index + 1, elements, index, size - index - 1);
         elements[--size] = null;
         return removedElement;
@@ -80,7 +80,7 @@ public class ArrayList<T> implements List<T> {
 
     private void resizeIfNeeded() {
         if (elements.length == size) {
-            Object[] biggerArray = new Object[elements.length * ARRAY_MULTIPLIER];
+            T[] biggerArray = (T[]) new Object[(int) (elements.length * ARRAY_MULTIPLIER)];
             System.arraycopy(elements, 0, biggerArray, 0, size);
             elements = biggerArray;
         }
