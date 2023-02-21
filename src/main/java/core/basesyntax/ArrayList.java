@@ -3,13 +3,13 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    private static final int MAX_SIZE = 10;
+    private static final int DEFAULT_SIZE = 10;
     private static final double MULTIPLIER = 1.5;
     private int size;
     private Object[] array;
 
     public ArrayList() {
-        array = new Object[MAX_SIZE];
+        array = new Object[DEFAULT_SIZE];
     }
 
     @Override
