@@ -15,7 +15,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value) {
         checkSize();
-        elements[size()] = value;
+        elements[size] = value;
         size++;
     }
 
@@ -25,9 +25,8 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayListIndexOutOfBoundsException("Incorrect index of list");
         }
         checkSize();
-        for (int j = size(); j > index; j--) {
-            elements[j] = elements[j - 1];
-        }
+        System.arraycopy(elements, index, elements, index + 1, size - index);
+
         elements[index] = value;
         size++;
     }
@@ -35,7 +34,6 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void addAll(List<T> list) {
         for (int i = 0; i < list.size(); i++) {
-            checkSize();
             add(list.get(i));
         }
     }
@@ -56,8 +54,8 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         indexValid(index);
         T removedElement = elements[index];
-        for (int i = index; i + 1 < size(); i++) {
-            elements[i] = elements[i + 1];
+        if (index + 1 != size) {
+            System.arraycopy(elements, index + 1, elements, index, size - index);
         }
         size--;
         return removedElement;
@@ -65,7 +63,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        for (int i = 0; i < size(); i++) {
+        for (int i = 0; i < size; i++) {
             if (element == elements[i] || (elements[i] != null && elements[i].equals(element))) {
                 return remove(i);
             }
@@ -80,10 +78,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public boolean isEmpty() {
-        if (size() == 0) {
-            return true;
-        }
-        return false;
+        return size == 0;
     }
 
     private void checkSize() {
