@@ -15,7 +15,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        isFull();
+        ensureCapacity();
         elements[size] = value;
         size++;
     }
@@ -23,7 +23,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         checkAddIndex(index);
-        isFull();
+        ensureCapacity();
         System.arraycopy(elements, index,
                 elements, index + 1,
                 size - index);
@@ -76,7 +76,7 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void isFull() {
+    private void ensureCapacity() {
         if (size == elements.length) {
             grow();
         }
@@ -93,16 +93,9 @@ public class ArrayList<T> implements List<T> {
     }
 
     private int findIndexByElement(T element) {
-        if (element == null) {
-            for (int i = 0; i < size; i++) {
-                if (elements[i] == null) {
-                    return i;
-                }
-            }
-            return NON_EXISTENT_INDEX;
-        }
         for (int i = 0; i < size; i++) {
-            if (element.equals(elements[i])) {
+            if (element == elements[i]
+                    || (element != null && element.equals(elements[i]))) {
                 return i;
             }
         }
