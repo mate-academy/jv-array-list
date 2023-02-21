@@ -1,114 +1,95 @@
 package core.basesyntax;
 
+import java.util.NoSuchElementException;
+
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    private Object[] arr = new Object[DEFAULT_CAPACITY];
-    private int marker = 0;
+    private Object[] storage = new Object[DEFAULT_CAPACITY];
+    private int storageSize;
 
     @Override
     public void add(T value) {
-        if (marker == arr.length - 1) {
-            resizeOldArr(arr.length * 2);
-        }
-        for (int i = 0; i < marker; i++) {
-            if (equals(arr[i], value)) {
-                arr[marker] = value;
-            }
-        }
-        arr[marker++] = value;
-    }
-
-    private void resizeOldArr(int newSizeOfArr) {
-        Object[] newArr = new Object[newSizeOfArr];
-        System.arraycopy(arr, 0, newArr, 0, marker);
-        arr = newArr;
+        checkStorageSize();
+        storage[storageSize] = value;
+        storageSize++;
     }
 
     @Override
     public void add(T value, int index) {
-        if (marker == arr.length - 1) {
-            resizeOldArr(arr.length * 2);
+        checkStorageSize();
+        if (index < 0 || index > storageSize) {
+            throw new ArrayListIndexOutOfBoundsException("Insert index: "
+                    + index + "is not valid. Please try again ");
         }
-        if (index < marker) {
-            for (int i = index; i < marker; i++) {
-                arr[i] = arr[i++];
-                arr[index] = null;
-                arr[index] = value;
-            }
-
-        }
-
+        System.arraycopy(storage, index, storage, index + 1, storageSize - index);
+        storage[index] = value;
+        storageSize++;
     }
-
-
 
     @Override
     public void addAll(List<T> list) {
-        if (marker == arr.length - 1) {
-            resizeOldArr(arr.length * 2);
-        }
         for (int i = 0; i < list.size(); i++) {
-            arr[marker++] = get(i);
-            if (marker == arr.length - 1) {
-                resizeOldArr(arr.length * 2);
-            }
+            add(list.get(i));
         }
     }
 
     @Override
     public T get(int index) {
-        try {
-            return (T) arr[index];
-        } catch (ArrayListIndexOutOfBoundsException exception) {
-            throw new ArrayListIndexOutOfBoundsException("Insert index is not valid. Please try again");
-        }
+        indexValidation(index);
+        return (T) storage[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (marker == arr.length - 1) {
-            resizeOldArr(arr.length * 2);
-        }
-        arr[index] = value;
+        indexValidation(index);
+        storage[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        Object oldValue = arr[index];
-        if (index == 0) {
-            return (T) arr[0];
-        } else if (index == marker -1) {
-            return (T) arr[marker - 1];
-        }
-        for (int i = 1; i < marker - 1; i++) {
-                arr[i] = arr[i--];
-            }
-            return (T) oldValue;
-        }
+        indexValidation(index);
+        T removedValueByIndex = (T) storage[index];
+        System.arraycopy(storage, index + 1, storage, index, storageSize - index - 1);
+        storageSize--;
+        return removedValueByIndex;
+    }
 
     @Override
     public T remove(T element) {
-        for (int i = 0; i < marker; i++) {
-            if (arr[i] == element) {
-                return element;
+        for (int i = 0; i < storageSize; i++) {
+            if (isEquals(storage[i], element)) {
+                return remove(i);
             }
         }
-        return null;
+        throw new NoSuchElementException("Can't find the element " + element);
     }
 
     @Override
     public int size() {
-        return marker;
+        return storageSize;
     }
 
     @Override
     public boolean isEmpty() {
-        if (marker == 0) {
-            return true;
-        }
-        return false;
+        return storageSize == 0;
     }
-    private boolean equals(Object value1, Object value2) {
-        return (value1 == value2) || (value1 != null && value1.equals(value2));
+
+    private void indexValidation(int index) {
+        if (index < 0 || index > storageSize - 1) {
+            throw new ArrayListIndexOutOfBoundsException("Insert index: "
+                    + index + "is not valid. Please try again ");
+        }
+    }
+
+    private boolean isEquals(Object a, Object b) {
+        return a == b || a != null && a.equals(b);
+    }
+
+    private void checkStorageSize() {
+        if (storageSize == storage.length) {
+            Object[] newStorage = new Object[storage.length + storageSize];
+            System.arraycopy(storage, 0, newStorage, 0, storageSize);
+            storage = newStorage;
+        }
     }
 }
