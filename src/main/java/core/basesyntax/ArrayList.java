@@ -14,7 +14,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        increaseCapasity();
+        ensureCapacity();
         elements[size++] = value;
     }
 
@@ -23,7 +23,7 @@ public class ArrayList<T> implements List<T> {
         if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException("Index is out of the bounds: " + index);
         }
-        increaseCapasity();
+        ensureCapacity();
         System.arraycopy(elements, index, elements, index + 1, size - index);
         elements[index] = value;
         size++;
@@ -38,23 +38,22 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        indexIsValid(index);
+        checkIndex(index);
         return elements[index];
     }
 
     @Override
     public void set(T value, int index) {
-        indexIsValid(index);
+        checkIndex(index);
         elements[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        indexIsValid(index);
+        checkIndex(index);
         final T removed = elements[index];
         System.arraycopy(elements, index + 1, elements, index, size - index - 1);
         size--;
-        elements[size] = null;
         return removed;
     }
 
@@ -65,7 +64,7 @@ public class ArrayList<T> implements List<T> {
                 return remove(i);
             }
         }
-        throw new NoSuchElementException("Element not found");
+        throw new NoSuchElementException("Can't found element by value " + element);
     }
 
     @Override
@@ -78,15 +77,19 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void increaseCapasity() {
+    private void ensureCapacity() {
         if (size == elements.length) {
-            T[] newElements = (T[]) new Object[elements.length + (elements.length >> 1)];
-            System.arraycopy(elements, 0, newElements, 0, elements.length);
-            elements = newElements;
+            grow();
         }
     }
 
-    private void indexIsValid(int index) {
+    private void grow() {
+        T[] newElements = (T[]) new Object[elements.length + (elements.length >> 1)];
+        System.arraycopy(elements, 0, newElements, 0, elements.length);
+        elements = newElements;
+    }
+
+    private void checkIndex(int index) {
         if (index >= size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Incorrect index of list");
         }
