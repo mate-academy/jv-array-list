@@ -3,13 +3,13 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    private static final double GROW_MULTIPLY = 1.5;
+    private static final double GROW_MULTIPLY = 0.5;
     private static final int DEFAULT_CAPACITY = 10;
     private int size;
     private T[] array;
 
     public ArrayList() {
-        array = (T[])new Object[DEFAULT_CAPACITY];
+        array = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
     @Override
@@ -20,11 +20,11 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index < 0 || index > size) {
+        growCheck();
+        if (index > size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Element not found at " + index);
         }
-        growCheck();
-        System.arraycopy(array, index, array,index + 1,size - index);
+        System.arraycopy(array, index, array, index + 1, size - index);
         array[index] = value;
         size++;
     }
@@ -41,7 +41,7 @@ public class ArrayList<T> implements List<T> {
         if (isNotValidValue(index)) {
             throw new ArrayListIndexOutOfBoundsException("Element does not exist");
         }
-        return (T) array[index];
+        return (T)array[index];
     }
 
     @Override
@@ -58,7 +58,7 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayListIndexOutOfBoundsException("Element does not exist in position"
                     + index);
         }
-        T tempVal = (T)array[index];
+        T tempVal = array[index];
         System.arraycopy(array, index + 1, array, index, --size - index);
         return tempVal;
     }
@@ -92,10 +92,10 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void grow() {
-        T[] arrayCopy = (T[])new Object[DEFAULT_CAPACITY
-                + DEFAULT_CAPACITY >> 1];
-        System.arraycopy(array, 0, arrayCopy, 0, arrayCopy.length);
-        array = arrayCopy;
+        int newCapacity = size + (int)(DEFAULT_CAPACITY * GROW_MULTIPLY);
+        T[] arrayCopy = (T[]) new Object[newCapacity];
+        System.arraycopy(this.array, 0, arrayCopy, 0, size);
+        this.array = arrayCopy;
     }
 
     private boolean isNotValidValue(int index) {
