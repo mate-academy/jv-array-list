@@ -21,7 +21,6 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-
         if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException("Index  " + index + " does not exist");
         }
@@ -90,7 +89,7 @@ public class ArrayList<T> implements List<T> {
 
     private void checkIndexBounds(int index) {
         if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Can't get from index " + index);
+            throw new ArrayListIndexOutOfBoundsException(index + " out of bounds");
         }
     }
 }
