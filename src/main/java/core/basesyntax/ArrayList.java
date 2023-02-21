@@ -10,9 +10,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value) {
         resizeArray();
-        array[size] = value;
-        size++;
-
+        array[size++] = value;
     }
 
     @Override
