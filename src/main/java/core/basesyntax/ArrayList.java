@@ -1,10 +1,13 @@
 package core.basesyntax;
 
+import org.codehaus.plexus.interpolation.SimpleRecursionInterceptor;
+
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    private static final double GROW_MULTIPLY = 0.5;
+    private static final double GROW_MULTIPLY = 1.5;
     private static final int DEFAULT_CAPACITY = 10;
+    private static final String ERROR_ELEMENT_NOT_EXIST = "Element does not exist";
     private int size;
     private T[] array;
 
@@ -39,15 +42,15 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         if (isNotValidValue(index)) {
-            throw new ArrayListIndexOutOfBoundsException("Element does not exist");
+            throw new ArrayListIndexOutOfBoundsException(ERROR_ELEMENT_NOT_EXIST);
         }
-        return (T)array[index];
+        return array[index];
     }
 
     @Override
     public void set(T value, int index) {
         if (isNotValidValue(index)) {
-            throw new ArrayListIndexOutOfBoundsException("Element does not exist");
+            throw new ArrayListIndexOutOfBoundsException(ERROR_ELEMENT_NOT_EXIST);
         }
         array[index] = value;
     }
@@ -92,7 +95,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void grow() {
-        int newCapacity = size + (int)(DEFAULT_CAPACITY * GROW_MULTIPLY);
+        int newCapacity = (int)(array.length * GROW_MULTIPLY);
         T[] arrayCopy = (T[]) new Object[newCapacity];
         System.arraycopy(this.array, 0, arrayCopy, 0, size);
         this.array = arrayCopy;
