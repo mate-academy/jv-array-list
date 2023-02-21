@@ -41,19 +41,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        isIndexValid(index);
+        indexValidation(index);
         return (T) array[index];
     }
 
     @Override
     public void set(T value, int index) {
-        isIndexValid(index);
+        indexValidation(index);
         array[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        isIndexValid(index);
+        indexValidation(index);
         T result = (T) array[index];
         System.arraycopy(array, index + 1, array, index, size - index - 1);
         size--;
@@ -89,7 +89,7 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private void isIndexValid(int index) {
+    private void indexValidation(int index) {
         if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException("Wrong index value."
                     + " No such index or index is less than 0");
