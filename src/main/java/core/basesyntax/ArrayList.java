@@ -85,11 +85,13 @@ public class ArrayList<T> implements List<T> {
         checkIndexAvailability(index);
         T deleted = elementData[index];
         T[] temp = elementData;
-        if (size - (index + 1) >= 0) System.arraycopy(temp,
-                index + 1,
-                elementData,
-                index + 1 - 1,
-                size - (index + 1));
+        if (size - (index + 1) >= 0) {
+            System.arraycopy(temp,
+                    index + 1,
+                    elementData,
+                    index + 1 - 1,
+                    size - (index + 1));
+        }
         size--;
         return deleted;
     }
@@ -97,7 +99,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if ((Objects.equals(elementData[i], element)) ) {
+            if ((Objects.equals(elementData[i], element))) {
                 return remove(i);
             }
         }
