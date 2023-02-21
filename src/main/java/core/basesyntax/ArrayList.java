@@ -4,33 +4,33 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final double MULTIPLIER_FOR_ARRAY_SIZE = 1.5;
-    private int arraySize = 10;
+    private int arrayCapacity = 10;
     private T[] array;
-    private int numberOfElements;
+    private int size;
 
     public ArrayList() {
-        array = (T[]) new Object[arraySize];
+        array = (T[]) new Object[arrayCapacity];
     }
 
     @Override
     public void add(T value) {
-        if (numberOfElements >= arraySize) {
+        if (size >= arrayCapacity) {
             newArray();
         }
-        array[numberOfElements] = value;
-        numberOfElements++;
+        array[size] = value;
+        size++;
     }
 
     @Override
     public void add(T value, int index) {
-        if (index > numberOfElements || index < 0) {
+        if (index > size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("incorrect index");
-        } else if (index < numberOfElements) {
+        } else if (index < size) {
             shiftRightAndAddElement(value, index);
             return;
         }
-        array[numberOfElements] = value;
-        numberOfElements++;
+        array[size] = value;
+        size++;
     }
 
     @Override
@@ -62,7 +62,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        for (int i = 0; i < numberOfElements; i++) {
+        for (int i = 0; i < size; i++) {
             if ((array[i] == element) || (array[i] != null && array[i].equals(element))) {
                 return remove(i);
             }
@@ -72,43 +72,41 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public int size() {
-        return numberOfElements;
+        return size;
     }
 
     @Override
     public boolean isEmpty() {
-        return numberOfElements < 1;
+        return size < 1;
     }
 
     private T[] newTemporaryArray() {
-        T[] tempArray = (T[]) new Object[arraySize];
-        for (int i = 0; i < array.length; i++) {
-            tempArray[i] = array[i];
-        }
+        T[] tempArray = (T[]) new Object[arrayCapacity];
+        System.arraycopy(array, 0, tempArray, 0, array.length);
         return tempArray;
     }
 
     private void newArray() {
-        arraySize *= MULTIPLIER_FOR_ARRAY_SIZE;
+        arrayCapacity *= MULTIPLIER_FOR_ARRAY_SIZE;
         array = newTemporaryArray();
     }
 
     private void shiftRightAndAddElement(T value, int index) {
-        if (numberOfElements >= arraySize) {
+        if (size >= arrayCapacity) {
             newArray();
         }
-        System.arraycopy(array, index, array, index + 1, numberOfElements - index);
+        System.arraycopy(array, index, array, index + 1, size - index);
         array[index] = value;
-        numberOfElements++;
+        size++;
     }
 
     private void shiftLeftAndRemoveElement(int index) {
-        System.arraycopy(array, index + 1, array, index, numberOfElements - index - 1);
-        numberOfElements--;
+        System.arraycopy(array, index + 1, array, index, size - index - 1);
+        size--;
     }
 
     private void checkIfIndexCorrect(int index) {
-        if (index >= numberOfElements || index < 0) {
+        if (index >= size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("incorrect index");
         }
     }
