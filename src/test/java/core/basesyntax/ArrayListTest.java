@@ -186,7 +186,7 @@ public class ArrayListTest {
         Assert.assertEquals(6, arrayList.size());
         String actualResult = arrayList.remove("Java");
         Assert.assertEquals(String.format("Test failed! Returned value should be \"%s\", "
-                + "but was \"%s\"\n", "Java", actualResult), "Java", actualResult);
+                        + "but was \"%s\"\n", "Java", actualResult), "Java", actualResult);
         int actualSize = arrayList.size();
         Assert.assertEquals(String.format("Test failed! Size of array after removing element "
                 + "should be %d, but it is %d\n", 5, actualSize), 5, actualSize);
