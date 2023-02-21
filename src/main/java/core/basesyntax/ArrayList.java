@@ -23,7 +23,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         if (index > size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Wrong index");
+            throw new ArrayListIndexOutOfBoundsException("Index " + index + " don`t exist!");
         }
         if (size == currentArray.length) {
             increaseLength();
@@ -35,6 +35,9 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
+        if (list == null) {
+            throw new RuntimeException("This list is null!");
+        }
         for (int i = 0; i < list.size(); i++) {
             add(list.get(i));
         }
@@ -68,7 +71,7 @@ public class ArrayList<T> implements List<T> {
                 return remove(i);
             }
         }
-        throw new NoSuchElementException("There`s no such element");
+        throw new NoSuchElementException("Element " + element + " don`t exist!");
     }
 
     @Override
@@ -90,7 +93,7 @@ public class ArrayList<T> implements List<T> {
 
     private void indexLengthCheck(int index) {
         if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Wrong index");
+            throw new ArrayListIndexOutOfBoundsException("Index " + index + " don`t exist!");
         }
     }
 
