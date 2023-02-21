@@ -91,7 +91,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void grow() {
-       if (size == values.length) {
+        if (size == values.length) {
             T[] newValues = (T[]) new Object[(int) (values.length * MULTIPLICATION_CAPACITY)];
             System.arraycopy(values, 0, newValues, 0, size);
             values = newValues;
