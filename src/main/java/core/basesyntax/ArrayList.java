@@ -78,10 +78,14 @@ public class ArrayList<T> implements List<T> {
 
     private void checkSize() {
         if (array.length == size) {
-            T[] newArray = (T[]) new Object[(int) (array.length * MULTIPLIER)];
-            System.arraycopy(array, 0, newArray, 0, size);
-            array = newArray;
+            resize();
         }
+    }
+
+    private void resize() {
+        T[] newArray = (T[]) new Object[(int) (array.length * MULTIPLIER)];
+        System.arraycopy(array, 0, newArray, 0, size);
+        array = newArray;
     }
 
     private void checkIndex(int index, int size) {
