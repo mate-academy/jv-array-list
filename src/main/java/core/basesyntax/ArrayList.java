@@ -1,11 +1,15 @@
 package core.basesyntax;
 
 import java.util.NoSuchElementException;
-import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
 
     private static final int DEFAULT_CAPACITY = 10;
+    private static final float CAPACITY_GROWTH = 1.5f;
+    private static final ArrayListIndexOutOfBoundsException
+            ARRAY_LIST_INDEX_OUT_OF_BOUNDS_EXCEPTION
+            = new ArrayListIndexOutOfBoundsException(
+                    "Given index is not valid for size");
     private T[] elementData = (T[]) new Object[DEFAULT_CAPACITY];
     private int size;
 
@@ -45,16 +49,6 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private void grow() {
-        T[] oldElementData = elementData;
-        elementData = (T[]) new Object[(int)(elementData.length * 1.5f)];
-        System.arraycopy(oldElementData,
-                0,
-                elementData,
-                0,
-                oldElementData.length);
-    }
-
     @Override
     public T get(int index) {
         checkIndexAvailability(index);
@@ -70,8 +64,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void set(T value, int index) {
         if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException(
-                    "Given index is not valid for size: " + size);
+            throw ARRAY_LIST_INDEX_OUT_OF_BOUNDS_EXCEPTION;
         }
         for (int i = 0; i < size; i++) {
             if (i == index) {
@@ -99,18 +92,13 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if ((Objects.equals(elementData[i], element))) {
+            if ((elementData[i] == element)
+                    || elementData[i] != null
+                    && elementData[i].equals(element)) {
                 return remove(i);
             }
         }
         throw new NoSuchElementException();
-    }
-
-    private void checkIndexAvailability(int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException(
-                    "Given index is not valid for size: " + size);
-        }
     }
 
     @Override
@@ -121,5 +109,21 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private void grow() {
+        T[] oldElementData = elementData;
+        elementData = (T[]) new Object[(int)(elementData.length * CAPACITY_GROWTH)];
+        System.arraycopy(oldElementData,
+                0,
+                elementData,
+                0,
+                oldElementData.length);
+    }
+
+    private void checkIndexAvailability(int index) {
+        if (index >= size || index < 0) {
+            throw ARRAY_LIST_INDEX_OUT_OF_BOUNDS_EXCEPTION;
+        }
     }
 }
