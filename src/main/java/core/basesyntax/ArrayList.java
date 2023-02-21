@@ -14,14 +14,14 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        resize();
+        checkSize();
         array[size++] = value;
     }
 
     @Override
     public void add(T value, int index) {
         checkIndex(index, size + 1);
-        resize();
+        checkSize();
         System.arraycopy(array, index, array, index + 1, size - index);
         array[index] = value;
         size++;
@@ -76,7 +76,7 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void resize() {
+    private void checkSize() {
         if (array.length == size) {
             T[] newArray = (T[]) new Object[(int) (array.length * MULTIPLIER)];
             System.arraycopy(array, 0, newArray, 0, size);
