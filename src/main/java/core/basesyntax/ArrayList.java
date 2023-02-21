@@ -129,7 +129,7 @@ public class ArrayList<T> implements List<T> {
         if (index > -1) {
             return remove(index);
         } else {
-            throw new NoSuchElementException("Not such element to remove");
+            throw new ArrayListIndexOutOfBoundsException("Not such element to remove");
         }
     }
 }
