@@ -1,6 +1,5 @@
 package core.basesyntax;
 
-import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
@@ -16,7 +15,9 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        grow();
+        if (checkCapacity()) {
+            grow();
+        }
         dataElement[size++] = value;
     }
 
@@ -25,7 +26,9 @@ public class ArrayList<T> implements List<T> {
         if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException("Can't add to index " + index);
         }
-        grow();
+        if (checkCapacity()) {
+            grow();
+        }
         System.arraycopy(dataElement, index, dataElement, index + 1, size++ - index);
         dataElement[index] = value;
     }
@@ -39,26 +42,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (checkIndex(index)) {
-            throw new ArrayListIndexOutOfBoundsException("Can't get from index " + index);
-        }
+        checkArrayListIndexOutOfBoundsException(index, "get");
         return dataElement[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (checkIndex(index)) {
-            throw new ArrayListIndexOutOfBoundsException("Can't set to index " + index);
-        }
+        checkArrayListIndexOutOfBoundsException(index, "set");
         dataElement[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (checkIndex(index)) {
-            throw new ArrayListIndexOutOfBoundsException("Can't remove from index "
-                    + index);
-        }
+        checkArrayListIndexOutOfBoundsException(index, "remove");
         final T element = dataElement[index];
         System.arraycopy(dataElement, index + 1, dataElement, index, size-- - index - 1);
         return element;
@@ -85,14 +81,14 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void grow() {
-        if (size == dataElement.length) {
-            int oldCapacity = dataElement.length;
-            int newCapacity = oldCapacity + (oldCapacity / CAPACITY_DIVISOR);
-            if (newCapacity < 0) {
-                newCapacity = Integer.MAX_VALUE;
-            }
-            dataElement = Arrays.copyOf(dataElement, newCapacity);
+        int oldCapacity = dataElement.length;
+        int newCapacity = oldCapacity + (oldCapacity / CAPACITY_DIVISOR);
+        if (newCapacity < 0) {
+            newCapacity = Integer.MAX_VALUE;
         }
+        T[] newDataElement = (T[]) new Object[newCapacity];
+        System.arraycopy(dataElement, 0, newDataElement, 0, oldCapacity);
+        dataElement = newDataElement;
     }
 
     private boolean checkIndex(int index) {
@@ -103,4 +99,14 @@ public class ArrayList<T> implements List<T> {
         return (a != null && b != null && a.hashCode() == b.hashCode());
     }
 
+    private boolean checkCapacity() {
+        return size == dataElement.length;
+    }
+
+    private void checkArrayListIndexOutOfBoundsException(int index, String message) {
+        if (checkIndex(index)) {
+            throw new ArrayListIndexOutOfBoundsException("Can't " + message + " from index "
+                    + index);
+        }
+    }
 }
