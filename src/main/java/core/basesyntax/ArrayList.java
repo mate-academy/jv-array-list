@@ -22,7 +22,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         if (index > size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Choose index less or equal than size"
+            throw new ArrayListIndexOutOfBoundsException("Choose index less or equal than " + size
                     + "of ArrayList<T>. This index incorrect " + index);
         }
         checkSize();
@@ -70,7 +70,7 @@ public class ArrayList<T> implements List<T> {
                 return remove(i);
             }
         }
-        throw new NoSuchElementException("ArrayList don`t consist the element");
+        throw new NoSuchElementException("ArrayList don`t consist the element " + element);
     }
 
     @Override
@@ -92,7 +92,7 @@ public class ArrayList<T> implements List<T> {
 
     private void checkTheIndex(int index) {
         if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Choose index less or equal than size "
+            throw new ArrayListIndexOutOfBoundsException("Choose index less or equal than " + size
                     + "of ArrayList<T>. This index incorrect "
                     + index);
         }
