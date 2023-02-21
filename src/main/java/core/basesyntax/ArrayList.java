@@ -10,20 +10,6 @@ public class ArrayList<T> implements List<T> {
 
     public ArrayList() {
         array = (T[]) new Object[arraySize];
-        numberOfElements = 0;
-    }
-
-    private T[] newTemporaryArray() {
-        T[] tempArray = (T[]) new Object[arraySize];
-        for (int i = 0; i < array.length; i++) {
-            tempArray[i] = array[i];
-        }
-        return tempArray;
-    }
-
-    private void newArray() {
-        arraySize *= MULTIPLIER_FOR_ARRAY_SIZE;
-        array = newTemporaryArray();
     }
 
     @Override
@@ -84,6 +70,29 @@ public class ArrayList<T> implements List<T> {
         throw new NoSuchElementException("no such element in list");
     }
 
+    @Override
+    public int size() {
+        return numberOfElements;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return numberOfElements < 1;
+    }
+
+    private T[] newTemporaryArray() {
+        T[] tempArray = (T[]) new Object[arraySize];
+        for (int i = 0; i < array.length; i++) {
+            tempArray[i] = array[i];
+        }
+        return tempArray;
+    }
+
+    private void newArray() {
+        arraySize *= MULTIPLIER_FOR_ARRAY_SIZE;
+        array = newTemporaryArray();
+    }
+
     private void shiftRightAndAddElement(T value, int index) {
         if (numberOfElements >= arraySize) {
             newArray();
@@ -112,15 +121,5 @@ public class ArrayList<T> implements List<T> {
         if (index >= numberOfElements || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("incorrect index");
         }
-    }
-
-    @Override
-    public int size() {
-        return numberOfElements;
-    }
-
-    @Override
-    public boolean isEmpty() {
-        return numberOfElements < 1;
     }
 }
