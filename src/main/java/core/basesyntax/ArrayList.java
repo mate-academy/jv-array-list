@@ -12,14 +12,14 @@ public class ArrayList<T> implements List<T> {
         elementData = (T[]) new Object[DEFAULT_LENGTH];
     }
 
-    public void grow() {
+    private void grow() {
         int newLength = (int) (elementData.length * MULTIPLIER);
         T[] elementDataNewLength = (T[]) new Object[newLength];
         System.arraycopy(elementData, 0, elementDataNewLength, 0, elementData.length);
         elementData = elementDataNewLength;
     }
 
-    public void growingCheck() {
+    private void growingCheck() {
         if (size == elementData.length) {
             grow();
         }
@@ -27,7 +27,7 @@ public class ArrayList<T> implements List<T> {
 
     private void checkIndex(int index) {
         if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index Out Of Bounds");
+            throw new ArrayListIndexOutOfBoundsException("Index Out Of Bounds " + index);
         }
     }
 
@@ -77,7 +77,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if ((element == elementData[i] || elementData[i] != null)
+            if (element == elementData[i] || elementData[i] != null
                     && elementData[i].equals(element)) {
                 return remove(i);
             }
