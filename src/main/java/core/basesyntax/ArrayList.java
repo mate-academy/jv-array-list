@@ -14,16 +14,17 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        growFromNeed();
+        checkSize();
         data[size++] = value;
     }
 
     @Override
     public void add(T value, int index) {
         if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("Index out of array");
+            throw new ArrayListIndexOutOfBoundsException("Index [" + index + "] out of bounds."
+                    + "Must be: 0 <= [" + index + "] <= current size ([" + size + "])");
         }
-        growFromNeed();
+        checkSize();
         System.arraycopy(data, index, data, index + 1, size - index);
         data[index] = value;
         size++;
@@ -60,7 +61,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if (isCompare(element, data[i])) {
+            if (isEquals(element, data[i])) {
                 return remove(i);
             }
         }
@@ -77,22 +78,27 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void growFromNeed() {
+    private void checkSize() {
         if (size == data.length) {
-            int newLength = (int) (data.length * FACTOR_SIZE);
-            T[] newData = (T[]) new Object[newLength];
-            System.arraycopy(data, 0, newData, 0, data.length);
-            data = newData;
+            grow();
         }
+    }
+
+    private void grow() {
+        int newLength = (int) (data.length * FACTOR_SIZE);
+        T[] newData = (T[]) new Object[newLength];
+        System.arraycopy(data, 0, newData, 0, data.length);
+        data = newData;
     }
 
     private void checkIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index out of array");
+            throw new ArrayListIndexOutOfBoundsException("Index [" + index + "] out of bounds."
+            + "Must be: 0 <= [" + index + "] < current size ([" + size + "])");
         }
     }
 
-    private boolean isCompare(T first, T second) {
+    private boolean isEquals(T first, T second) {
         return first == second || (first != null && first.equals(second));
     }
 }
