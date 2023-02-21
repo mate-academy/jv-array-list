@@ -5,6 +5,7 @@ import java.util.NoSuchElementException;
 @SuppressWarnings("unchecked")
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
+    private static final double DEFAULT_MULTIPLIER = 1.5;
     private int capacity;
     private T[] elementData;
     private int size;
@@ -12,12 +13,11 @@ public class ArrayList<T> implements List<T> {
     public ArrayList() {
         capacity = DEFAULT_CAPACITY;
         elementData = (T[]) new Object[capacity];
-        size = 0;
     }
 
     private void resizeIfNeeded() {
         if (size == capacity) {
-            capacity *= 1.5;
+            capacity *= DEFAULT_MULTIPLIER;
             T[] expandedArray = (T[]) new Object[capacity];
             System.arraycopy(elementData, 0, expandedArray, 0, size);
             elementData = expandedArray;
