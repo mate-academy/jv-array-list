@@ -39,17 +39,13 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (isNotValidValue(index)) {
-            throw new ArrayListIndexOutOfBoundsException(ERROR_ELEMENT_NOT_EXIST);
-        }
+        checkedException(index);
         return array[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (isNotValidValue(index)) {
-            throw new ArrayListIndexOutOfBoundsException(ERROR_ELEMENT_NOT_EXIST);
-        }
+        checkedException(index);
         array[index] = value;
     }
 
@@ -101,5 +97,11 @@ public class ArrayList<T> implements List<T> {
 
     private boolean isNotValidValue(int index) {
         return index >= size || index < 0;
+    }
+
+    private void checkedException(int index) {
+        if (isNotValidValue(index)) {
+            throw new ArrayListIndexOutOfBoundsException(ERROR_ELEMENT_NOT_EXIST);
+        }
     }
 }
