@@ -45,7 +45,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (checkIndex(index)) {
+        if (checkIndex(index + 1)) {
             return elementData[index];
         }
         return null;
