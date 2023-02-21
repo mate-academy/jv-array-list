@@ -1,13 +1,12 @@
 package core.basesyntax;
 
-import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     public static final int DEFAULT_SIZE = 10;
     public static final double EXPANSION_COEFFICIENT = 1.5;
     private T[] storage;
-    private int occupiedSpace = 0;
+    private int size;
 
     public ArrayList() {
         storage = (T[]) new Object[DEFAULT_SIZE];
@@ -15,18 +14,18 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        add(value, occupiedSpace);
+        add(value, size);
     }
 
     @Override
     public void add(T value, int index) {
-        ensureCapacity(1);
+        ensureCapacity();
         checkBounds(index, false);
         System.arraycopy(storage, index,
                 storage, index + 1,
-                occupiedSpace - index);
+                size - index);
         storage[index] = value;
-        occupiedSpace++;
+        size++;
     }
 
     @Override
@@ -38,32 +37,32 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        checkBounds(index, true);
+        checkBounds(index);
         return storage[index];
     }
 
     @Override
     public void set(T value, int index) {
-        checkBounds(index, true);
+        checkBounds(index);
         storage[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        checkBounds(index, true);
-        T deletedValue = get(index);
+        checkBounds(index);
+        final T deletedValue = get(index);
         System.arraycopy(storage,
                 index + 1,
                 storage,
                 index,
-                occupiedSpace - 1 - index);
-        occupiedSpace--;
+                size - 1 - index);
+        size--;
         return deletedValue;
     }
 
     @Override
     public T remove(T element) {
-        for (int i = 0; i <= occupiedSpace; i++) {
+        for (int i = 0; i <= size; i++) {
             if (storage[i] == element || storage[i] != null && storage[i].equals(element)) {
                 return remove(i);
             }
@@ -73,7 +72,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public int size() {
-        return occupiedSpace;
+        return size;
     }
 
     @Override
@@ -81,22 +80,29 @@ public class ArrayList<T> implements List<T> {
         return size() == 0;
     }
 
-    private void ensureCapacity(int freeSpaceNeeded) {
-        if (storage.length - occupiedSpace < freeSpaceNeeded) {
+    private void ensureCapacity() {
+        if (storage.length == size) {
             grow();
-            ensureCapacity(freeSpaceNeeded);
         }
     }
 
     private void grow() {
-        storage = Arrays.copyOf(storage, (int) (storage.length * EXPANSION_COEFFICIENT));
+        int newCapacity = storage.length + (int) (storage.length * EXPANSION_COEFFICIENT);
+        T[] newStorage = (T[]) new Object[newCapacity];
+        System.arraycopy(storage, 0, newStorage, 0, storage.length);
+        storage = newStorage;
+    }
+
+    //use inclusive by default
+    private void checkBounds(int index) {
+        checkBounds(index, true);
     }
 
     private void checkBounds(int index, boolean inclusive) {
-        if ((inclusive ? index >= occupiedSpace : index > occupiedSpace)
+        if ((inclusive ? index >= size : index > size)
                 || index < 0) {
             throw new ArrayListIndexOutOfBoundsException(
-                    generateErrorMessage(index, occupiedSpace)
+                    generateErrorMessage(index, size)
             );
         }
     }
