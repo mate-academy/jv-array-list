@@ -4,14 +4,13 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    private Object[] storage = new Object[DEFAULT_CAPACITY];
+    private T[] storage = (T[]) new Object[DEFAULT_CAPACITY];
     private int storageSize;
 
     @Override
     public void add(T value) {
         checkStorageSize();
-        storage[storageSize] = value;
-        storageSize++;
+        add(value, storageSize);
     }
 
     @Override
@@ -28,15 +27,17 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        for (int i = 0; i < list.size(); i++) {
-            add(list.get(i));
+        if (list != null) {
+            for (int i = 0; i < list.size(); i++) {
+                add(list.get(i));
+            }
         }
     }
 
     @Override
     public T get(int index) {
         indexValidation(index);
-        return (T) storage[index];
+        return storage[index];
     }
 
     @Override
@@ -61,7 +62,7 @@ public class ArrayList<T> implements List<T> {
                 return remove(i);
             }
         }
-        throw new NoSuchElementException("Can't find the element " + element);
+        throw new NoSuchElementException("Can't find the element");
     }
 
     @Override
@@ -75,7 +76,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void indexValidation(int index) {
-        if (index < 0 || index > storageSize - 1) {
+        if (index < 0 || index >= storageSize) {
             throw new ArrayListIndexOutOfBoundsException("Insert index: "
                     + index + "is not valid. Please try again ");
         }
@@ -87,7 +88,7 @@ public class ArrayList<T> implements List<T> {
 
     private void checkStorageSize() {
         if (storageSize == storage.length) {
-            Object[] newStorage = new Object[storage.length + storageSize];
+            T[] newStorage = (T[]) new Object[storage.length + (storageSize >> 1)];
             System.arraycopy(storage, 0, newStorage, 0, storageSize);
             storage = newStorage;
         }
