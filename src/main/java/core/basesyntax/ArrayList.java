@@ -19,7 +19,11 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        checkInvalidIndex(index);
+        if (index < 0 || index > size) {
+            throw new ArrayListIndexOutOfBoundsException("Index of the bounds "
+                    + size + " Check your input index!"
+                    + index);
+        }
         if (size == data.length) {
             grow();
         }
