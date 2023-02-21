@@ -5,8 +5,12 @@ import java.util.NoSuchElementException;
 public class ArrayList<T> implements List<T> {
     private static final double FACTOR_SIZE = 1.5;
     private static final int DEFAULT_SIZE = 10;
-    private T[] data = (T[]) new Object[DEFAULT_SIZE];
+    private T[] data;
     private int size;
+
+    public ArrayList() {
+        this.data = (T[]) new Object[DEFAULT_SIZE];
+    }
 
     @Override
     public void add(T value) {
