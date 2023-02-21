@@ -1,12 +1,11 @@
 package core.basesyntax;
 
-import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private static final int EMPTY_SIZE = 0;
-    private static final double CAPACITY_DIVISOR = 1.5;
+    private static final double ARRAY_MULTIPLIER = 1.5;
     private T[] elements;
     private int size;
 
@@ -16,7 +15,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        grow();
+        checkCapacity();
         elements[size++] = value;
     }
 
@@ -24,9 +23,9 @@ public class ArrayList<T> implements List<T> {
     public void add(T value, int index) {
 
         if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("Can't add to index " + index);
+            throw new ArrayListIndexOutOfBoundsException("Index  " + index + " does not exist");
         }
-        grow();
+        checkCapacity();
         System.arraycopy(elements, index, elements, index + 1, size++ - index);
         elements[index] = value;
     }
@@ -68,7 +67,7 @@ public class ArrayList<T> implements List<T> {
                 return remove(i);
             }
         }
-        throw new NoSuchElementException("Not found element in the list");
+        throw new NoSuchElementException("The element " + element + " is not exist");
     }
 
     @Override
@@ -81,14 +80,11 @@ public class ArrayList<T> implements List<T> {
         return size == EMPTY_SIZE;
     }
 
-    private void grow() {
-        if (size == elements.length) {
-            int oldCapacity = elements.length;
-            int newCapacity = (int) (oldCapacity + (oldCapacity / CAPACITY_DIVISOR));
-            if (newCapacity < 0) {
-                newCapacity = Integer.MAX_VALUE;
-            }
-            elements = Arrays.copyOf(elements, newCapacity);
+    private void checkCapacity() {
+        if (elements.length == size) {
+            T[] biggerArray = (T[]) new Object[(int) (elements.length * ARRAY_MULTIPLIER)];
+            System.arraycopy(elements, 0, biggerArray, 0, size);
+            elements = biggerArray;
         }
     }
 
