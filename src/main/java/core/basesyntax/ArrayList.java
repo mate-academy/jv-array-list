@@ -42,23 +42,23 @@ public class ArrayList<E> implements List<E> {
 
     @Override
     public E get(int index) {
-        checkIndexBounds(index);
+        checkIndex(index);
         return data[index];
     }
 
     @Override
     public void set(E value, int index) {
-        checkIndexBounds(index);
+        checkIndex(index);
         data[index] = value;
     }
 
     @Override
     public E remove(int index) {
-        checkIndexBounds(index);
-        E deletingData = data[index];
+        checkIndex(index);
+        E deletedData = data[index];
         System.arraycopy(data, index + 1, data, index, size - index - 1);
         size--;
-        return deletingData;
+        return deletedData;
     }
 
     @Override
@@ -92,7 +92,7 @@ public class ArrayList<E> implements List<E> {
         data = biggerData;
     }
 
-    private void checkIndexBounds(int index) {
+    private void checkIndex(int index) {
         if (index >= size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Index : " + index + " is out of bounds.");
         }
