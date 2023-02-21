@@ -4,8 +4,12 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    private T[] storage = (T[]) new Object[DEFAULT_CAPACITY];
+    private T[] storage;
     private int storageSize;
+
+    public ArrayList() {
+        storage = (T[]) new Object[DEFAULT_CAPACITY];
+    }
 
     @Override
     public void add(T value) {
@@ -16,8 +20,8 @@ public class ArrayList<T> implements List<T> {
     public void add(T value, int index) {
         checkStorageSize();
         if (index < 0 || index > storageSize) {
-            throw new ArrayListIndexOutOfBoundsException("Insert index: "
-                    + index + "is not valid. Please try again ");
+            throw new ArrayListIndexOutOfBoundsException("Can't add value on inserted index: "
+                    + index + "Your index is not valid. Please try again ");
         }
         System.arraycopy(storage, index, storage, index + 1, storageSize - index);
         storage[index] = value;
@@ -61,7 +65,7 @@ public class ArrayList<T> implements List<T> {
                 return remove(i);
             }
         }
-        throw new NoSuchElementException("Can't find the element");
+        throw new NoSuchElementException("Removing element doesn't exist, try again.");
     }
 
     @Override
@@ -76,12 +80,12 @@ public class ArrayList<T> implements List<T> {
 
     private void indexValidation(int index) {
         if (index < 0 || index >= storageSize) {
-            throw new ArrayListIndexOutOfBoundsException("Insert index: "
-                    + index + "is not valid. Please try again ");
+            throw new ArrayListIndexOutOfBoundsException("Inserted index: "
+                    + index + "is not valid. Can't figure operation. Please try again ");
         }
     }
 
-    private boolean isEquals(Object a, Object b) {
+    private boolean isEquals(T a, T b) {
         return a == b || a != null && a.equals(b);
     }
 
