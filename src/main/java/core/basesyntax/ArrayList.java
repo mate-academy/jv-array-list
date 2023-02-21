@@ -14,7 +14,7 @@ public class ArrayList<T> implements List<T> {
         elementData[size++] = value;
     }
 
-    private void log() {
+    public void log() {
         for (int i = 0; i < size; i++) {
             if (elementData[i] == null) {
                 System.out.println("null");
@@ -22,7 +22,6 @@ public class ArrayList<T> implements List<T> {
             }
             System.out.println(elementData[i].toString());
         }
-        System.out.println("----------");
     }
 
     @Override
@@ -33,9 +32,8 @@ public class ArrayList<T> implements List<T> {
         if (size == elementData.length) {
             grow();
             T[] oldElementData = elementData;
-            for (int i = index; i < size; i++) {
-                elementData[i + 1] = oldElementData[i];
-            }
+            if (size - (index + 1) >= 0)
+                System.arraycopy(oldElementData, index + 1 - 1, elementData, index + 1, size - (index + 1));
         }
         elementData[index] = value;
         size++;
@@ -55,7 +53,6 @@ public class ArrayList<T> implements List<T> {
         for (int i = 0; i < oldElementData.length; i++) {
             elementData[i] = oldElementData[i];
         }
-        System.out.println("----------grew to " + this.elementData.length + "----------");
     }
 
     @Override
