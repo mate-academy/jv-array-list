@@ -1,7 +1,5 @@
 package core.basesyntax;
 
-import org.codehaus.plexus.interpolation.SimpleRecursionInterceptor;
-
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
