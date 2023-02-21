@@ -4,16 +4,16 @@ import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
+    private final int DEFAULT_CAPACITY = 10;
     private static final double MULTIPLICATION_CAPACITY = 1.5;
     private static final String EXCEPTION_MESSAGE = "Index of the bounds. Check your input index";
     private T[] values;
     private int size;
-    private int capacity;
 
     public ArrayList() {
         size = 0;
         capacity = 10;
-        values = (T[]) new Object[capacity];
+        values = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
     @Override
@@ -100,9 +100,10 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void grow() {
-        if (size == capacity) {
-            capacity *= MULTIPLICATION_CAPACITY;
-            values = Arrays.copyOf(values, capacity);
+       if (size == values.length) {
+            T[] newValues = (T[]) new Object[(int) (values.length * MULTIPLICATION_CAPACITY)];
+            System.arraycopy(values, 0, newValues, 0, size);
+            values = newValues;
         }
     }
 
