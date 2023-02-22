@@ -1,7 +1,6 @@
 package core.basesyntax;
 
 import java.util.NoSuchElementException;
-import java.util.Random;
 
 public class ArrayList<T> implements List<T> {
     private static final int INITIAL_SIZE = 10;
@@ -64,11 +63,13 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if (element == dataElements[i] || equals(element, dataElements[i])) {
+            if (dataElements[i] == element
+                    || (dataElements[i] != null)
+                    && dataElements[i].equals(element)) {
                 return remove(i);
             }
         }
-        throw new NoSuchElementException("Not found " + element + " in the list");
+        throw new NoSuchElementException("There is no " + element + " Element");
     }
 
     @Override
@@ -96,22 +97,6 @@ public class ArrayList<T> implements List<T> {
         return index < 0 || index >= size;
     }
 
-    @Override
-    public boolean equals(T a, T b) {
-        return (a != null && b != null && a.hashCode() == b.hashCode());
-    }
-
-    @Override
-    public int hashCode() {
-        int result = generate();
-        result = generate() * result + size;
-        result = generate() * result + dataElements.length;
-        for (T dataElement: dataElements) {
-            result = generate() * result + (dataElement == null ? 0 : dataElement.hashCode());
-        }
-        return result;
-    }
-
     private boolean arrayIsFull() {
         return size == dataElements.length;
     }
@@ -123,24 +108,4 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    public int generate() {
-        Random random = new Random();
-        int n = random.nextInt(100);
-        while (!isPrime(n)) {
-            n = random.nextInt(100);
-        }
-        return n;
-    }
-
-    private static boolean isPrime(int n) {
-        if (n <= 1) {
-            return false;
-        }
-        for (int i = 2; i <= Math.sqrt(n); i++) {
-            if (n % i == 0) {
-                return false;
-            }
-        }
-        return true;
-    }
 }
