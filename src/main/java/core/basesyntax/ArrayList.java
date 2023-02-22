@@ -1,7 +1,6 @@
 package core.basesyntax;
 
 import java.util.NoSuchElementException;
-import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
     private static final int COUNT_OF_ELEMENTS = 10;
@@ -10,7 +9,6 @@ public class ArrayList<T> implements List<T> {
 
     public ArrayList() {
         this.array = (T[]) new Object[COUNT_OF_ELEMENTS];
-        ;
     }
 
     @Override
@@ -66,7 +64,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < array.length; i++) {
-            if (Objects.equals(element, array[i])) {
+            if (compareElements(element, array[i])) {
                 return remove(i);
             }
         }
@@ -93,5 +91,9 @@ public class ArrayList<T> implements List<T> {
         if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException("Illegal index: " + index);
         }
+    }
+
+    private boolean compareElements(T element1, T element2) {
+        return (element1 == element2) || (element1 != null && element1.equals(element2));
     }
 }
