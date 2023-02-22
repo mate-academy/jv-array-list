@@ -4,7 +4,7 @@ import java.util.NoSuchElementException;
 import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
-    private final static int COUNT_OF_ELEMENTS = 10;
+    private static final int COUNT_OF_ELEMENTS = 10;
     private T[] array;
     private int size;
 
