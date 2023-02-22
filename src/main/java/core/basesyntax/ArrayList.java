@@ -26,12 +26,9 @@ public class ArrayList<T> implements List<T> {
         } else {
             checkIndex(index);
             addFreeSpace();
-            T[] newValues = (T[]) new Object[values.length];
-            System.arraycopy(values, 0, newValues, 0, index);
-            newValues[index] = value;
-            System.arraycopy(values, index, newValues, index + 1, size - index);
+            System.arraycopy(values, index, values, index + 1, (size - index));
+            values[index] = value;
             size++;
-            values = newValues;
         }
     }
 
@@ -57,19 +54,16 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
-        T[] newValues = (T[]) new Object[values.length];
-        System.arraycopy(values, 0, newValues, 0, index);
-        System.arraycopy(values, index + 1, newValues, index + 1 - 1, values.length - (index + 1));
-        T result = values[index];
-        values = newValues;
+        T elementToRemove = values[index];
+        System.arraycopy(values, index + 1, values, index, size - index - 1);
         size--;
-        return result;
+        return elementToRemove;
     }
 
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if (Objects.equals(values[i], element)) {
+            if ((values[i] == element) || (values[i] != null && values[i].equals(element))) {
                 return remove(i);
             }
         }
