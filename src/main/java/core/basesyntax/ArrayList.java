@@ -25,7 +25,8 @@ public class ArrayList<E> implements List<E> {
         if (index > size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Can't add element: " + value
                     + " on the position: " + index);
-        } else if (isStorageFull()) {
+        }
+        if (isStorageFull()) {
             grow();
         }
         System.arraycopy(data, index, data, index + 1, size - index);
@@ -82,7 +83,7 @@ public class ArrayList<E> implements List<E> {
     }
 
     private boolean isStorageFull() {
-        return size() == data.length;
+        return size == data.length;
     }
 
     private void grow() {
