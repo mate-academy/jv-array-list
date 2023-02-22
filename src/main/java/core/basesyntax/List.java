@@ -18,4 +18,9 @@ public interface List<T> {
     int size();
 
     boolean isEmpty();
+
+    boolean equals(T a, T b);
+
+    int hashCode();
+
 }

@@ -1,24 +1,25 @@
 package core.basesyntax;
 
 import java.util.NoSuchElementException;
+import java.util.Random;
 
 public class ArrayList<T> implements List<T> {
     private static final int INITIAL_SIZE = 10;
     private static final int EMPTY_SIZE = 0;
     private static final int CAPACITY_DIVISOR = 2;
-    private T[] dataElement;
+    private T[] dataElements;
     private int size;
 
     public ArrayList() {
-        dataElement = (T[]) new Object[INITIAL_SIZE];
+        dataElements = (T[]) new Object[INITIAL_SIZE];
     }
 
     @Override
     public void add(T value) {
-        if (checkCapacity()) {
+        if (arrayIsFull()) {
             grow();
         }
-        dataElement[size++] = value;
+        dataElements[size++] = value;
     }
 
     @Override
@@ -26,11 +27,11 @@ public class ArrayList<T> implements List<T> {
         if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException("Can't add to index " + index);
         }
-        if (checkCapacity()) {
+        if (arrayIsFull()) {
             grow();
         }
-        System.arraycopy(dataElement, index, dataElement, index + 1, size++ - index);
-        dataElement[index] = value;
+        System.arraycopy(dataElements, index, dataElements, index + 1, size++ - index);
+        dataElements[index] = value;
     }
 
     @Override
@@ -43,31 +44,31 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         checkArrayListIndexOutOfBoundsException(index, "get");
-        return dataElement[index];
+        return dataElements[index];
     }
 
     @Override
     public void set(T value, int index) {
         checkArrayListIndexOutOfBoundsException(index, "set");
-        dataElement[index] = value;
+        dataElements[index] = value;
     }
 
     @Override
     public T remove(int index) {
         checkArrayListIndexOutOfBoundsException(index, "remove");
-        final T element = dataElement[index];
-        System.arraycopy(dataElement, index + 1, dataElement, index, size-- - index - 1);
+        T element = dataElements[index];
+        System.arraycopy(dataElements, index + 1, dataElements, index, size-- - index - 1);
         return element;
     }
 
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if (element == dataElement[i] || areEqual(element,dataElement[i])) {
+            if (element == dataElements[i] || equals(element, dataElements[i])) {
                 return remove(i);
             }
         }
-        throw new NoSuchElementException("Not found element in the list");
+        throw new NoSuchElementException("Not found " + element + " in the list");
     }
 
     @Override
@@ -81,32 +82,65 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void grow() {
-        int oldCapacity = dataElement.length;
+        int oldCapacity = dataElements.length;
         int newCapacity = oldCapacity + (oldCapacity / CAPACITY_DIVISOR);
         if (newCapacity < 0) {
             newCapacity = Integer.MAX_VALUE;
         }
         T[] newDataElement = (T[]) new Object[newCapacity];
-        System.arraycopy(dataElement, 0, newDataElement, 0, oldCapacity);
-        dataElement = newDataElement;
+        System.arraycopy(dataElements, 0, newDataElement, 0, oldCapacity);
+        dataElements = newDataElement;
     }
 
-    private boolean checkIndex(int index) {
+    private boolean indexIsInvalid(int index) {
         return index < 0 || index >= size;
     }
 
-    private boolean areEqual(T a, T b) {
+    @Override
+    public boolean equals(T a, T b) {
         return (a != null && b != null && a.hashCode() == b.hashCode());
     }
 
-    private boolean checkCapacity() {
-        return size == dataElement.length;
+    @Override
+    public int hashCode() {
+        int result = generate();
+        result = generate() * result + size;
+        result = generate() * result + dataElements.length;
+        for (T dataElement: dataElements) {
+            result = generate() * result + (dataElement == null ? 0 : dataElement.hashCode());
+        }
+        return result;
+    }
+
+    private boolean arrayIsFull() {
+        return size == dataElements.length;
     }
 
     private void checkArrayListIndexOutOfBoundsException(int index, String message) {
-        if (checkIndex(index)) {
+        if (indexIsInvalid(index)) {
             throw new ArrayListIndexOutOfBoundsException("Can't " + message + " from index "
                     + index);
         }
+    }
+
+    public int generate() {
+        Random random = new Random();
+        int n = random.nextInt(100);
+        while (!isPrime(n)) {
+            n = random.nextInt(100);
+        }
+        return n;
+    }
+
+    private static boolean isPrime(int n) {
+        if (n <= 1) {
+            return false;
+        }
+        for (int i = 2; i <= Math.sqrt(n); i++) {
+            if (n % i == 0) {
+                return false;
+            }
+        }
+        return true;
     }
 }
