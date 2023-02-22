@@ -77,7 +77,7 @@ public class ArrayList<T> implements List<T> {
 
     private void resizeIfNeeded() {
         if (values.length == size) {
-            T[] newArray = (T[]) new Object[values.length + (values.length >> 2)];
+            T[] newArray = (T[]) new Object[values.length + (values.length >> 1)];
             System.arraycopy(values, 0, newArray, 0, size);
             values = newArray;
         }
