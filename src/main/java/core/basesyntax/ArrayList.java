@@ -58,7 +58,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if (compare(values[i], element)) {
+            if (areValuesEqual(values[i], element)) {
                 return remove(i);
             }
         }
@@ -83,8 +83,8 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private boolean compare(T a, T b) {
-        return a == b || (a != null) && a.equals(b);
+    private boolean areValuesEqual(T a, T b) {
+        return a == b || a != null && a.equals(b);
     }
 
     public void checkIndex(int index, int size) {
