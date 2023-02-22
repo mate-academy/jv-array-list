@@ -22,8 +22,10 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (checkIndex(index) && index == size) {
+        if (index == size) {
             add(value);
+        } else if (index < 0 || index > size) {
+            throw new ArrayListIndexOutOfBoundsException("Index not valid");
         } else {
             if (size == elementData.length) {
                 grow();
@@ -49,7 +51,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (checkIndex(index + 1)) {
+        if (checkIndex(index)) {
             return elementData[index];
         }
         return null;
@@ -57,7 +59,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void set(T value, int index) {
-        if (checkIndex(index + 1)) {
+        if (checkIndex(index)) {
             elementData[index] = value;
         }
     }
@@ -110,7 +112,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     private boolean checkIndex(int index) {
-        if (index < 0 || index > size) {
+        if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException("Index not valid");
         }
         return true;
