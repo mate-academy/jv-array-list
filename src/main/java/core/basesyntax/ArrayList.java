@@ -5,7 +5,7 @@ import java.util.NoSuchElementException;
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_SIZE = 10;
     private static final double STEP_GROWTH = 1.5;
-    private int newArraySize = DEFAULT_SIZE;
+
     private int size;
     private T[] ownArrayList;
 
@@ -15,7 +15,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (size >= newArraySize) {
+        if (size >= ownArrayList.length) { //(size >= newArraySize)
             resizeArray();
         }
         ownArrayList[size] = value;
@@ -24,22 +24,23 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        size++;
+        if (index == size) {
+            add(value);
+            return;
+        }
         checkForValidIndex(index);
-        if (size >= newArraySize) {
+        if (size >= ownArrayList.length) {
             resizeArray();
         }
         System.arraycopy(ownArrayList, index, ownArrayList, index + 1, size - index);
         ownArrayList[index] = value;
+        size++;
     }
 
     @Override
     public void addAll(List<T> list) {
-        int indexOfAddedList = 0;
-        size += list.size();
-        for (int i = (size - list.size()); i < size; i++) {
-            ownArrayList[i] = list.get(indexOfAddedList);
-            indexOfAddedList++;
+        for (int i = 0; i < list.size(); i++) {
+            add(list.get(i));
         }
     }
 
@@ -88,26 +89,23 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public boolean isEmpty() {
-        return !(size > 0);
+        return size == 0;
     }
 
     private void checkForValidIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index is out of range."
-                    + "Please, enter correct index");
+            throw new ArrayListIndexOutOfBoundsException("Index " + index + " is out of range."
+                    + " Current array size is " + size + ". Please, enter correct index");
         }
     }
 
     private void removeElementByIndex(int index) {
-        for (int i = index; i < size - 1; i++) {
-            ownArrayList[i] = ownArrayList[i + 1];
-        }
+        System.arraycopy(ownArrayList, index + 1, ownArrayList, index, size - index - 1);
         size--;
     }
 
     public void resizeArray() {
-        newArraySize = (int) (newArraySize * STEP_GROWTH);
-        T[] arrayCopy = (T[]) new Object[(int) (newArraySize)];
+        T[] arrayCopy = (T[]) new Object[(int) (ownArrayList.length * STEP_GROWTH)];
         System.arraycopy(ownArrayList, 0, arrayCopy, 0, size);
         ownArrayList = arrayCopy;
     }
