@@ -69,10 +69,8 @@ public class ArrayList<T> implements List<T> {
         T value = null;
         if (checkIndex(index)) {
             value = elementData[index];
-            T[] newElementData = (T[]) new Object[size];
-            System.arraycopy(elementData, index + 1, newElementData, 0, size - index - 1);
-            System.arraycopy(newElementData, 0, elementData, index, size + 1 - index);
-            size--;
+            System.arraycopy(elementData, index + 1, elementData, index, size - index - 1);
+            elementData[--size] = null;
         }
         return value;
     }
