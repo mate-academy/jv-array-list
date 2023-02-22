@@ -5,7 +5,7 @@ import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    private Object[] values;
+    private T[] values;
     private int size;
 
     public ArrayList() {
@@ -16,15 +16,7 @@ public class ArrayList<T> implements List<T> {
         if (initCapacity <= 0) {
             throw new IllegalArgumentException();
         }
-        values = new Object[initCapacity];
-    }
-
-    private void resizeIfNeed() {
-        if (values.length == size) {
-            Object[] newArray = new Object[(int) (values.length * 1.5)];
-            System.arraycopy(values, 0, newArray, 0, size);
-            values = newArray;
-        }
+        values = (T[]) new Object[initCapacity];
     }
 
     @Override
@@ -36,9 +28,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index > size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Incorrect index " + index);
-        }
+        checkIndexForAdd(index);
         resizeIfNeed();
         System.arraycopy(values, index, values, index + 1, size - index);
         values[index] = value;
@@ -54,26 +44,20 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Incorrect index");
-        }
+        checkIndex(index);
         return (T) values[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Incorrect index");
-        }
+        checkIndex(index);
         values[index] = value;
 
     }
 
     @Override
     public T remove(int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Incorrect index");
-        }
+        checkIndex(index);
         T removedValue = (T) values[index];
         System.arraycopy(values, index + 1, values, index, size - index - 1);
         size--;
@@ -98,5 +82,27 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private boolean checkIndex(int index) throws ArrayListIndexOutOfBoundsException {
+        if (index >= size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Incorrect index");
+        }
+        return false;
+    }
+
+    private boolean checkIndexForAdd(int index) throws ArrayListIndexOutOfBoundsException {
+        if (index > size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Incorrect index");
+        }
+        return false;
+    }
+
+    private void resizeIfNeed() {
+        if (values.length == size) {
+            T[] newArray = (T[]) new Object[(int) (values.length * 1.5)];
+            System.arraycopy(values, 0, newArray, 0, size);
+            values = newArray;
+        }
     }
 }
