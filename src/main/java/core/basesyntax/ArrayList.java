@@ -28,11 +28,10 @@ public class ArrayList<T> implements List<T> {
             if (size == elementData.length) {
                 grow();
             }
-            T[] newElementData = (T[]) new Object[elementData.length];
-            System.arraycopy(elementData, 0, newElementData, 0, index);
-            newElementData[index] = value;
-            System.arraycopy(elementData, index, newElementData, index + 1, size);
-            System.arraycopy(newElementData, 0, elementData, 0, newElementData.length);
+            T[] newElementData = (T[]) new Object[size + 1];
+            System.arraycopy(elementData, index, newElementData, 0, size - index);
+            elementData[index] = value;
+            System.arraycopy(newElementData, 0, elementData, index + 1, size + 1 - index);
             size++;
         }
     }
