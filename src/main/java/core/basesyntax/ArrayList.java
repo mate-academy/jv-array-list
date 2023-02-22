@@ -1,12 +1,17 @@
 package core.basesyntax;
 
-import java.util.Arrays;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
-    private T[] array = (T[]) new Object[10];
-    private int size = 0;
+    private final static int COUNT_OF_ELEMENTS = 10;
+    private T[] array;
+    private int size;
+
+    public ArrayList() {
+        this.array = (T[]) new Object[COUNT_OF_ELEMENTS];
+        ;
+    }
 
     @Override
     public void add(T value) {
@@ -79,7 +84,9 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void expandArray() {
-        array = Arrays.copyOf(array, array.length * (array.length / 2));
+        T[] expandedArray = (T[]) new Object[array.length * array.length / 2];
+        System.arraycopy(array, 0, expandedArray, 0, array.length);
+        array = expandedArray;
     }
 
     private void checkIndex(int index) {
