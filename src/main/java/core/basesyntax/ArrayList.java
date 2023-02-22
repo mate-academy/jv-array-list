@@ -14,7 +14,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        addFreeSpace(values.length);
+        addFreeSpace();
         values[size] = value;
         size++;
     }
@@ -25,15 +25,11 @@ public class ArrayList<T> implements List<T> {
             add(value);
         } else {
             checkIndex(index);
-            addFreeSpace(values.length);
+            addFreeSpace();
             T[] newValues = (T[]) new Object[values.length];
-            for (int i = 0; i < index; i++) {
-                newValues[i] = values[i];
-            }
+            System.arraycopy(values, 0, newValues, 0, index);
             newValues[index] = value;
-            for (int i = index; i < size; i++) {
-                newValues[i + 1] = values[i];
-            }
+            System.arraycopy(values, index, newValues, index + 1, size - index);
             size++;
             values = newValues;
         }
@@ -104,8 +100,8 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private void addFreeSpace(int index) {
-        if (index == size) {
+    private void addFreeSpace() {
+        if (values.length == size) {
             grow();
         }
     }
