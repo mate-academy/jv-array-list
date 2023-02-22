@@ -15,7 +15,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        checkSize(size, data);
+        checkSize();
         data[size] = value;
         size++;
     }
@@ -23,7 +23,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         checkIndexToAdd(index);
-        checkSize(size, data);
+        checkSize();
         System.arraycopy(data, index, data, index + 1, size - index);
         data[index] = value;
         size++;
@@ -64,7 +64,7 @@ public class ArrayList<T> implements List<T> {
                 return remove(i);
             }
         }
-        throw new NoSuchElementException("No such element");
+        throw new NoSuchElementException("No such element: " + element);
     }
 
     @Override
@@ -99,7 +99,7 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private void checkSize(int size, T[] data) {
+    private void checkSize() {
         if (size == data.length) {
             grow();
         }
