@@ -20,7 +20,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        addingChecking(index);
+        capacityChecking(index, size + 1);
         capacityEnsures();
         for (int i = size - 1; i >= index; i--) {
             elements[i + 1] = elements[i];
@@ -38,19 +38,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        capacityChecking(index);
+        capacityChecking(index, size);
         return elements[index];
     }
 
     @Override
     public void set(T value, int index) {
-        capacityChecking(index);
+        capacityChecking(index, size);
         elements[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        capacityChecking(index);
+        capacityChecking(index, size);
         final T temp = elements[index];
         System.arraycopy(elements, index + 1, elements, index, size - index - 1);
         elements[--size] = null;
@@ -88,15 +88,9 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private void capacityChecking(int index) {
+    private void capacityChecking(int index, int size) {
         if (index >= size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("This index out of bounds " + index);
-        }
-    }
-
-    private void addingChecking(int index) {
-        if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("Can't add element on position " + index);
         }
     }
 }
