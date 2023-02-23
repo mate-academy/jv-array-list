@@ -38,11 +38,8 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        if (elementData.length - size < list.size()) {
-            grow();
-        }
         for (int i = 0; i < list.size(); i++) {
-            elementData[size] = list.get(i);
+            add(list.get(i));
             size++;
         }
     }
