@@ -20,9 +20,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("Can't add element on position " + index);
-        }
+        addingChecking(index);
         capacityEnsures();
         for (int i = size - 1; i >= index; i--) {
             elements[i + 1] = elements[i];
@@ -93,6 +91,12 @@ public class ArrayList<T> implements List<T> {
     private void capacityChecking(int index) {
         if (index >= size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("This index out of bounds " + index);
+        }
+    }
+
+    private void addingChecking(int index) {
+        if (index < 0 || index > size) {
+            throw new ArrayListIndexOutOfBoundsException("Can't add element on position " + index);
         }
     }
 }
