@@ -24,7 +24,9 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayListIndexOutOfBoundsException("Can't add element on position " + index);
         }
         capacityEnsures();
-        System.arraycopy(elements, index, elements, index + 1, size - index);
+        for (int i = size - 1; i >= index; i--) {
+            elements[i + 1] = elements[i];
+        }
         elements[index] = value;
         size++;
     }
@@ -81,7 +83,7 @@ public class ArrayList<T> implements List<T> {
 
     private void capacityEnsures() {
         if (size == elements.length) {
-            int capacity = (int) (elements.length * STANDART_GROW);
+            int capacity = (int) (elements.length + STANDART_GROW);
             T[] tempArray = (T[]) new Object[capacity];
             System.arraycopy(elements, 0, tempArray, 0, size);
             elements = tempArray;
