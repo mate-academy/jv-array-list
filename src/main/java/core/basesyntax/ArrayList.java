@@ -71,16 +71,12 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        T value = null;
-        int index = -1;
         for (int i = 0; i < size; i++) {
             if (Objects.equals(element, elementData[i])) {
-                index = i;
-                break;
+                remove(i);
             }
         }
-        value = checkRemoveIndex(index);
-        return value;
+        return null;
     }
 
     @Override
@@ -108,13 +104,5 @@ public class ArrayList<T> implements List<T> {
         System.arraycopy(elementData, 0, newElementData, 0, size);
         elementData = (T[]) new Object[newCapacity];
         System.arraycopy(newElementData, 0, elementData, 0, size);
-    }
-
-    private T checkRemoveIndex(int index) {
-        if (index > -1) {
-            return remove(index);
-        } else {
-            throw new NoSuchElementException("Not such element to remove");
-        }
     }
 }
