@@ -92,7 +92,7 @@ public class ArrayList<T> implements List<T> {
 
     private void grow() {
         T[] data = elementData;
-        data = (T[]) new Object[size * 3 / 2];
+        elementData = (T[]) new Object[size * 3 / 2];
         System.arraycopy(data, 0, elementData, 0, size);
     }
 }
