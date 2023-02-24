@@ -60,12 +60,10 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(int index) {
-        T value = null;
-        if (checkIndex(index)) {
-            value = elementData[index];
-            System.arraycopy(elementData, index + 1, elementData, index, size - index - 1);
-            elementData[--size] = null;
-        }
+        checkIndex(index);
+        T value = elementData[index];
+        System.arraycopy(elementData, index + 1, elementData, index, size - index - 1);
+        elementData[--size] = null;
         return value;
     }
 
