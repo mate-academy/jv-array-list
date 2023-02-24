@@ -1,48 +1,45 @@
 package core.basesyntax;
 
+import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
-    private static final int START_ARRAY_LENGTH = 0;
-    private Object[] objects;
+    private static final int START_ARRAY_LENGTH = 10;
+    private int arraySize;
+    private T[] objects;
 
     public ArrayList() {
-        objects = new Object[START_ARRAY_LENGTH];
+        objects = (T[]) (Array.newInstance(Object.class, START_ARRAY_LENGTH));
     }
 
     @Override
     public void add(T value) {
-        objects = grow((T[]) (objects));
-        if (objects.length != 0) {
-            objects[objects.length - 1] = value;
-        } else {
-            objects = grow((T[]) (objects));
-            objects[0] = value;
+        if (objects.length == arraySize) {
+            objects = grow(objects);
         }
+        objects[arraySize] = value;
+        arraySize += 1;
     }
 
     @Override
     public void add(T value, int index) {
-        try {
-            if (objects.length == 0) {
-                objects = grow((T[]) (objects));
-                objects[0] = value;
-            } else {
-                Object [] clonedArray = new Object[objects.length + 1];
-                for (int i = 0; i <= index; i++) {
-                    clonedArray[i] = (i == index) ? value : objects[i];
-                }
-                for (int i = index; i < objects.length; i++) {
-                    clonedArray[i + 1] = objects[i];
-                }
-                objects = grow((T[]) (objects));
-                objects = clonedArray;
-            }
-        } catch (IndexOutOfBoundsException e) {
-            throw new ArrayListIndexOutOfBoundsException("No such index");
+        if (index != 0) {
+            boundsValidation(index - 1);
         }
+        Object [] clonedArray = new Object[objects.length];
+        if (objects.length == arraySize) {
+            clonedArray = grow(objects);
+        }
+        for (int i = 0; i <= index; i++) {
+            clonedArray[i] = (i == index) ? value : objects[i];
+        }
+        for (int i = index; i < arraySize; i++) {
+            clonedArray[i + 1] = objects[i];
+        }
+        arraySize += 1;
+        objects = (T[]) (clonedArray);
     }
 
     @Override
@@ -54,50 +51,38 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        try {
-            return (T) (objects[index]);
-        } catch (IndexOutOfBoundsException e) {
-            throw new ArrayListIndexOutOfBoundsException("Element does not exist");
-        }
+        boundsValidation(index);
+        return (objects[index]);
     }
 
     @Override
     public void set(T value, int index) {
-        try {
-            objects[index] = value;
-        } catch (IndexOutOfBoundsException e) {
-            throw new ArrayListIndexOutOfBoundsException("Such index does not exist");
-        }
-
+        boundsValidation(index);
+        objects[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        Object removed = -1;
-        try {
-            if (objects.length != 0) {
-                Object [] temp = new Object[objects.length - 1];
-                removed = objects[index];
-                for (int i = 0; i < index; i++) {
-                    temp[i] = objects[i];
-                }
-                if (index != objects.length - 1) {
-                    for (int i = index + 1; i < objects.length; i++) {
-                        temp[i - 1] = objects[i];
-                    }
-                }
-                objects = temp;
-            }
-        } catch (IndexOutOfBoundsException e) {
-            throw new ArrayListIndexOutOfBoundsException("Such index does not exist");
+        boundsValidation(index);
+        Object [] temp = new Object[objects.length];
+        for (int i = 0; i < index; i++) {
+            temp[i] = objects[i];
         }
-        return (T) (removed);
+        if (index != objects.length - 1) {
+            for (int i = index + 1; i < objects.length; i++) {
+                temp[i - 1] = objects[i];
+            }
+        }
+        arraySize -= 1;
+        T removed = objects[index];
+        objects = (T[]) (temp);
+        return removed;
     }
 
     @Override
     public T remove(T element) {
         int index = -1;
-        for (int i = 0; i < objects.length; i++) {
+        for (int i = 0; i < arraySize; i++) {
             index = (Objects.equals(element, objects[i])) ? i : index;
         }
         if (index == -1) {
@@ -108,15 +93,15 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public int size() {
-        return objects.length;
+        return arraySize;
     }
 
     @Override
     public boolean isEmpty() {
-        if (objects.length == 0) {
+        if (arraySize == 0) {
             return true;
         }
-        for (int i = 0; i < objects.length; i++) {
+        for (int i = 0; i < arraySize; i++) {
             if (Objects.equals(objects[i], "")
                     || Objects.equals(objects[i], null)) {
                 return true;
@@ -126,11 +111,13 @@ public class ArrayList<T> implements List<T> {
     }
 
     private T[] grow(T[] inputArray) {
-        int value = inputArray.length + 1;
-        Object [] startArray = new Object[value];
-        if (inputArray.length > 0) {
-            startArray = Arrays.copyOf(inputArray, value);
+        Object [] expandedArray = Arrays.copyOf(inputArray, (int) (inputArray.length * 1.5));
+        return (T[]) (expandedArray);
+    }
+
+    private void boundsValidation(int index) {
+        if (index >= arraySize || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Element does not exist");
         }
-        return (T[]) (startArray);
     }
 }
