@@ -89,11 +89,10 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private boolean checkIndex(int index) {
+    private void checkIndex(int index) {
         if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException("Index not valid");
         }
-        return true;
     }
 
     private void grow() {
