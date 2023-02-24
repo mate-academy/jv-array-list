@@ -91,12 +91,8 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void grow() {
-        int newCapacity = size;
-        T[] newElementData;
-        newCapacity += newCapacity / 2;
-        newElementData = (T[]) new Object[newCapacity];
-        System.arraycopy(elementData, 0, newElementData, 0, size);
-        elementData = (T[]) new Object[newCapacity];
-        System.arraycopy(newElementData, 0, elementData, 0, size);
+        T[] data = elementData;
+        data = (T[]) new Object[size * 3 / 2];
+        System.arraycopy(data, 0, elementData, 0, size);
     }
 }
