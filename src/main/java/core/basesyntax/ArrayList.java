@@ -45,10 +45,8 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (checkIndex(index)) {
-            return elementData[index];
-        }
-        return null;
+        checkIndex(index);
+        return elementData[index];
     }
 
     @Override
