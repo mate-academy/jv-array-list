@@ -5,6 +5,7 @@ import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
+    final static int NEW_CAPACITY = 3 / 2;
     private T[] elementData;
     private int size = 0;
 
@@ -92,7 +93,7 @@ public class ArrayList<T> implements List<T> {
 
     private void grow() {
         T[] data = elementData;
-        elementData = (T[]) new Object[size * 3 / 2];
+        elementData = (T[]) new Object[ size * NEW_CAPACITY];
         System.arraycopy(data, 0, elementData, 0, size);
     }
 }
