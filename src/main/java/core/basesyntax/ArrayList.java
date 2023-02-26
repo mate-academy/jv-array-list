@@ -86,14 +86,16 @@ public class ArrayList<T> implements List<T> {
 
     private boolean checkIndex(int index) throws ArrayListIndexOutOfBoundsException {
         if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Incorrect index");
+            throw new ArrayListIndexOutOfBoundsException("Input index: " + index + " out of bound: "
+                    + size);
         }
         return false;
     }
 
     private boolean checkIndexForAdd(int index) throws ArrayListIndexOutOfBoundsException {
         if (index > size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Incorrect index");
+            throw new ArrayListIndexOutOfBoundsException("Input index: " + index + " out of bound: "
+                    + size);
         }
         return false;
     }
