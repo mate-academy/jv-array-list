@@ -3,11 +3,10 @@ package core.basesyntax;
 import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.NoSuchElementException;
-import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
     private static final int START_ARRAY_LENGTH = 10;
-    private int arraySize;
+    private int size;
     private T[] objects;
 
     public ArrayList() {
@@ -16,29 +15,22 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (objects.length == arraySize) {
-            objects = grow(objects);
-        }
-        objects[arraySize] = value;
-        arraySize += 1;
+        grow();
+        objects[size] = value;
+        size++;
     }
 
     @Override
     public void add(T value, int index) {
-        if (index != 0) {
-            boundsValidation(index - 1);
+        if (index > size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Element does not exist");
         }
+        grow();
         Object [] clonedArray = new Object[objects.length];
-        if (objects.length == arraySize) {
-            clonedArray = grow(objects);
-        }
-        for (int i = 0; i <= index; i++) {
-            clonedArray[i] = (i == index) ? value : objects[i];
-        }
-        for (int i = index; i < arraySize; i++) {
-            clonedArray[i + 1] = objects[i];
-        }
-        arraySize += 1;
+        System.arraycopy(objects, 0, clonedArray, 0, index);
+        clonedArray[index] = value;
+        System.arraycopy(objects, index, clonedArray, index + 1, size - index);
+        size++;
         objects = (T[]) (clonedArray);
     }
 
@@ -51,73 +43,62 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        boundsValidation(index);
-        return (objects[index]);
+        validate(index);
+        return objects[index];
     }
 
     @Override
     public void set(T value, int index) {
-        boundsValidation(index);
+        validate(index);
         objects[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        boundsValidation(index);
-        Object [] temp = new Object[objects.length];
-        for (int i = 0; i < index; i++) {
-            temp[i] = objects[i];
-        }
-        if (index != objects.length - 1) {
-            for (int i = index + 1; i < objects.length; i++) {
-                temp[i - 1] = objects[i];
-            }
-        }
-        arraySize -= 1;
+        validate(index);
+        Object [] clonedArray = new Object[objects.length];
+        size--;
+        System.arraycopy(objects, 0, clonedArray, 0, index);
+        System.arraycopy(objects, index + 1, clonedArray, index, size - index);
         T removed = objects[index];
-        objects = (T[]) (temp);
+        objects = (T[]) (clonedArray);
         return removed;
     }
 
     @Override
     public T remove(T element) {
-        int index = -1;
-        for (int i = 0; i < arraySize; i++) {
-            index = (Objects.equals(element, objects[i])) ? i : index;
+        size--;
+        for (int j, i = 0; i < size; i++) {
+            if ((objects[i] == element) || (objects[i] != null && objects[i].equals(element))) {
+                System.arraycopy(objects, i + 1, objects, i, size - i);
+                return element;
+            }
+            if (i == size - 1) {
+                throw new NoSuchElementException("Can`t find element: " + element);
+            }
         }
-        if (index == -1) {
-            throw new NoSuchElementException("Such element does not exist");
-        }
-        return remove(index);
+        return null;
     }
 
     @Override
     public int size() {
-        return arraySize;
+        return size;
     }
 
     @Override
     public boolean isEmpty() {
-        if (arraySize == 0) {
-            return true;
-        }
-        for (int i = 0; i < arraySize; i++) {
-            if (Objects.equals(objects[i], "")
-                    || Objects.equals(objects[i], null)) {
-                return true;
-            }
-        }
-        return false;
+        return size == 0;
     }
 
-    private T[] grow(T[] inputArray) {
-        Object [] expandedArray = Arrays.copyOf(inputArray, (int) (inputArray.length * 1.5));
-        return (T[]) (expandedArray);
+    private void grow() {
+        if (objects.length == size) {
+            objects = Arrays.copyOf(objects, (int) (objects.length * 1.5));
+        }
     }
 
-    private void boundsValidation(int index) {
-        if (index >= arraySize || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Element does not exist");
+    private void validate(int index) {
+        if (index >= size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Element does not exist [" + index + "]");
         }
     }
 }
