@@ -24,8 +24,9 @@ public class ArrayList<T> implements List<T> {
     public void add(T value, int index) {
         indexOnRange(index);
         growIfNeeded();
-        if (size - index >= 0)
+        if (size - index >= 0) {
             System.arraycopy(values, index, values, index + 1, size - index);
+        }
         values[index] = value;
         size++;
     }
@@ -65,8 +66,9 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         indexOnRangeWithEqualsSize(index);
         T removed = values[index];
-        if (size - 1 - index >= 0)
+        if (size - 1 - index >= 0) {
             System.arraycopy(values, index + 1, values, index, size - 1 - index);
+        }
         T newRemoved = removed;
         values[size - 1] = null;
         size--;
