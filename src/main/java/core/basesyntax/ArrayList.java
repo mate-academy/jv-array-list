@@ -10,13 +10,12 @@ public class ArrayList<T> implements List<T> {
     private int size;
 
     public ArrayList() {
-        size = 0;
         values = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
     @Override
     public void add(T value) {
-        grow();
+        growIfNeeded();
         values[size] = value;
         size++;
     }
@@ -24,10 +23,9 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         indexOnRange(index);
-        grow();
-        for (int i = size; i > index; i--) {
-            values[i] = values[i - 1];
-        }
+        growIfNeeded();
+        if (size - index >= 0)
+            System.arraycopy(values, index, values, index + 1, size - index);
         values[index] = value;
         size++;
     }
@@ -55,11 +53,9 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T value) {
         for (int i = 0; i < size; i++) {
-            if (((values[i] == null) && (value == null))
+            if ((values[i] == value)
                     || (values[i] != null && values[i].equals(value))) {
-                T removed = values[i];
-                remove(i);
-                return removed;
+                return remove(i);
             }
         }
         throw new NoSuchElementException("No such element");
@@ -69,15 +65,24 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         indexOnRangeWithEqualsSize(index);
         T removed = values[index];
-        for (int i = index; i < size - 1; i++) {
-            values[i] = values[i + 1];
-        }
+        if (size - 1 - index >= 0)
+            System.arraycopy(values, index + 1, values, index, size - 1 - index);
         T newRemoved = removed;
         values[size - 1] = null;
         size--;
         return newRemoved;
     }
 
+    @Override
+    public int size() {
+        return size;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return size == 0;
+    }
+    
     private void indexOnRange(int index) {
         if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException(EXCEPTION_MESSAGE);
@@ -96,15 +101,5 @@ public class ArrayList<T> implements List<T> {
             System.arraycopy(values, 0, newValues, 0, size);
             values = newValues;
         }
-    }
-
-    @Override
-    public int size() {
-        return size;
-    }
-
-    @Override
-    public boolean isEmpty() {
-        return size == 0;
     }
 }
