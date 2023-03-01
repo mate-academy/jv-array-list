@@ -1,7 +1,5 @@
 package core.basesyntax;
 
-import java.lang.reflect.Array;
-import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
@@ -10,12 +8,12 @@ public class ArrayList<T> implements List<T> {
     private T[] objects;
 
     public ArrayList() {
-        objects = (T[]) (Array.newInstance(Object.class, START_ARRAY_LENGTH));
+        objects = (T[]) new Object[START_ARRAY_LENGTH];
     }
 
     @Override
     public void add(T value) {
-        grow();
+        doNeedGrowth();
         objects[size] = value;
         size++;
     }
@@ -23,15 +21,12 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         if (index > size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Element does not exist");
+            throw new ArrayListIndexOutOfBoundsException("Such index does not exist: " + index);
         }
-        grow();
-        Object [] clonedArray = new Object[objects.length];
-        System.arraycopy(objects, 0, clonedArray, 0, index);
-        clonedArray[index] = value;
-        System.arraycopy(objects, index, clonedArray, index + 1, size - index);
+        doNeedGrowth();
+        System.arraycopy(objects, index, objects, index + 1, size - index);
+        objects[index] = value;
         size++;
-        objects = (T[]) (clonedArray);
     }
 
     @Override
@@ -56,12 +51,9 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         validate(index);
-        Object [] clonedArray = new Object[objects.length];
-        size--;
-        System.arraycopy(objects, 0, clonedArray, 0, index);
-        System.arraycopy(objects, index + 1, clonedArray, index, size - index);
         T removed = objects[index];
-        objects = (T[]) (clonedArray);
+        System.arraycopy(objects, index + 1, objects, index, size - 1 - index);
+        objects[--size] = null;
         return removed;
     }
 
@@ -73,11 +65,8 @@ public class ArrayList<T> implements List<T> {
                 System.arraycopy(objects, i + 1, objects, i, size - i);
                 return element;
             }
-            if (i == size - 1) {
-                throw new NoSuchElementException("Can`t find element: " + element);
-            }
         }
-        return null;
+        throw new NoSuchElementException("Can`t find element: " + element);
     }
 
     @Override
@@ -90,10 +79,16 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void grow() {
+    private void doNeedGrowth() {
         if (objects.length == size) {
-            objects = Arrays.copyOf(objects, (int) (objects.length * 1.5));
+            grow();
         }
+    }
+
+    private void grow() {
+        Object [] copied = new Object[(int) (objects.length * 1.5)];
+        System.arraycopy(objects, 0, copied, 0, size);
+        objects = (T[]) copied;
     }
 
     private void validate(int index) {
