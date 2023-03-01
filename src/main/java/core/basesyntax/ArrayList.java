@@ -59,10 +59,10 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        size--;
-        for (int j, i = 0; i < size; i++) {
+        for (int i = 0; i < size; i++) {
             if ((objects[i] == element) || (objects[i] != null && objects[i].equals(element))) {
                 System.arraycopy(objects, i + 1, objects, i, size - i);
+                size--;
                 return element;
             }
         }
