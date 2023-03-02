@@ -4,49 +4,37 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    private static final int DIVIDE_BY_TWO = 2;
-    private static final int INDEX_BY_ZERO = 0;
-    private static final int INDEX_BY_ONE = 1;
-    private static final int EMPTY = 0;
-    private T[] array;
-    private T[] copiedArray;
+    private static final double GROW_FACTOR = 1.5;
+    private T[] values;
     private int size;
 
     public ArrayList() {
-        array = (T[]) new Object[DEFAULT_CAPACITY];
+        values = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
     @Override
     public void add(T value) {
-        if (array.length == size) {
-            array = grow();
+        if (values.length == size) {
+            values = grow();
         }
-        array[size] = value;
-        size++;
+        values[size++] = value;
     }
 
     @Override
     public void add(T value, int index) {
-        if (index < INDEX_BY_ZERO) {
-            throw new ArrayListIndexOutOfBoundsException(
-                    "You cannot add element by negative index");
+        if (index < 0 || index > size) {
+            checkIndexInBounds(index);
         }
-        if (array.length == size + INDEX_BY_ONE) {
-            array = grow();
+        if (values.length == size + 1) {
+            values = grow();
         }
-        if (index < array.length && index < size) {
-            copiedArray = (T[]) new Object[array.length];
-            System.arraycopy(array, INDEX_BY_ZERO, copiedArray, INDEX_BY_ZERO, index);
-            copiedArray[index] = value;
-            System.arraycopy(array, index, copiedArray, index + INDEX_BY_ONE, size + INDEX_BY_ONE);
-            System.arraycopy(copiedArray, INDEX_BY_ZERO, array, INDEX_BY_ZERO, size + INDEX_BY_ONE);
+        if (index < values.length && index < size) {
+            System.arraycopy(values, index, values, index + 1, size + 1);
+            values[index] = value;
             size++;
             return;
-        } else if (index > size) {
-            throw new ArrayListIndexOutOfBoundsException(
-                    "You cannot add element by not existent index");
         }
-        array[size] = value;
+        values[size] = value;
         size++;
     }
 
@@ -59,58 +47,45 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index < size && index >= INDEX_BY_ZERO) {
-            return array[index];
+        if (index <= size || index < 0) {
+            checkIndexInBounds(index);
         }
-        throw new ArrayListIndexOutOfBoundsException("There is not element by index: " + index);
+        return values[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index >= size) {
-            throw new ArrayListIndexOutOfBoundsException(
-                    "You cannot add element by not existent index");
-        } else if (index < INDEX_BY_ZERO) {
-            throw new ArrayListIndexOutOfBoundsException(
-                    "You cannot add element by negative index");
+        if (index >= size || index < 0) {
+            checkIndexInBounds(index);
         }
-        array[index] = value;
+        values[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if ((index + INDEX_BY_ONE) == size) {
-            copiedArray = (T[]) new Object[array.length];
-            System.arraycopy(array, index, copiedArray, INDEX_BY_ZERO, size - index);
-            array[index] = null;
-            size--;
-            return copiedArray[INDEX_BY_ZERO];
+        if (index < 0 || index >= size) {
+            checkIndexInBounds(index);
         }
-        if (index < size && index >= INDEX_BY_ZERO) {
-            copiedArray = (T[]) new Object[array.length];
-            System.arraycopy(array, index, copiedArray, INDEX_BY_ZERO, size - index);
-            System.arraycopy(copiedArray, INDEX_BY_ONE, array, index, size--);
-            return copiedArray[INDEX_BY_ZERO];
+        if (index < (size - 1)) {
+            T copy = values[index];
+            System.arraycopy(values, index + 1, values, index, size);
+            values[--size] = null;
+            return copy;
         }
-        if (index < INDEX_BY_ZERO) {
-            throw new ArrayListIndexOutOfBoundsException(
-                    "You cannot remove element by negative index");
-        }
-        throw new ArrayListIndexOutOfBoundsException(
-                "You cannot remove element by not existent index");
+        T copy = values[index];
+        values[--size] = null;
+        return copy;
     }
 
     @Override
     public T remove(T element) {
-        for (int i = 0; i < array.length; i++) {
-            if (array[i] == element || array[i] != null && array[i].equals(element)) {
-                copiedArray = (T[]) new Object[DEFAULT_CAPACITY];
-                System.arraycopy(array, i, copiedArray, INDEX_BY_ZERO, size - i);
-                System.arraycopy(copiedArray, INDEX_BY_ONE, array, i, size--);
-                return copiedArray[INDEX_BY_ZERO];
+        for (int i = 0; i < values.length; i++) {
+            if (values[i] == element || values[i] != null && values[i].equals(element)) {
+                return remove(i);
             }
         }
-        throw new NoSuchElementException("Given element does not exist. Try to write correct");
+        throw new NoSuchElementException(
+                "Given element does not exist! Try to write correct element");
     }
 
     @Override
@@ -120,26 +95,36 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public boolean isEmpty() {
-        if (size == EMPTY) {
-            return true;
-        }
-        return false;
+        return size == 0;
     }
 
     private T[] grow() {
-        if ((size + INDEX_BY_ONE) == array.length) {
-            array = resize();
-        } else if (size == array.length) {
-            array = resize();
+        if ((size + 1) == values.length) {
+            values = resize();
+        } else if (size == values.length) {
+            values = resize();
         }
-        return array;
+        return values;
     }
 
     private T[] resize() {
-        copiedArray = (T[]) new Object[array.length];
-        System.arraycopy(array, INDEX_BY_ZERO, copiedArray, INDEX_BY_ZERO, array.length);
-        array = (T[]) new Object[array.length + (array.length / DIVIDE_BY_TWO)];
-        System.arraycopy(copiedArray, INDEX_BY_ZERO, array, INDEX_BY_ZERO, copiedArray.length);
-        return array;
+        T[] copy = values;
+        values = (T[]) new Object[(int) (size * GROW_FACTOR)];
+        System.arraycopy(copy, 0, values, 0, size);
+        return values;
+    }
+
+    private T checkIndexInBounds(int index) {
+        if (index < 0) {
+            throw new ArrayListIndexOutOfBoundsException(
+                    "index cannot be negative! For given array, index should be from "
+                            + 0 + " to " + (size - 1));
+        }
+        if (index >= size) {
+            throw new ArrayListIndexOutOfBoundsException(
+                    index + " does not exist! For given array, index should be from "
+                            + 0 + " to " + (size - 1));
+        }
+        return null;
     }
 }
