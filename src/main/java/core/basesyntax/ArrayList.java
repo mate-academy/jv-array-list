@@ -1,5 +1,6 @@
 package core.basesyntax;
 
+import java.util.NoSuchElementException;
 import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
@@ -18,7 +19,7 @@ public class ArrayList<T> implements List<T> {
                 maxSize = maxSize + maxSize / 2;
                 Object[] oldElementData = elementData;
                 elementData = new Object[maxSize];
-                elementData = oldElementData;
+                System.arraycopy(oldElementData, 0, elementData, 0, size);
             }
         }
         elementData[size] = value;
@@ -27,15 +28,16 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
+        if ((index < 0) || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Out of bound exception");
+        }
         if (index <= size) {
-            Object[] oldElementsData = new Object[size];
+            Object[] oldElementsData = new Object[maxSize];
             System.arraycopy(elementData, 0, oldElementsData, 0, size);
             elementData = new Object[size + 1];
             System.arraycopy(oldElementsData, 0, elementData, 0, index);
             elementData[index] = value;
-            System.arraycopy(oldElementsData, index, elementData, index, size - index);
-        } else {
-            throw new ArrayListIndexOutOfBoundsException("ArrayList out of bound execption");
+            System.arraycopy(oldElementsData, index, elementData, index, size - index - 1);
         }
     }
 
@@ -46,17 +48,26 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
+        if ((index < 0) || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Out of bound exception");
+        }
         Objects.checkIndex(index, size);
         return (T) elementData[index];
     }
 
     @Override
     public void set(T value, int index) {
+        if ((index < 0) || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Out of bound exception");
+        }
         elementData[index] = value;
     }
 
     @Override
     public T remove(int index) {
+        if ((index < 0) || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Out of bound exception");
+        }
         Objects.checkIndex(index, size);
         final Object[] es = elementData;
 
@@ -68,7 +79,21 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        return null;
+        boolean exception = false;
+        final Object[] es = elementData;
+        T oldValue = (T) new ArrayList<T>();
+        for (int i = 0; i < size; i++) {
+            if (elementData[i].equals(element)) {
+                Objects.checkIndex(i, size);
+                oldValue = (T) es[i];
+                fastRemove(es, i);
+                exception = true;
+            }
+        }
+        if (exception == false) {
+            throw new NoSuchElementException("No such element");
+        }
+        return oldValue;
     }
 
     @Override
