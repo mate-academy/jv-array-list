@@ -27,16 +27,15 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index < size) {
-          Object[] oldElementData = new Object[size];
-          oldElementData = elementData;
-          for (int i = 0; i < index; i++) {
-              elementData[i] = oldElementData[i];
-          }
-          elementData[index] = value;
-          for (int i = index + 1; i < maxSize; i++) {
-              elementData[i] = oldElementData[i-1];
-          }
+        if (index <= size) {
+            Object[] oldElementsData = new Object[size];
+            System.arraycopy(elementData, 0, oldElementsData, 0, size);
+            elementData = new Object[size + 1];
+            System.arraycopy(oldElementsData, 0, elementData, 0, index);
+            elementData[index] = value;
+            System.arraycopy(oldElementsData, index, elementData, index, size - index);
+        } else {
+            throw new ArrayListIndexOutOfBoundsException("ArrayList out of bound execption");
         }
     }
 
@@ -69,7 +68,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-
+        return null;
     }
 
     @Override
@@ -84,8 +83,9 @@ public class ArrayList<T> implements List<T> {
 
     private void fastRemove(Object[] es, int i) {
         final int newSize;
-        if ((newSize = size - 1) > i)
+        if ((newSize = size - 1) > i) {
             System.arraycopy(es, i + 1, es, i, newSize - i);
+        }
         es[size = newSize] = null;
     }
 }
