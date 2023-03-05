@@ -24,13 +24,13 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    public void checkIndex(int index) {
+    private void checkIndex(int index) {
         if (index >= size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Index out of ArrayList bound!");
         }
     }
 
-    public boolean isEquals(Object first, Object second) {
+    private boolean isEquals(Object first, Object second) {
         return first == second || first != null && first.equals(second);
     }
 
