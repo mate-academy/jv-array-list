@@ -2,8 +2,6 @@ package core.basesyntax;
 
 import java.util.NoSuchElementException;
 
-import javax.security.auth.callback.ChoiceCallback;
-
 @SuppressWarnings("unchecked")
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
@@ -35,7 +33,6 @@ public class ArrayList<T> implements List<T> {
     public boolean isEquals(Object first, Object second) {
         return first == second || first != null && first.equals(second);
     }
-
 
     @Override
     public void add(T value) {
