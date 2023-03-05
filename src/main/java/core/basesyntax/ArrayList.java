@@ -55,7 +55,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-       while (size + list.size() > capacity) {
+        while (size + list.size() > capacity) {
             resizeIfNeeded();
         }
         for (int i = 0; i < list.size(); i++) {
