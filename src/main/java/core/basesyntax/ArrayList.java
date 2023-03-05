@@ -26,7 +26,7 @@ public class ArrayList<T> implements List<T> {
 
     public void checkIndex(int index) {
         if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Out of index ArrayList bound.");
+            throw new ArrayListIndexOutOfBoundsException("Index out of ArrayList bound!");
         }
     }
 
@@ -37,8 +37,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value) {
         resizeIfNeeded();
-        elementData[size] = value;
-        size++;
+        elementData[size++] = value;
     }
 
     @Override
@@ -49,21 +48,18 @@ public class ArrayList<T> implements List<T> {
         }
         checkIndex(index);
         resizeIfNeeded();
-        System.arraycopy(elementData, index,
-                elementData, index + 1,
-                 size - index);
+        System.arraycopy(elementData, index, elementData, index + 1, size - index);
         elementData[index] = value;
         size++;
-    }
+    }  
 
     @Override
     public void addAll(List<T> list) {
-        while (size + list.size() > capacity) {
+       while (size + list.size() > capacity) {
             resizeIfNeeded();
         }
         for (int i = 0; i < list.size(); i++) {
-            elementData[size] = list.get(i);
-            size++;
+            elementData[size++] = list.get(i);
         }
     }
 
@@ -82,12 +78,10 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
-        T removeValue = elementData[index];
-        System.arraycopy(elementData, index + 1,
-                 elementData, index,
-                 size - index - 1);
+        T removedValue = elementData[index];
+        System.arraycopy(elementData, index + 1, elementData, index, size - index - 1);
         size--;
-        return removeValue;
+        return removedValue;
     }
 
     @Override
@@ -97,7 +91,7 @@ public class ArrayList<T> implements List<T> {
                 return remove(i);
             }
         }
-        throw new NoSuchElementException("Such an element does not exist.");
+        throw new NoSuchElementException("Such an element does not exist!");
     }
 
     @Override
