@@ -52,6 +52,8 @@ public class ArrayList<T> implements List<T> {
         System.arraycopy(elementData, index,
                 elementData, index + 1,
                  size - index);
+        elementData[index] = value;
+        size++;
     }
 
     @Override
