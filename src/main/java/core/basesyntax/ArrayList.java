@@ -5,12 +5,12 @@ import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    private static final double GROW_ARRAY = 1.5;
-    private Object[] elements;
+    private static final double GROW_COEFFICIENT = 1.5;
+    private T[] elements;
     private int size;
 
     public ArrayList() {
-        this.elements = new Object[DEFAULT_CAPACITY];
+        this.elements = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
     @Override
@@ -43,8 +43,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         checkIndex(index);
-        Objects.checkIndex(index, size);
-        return (T) elements[index];
+        return elements[index];
     }
 
     @Override
@@ -57,7 +56,6 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
-        Objects.checkIndex(index, size);
         T removedElement = (T) elements[index];
         System.arraycopy(elements, index + 1, elements, index, size - index - 1);
         size--;
@@ -67,7 +65,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if ((element == null && elements[i] == null)
+            if ((element == elements[i])
                     || element != null && element.equals(elements[i])) {
                 return remove(i);
             }
@@ -87,9 +85,9 @@ public class ArrayList<T> implements List<T> {
 
     private void changeSize() {
         if (elements.length == size) {
-            Object[] newArray = new Object[(int) (elements.length * GROW_ARRAY)];
+            T[] newArray = (T[]) new Object[(int) (elements.length * GROW_COEFFICIENT)];
             System.arraycopy(elements, 0, newArray, 0, size);
-            elements = newArray;
+            elements = (T[]) newArray;
         }
     }
 
