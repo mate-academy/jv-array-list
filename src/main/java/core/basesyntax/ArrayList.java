@@ -28,22 +28,34 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if ((index < 0) || index >= size) {
+        if ((index < 0) || index > size) {
             throw new ArrayListIndexOutOfBoundsException("Out of bound exception");
         }
         if (index <= size) {
-            Object[] oldElementsData = new Object[maxSize];
-            System.arraycopy(elementData, 0, oldElementsData, 0, size);
-            elementData = new Object[size + 1];
-            System.arraycopy(oldElementsData, 0, elementData, 0, index);
-            elementData[index] = value;
-            System.arraycopy(oldElementsData, index, elementData, index, size - index - 1);
+            if (size != 0) {
+                if (this.size == maxSize) {
+                    maxSize = maxSize + maxSize / 2;
+                }
+                Object[] oldElementsData = new Object[maxSize];
+                System.arraycopy(elementData, 0, oldElementsData, 0, size);
+                elementData = new Object[size + 1];
+                System.arraycopy(oldElementsData, 0, elementData, 0, index);
+                elementData[index] = value;
+                System.arraycopy(oldElementsData, index, elementData, index + 1, size - index);
+                size++;
+            } else {
+                this.add(value);
+            }
         }
     }
 
     @Override
     public void addAll(List<T> list) {
-
+        if (!list.isEmpty()) {
+            for (int i = 0; i < list.size(); i++) {
+                this.add(list.get(i));
+            }
+        }
     }
 
     @Override
@@ -83,13 +95,16 @@ public class ArrayList<T> implements List<T> {
         final Object[] es = elementData;
         T oldValue = (T) new ArrayList<T>();
         for (int i = 0; i < size; i++) {
-            if (elementData[i].equals(element)) {
+            if ((element == null && elementData[i] == null)
+                    || (elementData[i] != null && elementData[i].equals(element))) {
                 Objects.checkIndex(i, size);
                 oldValue = (T) es[i];
                 fastRemove(es, i);
                 exception = true;
+                break;
             }
         }
+
         if (exception == false) {
             throw new NoSuchElementException("No such element");
         }
