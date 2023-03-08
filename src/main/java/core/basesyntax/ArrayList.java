@@ -10,11 +10,6 @@ public class ArrayList<T> implements List<T> {
     private T[] elementData;
     private int size;
 
-    public ArrayList() {
-        capacity = DEFAULT_CAPACITY;
-        elementData = (T[]) new Object[capacity];
-    }
-
     private void resizeIfNeeded() {
         if (size == capacity) {
             capacity *= DEFAULT_MULTIPLIER;
@@ -34,6 +29,11 @@ public class ArrayList<T> implements List<T> {
         return first == second || first != null && first.equals(second);
     }
 
+    public ArrayList() {
+        capacity = DEFAULT_CAPACITY;
+        elementData = (T[]) new Object[capacity];
+    }
+
     @Override
     public void add(T value) {
         resizeIfNeeded();
@@ -51,13 +51,10 @@ public class ArrayList<T> implements List<T> {
         System.arraycopy(elementData, index, elementData, index + 1, size - index);
         elementData[index] = value;
         size++;
-    }  
+    }
 
     @Override
     public void addAll(List<T> list) {
-        while (size + list.size() > capacity) {
-            resizeIfNeeded();
-        }
         for (int i = 0; i < list.size(); i++) {
             elementData[size++] = list.get(i);
         }
