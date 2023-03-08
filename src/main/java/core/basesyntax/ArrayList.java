@@ -1,90 +1,84 @@
 package core.basesyntax;
 
-import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    private int currentCapacity = DEFAULT_CAPACITY;
-    private T[] elements = (T[]) new Object[DEFAULT_CAPACITY];
-    private int currentSize;
+    private int size;
+    private T[] elements;
+
+    public ArrayList() {
+        this.elements = (T[]) new Object[DEFAULT_CAPACITY];
+    }
 
     @Override
     public void add(T value) {
-        if (currentSize >= currentCapacity) {
-            increaseCapacity();
+        if (elements.length == size) {
+            grow();
         }
-        elements[currentSize] = value;
-        currentSize++;
+        elements[size] = value;
+        size++;
     }
 
     @Override
     public void add(T value, int index) {
-        if (index > currentSize || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Can't add element to index " + index);
-        }
-        if (currentSize == currentCapacity) {
-            increaseCapacity();
+        validateIndex(index, ValidatableAction.ADD);
+
+        if (elements.length == size) {
+            grow();
         }
 
-        // first, I move the existing elements by one position starting from new index
-        for (int i = currentSize; i > index; i--) {
-            elements[i] = elements[i - 1];
-        }
-        // then I change the value
+        System.arraycopy(elements, index, elements, index + 1, elements.length - index - 1);
         elements[index] = value;
-        currentSize++;
+        size++;
     }
 
     @Override
     public void addAll(List<T> list) {
-        while (currentCapacity < currentSize + list.size()) {
-            increaseCapacity();
+        while (elements.length < size + list.size()) {
+            grow();
         }
         for (int i = 0; i < list.size(); i++) {
-            elements[i + currentSize] = list.get(i);
+            add(list.get(i));
         }
-        currentSize += list.size();
     }
 
     @Override
     public T get(int index) {
-        if (index >= currentSize || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Can't get element at index " + index);
-        }
+        validateIndex(index, ValidatableAction.GET);
+
         return elements[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index > currentSize - 1 || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Can't set element at index " + index);
-        }
+        validateIndex(index, ValidatableAction.SET);
         elements[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index > currentSize - 1 || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Can't remove element at index " + index);
-        }
-        T[] updatedElements = (T[]) new Object[currentCapacity];
-        for (int i = 0, j = 0; i < currentSize; i++) {
-            if (i != index) {
-                updatedElements[j] = elements[i];
-                j++;
-            }
-        }
+        validateIndex(index, ValidatableAction.REMOVE);
         T element = elements[index];
-        elements = updatedElements;
-        currentSize--;
+        System.arraycopy(elements, index + 1, elements, index, elements.length - index - 1);
+        size--;
 
         return element;
     }
 
     @Override
     public T remove(T element) {
-        int index = findIndex(element);
+        int index = -1;
+
+        for (int i = 0; i < size; i++) {
+            boolean areValuesEqual = element == elements[i]
+                    || element != null && element.equals(elements[i]);
+
+            if (areValuesEqual) {
+                index = i;
+                break;
+            }
+        }
 
         if (index >= 0) {
             return remove(index);
@@ -95,35 +89,44 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public int size() {
-        return currentSize;
+        return size;
     }
 
     @Override
     public boolean isEmpty() {
-        return currentSize == 0;
+        return size == 0;
     }
 
-    private void increaseCapacity() {
-        int newCapacity = currentCapacity + currentCapacity / 2;
-        currentCapacity = newCapacity;
-        elements = Arrays.copyOf(elements, newCapacity);
+    private void grow() {
+        int newCapacity = elements.length + elements.length / 2;
+        T[] newElementsArray = (T[]) new Object[newCapacity];
+        System.arraycopy(elements, 0, newElementsArray, 0, elements.length);
+        elements = newElementsArray;
     }
 
-    private int findIndex(T value) {
-        for (int i = 0; i < currentSize; i++) {
-            if (compareObjects(elements[i], value)) {
-                return i;
-            }
+    private void validateIndex(int index, ValidatableAction action) {
+        boolean uniqueCondition;
+
+        switch (action) {
+            case ADD:
+                uniqueCondition = index > size;
+                break;
+            case GET:
+                uniqueCondition = index >= size;
+                break;
+            case SET:
+            case REMOVE:
+                uniqueCondition = index > size - 1;
+                break;
+            default:
+                uniqueCondition = false;
         }
 
-        return -1;
-    }
-
-    private boolean compareObjects(T obj1, T obj2) {
-        if (obj1 == null || obj2 == null) {
-            return obj1 == null && obj2 == null;
+        if (uniqueCondition || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException(
+                    "Index \"" + index
+                    + "\" is out of bounds for action " + action
+            );
         }
-
-        return obj1.equals(obj2);
     }
 }
