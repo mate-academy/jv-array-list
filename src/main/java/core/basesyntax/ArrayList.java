@@ -10,6 +10,11 @@ public class ArrayList<T> implements List<T> {
     private T[] elementData;
     private int size;
 
+    public ArrayList() {
+        capacity = DEFAULT_CAPACITY;
+        elementData = (T[]) new Object[capacity];
+    }
+
     private void resizeIfNeeded() {
         if (size == capacity) {
             capacity *= DEFAULT_MULTIPLIER;
@@ -27,11 +32,6 @@ public class ArrayList<T> implements List<T> {
 
     private boolean isEquals(Object first, Object second) {
         return first == second || first != null && first.equals(second);
-    }
-
-    public ArrayList() {
-        capacity = DEFAULT_CAPACITY;
-        elementData = (T[]) new Object[capacity];
     }
 
     @Override
