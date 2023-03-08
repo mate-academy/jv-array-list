@@ -21,7 +21,7 @@ public class ArrayList<T> implements List<T> {
         if (size >= elements.length) {
             elements = getExpanded();
         }
-        if (checkIndex(index)) {
+        if (index > size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("You can't add an element at that index");
         } else if (index == size) {
             elements[index] = value;
@@ -40,7 +40,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (checkIndex(index)) {
+        if (index >= size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("There is no element with such index");
         } else {
             return elements[index];
@@ -116,9 +116,5 @@ public class ArrayList<T> implements List<T> {
             }
         }
         throw new NoSuchElementException("you tried to remove a non-existent element");
-    }
-
-    private boolean checkIndex(int index) {
-        return index >= size || index < 0;
     }
 }
