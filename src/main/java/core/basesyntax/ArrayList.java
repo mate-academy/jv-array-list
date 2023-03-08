@@ -5,14 +5,11 @@ import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_SIZE = 10;
-    private T[] array;
+    private T[] elements;
     private int size;
-    private int maxSize;
 
     public ArrayList() {
-        size = 0;
-        maxSize = DEFAULT_SIZE;
-        array = (T[]) (new Object[maxSize]);
+        elements = (T[]) (new Object[DEFAULT_SIZE]);
     }
 
     public void add(T value) {
@@ -21,15 +18,15 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (size >= maxSize) {
-            array = getExpanded();
+        if (size >= elements.length) {
+            elements = getExpanded();
         }
         if (index > size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("You can't add an element at that index");
         } else if (index == size) {
-            array[index] = value;
+            elements[index] = value;
         } else {
-            array = insertAndCopy(value, index);
+            elements = insertElement(value, index);
         }
         size++;
     }
@@ -37,7 +34,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void addAll(List<T> list) {
         for (int i = 0; i < list.size(); i++) {
-            this.add(list.get(i));
+            add(list.get(i));
         }
     }
 
@@ -46,29 +43,22 @@ public class ArrayList<T> implements List<T> {
         if (index >= size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("There is no element with such index");
         } else {
-            return array[index];
+            return elements[index];
         }
     }
 
     @Override
     public void set(T value, int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("There is no element with such index");
-        } else {
-            array[index] = value;
+        if (get(index) != null) {
+            elements[index] = value;
         }
     }
 
     @Override
     public T remove(int index) {
-        T oldValue = null;
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("There is no element with such index");
-        } else {
-            oldValue = get(index);
-            array = removeAndCopy(index);
-            size--;
-        }
+        T oldValue = get(index);
+        elements = removeAndCopy(index);
+        size--;
         return oldValue;
     }
 
@@ -88,33 +78,32 @@ public class ArrayList<T> implements List<T> {
     }
 
     private T[] getExpanded() {
-        maxSize *= 2;
-        T[] expandedArray = (T[]) (new Object[maxSize]);
-        System.arraycopy(array, 0, expandedArray, 0, array.length);
+        T[] expandedArray = (T[]) (new Object[elements.length * 2]);
+        System.arraycopy(elements, 0, expandedArray, 0, elements.length);
         return expandedArray;
     }
 
-    private T[] insertAndCopy(T value, int index) {
-        T[] copyWithInsertion = (T[]) (new Object[maxSize]);
+    private T[] insertElement(T value, int index) {
+        T[] copyWithInsertion = (T[]) (new Object[elements.length + 1]);
         for (int i = 0; i <= size; i++) {
             if (i == index) {
                 copyWithInsertion[i] = value;
             } else if (i > index) {
-                copyWithInsertion[i] = array[i - 1];
+                copyWithInsertion[i] = elements[i - 1];
             } else {
-                copyWithInsertion[i] = array[i];
+                copyWithInsertion[i] = elements[i];
             }
         }
         return copyWithInsertion;
     }
 
     private T[] removeAndCopy(int index) {
-        T[] copyWithRemoval = (T[]) (new Object[maxSize]);
+        T[] copyWithRemoval = (T[]) (new Object[elements.length]);
         for (int i = 0; i < size; i++) {
             if (i > index) {
-                copyWithRemoval[i - 1] = array[i];
+                copyWithRemoval[i - 1] = elements[i];
             } else if (i < index) {
-                copyWithRemoval[i] = array[i];
+                copyWithRemoval[i] = elements[i];
             }
         }
         return copyWithRemoval;
@@ -122,7 +111,7 @@ public class ArrayList<T> implements List<T> {
 
     private T removeAndCopy(T value) {
         for (int i = 0; i < size; i++) {
-            if (Objects.equals(value, array[i])) {
+            if (Objects.equals(value, elements[i])) {
                 return remove(i);
             }
         }
