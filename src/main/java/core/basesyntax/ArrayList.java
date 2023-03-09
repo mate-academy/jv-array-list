@@ -22,7 +22,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        validateIndex(index, ValidatableAction.ADD);
+        checkIfCanAddByIndex(index);
 
         if (elements.length == size) {
             grow();
@@ -35,9 +35,6 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        while (elements.length < size + list.size()) {
-            grow();
-        }
         for (int i = 0; i < list.size(); i++) {
             add(list.get(i));
         }
@@ -45,20 +42,20 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        validateIndex(index, ValidatableAction.GET);
+        checkIfIndexExists(index);
 
         return elements[index];
     }
 
     @Override
     public void set(T value, int index) {
-        validateIndex(index, ValidatableAction.SET);
+        checkIfIndexExists(index);
         elements[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        validateIndex(index, ValidatableAction.REMOVE);
+        checkIfIndexExists(index);
         T element = elements[index];
         System.arraycopy(elements, index + 1, elements, index, elements.length - index - 1);
         size--;
@@ -68,20 +65,13 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        int index = -1;
-
         for (int i = 0; i < size; i++) {
             boolean areValuesEqual = element == elements[i]
                     || element != null && element.equals(elements[i]);
 
             if (areValuesEqual) {
-                index = i;
-                break;
+                return remove(i);
             }
-        }
-
-        if (index >= 0) {
-            return remove(index);
         }
 
         throw new NoSuchElementException("Can't remove " + element + " from the list");
@@ -104,28 +94,20 @@ public class ArrayList<T> implements List<T> {
         elements = newElementsArray;
     }
 
-    private void validateIndex(int index, ValidatableAction action) {
-        boolean uniqueCondition;
-
-        switch (action) {
-            case ADD:
-                uniqueCondition = index > size;
-                break;
-            case GET:
-                uniqueCondition = index >= size;
-                break;
-            case SET:
-            case REMOVE:
-                uniqueCondition = index > size - 1;
-                break;
-            default:
-                uniqueCondition = false;
+    private void checkIfCanAddByIndex(int index) {
+        if (index > size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException(
+                    "Failed to add - index \"" + index
+                    + "\" is out of bounds"
+            );
         }
+    }
 
-        if (uniqueCondition || index < 0) {
+    private void checkIfIndexExists(int index) {
+        if (index >= size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException(
                     "Index \"" + index
-                    + "\" is out of bounds for action " + action
+                    + "\" is out of bounds"
             );
         }
     }
