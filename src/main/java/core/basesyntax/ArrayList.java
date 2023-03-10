@@ -5,65 +5,53 @@ import java.util.NoSuchElementException;
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private static final double STEP_UPHILL = 1.5d;
-    private static final int BASE_INDEX_FROM = 0;
-    private static final Object[] EMPTY_ARRAY = new Object[0];
     private Object[] dataCollection;
     private int size;
 
     public ArrayList() {
-        this.dataCollection = EMPTY_ARRAY;
+        dataCollection = new Object[DEFAULT_CAPACITY];
     }
 
     public ArrayList(int number) {
         if (number > 0) {
-            this.dataCollection = new Object[number];
+            dataCollection = new Object[number];
         } else {
-            if (number != 0) {
-                throw new IllegalArgumentException("Illegal argument: " + number);
-            } else {
-                this.dataCollection = EMPTY_ARRAY;
-            }
+            throw new IllegalArgumentException("Illegal argument: " + number);
         }
     }
 
     @Override
     public void add(T value) {
-        if (this.size == this.dataCollection.length) {
-            this.dataCollection = grow(this.size + 1);
+        if (size == dataCollection.length) {
+            dataCollection = grow(size + 1);
         }
-        this.dataCollection[this.size] = value;
-        this.size++;
+        dataCollection[size] = value;
+        size = size + 1;
     }
 
     @Override
     public void add(T value, int index) {
-        if (index > this.size || index < 0) {
-            sendException(index);
+        if (index == size) {
+            add(value);
         } else {
-            if (index == this.size) {
-                add(value);
-            } else {
-                int afterIndex = this.size - index;
-                Object[] afterArray;
-                afterArray = copyOf(this.dataCollection, afterIndex, index);
-                this.dataCollection = grow(this.size + 1);
-                this.dataCollection[index] = value;
-                for (Object o : afterArray) {
-                    index++;
-                    this.dataCollection[index] = o;
-                }
-                this.size++;
+            sendException(index);
+            if (size == dataCollection.length) {
+                dataCollection = grow(size + 1);
             }
+
+            System.arraycopy(dataCollection, index, dataCollection, index + 1, size - index);
+            dataCollection[index] = value;
+            size++;
         }
     }
 
     @Override
     public void addAll(List<T> list) {
-        int newCapacity = list.size() + this.size;
-        int index = this.size;
-        this.dataCollection = grow(newCapacity);
+        int newCapacity = list.size() + size;
+        int index = size;
+        dataCollection = grow(newCapacity);
         for (int i = 0; i < list.size(); i++) {
-            this.dataCollection[index] = list.get(i);
+            dataCollection[index] = list.get(i);
             index++;
         }
         this.size = newCapacity;
@@ -71,39 +59,33 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index < 0 || index > this.size - 1) {
-            sendException(index);
-        }
-        return (T) this.dataCollection[index];
+        sendException(index);
+        return (T) dataCollection[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index < 0 || index > this.size - 1) {
-            sendException(index);
-        } else {
-            this.dataCollection[index] = value;
-        }
+        sendException(index);
+        dataCollection[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index < 0 || index > this.size - 1) {
-            sendException(index);
-        }
-        T data = (T) this.dataCollection[index];
-        removeExtraIndex(this.dataCollection, index);
-        this.size--;
+        sendException(index);
+        T data = (T) dataCollection[index];
+        removeExtraIndex(dataCollection, index);
+        size--;
         return data;
     }
 
     @Override
     public T remove(T element) {
-        for (int i = 0; i < this.size; i++) {
-            if ((element == null && this.dataCollection[i] == null)
-                    || (this.dataCollection[i] != null && this.dataCollection[i].equals(element))) {
-                removeExtraIndex(this.dataCollection, i);
-                this.size--;
+        for (int i = 0; i < size; i++) {
+            Object object = dataCollection[i];
+            if ((element == null && object == null)
+                    || (object != null && object.equals(element))) {
+                removeExtraIndex(dataCollection, i);
+                size--;
                 return element;
             }
         }
@@ -112,23 +94,24 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public int size() {
-        return this.size;
+        return size;
     }
 
     @Override
     public boolean isEmpty() {
-        return this.size == 0;
+        return size == 0;
     }
 
     private Object[] grow(int needSize) {
-        int oldSize = this.dataCollection.length;
+        int oldSize = dataCollection.length;
         if (oldSize == 0) {
             return new Object[Math.max(DEFAULT_CAPACITY, needSize)];
         } else {
             int newCapacity = needSize <= oldSize
                     ? oldSize : growOnSomeSteps(oldSize, needSize);
-            return this.dataCollection
-                    = copyOf(this.dataCollection, newCapacity, BASE_INDEX_FROM);
+            Object[] renewed = new Object[newCapacity];
+            System.arraycopy(dataCollection, 0, renewed, 0, size);
+            return renewed;
         }
     }
 
@@ -140,25 +123,18 @@ public class ArrayList<T> implements List<T> {
         return newCapacity;
     }
 
-    private Object[] copyOf(Object[] old, int renewedSize, int from) {
-        Object[] renewed = new Object[renewedSize];
-        int indexRenewed = 0;
-        for (int i = from; i < this.size; i++) {
-            renewed[indexRenewed] = old[i];
-            indexRenewed++;
-        }
-        return renewed;
-    }
-
     private void removeExtraIndex(Object[] array, int index) {
-        for (int i = index + 1; i < this.size; i++) {
+        for (int i = index + 1; i < size; i++) {
             array[index] = array[i];
             index++;
         }
-        array[this.size - 1] = null;
+        array[size - 1] = null;
     }
 
     private void sendException(int index) {
-        throw new ArrayListIndexOutOfBoundsException("Index out of array bounds: " + index);
+        if (index < 0 || index > size - 1) {
+            throw new ArrayListIndexOutOfBoundsException("Index out of array bounds: " + index);
+        }
+
     }
 }
