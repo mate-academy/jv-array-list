@@ -5,19 +5,11 @@ import java.util.NoSuchElementException;
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private static final double STEP_UPHILL = 1.5d;
-    private Object[] dataCollection;
+    private T[] dataCollection;
     private int size;
 
     public ArrayList() {
-        dataCollection = new Object[DEFAULT_CAPACITY];
-    }
-
-    public ArrayList(int number) {
-        if (number > 0) {
-            dataCollection = new Object[number];
-        } else {
-            throw new IllegalArgumentException("Illegal argument: " + number);
-        }
+        dataCollection = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
     @Override
@@ -26,7 +18,7 @@ public class ArrayList<T> implements List<T> {
             dataCollection = grow(size + 1);
         }
         dataCollection[size] = value;
-        size = size + 1;
+        size++;
     }
 
     @Override
@@ -34,7 +26,7 @@ public class ArrayList<T> implements List<T> {
         if (index == size) {
             add(value);
         } else {
-            sendException(index);
+            checkIndex(index);
             if (size == dataCollection.length) {
                 dataCollection = grow(size + 1);
             }
@@ -59,20 +51,20 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        sendException(index);
-        return (T) dataCollection[index];
+        checkIndex(index);
+        return dataCollection[index];
     }
 
     @Override
     public void set(T value, int index) {
-        sendException(index);
+        checkIndex(index);
         dataCollection[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        sendException(index);
-        T data = (T) dataCollection[index];
+        checkIndex(index);
+        T data = dataCollection[index];
         removeExtraIndex(dataCollection, index);
         size--;
         return data;
@@ -102,22 +94,22 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private Object[] grow(int needSize) {
+    private T[] grow(int needSize) {
         int newCapacity = dataCollection.length;
         if (newCapacity == 0) {
-            return new Object[Math.max(DEFAULT_CAPACITY, needSize)];
+            return (T[]) new Object[Math.max(DEFAULT_CAPACITY, needSize)];
         }
 
         do {
             newCapacity = (int) (newCapacity * STEP_UPHILL);
         } while (newCapacity < needSize);
 
-        Object[] renewed = new Object[newCapacity];
+        T[] renewed = (T[]) new Object[newCapacity];
         System.arraycopy(dataCollection, 0, renewed, 0, size);
         return renewed;
     }
 
-    private void removeExtraIndex(Object[] array, int index) {
+    private void removeExtraIndex(T[] array, int index) {
         for (int i = index + 1; i < size; i++) {
             array[index] = array[i];
             index++;
@@ -125,7 +117,7 @@ public class ArrayList<T> implements List<T> {
         array[size - 1] = null;
     }
 
-    private void sendException(int index) {
+    private void checkIndex(int index) {
         if (index < 0 || index > size - 1) {
             throw new ArrayListIndexOutOfBoundsException("Index out of array bounds: " + index);
         }
