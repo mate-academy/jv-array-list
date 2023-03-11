@@ -78,7 +78,9 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void insertElement(T value, int index) {
-        System.arraycopy(elements, index, elements, index + 1, size - index);
+        if (index != size) {
+            System.arraycopy(elements, index, elements, index + 1, size - index);
+        }
         elements[index] = value;
     }
 
