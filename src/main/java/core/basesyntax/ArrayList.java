@@ -103,23 +103,18 @@ public class ArrayList<T> implements List<T> {
     }
 
     private Object[] grow(int needSize) {
-        int oldSize = dataCollection.length;
-        if (oldSize == 0) {
+        int newCapacity = dataCollection.length;
+        if (newCapacity == 0) {
             return new Object[Math.max(DEFAULT_CAPACITY, needSize)];
-        } else {
-            int newCapacity = needSize <= oldSize
-                    ? oldSize : growOnSomeSteps(oldSize, needSize);
-            Object[] renewed = new Object[newCapacity];
-            System.arraycopy(dataCollection, 0, renewed, 0, size);
-            return renewed;
         }
-    }
 
-    private int growOnSomeSteps(int capacity, int needCapacity) {
         do {
-            capacity = (int) (capacity * STEP_UPHILL);
-        } while (capacity < needCapacity);
-        return capacity;
+            newCapacity = (int) (newCapacity * STEP_UPHILL);
+        } while (newCapacity < needSize);
+
+        Object[] renewed = new Object[newCapacity];
+        System.arraycopy(dataCollection, 0, renewed, 0, size);
+        return renewed;
     }
 
     private void removeExtraIndex(Object[] array, int index) {
