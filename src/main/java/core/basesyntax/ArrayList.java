@@ -115,12 +115,11 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private int growOnSomeSteps(int oldCapacity, int needCapacity) {
-        int newCapacity = (int) (oldCapacity * STEP_UPHILL);
-        while (newCapacity < needCapacity) {
-            newCapacity = (int) (newCapacity * STEP_UPHILL);
-        }
-        return newCapacity;
+    private int growOnSomeSteps(int capacity, int needCapacity) {
+        do {
+            capacity = (int) (capacity * STEP_UPHILL);
+        } while (capacity < needCapacity);
+        return capacity;
     }
 
     private void removeExtraIndex(Object[] array, int index) {
