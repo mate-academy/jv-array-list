@@ -4,17 +4,21 @@ import java.util.NoSuchElementException;
 
 @SuppressWarnings("unchecked")
 public class ArrayList<T> implements List<T> {
+    // Constants for setting the size and increasing the size of the list by default.
     private static final int DEFAULT_CAPACITY = 10;
     private static final double DEFAULT_MULTIPLIER = 1.5;
-    private int capacity;
-    private T[] elementData;
-    private int size;
+    // Class fields
+    private int capacity; // current list capacity
+    private T[] elementData; // array of list elements
+    private int size; // current list size
 
+    // Class constructor that sets the default list capacity.
     public ArrayList() {
         capacity = DEFAULT_CAPACITY;
         elementData = (T[]) new Object[capacity];
     }
 
+    // Method for increasing the capacity of the list when full.
     private void resizeIfNeeded() {
         if (size == capacity) {
             capacity *= DEFAULT_MULTIPLIER;
@@ -24,22 +28,38 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
+    // Method to check if two objects are equal.
+    private boolean isEquals(Object first, Object second) {
+        return first == second || first != null && first.equals(second);
+    }
+
+    // Method for checking if the index is within the allowed bounds of the list.
     private void checkIndex(int index) {
         if (index >= size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Index out of ArrayList bound!");
         }
     }
 
-    private boolean isEquals(Object first, Object second) {
-        return first == second || first != null && first.equals(second);
+    @Override
+    public boolean isEmpty() {
+        // Return true if the array is empty (size == 0), false otherwise
+        return size == 0;
     }
 
+    @Override
+    public int size() {
+        // Return the current size of the array
+        return size;
+    }
+
+    // Adding an element to the end of the list.
     @Override
     public void add(T value) {
         resizeIfNeeded();
         elementData[size++] = value;
     }
 
+    // Adding an element to the specified position in the list.
     @Override
     public void add(T value, int index) {
         if (index == size) {
@@ -53,6 +73,7 @@ public class ArrayList<T> implements List<T> {
         size++;
     }
 
+    // Adding all elements from the passed list to the current list.
     @Override
     public void addAll(List<T> list) {
         for (int i = 0; i < list.size(); i++) {
@@ -60,27 +81,21 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
+    // Get the list element by index.
     @Override
     public T get(int index) {
         checkIndex(index);
         return elementData[index];
     }
 
+    // Replacing the list element by index with the passed element.
     @Override
     public void set(T value, int index) {
         checkIndex(index);
         elementData[index] = value;
     }
 
-    @Override
-    public T remove(int index) {
-        checkIndex(index);
-        T removedValue = elementData[index];
-        System.arraycopy(elementData, index + 1, elementData, index, size - index - 1);
-        size--;
-        return removedValue;
-    }
-
+    // Removes the first occurrence of the specified element from this list.
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
@@ -91,13 +106,13 @@ public class ArrayList<T> implements List<T> {
         throw new NoSuchElementException("Such an element does not exist!");
     }
 
+    // Removing the list element by index and returning the removed element.
     @Override
-    public int size() {
-        return size;
-    }
-
-    @Override
-    public boolean isEmpty() {
-        return size == 0;
+    public T remove(int index) {
+        checkIndex(index);
+        T removedValue = elementData[index];
+        System.arraycopy(elementData, index + 1, elementData, index, size - index - 1);
+        size--;
+        return removedValue;
     }
 }
