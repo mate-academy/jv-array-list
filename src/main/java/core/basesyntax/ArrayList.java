@@ -43,14 +43,6 @@ public class ArrayList<T> implements List<T> {
         return elements[index];
     }
 
-    //public T get(int index) {
-    //    if (index >= size || index < 0) {
-    //      throw new ArrayListIndexOutOfBoundsException("There is no element with such index");
-    //    } else {
-    //        return elements[index];
-    //    }
-    //}
-
     @Override
     public void set(T value, int index) {
         if (get(index) != null) {
