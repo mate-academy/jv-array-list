@@ -3,7 +3,7 @@ package core.basesyntax;
 public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value) {
-
+        int var = 1;
     }
 
     @Override
