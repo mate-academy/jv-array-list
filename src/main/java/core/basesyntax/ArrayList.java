@@ -25,7 +25,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     @Override
-    public void add(T value, int index) {
+    public void add(T value, int index) throws ArrayListIndexOutOfBoundsException {
         if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException("This index " + index + " is not exist!");
         }
@@ -49,26 +49,20 @@ public class ArrayList<T> implements List<T> {
     }
 
     @Override
-    public T get(int index) throws ArrayListIndexOutOfBoundsException {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("This index " + index + " is not exist!");
-        }
+    public T get(int index) {
+        checkIndex(index);
         return (T) array[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("This index " + index + " is not exist!");
-        }
+        checkIndex(index);
         array[index] = value;
     }
 
     @Override
-    public T remove(int index) throws ArrayListIndexOutOfBoundsException {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("This index " + index + " is not exist!");
-        }
+    public T remove(int index) {
+        checkIndex(index);
         T removedElement = array[index];
         System.arraycopy(array, index + 1, array, index, --size - index);
         return removedElement;
@@ -99,6 +93,12 @@ public class ArrayList<T> implements List<T> {
         T[] growArray = (T[]) new Object[newCapacity];
         System.arraycopy(array, 0, growArray, 0, size);
         array = growArray;
+    }
+
+    private void checkIndex(int index) throws ArrayListIndexOutOfBoundsException {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("This index " + index + " is not exist!");
+        }
     }
 }
 
