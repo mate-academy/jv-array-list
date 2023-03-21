@@ -12,11 +12,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     public ArrayList(int size) {
-        if (size <= DEFAULT_ARRAY_SIZE) {
-            array = (T[]) new Object[DEFAULT_ARRAY_SIZE];
-        } else {
-            array = (T[]) new Object[size];
-        }
+        array = (T[]) new Object[size];
     }
 
     @Override
@@ -31,7 +27,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("");
+            throw new ArrayListIndexOutOfBoundsException("Wrong index");
         }
         while (index > size && index > array.length || size + 1 > array.length) {
             grow();
@@ -57,25 +53,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("");
-        }
+        checkIndex(index);
         return array[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index < 0 || index + 1 > size) {
-            throw new ArrayListIndexOutOfBoundsException("");
-        }
+        checkIndex(index);
         array[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index < 0 || index > size - 1) {
-            throw new ArrayListIndexOutOfBoundsException("");
-        }
+        checkIndex(index);
         T temp = null;
         if (index < size()) {
             temp = array[index];
@@ -93,7 +83,7 @@ public class ArrayList<T> implements List<T> {
                 return this.remove(i);
             }
         }
-        throw new NoSuchElementException();
+        throw new NoSuchElementException("Wrong index");
     }
 
     @Override
@@ -123,6 +113,12 @@ public class ArrayList<T> implements List<T> {
             array[i] = list.get(i);
         }
         return array;
+    }
+
+    private void checkIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Wrong index");
+        }
     }
 }
 
