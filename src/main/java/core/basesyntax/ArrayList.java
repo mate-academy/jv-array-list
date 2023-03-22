@@ -13,7 +13,7 @@ public class ArrayList<T> implements List<T> {
 
     public ArrayList() {
         elements = (T[]) new Object[INITIAL_SIZE];
-//        size = 0;
+        size = 0;
     }
 
     public int getSize() {
