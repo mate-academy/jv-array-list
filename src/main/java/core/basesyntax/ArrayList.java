@@ -5,13 +5,13 @@ import java.util.NoSuchElementException;
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_SIZE = 10;
     private T[] defaultArray;
-    private int size = 0;
+    private int size;
 
     public ArrayList() {
         this.defaultArray = (T[]) new Object[DEFAULT_SIZE];
     }
 
-    private void foundSize() {
+    private void grow() {
         if (size == defaultArray.length) {
             T[] destinationArray = (T[]) new Object[(int) (defaultArray.length * 1.5)];
             System.arraycopy(defaultArray, 0, destinationArray, 0, defaultArray.length);
@@ -27,7 +27,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        foundSize();
+        grow();
         defaultArray[size] = value;
         size++;
     }
@@ -35,29 +35,21 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         if (index == size) {
-            foundSize();
-            defaultArray[index] = value;
-            size++;
+            add(value);
             return;
         }
-        if (index >= 0 && index < size) {
-            foundSize();
-            System.arraycopy(defaultArray, index, defaultArray, index + 1, size - index);
-            defaultArray[index] = value;
-            size++;
-            return;
-        }
-        throw new ArrayListIndexOutOfBoundsException("Incorrect index " + index);
+        checkIndex(index);
+        grow();
+        System.arraycopy(defaultArray, index, defaultArray, index + 1, size - index);
+        defaultArray[index] = value;
+        size++;
     }
 
     @Override
     public void addAll(List<T> list) {
-        foundSize();
-        int newSize = 0;
-        while (newSize < list.size()) {
-            defaultArray[size] = list.get(newSize);
-            size++;
-            newSize++;
+        grow();
+        for (int i = 0; i < list.size(); i++) {
+            add(list.get(i));
         }
     }
 
