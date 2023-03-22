@@ -15,7 +15,6 @@ public class ArrayList<T> implements List<T> {
         size = 0;
     }
 
-
     @Override
     public void add(T value) {
         resizeIfNeed();
