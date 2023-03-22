@@ -7,11 +7,15 @@ public class ArrayList<T> implements List<T> {
     static final int INITIAL_SIZE = 10;
     static final double k = 1.5;
     private T[] elements;
-    static int size;
+    private int size;
 
     public ArrayList() {
         elements = (T[]) new Object[INITIAL_SIZE];
         size = 0;
+    }
+
+    public int getSize() {
+        return size;
     }
 
     @Override
