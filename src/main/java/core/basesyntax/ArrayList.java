@@ -41,9 +41,9 @@ public class ArrayList<T> implements List<T> {
                     + "> out of ArrayList current size bounds <" + this.size + ">");
         }
 
-         if (elements.length == this.size) {
-           resizeIdNeeded();
-         }
+        if (elements.length == this.size) {
+            resizeIdNeeded();
+        }
 
         for (int i = this.size - 1; i >= index; i--) {
             elements[i + 1] = elements[i];
