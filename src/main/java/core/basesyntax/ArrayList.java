@@ -2,16 +2,18 @@ package core.basesyntax;
 
 import java.util.Arrays;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 
+@SuppressWarnings("unchecked")
 public class ArrayList<T> implements List<T> {
     static final int INITIAL_SIZE = 10;
-    static final double k = 1.5;
+    static final double growIndex = 1.5;
     private T[] elements;
     private int size;
 
     public ArrayList() {
         elements = (T[]) new Object[INITIAL_SIZE];
-        size = 0;
+//        size = 0;
     }
 
     public int getSize() {
@@ -45,7 +47,10 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        isInArray(index);
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Index " + index
+                    + " is invalid for size " + size);
+        }
         return elements[index];
     }
 
@@ -67,11 +72,11 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if (elements[i] == element || elements[i].equals(element)) {
+            if (Objects.equals(elements[i], element)) {
                 return remove(i);
             }
         }
-        throw new NoSuchElementException("There is no element " + element);
+        throw new NoSuchElementException("There is no element" + element);
     }
 
     @Override
@@ -96,7 +101,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void resize() {
-        int newSize = (int) (size * k);
+        int newSize = (int) (size * growIndex);
         T[] elements2 = (T[]) new Object[newSize];
         System.arraycopy(elements, 0, elements2, 0, elements.length);
         elements = elements2;
@@ -104,7 +109,8 @@ public class ArrayList<T> implements List<T> {
 
     private void isInArray(int index) {
         if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
+            throw new ArrayListIndexOutOfBoundsException("Index " + index
+                    + " is invalid for this " + size + " size");
         }
     }
 }
