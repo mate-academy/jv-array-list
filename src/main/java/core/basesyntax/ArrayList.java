@@ -4,23 +4,20 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int START_CAPACITY = 10;
-    private static final int START_ARR_LENGTH_VALUE = 0;
-    private static final int FIRST_ARR_ELEMENT = 0;
+    private static final float INCREASE_RATE = 1.5f;
     private Object[] arrayList;
-    private int arrLength;
+    private int size;
 
     public ArrayList() {
         arrayList = new Object[START_CAPACITY];
-        arrLength = START_ARR_LENGTH_VALUE;
+        size = 0;
     }
 
     private void grow() {
-        Object[] grownArray = new Object[arrayList.length];
-        System.arraycopy(arrayList, FIRST_ARR_ELEMENT, grownArray,
-                FIRST_ARR_ELEMENT, arrayList.length);
-        arrayList = new Object[grownArray.length + grownArray.length / 2];
-        System.arraycopy(grownArray, FIRST_ARR_ELEMENT, arrayList,
-                FIRST_ARR_ELEMENT, grownArray.length);
+        Object[] grownArray = new Object[(int)(arrayList.length * INCREASE_RATE)];
+        System.arraycopy(arrayList, 0, grownArray,
+                0, arrayList.length);
+        arrayList = grownArray;
     }
 
     private void expandArray(int size) {
@@ -29,30 +26,28 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private void exceptionThrow(int index) {
-        if (index < 0 || index >= arrLength) {
+    private void checkIndex(int index) {
+        if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException("The index exceeded the array!");
         }
     }
 
     @Override
     public void add(T value) {
-        expandArray(arrLength);
-        arrayList[arrLength] = value;
-        arrLength++;
+        expandArray(size);
+        arrayList[size] = value;
+        size++;
     }
 
     @Override
     public void add(T value, int index) {
-        if (index < FIRST_ARR_ELEMENT || index > arrLength) {
+        if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException("The index exceeded the array!");
         }
-        expandArray(arrLength);
-        for (int i = arrLength + 1; i > index; i--) {
-            arrayList[i] = arrayList[i - 1];
-        }
+        expandArray(size);
+        System.arraycopy(arrayList, index, arrayList, index + 1, size - index);
         arrayList[index] = value;
-        arrLength++;
+        size++;
     }
 
     @Override
@@ -64,33 +59,31 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        exceptionThrow(index);
+        checkIndex(index);
         return (T) arrayList[index];
     }
 
     @Override
     public void set(T value, int index) {
-        exceptionThrow(index);
+        checkIndex(index);
         arrayList[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index < FIRST_ARR_ELEMENT || index >= arrLength) {
+        if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException("The index exceeded the array!");
         }
         final T removedValue = (T) arrayList[index];
-        for (int i = index; i < arrLength - 1; i++) {
-            arrayList[i] = arrayList[i + 1];
-        }
-        arrayList[arrLength - 1] = null;
-        arrLength--;
+        System.arraycopy(arrayList, index + 1, arrayList, index, size - index);
+        arrayList[size - 1] = null;
+        size--;
         return removedValue;
     }
 
     @Override
     public T remove(T element) {
-        for (int i = 0; i < arrLength; i++) {
+        for (int i = 0; i < size; i++) {
             if (element == null && arrayList[i] == null
                     || element != null && element.equals(arrayList[i])) {
                 return remove(i);
@@ -101,11 +94,11 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public int size() {
-        return arrLength;
+        return size;
     }
 
     @Override
     public boolean isEmpty() {
-        return arrLength == 0 ? true : false;
+        return size == 0 ? true : false;
     }
 }
