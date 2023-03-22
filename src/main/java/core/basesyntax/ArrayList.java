@@ -9,20 +9,8 @@ public class ArrayList<T> implements List<T> {
     private int size;
 
     public ArrayList() {
-        this(DEFAULT_CAPACITY);
-    }
-
-    public ArrayList(int initialCapacity) {
-        if (initialCapacity < 0)
-            throw new IllegalArgumentException("Illegal Capacity: " + initialCapacity);
-        elements = (T[]) new Object[initialCapacity];
-    }
-
-    @Override
-    public void add(T value) {
-        resizeIdNeeded();
-        elements[size] = value;
-        size++;
+        this.elements = new Object[DEFAULT_CAPACITY];
+        this.size = 0;
     }
 
     private void resizeIdNeeded() {
@@ -33,59 +21,72 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
+    private void checkIndex(int index) {
+        if (index < 0 || index >= this.size) {
+            throw new ArrayListIndexOutOfBoundsException("index <" + index
+                    + "> out of ArrayList current size bounds <" + this.size + ">");
+        }
+    }
+
+    @Override
+    public void add(T value) {
+        resizeIdNeeded();
+        elements[size] = value;
+        size++;
+    }
+
     @Override
     public void add(T value, int index) {
-        if (index < 0 || index > size) {
+        if (index < 0 || index > this.size) {
             throw new ArrayListIndexOutOfBoundsException("index <" + index
-                    + "> out of ArrayList current size bounds <" + size + ">");
+                    + "> out of ArrayList current size bounds <" + this.size + ">");
         }
-        if (elements.length == size) {
+        if (elements.length == this.size) {
            resizeIdNeeded();
         }
-        for (int i = size - 1; i >= index; i--) {
+        for (int i = this.size - 1; i >= index; i--) {
             elements[i + 1] = elements[i];
         }
-        elements[index] = value;
-        size++;
+        this.elements[index] = value;
+        this.size++;
     }
 
     @Override
     public void addAll(List<T> list) {
         for (int i = 0; i < list.size(); i++) {
-            add(list.get(i));
+            this.add(list.get(i));
         }
     }
 
     @Override
     public T get(int index) {
-        Objects.checkIndex(index, size);
+        checkIndex(index);
         return (T) elements[index];
     }
 
     @Override
     public void set(T value, int index) {
-        Objects.checkIndex(index, size);
+        checkIndex(index);
         elements[index] = value;
 
     }
 
     @Override
     public T remove(int index) {
-        Objects.checkIndex(index, size + 1);
+        checkIndex(index);
         T removedElement = (T) elements[index];
-        System.arraycopy(elements, index + 1, elements, index, size - 1 - index);
+        System.arraycopy(this.elements, index + 1, this.elements, index, this.size - 1 - index);
         size--;
         return removedElement;
-
     }
 
     @Override
     public T remove(T element) {
         for (int i = 0; i < this.size; i++) {
-            T currentElement = (T) elements[i];
+            T currentElement = (T) this.elements[i];
             if (currentElement == element || currentElement != null
                     && currentElement.equals(element)) {
-                remove(i);
+                this.remove(i);
                 return currentElement;
             }
         }
