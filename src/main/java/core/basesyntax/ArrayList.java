@@ -9,7 +9,6 @@ public class ArrayList<T> implements List<T> {
     private T[] elements;
     static int size;
 
-
     public ArrayList() {
         elements = (T[]) new Object[INITIAL_SIZE];
         size = 0;
