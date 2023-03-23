@@ -12,18 +12,10 @@ public class ArrayList<T> implements List<T> {
         this.size = 0;
     }
 
-    private void resizeIdNeeded() {
-        if (elements.length == size) {
-            Object[] newArray = new Object[elements.length + (elements.length / 2)];
-            System.arraycopy(elements, 0, newArray, 0, size);
-            elements = newArray;
-        }
-    }
-
     private void checkIndex(int index) {
-        if (index < 0 || index >= this.size) {
+        if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException("index <" + index
-                    + "> out of ArrayList current size bounds <" + this.size + ">");
+                    + "> out of ArrayList current size bounds <" + size + ">");
         }
     }
 
@@ -36,26 +28,26 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index < 0 || index > this.size) {
+        if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException("index <" + index
-                    + "> out of ArrayList current size bounds <" + this.size + ">");
+                    + "> out of ArrayList current size bounds <" + size + ">");
         }
 
-        if (elements.length == this.size) {
+        if (elements.length == size) {
             resizeIdNeeded();
         }
 
-        for (int i = this.size - 1; i >= index; i--) {
+        for (int i = size - 1; i >= index; i--) {
             elements[i + 1] = elements[i];
         }
-        this.elements[index] = value;
-        this.size++;
+        elements[index] = value;
+        size++;
     }
 
     @Override
     public void addAll(List<T> list) {
         for (int i = 0; i < list.size(); i++) {
-            this.add(list.get(i));
+            add(list.get(i));
         }
     }
 
@@ -76,7 +68,7 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         checkIndex(index);
         T removedElement = (T) elements[index];
-        System.arraycopy(this.elements, index + 1, this.elements, index, this.size - 1 - index);
+        System.arraycopy(elements, index + 1, elements, index, size - 1 - index);
         size--;
         return removedElement;
     }
@@ -87,7 +79,7 @@ public class ArrayList<T> implements List<T> {
             T currentElement = (T) this.elements[i];
             if (currentElement == element || currentElement != null
                     && currentElement.equals(element)) {
-                this.remove(i);
+                remove(i);
                 return currentElement;
             }
         }
@@ -105,4 +97,11 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
+    private void resizeIdNeeded() {
+        if (elements.length == size) {
+            Object[] newArray = new Object[elements.length + (elements.length / 2)];
+            System.arraycopy(elements, 0, newArray, 0, size);
+            elements = newArray;
+        }
+    }
 }
