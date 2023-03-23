@@ -11,13 +11,6 @@ public class ArrayList<T> implements List<T> {
         this.arrayOfElements = new Object[DEFAULT_CAPACITY];
     }
 
-    private void checkIndex(int index) {
-        if (index < 0 || index > size - 1) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index
-                    + ". Size: " + size);
-        }
-    }
-
     @Override
     public void add(T value) {
         arrayOfElements = growIfArrayFull();
@@ -94,5 +87,12 @@ public class ArrayList<T> implements List<T> {
             System.arraycopy(arrayOfElements, 0, grownArray, 0, size);
         }
         return grownArray;
+    }
+
+    private void checkIndex(int index) {
+        if (index < 0 || index > size - 1) {
+            throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index
+                    + ". Size: " + size);
+        }
     }
 }
