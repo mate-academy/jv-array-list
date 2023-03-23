@@ -2,22 +2,16 @@ package core.basesyntax;
 
 import java.util.Arrays;
 import java.util.NoSuchElementException;
-import java.util.Objects;
 
 @SuppressWarnings("unchecked")
 public class ArrayList<T> implements List<T> {
     static final int INITIAL_SIZE = 10;
-    static final double growIndex = 1.5;
+    static final double GROW_INDEX = 1.5;
     private T[] elements;
-    private int size;
+    private int size = 0;
 
     public ArrayList() {
         elements = (T[]) new Object[INITIAL_SIZE];
-        size = 0;
-    }
-
-    public int getSize() {
-        return size;
     }
 
     @Override
@@ -47,10 +41,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index " + index
-                    + " is invalid for size " + size);
-        }
+        isInArray(index);
         return elements[index];
     }
 
@@ -72,7 +63,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if (Objects.equals(elements[i], element)) {
+            if (element.equals(elements[i])) {
                 return remove(i);
             }
         }
@@ -101,10 +92,10 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void resize() {
-        int newSize = (int) (size * growIndex);
-        T[] elements2 = (T[]) new Object[newSize];
-        System.arraycopy(elements, 0, elements2, 0, elements.length);
-        elements = elements2;
+        int newSize = (int) (size * GROW_INDEX);
+        T[] tempElements = (T[]) new Object[newSize];
+        System.arraycopy(elements, 0, tempElements, 0, elements.length);
+        elements = tempElements;
     }
 
     private void isInArray(int index) {
