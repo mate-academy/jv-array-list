@@ -21,7 +21,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void expandArray(int size) {
-        if (size + 1 >= arrayList.length) {
+        if (size >= arrayList.length) {
             grow();
         }
     }
@@ -75,7 +75,7 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayListIndexOutOfBoundsException("The index exceeded the array!");
         }
         final T removedValue = (T) arrayList[index];
-        System.arraycopy(arrayList, index + 1, arrayList, index, size - index);
+        System.arraycopy(arrayList, index + 1, arrayList, index, size - index - 1);
         arrayList[size - 1] = null;
         size--;
         return removedValue;
@@ -99,6 +99,6 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public boolean isEmpty() {
-        return size == 0 ? true : false;
+        return size == 0;
     }
 }
