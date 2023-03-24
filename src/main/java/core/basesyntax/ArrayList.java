@@ -3,7 +3,9 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
+
     private static final int DEFAULT_SIZE = 10;
+    private static final float FACTOR_ARRAY = 1.5f;
     private T[] array;
     private int size;
 
@@ -15,7 +17,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value) {
         if (size == array.length) {
-            newArray();
+            increaseArray();
         }
         array[size] = value;
         size++;
@@ -23,11 +25,9 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("Index is out of Array");
-        }
+        checkIndexOutOfBoundsAdd(index);
         if (size == array.length) {
-            newArray();
+            increaseArray();
         }
         for (int i = size; i > index; i--) {
             array[i] = array[i - 1];
@@ -45,25 +45,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index is out of Array");
-        }
+        checkIndexOutOfBounds(index);
         return array[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index is out of Array");
-        }
+        checkIndexOutOfBounds(index);
         array[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index is out of Array");
-        }
+        checkIndexOutOfBounds(index);
         T removed = array[index];
         for (int i = index; i < size() - 1; i++) {
             array[i] = array[i + 1];
@@ -94,11 +88,21 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void newArray() {
-        T[] newArray = (T[]) new Object[(int) (array.length * 1.5)];
-        for (int i = 0; i < array.length; i++) {
-            newArray[i] = array[i];
-        }
+    private void increaseArray() {
+        T[] newArray = (T[]) new Object[(int) (array.length * FACTOR_ARRAY)];
+        System.arraycopy(array, 0, newArray, 0, array.length);
         array = newArray;
+    }
+
+    private void checkIndexOutOfBoundsAdd(int index) {
+        if (index < 0 || index > size) {
+            throw new ArrayListIndexOutOfBoundsException("Index is out of Array");
+        }
+    }
+
+    private void checkIndexOutOfBounds(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Index is out of Array");
+        }
     }
 }
