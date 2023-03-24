@@ -7,8 +7,9 @@ public class ArrayList<T> implements List<T> {
 
     private static final double CAPACITY_MULTIPLIER = 1.5;
 
-    T[] values = (T[]) new Object[MINIMUM_LENGTH_ARRAY];
+    private T[] values = (T[]) new Object[MINIMUM_LENGTH_ARRAY];
     private int size = 0;
+
     @Override
     public void add(T value) {
         if (size() == values.length) {
@@ -16,7 +17,6 @@ public class ArrayList<T> implements List<T> {
         }
         values[size] = value;
         size++;
-        return;
     }
 
     @Override
@@ -34,7 +34,7 @@ public class ArrayList<T> implements List<T> {
         size++;
     }
 
-    public void checkNullAndSize (int index) {
+    public void checkNullAndSize(int index) {
         if (index < 0 || index >= size()) {
             throw new ArrayListIndexOutOfBoundsException("Index "
                     + index + "is not valid for size " + size + ".");
@@ -43,11 +43,11 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-       int sizeAddAll = size + list.size();
-      for (int i = size; i < sizeAddAll; i++) {
-          values[i] = list.get(i - list.size() - 1);
-          add(values[i]);
-      }
+        int sizeAddAll = size + list.size();
+        for (int i = size; i < sizeAddAll; i++) {
+            values[i] = list.get(i - list.size() - 1);
+            add(values[i]);
+        }
     }
 
     @Override
@@ -66,33 +66,14 @@ public class ArrayList<T> implements List<T> {
     }
 
     @Override
-    public T remove(int index) throws ArrayListIndexOutOfBoundsException {
+    public T remove(int index) {
         checkNullAndSize(index);
         T valuesIndex = values[index];
-        if (index == size - 1) {
-        } else {
+        if (index != size - 1) {
             System.arraycopy(values, index + 1, values, index, size() - index);
         }
         size--;
         return valuesIndex;
-    }
-
-    public int searchIndex(T element) {
-        for (int i = 0; i < values.length; i++ ) {
-            if (element == values[i] || element != null && element.equals(values[i])) {
-                return i;
-            }
-        }
-    return -1;
-    }
-
-    public int searchIndex(int index) {
-        for (int i = 0; i < size; i++ ) {
-            if (i == index) {
-                return i;
-            }
-        }
-        return -1;
     }
 
     @Override
@@ -114,13 +95,30 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         if (size == 0) {
-          return true;
+            return true;
         }
         return false;
     }
 
-    private void grow()
-    {
+    public int searchIndex(T element) {
+        for (int i = 0; i < values.length; i++) {
+            if (element == values[i] || element != null && element.equals(values[i])) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    public int searchIndex(int index) {
+        for (int i = 0; i < size; i++) {
+            if (i == index) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    private void grow() {
         T[] newValues = (T[]) new Object[(int) (values.length * CAPACITY_MULTIPLIER)];
         System.arraycopy(values, 0, newValues, 0, values.length);
         values = newValues;
