@@ -8,15 +8,8 @@ public class ArrayList<T> implements List<T> {
     private int size;
 
     public ArrayList() {
-        this.elements = new Object[DEFAULT_CAPACITY];
-        this.size = 0;
-    }
-
-    private void checkIndex(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("index <" + index
-                    + "> out of ArrayList current size bounds <" + size + ">");
-        }
+        elements = new Object[DEFAULT_CAPACITY];
+        size = 0;
     }
 
     @Override
@@ -37,9 +30,7 @@ public class ArrayList<T> implements List<T> {
             resizeIdNeeded();
         }
 
-        for (int i = size - 1; i >= index; i--) {
-            elements[i + 1] = elements[i];
-        }
+        System.arraycopy(elements, index, elements, index + 1, size - index);
         elements[index] = value;
         size++;
     }
@@ -84,7 +75,7 @@ public class ArrayList<T> implements List<T> {
             }
         }
         throw new NoSuchElementException("Cannot find element <"
-                + (element == null ? "null" : element.toString()) + ">");
+                + (element.toString()) + ">");
     }
 
     @Override
@@ -102,6 +93,13 @@ public class ArrayList<T> implements List<T> {
             Object[] newArray = new Object[elements.length + (elements.length / 2)];
             System.arraycopy(elements, 0, newArray, 0, size);
             elements = newArray;
+        }
+    }
+
+    private void checkIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("index <" + index
+                    + "> out of ArrayList current size bounds <" + size + ">");
         }
     }
 }
