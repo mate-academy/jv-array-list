@@ -1,6 +1,7 @@
 package core.basesyntax;
 
 import java.util.NoSuchElementException;
+import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
     public static final int DEFAULT_SIZE = 10;
@@ -27,7 +28,7 @@ public class ArrayList<T> implements List<T> {
         }
         checkIndex(index);
         growIfArrayFull();
-        System.arraycopy(elementData,index,elementData,index + 1,size - index);
+        System.arraycopy(elementData, index, elementData, index + 1, size - index);
         elementData[index] = value;
         size++;
     }
@@ -55,7 +56,7 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         checkIndex(index);
         T deletedElement = elementData[index];
-        System.arraycopy(elementData,index + 1,elementData,index,size - index - 1);
+        System.arraycopy(elementData, index + 1, elementData, index, size - index - 1);
         size--;
         return deletedElement;
     }
@@ -63,8 +64,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if (elementData[i] == null && element == null
-                    || elementData[i] != null && elementData[i].equals(element)) {
+            if (Objects.equals(element, elementData[i])) {
                 return remove(i);
             }
         }
@@ -85,7 +85,7 @@ public class ArrayList<T> implements List<T> {
         if (size == elementData.length) {
             int newObjectsSize = (int) (size * GROW_RATE);
             T[] newSize = (T[]) new Object[newObjectsSize];
-            System.arraycopy(this.elementData,0, newSize, 0,size);
+            System.arraycopy(this.elementData, 0, newSize, 0, size);
             this.elementData = newSize;
         }
     }
