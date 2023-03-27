@@ -3,9 +3,8 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-
     private static final int DEFAULT_SIZE = 10;
-    private static final float FACTOR_ARRAY = 1.5f;
+    private static final float GROW_FACTOR = 1.5f;
     private T[] array;
     private int size;
 
@@ -18,8 +17,7 @@ public class ArrayList<T> implements List<T> {
         if (size == array.length) {
             increaseArray();
         }
-        array[size] = value;
-        size++;
+        array[size++] = value;
     }
 
     @Override
@@ -64,13 +62,13 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if (element == null && array[i] == null) {
-                return remove(i);
-            } else if (element != null && element.equals(array[i])) {
+            if ((element == null && array[i] == null)
+                    || (element != null && element.equals(array[i]))) {
                 return remove(i);
             }
         }
-        throw new NoSuchElementException("This element does not exist");
+        throw new NoSuchElementException("Removed element: "
+                + element + " does not exist");
     }
 
     @Override
@@ -84,20 +82,22 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void increaseArray() {
-        T[] newArray = (T[]) new Object[(int) (array.length * FACTOR_ARRAY)];
+        T[] newArray = (T[]) new Object[(int) (array.length * GROW_FACTOR)];
         System.arraycopy(array, 0, newArray, 0, array.length);
         array = newArray;
     }
 
     private void checkIndexOutOfBoundsAdd(int index) {
         if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("Index is out of Array");
+            throw new ArrayListIndexOutOfBoundsException("Index is out of Array.  Size: " + size
+                    + "; Index: " + index + ";");
         }
     }
 
     private void checkIndexOutOfBounds(int index) {
         if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index is out of Array");
+            throw new ArrayListIndexOutOfBoundsException("Index is out of Array.  Size: " + size
+                    + "; Index: " + index + ";");
         }
     }
 }
