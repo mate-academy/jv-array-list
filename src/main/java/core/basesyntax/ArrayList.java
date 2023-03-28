@@ -1,118 +1,106 @@
 package core.basesyntax;
 
+import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-
-    private Object[] elements;
+    private static final int INITIAL_CAPACITY = 10;
+    private T[] elements;
     private int size;
 
     public ArrayList() {
-        this.size = 0;
-        this.elements = new Object[size];
-    }
-
-    public ArrayList(Object[] elements, int size) {
-        this.size = size;
-        this.elements = elements;
+        elements = (T[]) new Object[INITIAL_CAPACITY];
+        size = 0;
     }
 
     @Override
     public void add(T value) {
-        add(value, size);
+        ensureCapacity();
+        elements[size] = value;
+        size++;
     }
 
     @Override
     public void add(T value, int index) {
-        if (index > size() || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Wrong index");
-        } else if (index < size()) {
-            size++;
-            Object[] newElements = new Object[size()];
-            for (int i = size() - 1; i > index; i--) {
-                newElements[i] = elements[i - 1];
-            }
-            newElements[index] = value;
-            for (int j = index - 1; j >= 0; j--) {
-                newElements[j] = elements[j];
-            }
-            elements = newElements;
-        } else if (index == size()) {
-            size++;
-            Object[] newElements = new Object[size()];
-            for (int i = 0; i < size() - 1; i++) {
-                newElements[i] = elements[i];
-            }
-            newElements[index] = value;
-            elements = newElements;
+        if (index < 0 || index > size) {
+            throw new ArrayListIndexOutOfBoundsException("Wrong index!");
         }
+        if (index == size) {
+            add(value);
+            return;
+        }
+        ensureCapacity();
+        System.arraycopy(elements, index, elements, index + 1, size - index);
+        elements[index] = value;
+        size++;
     }
 
     @Override
     public void addAll(List<T> list) {
-        Object[] newElements = new Object[size() + list.size()];
-
-        for (int i = 0; i < size(); i++) {
-            newElements[i] = elements[i];
+        for (int i = 0; i < list.size(); i++) {
+            add(list.get(i));
         }
-        for (int j = 0; j < list.size(); j++) {
-            newElements[size() + j] = list.get(j);
-        }
-        size = newElements.length;
-        elements = newElements;
     }
 
     @Override
     public T get(int index) {
-        if (index < 0 || index >= size()) {
-            throw new ArrayListIndexOutOfBoundsException("Wrong index");
-        } else {
-            return (T)elements[index];
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Wrong index!");
         }
+        return elements[index];
     }
 
     @Override
-    public void set(T value, int index) throws ArrayListIndexOutOfBoundsException {
-        if (index < 0 || index >= size()) {
-            throw new ArrayListIndexOutOfBoundsException("Wrong index");
-        } else {
-            elements[index] = value;
+    public void set(T value, int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Wrong index!");
         }
+        elements[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index < 0 || index >= size()) {
-            throw new ArrayListIndexOutOfBoundsException("Wrong index");
-        } else {
-            T removedElement = (T)elements[index];
-            for (int i = index; i < size() - 1; i++) {
-                elements[i] = elements[i + 1];
-            }
-            size--;
-            return removedElement;
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Wrong index!");
         }
+        T removedElement = elements[index];
+        System.arraycopy(elements, index + 1, elements, index, size - index - 1);
+        size--;
+        return removedElement;
     }
 
     @Override
     public T remove(T element) {
-        int j;
-        for (j = 0; j < size; j++) {
-            if (equals(elements[j], element)) {
-                return remove(j);
-            }
+        int index = indexOf(element);
+        if (index == -1) {
+            return null;
         }
-        throw new NoSuchElementException("no such element in array list");
+        return remove(index);
     }
 
     @Override
     public int size() {
-        return this.size;
+        return size;
     }
 
     @Override
     public boolean isEmpty() {
-        return size() == 0;
+        return size == 0;
+    }
+
+    private void ensureCapacity() {
+        if (size == elements.length) {
+            elements = Arrays.copyOf(elements, 2 * size);
+        }
+    }
+
+    private int indexOf(T element) {
+        for (int i = 0; i < size; i++) {
+            if (equals(elements[i], element)) {
+                return i;
+            }
+        }
+        throw new NoSuchElementException("Element not found in the list.");
     }
 
     public boolean equals(Object element1, Object element2) {
