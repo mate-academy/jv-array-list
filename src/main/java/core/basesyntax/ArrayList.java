@@ -25,7 +25,10 @@ public class ArrayList<T> implements List<T> {
             add(value);
             return;
         }
-        checkNullAndSize(index);
+        if (index < 0 || index >= size()) {
+            throw new ArrayListIndexOutOfBoundsException("Index "
+                    + index + "is not valid for size " + size + ".");
+        }
         if (size() == values.length) {
             grow();
         }
@@ -34,7 +37,7 @@ public class ArrayList<T> implements List<T> {
         size++;
     }
 
-    public void checkNullAndSize(int index) {
+    private void checkPositiveValueAndIndexInSize(int index) {
         if (index < 0 || index >= size()) {
             throw new ArrayListIndexOutOfBoundsException("Index "
                     + index + "is not valid for size " + size + ".");
@@ -43,31 +46,29 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        int sizeAddAll = size + list.size();
-        for (int i = size; i < sizeAddAll; i++) {
-            values[i] = list.get(i - list.size() - 1);
-            add(values[i]);
+        for (int i = 0; i < list.size(); i++) {
+            add(list.get(i));
         }
     }
 
     @Override
     public T get(int index) throws ArrayListIndexOutOfBoundsException {
-        checkNullAndSize(index);
+        checkPositiveValueAndIndexInSize(index);
         return values[index];
     }
 
     @Override
     public void set(T value, int index) {
-        index = searchIndex(index);
-        if (index == -1) {
-            throw new ArrayListIndexOutOfBoundsException("index out of bound");
+        if (index < 0 || index >= size()) {
+            throw new ArrayListIndexOutOfBoundsException("Index "
+                    + index + "is not valid for size " + size + ".");
         }
         values[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        checkNullAndSize(index);
+        checkPositiveValueAndIndexInSize(index);
         T valuesIndex = values[index];
         if (index != size - 1) {
             System.arraycopy(values, index + 1, values, index, size() - index);
@@ -83,7 +84,6 @@ public class ArrayList<T> implements List<T> {
             throw new NoSuchElementException("Index is out of bound array!");
         }
         remove(index);
-        //size--;
         return element;
     }
 
@@ -100,18 +100,9 @@ public class ArrayList<T> implements List<T> {
         return false;
     }
 
-    public int searchIndex(T element) {
+    private int searchIndex(T element) {
         for (int i = 0; i < values.length; i++) {
             if (element == values[i] || element != null && element.equals(values[i])) {
-                return i;
-            }
-        }
-        return -1;
-    }
-
-    public int searchIndex(int index) {
-        for (int i = 0; i < size; i++) {
-            if (i == index) {
                 return i;
             }
         }
