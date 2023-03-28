@@ -85,9 +85,8 @@ public class ArrayList<T> implements List<T> {
     private boolean isIndexInRange(int index) {
         if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException("Index out of range: " + index);
-        } else {
-            return true;
         }
+        return true;
     }
 
     private void resize() {
