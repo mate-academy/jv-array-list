@@ -3,11 +3,7 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    private static final int MINIMUM_LENGTH_ARRAY = 10;
-
-    private static final double CAPACITY_MULTIPLIER = 1.5;
-
-    private T[] values = (T[]) new Object[MINIMUM_LENGTH_ARRAY];
+    private T[] values = (T[]) new Object[10];
     private int size = 0;
 
     @Override
@@ -37,7 +33,7 @@ public class ArrayList<T> implements List<T> {
         size++;
     }
 
-    private void checkPositiveValueAndIndexInSize(int index) {
+    private void checkIndex(int index) {
         if (index < 0 || index >= size()) {
             throw new ArrayListIndexOutOfBoundsException("Index "
                     + index + "is not valid for size " + size + ".");
@@ -53,7 +49,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) throws ArrayListIndexOutOfBoundsException {
-        checkPositiveValueAndIndexInSize(index);
+        checkIndex(index);
         return values[index];
     }
 
@@ -68,7 +64,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(int index) {
-        checkPositiveValueAndIndexInSize(index);
+        checkIndex(index);
         T valuesIndex = values[index];
         if (index != size - 1) {
             System.arraycopy(values, index + 1, values, index, size() - index);
@@ -110,7 +106,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void grow() {
-        T[] newValues = (T[]) new Object[(int) (values.length * CAPACITY_MULTIPLIER)];
+        T[] newValues = (T[]) new Object[(int) (values.length * 1.5)];
         System.arraycopy(values, 0, newValues, 0, values.length);
         values = newValues;
     }
