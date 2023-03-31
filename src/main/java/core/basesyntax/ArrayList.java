@@ -80,19 +80,16 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private boolean isElementDataFull() {
+    private void isElementDataFull() {
         if (size == elementData.length) {
             increaseSize();
-            return true;
         }
-        return false;
     }
 
-    private boolean isIndexInRange(int index) {
+    private void isIndexInRange(int index) {
         if (index >= size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Index is out of bounds: " + index);
         }
-        return true;
     }
 
     private boolean isEqual(T firstElement, T secondElement) {
