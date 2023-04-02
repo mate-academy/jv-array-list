@@ -1,48 +1,99 @@
 package core.basesyntax;
 
+import java.util.Arrays;
+import java.util.NoSuchElementException;
+
 public class ArrayList<T> implements List<T> {
+    private static final String INDEX_IS_BELOW_ZERO = "Index - %d is below zero";
+    private static final String INDEX_IS_OUT_OF_BOUND =
+            "Index - %d is out of bound array with size - %d";
+    private static final int DEFAULT_CAPACITY = 10;
+    private static final double GROW_COEFFICIENT = 1.5;
+    private int size;
+    private T[] elements;
+
+    public ArrayList() {
+        elements = (T[]) new Object[DEFAULT_CAPACITY];
+    }
+
     @Override
     public void add(T value) {
-
+        growIfArrayIsFull();
+        elements[size] = value;
+        size++;
     }
 
     @Override
     public void add(T value, int index) {
-
+        if (index == size) {
+            add(value);
+            return;
+        }
+        checkIfIndexExist(index);
+        growIfArrayIsFull();
+        System.arraycopy(elements, index, elements, index + 1, size - index);
+        elements[index] = value;
+        size++;
     }
 
     @Override
     public void addAll(List<T> list) {
-
+        for (int i = 0; i < list.size(); i++) {
+            add(list.get(i));
+        }
     }
 
     @Override
     public T get(int index) {
-        return null;
+        checkIfIndexExist(index);
+        return elements[index];
     }
 
     @Override
     public void set(T value, int index) {
-
+        checkIfIndexExist(index);
+        elements[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        return null;
+        checkIfIndexExist(index);
+        final T removed = elements[index];
+        elements[index] = null;
+        System.arraycopy(elements, index + 1, elements, index, size - index - 1);
+        size--;
+        return removed;
     }
 
     @Override
     public T remove(T element) {
-        return null;
+        for (int i = 0; i < size; i++) {
+            if (elements[i] == element || elements[i] != null && elements[i].equals(element)) {
+                return remove(i);
+            }
+        }
+        throw new NoSuchElementException();
     }
 
     @Override
     public int size() {
-        return 0;
+        return size;
     }
 
     @Override
     public boolean isEmpty() {
-        return false;
+        return size == 0;
+    }
+
+    private void growIfArrayIsFull() {
+        if (elements.length == size) {
+            elements = Arrays.copyOf(elements, (int) (elements.length * GROW_COEFFICIENT));
+        }
+    }
+
+    private void checkIfIndexExist(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException(String.format(INDEX_IS_BELOW_ZERO, index));
+        }
     }
 }
