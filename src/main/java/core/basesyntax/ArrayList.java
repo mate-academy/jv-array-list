@@ -14,14 +14,16 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (size == array.length) {
-            growArray();
-        }
+        growArray();
         array[size++] = value;
     }
 
     @Override
     public void add(T value, int index) {
+        if (index == size) {
+            add(value);
+            size--;
+        }
         checkIndexOutOfBoundsAdd(index);
         if (size == array.length) {
             growArray();
@@ -82,9 +84,11 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void growArray() {
-        T[] newArray = (T[]) new Object[((int) (array.length * GROW_FACTOR))];
-        System.arraycopy(array,0,newArray,0,array.length);
-        array = newArray;
+        if (size == array.length) {
+            T[] newArray = (T[]) new Object[((int) (array.length * GROW_FACTOR))];
+            System.arraycopy(array, 0, newArray, 0, array.length);
+            array = newArray;
+        }
     }
 
     private void checkIndexOutOfBoundsAdd(int index) {
