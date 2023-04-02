@@ -11,6 +11,7 @@ public class ArrayList<T> implements List<T> {
     public ArrayList() {
         this.elementDate = new Object[DEFAULT_CAPACITY];
     }
+
     @Override
     public void add(T value) {
         checkForResize();
