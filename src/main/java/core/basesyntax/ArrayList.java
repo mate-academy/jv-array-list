@@ -1,6 +1,7 @@
 package core.basesyntax;
 
 import java.util.NoSuchElementException;
+import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
     private static final int SIZE_ARRAY = 10;
@@ -24,7 +25,7 @@ public class ArrayList<T> implements List<T> {
             add(value);
             return;
         }
-        checkIndexOutOfBoundsAdd(index);
+        checkIndexOutOfBounds(index);
         if (size == array.length) {
             growArray();
         }
@@ -64,8 +65,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if ((element == null && array[i] == null)
-                    || (element != null && element.equals(array[i]))) {
+            if (Objects.equals(element, array[i])) {
                 return remove(i);
             }
         }
@@ -91,15 +91,8 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private void checkIndexOutOfBoundsAdd(int index) {
-        if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("Index is out of Array. Side:" + size
-                    + " Index:" + index + ".");
-        }
-    }
-
     private void checkIndexOutOfBounds(int index) {
-        if (index < 0 || index >= size) {
+        if (index < 0 || index > size || index >= size) {
             throw new ArrayListIndexOutOfBoundsException("Index is out of Array. Side:" + size
                     + " Index:" + index + ".");
         }
