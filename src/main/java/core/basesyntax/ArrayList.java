@@ -22,7 +22,7 @@ public class ArrayList<T> implements List<T> {
     public void add(T value, int index) {
         if (index == size) {
             add(value);
-            size--;
+            return;
         }
         checkIndexOutOfBoundsAdd(index);
         if (size == array.length) {
