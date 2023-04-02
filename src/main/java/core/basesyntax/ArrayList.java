@@ -5,8 +5,7 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final String INDEX_IS_BELOW_ZERO = "Index - %d is below zero";
-    private static final String INDEX_IS_OUT_OF_BOUND =
-            "Index - %d is out of bound array with size - %d";
+    private static final String NO_SUCH_ELEMENT = "There is no such elements in ArrayList";
     private static final int DEFAULT_CAPACITY = 10;
     private static final double GROW_COEFFICIENT = 1.5;
     private int size;
@@ -72,7 +71,7 @@ public class ArrayList<T> implements List<T> {
                 return remove(i);
             }
         }
-        throw new NoSuchElementException();
+        throw new NoSuchElementException(NO_SUCH_ELEMENT);
     }
 
     @Override
