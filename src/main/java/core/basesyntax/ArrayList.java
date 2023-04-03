@@ -3,8 +3,8 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-
     private static final int DEFAULT_CAPACITY = 10;
+    private static final double GROW_FACTOR = 1.5;
     private T[] elementData;
     private int size;
 
@@ -15,19 +15,18 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value) {
         grow();
-        elementData[size] = value;
-        size++;
+        elementData[size++] = value;
     }
 
     @Override
     public void add(T value, int index) {
-        if (index > size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("index " + index
-                    + " out of list size " + size);
-        }
         if (index == size) {
             add(value);
             return;
+        }
+        if (index > size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("index " + index
+                    + " out of list size " + size);
         }
         grow();
         System.arraycopy(elementData, index, elementData, index + 1, size - index);
@@ -44,24 +43,24 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        checkElementIndex(index);
+        checkIndex(index);
         return elementData[index];
     }
 
     @Override
     public void set(T value, int index) {
-        checkElementIndex(index);
+        checkIndex(index);
         elementData[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        checkElementIndex(index);
-        T removeT = elementData[index];
+        checkIndex(index);
+        T removeElement = elementData[index];
         System.arraycopy(elementData, index + 1, elementData, index,
                 elementData.length - index - 1);
         size--;
-        return removeT;
+        return removeElement;
     }
 
     @Override
@@ -85,7 +84,7 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void checkElementIndex(int index) {
+    private void checkIndex(int index) {
         if (index >= size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("index " + index
                     + " out of list size " + size);
@@ -94,7 +93,7 @@ public class ArrayList<T> implements List<T> {
 
     private void grow() {
         if (size == elementData.length) {
-            T[] newElementData = (T[]) new Object[elementData.length + elementData.length / 2];
+            T[] newElementData = (T[]) new Object[(int) (elementData.length * GROW_FACTOR)];
             System.arraycopy(elementData, 0, newElementData, 0, elementData.length);
             elementData = newElementData;
         }
