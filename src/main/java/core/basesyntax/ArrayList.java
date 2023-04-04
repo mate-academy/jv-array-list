@@ -1,11 +1,10 @@
 package core.basesyntax;
 
-import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final String INDEX_IS_BELOW_ZERO = "Index - %d is below zero";
-    private static final String NO_SUCH_ELEMENT = "In ArrayListThere is no such element - %s";
+    private static final String NO_SUCH_ELEMENT = "In ArrayList there is no such element - %s";
     private static final int DEFAULT_CAPACITY = 10;
     private static final double GROW_COEFFICIENT = 1.5;
     private int size;
