@@ -5,7 +5,7 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final String INDEX_IS_BELOW_ZERO = "Index - %d is below zero";
-    private static final String NO_SUCH_ELEMENT = "There is no such elements in ArrayList";
+    private static final String NO_SUCH_ELEMENT = "In ArrayListThere is no such element - %s";
     private static final int DEFAULT_CAPACITY = 10;
     private static final double GROW_COEFFICIENT = 1.5;
     private int size;
@@ -18,8 +18,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value) {
         growIfArrayIsFull();
-        elements[size] = value;
-        size++;
+        elements[size++] = value;
     }
 
     @Override
@@ -71,7 +70,7 @@ public class ArrayList<T> implements List<T> {
                 return remove(i);
             }
         }
-        throw new NoSuchElementException(NO_SUCH_ELEMENT);
+        throw new NoSuchElementException(String.format(NO_SUCH_ELEMENT, element));
     }
 
     @Override
@@ -86,7 +85,9 @@ public class ArrayList<T> implements List<T> {
 
     private void growIfArrayIsFull() {
         if (elements.length == size) {
-            elements = Arrays.copyOf(elements, (int) (elements.length * GROW_COEFFICIENT));
+            T[] grownElements = (T[]) new Object[(int) (elements.length * GROW_COEFFICIENT)];
+            System.arraycopy(elements, 0, grownElements, 0, elements.length);
+            elements = grownElements;
         }
     }
 
