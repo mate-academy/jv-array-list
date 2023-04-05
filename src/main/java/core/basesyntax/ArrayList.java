@@ -1,6 +1,5 @@
 package core.basesyntax;
 
-import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
@@ -94,14 +93,6 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
-    }
-
-    @Override
-    public String toString() {
-        return "ArrayList{"
-                + "elementData="
-                + Arrays.toString(elementData)
-                + '}';
     }
 
     private void growIfArrayIsFull() {
