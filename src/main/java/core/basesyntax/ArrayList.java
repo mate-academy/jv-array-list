@@ -1,7 +1,6 @@
 package core.basesyntax;
 
 import java.util.NoSuchElementException;
-import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
@@ -9,14 +8,7 @@ public class ArrayList<T> implements List<T> {
     private int size;
 
     public ArrayList() {
-        this(DEFAULT_CAPACITY);
-    }
-
-    public ArrayList(int initCapacity) {
-        if (initCapacity <= 0) {
-            throw new IllegalArgumentException();
-        }
-        elements = (T[]) new Object[initCapacity];
+        elements = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
     @Override
@@ -66,8 +58,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if (elements[i] == element || elements[i] != null
-                && elements[i].equals(element)) {
+            if (element != null && element.equals(elements[i]) || elements[i] == element) {
                 return remove(i);
             }
         }
@@ -92,19 +83,17 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private boolean checkIndex(int index) throws ArrayListIndexOutOfBoundsException {
+    private void checkIndex(int index) throws ArrayListIndexOutOfBoundsException {
         if (index >= size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Input index: " + index + " out of bound: "
                     + size);
         }
-        return false;
     }
 
-    private boolean checkIndexForAdd(int index) throws ArrayListIndexOutOfBoundsException {
+    private void checkIndexForAdd(int index) throws ArrayListIndexOutOfBoundsException {
         if (index > size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Input index: " + index + " out of bound: "
                     + size);
         }
-        return false;
     }
 }
