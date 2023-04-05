@@ -18,7 +18,7 @@ public class ArrayList<T> implements List<T> {
         }
         elements = (T[]) new Object[initCapacity];
     }
-    
+
     @Override
     public void add(T value) {
         resizeIfNeeded();
@@ -30,7 +30,7 @@ public class ArrayList<T> implements List<T> {
     public void add(T value, int index) {
         checkIndexForAdd(index);
         resizeIfNeeded();
-        System.arraycopy(elements,index,elements,index + 1,size - index);
+        System.arraycopy(elements, index, elements,index + 1,size - index);
         elements[index] = value;
         size++;
     }
@@ -58,7 +58,7 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         checkIndex(index);
         T removedValue = elements[index];
-        System.arraycopy(elements,index + 1,elements,index,size - index - 1);
+        System.arraycopy(elements,index + 1, elements, index,size - index - 1);
         size--;
         return removedValue;
     }
@@ -66,7 +66,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if (Objects.equals(elements[i],element)) {
+            if (elements[i] == element || elements[i] != null
+                && elements[i].equals(element)) {
                 return remove(i);
             }
         }
@@ -86,7 +87,7 @@ public class ArrayList<T> implements List<T> {
     private void resizeIfNeeded() {
         if (elements.length == size) {
             T[] newArray = (T[]) new Object[(int) (elements.length * 1.5)];
-            System.arraycopy(elements,0,newArray,0,size);
+            System.arraycopy(elements,0, newArray,0, size);
             elements = newArray;
         }
     }
