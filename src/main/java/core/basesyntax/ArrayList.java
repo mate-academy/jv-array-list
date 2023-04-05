@@ -4,6 +4,7 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
+    private static final double GROW_FACTOR = 1.5;
     private Object[] elementData;
     private int size;
 
@@ -22,7 +23,10 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         growIfArrayIsFull();
-        checkIndexCorrectness(index);
+        if (index > size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException(
+                    "Index: " + index + " is out of bounds. Please enter correct index");
+        }
         System.arraycopy(elementData, index,
                 elementData, index + 1,
                 elementData.length - index - 1);
@@ -40,14 +44,14 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        checkIndexCorrectnessWithoutLastEmptyElement(index);
+        checkIndexCorrectness(index);
         return (T) elementData[index];
     }
 
     @Override
     public void set(T value, int index) {
         growIfArrayIsFull();
-        checkIndexCorrectnessWithoutLastEmptyElement(index);
+        checkIndexCorrectness(index);
         elementData[index] = value;
         if (index == size) {
             size++;
@@ -56,7 +60,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(int index) {
-        checkIndexCorrectnessWithoutLastEmptyElement(index);
+        checkIndexCorrectness(index);
         T removingElementData = (T) elementData[index];
         moveArray(index);
         size--;
@@ -97,20 +101,13 @@ public class ArrayList<T> implements List<T> {
 
     private void growIfArrayIsFull() {
         if (size == elementData.length) {
-            Object[] resizedArray = new Object[elementData.length + (elementData.length >> 1)];
+            Object[] resizedArray = new Object[(int) (elementData.length * GROW_FACTOR)];
             System.arraycopy(elementData, 0, resizedArray, 0, elementData.length);
             elementData = resizedArray;
         }
     }
 
     private void checkIndexCorrectness(int index) {
-        if (index > size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException(
-                    "Index: " + index + " is out of bounds. Please enter correct index");
-        }
-    }
-
-    private void checkIndexCorrectnessWithoutLastEmptyElement(int index) {
         if (index >= size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException(
                     "Index: " + index + " is out of bounds. Please enter correct index");
