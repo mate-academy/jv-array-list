@@ -1,6 +1,5 @@
 package core.basesyntax;
 
-import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
@@ -58,23 +57,13 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        if (element == null) {
-            for (int i = 0; i < size; i++) {
-                if (elements[i] == null) {
-                    T removedElement = elements[i];
-                    System.arraycopy(elements, i + 1, elements, i, size - i - 1);
-                    elements[--size] = null;
-                    return removedElement;
-                }
-            }
-        } else {
-            for (int i = 0; i < size; i++) {
-                if (element.equals(elements[i])) {
-                    T removedElement = elements[i];
-                    System.arraycopy(elements, i + 1, elements, i, size - i - 1);
-                    elements[--size] = null;
-                    return removedElement;
-                }
+        for (int i = 0; i < size; i++) {
+            if ((element == null && elements[i] == null)
+                    || (element != null && element.equals(elements[i]))) {
+                T removedElement = elements[i];
+                System.arraycopy(elements, i + 1, elements, i, size - i - 1);
+                elements[--size] = null;
+                return removedElement;
             }
         }
         throw new NoSuchElementException("Element not found: " + element);
@@ -90,21 +79,23 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void ensureCapacity(int minCapacity) {
-        if (minCapacity > elements.length) {
-            int newCapacity = (int) Math.max(elements.length * GROWTH_FACTOR, minCapacity);
-            elements = Arrays.copyOf(elements, newCapacity);
+    private void ensureCapacity(int size) {
+        if (size > elements.length) {
+            int newCapacity = (int) Math.max(elements.length * GROWTH_FACTOR, size);
+            T[] newElements = (T[]) new Object[newCapacity];
+            System.arraycopy(elements, 0, newElements, 0, elements.length);
+            elements = newElements;
         }
     }
 
-    private void checkIndex(int index) throws ArrayListIndexOutOfBoundsException {
+    private void checkIndex(int index) {
         if (index >= size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Input index: " + index + " out of bound: "
                     + size);
         }
     }
 
-    private void checkIndexForAdd(int index) throws ArrayListIndexOutOfBoundsException {
+    private void checkIndexForAdd(int index) {
         if (index > size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Input index: "
                     + index + " out of bound: " + size);
