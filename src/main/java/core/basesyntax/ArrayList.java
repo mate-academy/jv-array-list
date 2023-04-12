@@ -81,12 +81,7 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         if (index >= 0 && index < size) {
             final T value = (T) this.array[index];
-            if (index < size - 1) {
-                Object[] defArray = new Object[size - index - 1];
-                for (int i = index + 1; i < size; i++) {
-                    this.array[i - 1] = this.array[i];
-                }
-            }
+            System.arraycopy(this.array, index + 1, this.array, index, size - index - 1);
             this.array[size - 1] = null;
             size--;
             return value;
@@ -102,23 +97,10 @@ public class ArrayList<T> implements List<T> {
             if (this.array[i] == element
                     || (this.array[i] != null && element != null
                     && this.array[i].equals(element))) {
-                index = i;
+                return remove(i);
             }
         }
-
-        if (index == size) {
-            throw new NoSuchElementException(ELEMENT_NOT_FOUND_MESSAGE);
-        }
-
-        final T value = (T) this.array[index];
-        if (index < size - 1) {
-            for (int i = index + 1; i < size; i++) {
-                this.array[i - 1] = this.array[i];
-            }
-        }
-        this.array[size - 1] = null;
-        size--;
-        return value;
+        throw new NoSuchElementException(ELEMENT_NOT_FOUND_MESSAGE);
     }
 
     @Override
@@ -136,9 +118,7 @@ public class ArrayList<T> implements List<T> {
             this.array = (T[]) new Object[DEFAULT_CAPACITY];
         } else if (this.array.length == size) {
             T[] defArray = (T[]) new Object[(int) (this.array.length * EXTENDS_KOEFFICIENT)];
-            for (int i = 0; i < this.array.length; i++) {
-                defArray[i] = this.array[i];
-            }
+            System.arraycopy(this.array, 0, defArray, 0, size);
             this.array = defArray;
         }
     }
