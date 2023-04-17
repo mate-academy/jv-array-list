@@ -23,9 +23,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
-        }
+        checkIndexAdd(index);
         ensureCapacity(size + 1);
         System.arraycopy(elements, index, elements, index + 1, size - index);
         elements[index] = value;
@@ -34,37 +32,28 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        ensureCapacity(size + list.size());
         for (int i = 0; i < list.size(); i++) {
-            elements[size + i] = list.get(i);
+            add(list.get(i));
         }
-        size += list.size();
     }
 
     @Override
     public T get(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
-        }
+        checkIndex(index);
         return elements[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
-        }
+        checkIndex(index);
         elements[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
-        }
-        final T removed = elements[index];
+        checkIndex(index);
+        final T removed = (T) elements[index];
         System.arraycopy(elements, index + 1, elements, index, size - index - 1);
-        elements[size - 1] = null;
         size--;
         return removed;
     }
@@ -99,5 +88,20 @@ public class ArrayList<T> implements List<T> {
             System.arraycopy(elements, 0, newElements, 0, size);
             elements = newElements;
         }
+    }
+
+    private void checkIndex(int index) throws ArrayListIndexOutOfBoundsException {
+        if (index >= size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Input index: " + index + " out of bound: "
+                    + size);
+        }
+    }
+
+    private void checkIndexAdd(int index) throws ArrayListIndexOutOfBoundsException {
+        if (index > size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Input index: " + index + " out of bound: "
+                    + size);
+        }
+
     }
 }
