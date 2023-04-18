@@ -1,7 +1,5 @@
 package core.basesyntax;
 
-import java.util.Arrays;
-
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private int size;
@@ -113,21 +111,20 @@ public class ArrayList<T> implements List<T> {
         if (newCapacity > Integer.MAX_VALUE - 8) {
             throw new OutOfMemoryError();
         }
-        this.elements = Arrays.copyOf(this.elements, newCapacity);
+        T[] newArray = (T[]) new Object[newCapacity];
+        System.arraycopy(this.elements, 0, newArray, 0, oldCapacity);
+        this.elements = newArray;
     }
 
     private int indexOf(T element) {
-        if (element == null) {
-            for (int i = 0; i < size; i++) {
-                if (this.elements[i] == null) {
-                    return i;
-                }
+        for (int i = 0; i < size; i++) {
+            if (element == null && this.elements[i] == null) {
+                return i;
             }
-        } else {
-            for (int i = 0; i < size; i++) {
-                if (element.equals(this.elements[i])) {
-                    return i;
-                }
+        }
+        for (int i = 0; i < size; i++) {
+            if (element.equals(this.elements[i])) {
+                return i;
             }
         }
         return -1;
