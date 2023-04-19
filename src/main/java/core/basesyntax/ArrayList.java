@@ -13,7 +13,7 @@ public class ArrayList<T> implements List<T> {
         if (initialCapacity < 0) {
             throw new ArrayListIndexOutOfBoundsException("Illegal Capacity: " + initialCapacity);
         }
-        this.elements = (T[]) new Object[initialCapacity];
+        elements = (T[]) new Object[initialCapacity];
     }
 
     @Override
@@ -29,20 +29,20 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayListIndexOutOfBoundsException("Illegal Index: " + index);
         }
         ensureCapacity(size + 1);
-        System.arraycopy(this.elements, index, this.elements, index + 1, size - index);
-        this.elements[index] = value;
+        System.arraycopy(elements, index, elements, index + 1, size - index);
+        elements[index] = value;
         size++;
     }
 
     @Override
     public void addAll(List<T> list) {
-        int numNew = list.size();
-        T[] arrayList = (T[]) new Object[numNew];
-        for (int i = 0; i < numNew; i++) {
-            arrayList[i] = list.get(i);
+        int addedListSize = list.size();
+        T[] arrayForAddedListElements = (T[]) new Object[addedListSize];
+        for (int i = 0; i < addedListSize; i++) {
+            arrayForAddedListElements[i] = list.get(i);
         }
-        System.arraycopy(arrayList, 0, elements, size, numNew);
-        size += numNew;
+        System.arraycopy(arrayForAddedListElements, 0, elements, size, addedListSize);
+        size += addedListSize;
     }
 
     @Override
@@ -50,15 +50,15 @@ public class ArrayList<T> implements List<T> {
         if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException("Illegal Index: " + index);
         }
-        return this.elements[index];
+        return elements[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index < 0 || index >= this.size) {
+        if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException("Illegal Index:" + index);
         }
-        this.elements[index] = value;
+        elements[index] = value;
     }
 
     @Override
@@ -66,12 +66,12 @@ public class ArrayList<T> implements List<T> {
         if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException("Illegal Index: " + index);
         }
-        T removedElement = this.elements[index];
+        T removedElement = elements[index];
         int numMoved = size - index - 1;
         if (numMoved > 0) {
-            System.arraycopy(this.elements, index + 1, this.elements, index, numMoved);
+            System.arraycopy(elements, index + 1, elements, index, numMoved);
         }
-        this.elements[--size] = null;
+        elements[--size] = null;
         return removedElement;
     }
 
@@ -88,22 +88,22 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public int size() {
-        return this.size;
+        return size;
     }
 
     @Override
     public boolean isEmpty() {
-        return this.size == 0;
+        return size == 0;
     }
 
     private void ensureCapacity(int minCapacity) {
-        if (minCapacity - this.elements.length > 0) {
+        if (minCapacity - elements.length > 0) {
             grow(minCapacity);
         }
     }
 
     private void grow(int minCapacity) {
-        int oldCapacity = this.elements.length;
+        int oldCapacity = elements.length;
         int newCapacity = oldCapacity + (oldCapacity >> 1);
         if (newCapacity - minCapacity < 0) {
             newCapacity = minCapacity;
@@ -112,18 +112,18 @@ public class ArrayList<T> implements List<T> {
             throw new OutOfMemoryError();
         }
         T[] newArray = (T[]) new Object[newCapacity];
-        System.arraycopy(this.elements, 0, newArray, 0, oldCapacity);
-        this.elements = newArray;
+        System.arraycopy(elements, 0, newArray, 0, oldCapacity);
+        elements = newArray;
     }
 
     private int indexOf(T element) {
         for (int i = 0; i < size; i++) {
-            if (element == null && this.elements[i] == null) {
+            if (element == null && elements[i] == null) {
                 return i;
             }
         }
         for (int i = 0; i < size; i++) {
-            if (element.equals(this.elements[i])) {
+            if (element.equals(elements[i])) {
                 return i;
             }
         }
