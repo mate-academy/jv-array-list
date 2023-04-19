@@ -123,6 +123,7 @@ public class ArrayList<T> implements List<T> {
         }
         return -1;
     }
+
     private void isIndexExist(int indexPosition) {
         if (indexPosition < 0 || indexPosition >= size) {
             throw new ArrayListIndexOutOfBoundsException("Illegal Index: " + indexPosition);
