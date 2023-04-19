@@ -24,13 +24,13 @@ public class ArrayList<T> implements List<T> {
     }
 
     @Override
-    public void add(T value, int index) {
-        if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("Illegal Index: " + index);
+    public void add(T value, int position) {
+        if (position < 0 || position > size) {
+            throw new ArrayListIndexOutOfBoundsException("Illegal Index: " + position);
         }
         ensureCapacity(size + 1);
-        System.arraycopy(elements, index, elements, index + 1, size - index);
-        elements[index] = value;
+        System.arraycopy(elements, position, elements, position + 1, size - position);
+        elements[position] = value;
         size++;
     }
 
@@ -46,30 +46,30 @@ public class ArrayList<T> implements List<T> {
     }
 
     @Override
-    public T get(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Illegal Index: " + index);
+    public T get(int indexPosition) {
+        if (indexPosition < 0 || indexPosition >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Illegal Index: " + indexPosition);
         }
-        return elements[index];
+        return elements[indexPosition];
     }
 
     @Override
-    public void set(T value, int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Illegal Index:" + index);
+    public void set(T value, int indexPosition) {
+        if (indexPosition < 0 || indexPosition >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Illegal Index:" + indexPosition);
         }
-        elements[index] = value;
+        elements[indexPosition] = value;
     }
 
     @Override
-    public T remove(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Illegal Index: " + index);
+    public T remove(int indexPosition) {
+        if (indexPosition < 0 || indexPosition >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Illegal Index: " + indexPosition);
         }
-        T removedElement = elements[index];
-        int numMoved = size - index - 1;
+        T removedElement = elements[indexPosition];
+        int numMoved = size - indexPosition - 1;
         if (numMoved > 0) {
-            System.arraycopy(elements, index + 1, elements, index, numMoved);
+            System.arraycopy(elements, indexPosition + 1, elements, indexPosition, numMoved);
         }
         elements[--size] = null;
         return removedElement;
@@ -77,11 +77,11 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        int index = indexOf(element);
-        if (index == -1) {
+        int indexPosition = indexOf(element);
+        if (indexPosition == -1) {
             throw new java.util.NoSuchElementException("Element not found in ArrayList");
         } else {
-            remove(index);
+            remove(indexPosition);
         }
         return element;
     }
