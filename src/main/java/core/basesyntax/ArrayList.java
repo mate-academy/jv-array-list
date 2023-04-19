@@ -47,25 +47,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int indexPosition) {
-        if (indexPosition < 0 || indexPosition >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Illegal Index: " + indexPosition);
-        }
+        isIndexExist(indexPosition);
         return elements[indexPosition];
     }
 
     @Override
     public void set(T value, int indexPosition) {
-        if (indexPosition < 0 || indexPosition >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Illegal Index:" + indexPosition);
-        }
+        isIndexExist(indexPosition);
         elements[indexPosition] = value;
     }
 
     @Override
     public T remove(int indexPosition) {
-        if (indexPosition < 0 || indexPosition >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Illegal Index: " + indexPosition);
-        }
+        isIndexExist(indexPosition);
         T removedElement = elements[indexPosition];
         int numMoved = size - indexPosition - 1;
         if (numMoved > 0) {
@@ -129,4 +123,10 @@ public class ArrayList<T> implements List<T> {
         }
         return -1;
     }
+    private void isIndexExist(int indexPosition) {
+        if (indexPosition < 0 || indexPosition >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Illegal Index: " + indexPosition);
+        }
+    }
 }
+
