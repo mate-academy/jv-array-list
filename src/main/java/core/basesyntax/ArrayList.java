@@ -13,7 +13,13 @@ public class ArrayList<T> implements List<T> {
         values = (T[]) new Object[MAX_ITEMS_NUMBER];
     }
 
-    private T[] growSize() {
+    private void checkSize() {
+        if (size == values.length) {
+            values = getGrownArray();
+        }
+    }
+
+    private T[] getGrownArray() {
         int newCapacity = 0;
         int oldCapacity = values.length;
         newCapacity = (int) (oldCapacity * DEFAULT_SIZE_GROW);
@@ -25,22 +31,17 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (size == values.length) {
-            values = growSize();
-        }
+        checkSize();
         values[size] = value;
         size++;
-
     }
 
     @Override
-    public void add(T value, int index) throws ArrayListIndexOutOfBoundsException {
+    public void add(T value, int index) {
         if (index > size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Wrong index");
         }
-        if (size == values.length) {
-            values = growSize();
-        }
+        checkSize();
         T[] resultCopy = (T[]) new Object[values.length];
         System.arraycopy(values, 0, resultCopy, 0, index + 1);
         resultCopy[index] = value;
@@ -58,7 +59,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     @Override
-    public T get(int index) throws ArrayListIndexOutOfBoundsException {
+    public T get(int index) {
         if (index >= size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Wrong index");
         } else {
@@ -68,7 +69,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     @Override
-    public void set(T value, int index) throws ArrayListIndexOutOfBoundsException {
+    public void set(T value, int index) {
         if (index >= size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Wrong index");
         }
