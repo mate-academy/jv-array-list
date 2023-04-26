@@ -37,7 +37,6 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-
     @Override
     public void addAll(List<T> list) {
         T[] bufferArray = (T[]) new Object[list.size()];
