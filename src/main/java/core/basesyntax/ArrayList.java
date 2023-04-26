@@ -15,13 +15,13 @@ public class ArrayList<T> implements List<T> {
         size = MIN_SIZE;
     }
 
-    private Object[] grow() {
+    private void grow() {
         int oldCapacity = elementData.length;
         int newCapacity = oldCapacity + (oldCapacity >> 1);
         if (newCapacity - MAX_CAPACITY > 0) {
             newCapacity = MAX_CAPACITY;
         }
-        return Arrays.copyOf(elementData, newCapacity);
+        elementData = Arrays.copyOf(elementData, newCapacity);
     }
 
     private void checkRangeForAdd(int index) {
@@ -36,7 +36,7 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private T fastRemote(int index) {
+    private T fastRemove(int index) {
         T value = (T) elementData[index];
         if (size - 1 > index) {
             System.arraycopy(elementData, index + 1, elementData, index, size - 1);
@@ -45,19 +45,13 @@ public class ArrayList<T> implements List<T> {
         return value;
     }
 
-    private boolean arrayListEquals(Object first, Object second) {
-        return (first == second) || (first != null && first.equals(second));
-    }
-
     public Object[] toArray() {
         return Arrays.copyOf(elementData, size);
     }
 
     @Override
     public void add(T value) {
-        if (size == elementData.length) {
-            elementData = grow();
-        }
+        growIfNeeded();
         elementData[size] = value;
         size++;
     }
@@ -65,13 +59,10 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         checkRangeForAdd(index);
-        final int newSize = size;
-        if (newSize == elementData.length) {
-            elementData = grow();
-        }
-        System.arraycopy(elementData, index, elementData, index + 1, newSize - index);
+        growIfNeeded();
+        System.arraycopy(elementData, index, elementData, index + 1, size - index);
         elementData[index] = value;
-        size = newSize + 1;
+        size++;
     }
 
     @Override
@@ -79,7 +70,7 @@ public class ArrayList<T> implements List<T> {
         Object[] newArray = list.toArray();
         int newArrayLength = newArray.length;
         if (newArrayLength > elementData.length - size) {
-            elementData = grow();
+            grow();
         }
         System.arraycopy(newArray, 0, elementData, size, newArrayLength);
         size = size + newArrayLength;
@@ -100,14 +91,14 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         checkRange(index);
-        return fastRemote(index);
+        return fastRemove(index);
     }
 
     @Override
     public T remove(T element) {
         for (int i = 0; i <= size; i++) {
-            if (arrayListEquals(elementData[i], element)) {
-                return fastRemote(i);
+            if (elementsEqual(elementData[i], element)) {
+                return fastRemove(i);
             }
         }
         throw new NoSuchElementException(element.toString() + ": doesn't exist");
@@ -121,5 +112,15 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private boolean elementsEqual(Object first, Object second) {
+        return (first == second) || (first != null && first.equals(second));
+    }
+
+    private void growIfNeeded() {
+        if (size == elementData.length) {
+            grow();
+        }
     }
 }
