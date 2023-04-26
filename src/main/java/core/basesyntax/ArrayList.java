@@ -13,22 +13,6 @@ public class ArrayList<T> implements List<T> {
         values = (T[]) new Object[MAX_ITEMS_NUMBER];
     }
 
-    private void checkSize() {
-        if (size == values.length) {
-            values = getGrownArray();
-        }
-    }
-
-    private T[] getGrownArray() {
-        int newCapacity = 0;
-        int oldCapacity = values.length;
-        newCapacity = (int) (oldCapacity * DEFAULT_SIZE_GROW);
-
-        T[] newValues = (T[]) new Object[newCapacity];
-        System.arraycopy(values, 0, newValues, 0, size);
-        return newValues;
-    }
-
     @Override
     public void add(T value) {
         checkSize();
@@ -60,42 +44,33 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Wrong index");
-        } else {
-            return values[index];
-        }
-
+        checkIndex(index);
+        return values[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Wrong index");
-        }
+        checkIndex(index);
         values[index] = value;
 
     }
 
     @Override
     public T remove(int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Wrong index");
-        } else {
-            final T removeValue = (T) values[index];
-            final T[] resultCopy = (T[]) new Object[values.length - 1];
-            System.arraycopy(values, 0, resultCopy, 0, index);
-            System.arraycopy(values, index + 1, resultCopy, index, size - (index + 1));
-            values = resultCopy;
-            size--;
-            return removeValue;
-        }
+        checkIndex(index);
+
+        final T removeValue = (T) values[index];
+        final T[] resultCopy = (T[]) new Object[values.length - 1];
+        System.arraycopy(values, 0, resultCopy, 0, index);
+        System.arraycopy(values, index + 1, resultCopy, index, size - (index + 1));
+        values = resultCopy;
+        size--;
+        return removeValue;
+
     }
 
     @Override
     public T remove(T element) {
-
-        int indexElement = 0;
         for (int i = 0; i < size; i++) {
             if (values[i] == element || values[i] != null && values[i].equals(element)) {
                 return remove(i);
@@ -114,4 +89,21 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
+    private void checkSize() {
+        if (size < values.length) {
+            return;
+        }
+        int oldCapacity = values.length;
+        int newCapacity = (int) (oldCapacity * DEFAULT_SIZE_GROW);
+        T[] newValues = (T[]) new Object[newCapacity];
+        System.arraycopy(values, 0, newValues, 0, size);
+        values = newValues;
+    }
+
+    private void checkIndex(int index) {
+        if (index >= size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Wrong index");
+        }
+
+    }
 }
