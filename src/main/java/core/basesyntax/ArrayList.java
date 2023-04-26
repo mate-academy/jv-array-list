@@ -4,34 +4,23 @@ import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    private static final int DEFAULT_CAPACITY = 10;
-    private static final Object[] DEFAULTCAPACITY_EMPTY_ELEMENT_DATA = {};
-    public static final int SOFT_MAX_ARRAY_LENGTH = Integer.MAX_VALUE - 8;
+    private static final int DEFAULT_CAPACITY;
+    private static final int SOFT_MAX_ARRAY_LENGTH;
+    private static final Object[] DEFAULT_CAPACITY_EMPTY_ELEMENT_DATA;
+    private static final int NOT_EXISTING_INDEX;
+
+    static {
+        NOT_EXISTING_INDEX = -1;
+        DEFAULT_CAPACITY = 10;
+        SOFT_MAX_ARRAY_LENGTH = Integer.MAX_VALUE - 8;
+        DEFAULT_CAPACITY_EMPTY_ELEMENT_DATA = new Object[]{};
+    }
+
     private Object[] elementData;
     private int size;
 
     public ArrayList() {
-        elementData = DEFAULTCAPACITY_EMPTY_ELEMENT_DATA;
-    }
-
-    @Override
-    public void add(T value) {
-        add(value, elementData, size);
-    }
-
-    @Override
-    public void add(T value, int index) {
-        checkIndex(index, size + 1);
-        final int size;
-        Object[] elementData;
-        if ((size = this.size) == (elementData = this.elementData).length) {
-            elementData = grow();
-        }
-        System.arraycopy(elementData, index,
-                elementData, index + 1,
-                size - index);
-        elementData[index] = value;
-        this.size = size + 1;
+        elementData = DEFAULT_CAPACITY_EMPTY_ELEMENT_DATA;
     }
 
     @Override
@@ -63,54 +52,6 @@ public class ArrayList<T> implements List<T> {
     }
 
     @Override
-    public T remove(int index) {
-        checkIndex(index, size);
-        final Object[] elements = elementData;
-        @SuppressWarnings("unchecked")
-        T oldValue = (T) elements[index];
-        fastRemove(elements, index);
-        return oldValue;
-    }
-
-    @Override
-    public T remove(T element) {
-        final Object[] es = elementData;
-        final int size = this.size;
-        int i = 0;
-        boolean isFound = false;
-        found:
-        {
-            if (element == null) {
-                for (; i < size; i++)
-                    if (es[i] == null) {
-                        isFound = true;
-                        break found;
-                    }
-            } else {
-                for (; i < size; i++)
-                    if (element.equals(es[i])) {
-                        isFound = true;
-                        break found;
-                    }
-            }
-        }
-        if (isFound) {
-            fastRemove(es, i);
-            return element;
-        } else {
-            throw new NoSuchElementException("Not found such element.");
-        }
-
-    }
-
-    private void fastRemove(Object[] es, int i) {
-        final int newSize;
-        if ((newSize = size - 1) > i)
-            System.arraycopy(es, i + 1, es, i, newSize - i);
-        es[size = newSize] = null;
-    }
-
-    @Override
     public int size() {
         return size;
     }
@@ -128,6 +69,74 @@ public class ArrayList<T> implements List<T> {
         return objects;
     }
 
+    @Override
+    public T remove(int index) {
+        checkIndex(index, size);
+        final Object[] elements = elementData;
+        @SuppressWarnings("unchecked")
+        T oldValue = (T) elements[index];
+        fastRemove(elements, index);
+        return oldValue;
+    }
+
+    @Override
+    public T remove(T element) {
+        int searchingIndex = foundElementIndex(element);
+        if (searchingIndex > NOT_EXISTING_INDEX) {
+            fastRemove(elementData, searchingIndex);
+            return element;
+        }
+        throw new NoSuchElementException("Not found such element.");
+    }
+
+    private int foundElementIndex(T element) {
+        final Object[] elements = elementData;
+        final int size = this.size;
+        int i = 0;
+        if (element == null) {
+            for (; i < size; i++) {
+                if (elements[i] == null) {
+                    return i;
+                }
+            }
+        } else {
+            for (; i < size; i++) {
+                if (element.equals(elements[i])) {
+                    return i;
+                }
+            }
+        }
+        return NOT_EXISTING_INDEX;
+    }
+
+    private void fastRemove(Object[] es, int i) {
+        final int newSize;
+        if ((newSize = size - 1) > i) {
+            System.arraycopy(es, i + 1, es, i, newSize - i);
+        }
+        es[size = newSize] = null;
+    }
+
+    @Override
+    public void add(T value) {
+        add(value, elementData, size);
+    }
+
+    @Override
+    public void add(T value, int index) {
+        checkIndex(index, size + 1);
+        final int size;
+        Object[] elementData;
+        if ((size = this.size) == (elementData = this.elementData).length) {
+            elementData = grow();
+        }
+        System.arraycopy(elementData, index,
+                elementData, index + 1,
+                size - index);
+        elementData[index] = value;
+        this.size = size + 1;
+    }
+
     private void add(T element, Object[] elementData, int size) {
         if (size == elementData.length) {
             elementData = grow();
@@ -136,38 +145,36 @@ public class ArrayList<T> implements List<T> {
         this.size = size + 1;
     }
 
-    private Object[] grow(int minCapacity) {
-        int oldCapacity = elementData.length;
-        if (oldCapacity > 0 || elementData != DEFAULTCAPACITY_EMPTY_ELEMENT_DATA) {
-            int newCapacity = newLength(oldCapacity,
-                    minCapacity - oldCapacity, /* minimum growth */
-                    oldCapacity >> 1           /* preferred growth */);
-            return elementData = Arrays.copyOf(elementData, newCapacity);
-        } else {
-            return elementData = new Object[Math.max(DEFAULT_CAPACITY, minCapacity)];
-        }
-    }
+    private static int newLength(int oldLength, int minGrowth, int prefGrowth) {
 
-    public static int newLength(int oldLength, int minGrowth, int prefGrowth) {
-        // preconditions not checked because of inlining
-        // assert oldLength >= 0
-        // assert minGrowth > 0
-
-        int prefLength = oldLength + Math.max(minGrowth, prefGrowth); // might overflow
+        int prefLength = oldLength + Math.max(minGrowth, prefGrowth);
         if (0 < prefLength && prefLength <= SOFT_MAX_ARRAY_LENGTH) {
             return prefLength;
         } else {
-            // put code cold in a separate method
             return hugeLength(oldLength, minGrowth);
         }
     }
 
     private static int hugeLength(int oldLength, int minGrowth) {
         int minLength = oldLength + minGrowth;
-        if (minLength < 0) { // overflow
+        if (minLength < 0) {
             throw new OutOfMemoryError(
                     "Required array length " + oldLength + " + " + minGrowth + " is too large");
-        } else return Math.max(minLength, SOFT_MAX_ARRAY_LENGTH);
+        } else {
+            return Math.max(minLength, SOFT_MAX_ARRAY_LENGTH);
+        }
+    }
+
+    private Object[] grow(int minCapacity) {
+        int oldCapacity = elementData.length;
+        if (oldCapacity > 0 || elementData != DEFAULT_CAPACITY_EMPTY_ELEMENT_DATA) {
+            int newCapacity = newLength(oldCapacity,
+                    minCapacity - oldCapacity,
+                    oldCapacity >> 1);
+            return elementData = Arrays.copyOf(elementData, newCapacity);
+        } else {
+            return elementData = new Object[Math.max(DEFAULT_CAPACITY, minCapacity)];
+        }
     }
 
     private Object[] grow() {
@@ -180,9 +187,10 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void checkIndex(int index, int length) {
-        if (index < 0 || index >= length)
+        if (index < 0 || index >= length) {
             throw new ArrayListIndexOutOfBoundsException("Index out of bound exception, "
                     + "total length is: [" + length + "], when index is : ["
                     + index + "].");
+        }
     }
 }
