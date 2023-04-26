@@ -4,6 +4,7 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
+    private static final double GROW_FACTOR = 1.5;
     private T[] elementData;
     private int size;
 
@@ -67,8 +68,7 @@ public class ArrayList<T> implements List<T> {
                 return removedElement;
             }
         }
-        checkNoSuchElementException(removedElement);
-        return removedElement;
+        throw new NoSuchElementException("Value doesn't exist! " + element);
     }
 
     @Override
@@ -83,9 +83,7 @@ public class ArrayList<T> implements List<T> {
 
     private void growIfArrayFull() {
         if (size == elementData.length) {
-            int oldLength = size;
-            int newLength = oldLength + (oldLength >> 1);
-            T[] newData = (T[]) new Object[newLength];
+            T[] newData = (T[]) new Object[(int) (size * GROW_FACTOR)];
             System.arraycopy(elementData, 0, newData, 0, size);
             elementData = newData;
         }
@@ -102,12 +100,6 @@ public class ArrayList<T> implements List<T> {
         if (index >= size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Invalid index!Index: "
                     + index + ".Size: " + size);
-        }
-    }
-
-    private void checkNoSuchElementException(T value) {
-        if (value == null) {
-            throw new NoSuchElementException("Invalid value!");
         }
     }
 }
