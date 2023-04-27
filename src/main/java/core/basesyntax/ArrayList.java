@@ -2,6 +2,8 @@ package core.basesyntax;
 
 import java.util.NoSuchElementException;
 
+@SuppressWarnings("unchecked")
+
 public class ArrayList<T> implements List<T> {
 
     private static final int DEFAULT_CAPACITY = 10;
@@ -16,19 +18,17 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (size <= DEFAULT_CAPACITY) {
-            growCapacity();
-        }
+        growCapacity();
         arrayLegacy[size] = value;
         size++;
     }
 
     @Override
     public void add(T value, int index) {
-        checkIndexEqualsSize(index);
         checkIndex(index);
         growCapacity();
         System.arraycopy(arrayLegacy, index, arrayLegacy, index + 1, size - index);
+        arrayLegacy[index] = value;
         size++;
     }
 
