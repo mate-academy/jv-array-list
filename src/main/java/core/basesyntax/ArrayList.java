@@ -1,11 +1,11 @@
 package core.basesyntax;
 
-import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
 
     private static final int DEFAULT_CAPACITY = 10;
+    private static final int GROW_FACTORY = DEFAULT_CAPACITY >> 1;
     private int size = 0;
 
     private T[] arrayLegacy;
@@ -17,7 +17,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value) {
         if (size <= DEFAULT_CAPACITY) {
-            ensureCapacity(size);
+            growCapacity();
         }
         arrayLegacy[size] = value;
         size++;
@@ -26,10 +26,9 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         checkIndex(index);
-        ensureCapacity(this.size + 1);
-        System.arraycopy(this.arrayLegacy, index, arrayLegacy, index + 1, size - index - 1);
-        arrayLegacy[index] = value;
-        this.size++;
+        growCapacity();
+        System.arraycopy(arrayLegacy, index, arrayLegacy, index + 1, size - index);
+        size++;
     }
 
     @Override
@@ -48,8 +47,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void set(T value, int index) {
         checkIndex(index);
-        ensureCapacity(this.size + 1);
-        this.arrayLegacy[index] = value;
+        growCapacity();
+        arrayLegacy[index] = value;
     }
 
     @Override
@@ -84,17 +83,17 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void ensureCapacity(int needCapacity) {
-        if (needCapacity > arrayLegacy.length) {
-            Object[] oldElements = this.arrayLegacy;
-            int newSize = this.size * 2;
-            this.arrayLegacy = (T[]) Arrays.copyOf(oldElements, newSize);
+    private void growCapacity() {
+        if (arrayLegacy.length == size) {
+            T[] newArrays = (T[]) new Object[(int) (arrayLegacy.length + GROW_FACTORY)];
+            System.arraycopy(arrayLegacy, 0, newArrays, 0, arrayLegacy.length);
+            arrayLegacy = newArrays;
         }
     }
 
     private void checkIndex(int index) {
-        if (index < 0 || index >= (size)) {
-            throw new ArrayListIndexOutOfBoundsException("Index: " + index + ", Size " + index);
+        if (index >= size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Index is wrong: " + index);
         }
     }
 }
