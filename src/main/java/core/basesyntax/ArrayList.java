@@ -25,6 +25,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
+        checkIndexEqualsSize(index);
         checkIndex(index);
         growCapacity();
         System.arraycopy(arrayLegacy, index, arrayLegacy, index + 1, size - index);
@@ -40,12 +41,14 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
+        checkIndexEqualsSize(index);
         checkIndex(index);
         return arrayLegacy[index];
     }
 
     @Override
     public void set(T value, int index) {
+        checkIndexEqualsSize(index);
         checkIndex(index);
         growCapacity();
         arrayLegacy[index] = value;
@@ -53,6 +56,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(int index) {
+        checkIndexEqualsSize(index);
         checkIndex(index);
         T removedElement = arrayLegacy[index];
         for (int i = index; i < size - 1; i++) {
@@ -92,7 +96,13 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void checkIndex(int index) {
-        if (index >= size || index < 0) {
+        if (index > size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Index is wrong: " + index);
+        }
+    }
+
+    private void checkIndexEqualsSize(int index) {
+        if (index == size) {
             throw new ArrayListIndexOutOfBoundsException("Index is wrong: " + index);
         }
     }
