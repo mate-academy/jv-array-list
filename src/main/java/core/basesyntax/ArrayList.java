@@ -5,20 +5,19 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_ARRAY_LIST_CAPACITY = 10;
+    private static final double ARRAY_MULTIPLIER = 1.5;
     private T[] elements;
     private int size;
 
-    @SuppressWarnings("unchecked")
     public ArrayList() {
         this.elements = (T[]) new Object[DEFAULT_ARRAY_LIST_CAPACITY];
         this.size = 0;
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public void add(T value) {
         if (size == elements.length) {
-            int newCapacity = (int) (elements.length * 1.5);
+            int newCapacity = (int) (elements.length * ARRAY_MULTIPLIER);
             T[] newElements = (T[]) new Object[newCapacity];
             System.arraycopy(elements, 0, newElements, 0, elements.length);
             elements = newElements;
@@ -26,16 +25,11 @@ public class ArrayList<T> implements List<T> {
         elements[size++] = value;
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public void add(T value, int index) {
-        if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException(
-                    "Index can not be less then 0 and greater then size"
-            );
-        }
+        indexOutOfRange(index);
         if (size == elements.length) {
-            int newCapacity = (int) (elements.length * 1.5);
+            int newCapacity = (int) (elements.length * ARRAY_MULTIPLIER);
             T[] newElements = (T[]) new Object[newCapacity];
             System.arraycopy(elements, 0, newElements, 0, index);
             newElements[index] = value;
@@ -50,19 +44,18 @@ public class ArrayList<T> implements List<T> {
         size++;
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public void addAll(List<T> list) {
         int remainingCapacity = elements.length - size;
         if (list.size() > remainingCapacity) {
-            int newCapacity = (int) (elements.length * 1.5);
+            int newCapacity = (int) (elements.length * ARRAY_MULTIPLIER);
             T[] newElements = Arrays.copyOf(elements, newCapacity);
             System.arraycopy(elements, 0, newElements, 0, elements.length);
             elements = newElements;
         }
         for (int i = 0; i < list.size(); i++) {
             if (size == elements.length) {
-                int newCapacity = (int) (elements.length * 1.5);
+                int newCapacity = (int) (elements.length * ARRAY_MULTIPLIER);
                 elements = (T[]) new Object[newCapacity];
             }
             elements[size++] = list.get(i);
@@ -133,5 +126,12 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private void indexOutOfRange(int index) {
+        String msg = "Index must be between 0 and ";
+        if (index < 0 || index > size) {
+            throw new ArrayListIndexOutOfBoundsException(msg + (elements.length - 1));
+        }
     }
 }
