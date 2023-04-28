@@ -3,8 +3,8 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    private int size = 0;
-    private final int defaultSize = 10;
+    private int size;
+    private static final int defaultSize = 10;
     private T[] elements;
 
     public ArrayList() {
@@ -23,7 +23,7 @@ public class ArrayList<T> implements List<T> {
             add(value);
             return;
         }
-        indexExeption(index);
+        checkIndex(index);
         resize();
         System.arraycopy(elements, index, elements, index + 1, size - index);
         elements[index] = value;
@@ -39,29 +39,29 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        indexExeption(index);
+        checkIndex(index);
         return elements[index];
     }
 
     @Override
     public void set(T value, int index) {
-        indexExeption(index);
+        checkIndex(index);
         elements[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        indexExeption(index);
-        final T removedObject = elements[index];
+        checkIndex(index);
+        final T removedElement = elements[index];
         System.arraycopy(elements, index + 1, elements, index, size - index - 1);
         size--;
-        return removedObject;
+        return removedElement;
     }
 
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if (elements[i] != null && elements[i].equals(element) || element == elements[i]) {
+            if (element == elements[i] || (elements[i] != null) && elements[i].equals(element)) {
                 return remove(i);
             }
         }
@@ -79,15 +79,15 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void resize() {
-        if (elements.length == size) {
-            T[] increasedObjectsArray = (T[]) new Object[(int) (elements.length * 1.5)];
-            System.arraycopy(elements, 0, increasedObjectsArray, 0, elements.length);
-            elements = increasedObjectsArray;
+        if (size == elements.length) {
+            T[] resizeElementsArray = (T[]) new Object[(int) (elements.length * 1.5)];
+            System.arraycopy(elements, 0, resizeElementsArray, 0, elements.length);
+            elements = resizeElementsArray;
         }
     }
 
-    private void indexExeption(int index) {
-        if (size <= index || index < 0) {
+    private void checkIndex(int index) {
+        if (index >= size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Invalid index " + index);
         }
     }
