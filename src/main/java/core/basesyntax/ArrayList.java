@@ -24,7 +24,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        indexOutOfRangeForAdd(index);
+        checkIndexForAdd(index);
         if (size == elements.length) {
             resize(value, index);
         } else {
@@ -49,19 +49,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        indexOutOfRange(index);
+        checkIndex(index);
         return elements[index];
     }
 
     @Override
     public void set(T value, int index) {
-        indexOutOfRange(index);
+        checkIndex(index);
         elements[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        indexOutOfRange(index);
+        checkIndex(index);
         final T removedElement = elements[index];
         int elementsMoved = size - index - 1;
         if (elementsMoved > 0) {
@@ -93,14 +93,14 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void indexOutOfRangeForAdd(int index) {
+    private void checkIndexForAdd(int index) {
         String msg = "Index must be between 0 and ";
         if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException(msg + (size - 1));
         }
     }
 
-    private void indexOutOfRange(int index) {
+    private void checkIndex(int index) {
         if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException(
                     "Index must be between 0 and " + (size - 1)
