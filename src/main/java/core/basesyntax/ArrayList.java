@@ -62,7 +62,6 @@ public class ArrayList<T> implements List<T> {
         elementsData[index] = value;
     }
 
-
     @Override
     public T remove(int index) {
         checkIndex(index);
@@ -75,7 +74,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if ((elementsData[i] == element || elementsData[i] != null && elementsData[i].equals(element))) {
+            if ((elementsData[i] == element || elementsData[i] != null
+                    && elementsData[i].equals(element))) {
                 return remove(i);
             }
         }
