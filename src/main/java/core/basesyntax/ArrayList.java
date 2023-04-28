@@ -5,33 +5,33 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int INITIAL_CAPACITY = 10;
-    private static final int INITIAL_SIZE = 0;
     private static final int INITIAL_INDEX = 0;
-    private static final String TEXT_OF_EXCEPTION = "Invalid index outside"
-            + " the dimension of the array";
     private int size;
-    private T[] elementData;
+    private T[] elementsData;
 
     public ArrayList() {
-        size = INITIAL_SIZE;
-        elementData = (T[]) new Object[INITIAL_CAPACITY];
+        elementsData = (T[]) new Object[INITIAL_CAPACITY];
     }
 
     @Override
     public void add(T value) {
-        if (size == elementData.length) {
-            increaseElementDataLength();
+        if (size == elementsData.length) {
+            resize();
         }
-        addValueToElementData(value);
+        elementsData[size] = value;
+        size++;
     }
 
     @Override
     public void add(T value, int index) {
         if (index > size || index < INITIAL_INDEX) {
-            throw new ArrayListIndexOutOfBoundsException(TEXT_OF_EXCEPTION);
-        } else if (index == elementData.length - 1) {
-            increaseElementDataLength();
-            addValueToElementData(value);
+            throw new ArrayListIndexOutOfBoundsException("Invalid index outside"
+                    + " the dimension of the array");
+        }
+        if (index == elementsData.length - 1) {
+            resize();
+            elementsData[size] = value;
+            size++;
         } else {
             rightShiftOfElements(value, index);
         }
@@ -39,61 +39,44 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        T[] bufferArray = (T[]) new Object[list.size()];
+        T[] data = (T[]) new Object[list.size()];
         for (int i = 0; i < list.size(); i++) {
-            bufferArray[i] = list.get(i);
+            data[i] = list.get(i);
         }
-        if (elementData.length - size < list.size()) {
-            increaseElementDataLength();
+        if (elementsData.length - size < list.size()) {
+            resize();
         }
-        System.arraycopy(bufferArray, INITIAL_INDEX, elementData, size, bufferArray.length);
-        size += bufferArray.length;
+        System.arraycopy(data, INITIAL_INDEX, elementsData, size, data.length);
+        size += data.length;
     }
 
     @Override
     public T get(int index) {
-        if (index >= size || index < INITIAL_INDEX) {
-            throw new ArrayListIndexOutOfBoundsException(TEXT_OF_EXCEPTION);
-        } else {
-            return elementData[index];
-        }
+        checkIndex(index);
+        return elementsData[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index >= size || index < INITIAL_INDEX) {
-            throw new ArrayListIndexOutOfBoundsException(TEXT_OF_EXCEPTION);
-        } else {
-            elementData[index] = value;
-        }
+        checkIndex(index);
+        elementsData[index] = value;
     }
+
 
     @Override
     public T remove(int index) {
-        if (index >= size || index < INITIAL_INDEX) {
-            throw new ArrayListIndexOutOfBoundsException(TEXT_OF_EXCEPTION);
-        }
-        if (index == size - 1) {
-            size--;
-            return elementData[index];
-        } else {
-            T removeValue = elementData[index];
-            leftShiftOfElements(index);
-            return removeValue;
-        }
+        checkIndex(index);
+        T removedElement = elementsData[index];
+        System.arraycopy(elementsData, index + 1, elementsData, index, (size - index) - 1);
+        size--;
+        return removedElement;
     }
 
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if (element == null) {
-                if (null == elementData[i]) {
-                    leftShiftOfElements(i);
-                    return null;
-                }
-            } else if (element.equals(elementData[i])) {
-                leftShiftOfElements(i);
-                return element;
+            if ((elementsData[i] == element || elementsData[i] != null && elementsData[i].equals(element))) {
+                return remove(i);
             }
         }
         throw new NoSuchElementException();
@@ -109,29 +92,23 @@ public class ArrayList<T> implements List<T> {
         return size == INITIAL_INDEX;
     }
 
-    private void increaseElementDataLength() {
-        elementData = Arrays.copyOf(elementData, (int) (elementData.length * 1.5 + 1));
+    private void resize() {
+        elementsData = Arrays.copyOf(elementsData, (int) (elementsData.length * 1.5 + 1));
     }
 
     private void rightShiftOfElements(T value, int index) {
-        T[] bufferElementData = (T[]) new Object[elementData.length + 1];
-        System.arraycopy(elementData, INITIAL_INDEX, bufferElementData, INITIAL_INDEX, index);
-        System.arraycopy(elementData, index, bufferElementData, index + 1, size);
-        bufferElementData[index] = value;
-        elementData = bufferElementData;
+        T[] data = (T[]) new Object[elementsData.length + 1];
+        System.arraycopy(elementsData, INITIAL_INDEX, data, INITIAL_INDEX, index);
+        System.arraycopy(elementsData, index, data, index + 1, size);
+        data[index] = value;
+        elementsData = data;
         size++;
     }
 
-    private void addValueToElementData(T value) {
-        elementData[size] = value;
-        size++;
-    }
-
-    private void leftShiftOfElements(int i) {
-        T[] bufferElementData = (T[]) new Object[elementData.length - 1];
-        System.arraycopy(elementData, INITIAL_INDEX, bufferElementData, INITIAL_INDEX, i);
-        System.arraycopy(elementData, i + 1, bufferElementData, i, size - i);
-        elementData = bufferElementData;
-        size--;
+    private void checkIndex(int index) {
+        if (index >= size || index < INITIAL_INDEX) {
+            throw new ArrayListIndexOutOfBoundsException("Invalid index outside"
+                    + " the dimension of the array");
+        }
     }
 }
