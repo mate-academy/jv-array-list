@@ -8,6 +8,7 @@ public class ArrayList<T> implements List<T> {
     private static final int GROW_FACTORY = DEFAULT_CAPACITY >> 1;
     private int size;
     private T[] arrayLegacy;
+
     public ArrayList() {
         arrayLegacy = (T[]) new Object[DEFAULT_CAPACITY];
     }
