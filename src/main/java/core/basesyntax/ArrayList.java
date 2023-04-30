@@ -5,7 +5,6 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int INITIAL_CAPACITY = 10;
-    private static final int INITIAL_INDEX = 0;
     private int size;
     private T[] elementsData;
 
@@ -24,17 +23,15 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index > size || index < INITIAL_INDEX) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index outside"
-                    + " the dimension of the array");
+        if (index > size || index < 0) {
+            trowException();
         }
-        if (index == elementsData.length - 1) {
+        if (size == elementsData.length - 1) {
             resize();
-            elementsData[size] = value;
-            size++;
-        } else {
-            rightShiftOfElements(value, index);
         }
+        System.arraycopy(elementsData, index, elementsData, index + 1, size - index);
+        elementsData[index] = value;
+        size++;
     }
 
     @Override
@@ -46,7 +43,7 @@ public class ArrayList<T> implements List<T> {
         if (elementsData.length - size < list.size()) {
             resize();
         }
-        System.arraycopy(data, INITIAL_INDEX, elementsData, size, data.length);
+        System.arraycopy(data, 0, elementsData, size, data.length);
         size += data.length;
     }
 
@@ -89,26 +86,21 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public boolean isEmpty() {
-        return size == INITIAL_INDEX;
+        return size == 0;
     }
 
     private void resize() {
         elementsData = Arrays.copyOf(elementsData, (int) (elementsData.length * 1.5 + 1));
     }
 
-    private void rightShiftOfElements(T value, int index) {
-        T[] data = (T[]) new Object[elementsData.length + 1];
-        System.arraycopy(elementsData, INITIAL_INDEX, data, INITIAL_INDEX, index);
-        System.arraycopy(elementsData, index, data, index + 1, size);
-        data[index] = value;
-        elementsData = data;
-        size++;
+    private void checkIndex(int index) {
+        if (index >= size || index < 0) {
+            trowException();
+        }
     }
 
-    private void checkIndex(int index) {
-        if (index >= size || index < INITIAL_INDEX) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index outside"
-                    + " the dimension of the array");
-        }
+    private void trowException() {
+        throw new ArrayListIndexOutOfBoundsException("Invalid index outside"
+                + " the dimension of the array");
     }
 }
