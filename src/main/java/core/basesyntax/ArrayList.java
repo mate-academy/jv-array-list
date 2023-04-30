@@ -22,8 +22,8 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index > size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Wrong index");
+        if (index != size) {
+            checkIndex(index);
         }
         checkSize();
         T[] resultCopy = (T[]) new Object[values.length];
