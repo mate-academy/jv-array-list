@@ -26,11 +26,9 @@ public class ArrayList<T> implements List<T> {
             checkIndex(index);
         }
         checkSize();
-        T[] resultCopy = (T[]) new Object[values.length];
-        System.arraycopy(values, 0, resultCopy, 0, index + 1);
-        resultCopy[index] = value;
-        System.arraycopy(values, index, resultCopy, index + 1, size - index);
-        values = resultCopy;
+
+        System.arraycopy(values, index, values, index + 1, size - index);
+        values[index] = value;
         size++;
 
     }
@@ -58,12 +56,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
-
         final T removeValue = (T) values[index];
-        final T[] resultCopy = (T[]) new Object[values.length - 1];
-        System.arraycopy(values, 0, resultCopy, 0, index);
-        System.arraycopy(values, index + 1, resultCopy, index, size - (index + 1));
-        values = resultCopy;
+        System.arraycopy(values, index + 1, values, index, size - (index + 1));
         size--;
         return removeValue;
 
