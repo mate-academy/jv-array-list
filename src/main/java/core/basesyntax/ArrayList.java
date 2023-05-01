@@ -36,8 +36,8 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        for (T value : elements) {
-            add(value);
+        for (int i = 0; i < list.size(); i++) {
+            add(list.get(i));
         }
     }
 
@@ -97,6 +97,7 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayListIndexOutOfBoundsException("Index out of bounds: " + index);
         }
     }
+
     private void checkIndexBounds(int index) {
         checkIndexBounds(index, size);
     }
