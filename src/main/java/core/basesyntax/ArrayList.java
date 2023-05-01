@@ -1,48 +1,110 @@
 package core.basesyntax;
 
+import java.util.Arrays;
+import java.util.NoSuchElementException;
+
 public class ArrayList<T> implements List<T> {
+    private static final int DEFAULT_CAPACITY = 10;
+    private static final int ADD_ONE_ELEMENT = 1;
+    private T[] elements;
+    private int size;
+
+    public ArrayList() {
+        elements = (T[])new Object[DEFAULT_CAPACITY];
+        size = 0;
+    }
+
     @Override
     public void add(T value) {
-
+        if (size < elements.length) {
+            elements[size++] = value;
+        } else {
+            resizeIfNeeded(ADD_ONE_ELEMENT);
+            elements[size++] = value;
+        }
     }
 
     @Override
     public void add(T value, int index) {
-
+        verifyIndexForAdd(index);
+        resizeIfNeeded(ADD_ONE_ELEMENT);
+        System.arraycopy(elements, index, elements, index + 1, size - index);
+        elements[index] = value;
+        size++;
     }
 
     @Override
     public void addAll(List<T> list) {
-
+        resizeIfNeeded(list.size());
+        int indexOfLastElement = size;
+        for (int i = 0; i < list.size(); i++) {
+            elements[indexOfLastElement++] = list.get(i);
+            size++;
+        }
     }
 
     @Override
     public T get(int index) {
-        return null;
+        verifyIndex(index);
+        return elements[index];
     }
 
     @Override
     public void set(T value, int index) {
-
+        verifyIndex(index);
+        elements[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        return null;
+        verifyIndex(index);
+        T deletedElement = elements[index];
+        for (int i = index; i < elements.length - 1; i++) {
+            elements[i] = elements[i + 1];
+        }
+        size--;
+        return deletedElement;
     }
 
     @Override
     public T remove(T element) {
-        return null;
+        T deletedElement;
+        for (int i = 0; i < size; i++) {
+            if ((elements[i] != null && elements[i].equals(element)) || elements[i] == element) {
+                deletedElement = elements[i];
+                remove(i);
+                return deletedElement;
+            }
+        }
+        throw new NoSuchElementException();
     }
 
     @Override
     public int size() {
-        return 0;
+        return size;
     }
 
     @Override
     public boolean isEmpty() {
-        return false;
+        return size == 0;
+    }
+
+    private void resizeIfNeeded(int extraSize) {
+        if (size + extraSize > elements.length) {
+            elements = Arrays.copyOf(elements, elements.length + (elements.length >> 1));
+        }
+    }
+
+    private void verifyIndexForAdd(int index) {
+        if (index > size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("invalid index: " + index + " not exist");
+        }
+    }
+
+    private void verifyIndex(int index) {
+        if (index >= size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("wrong index: " + index
+                    + " for ArrayList size: " + size);
+        }
     }
 }
