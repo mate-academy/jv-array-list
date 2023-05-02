@@ -34,7 +34,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        Object[] listInObjectArray = listToArray(list);
+        T[] listInObjectArray = (T[])listToArray(list);
         growIfArrayFull(list.size() + size);
         System.arraycopy(listInObjectArray,0,elementData,size,listInObjectArray.length);
         size += listInObjectArray.length;
@@ -55,7 +55,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         rangeCheckForAdd(index);
-        Object element = elementData[index];
+        T element = elementData[index];
         if (index == size - 1) {
             elementData[index] = null;
         } else {
@@ -89,7 +89,7 @@ public class ArrayList<T> implements List<T> {
 
     private void growIfArrayFull(int minSize) {
         if (minSize >= elementData.length) {
-            Object[] copyElementData = elementData.clone();
+            T[] copyElementData = elementData.clone();
             while (elementData.length <= minSize) {
                 elementData = (T[])new Object[size + size / 2];
             }
@@ -98,7 +98,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     private Object[] listToArray(List<T> list) {
-        Object[] listInArray = new Object[list.size()];
+        T[] listInArray = (T[])new Object[list.size()];
         for (int i = 0; i < list.size(); i++) {
             listInArray[i] = list.get(i);
         }
