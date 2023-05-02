@@ -38,16 +38,9 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        T[] data = (T[]) new Object[list.size()];
         for (int i = 0; i < list.size(); i++) {
-            data[i] = list.get(i);
+            add(list.get(i));
         }
-        if (elementsData.length - size < list.size()) {
-            int newSize = ((int) (elementsData.length * 1.5 + 1) + list.size());
-            elementsData = Arrays.copyOf(elementsData, newSize);
-        }
-        System.arraycopy(data, 0, elementsData, size, data.length);
-        size += data.length;
     }
 
     @Override
@@ -79,7 +72,7 @@ public class ArrayList<T> implements List<T> {
                 return remove(i);
             }
         }
-        throw new NoSuchElementException();
+        throw new NoSuchElementException("Does not have an element with such a value " + element);
     }
 
     @Override
