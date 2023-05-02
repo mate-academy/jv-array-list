@@ -1,48 +1,105 @@
 package core.basesyntax;
 
-public class ArrayList<T> implements List<T> {
-    @Override
-    public void add(T value) {
+import java.util.NoSuchElementException;
 
+public class ArrayList<E> implements List<E> {
+    private static final int DEFAULT_CAPACITY = 10;
+    private E[] data;
+    private int size;
+
+    public ArrayList() {
+        data = (E[]) new Object[DEFAULT_CAPACITY];
     }
 
     @Override
-    public void add(T value, int index) {
-
+    public void add(E value) {
+        if (isStorageFull()) {
+            grow();
+        }
+        data[size] = value;
+        size++;
     }
 
     @Override
-    public void addAll(List<T> list) {
-
+    public void add(E value, int index) {
+        if (index > size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Can't add element: " + value
+                    + " on the position: " + index);
+        }
+        if (isStorageFull()) {
+            grow();
+        }
+        System.arraycopy(data, index, data, index + 1, size - index);
+        data[index] = value;
+        size++;
     }
 
     @Override
-    public T get(int index) {
-        return null;
+    public void addAll(List<E> list) {
+        for (int i = 0; i < list.size(); i++) {
+            add(list.get(i));
+        }
     }
 
     @Override
-    public void set(T value, int index) {
-
+    public E get(int index) {
+        checkIndex(index);
+        return data[index];
     }
 
     @Override
-    public T remove(int index) {
-        return null;
+    public void set(E value, int index) {
+        checkIndex(index);
+        data[index] = value;
     }
 
     @Override
-    public T remove(T element) {
-        return null;
+    public E remove(int index) {
+        checkIndex(index);
+        E deletedData = data[index];
+        System.arraycopy(data, index + 1, data, index, size - index - 1);
+        size--;
+        return deletedData;
+    }
+
+    @Override
+    public E remove(E element) {
+        for (int i = 0; i < size; i++) {
+            if (areEqual(data[i], element)) {
+                return remove(i);
+            }
+        }
+        throw new NoSuchElementException("Can't remove non-existing element: " + element);
     }
 
     @Override
     public int size() {
-        return 0;
+        return size;
     }
 
     @Override
     public boolean isEmpty() {
-        return false;
+        return size == 0;
+    }
+
+    private boolean isStorageFull() {
+        return size == data.length;
+    }
+
+    private void grow() {
+        int newCapacity = (data.length >> 1) + data.length;
+        E[] biggerData = (E[]) new Object[newCapacity];
+        System.arraycopy(data, 0, biggerData, 0, data.length);
+        data = biggerData;
+    }
+
+    private void checkIndex(int index) {
+        if (index >= size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Index : " + index + " is out of bounds.");
+        }
+    }
+
+    private boolean areEqual(E a, E b) {
+        return a == b || a != null && a.equals(b);
     }
 }
