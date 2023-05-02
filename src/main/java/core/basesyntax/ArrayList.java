@@ -74,6 +74,27 @@ public class ArrayList<T> implements List<T> {
         throw new NoSuchElementException("Not found such element.");
     }
 
+    @Override
+    public void add(T value) {
+        if (size == elementData.length) {
+            grow();
+        }
+        elementData[size++] = value;
+    }
+
+    @Override
+    public void add(T value, int index) {
+        checkIndex(index, size + 1);
+        if (size == elementData.length) {
+            grow();
+        }
+        System.arraycopy(elementData, index,
+                elementData, index + 1,
+                size - index);
+        elementData[index] = value;
+        size++;
+    }
+
     private int foundElementIndex(T element) {
         final Object[] elements = elementData;
         int i = 0;
@@ -102,27 +123,6 @@ public class ArrayList<T> implements List<T> {
         elementData[size = newSize] = null;
     }
 
-    @Override
-    public void add(T value) {
-        if (size == elementData.length) {
-            grow();
-        }
-        elementData[size++] = value;
-    }
-
-    @Override
-    public void add(T value, int index) {
-        checkIndex(index, size + 1);
-        if (size == elementData.length) {
-            grow();
-        }
-        System.arraycopy(elementData, index,
-                elementData, index + 1,
-                size - index);
-        elementData[index] = value;
-        size++;
-    }
-
     private static int newLength(int oldLength, int minGrowth, int prefGrowth) {
 
         int prefLength = oldLength + Math.max(minGrowth, prefGrowth);
@@ -139,7 +139,8 @@ public class ArrayList<T> implements List<T> {
             throw new OutOfMemoryError(
                     "Required array length " + oldLength + " + " + minGrowth + " is too large");
         } else {
-            return Math.max(minLength, SOFT_MAX_ARRAY_LENGTH);
+            return Math.max(minLength,
+                    SOFT_MAX_ARRAY_LENGTH);
         }
     }
 
@@ -149,10 +150,10 @@ public class ArrayList<T> implements List<T> {
         elementData =
                 (oldCapacity > 0
                         || !Arrays.equals(elementData, DEFAULT_CAPACITY_EMPTY_ELEMENT_DATA))
-                ? Arrays.copyOf(elementData, newLength(oldCapacity,
-                minCapacity - oldCapacity,
-                oldCapacity >> 1))
-                : new Object[Math.max(DEFAULT_CAPACITY, minCapacity)];
+                        ? Arrays.copyOf(elementData, newLength(oldCapacity,
+                        minCapacity - oldCapacity,
+                        oldCapacity >> 1))
+                        : new Object[Math.max(DEFAULT_CAPACITY, minCapacity)];
     }
 
     private void checkIndex(int index, int length) {
