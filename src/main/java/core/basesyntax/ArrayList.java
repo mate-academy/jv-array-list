@@ -4,18 +4,10 @@ import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    private static final int DEFAULT_CAPACITY;
-    private static final int SOFT_MAX_ARRAY_LENGTH;
-    private static final Object[] DEFAULT_CAPACITY_EMPTY_ELEMENT_DATA;
-    private static final int NOT_EXISTING_INDEX;
-
-    static {
-        NOT_EXISTING_INDEX = -1;
-        DEFAULT_CAPACITY = 10;
-        SOFT_MAX_ARRAY_LENGTH = Integer.MAX_VALUE - 8;
-        DEFAULT_CAPACITY_EMPTY_ELEMENT_DATA = new Object[]{};
-    }
-
+    private static final int NOT_EXISTING_INDEX = -1;
+    private static final int DEFAULT_CAPACITY = 10;
+    private static final int SOFT_MAX_ARRAY_LENGTH = Integer.MAX_VALUE - 8;
+    private static final Object[] DEFAULT_CAPACITY_EMPTY_ELEMENT_DATA = new Object[]{};
     private Object[] elementData;
     private int size;
 
@@ -23,26 +15,20 @@ public class ArrayList<T> implements List<T> {
         elementData = DEFAULT_CAPACITY_EMPTY_ELEMENT_DATA;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void addAll(List<T> list) {
         Object[] objectsList = toArray(list);
-        int numNew = objectsList.length;
-        if (numNew == 0) {
-            return;
+        for (Object element : objectsList) {
+            add((T) element);
         }
-        Object[] elementData;
-        final int size;
-        if (numNew > (elementData = this.elementData).length - (size = this.size)) {
-            elementData = grow(size + numNew);
-        }
-        System.arraycopy(objectsList, 0, elementData, size, numNew);
-        this.size = size + numNew;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public T get(int index) {
         checkIndex(index, size);
-        return elementData(index);
+        return (T) elementData[index];
     }
 
     @Override
@@ -72,10 +58,9 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         checkIndex(index, size);
-        final Object[] elements = elementData;
         @SuppressWarnings("unchecked")
-        T oldValue = (T) elements[index];
-        fastRemove(elements, index);
+        T oldValue = (T) elementData[index];
+        fastRemove(index);
         return oldValue;
     }
 
@@ -83,7 +68,7 @@ public class ArrayList<T> implements List<T> {
     public T remove(T element) {
         int searchingIndex = foundElementIndex(element);
         if (searchingIndex > NOT_EXISTING_INDEX) {
-            fastRemove(elementData, searchingIndex);
+            fastRemove(searchingIndex);
             return element;
         }
         throw new NoSuchElementException("Not found such element.");
@@ -91,7 +76,6 @@ public class ArrayList<T> implements List<T> {
 
     private int foundElementIndex(T element) {
         final Object[] elements = elementData;
-        final int size = this.size;
         int i = 0;
         if (element == null) {
             for (; i < size; i++) {
@@ -109,40 +93,34 @@ public class ArrayList<T> implements List<T> {
         return NOT_EXISTING_INDEX;
     }
 
-    private void fastRemove(Object[] es, int i) {
+    private void fastRemove(int i) {
         final int newSize;
         if ((newSize = size - 1) > i) {
-            System.arraycopy(es, i + 1, es, i, newSize - i);
+            System.arraycopy(elementData, i + 1,
+                    elementData, i, newSize - i);
         }
-        es[size = newSize] = null;
+        elementData[size = newSize] = null;
     }
 
     @Override
     public void add(T value) {
-        add(value, elementData, size);
+        if (size == elementData.length) {
+            grow();
+        }
+        elementData[size++] = value;
     }
 
     @Override
     public void add(T value, int index) {
         checkIndex(index, size + 1);
-        final int size;
-        Object[] elementData;
-        if ((size = this.size) == (elementData = this.elementData).length) {
-            elementData = grow();
+        if (size == elementData.length) {
+            grow();
         }
         System.arraycopy(elementData, index,
                 elementData, index + 1,
                 size - index);
         elementData[index] = value;
-        this.size = size + 1;
-    }
-
-    private void add(T element, Object[] elementData, int size) {
-        if (size == elementData.length) {
-            elementData = grow();
-        }
-        elementData[size] = element;
-        this.size = size + 1;
+        size++;
     }
 
     private static int newLength(int oldLength, int minGrowth, int prefGrowth) {
@@ -165,25 +143,16 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private Object[] grow(int minCapacity) {
+    private void grow() {
+        int minCapacity = size + 1;
         int oldCapacity = elementData.length;
-        if (oldCapacity > 0 || elementData != DEFAULT_CAPACITY_EMPTY_ELEMENT_DATA) {
-            int newCapacity = newLength(oldCapacity,
-                    minCapacity - oldCapacity,
-                    oldCapacity >> 1);
-            return elementData = Arrays.copyOf(elementData, newCapacity);
-        } else {
-            return elementData = new Object[Math.max(DEFAULT_CAPACITY, minCapacity)];
-        }
-    }
-
-    private Object[] grow() {
-        return grow(size + 1);
-    }
-
-    @SuppressWarnings("unchecked")
-    private T elementData(int index) {
-        return (T) elementData[index];
+        elementData =
+                (oldCapacity > 0
+                        || !Arrays.equals(elementData, DEFAULT_CAPACITY_EMPTY_ELEMENT_DATA))
+                ? Arrays.copyOf(elementData, newLength(oldCapacity,
+                minCapacity - oldCapacity,
+                oldCapacity >> 1))
+                : new Object[Math.max(DEFAULT_CAPACITY, minCapacity)];
     }
 
     private void checkIndex(int index, int length) {
