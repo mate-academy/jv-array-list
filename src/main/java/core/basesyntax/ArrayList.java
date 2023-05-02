@@ -23,15 +23,17 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index > size || index < 0) {
-            trowException();
+        checkIndex(index);
+        if (index == size) {
+            add(value);
+        } else {
+            if (size == elementsData.length) {
+                resize();
+            }
+            System.arraycopy(elementsData, index, elementsData, index + 1, size - index);
+            elementsData[index] = value;
+            size++;
         }
-        if (size == elementsData.length - 1) {
-            resize();
-        }
-        System.arraycopy(elementsData, index, elementsData, index + 1, size - index);
-        elementsData[index] = value;
-        size++;
     }
 
     @Override
@@ -41,7 +43,7 @@ public class ArrayList<T> implements List<T> {
             data[i] = list.get(i);
         }
         if (elementsData.length - size < list.size()) {
-            resize();
+            resizeForAddAll(list);
         }
         System.arraycopy(data, 0, elementsData, size, data.length);
         size += data.length;
@@ -49,19 +51,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        checkIndex(index);
+        checkIndexEqualSize(index);
         return elementsData[index];
     }
 
     @Override
     public void set(T value, int index) {
-        checkIndex(index);
+        checkIndexEqualSize(index);
         elementsData[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        checkIndex(index);
+        checkIndexEqualSize(index);
         T removedElement = elementsData[index];
         System.arraycopy(elementsData, index + 1, elementsData, index, (size - index) - 1);
         size--;
@@ -90,17 +92,31 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void resize() {
+
         elementsData = Arrays.copyOf(elementsData, (int) (elementsData.length * 1.5 + 1));
     }
 
-    private void checkIndex(int index) {
+    private void checkIndexEqualSize(int index) {
         if (index >= size || index < 0) {
-            trowException();
+            trowException(index);
         }
     }
 
-    private void trowException() {
+    private void checkIndex(int index) {
+        if (index > size || index < 0) {
+            trowException(index);
+        }
+    }
+
+    private void resizeForAddAll(List<T> list) {
+        int newSize = Math.max((int) (elementsData.length * 1.5 + 1),
+                ((elementsData.length + list.size()) + 2));
+        elementsData = Arrays.copyOf(elementsData, newSize);
+    }
+
+    private void trowException(int index) {
         throw new ArrayListIndexOutOfBoundsException("Invalid index outside"
-                + " the dimension of the array");
+                + " the dimension of the array, index - " + index + System.lineSeparator()
+                + "array size - " + size);
     }
 }
