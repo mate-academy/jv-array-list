@@ -4,11 +4,11 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    private Object[] elementData;
+    private T[] elementData;
     private int size;
 
     public ArrayList() {
-        elementData = new Object[DEFAULT_CAPACITY];
+        elementData = (T[]) new Object[DEFAULT_CAPACITY];
         size = 0;
     }
 
@@ -21,9 +21,11 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException(" Index " + index + " out of bounds List");
+        if (index == size) {
+            add(value);
+            return;
         }
+        rangeCheckForAdd(index);
         growIfArrayFull(size);
         System.arraycopy(elementData,index,elementData,index + 1,size - index);
         elementData[index] = value;
@@ -89,7 +91,7 @@ public class ArrayList<T> implements List<T> {
         if (minSize >= elementData.length) {
             Object[] copyElementData = elementData.clone();
             while (elementData.length <= minSize) {
-                elementData = new Object[size + size / 2];
+                elementData = (T[])new Object[size + size / 2];
             }
             System.arraycopy(copyElementData, 0, elementData, 0, copyElementData.length);
         }
