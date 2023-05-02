@@ -43,7 +43,8 @@ public class ArrayList<T> implements List<T> {
             data[i] = list.get(i);
         }
         if (elementsData.length - size < list.size()) {
-            resizeForAddAll(list);
+            int newSize = ((int) (elementsData.length * 1.5 + 1) + list.size());
+            elementsData = Arrays.copyOf(elementsData, newSize);
         }
         System.arraycopy(data, 0, elementsData, size, data.length);
         size += data.length;
@@ -98,23 +99,17 @@ public class ArrayList<T> implements List<T> {
 
     private void checkIndexEqualSize(int index) {
         if (index >= size || index < 0) {
-            trowException(index);
+            throwException(index);
         }
     }
 
     private void checkIndex(int index) {
         if (index > size || index < 0) {
-            trowException(index);
+            throwException(index);
         }
     }
 
-    private void resizeForAddAll(List<T> list) {
-        int newSize = Math.max((int) (elementsData.length * 1.5 + 1),
-                ((elementsData.length + list.size()) + 2));
-        elementsData = Arrays.copyOf(elementsData, newSize);
-    }
-
-    private void trowException(int index) {
+    private void throwException(int index) {
         throw new ArrayListIndexOutOfBoundsException("Invalid index outside"
                 + " the dimension of the array, index - " + index + System.lineSeparator()
                 + "array size - " + size);
