@@ -3,16 +3,17 @@ package core.basesyntax;
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private static final double RESIZE_FACTOR = 1.5;
-    private T[] values;
+    private T[] elements;
     int size = 0;
+
+    public ArrayList() {
+        elements = (T[]) new Object[DEFAULT_CAPACITY];
+    }
 
 
 
     @Override
     public void add(T value) {
-
-
-
     }
 
     @Override
