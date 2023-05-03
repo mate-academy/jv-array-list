@@ -95,7 +95,7 @@ public class ArrayList<T> implements List<T> {
         size++;
     }
 
-    private int foundElementIndex(T element) {
+    private int findIndex(T element) {
         final Object[] elements = elementData;
         int i = 0;
         if (element == null) {
