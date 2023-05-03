@@ -15,27 +15,17 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (size < DEFAULT_SIZE) {
-            elementData[size++] = value;
-        } else {
-            grow();
-            elementData[size++] = value;
-        }
+        checkGrowIfNeed();
+        elementData[size++] = value;
     }
 
     @Override
     public void add(T value, int index) {
-        checkIndex(index);
-        if (size < DEFAULT_SIZE) {
-            arrayCopyForAddByIndex(index);
-            elementData[index] = value;
-            size++;
-        } else {
-            grow();
-            arrayCopyForAddByIndex(index);
-            elementData[index] = value;
-            size++;
-        }
+        checkIndexForAddByIndex(index);
+        checkGrowIfNeed();
+        arrayCopyForAddByIndex(index);
+        elementData[index] = value;
+        size++;
     }
 
     @Override
@@ -53,21 +43,13 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         checkIndex(index);
-        if (size > index) {
-            return elementData[index];
-        } else {
-            throw new ArrayListIndexOutOfBoundsException("Error in get method");
-        }
+        return elementData[index];
     }
 
     @Override
     public void set(T value, int index) {
         checkIndex(index);
-        if (size > index) {
-            elementData[index] = value;
-        } else {
-            throw new ArrayListIndexOutOfBoundsException("Error in set method");
-        }
+        elementData[index] = value;
     }
 
     @Override
@@ -103,6 +85,12 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
+    private void checkGrowIfNeed() {
+        if (size >= DEFAULT_SIZE) {
+            grow();
+        }
+    }
+
     private T[] grow() {
         int oldCapacity = elementData.length;
         if (oldCapacity > 0 || elementData != null) {
@@ -114,6 +102,12 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void checkIndex(int index) {
+        if (index >= size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Index >= size or index < 0");
+        }
+    }
+
+    private void checkIndexForAddByIndex(int index) {
         if (index > size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Index > size or index < 0");
         }
