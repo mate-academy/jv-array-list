@@ -55,13 +55,9 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
-        if (size > index) {
-            T oldValue = elementData[index];
-            removeByIndex(elementData, index);
-            return oldValue;
-        } else {
-            throw new ArrayListIndexOutOfBoundsException("Error in remove method");
-        }
+        T oldValue = elementData[index];
+        removeByIndex(elementData, index);
+        return oldValue;
     }
 
     @Override
