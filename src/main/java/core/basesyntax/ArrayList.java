@@ -1,9 +1,15 @@
 package core.basesyntax;
 
 public class ArrayList<T> implements List<T> {
+    private static final int DEFAULT_CAPACITY = 10;
+    private static final double RESIZE_FACTOR = 1.5;
+    private T[] values;
+    int size = 0;
+
+
+
     @Override
     public void add(T value) {
-
 
 
 
