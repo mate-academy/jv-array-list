@@ -1,11 +1,9 @@
 package core.basesyntax;
 
-import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    public static final int DEFAULT_LIST_LENGTH = 10;
-    public static final int ONE_ELEMENT = 1;
+    private static final int DEFAULT_LIST_LENGTH = 10;
     private int size;
     private T[] elementData;
 
@@ -15,15 +13,15 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        growIfNeed(ONE_ELEMENT);
+        growIfNeeded(1);
         elementData[size++] = value;
     }
 
     @Override
     public void add(T value, int index) {
         checkIndexForAdd(index);
-        growIfNeed(ONE_ELEMENT);
-        System.arraycopy(elementData, index, elementData, index + ONE_ELEMENT,
+        growIfNeeded(1);
+        System.arraycopy(elementData, index, elementData, index + 1,
                 size - index);
         elementData[index] = value;
         size++;
@@ -31,9 +29,8 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        growIfNeed(list.size());
         for (int i = 0; i < list.size(); i++) {
-            elementData[size++] = list.get(i);
+            add(list.get(i));
         }
     }
 
@@ -54,8 +51,8 @@ public class ArrayList<T> implements List<T> {
         checkIndex(index);
         T[] elementDataCopy = elementData;
         T deletedElement = elementData[index];
-        System.arraycopy(elementData, index + ONE_ELEMENT, elementDataCopy, index,
-                size - ONE_ELEMENT - index);
+        System.arraycopy(elementData, index + 1, elementDataCopy, index,
+                size - 1 - index);
         size--;
         return deletedElement;
     }
@@ -75,32 +72,35 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    public void growIfNeed(int quantity) {
+    private void growIfNeeded(int quantity) {
         if (size + quantity > elementData.length) {
-            int newCapacity = (elementData.length + (elementData.length >> ONE_ELEMENT));
-            elementData = Arrays.copyOf(elementData, newCapacity);
+            int newCapacity = (elementData.length + (elementData.length >> 1));
+            T[] growedElementData = (T[]) new Object[newCapacity];
+            System.arraycopy(elementData,0, growedElementData, 0, size);
+            elementData = growedElementData;
         }
     }
 
-    public void checkIndex(int index) {
+    private void checkIndex(int index) {
         if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("there is no index" + index);
+            throw new ArrayListIndexOutOfBoundsException("invalid index: "
+                    + index + " is not exist");
         }
     }
 
-    public void checkIndexForAdd(int index) {
+    private void checkIndexForAdd(int index) {
         if (index > size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("there is no index" + index);
+            throw new ArrayListIndexOutOfBoundsException(" Index " + index + " out of bounds List");
         }
     }
 
-    public int getElementIndex(T element) {
+    private int getElementIndex(T element) {
         for (int i = 0; i < elementData.length; i++) {
-            if ((elementData[i] == element) || (element != null)
+            if (elementData[i] == element || (element != null)
                     && element.equals(elementData[i])) {
                 return i;
             }
         }
-        throw new NoSuchElementException("there is no such element" + element);
+        throw new NoSuchElementException("invalid element: " + element + " is not exist");
     }
 }
