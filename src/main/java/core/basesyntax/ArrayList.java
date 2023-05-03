@@ -8,7 +8,7 @@ public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private static final int SOFT_MAX_ARRAY_LENGTH = Integer.MAX_VALUE - 8;
     private static final Object[] DEFAULT_CAPACITY_EMPTY_ELEMENT_DATA = new Object[]{};
-    private Object[] elementData;
+    private T[] elementData;
     private int size;
 
     public ArrayList() {
