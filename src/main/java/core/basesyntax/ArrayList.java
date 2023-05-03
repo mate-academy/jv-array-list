@@ -35,6 +35,7 @@ public class ArrayList<T> implements List<T> {
             add(list.get(i));
         }
     }
+
     @Override
     public T get(int index) {
         checkIndexBounds(index);
