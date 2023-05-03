@@ -101,7 +101,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     private String outOfBoundsMsg(int index) {
-        return "Index: " + index + ", Size: " + size;
+        return "Index: " + index + " out of bounds for size: " + size;
     }
 
     private int newLength(int oldLength, int minGrowth, int prefGrowth) {
@@ -119,8 +119,8 @@ public class ArrayList<T> implements List<T> {
     }
 
     private T fastRemove(int index) {
-        final T oldValue = (T) elementData[index];
         size--;
+        T oldValue = (T) elementData[index];
         if (size > index) {
             System.arraycopy(elementData, index + 1, elementData, index, size - index);
         }
