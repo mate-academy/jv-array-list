@@ -28,9 +28,11 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException();
+        if (index == size) {
+            add(value);
+            return;
         }
+        checkIn(index);
         if (size == elements.length) {
             grow();
         }
@@ -68,17 +70,13 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException();
-        }
+        checkIn(index);
         return (T) elements[index];
     }
 
     @Override
     public T set(T value, int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException();
-        }
+        checkIn(index);
         T replace = (T) elements[index];
         elements[index] = value;
         return replace;
@@ -86,9 +84,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException();
-        }
+        checkIn(index);
         final T removedElement = (T) elements[index];
         for (int i = index; i < size - 1; i++) {
             elements[i] = elements[i + 1];
@@ -116,5 +112,11 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private void checkIn(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException();
+        }
     }
 }
