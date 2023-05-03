@@ -21,14 +21,14 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        resize();
+        resizeIfNeeded();
         elements[size++] = value;
     }
 
     @Override
     public void add(T value, int index) {
         checkIndex(index, size + 1);
-        resize();
+        resizeIfNeeded();
         System.arraycopy(elements, index, elements, index + 1, size - index);
         elements[index] = value;
         size++;
@@ -65,8 +65,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if (elements[i] == element
-                    || (elements[i] != null) && elements[i].equals(element)) {
+            if (elementsEquals(elements[i], element)) {
                 return remove(i);
             }
         }
@@ -83,7 +82,7 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void resize() {
+    private void resizeIfNeeded() {
         if (elements.length == size) {
             T[] tempArray = (T[]) new Object[(int) (elements.length * MULTIPLIER)];
             System.arraycopy(elements, 0, tempArray, 0, size);
@@ -93,7 +92,11 @@ public class ArrayList<T> implements List<T> {
 
     private void checkIndex(int index, int size) {
         if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("error");
+            throw new ArrayListIndexOutOfBoundsException("Index Out Of Bounds");
         }
+    }
+
+    private boolean elementsEquals(Object first, Object second) {
+        return (first == second) || (first != null && first.equals(second));
     }
 }
