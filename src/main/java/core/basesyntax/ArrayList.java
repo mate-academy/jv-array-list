@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-
+    private static final int NUM_ONE = 1;
     private static final int DEFAULT_SIZE = 10;
     private int size;
     private T[] elementData;
@@ -78,7 +78,7 @@ public class ArrayList<T> implements List<T> {
             removeByIndex(elementData, index);
             return oldValue;
         } else {
-            throw new ArrayListIndexOutOfBoundsException("Error in remove by index method");
+            throw new ArrayListIndexOutOfBoundsException("Error in remove method");
         }
     }
 
@@ -106,7 +106,7 @@ public class ArrayList<T> implements List<T> {
     private T[] grow() {
         int oldCapacity = elementData.length;
         if (oldCapacity > 0 || elementData != null) {
-            int newCapacity = oldCapacity + (DEFAULT_SIZE >> 1) + 1;
+            int newCapacity = oldCapacity + (DEFAULT_SIZE >> NUM_ONE) + NUM_ONE;
             return elementData = Arrays.copyOf(elementData, newCapacity);
         } else {
             throw new ArrayListIndexOutOfBoundsException("Error in grow method");
@@ -120,11 +120,11 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void arrayCopyForAddByIndex(int index) {
-        System.arraycopy(elementData, index, elementData, index + 1, size - index);
+        System.arraycopy(elementData, index, elementData, index + NUM_ONE, size - index);
     }
 
     private void removeByIndex(T[] elementData, int index) {
-        System.arraycopy(elementData, index + 1, elementData, index, size - 1 - index);
+        System.arraycopy(elementData, index + NUM_ONE, elementData, index, size - NUM_ONE - index);
         size--;
     }
 
