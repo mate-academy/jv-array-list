@@ -12,25 +12,24 @@ public class ArrayList<T> implements List<T> {
     }
 
     @Override
-    public void add(T value) { //
-        if (size == size()) {
-            resize();
-        }
+    public void add(T value) {
+        resize();
         elementsData[size] = value;
         size++;
     }
 
     @Override
     public void add(T value, int index) {
-        if (index == size) { //
+        if (index == size) {
             add(value);
-        } else {
-            checkIndex(index);
-            resize();
-            System.arraycopy(elementsData, index, elementsData, index + 1, size - index);
-            elementsData[index] = value;
-            size++;
+            return;
         }
+        checkIndex(index);
+        resize();
+        System.arraycopy(elementsData, index, elementsData, index + 1, size - index);
+        elementsData[index] = value;
+        size++;
+
     }
 
     @Override
