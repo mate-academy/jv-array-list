@@ -11,8 +11,9 @@ public class ArrayList<T> implements List<T> {
     private T[] elementData;
     private int size;
 
+    @SuppressWarnings("unchecked")
     public ArrayList() {
-        elementData = DEFAULT_CAPACITY_EMPTY_ELEMENT_DATA;
+        elementData = (T[]) DEFAULT_CAPACITY_EMPTY_ELEMENT_DATA;
     }
 
     @SuppressWarnings("unchecked")
@@ -24,11 +25,10 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public T get(int index) {
         checkIndex(index, size);
-        return (T) elementData[index];
+        return elementData[index];
     }
 
     @Override
@@ -58,15 +58,14 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         checkIndex(index, size);
-        @SuppressWarnings("unchecked")
-        T oldValue = (T) elementData[index];
+        T oldValue = elementData[index];
         fastRemove(index);
         return oldValue;
     }
 
     @Override
     public T remove(T element) {
-        int searchingIndex = foundElementIndex(element);
+        int searchingIndex = findIndex(element);
         if (searchingIndex > NOT_EXISTING_INDEX) {
             fastRemove(searchingIndex);
             return element;
@@ -144,6 +143,7 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
+    @SuppressWarnings("unchecked")
     private void grow() {
         int minCapacity = size + 1;
         int oldCapacity = elementData.length;
@@ -153,7 +153,7 @@ public class ArrayList<T> implements List<T> {
                         ? Arrays.copyOf(elementData, newLength(oldCapacity,
                         minCapacity - oldCapacity,
                         oldCapacity >> 1))
-                        : new Object[Math.max(DEFAULT_CAPACITY, minCapacity)];
+                        : (T[]) new Object[Math.max(DEFAULT_CAPACITY, minCapacity)];
     }
 
     private void checkIndex(int index, int length) {
