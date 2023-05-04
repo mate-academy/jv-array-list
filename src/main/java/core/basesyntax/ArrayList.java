@@ -1,48 +1,132 @@
 package core.basesyntax;
 
+import java.util.NoSuchElementException;
+
 public class ArrayList<T> implements List<T> {
+    private static final int DEFAULT_LENGTH = 10;
+    private static final float EXPANSION_MULTIPLIER = 1.5F;
+    private static final int ARRAY_ELEMENTS_OFFSET = 1;
+    private T[] array;
+    private int size;
+
+    public ArrayList() {
+        this.array = (T[]) new Object[DEFAULT_LENGTH];
+    }
+
     @Override
     public void add(T value) {
-
+        if (isArrayHaveOneMoreLine()) {
+            array[size] = value;
+            size++;
+        } else {
+            grow();
+            add(value);
+        }
     }
 
     @Override
     public void add(T value, int index) {
-
+        exceptionCheckForAdd(index);
+        if (index == size) {
+            add(value);
+            return;
+        }
+        if (isArrayHaveOneMoreLine()) {
+            System.arraycopy(array, index,
+                    array, index + ARRAY_ELEMENTS_OFFSET,
+                    size - index);
+            array[index] = value;
+            size++;
+        } else {
+            grow();
+            add(value, index);
+        }
     }
 
     @Override
     public void addAll(List<T> list) {
-
+        for (int i = 0; i < list.size(); i++) {
+            add(list.get(i));
+        }
     }
 
     @Override
     public T get(int index) {
-        return null;
+        exceptionCheckForGetSetRemove(index);
+        return array[index];
     }
 
     @Override
     public void set(T value, int index) {
-
+        exceptionCheckForGetSetRemove(index);
+        array[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        return null;
+        exceptionCheckForGetSetRemove(index);
+        T returnValue = array[index];
+        System.arraycopy(array, index + ARRAY_ELEMENTS_OFFSET,
+                array, index, size - index - ARRAY_ELEMENTS_OFFSET);
+        size--;
+        return returnValue;
     }
 
     @Override
     public T remove(T element) {
-        return null;
+        if (element == null) {
+            return null;
+        }
+        int i = indexOfElementFinder(element);
+        if (i < 0) {
+            throw new NoSuchElementException("Element not found");
+        }
+        remove(i);
+        return element;
     }
 
     @Override
     public int size() {
-        return 0;
+        return size;
     }
 
     @Override
     public boolean isEmpty() {
-        return false;
+        return size == 0;
+    }
+
+    private void grow() {
+        T[] newArray = (T[]) new Object[(int) (array.length * EXPANSION_MULTIPLIER)];
+        if (size >= 0) System.arraycopy(array, 0, newArray, 0, size);
+        array = newArray;
+    }
+
+    private boolean isArrayHaveOneMoreLine() {
+        return array.length > size;
+    }
+
+    private int indexOfElementFinder(T element) {
+        for (int i = 0; i < size; i++) {
+            if (array[i] != null && array[i].equals(element)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    private void exceptionCheckForAdd ( int index) {
+        if (index < 0 || index > size) {
+            arrayListExceptionThrow();
+        }
+    }
+
+    private void exceptionCheckForGetSetRemove ( int index) {
+        if (index < 0 || index >= size) {
+            arrayListExceptionThrow();
+        }
+    }
+
+    private void arrayListExceptionThrow () {
+        throw new ArrayListIndexOutOfBoundsException("There is no such index!");
     }
 }
