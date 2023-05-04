@@ -1,6 +1,12 @@
 package core.basesyntax;
 
 public class ArrayList<T> implements List<T> {
+    private static final int DEFAULT_SIZE = 10;
+    private T[] content;
+    public ArrayList() {
+        content = (T[]) new Object[DEFAULT_SIZE];
+    }
+
     @Override
     public void add(T value) {
 
