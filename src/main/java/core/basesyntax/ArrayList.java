@@ -6,9 +6,11 @@ public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_LENGTH = 10;
     private static final float EXPANSION_MULTIPLIER = 1.5F;
     private static final int ARRAY_ELEMENTS_OFFSET = 1;
+    private static final int INVALID_INDEX = -1;
     private T[] array;
     private int size;
 
+    @SuppressWarnings("unchecked")
     public ArrayList() {
         this.array = (T[]) new Object[DEFAULT_LENGTH];
     }
@@ -74,9 +76,6 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        if (element == null) {
-            return null;
-        }
         int i = indexOfElementFinder(element);
         if (i < 0) {
             throw new NoSuchElementException("Element not found");
@@ -95,9 +94,10 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
+    @SuppressWarnings("unchecked")
     private void grow() {
         T[] newArray = (T[]) new Object[(int) (array.length * EXPANSION_MULTIPLIER)];
-        if (size >= 0) System.arraycopy(array, 0, newArray, 0, size);
+        System.arraycopy(array, 0, newArray, 0, size);
         array = newArray;
     }
 
@@ -107,26 +107,28 @@ public class ArrayList<T> implements List<T> {
 
     private int indexOfElementFinder(T element) {
         for (int i = 0; i < size; i++) {
-            if (array[i] != null && array[i].equals(element)) {
+            if ((array[i] == element)
+                    || (array[i] != null
+                    && array[i].equals(element))) {
                 return i;
             }
         }
-        return -1;
+        return INVALID_INDEX;
     }
 
-    private void exceptionCheckForAdd ( int index) {
+    private void exceptionCheckForAdd(int index) {
         if (index < 0 || index > size) {
             arrayListExceptionThrow();
         }
     }
 
-    private void exceptionCheckForGetSetRemove ( int index) {
+    private void exceptionCheckForGetSetRemove(int index) {
         if (index < 0 || index >= size) {
             arrayListExceptionThrow();
         }
     }
 
-    private void arrayListExceptionThrow () {
+    private void arrayListExceptionThrow() {
         throw new ArrayListIndexOutOfBoundsException("There is no such index!");
     }
 }
