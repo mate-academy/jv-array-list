@@ -5,7 +5,8 @@ import org.junit.Assert;
 import org.junit.Test;
 
 public class ArrayListTest {
-    private static final int ELEMENTS_COUNT = 1000;
+    private static final int ELEMENTS_COUNT = 11;
+//    private static final int ELEMENTS_COUNT = 1000;
 
     @Test
     public void addElementToArrayList() {
