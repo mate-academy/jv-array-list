@@ -1,48 +1,106 @@
 package core.basesyntax;
 
+import java.util.NoSuchElementException;
+
 public class ArrayList<T> implements List<T> {
+    private static final int DEFAULT_CAPACITY = 10;
+    private static final int GROWTH_RATE = 5;
+    private int size;
+    private T[] elementData;
+    private T[] bufferArray;
+
+    public ArrayList() {
+        elementData = (T[]) new Object[DEFAULT_CAPACITY];
+    }
+
     @Override
     public void add(T value) {
-
+        if (elementData.length == size) {
+            grow();
+        }
+        elementData[size] = value;
+        size++;
     }
 
     @Override
     public void add(T value, int index) {
-
+        if (index > size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Index is not valid " + index);
+        }
+        if (elementData.length == size) {
+            grow();
+        }
+        System.arraycopy(elementData, index,
+                elementData, index + 1, size - index);
+        elementData[index] = value;
+        size++;
     }
 
     @Override
     public void addAll(List<T> list) {
-
+        for (int i = 0; i < list.size(); i++) {
+            add(list.get(i));
+        }
     }
 
     @Override
     public T get(int index) {
-        return null;
+        indexValidation(index);
+        return elementData[index];
     }
 
     @Override
     public void set(T value, int index) {
-
+        indexValidation(index);
+        elementData[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        return null;
+        indexValidation(index);
+        final T removedValue = elementData[index];
+        System.arraycopy(elementData, index + 1, elementData, index, size - 1 - index);
+        size--;
+        return removedValue;
     }
 
     @Override
     public T remove(T element) {
-        return null;
+        for (int i = 0; i < size(); i++) {
+            if (isEqualElement(element, elementData[i])) {
+                return remove(i);
+            }
+        }
+        throw new NoSuchElementException("Element " + element + " is not exist");
     }
 
     @Override
     public int size() {
-        return 0;
+        return size;
     }
 
     @Override
     public boolean isEmpty() {
+        return size == 0;
+    }
+
+    private void grow() {
+        bufferArray = (T[]) new Object[elementData.length + GROWTH_RATE];
+        System.arraycopy(elementData, 0, bufferArray, 0, size());
+        elementData = bufferArray;
+    }
+
+    private void indexValidation(int index) {
+        if (index < 0 || index >= size()) {
+            throw new ArrayListIndexOutOfBoundsException("Index " + index + " is not valid");
+        }
+    }
+
+    private boolean isEqualElement(T firstElement, T secondElement) {
+        if (firstElement == secondElement
+                || (firstElement != null && firstElement.equals(secondElement))) {
+            return true;
+        }
         return false;
     }
 }
