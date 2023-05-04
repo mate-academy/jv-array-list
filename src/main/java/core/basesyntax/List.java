@@ -13,7 +13,7 @@ public interface List<T> {
 
     T remove(int index);
 
-    T remove(T element);
+    T remove(T element) throws NoSuchFieldException;
 
     int size();
 
