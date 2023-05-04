@@ -9,12 +9,10 @@ public class ArrayList<T> implements List<T> {
 
     public ArrayList() {
         elements = (T[]) new Object[DEFAULT_CAPACITY];
-        size = 0;
     }
 
     public ArrayList(int capacity) {
         elements = (T[]) new Object[capacity];
-        size = 0;
     }
 
     public boolean contains(Object o) {
@@ -32,32 +30,20 @@ public class ArrayList<T> implements List<T> {
             add(value);
             return;
         }
-        checkIn(index);
-        if (size == elements.length) {
-            grow();
-        }
-        for (int i = size; i > index; i--) {
-            elements[i] = elements [i - 1];
-        }
+        checkIndex(index);
+        checkArray();
+        System.arraycopy(elements, index, elements, index + 1, size - index);
         elements[index] = value;
         size++;
     }
 
     @Override
     public boolean add(T value) {
-        if (size == elements.length) {
-            grow();
-        }
+        checkArray();
         elements[size] = value;
         size++;
         return true;
 
-    }
-
-    private void grow() {
-        Object[] newElements = new Object[elements.length + elements.length / 2];
-        System.arraycopy(elements, 0, newElements, 0, size);
-        elements = (T[]) newElements;
     }
 
     @Override
@@ -70,13 +56,13 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        checkIn(index);
+        checkIndex(index);
         return (T) elements[index];
     }
 
     @Override
     public T set(T value, int index) {
-        checkIn(index);
+        checkIndex(index);
         T replace = (T) elements[index];
         elements[index] = value;
         return replace;
@@ -84,12 +70,9 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(int index) {
-        checkIn(index);
-        final T removedElement = (T) elements[index];
-        for (int i = index; i < size - 1; i++) {
-            elements[i] = elements[i + 1];
-        }
-        elements[size - 1] = null;
+        checkIndex(index);
+        T removedElement = (T) elements[index];
+        System.arraycopy(elements, index + 1, elements, index, size - index - 1);
         size--;
         return removedElement;
     }
@@ -114,9 +97,21 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void checkIn(int index) {
+    private void grow() {
+        Object[] newElements = new Object[elements.length + elements.length / 2];
+        System.arraycopy(elements, 0, newElements, 0, size);
+        elements = (T[]) newElements;
+    }
+
+    private void checkIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException();
+            throw new ArrayListIndexOutOfBoundsException(" Index " + index + " out of bounds List");
+        }
+    }
+
+    private void checkArray() {
+        if (elements.length == size) {
+            grow();
         }
     }
 }
