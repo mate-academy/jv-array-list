@@ -6,13 +6,11 @@ import java.util.NoSuchElementException;
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private static final int MAX_CAPACITY = Integer.MAX_VALUE;
-    private static final int INITIAL_SIZE = 0;
-    private transient Object[] elementData;
+    private Object[] elementData;
     private int size;
 
     public ArrayList() {
         elementData = new Object[DEFAULT_CAPACITY];
-        size = INITIAL_SIZE;
     }
 
     @Override
@@ -82,7 +80,15 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    //private methods
+    @Override
+    public Object[] toArray() {
+        Object[] result = new Object[size()];
+        for (int i = 0; i < size(); i++) {
+            result[i] = get(i);
+        }
+        return result;
+    }
+
     private void inspectIndexForAdd(int index) {
         if (index > size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException(
@@ -125,19 +131,12 @@ public class ArrayList<T> implements List<T> {
         if (index < size - 1) {
             System.arraycopy(elementData, index + 1, elementData, index, size - index);
         } else {
-            System.arraycopy(elementData, index, elementData, index,size - index);
+            System.arraycopy(elementData, index, elementData, index, size - index);
         }
         size--;
         return removedUnit;
     }
-
-    @Override
-    public Object[] toArray() {
-        Object[] result = new Object[size()];
-        for (int i = 0; i < size(); i++) {
-            result[i] = get(i);
-        }
-        return result;
-    }
 }
+
+
 
