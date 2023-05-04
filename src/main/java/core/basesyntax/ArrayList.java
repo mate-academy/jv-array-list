@@ -1,6 +1,5 @@
 package core.basesyntax;
 
-import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
@@ -16,12 +15,10 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (size < elements.length) {
-            elements[size++] = value;
-        } else {
+        if (size >= elements.length) {
             resizeIfNeeded(ADD_ONE_ELEMENT);
-            elements[size++] = value;
         }
+        elements[size++] = value;
     }
 
     @Override
@@ -36,10 +33,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void addAll(List<T> list) {
         resizeIfNeeded(list.size());
-        int indexOfLastElement = size;
         for (int i = 0; i < list.size(); i++) {
-            elements[indexOfLastElement++] = list.get(i);
-            size++;
+            add(list.get(i));
         }
     }
 
@@ -59,21 +54,16 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         verifyIndex(index);
         T deletedElement = elements[index];
-        for (int i = index; i < elements.length - 1; i++) {
-            elements[i] = elements[i + 1];
-        }
+        System.arraycopy(elements, index + 1, elements, index, size - index - 1);
         size--;
         return deletedElement;
     }
 
     @Override
     public T remove(T element) {
-        T deletedElement;
         for (int i = 0; i < size; i++) {
             if ((elements[i] != null && elements[i].equals(element)) || elements[i] == element) {
-                deletedElement = elements[i];
-                remove(i);
-                return deletedElement;
+                return remove(i);
             }
         }
         throw new NoSuchElementException();
@@ -91,7 +81,10 @@ public class ArrayList<T> implements List<T> {
 
     private void resizeIfNeeded(int extraSize) {
         if (size + extraSize > elements.length) {
-            elements = Arrays.copyOf(elements, elements.length + (elements.length >> 1));
+            int newSize = elements.length + (elements.length >> 1);
+            T[] newArray = (T[]) new Object[newSize];
+            System.arraycopy(elements, 0, newArray, 0, size);
+            elements = newArray;
         }
     }
 
