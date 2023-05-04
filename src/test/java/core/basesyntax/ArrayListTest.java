@@ -70,7 +70,7 @@ public class ArrayListTest {
         newArrayList.add("Academy");
         newArrayList.add("Kiev");
         arrayList.addAll(newArrayList);
-        Assert.assertEquals("Test failed! Size of array should be " + 5 + "but it is "
+        Assert.assertEquals("Test failed! Size of array should be " + 5 + " but it is "
                 + arrayList.size(), 5, arrayList.size());
         Assert.assertEquals("Academy", arrayList.get(3));
         Assert.assertEquals("Kiev", arrayList.get(4));
@@ -100,7 +100,7 @@ public class ArrayListTest {
         ArrayList<String> arrayList = new ArrayList<>();
         for (int i = 0; i < ELEMENTS_COUNT; i++) {
             arrayList.add("First + " + i, 0);
-            Assert.assertEquals("Test failed! Size of array should be " + (i + 1) + "but it is "
+            Assert.assertEquals("Test failed! Size of array should be " + (i + 1) + " but it is "
                     + arrayList.size(), i + 1, arrayList.size());
         }
         for (int i = 0; i < ELEMENTS_COUNT; i++) {
