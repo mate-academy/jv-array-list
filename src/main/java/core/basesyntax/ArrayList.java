@@ -6,6 +6,7 @@ import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
+    public static final double GROWING_COEFFICIENT = 1.5;
     private int size;
     private T[] elementData;
 
@@ -88,7 +89,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void resize() {
-        elementData = Arrays.copyOf(elementData, (int) (elementData.length * 1.5));
+        elementData = Arrays.copyOf(elementData, (int) (elementData.length * GROWING_COEFFICIENT));
     }
 
     private void checkIndex(int index) {
