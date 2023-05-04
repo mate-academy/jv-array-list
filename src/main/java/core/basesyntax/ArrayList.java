@@ -6,7 +6,7 @@ import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    public static final double GROWING_COEFFICIENT = 1.5;
+    private static final double GROWING_COEFFICIENT = 1.5;
     private int size;
     private T[] elementData;
 
