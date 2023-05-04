@@ -1,8 +1,6 @@
 package core.basesyntax;
 
 public interface List<T> {
-    Object[] toArray();
-
     void add(T value);
 
     void add(T value, int index);

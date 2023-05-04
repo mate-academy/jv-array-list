@@ -1,26 +1,20 @@
 package core.basesyntax;
 
-import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    private Object[] elementData;
+    private T[] elementData;
     private int size;
 
     public ArrayList() {
-        elementData = new Object[DEFAULT_CAPACITY];
-    }
-
-    @Override
-    public Object[] toArray() {
-        return Arrays.copyOf(elementData, size);
+        elementData = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
     @Override
     public void add(T value) {
         if (size == elementData.length) {
-            elementData = grow();
+            grow();
         }
         elementData[size] = value;
         size++;
@@ -30,7 +24,7 @@ public class ArrayList<T> implements List<T> {
     public void add(T value, int index) {
         rangeCheckForAdd(index);
         if (size == elementData.length) {
-            elementData = grow();
+            grow();
         }
         System.arraycopy(elementData, index,
                         elementData, index + 1,
@@ -41,19 +35,15 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        Object[] arrayToAdd = list.toArray();
-        int arrayToAddLength = arrayToAdd.length;
-        if (arrayToAddLength > elementData.length - size) {
-            grow(size + arrayToAddLength);
+        for (int i = 0; i < list.size(); i++) {
+            add(list.get(i));
         }
-        System.arraycopy(arrayToAdd, 0, elementData, size, arrayToAddLength);
-        size += arrayToAddLength;
     }
 
     @Override
     public T get(int index) {
         checkIndex(index);
-        return (T) elementData[index];
+        return elementData[index];
     }
 
     @Override
@@ -90,46 +80,38 @@ public class ArrayList<T> implements List<T> {
 
     private void rangeCheckForAdd(int index) {
         if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException(outOfBoundsMsg(index));
+            throw new ArrayListIndexOutOfBoundsException(
+                    "Index: " + index + " out of bounds for size: " + size);
         }
     }
 
     private void checkIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException(outOfBoundsMsg(index));
+            throw new ArrayListIndexOutOfBoundsException(
+                    "Index: " + index + " out of bounds for size: " + size);
         }
     }
 
-    private String outOfBoundsMsg(int index) {
-        return "Index: " + index + " out of bounds for size: " + size;
-    }
-
-    private int newLength(int oldLength, int minGrowth, int prefGrowth) {
-        return oldLength + Math.max(minGrowth, prefGrowth);
-    }
-
-    private Object[] grow() {
-        return grow(size + 1);
-    }
-
-    private Object[] grow(int minCapacity) {
+    private void grow() {
         int oldCapacity = elementData.length;
-        int newCapacity = newLength(oldCapacity, minCapacity, oldCapacity >> 1);
-        return elementData = Arrays.copyOf(elementData, newCapacity);
+        int newCapacity = oldCapacity + Math.max(size + 1, oldCapacity >> 1);
+        T[] newElementData = (T[]) new Object[newCapacity];
+        System.arraycopy(elementData, 0, newElementData, 0, size);
+        elementData = newElementData;
     }
 
     private T fastRemove(int index) {
-        size--;
-        T oldValue = (T) elementData[index];
-        if (size > index) {
-            System.arraycopy(elementData, index + 1, elementData, index, size - index);
+        final T oldValue = elementData[index];
+        int newSize = size - 1;
+        if (newSize > index) {
+            System.arraycopy(elementData, index + 1, elementData, index, newSize - index);
         }
-        elementData[size] = null;
+        elementData[newSize] = null;
+        size = newSize;
         return oldValue;
     }
 
-    private boolean objectsEquals(Object a, Object b) {
-        return (a == b) || (a != null && a.equals(b));
+    private boolean objectsEquals(T a, T b) {
+        return a == b || a != null && a.equals(b);
     }
-
 }
