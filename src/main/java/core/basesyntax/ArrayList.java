@@ -15,25 +15,6 @@ public class ArrayList<T> implements List<T> {
         elementData = new Object[DEFAULT_CAPACITY];
     }
 
-    private void checkRangeForAdd(int index) {
-        if (index >= size || index < MINIMAL_SIZE_LIST) {
-            throw new ArrayListIndexOutOfBoundsException("No such index: " + index);
-        }
-    }
-
-    private void ensureCapacity(int minCapacity) {
-        if (minCapacity > elementData.length) {
-            T[] newArray = (T[]) new Object[(int) Math.max(elementData.length
-                    * MINIMAL_GROWING_RANGE, minCapacity)];
-            System.arraycopy(elementData, START_INDEX, newArray, START_INDEX, size);
-            elementData = newArray;
-        }
-    }
-
-    private void grow(int capacity) {
-        ensureCapacity(size + capacity);
-    }
-
     @Override
     public void add(T value) {
         ensureCapacity(size + MINIMAL_GROWING_STEP);
@@ -103,5 +84,24 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == MINIMAL_SIZE_LIST;
+    }
+
+    private void checkRangeForAdd(int index) {
+        if (index >= size || index < MINIMAL_SIZE_LIST) {
+            throw new ArrayListIndexOutOfBoundsException("No such index: " + index);
+        }
+    }
+
+    private void ensureCapacity(int minCapacity) {
+        if (minCapacity > elementData.length) {
+            T[] newArray = (T[]) new Object[(int) Math.max(elementData.length
+                    * MINIMAL_GROWING_RANGE, minCapacity)];
+            System.arraycopy(elementData, START_INDEX, newArray, START_INDEX, size);
+            elementData = newArray;
+        }
+    }
+
+    private void grow(int capacity) {
+        ensureCapacity(size + capacity);
     }
 }
