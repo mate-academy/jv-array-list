@@ -90,7 +90,7 @@ public class ArrayListTest {
             arrayList.add("First + " + i);
         }
         for (int i = 0; i < ELEMENTS_COUNT; i++) {
-            Assert.assertEquals("Test failed! Array can't resize correctly",
+            Assert.assertEquals("Test failed! Array can't growIfArrayFull correctly",
                     "First + " + i, arrayList.get(i));
         }
     }
@@ -104,7 +104,7 @@ public class ArrayListTest {
                     + arrayList.size(), i + 1, arrayList.size());
         }
         for (int i = 0; i < ELEMENTS_COUNT; i++) {
-            Assert.assertEquals("Test failed! Array can't resize correctly",
+            Assert.assertEquals("Test failed! Array can't growIfArrayFull correctly",
                     "First + " + (ELEMENTS_COUNT - i - 1), arrayList.get(i));
         }
     }
