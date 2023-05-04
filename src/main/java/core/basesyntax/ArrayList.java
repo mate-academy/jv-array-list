@@ -34,15 +34,6 @@ public class ArrayList<T> implements List<T> {
         size++;
     }
 
-    private void growIfArrayFull() {
-        if (size == elementData.length) {
-            int newSize = (int) (elementData.length * GROWING_COEFFICIENT);
-            T[] newArray = (T[]) new Object[newSize];
-            System.arraycopy(elementData, 0, newArray, 0, elementData.length);
-            elementData = newArray;
-        }
-    }
-
     @Override
     public void addAll(List<T> list) {
         for (int i = 0; i < list.size(); i++) {
@@ -56,10 +47,6 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayListIndexOutOfBoundsException("Invalid index passed");
         }
         return elementData[index];
-    }
-
-    private boolean indexIsInvalid(int index) {
-        return index < 0 || index >= size;
     }
 
     @Override
@@ -92,10 +79,6 @@ public class ArrayList<T> implements List<T> {
         throw new NoSuchElementException("No such element present");
     }
 
-    private boolean elementsAreEquals(T first, T second) {
-        return (first == second) || (second != null && second.equals(first));
-    }
-
     @Override
     public int size() {
         return size;
@@ -104,5 +87,22 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private boolean elementsAreEquals(T first, T second) {
+        return (first == second) || (second != null && second.equals(first));
+    }
+
+    private boolean indexIsInvalid(int index) {
+        return index < 0 || index >= size;
+    }
+
+    private void growIfArrayFull() {
+        if (size == elementData.length) {
+            int newSize = (int) (elementData.length * GROWING_COEFFICIENT);
+            T[] newArray = (T[]) new Object[newSize];
+            System.arraycopy(elementData, 0, newArray, 0, elementData.length);
+            elementData = newArray;
+        }
     }
 }
