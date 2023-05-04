@@ -1,7 +1,6 @@
 package core.basesyntax;
 
 import java.util.NoSuchElementException;
-import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_SIZE = 10;
@@ -19,20 +18,18 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (size == content.length) {
-            grow();
-        }
+        growContent();
         content[size++] = value;
     }
 
     @Override
     public void add(T value, int index) {
         if (!(index >= 0 && index <= size)) {
-            throw new ArrayListIndexOutOfBoundsException("The index is out of bounds");
+            String errorMessage = String.format("Can't add value at index %s. It's out of bounds.",
+                    index);
+            throw new ArrayListIndexOutOfBoundsException(errorMessage);
         }
-        if (size == content.length) {
-            grow();
-        }
+        growContent();
         System.arraycopy(content, index, content, index + 1, size++ - index);
         content[index] = value;
     }
@@ -40,11 +37,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void addAll(List<T> list) {
         int listSize = list.size();
-        int currentLength = content.length;
-        if (listSize > currentLength - size) {
-            int missingCells = Math.max(listSize - (currentLength - size), currentLength >> 1);
-            grow(missingCells);
-        }
+        growContent(listSize);
 
         T[] listArray = convertListToArray(list);
         System.arraycopy(listArray, 0, content, size, listSize);
@@ -56,14 +49,17 @@ public class ArrayList<T> implements List<T> {
         if (isInRange(index)) {
             return content[index];
         }
-        throw new ArrayListIndexOutOfBoundsException("The index is out of bounds");
+        String errorMessage = String.format("Can't get value with index %s. It's out of bounds.",
+                index);
+        throw new ArrayListIndexOutOfBoundsException(errorMessage);
     }
 
     @Override
     public void set(T value, int index) {
         if (!isInRange(index)) {
-            throw new ArrayListIndexOutOfBoundsException("Can't set value, because the index "
-                    + "is out of bounds");
+            String errorMessage = String.format("Can't set value at index %s. It's out of bounds.",
+                    index);
+            throw new ArrayListIndexOutOfBoundsException(errorMessage);
         }
         content[index] = value;
     }
@@ -75,7 +71,9 @@ public class ArrayList<T> implements List<T> {
             System.arraycopy(content, index + 1, content, index, size-- - (index + 1));
             return deletedValue;
         }
-        throw new ArrayListIndexOutOfBoundsException("The index is out of list's range");
+        String errorMessage = String.format("Can't remove value at index %s. It's out of bounds.",
+                index);
+        throw new ArrayListIndexOutOfBoundsException(errorMessage);
     }
 
     @Override
@@ -95,6 +93,20 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private void growContent() {
+        if (size == content.length) {
+            grow();
+        }
+    }
+
+    private void growContent(int sizeToExtend) {
+        int currentLength = content.length;
+        if (sizeToExtend > currentLength - size) {
+            int missingCells = Math.max(sizeToExtend - (currentLength - size), currentLength >> 1);
+            grow(missingCells);
+        }
     }
 
     private void grow() {
@@ -128,7 +140,8 @@ public class ArrayList<T> implements List<T> {
 
     private int getValueIndex(T value) {
         for (int i = 0; i < content.length; i++) {
-            if (Objects.equals(content[i], value)) {
+            T element = content[i];
+            if (element == value || element != null && element.equals(value)) {
                 return i;
             }
         }
