@@ -29,8 +29,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void addAll(List<T> list) {
         if (elementData.length > list.size()) {
-            for (int i = 0; i < list.size(); i++) {
-                elementData[size++] = list.get(i);
+            for (int index = 0; index < list.size(); index++) {
+                add(list.get(index));
             }
         } else {
             grow();
