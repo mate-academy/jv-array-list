@@ -15,7 +15,7 @@ public class ArrayList<T> implements List<T> {
         elementData = new Object[DEFAULT_CAPACITY];
     }
 
-    private void rangeCheckForAdd(int index) {
+    private void checkRangeForAdd(int index) {
         if (index >= size || index < MINIMAL_SIZE_LIST) {
             throw new ArrayListIndexOutOfBoundsException("No such index: " + index);
         }
@@ -23,8 +23,8 @@ public class ArrayList<T> implements List<T> {
 
     private void ensureCapacity(int minCapacity) {
         if (minCapacity > elementData.length) {
-            T[] newArray = (T[]) new Object[Math.max(elementData.length
-                    * (int) MINIMAL_GROWING_RANGE, minCapacity)];
+            T[] newArray = (T[]) new Object[(int) Math.max(elementData.length
+                    * MINIMAL_GROWING_RANGE, minCapacity)];
             System.arraycopy(elementData, START_INDEX, newArray, START_INDEX, size);
             elementData = newArray;
         }
@@ -46,7 +46,7 @@ public class ArrayList<T> implements List<T> {
             grow(MINIMAL_GROWING_STEP);
             elementData[size++] = value;
         } else {
-            rangeCheckForAdd(index);
+            checkRangeForAdd(index);
             grow(MINIMAL_GROWING_STEP);
             System.arraycopy(elementData, index, elementData, index + MINIMAL_GROWING_STEP,
                     size - index);
@@ -65,19 +65,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        rangeCheckForAdd(index);
+        checkRangeForAdd(index);
         return (T) elementData[index];
     }
 
     @Override
     public void set(T value, int index) {
-        rangeCheckForAdd(index);
+        checkRangeForAdd(index);
         elementData[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        rangeCheckForAdd(index);
+        checkRangeForAdd(index);
         T removedValue = (T) elementData[index];
         System.arraycopy(elementData, index + MINIMAL_GROWING_STEP, elementData, index,
                 size - index - MINIMAL_GROWING_STEP);
@@ -88,8 +88,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if ((element == null && elementData[i] == null)
-                    || (element != null && element.equals(elementData[i]))) {
+            if (element == elementData[i] || element != null && element.equals(elementData[i])) {
                 return remove(i);
             }
         }
