@@ -18,7 +18,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        growContent();
+        growIfNeeded();
         content[size++] = value;
     }
 
@@ -29,7 +29,7 @@ public class ArrayList<T> implements List<T> {
                     index);
             throw new ArrayListIndexOutOfBoundsException(errorMessage);
         }
-        growContent();
+        growIfNeeded();
         System.arraycopy(content, index, content, index + 1, size++ - index);
         content[index] = value;
     }
@@ -37,7 +37,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void addAll(List<T> list) {
         int listSize = list.size();
-        growContent(listSize);
+        growIfNeeded(listSize);
 
         T[] listArray = convertListToArray(list);
         System.arraycopy(listArray, 0, content, size, listSize);
@@ -95,13 +95,13 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void growContent() {
+    private void growIfNeeded() {
         if (size == content.length) {
             grow();
         }
     }
 
-    private void growContent(int sizeToExtend) {
+    private void growIfNeeded(int sizeToExtend) {
         int currentLength = content.length;
         if (sizeToExtend > currentLength - size) {
             int missingCells = Math.max(sizeToExtend - (currentLength - size), currentLength >> 1);
@@ -141,10 +141,14 @@ public class ArrayList<T> implements List<T> {
     private int getValueIndex(T value) {
         for (int i = 0; i < content.length; i++) {
             T element = content[i];
-            if (element == value || element != null && element.equals(value)) {
+            if (isObjectsEqual(element, value)) {
                 return i;
             }
         }
         return NOT_FOUND_INDEX;
+    }
+
+    private boolean isObjectsEqual(T a, T b) {
+        return a == b || a != null && a.equals(b);
     }
 }
