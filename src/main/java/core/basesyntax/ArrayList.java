@@ -1,12 +1,10 @@
 package core.basesyntax;
 
-import java.util.Arrays;
 import java.util.NoSuchElementException;
-import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    private static final double RESIZE = 1.5;
+    private static final double RESIZE_MULTIPLIER = 1.5;
     private Object[] elementsData;
     private int size;
 
@@ -61,18 +59,6 @@ public class ArrayList<T> implements List<T> {
         elementsData[index] = value;
     }
 
-    public void checkGrow() {
-        if (elementsData.length == size) {
-            growIfArrayFull();
-        }
-    }
-
-    public void growIfArrayFull() {
-        int currentCapacity = elementsData.length;
-        int newCapacity = (int) Math.round(currentCapacity * RESIZE);
-        elementsData = Arrays.copyOf(elementsData, newCapacity);
-    }
-
     @Override
     public T remove(int index) {
         checkIndexGet(index);
@@ -83,7 +69,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if (Objects.equals(element, elementsData[i])) {
+            if (element == elementsData[i]
+                    || (element != null && element.equals(elementsData[i]))) {
                 return removeElement(i);
             }
         }
@@ -105,5 +92,19 @@ public class ArrayList<T> implements List<T> {
         System.arraycopy(elementsData, index + 1, elementsData, index, size - index - 1);
         size--;
         return removedElement;
+    }
+
+    private void checkGrow() {
+        if (elementsData.length == size) {
+            growIfArrayFull();
+        }
+    }
+
+    private void growIfArrayFull() {
+        int currentCapacity = elementsData.length;
+        int newCapacity = (int) Math.round(currentCapacity * RESIZE_MULTIPLIER);
+        T[] newElementsData = (T[]) new Object[newCapacity];
+        System.arraycopy(elementsData, 0, newElementsData, 0, size);
+        elementsData = newElementsData;
     }
 }
