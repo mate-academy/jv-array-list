@@ -7,18 +7,18 @@ public class ArrayList<T> implements List<T> {
     private static final float EXPANSION_MULTIPLIER = 1.5F;
     private static final int ARRAY_ELEMENTS_OFFSET = 1;
     private static final int INVALID_INDEX = -1;
-    private T[] array;
+    private T[] elementArray;
     private int size;
 
     @SuppressWarnings("unchecked")
     public ArrayList() {
-        this.array = (T[]) new Object[DEFAULT_LENGTH];
+        this.elementArray = (T[]) new Object[DEFAULT_LENGTH];
     }
 
     @Override
     public void add(T value) {
         if (isArrayHaveOneMoreLine()) {
-            array[size] = value;
+            elementArray[size] = value;
             size++;
         } else {
             grow();
@@ -34,10 +34,10 @@ public class ArrayList<T> implements List<T> {
             return;
         }
         if (isArrayHaveOneMoreLine()) {
-            System.arraycopy(array, index,
-                    array, index + ARRAY_ELEMENTS_OFFSET,
+            System.arraycopy(elementArray, index,
+                    elementArray, index + ARRAY_ELEMENTS_OFFSET,
                     size - index);
-            array[index] = value;
+            elementArray[index] = value;
             size++;
         } else {
             grow();
@@ -55,21 +55,21 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         exceptionCheckForGetSetRemove(index);
-        return array[index];
+        return elementArray[index];
     }
 
     @Override
     public void set(T value, int index) {
         exceptionCheckForGetSetRemove(index);
-        array[index] = value;
+        elementArray[index] = value;
     }
 
     @Override
     public T remove(int index) {
         exceptionCheckForGetSetRemove(index);
-        T returnValue = array[index];
-        System.arraycopy(array, index + ARRAY_ELEMENTS_OFFSET,
-                array, index, size - index - ARRAY_ELEMENTS_OFFSET);
+        T returnValue = elementArray[index];
+        System.arraycopy(elementArray, index + ARRAY_ELEMENTS_OFFSET,
+                elementArray, index, size - index - ARRAY_ELEMENTS_OFFSET);
         size--;
         return returnValue;
     }
@@ -96,20 +96,20 @@ public class ArrayList<T> implements List<T> {
 
     @SuppressWarnings("unchecked")
     private void grow() {
-        T[] newArray = (T[]) new Object[(int) (array.length * EXPANSION_MULTIPLIER)];
-        System.arraycopy(array, 0, newArray, 0, size);
-        array = newArray;
+        T[] newArray = (T[]) new Object[(int) (elementArray.length * EXPANSION_MULTIPLIER)];
+        System.arraycopy(elementArray, 0, newArray, 0, size);
+        elementArray = newArray;
     }
 
     private boolean isArrayHaveOneMoreLine() {
-        return array.length > size;
+        return elementArray.length > size;
     }
 
     private int indexOfElementFinder(T element) {
         for (int i = 0; i < size; i++) {
-            if ((array[i] == element)
-                    || (array[i] != null
-                    && array[i].equals(element))) {
+            if ((elementArray[i] == element)
+                    || (elementArray[i] != null
+                    && elementArray[i].equals(element))) {
                 return i;
             }
         }
@@ -118,17 +118,19 @@ public class ArrayList<T> implements List<T> {
 
     private void exceptionCheckForAdd(int index) {
         if (index < 0 || index > size) {
-            arrayListExceptionThrow();
+            arrayListExceptionThrow(index);
         }
     }
 
     private void exceptionCheckForGetSetRemove(int index) {
         if (index < 0 || index >= size) {
-            arrayListExceptionThrow();
+            arrayListExceptionThrow(index);
         }
     }
 
-    private void arrayListExceptionThrow() {
-        throw new ArrayListIndexOutOfBoundsException("There is no such index!");
+    private void arrayListExceptionThrow(int index) {
+        throw new ArrayListIndexOutOfBoundsException("There is no such index!"
+                + " Index bounds are from 0 to "
+                + (size - 1) + ", but your index is " + index);
     }
 }
