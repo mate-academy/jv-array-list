@@ -60,7 +60,6 @@ public class ArrayList<T> implements List<T> {
         System.arraycopy(content, index + 1, content, index, size - (index + 1));
         size--;
         return deletedValue;
-
     }
 
     @Override
