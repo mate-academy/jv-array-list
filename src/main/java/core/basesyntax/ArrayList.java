@@ -8,7 +8,7 @@ public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private static final double RESIZE = 1.5;
     private Object[] elementsData;
-    private int size = 0;
+    private int size;
 
     public ArrayList() {
         this.elementsData = new Object[DEFAULT_CAPACITY];
@@ -63,11 +63,11 @@ public class ArrayList<T> implements List<T> {
 
     public void checkGrow() {
         if (elementsData.length == size) {
-            grow();
+            growIfArrayFull();
         }
     }
 
-    public void grow() {
+    public void growIfArrayFull() {
         int currentCapacity = elementsData.length;
         int newCapacity = (int) Math.round(currentCapacity * RESIZE);
         elementsData = Arrays.copyOf(elementsData, newCapacity);
