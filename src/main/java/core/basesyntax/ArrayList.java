@@ -66,7 +66,7 @@ public class ArrayList<T> implements List<T> {
                 return element;
             }
         }
-        throw new NoSuchElementException();
+        throw new NoSuchElementException("This element - " + element + " not in the array");
     }
 
     @Override
@@ -94,7 +94,8 @@ public class ArrayList<T> implements List<T> {
 
     private void checkIndex(int index) {
         if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index >= size or index < 0");
+            throw new ArrayListIndexOutOfBoundsException("Input index " + index
+                    + " for size " + size);
         }
     }
 
