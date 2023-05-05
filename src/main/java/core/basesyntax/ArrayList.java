@@ -25,9 +25,7 @@ public class ArrayList<T> implements List<T> {
             add(value);
             return;
         }
-        if (indexIsInvalid(index)) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index passed");
-        }
+        indexIsInvalid(index);
         growIfArrayFull();
         System.arraycopy(elementData, index, elementData, index + 1, size - index);
         set(value, index);
@@ -43,25 +41,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (indexIsInvalid(index)) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index passed");
-        }
+        indexIsInvalid(index);
         return elementData[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (indexIsInvalid(index)) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index passed");
-        }
+        indexIsInvalid(index);
         elementData[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (indexIsInvalid(index)) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index passed");
-        }
+        indexIsInvalid(index);
         T object = get(index);
         System.arraycopy(elementData, index + 1, elementData, index, size - index - 1);
         size--;
@@ -71,12 +63,12 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if (elementsAreEquals(element, elementData[i])) {
+            if (elementsAreEqual(element, elementData[i])) {
                 remove(i);
                 return element;
             }
         }
-        throw new NoSuchElementException("No such element present");
+        throw new NoSuchElementException("No such element present: " + element);
     }
 
     @Override
@@ -89,12 +81,16 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private boolean elementsAreEquals(T first, T second) {
+    private boolean elementsAreEqual(T first, T second) {
         return (first == second) || (second != null && second.equals(first));
     }
 
     private boolean indexIsInvalid(int index) {
-        return index < 0 || index >= size;
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Invalid index passed: "
+                    + index + " for size: " + size);
+        }
+        return true;
     }
 
     private void growIfArrayFull() {
