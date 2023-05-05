@@ -87,8 +87,8 @@ public class ArrayList<T> implements List<T> {
 
     private boolean indexIsInvalid(int index) {
         if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index passed: "
-                    + index + " for size: " + size);
+            throw new ArrayListIndexOutOfBoundsException(
+                    String.format("Invalid index passed: %d for size: %d", index, size));
         }
         return true;
     }
