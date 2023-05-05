@@ -17,7 +17,5 @@ public interface List<T> {
 
     int size();
 
-    T[] toArray();
-
     boolean isEmpty();
 }

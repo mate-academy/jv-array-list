@@ -33,13 +33,14 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        T[] addedArray = list.toArray();
-        int addedArrayLength = addedArray.length;
-        while (addedArrayLength > data.length - size) {
+        int addedArraySize = list.size();
+        while (addedArraySize > data.length - size) {
             grow();
         }
-        System.arraycopy(addedArray, 0, data, size, addedArrayLength);
-        size += addedArrayLength;
+        for (int i = 0; i < addedArraySize; i++) {
+            data[size + i] = list.get(i);
+        }
+        size += addedArraySize;
     }
 
     @Override
@@ -83,11 +84,6 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
-    }
-
-    @Override
-    public T[] toArray() {
-        return Arrays.copyOf(data, size);
     }
 
     public boolean equals(T first, T second) {
