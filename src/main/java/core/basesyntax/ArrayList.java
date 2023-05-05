@@ -1,6 +1,5 @@
 package core.basesyntax;
 
-import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
@@ -33,14 +32,9 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        int addedArraySize = list.size();
-        while (addedArraySize > data.length - size) {
-            grow();
+        for (int i = 0; i < list.size(); i++) {
+            add(list.get(i));
         }
-        for (int i = 0; i < addedArraySize; i++) {
-            data[size + i] = list.get(i);
-        }
-        size += addedArraySize;
     }
 
     @Override
@@ -60,7 +54,7 @@ public class ArrayList<T> implements List<T> {
         checkRange(index);
         T value = data[index];
         if (size - 1 > index) {
-            System.arraycopy(data, index + 1, data, index, size - 1);
+            System.arraycopy(data, index + 1, data, index, size - index - 1);
         }
         size--;
         return value;
@@ -69,7 +63,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if (equals(data[i], element)) {
+            if (elementsAreEqual(data[i], element)) {
                 return remove(i);
             }
         }
@@ -86,17 +80,20 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    public boolean equals(T first, T second) {
-        return (first == second) || (first != null && first.equals(second));
+    private boolean elementsAreEqual(T first, T second) {
+        return first == second || first != null && first.equals(second);
     }
 
+    @SuppressWarnings("unchecked")
     private void grow() {
         int oldSize = data.length;
         int newSize = oldSize + (oldSize >> 1);
         if (newSize < 0) {
             newSize = Integer.MAX_VALUE;
         }
-        data = Arrays.copyOf(data, newSize);
+        T[] dataCopy = data.clone();
+        data = (T[]) new Object[newSize];
+        System.arraycopy(dataCopy, 0, data, 0, oldSize);
     }
 
     private void growIfFull() {
@@ -107,13 +104,13 @@ public class ArrayList<T> implements List<T> {
 
     private void checkAddRange(int index) {
         if (index > size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Illigal index: " + index);
+            throw new ArrayListIndexOutOfBoundsException("Illegal index: " + index);
         }
     }
 
     private void checkRange(int index) {
         if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Illigal index: " + index);
+            throw new ArrayListIndexOutOfBoundsException("Illegal index: " + index);
         }
     }
 }
