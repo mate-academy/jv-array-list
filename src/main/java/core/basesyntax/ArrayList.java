@@ -4,10 +4,9 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    private static final int GROWTH_RATE = 5;
+    private static final double GROWTH_RATE = 1.5;
     private int size;
     private T[] elementData;
-    private T[] bufferArray;
 
     public ArrayList() {
         elementData = (T[]) new Object[DEFAULT_CAPACITY];
@@ -67,7 +66,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < size(); i++) {
-            if (isEqualElement(element, elementData[i])) {
+            if (areEqualElement(element, elementData[i])) {
                 return remove(i);
             }
         }
@@ -85,7 +84,8 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void grow() {
-        bufferArray = (T[]) new Object[elementData.length + GROWTH_RATE];
+        int newSize = (int) (elementData.length * GROWTH_RATE);
+        T[] bufferArray = (T[]) new Object[newSize];
         System.arraycopy(elementData, 0, bufferArray, 0, size());
         elementData = bufferArray;
     }
@@ -96,11 +96,8 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private boolean isEqualElement(T firstElement, T secondElement) {
-        if (firstElement == secondElement
-                || (firstElement != null && firstElement.equals(secondElement))) {
-            return true;
-        }
-        return false;
+    private boolean areEqualElement(T firstElement, T secondElement) {
+        return firstElement == secondElement
+                || (firstElement != null && firstElement.equals(secondElement));
     }
 }
