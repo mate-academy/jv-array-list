@@ -4,32 +4,30 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
+    private static final double GROWING_COEFFICIENT = 1.5d;
     private int size;
     private T[] elementData;
 
+    @SuppressWarnings("unchecked")
     public ArrayList() {
         elementData = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
     @Override
     public void add(T value) {
-        if (checkIfMyArrayIsFull()) {
-            growFullArray();
-        }
+        growFullArray();
         elementData[size] = value;
         size++;
     }
 
     @Override
-    public void add(T value, int index) throws ArrayListIndexOutOfBoundsException {
+    public void add(T value, int index) {
         if (index == size) {
             add(value);
             return;
         }
         checkIndex(index);
-        if (checkIfMyArrayIsFull()) {
-            growFullArray();
-        }
+        growFullArray();
         System.arraycopy(elementData, index, elementData, index + 1, size - index);
         elementData[index] = value;
         size++;
@@ -45,8 +43,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) throws ArrayListIndexOutOfBoundsException {
         checkIndex(index);
-        T t = null;
-        t = elementData[index];
+        T t = elementData[index];
         return t;
     }
 
@@ -73,7 +70,7 @@ public class ArrayList<T> implements List<T> {
                 return remove(i);
             }
         }
-        throw new NoSuchElementException("non existing element");
+        throw new NoSuchElementException("non existing element: " + element);
     }
 
     @Override
@@ -86,14 +83,13 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private boolean checkIfMyArrayIsFull() {
-        return size == elementData.length;
-    }
-
     private void growFullArray() {
-        T[] grownElementData = (T[]) new Object[(int) (elementData.length * 1.5)];
-        System.arraycopy(elementData, 0, grownElementData, 0, elementData.length);
-        elementData = grownElementData;
+        if (size == elementData.length) {
+            T[] grownElementData = (T[]) new Object[(int) (elementData.length
+              * GROWING_COEFFICIENT)];
+            System.arraycopy(elementData, 0, grownElementData, 0, elementData.length);
+            elementData = grownElementData;
+        }
     }
 
     private void checkIndex(int index) {
