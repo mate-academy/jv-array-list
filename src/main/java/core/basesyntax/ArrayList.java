@@ -2,7 +2,6 @@ package core.basesyntax;
 
 import java.util.Arrays;
 import java.util.NoSuchElementException;
-import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
@@ -16,9 +15,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (size == elementData.length) {
-            resize();
-        }
+        resizeIsFull();
         elementData[size] = value;
         size++;
     }
@@ -26,9 +23,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         rangeCheckForAdd(index);
-        if (size == elementData.length) {
-            resize();
-        }
+        resizeIsFull();
         System.arraycopy(elementData, index, elementData, index + 1, size - index);
         elementData[index] = value;
         size++;
@@ -65,11 +60,11 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if (Objects.equals(elementData[i], element)) {
+            if (isEquals(element, elementData[i])) {
                 return remove(i);
             }
         }
-        throw new NoSuchElementException();
+        throw new NoSuchElementException("Element: " + element + " does not exist");
     }
 
     @Override
@@ -89,12 +84,23 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void resize() {
-        elementData = Arrays.copyOf(elementData, (int) (elementData.length * GROWING_COEFFICIENT));
+        int newCapacity = (int) (elementData.length * GROWING_COEFFICIENT);
+        elementData = Arrays.copyOf(elementData, newCapacity);
     }
 
     private void checkIndex(int index) {
         if (index < 0 || index >= size()) {
             throw new ArrayListIndexOutOfBoundsException("Index: " + index + ", Size: " + size);
         }
+    }
+
+    private void resizeIsFull() {
+        if (size == elementData.length) {
+            resize();
+        }
+    }
+
+    private boolean isEquals(T a, T b) {
+        return a == b || a != null && a.equals(b);
     }
 }
