@@ -3,6 +3,7 @@ package core.basesyntax;
 import java.util.Arrays;
 import java.util.NoSuchElementException;
 
+@SuppressWarnings("unchecked")
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private static final int MAX_CAPACITY = Integer.MAX_VALUE;
@@ -15,15 +16,15 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        raiseIfRequirement();
+        growIfNeeded();
         elementData[size] = value;
         size++;
     }
 
     @Override
     public void add(T value, int index) {
-        raiseIfRequirement();
-        inspectIndexForAdd(index);
+        growIfNeeded();
+        verifyIndexForAdd(index);
         System.arraycopy(elementData, index, elementData, index + 1, size - index);
         elementData[index] = value;
         size++;
@@ -35,7 +36,7 @@ public class ArrayList<T> implements List<T> {
         int additionalArrayLength = additionalArray.length;
         int existingArrayLength = elementData.length;
         if (additionalArrayLength > existingArrayLength - size) {
-            raise();
+            grow();
         }
         System.arraycopy(additionalArray, 0, elementData, size, additionalArrayLength);
         size += additionalArrayLength;
@@ -43,27 +44,26 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        inspectIndexForGet(index);
+        verifyIndexForGet(index);
         return (T) elementData[index];
     }
 
     @Override
     public void set(T value, int index) {
-        inspectIndexForGet(index);
+        verifyIndexForGet(index);
         elementData[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        inspectIndexForGet(index);
+        verifyIndexForGet(index);
         return removeFromArray(index);
     }
 
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if (element == elementData[i] || element != null
-                    && element.equals(elementData[i])) {
+            if (elementsAreEqual(i, element)) {
                 return removeFromArray(i);
             }
         }
@@ -82,32 +82,32 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public Object[] toArray() {
-        Object[] result = new Object[size()];
+        Object[] result = new Object[size];
         for (int i = 0; i < size(); i++) {
             result[i] = get(i);
         }
         return result;
     }
 
-    private void inspectIndexForAdd(int index) {
+    private void verifyIndexForAdd(int index) {
         if (index > size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException(
-                    "Entered index " + index + " are not in range of data");
+                    "Entered index " + index + " are not in range of data length: " + size);
         }
     }
 
-    private void inspectIndexForGet(int index) {
+    private void verifyIndexForGet(int index) {
         if (index >= size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException(
                     "Entered index " + index + " are not in range of data");
         }
     }
 
-    private void raiseIfRequirement() {
+    private void growIfNeeded() {
         int currentCapacity = elementData.length;
         if ((MAX_CAPACITY - currentCapacity) > (currentCapacity / 2)) {
             if (currentCapacity == size) {
-                raise();
+                grow();
             }
         } else if (currentCapacity == MAX_CAPACITY) {
             throw new ArrayListIndexOutOfBoundsException("ArrayList reached maximum capacity");
@@ -116,7 +116,7 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private void raise() {
+    private void grow() {
         int currentCapacity = elementData.length;
         int raisedCapacity = currentCapacity + (currentCapacity >> 1);
         elementData = Arrays.copyOf(elementData, raisedCapacity);
@@ -128,15 +128,16 @@ public class ArrayList<T> implements List<T> {
 
     private T removeFromArray(int index) {
         T removedUnit = (T) elementData[index];
-        if (index < size - 1) {
-            System.arraycopy(elementData, index + 1, elementData, index, size - index);
-        } else {
-            System.arraycopy(elementData, index, elementData, index, size - index);
-        }
+        System.arraycopy(elementData, index + 1, elementData, index, size - index - 1);
         size--;
         return removedUnit;
     }
+
+    private boolean elementsAreEqual(int index, T element) {
+        if (element == elementData[index] || element != null
+                    && element.equals(elementData[index])) {
+            return true;
+        }
+        return false;
+    }
 }
-
-
-
