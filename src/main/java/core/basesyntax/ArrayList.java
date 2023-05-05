@@ -91,7 +91,8 @@ public class ArrayList<T> implements List<T> {
 
     private void checkRangeForAdd(int index) {
         if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("No such index: " + index  + " for size: " + size);
+            throw new ArrayListIndexOutOfBoundsException("No such index: "
+                    + index + " for size: " + size);
         }
     }
 
