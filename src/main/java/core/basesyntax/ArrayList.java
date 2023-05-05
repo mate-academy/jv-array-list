@@ -15,7 +15,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        growFullArray();
+        growIfArrayFull();
         elementData[size] = value;
         size++;
     }
@@ -27,7 +27,7 @@ public class ArrayList<T> implements List<T> {
             return;
         }
         checkIndex(index);
-        growFullArray();
+        growIfArrayFull();
         System.arraycopy(elementData, index, elementData, index + 1, size - index);
         elementData[index] = value;
         size++;
@@ -41,20 +41,19 @@ public class ArrayList<T> implements List<T> {
     }
 
     @Override
-    public T get(int index) throws ArrayListIndexOutOfBoundsException {
+    public T get(int index) {
         checkIndex(index);
-        T t = elementData[index];
-        return t;
+        return elementData[index];
     }
 
     @Override
-    public void set(T value, int index) throws ArrayListIndexOutOfBoundsException {
+    public void set(T value, int index) {
         checkIndex(index);
         elementData[index] = value;
     }
 
     @Override
-    public T remove(int index) throws ArrayListIndexOutOfBoundsException {
+    public T remove(int index) {
         checkIndex(index);
         final T t = elementData[index];
         System.arraycopy(elementData, index + 1, elementData, index, size - index - 1);
@@ -83,7 +82,7 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void growFullArray() {
+    private void growIfArrayFull() {
         if (size == elementData.length) {
             T[] grownElementData = (T[]) new Object[(int) (elementData.length
               * GROWING_COEFFICIENT)];
@@ -94,7 +93,7 @@ public class ArrayList<T> implements List<T> {
 
     private void checkIndex(int index) {
         if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("invalid index");
+            throw new ArrayListIndexOutOfBoundsException(" Index " + index + " out of bounds List");
         }
     }
 }
