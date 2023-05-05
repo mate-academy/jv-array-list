@@ -24,13 +24,10 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (!(index >= 0 && index <= size)) {
-            String errorMessage = String.format("Can't add value at index %s. It's out of bounds.",
-                    index);
-            throw new ArrayListIndexOutOfBoundsException(errorMessage);
-        }
+        verifyIndexForAdd(index);
         growIfNeeded();
-        System.arraycopy(content, index, content, index + 1, size++ - index);
+        System.arraycopy(content, index, content, index + 1, size - index);
+        size++;
         content[index] = value;
     }
 
@@ -46,34 +43,24 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (isInRange(index)) {
-            return content[index];
-        }
-        String errorMessage = String.format("Can't get value with index %s. It's out of bounds.",
-                index);
-        throw new ArrayListIndexOutOfBoundsException(errorMessage);
+        verifyIndexIsInRange(index);
+        return content[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (!isInRange(index)) {
-            String errorMessage = String.format("Can't set value at index %s. It's out of bounds.",
-                    index);
-            throw new ArrayListIndexOutOfBoundsException(errorMessage);
-        }
+        verifyIndexIsInRange(index);
         content[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (isInRange(index)) {
-            T deletedValue = content[index];
-            System.arraycopy(content, index + 1, content, index, size-- - (index + 1));
-            return deletedValue;
-        }
-        String errorMessage = String.format("Can't remove value at index %s. It's out of bounds.",
-                index);
-        throw new ArrayListIndexOutOfBoundsException(errorMessage);
+        verifyIndexIsInRange(index);
+        T deletedValue = content[index];
+        System.arraycopy(content, index + 1, content, index, size - (index + 1));
+        size--;
+        return deletedValue;
+
     }
 
     @Override
@@ -134,21 +121,33 @@ public class ArrayList<T> implements List<T> {
         return array;
     }
 
-    private boolean isInRange(int index) {
-        return index >= 0 && index < size;
+    private void verifyIndexForAdd(int index) {
+        if (!(index >= 0 && index <= size)) {
+            String errorMessage = String.format("Can't add value at index %s. It's out of bounds.",
+                    index);
+            throw new ArrayListIndexOutOfBoundsException(errorMessage);
+        }
+    }
+
+    private void verifyIndexIsInRange(int index) {
+        if (!(index >= 0 && index < size)) {
+            String errorMessage = String.format("The index: %s. It's out of bounds.",
+                    index);
+            throw new ArrayListIndexOutOfBoundsException(errorMessage);
+        }
     }
 
     private int getValueIndex(T value) {
         for (int i = 0; i < content.length; i++) {
             T element = content[i];
-            if (isObjectsEqual(element, value)) {
+            if (objectsAreEqual(element, value)) {
                 return i;
             }
         }
         return NOT_FOUND_INDEX;
     }
 
-    private boolean isObjectsEqual(T a, T b) {
+    private boolean objectsAreEqual(T a, T b) {
         return a == b || a != null && a.equals(b);
     }
 }
