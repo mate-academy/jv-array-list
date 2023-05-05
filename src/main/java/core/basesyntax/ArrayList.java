@@ -70,8 +70,7 @@ public class ArrayList<T> implements List<T> {
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
             if (elementsAreEqual(element, elementData[i])) {
-                remove(i);
-                return element;
+                return remove(i);
             }
         }
         throw new NoSuchElementException("No such item found: " + element);
@@ -87,10 +86,7 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    public void resize(int newLength) {
-        if (newLength < size) {
-            throw new IllegalArgumentException("New length is less than the current size");
-        }
+    private void resize(int newLength) {
         T[] newArray = (T[]) new Object[newLength];
         System.arraycopy(elementData, 0, newArray, 0, size);
         elementData = newArray;
