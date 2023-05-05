@@ -25,7 +25,7 @@ public class ArrayList<T> implements List<T> {
             add(value);
             return;
         }
-        indexIsInvalid(index);
+        verifyIndexIsValid(index);
         growIfArrayFull();
         System.arraycopy(elementData, index, elementData, index + 1, size - index);
         set(value, index);
@@ -41,19 +41,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        indexIsInvalid(index);
+        verifyIndexIsValid(index);
         return elementData[index];
     }
 
     @Override
     public void set(T value, int index) {
-        indexIsInvalid(index);
+        verifyIndexIsValid(index);
         elementData[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        indexIsInvalid(index);
+        verifyIndexIsValid(index);
         T object = get(index);
         System.arraycopy(elementData, index + 1, elementData, index, size - index - 1);
         size--;
@@ -85,7 +85,7 @@ public class ArrayList<T> implements List<T> {
         return (first == second) || (second != null && second.equals(first));
     }
 
-    private boolean indexIsInvalid(int index) {
+    private boolean verifyIndexIsValid(int index) {
         if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException(
                     String.format("Invalid index passed: %d for size: %d", index, size));
