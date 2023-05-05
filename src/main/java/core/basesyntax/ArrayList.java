@@ -10,7 +10,6 @@ public class ArrayList<T> implements List<T> {
     private T[] array;
     private int size;
 
-    @SuppressWarnings("unchecked")
     public ArrayList() {
         array = (T[]) new Object[DEFAULT_CAPACITY];
     }
