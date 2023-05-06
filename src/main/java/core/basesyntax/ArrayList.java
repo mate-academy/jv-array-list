@@ -5,9 +5,8 @@ import java.util.NoSuchElementException;
 public class ArrayList<T> implements List<T> {
 
     private static final int DEFAULT_CAPACITY = 10;
-    // default capacity for list
     private int size;
-    private Object[] elementInfo; // element
+    private Object[] elementInfo;
 
     public ArrayList() {
         this(DEFAULT_CAPACITY);
@@ -30,7 +29,7 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    public void checkRangeAdd(int index) {
+    private void checkRangeAdd(int index) {
         if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException("Index of element: " + index
                     + "Size of the list: " + size);
@@ -40,7 +39,7 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    public void checkRange(int index) {
+    private void checkRange(int index) {
         if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException("Index of element: " + index
                     + "Size of the list: " + size);
@@ -50,15 +49,15 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value) {
         grow();
-        elementInfo[size++] = value; // insert the new element
+        elementInfo[size++] = value;
     }
 
     @Override
     public void add(T value, int index) {
         checkRangeAdd(index);
-        System.arraycopy(elementInfo, index, elementInfo, // shift elements to the right
+        System.arraycopy(elementInfo, index, elementInfo,
                 index + 1, size - index);
-        elementInfo[index] = value; // insert the new element
+        elementInfo[index] = value;
         size++;
     }
 
@@ -96,14 +95,9 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if (element == null) {
-                if (elementInfo[i] == null) {
-                    return remove(i);
-                }
-            } else {
-                if (element.equals(elementInfo[i])) {
-                    return remove(i);
-                }
+            if (element == null ? elementInfo[i] == null
+                    : element.equals(elementInfo[i])) {
+                return remove(i);
             }
         }
         throw new NoSuchElementException("Array does not have such element: " + element);
