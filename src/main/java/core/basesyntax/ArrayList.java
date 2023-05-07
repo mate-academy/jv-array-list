@@ -28,8 +28,6 @@ public class ArrayList<T> implements List<T> {
             grow();
         }
         System.arraycopy(elements, index, elements, index + 1, size - index);
-        elements[index] = value;
-        size++;
     }
 
     @Override
@@ -83,12 +81,12 @@ public class ArrayList<T> implements List<T> {
 
     private void grow() {
         int newCapacity = (int) (elements.length * MULTIPLIER);
-        if (newCapacity <= size) {
-            newCapacity = size + 1;
+        Object[] newElements = new Object[newCapacity];
+        System.arraycopy(elements, 0, newElements, 0, elements.length);
+        elements = (T[]) newElements;
+        if (elements.length == size) {
+            grow();
         }
-        T[] newElements = (T[]) new Object[newCapacity];
-        System.arraycopy(elements, 0, newElements, 0, size);
-        elements = newElements;
     }
 
     private void checkIndex(int index) {
