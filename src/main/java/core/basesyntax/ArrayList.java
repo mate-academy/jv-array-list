@@ -24,6 +24,9 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         validateIndex(index);
+        if (elements.length == size) {
+            grow();
+        }
         System.arraycopy(elements, index, elements, index + 1, size - index);
         elements[index] = value;
         size++;
