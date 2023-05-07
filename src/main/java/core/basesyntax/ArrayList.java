@@ -81,12 +81,11 @@ public class ArrayList<T> implements List<T> {
     private void grow() {
         int newCapacity = (int) (elements.length * MULTIPLIER);
         Object[] newElements = new Object[newCapacity];
+        if (newCapacity <= size) {
+            newCapacity = size++;
+        }
         System.arraycopy(elements, 0, newElements, 0, elements.length);
         elements = (T[]) newElements;
-        if (elements.length == size) {
-            grow();
-        }
-
     }
 
     private void checkIndex(int index) {
