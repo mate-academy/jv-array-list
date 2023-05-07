@@ -1,16 +1,15 @@
 package core.basesyntax;
 
 import java.util.NoSuchElementException;
-import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
-    private static final int SIZE = 10;
+    private static final int DEFAULT_SIZE = 10;
     private static final double MULTIPLIER = 1.5;
     private T[] elements;
     private int size;
 
     public ArrayList() {
-        elements = (T[]) new Object[SIZE];
+        elements = (T[]) new Object[DEFAULT_SIZE];
     }
 
     @Override
@@ -24,15 +23,8 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index < 0 || size < index) {
-            throw new ArrayListIndexOutOfBoundsException("No valid index: " + index);
-        }
-        if (elements.length == size) {
-            grow();
-        }
-        for (int i = size - 1; i >= index; i--) {
-            elements[i + 1] = elements[i];
-        }
+        validateIndex(index);
+        System.arraycopy(elements, index, elements, index + 1, size - index);
         elements[index] = value;
         size++;
     }
@@ -69,7 +61,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < elements.length; i++) {
-            if (Objects.equals(element, elements[i])) {
+            if (element.equals(elements[i])) {
                 return remove(i);
             }
         }
@@ -91,11 +83,20 @@ public class ArrayList<T> implements List<T> {
         Object[] newElements = new Object[newCapacity];
         System.arraycopy(elements, 0, newElements, 0, elements.length);
         elements = (T[]) newElements;
+        if (elements.length == size) {
+            grow();
+        }
     }
 
     private void checkIndex(int index) {
         if (index < 0 || size <= index) {
             throw new ArrayListIndexOutOfBoundsException("Index out of range: " + index);
+        }
+    }
+
+    private void validateIndex(int index) {
+        if (index < 0 || size < index) {
+            throw new ArrayListIndexOutOfBoundsException("No valid index: " + index);
         }
     }
 }
