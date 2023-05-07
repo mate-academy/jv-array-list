@@ -66,7 +66,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < elements.length; i++) {
-            if (element.equals(elements[i])) {
+            if (element == elements[i] || (element != null && element.equals(elements[i])) {
                 return remove(i);
             }
         }
@@ -88,9 +88,6 @@ public class ArrayList<T> implements List<T> {
         Object[] newElements = new Object[newCapacity];
         System.arraycopy(elements, 0, newElements, 0, elements.length);
         elements = (T[]) newElements;
-        if (elements.length == size) {
-            grow();
-        }
     }
 
     private void checkIndex(int index) {
@@ -99,4 +96,3 @@ public class ArrayList<T> implements List<T> {
         }
     }
 }
-
