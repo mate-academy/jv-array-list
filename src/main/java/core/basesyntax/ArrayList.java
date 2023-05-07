@@ -86,6 +86,7 @@ public class ArrayList<T> implements List<T> {
         if (elements.length == size) {
             grow();
         }
+
     }
 
     private void checkIndex(int index) {
@@ -100,4 +101,3 @@ public class ArrayList<T> implements List<T> {
         }
     }
 }
-
