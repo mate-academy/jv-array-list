@@ -24,7 +24,9 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        verifyIndexToAdd(index);
+        if (index > size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Out of bounds!");
+        }
         if (listElements.length == size) {
             grow();
         }
@@ -63,23 +65,19 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         verifyIndex(index);
-        T removedElement = listElements[index];
-        for (int i = 0; i < listElements.length - 1; i++) {
-            listElements[i] = listElements[i + 1];
-        }
+        final T removedElement = (T) listElements[index];
+        System.arraycopy(listElements, index + 1, listElements, index, size - index - 1);
         size--;
+        listElements[size] = null;
         return removedElement;
     }
 
     @Override
     public T remove(T element) {
-        T removedElement;
-        for (int i = 0; i < size; i++) {
+        for (int i = 0; i < listElements.length; i++) {
             if ((listElements[i] != null && listElements[i].equals(element))
-                    || element == listElements[i]) {
-                removedElement = listElements[i];
-                remove(i);
-                return removedElement;
+                    || listElements[i] == element) {
+                return remove(i);
             }
         }
         throw new NoSuchElementException("Element not found!");
@@ -102,14 +100,8 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void verifyIndex(int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Out of bounds!");
-        }
-    }
-
-    private void verifyIndexToAdd(int index) {
-        if (index > size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Out of bounds!");
+        if (index < 0 || size <= index) {
+            throw new ArrayListIndexOutOfBoundsException("Index [" + index + "] is out of range");
         }
     }
 }
