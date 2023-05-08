@@ -14,10 +14,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (size == elementData.length) {
-            int newLength = (int) (elementData.length * GROWING_COEFFICIENT);
-            resize(newLength);
-        }
+        resize();
         elementData[size] = value;
         size++;
     }
@@ -28,10 +25,7 @@ public class ArrayList<T> implements List<T> {
             add(value);
             return;
         }
-        if (size == elementData.length) {
-            int newLength = (int) (elementData.length * GROWING_COEFFICIENT);
-            resize(newLength);
-        }
+        resize();
         verifyIndex(index);
         System.arraycopy(elementData, index, elementData, index + 1, size - index);
         set(value, index);
@@ -59,7 +53,6 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(int index) {
-        verifyIndex(index);
         T object = get(index);
         System.arraycopy(elementData, index + 1, elementData, index, size - index - 1);
         size--;
@@ -86,10 +79,13 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void resize(int newLength) {
-        T[] newArray = (T[]) new Object[newLength];
-        System.arraycopy(elementData, 0, newArray, 0, size);
-        elementData = newArray;
+    private void resize() {
+        if (size == elementData.length) {
+            int newLength = (int) (elementData.length * GROWING_COEFFICIENT);
+            T[] newArray = (T[]) new Object[newLength];
+            System.arraycopy(elementData, 0, newArray, 0, size);
+            elementData = newArray;
+        }
     }
 
     private void verifyIndex(int index) {
@@ -99,6 +95,6 @@ public class ArrayList<T> implements List<T> {
     }
 
     private boolean elementsAreEqual(T first, T second) {
-        return (first == second) || (second != null && second.equals(first));
+        return first == second || second != null && second.equals(first);
     }
 }
