@@ -6,7 +6,7 @@ public class ArrayList<T> implements List<T> {
 
     private static final int DEFAULT_CAPACITY = 10;
     private int size;
-    private Object[] elementInfo;
+    private Object[] dataArray;
 
     public ArrayList() {
         this(DEFAULT_CAPACITY);
@@ -16,48 +16,24 @@ public class ArrayList<T> implements List<T> {
         if (initialCapacity < 0) {
             throw new IllegalArgumentException("Invalid initial capacity: " + initialCapacity);
         }
-        elementInfo = new Object[initialCapacity];
-    }
-
-    private void grow() {
-        if (size == elementInfo.length) {
-            int oldCapacity = elementInfo.length;
-            int newCapacity = oldCapacity + (oldCapacity >> 1);
-            Object[] newArray = new Object[newCapacity];
-            System.arraycopy(elementInfo, 0, newArray, 0, size);
-            elementInfo = newArray;
-        }
-    }
-
-    private void checkRangeAdd(int index) {
-        if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("Index of element: " + index
-                    + "Size of the list: " + size);
-        }
-        if (size == elementInfo.length) {
-            grow();
-        }
-    }
-
-    private void checkRange(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index of element: " + index
-                    + "Size of the list: " + size);
-        }
+        dataArray = new Object[initialCapacity];
     }
 
     @Override
     public void add(T value) {
         grow();
-        elementInfo[size++] = value;
+        dataArray[size++] = value;
     }
 
     @Override
     public void add(T value, int index) {
         checkRangeAdd(index);
-        System.arraycopy(elementInfo, index, elementInfo,
+        if (size == dataArray.length) {
+            grow();
+        }
+        System.arraycopy(dataArray, index, dataArray,
                 index + 1, size - index);
-        elementInfo[index] = value;
+        dataArray[index] = value;
         size++;
     }
 
@@ -71,32 +47,32 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         checkRange(index);
-        return (T) elementInfo[index];
+        return (T) dataArray[index];
     }
 
     @Override
     public void set(T value, int index) {
         checkRange(index);
-        elementInfo[index] = value;
+        dataArray[index] = value;
     }
 
     @Override
     public T remove(int index) {
         checkRange(index);
-        T oldPos = (T) elementInfo[index];
+        T oldPos = (T) dataArray[index];
         int newPos = size - index - 1;
         if (newPos > 0) {
-            System.arraycopy(elementInfo, index + 1, elementInfo, index, newPos);
+            System.arraycopy(dataArray, index + 1, dataArray, index, newPos);
         }
-        elementInfo[--size] = null;
+        dataArray[--size] = null;
         return oldPos;
     }
 
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if (element == null ? elementInfo[i] == null
-                    : element.equals(elementInfo[i])) {
+            if (element == null ? dataArray[i] == null
+                    : element.equals(dataArray[i])) {
                 return remove(i);
             }
         }
@@ -111,5 +87,29 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private void grow() {
+        if (size == dataArray.length) {
+            int oldCapacity = dataArray.length;
+            int newCapacity = oldCapacity + (oldCapacity >> 1);
+            Object[] newArray = new Object[newCapacity];
+            System.arraycopy(dataArray, 0, newArray, 0, size);
+            dataArray = newArray;
+        }
+    }
+
+    private void checkRangeAdd(int index) {
+        if (index < 0 || index > size) {
+            throw new ArrayListIndexOutOfBoundsException("Index of element: " + index
+                    + "Size of the list: " + size);
+        }
+    }
+
+    private void checkRange(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Index of element: " + index
+                    + "Size of the list: " + size);
+        }
     }
 }
