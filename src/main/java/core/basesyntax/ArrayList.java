@@ -3,7 +3,6 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-
     private static final int DEFAULT_CAPACITY = 10;
     private int size;
     private Object[] dataArray;
@@ -21,16 +20,14 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        grow();
+        growIfArrayFull();
         dataArray[size++] = value;
     }
 
     @Override
     public void add(T value, int index) {
         checkRangeAdd(index);
-        if (size == dataArray.length) {
-            grow();
-        }
+        growIfArrayFull();
         System.arraycopy(dataArray, index, dataArray,
                 index + 1, size - index);
         dataArray[index] = value;
@@ -89,7 +86,7 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void grow() {
+    private void growIfArrayFull() {
         if (size == dataArray.length) {
             int oldCapacity = dataArray.length;
             int newCapacity = oldCapacity + (oldCapacity >> 1);
