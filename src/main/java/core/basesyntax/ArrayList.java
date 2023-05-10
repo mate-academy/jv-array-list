@@ -1,6 +1,5 @@
 package core.basesyntax;
 
-import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
@@ -30,13 +29,6 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        if (list == null) {
-            return;
-        }
-        if (size + list.size() > elements.length) {
-            growIfNeeded();
-        }
-        int lastElementIndex = size;
         for (int i = 0; i < list.size(); i++) {
             add(list.get(i));
         }
@@ -72,7 +64,7 @@ public class ArrayList<T> implements List<T> {
                 return remove(i);
             }
         }
-        throw new NoSuchElementException("Element not found!");
+        throw new NoSuchElementException("Element " + element + " not found!");
     }
 
     @Override
@@ -86,10 +78,10 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void growIfNeeded() {
-        if (elements.length == size) {
-            int oldCapacity = elements.length;
-            int newCapacity = oldCapacity + (oldCapacity >> 1);
-            elements = Arrays.copyOf(elements, newCapacity);
+        if (size == elements.length) {
+            T[] resizeElementsArray = (T[]) new Object[(int) (elements.length * 1.5)];
+            System.arraycopy(elements, 0, resizeElementsArray, 0, elements.length);
+            elements = resizeElementsArray;
         }
     }
 
@@ -99,11 +91,10 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private boolean verifyIndexForAdd(int index) {
+    private void verifyIndexForAdd(int index) {
         if (index < 0 || size < index) {
             throw new ArrayListIndexOutOfBoundsException("Index " + index
                 + " is out of bounds for length " + size);
         }
-        return true;
     }
 }
