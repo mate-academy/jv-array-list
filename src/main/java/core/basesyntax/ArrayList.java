@@ -78,12 +78,12 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void growIfLengthEqualsSize() {
-     if (size == array.length) {
-         int newLength = (int) (array.length * MULTIPLIER);
-         Object[] newArray = new Object[newLength];
-         System.arraycopy(array, 0, newArray, 0, array.length);
-         array = (T[]) newArray;
-     }
+        if (size == array.length) {
+            int newLength = (int) (array.length * MULTIPLIER);
+            Object[] newArray = new Object[newLength];
+            System.arraycopy(array, 0, newArray, 0, array.length);
+            array = (T[]) newArray;
+        }
     }
 
     private void verifyIndex(int index) {
