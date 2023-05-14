@@ -96,7 +96,4 @@ public class ArrayList<T> implements List<T> {
             array = (T[]) newArray;
         }
     }
-
 }
-
-
