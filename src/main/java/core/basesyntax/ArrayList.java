@@ -22,7 +22,6 @@ public class ArrayList<T> implements List<T> {
     public void add(T value, int index) {
         indexVerifyForAdd(index);
         growIfSizeFull();
-
         System.arraycopy(array, index, array, index + 1, size - index);
         array[index] = value;
         size++;
