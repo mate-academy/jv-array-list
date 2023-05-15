@@ -85,7 +85,6 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-
     private void growIfSizeFull() {
         if (size == array.length) {
             int newLength = (int) (array.length * MULTIPLIER);
