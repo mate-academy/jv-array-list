@@ -20,7 +20,11 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        indexVerifyForAdd(index);
+        if (index == size) {
+            add(value);
+            return;
+        }
+        indexVerify(index);
         growIfSizeFull();
         System.arraycopy(array, index, array, index + 1, size - index);
         array[index] = value;
@@ -57,7 +61,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        for (int i = 0; i < array.length; i++) {
+        for (int i = 0; i < size; i++) {
             if (array[i] == element || array[i] != null && array[i].equals(element)) {
                 return remove(i);
             }
@@ -81,11 +85,6 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private void indexVerifyForAdd(int index) {
-        if (index > size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("wrong index " + index);
-        }
-    }
 
     private void growIfSizeFull() {
         if (size == array.length) {
