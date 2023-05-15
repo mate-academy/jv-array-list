@@ -1,6 +1,7 @@
 package core.basesyntax;
 
 import java.util.NoSuchElementException;
+import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
@@ -20,12 +21,18 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-
+        checkIndex(index);
+        growIfArrayFull();
+        System.arraycopy(dataArray, index, dataArray, index + 1, size - index);
+        dataArray[index] = value;
+        size++;
     }
 
     @Override
     public void addAll(List<T> list) {
-
+        for (int i = 0; i < list.size(); i++) {
+            add(list.get(i));
+        }
     }
 
     @Override
@@ -37,7 +44,10 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void set(T value, int index) {
-
+        checkIndexEqualsSize(index);
+        checkIndex(index);
+        get(index);
+        dataArray[index] = value;
     }
 
     @Override
@@ -50,12 +60,11 @@ public class ArrayList<T> implements List<T> {
     }
 
     @Override
-    public T remove(T element) throws  NoSuchElementException {
+    public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if (dataArray[i] == element || dataArray[i] != null &&
-            dataArray[i].equals(element)) {
-                size--;
-                return dataArray[i];
+            if (Objects.equals(element, dataArray[i])) {
+                T removedElement = remove(i);
+                return removedElement;
             }
         }
         throw new NoSuchElementException("No such elelement" + element);
