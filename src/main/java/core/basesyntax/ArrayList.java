@@ -60,25 +60,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index is out of bounds");
-        }
+        indexChecking(index);
         return (T) currentList[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index is out of bounds");
-        }
+        indexChecking(index);
         currentList[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index is out of bounds");
-        }
+        indexChecking(index);
 
         newList = new Object[newList.length];
         System.arraycopy(currentList, 0, newList, 0, index);
@@ -123,5 +117,11 @@ public class ArrayList<T> implements List<T> {
 
     private void grow() {
         newList = new Object[currentList.length + (currentList.length >> 1)];
+    }
+
+    private void indexChecking(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Index is out of bounds");
+        }
     }
 }
