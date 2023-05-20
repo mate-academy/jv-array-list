@@ -47,7 +47,7 @@ public class ArrayList<T> implements List<T> {
         if (size + list.size() > capacity) {
             grow();
         }
-        T[] acceptedArray =  (T[]) new Object[list.size()];
+        T[] acceptedArray = (T[]) new Object[list.size()];
         for (int i = 0; i < acceptedArray.length; i++) {
             acceptedArray[i] = list.get(i);
         }
