@@ -18,15 +18,11 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (size == capacity) {grow();}
+        if (size == capacity) {
+            grow();
+        }
         array[size] = value;
         size++;
-    }
-    private void grow() {
-        capacity = (int) (capacity * GROW);
-        T[] newArray = (T[]) new Object[capacity];
-        System.arraycopy(array, 0, newArray,0, size);
-        array = newArray;
     }
 
     @Override
@@ -42,13 +38,6 @@ public class ArrayList<T> implements List<T> {
             array = newArray;
             size++;
         }
-    }
-
-    private boolean legalBound(int index) {
-        if (index < 0 || index > size - 1) {
-            return true;
-        }
-        return false;
     }
 
     @Override
@@ -120,5 +109,19 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == EMPTY;
+    }
+
+    private void grow() {
+        capacity = (int) (capacity * GROW);
+        T[] newArray = (T[]) new Object[capacity];
+        System.arraycopy(array, 0, newArray,0, size);
+        array = newArray;
+    }
+
+    private boolean legalBound(int index) {
+        if (index < 0 || index > size - 1) {
+            return true;
+        }
+        return false;
     }
 }
