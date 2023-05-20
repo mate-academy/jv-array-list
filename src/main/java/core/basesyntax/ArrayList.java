@@ -30,7 +30,9 @@ public class ArrayList<T> implements List<T> {
         if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException("IndexOutOfBounds");
         } else {
-            if (size == capacity) { grow(); }
+            if (size == capacity) {
+                grow();
+            }
             T[] newArray = (T[]) new Object[capacity];
             System.arraycopy(array, 0, newArray,0, index);
             newArray[index] = value;
@@ -42,7 +44,9 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        if (size + list.size() > capacity) {grow();}
+        if (size + list.size() > capacity) {
+            grow();
+        }
         T[] acceptedArray =  (T[]) new Object[list.size()];
         for (int i = 0; i < acceptedArray.length; i++) {
             acceptedArray[i] = list.get(i);
@@ -85,7 +89,7 @@ public class ArrayList<T> implements List<T> {
     public T remove(T element) {
         T result = null;
         int index = 0;
-        for (int i = 0; i < size; i++){
+        for (int i = 0; i < size; i++) {
             if (array[i] == element || array[i] != null && array[i].equals(element)) {
                 result = element;
                 index = i;
