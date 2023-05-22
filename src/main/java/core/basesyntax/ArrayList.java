@@ -16,7 +16,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        enaughCapacity(size + 1);
+        grow();
         internalArray[size++] = value;
     }
 
@@ -55,30 +55,22 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         checkIndex(index);
         T toRemoveElement = internalArray[index];
-        for (int i = index; i < size - 1; i++) {
-            internalArray[i] = internalArray[i + 1];
-        }
+        removeIndex(index);
         size--;
         return toRemoveElement;
     }
 
     @Override
     public T remove(T element) {
-        boolean notExistToRemove = true;
         for (int i = 0; i < size; i++) {
             if (Objects.equals(internalArray[i], element)) {
-                System.arraycopy(internalArray, i + 1, internalArray,
-                        i, size - i);
+                removeIndex(i);
                 size--;
-                notExistToRemove = false;
                 return element;
             }
         }
-        if (notExistToRemove) {
-            throw new NoSuchElementException("Element "
-                    + element + " nor exist in List");
-        }
-        return element;
+        throw new NoSuchElementException("Element "
+                + element + " nor exist in List");
     }
 
     @Override
@@ -90,14 +82,6 @@ public class ArrayList<T> implements List<T> {
     public boolean isEmpty() {
 
         return size == 0;
-    }
-
-    private void enaughCapacity(int needCapacity) {
-        if (needCapacity >= internalArray.length) {
-            T[] newArray = (T[]) new Object[(int) (internalArray.length * GROW_FACTORY)];
-            System.arraycopy(internalArray, 0, newArray, 0, internalArray.length);
-            internalArray = newArray;
-        }
     }
 
     private void grow() {
@@ -120,4 +104,13 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
+    private void removeIndex(int index) {
+        if (index == internalArray.length - 1) {
+            internalArray[index] = null;
+        } else {
+            System.arraycopy(internalArray, index + 1, internalArray,
+                    index, size - index);
+        }
+
+    }
 }
