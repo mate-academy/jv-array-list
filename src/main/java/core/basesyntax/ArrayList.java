@@ -4,21 +4,17 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int START_CAPACITY = 10;
-    private static final int EMPTY = 0;
     private static final double GROW = 1.5;
     private int size;
-    private int capacity;
     private T[] array;
 
     public ArrayList() {
         array = (T[]) new Object[START_CAPACITY];
-        size = EMPTY;
-        capacity = START_CAPACITY;
     }
 
     @Override
     public void add(T value) {
-        if (size == capacity) {
+        if (size == array.length) {
             grow();
         }
         array[size] = value;
@@ -30,10 +26,10 @@ public class ArrayList<T> implements List<T> {
         if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException("IndexOutOfBounds");
         } else {
-            if (size == capacity) {
+            if (size == array.length) {
                 grow();
             }
-            T[] newArray = (T[]) new Object[capacity];
+            T[] newArray = (T[]) new Object[array.length];
             System.arraycopy(array, 0, newArray,0, index);
             newArray[index] = value;
             System.arraycopy(array, index, newArray,index + 1, size - index);
@@ -44,7 +40,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        if (size + list.size() > capacity) {
+        while (size + list.size() > array.length) {
             grow();
         }
         T[] acceptedArray = (T[]) new Object[list.size()];
@@ -57,52 +53,35 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (legalBound(index)) {
-            throw new ArrayListIndexOutOfBoundsException("IndexOutOfBounds");
-        } else {
-            return array[index];
-        }
+        checkIndex(index);
+        return array[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (legalBound(index)) {
-            throw new ArrayListIndexOutOfBoundsException("IndexOutOfBounds");
-        } else {
-            array[index] = value;
-        }
+        checkIndex(index);
+        array[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (legalBound(index)) {
-            throw new ArrayListIndexOutOfBoundsException("IndexOutOfBounds");
-        } else {
-            T result = array[index];
-            size--;
-            System.arraycopy(array, index + 1, array, index, size - index);
-            return result;
-        }
+        checkIndex(index);
+        T result = array[index];
+        size--;
+        System.arraycopy(array, index + 1, array, index, size - index);
+        return result;
     }
 
     @Override
     public T remove(T element) {
-        T result = null;
-        int index = 0;
         for (int i = 0; i < size; i++) {
             if (array[i] == element || array[i] != null && array[i].equals(element)) {
-                result = element;
-                index = i;
-                break;
+                System.arraycopy(array, i + 1, array, i, size - i);
+                size--;
+                return element;
             }
         }
-        if (result == null && element != null) {
-            throw new NoSuchElementException();
-        } else {
-            size--;
-            System.arraycopy(array, index + 1, array, index, size - index);
-            return result;
-        }
+        throw new NoSuchElementException();
     }
 
     @Override
@@ -112,20 +91,18 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public boolean isEmpty() {
-        return size == EMPTY;
+        return size == 0;
     }
 
     private void grow() {
-        capacity = (int) (capacity * GROW);
-        T[] newArray = (T[]) new Object[capacity];
+        T[] newArray = (T[]) new Object[(int) (array.length * GROW)];
         System.arraycopy(array, 0, newArray,0, size);
         array = newArray;
     }
 
-    private boolean legalBound(int index) {
+    private void checkIndex(int index) {
         if (index < 0 || index > size - 1) {
-            return true;
+            throw new ArrayListIndexOutOfBoundsException("Index out of bounds for ArrayList");
         }
-        return false;
     }
 }
