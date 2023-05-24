@@ -25,7 +25,7 @@ public class ArrayList<T> implements List<T> {
     public void add(T value, int index) {
         if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException(
-                    "Index " + index +  " out of bounds for ArrayList with size " + size);
+                    "Index " + index + " out of bounds for ArrayList with size " + size);
         }
         if (size == array.length) {
             grow();
