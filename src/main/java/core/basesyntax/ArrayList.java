@@ -24,18 +24,15 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("IndexOutOfBounds");
-        } else {
-            if (size == array.length) {
-                grow();
-            }
-            T[] newArray = (T[]) new Object[array.length];
-            System.arraycopy(array, 0, newArray,0, index);
-            newArray[index] = value;
-            System.arraycopy(array, index, newArray,index + 1, size - index);
-            array = newArray;
-            size++;
+            throw new ArrayListIndexOutOfBoundsException(
+                    "Index " + index +  " out of bounds for ArrayList with size " + size);
         }
+        if (size == array.length) {
+            grow();
+        }
+        System.arraycopy(array, index, array,index + 1, size - index);
+        array[index] = value;
+        size++;
     }
 
     @Override
@@ -43,12 +40,9 @@ public class ArrayList<T> implements List<T> {
         while (size + list.size() > array.length) {
             grow();
         }
-        T[] acceptedArray = (T[]) new Object[list.size()];
-        for (int i = 0; i < acceptedArray.length; i++) {
-            acceptedArray[i] = list.get(i);
+        for (int i = 0; i < list.size(); i++) {
+            add(list.get(i));
         }
-        System.arraycopy(acceptedArray, 0, array, size, acceptedArray.length);
-        size += acceptedArray.length;
     }
 
     @Override
@@ -76,9 +70,7 @@ public class ArrayList<T> implements List<T> {
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
             if (array[i] == element || array[i] != null && array[i].equals(element)) {
-                System.arraycopy(array, i + 1, array, i, size - i);
-                size--;
-                return element;
+                return remove(i);
             }
         }
         throw new NoSuchElementException();
@@ -101,8 +93,9 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void checkIndex(int index) {
-        if (index < 0 || index > size - 1) {
-            throw new ArrayListIndexOutOfBoundsException("Index out of bounds for ArrayList");
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException(
+                    "Index " + index + " out of bounds for ArrayList with size " + size);
         }
     }
 }
