@@ -1,6 +1,5 @@
 package core.basesyntax;
 
-import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
@@ -23,45 +22,10 @@ public class ArrayList<T> implements List<T> {
         this.size = 0;
     }
 
-    public void ensureCapacity(int minCapacity) {
-        if (minCapacity > elements.length) {
-            int newCapacity = (int) (elements.length * GROWTH_FACTORY);
-            if (newCapacity < minCapacity) {
-                newCapacity = minCapacity;
-
-            }
-            elements = Arrays.copyOf(elements, newCapacity);
-        }
-    }
-
-    private void checkIndex(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
-        }
-    }
-
-    public int indexOf(T element) {
-        if (element == null) {
-            for (int i = 0; i < size; i++) {
-                if (elements[i] == null) {
-                    return i;
-                }
-            }
-        } else {
-            for (int i = 0; i < size; i++) {
-                if (element.equals(elements[i])) {
-                    return i;
-                }
-            }
-        }
-        return INVALID_INDEX;
-    }
-
     @Override
     public void add(T value) {
         ensureCapacity(size + 1);
         elements[size++] = value;
-
     }
 
     @Override
@@ -80,7 +44,6 @@ public class ArrayList<T> implements List<T> {
         for (int i = 0; i < list.size(); i++) {
             add(list.get(i));
         }
-
     }
 
     @Override
@@ -93,7 +56,6 @@ public class ArrayList<T> implements List<T> {
     public void set(T value, int index) {
         checkIndex(index);
         elements[index] = value;
-
     }
 
     @Override
@@ -123,5 +85,41 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private void ensureCapacity(int minCapacity) {
+        if (minCapacity > elements.length) {
+            int newCapacity = (int) (elements.length * GROWTH_FACTORY);
+            if (newCapacity < minCapacity) {
+                newCapacity = minCapacity;
+            }
+
+            Object[] newElements = new Object[newCapacity];
+            System.arraycopy(elements, 0, newElements, 0, size);
+            elements = newElements;
+        }
+    }
+
+    private void checkIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
+        }
+    }
+
+    private int indexOf(T element) {
+        if (element == null) {
+            for (int i = 0; i < size; i++) {
+                if (elements[i] == null) {
+                    return i;
+                }
+            }
+        } else {
+            for (int i = 0; i < size; i++) {
+                if (element.equals(elements[i])) {
+                    return i;
+                }
+            }
+        }
+        return INVALID_INDEX;
     }
 }
