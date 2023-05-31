@@ -8,11 +8,11 @@ public class ArrayList<T> implements List<T> {
     private int size;
     private int capacity;
 
-
     public ArrayList() {
         capacity = DEFAULT_CAPACITY;
         elementArray = (T[]) new Object[capacity];
     }
+
     public T[] elementArrayPlusSize(T[] elementArray, int increasingInSizeByInt) {
         int futureSize = size + increasingInSizeByInt;
         while (futureSize >= capacity) {
@@ -80,10 +80,10 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         if (index >= 0 && index < size) {
-            T deletedElement = elementArray[index];
-            System.arraycopy(elementArray, index + 1, elementArray, index, size - 1 - index);
-            elementArray[size - 1] = null;
             size--;
+            T deletedElement = elementArray[index];
+            System.arraycopy(elementArray, index + 1, elementArray, index, size - index);
+            elementArray[size] = null;
             return deletedElement;
         } else {
             throw new ArrayListIndexOutOfBoundsException("this index is not correction");
