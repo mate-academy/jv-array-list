@@ -1,15 +1,15 @@
 package core.basesyntax;
 
-import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    private Object[] elements;
-    private int size = 0;
+    private static final int GROW_FACTOR = (int) 1.5;
+    private T[] elements;
+    private int size;
 
     public ArrayList() {
-        elements = new Object[DEFAULT_CAPACITY];
+        elements = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
     @Override
@@ -22,9 +22,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("Index out of bounds!");
-        }
+        checkIndexForAdd(index);
         ensureCapacity(size + 1);
         System.arraycopy(elements, index, elements, index + 1, size - index);
         elements[index] = value;
@@ -33,35 +31,26 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        int listSize = list.size();
-        ensureCapacity(size + listSize);
-        for (int i = 0; i < listSize; i++) {
-            elements[size] = list.get(i);
-            size++;
+        for (int i = 0; i < list.size(); i++) {
+            add(list.get(i));
         }
     }
 
     @Override
     public T get(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index out of bounds!");
-        }
-        return (T) elements[index];
+        checkIndex(index);
+        return elements[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index out of bounds!");
-        }
+        checkIndex(index);
         elements[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index out of bounds!");
-        }
+        checkIndex(index);
 
         final T removedElement = (T) elements[index];
         System.arraycopy(elements, index + 1, elements, index, size - index - 1);
@@ -72,13 +61,12 @@ public class ArrayList<T> implements List<T> {
 
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if (element == null && elements[i] == null) {
-                return remove(i);
-            } else if (element != null && element.equals(elements[i])) {
+            if (element == null && elements[i] == null || element != null
+                    && element.equals(elements[i])) {
                 return remove(i);
             }
         }
-        throw new NoSuchElementException("Element not found in the list");
+        throw new NoSuchElementException("Element not found in the list" + element);
     }
 
     @Override
@@ -91,10 +79,29 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
+    private void checkIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException(
+            "Index out of bounds exception! Index: " + index + " Size:" + size);
+        }
+    }
+
+    private void checkIndexForAdd(int index) {
+        if (index < 0 || index > size) {
+            throw new ArrayListIndexOutOfBoundsException(
+            "Index out of bounds exception! Index: " + index + " Size:" + size);
+        }
+    }
+
     private void ensureCapacity(int minCapacity) {
         if (elements.length < minCapacity) {
-            int newCapacity = Math.max((int)(elements.length * 1.5), minCapacity);
-            elements = Arrays.copyOf(elements, newCapacity);
+            int newCapacity = (elements.length * GROW_FACTOR);
+            if (newCapacity < size + 1) {
+                newCapacity++;
+            }
+            T[] newElements = (T[]) new Object[newCapacity];
+            System.arraycopy(elements, 0, newElements, 0, size);
+            elements = newElements;
         }
     }
 }
