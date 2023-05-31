@@ -4,25 +4,24 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    private static final double NUMBER_INCREAD_ARRAY = 1.5;
+    private static final double GROW_FACTOR = 1.5;
     private T[] elements;
     private int size;
 
     public ArrayList() {
-        this.elements = (T[]) new Object[DEFAULT_CAPACITY];
+        elements = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
     @Override
     public void add(T value) {
         resizedIfNeeded();
-        elements[size] = value;
-        size++;
+        elements[size++] = value;
     }
 
     @Override
     public void add(T value, int index) {
         if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("index are incorect");
+            throw new ArrayListIndexOutOfBoundsException(index + " are incorect");
         }
         resizedIfNeeded();
         System.arraycopy(elements, index, elements, index + 1, size - index);
@@ -32,16 +31,11 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        if (size + list.size() > elements.length) {
-            T[] newArray = (T[]) new Object[size + list.size()];
-            System.arraycopy(elements, 0, newArray, 0, size);
-            elements = newArray;
-        }
+        resizedIfNeeded();
         int index = size;
         for (int i = 0; i < list.size(); i++) {
-            elements[index++] = list.get(i);
+            add(list.get(i), index++);
         }
-        size += list.size();
     }
 
     @Override
@@ -68,23 +62,23 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if ((elements[i] == null && element == null)
-                    || (elements[i] != null && elements[i].equals(element))) {
+            if (elements[i] == element
+                    || elements[i] != null && elements[i].equals(element)) {
                 return remove(i);
             }
         }
         throw new NoSuchElementException("Element not found: " + element);
     }
 
-    public void checkIndex(int index) {
+    private void checkIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("index are incorect");
+            throw new ArrayListIndexOutOfBoundsException(index + " are incorect" + index);
         }
     }
 
-    public void resizedIfNeeded() {
+    private void resizedIfNeeded() {
         if (elements.length == size) {
-            Object[] newArray = new Object[(int) (elements.length * NUMBER_INCREAD_ARRAY)];
+            Object[] newArray = new Object[(int) (elements.length * GROW_FACTOR)];
             System.arraycopy(elements, 0, newArray, 0, size);
             elements = (T[]) newArray;
         }
