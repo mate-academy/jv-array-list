@@ -8,21 +8,18 @@ public class ArrayList<T> implements List<T> {
     private int size;
     private int capacity;
 
+
     public ArrayList() {
         capacity = DEFAULT_CAPACITY;
-        size = 0;
         elementArray = (T[]) new Object[capacity];
     }
-
     public T[] elementArrayPlusSize(T[] elementArray, int increasingInSizeByInt) {
         int futureSize = size + increasingInSizeByInt;
         while (futureSize >= capacity) {
             capacity += (capacity >> 1);
         }
         T[] arrayPlusSize = (T[]) new Object[capacity];
-        for (int a = 0; a < size; a++) {
-            arrayPlusSize[a] = elementArray[a];
-        }
+        System.arraycopy(elementArray, 0, arrayPlusSize, 0, size);
         return arrayPlusSize;
     }
 
@@ -42,17 +39,8 @@ public class ArrayList<T> implements List<T> {
                 elementArray = elementArrayPlusSize(elementArray, 1);
             }
             size++;
-            int oldNumberOfElement = size - 1;
-            for (int a = size - 1; a >= 0; a--) {
-                if (a != index) {
-                    elementArray[a] = elementArray[oldNumberOfElement - 1];
-                    oldNumberOfElement--;
-                }
-                if (a == index) {
-                    elementArray[a] = value;
-                    break;
-                }
-            }
+            System.arraycopy(elementArray, index, elementArray, index + 1, size - index - 1);
+            elementArray[index] = value;
         } else {
             throw new ArrayListIndexOutOfBoundsException("this index is not correction");
         }
@@ -92,17 +80,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         if (index >= 0 && index < size) {
-            int newNumberOfElement = 0;
-            T deletedElement = null;
-            for (int a = 0; a < size; a++) {
-                if (a != index) {
-                    elementArray[newNumberOfElement] = elementArray[a];
-                    newNumberOfElement++;
-                }
-                if (a == index) {
-                    deletedElement = elementArray[a];
-                }
-            }
+            T deletedElement = elementArray[index];
+            System.arraycopy(elementArray, index + 1, elementArray, index, size - 1 - index);
             elementArray[size - 1] = null;
             size--;
             return deletedElement;
@@ -113,7 +92,6 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        int newNumberOfElement = 0;
         int numberDeletedElement = -1;
         T deletedElement = null;
         boolean deleteElement = false;
@@ -124,14 +102,10 @@ public class ArrayList<T> implements List<T> {
                 deleteElement = true;
                 break;
             }
-            elementArray[newNumberOfElement] = elementArray[a];
-            newNumberOfElement++;
         }
         if (deleteElement == true) {
-            for (int a = numberDeletedElement; a < size; a++) {
-                elementArray[newNumberOfElement] = elementArray[a + 1];
-                newNumberOfElement++;
-            }
+            System.arraycopy(elementArray, numberDeletedElement + 1, elementArray,
+                    numberDeletedElement, size - 1 - numberDeletedElement);
             elementArray[size - 1] = null;
             size--;
             return deletedElement;
