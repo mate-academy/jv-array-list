@@ -4,10 +4,9 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    private static final double GROWTH_FACTORY = 1.5;
-    private static final int INVALID_INDEX = -1;
+    private static final double GROWTH_FACTOR = 1.5;
 
-    private Object[] elements;
+    private T[] elements;
     private int size;
 
     public ArrayList() {
@@ -18,22 +17,40 @@ public class ArrayList<T> implements List<T> {
         if (initialCapacity < 0) {
             throw new IllegalStateException("Illegal capacity: " + initialCapacity);
         }
-        this.elements = new Object[initialCapacity];
-        this.size = 0;
+        elements = (T[]) new Object[initialCapacity];
+        size = 0;
+    }
+
+    private void ensureCapacity() {
+        if (size >= elements.length) {
+            int newCapacity = (int) (elements.length * GROWTH_FACTOR);
+            if (newCapacity < size + 1) {
+                newCapacity = size + 1;
+            }
+            Object[] newElements = new Object[newCapacity];
+            System.arraycopy(elements, 0, newElements, 0, size);
+            elements = (T[]) newElements;
+        }
+    }
+
+    private void checkIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
+        }
     }
 
     @Override
     public void add(T value) {
-        ensureCapacity(size + 1);
+        ensureCapacity();
         elements[size++] = value;
     }
 
     @Override
     public void add(T value, int index) {
         if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index:" + index);
+            throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
         }
-        ensureCapacity(size + 1);
+        ensureCapacity();
         System.arraycopy(elements, index, elements, index + 1, size - index);
         elements[index] = value;
         size++;
@@ -63,18 +80,18 @@ public class ArrayList<T> implements List<T> {
         checkIndex(index);
         final T removedElement = (T) elements[index];
         System.arraycopy(elements, index + 1, elements, index, size - index - 1);
-        elements[size - 1] = null;
-        size--;
+        elements[--size] = null;
         return removedElement;
     }
 
     @Override
     public T remove(T element) {
-        int index = indexOf(element);
-        if (index == INVALID_INDEX) {
-            throw new NoSuchElementException("Element not found: " + element);
+        for (int i = 0; i < size; i++) {
+            if (element == null ? elements[i] == null : element.equals(elements[i])) {
+                return remove(i);
+            }
         }
-        return remove(index);
+        throw new NoSuchElementException("Element not found: " + element);
     }
 
     @Override
@@ -85,41 +102,5 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
-    }
-
-    private void ensureCapacity(int minCapacity) {
-        if (minCapacity > elements.length) {
-            int newCapacity = (int) (elements.length * GROWTH_FACTORY);
-            if (newCapacity < minCapacity) {
-                newCapacity = minCapacity;
-            }
-
-            Object[] newElements = new Object[newCapacity];
-            System.arraycopy(elements, 0, newElements, 0, size);
-            elements = newElements;
-        }
-    }
-
-    private void checkIndex(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
-        }
-    }
-
-    private int indexOf(T element) {
-        if (element == null) {
-            for (int i = 0; i < size; i++) {
-                if (elements[i] == null) {
-                    return i;
-                }
-            }
-        } else {
-            for (int i = 0; i < size; i++) {
-                if (element.equals(elements[i])) {
-                    return i;
-                }
-            }
-        }
-        return INVALID_INDEX;
     }
 }
