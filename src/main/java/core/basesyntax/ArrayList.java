@@ -4,7 +4,7 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    private static final int GROW_FACTOR = (int) 1.5;
+    private static final float GROW_FACTOR = (int) 1.5;
     private T[] elements;
     private int size;
 
@@ -95,7 +95,7 @@ public class ArrayList<T> implements List<T> {
 
     private void ensureCapacity(int minCapacity) {
         if (elements.length < minCapacity) {
-            int newCapacity = (elements.length * GROW_FACTOR);
+            int newCapacity = (int)(elements.length * GROW_FACTOR);
             if (newCapacity < size + 1) {
                 newCapacity++;
             }
