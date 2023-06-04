@@ -1,6 +1,10 @@
 package core.basesyntax;
 
 public class ArrayList<T> implements List<T> {
+
+    private Object[] internalStorage;
+    private int size;
+
     @Override
     public void add(T value) {
 
@@ -38,11 +42,15 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public int size() {
-        return 0;
+        return size;
     }
 
     @Override
     public boolean isEmpty() {
-        return false;
+        return (size == 0);
+//        if (internalStorage == null || internalStorage.length == 0) {
+//            return true;
+//        }
+//        return false;
     }
 }
