@@ -14,7 +14,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value) {
         if (size == elementArray.length) {
-            elementArray = grow(elementArray, 1);
+            //elementArray = grow(elementArray, 1);
+            elementArray = grow();
         }
         elementArray[size] = value;
         size++;
@@ -24,7 +25,7 @@ public class ArrayList<T> implements List<T> {
     public void add(T value, int index) {
         checkIndexEqualsSize(index);
         if (size == elementArray.length) {
-            elementArray = grow(elementArray, 1);
+            elementArray = grow();
         }
         size++;
         System.arraycopy(elementArray, index, elementArray, index + 1, size - index - 1);
@@ -34,9 +35,6 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void addAll(List<T> list) {
         int listSize = list.size();
-        if (size + listSize >= elementArray.length) {
-            elementArray = grow(elementArray, listSize);
-        }
         for (int a = 0; a < listSize; a++) {
             add(list.get(a));
         }
@@ -66,20 +64,13 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        int numberDeletedElement = -1;
-        boolean deleteElement = false;
         for (int a = 0; a < size; a++) {
             if (element == elementArray[a] || element != null && element.equals(elementArray[a])) {
-                numberDeletedElement = a;
-                deleteElement = true;
-                break;
+                return remove(a);
             }
         }
-        if (deleteElement == true) {
-            return remove(numberDeletedElement);
-        } else {
-            throw new NoSuchElementException("this element is missing from the T[] elementArray");
-        }
+        throw new NoSuchElementException("element " + element
+                + "is missing from the T[] elementArray");
     }
 
     @Override
@@ -92,8 +83,8 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private T[] grow(T[] elementArray, int increasingInSizeByInt) {
-        int futureSize = size + increasingInSizeByInt;
+    private T[] grow() {
+        int futureSize = size + 1;
         int newCapacity = elementArray.length;
         while (futureSize >= newCapacity) {
             newCapacity += (newCapacity >> 1);
@@ -105,14 +96,15 @@ public class ArrayList<T> implements List<T> {
 
     private void checkIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("this index is not correction");
+            throw new ArrayListIndexOutOfBoundsException("index " + index
+                    + " is not correction. size = " + size);
         }
     }
 
     private void checkIndexEqualsSize(int index) {
         if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("this index is not correction");
+            throw new ArrayListIndexOutOfBoundsException("index " + index
+                    + " is not correction. size = " + size);
         }
     }
-
 }
