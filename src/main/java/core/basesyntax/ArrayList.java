@@ -5,11 +5,11 @@ import java.util.NoSuchElementException;
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private static final double GROWTH_FACTOR = 1.5;
-    private Object[] elements;
+    private T[] elements;
     private int size;
 
     ArrayList() {
-        elements = new Object[DEFAULT_CAPACITY];
+        elements = (T[]) new Object[DEFAULT_CAPACITY];
         size = 0;
     }
 
@@ -18,7 +18,7 @@ public class ArrayList<T> implements List<T> {
             int newCapacity = (int) (elements.length * GROWTH_FACTOR);
             Object[] newElements = new Object[newCapacity];
             System.arraycopy(elements, 0, newElements, 0, size);
-            elements = newElements;
+            elements = (T[]) newElements;
         }
     }
 
@@ -59,7 +59,6 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-
     @Override
     public T get(int index) {
         checkIndex(index);
@@ -92,15 +91,15 @@ public class ArrayList<T> implements List<T> {
                     return remove(i);
                 }
             }
-        }else {
-                for (int i = 0; i < size; i++) {
-                    if (element.equals(elements[i])) {
-                        return remove(i);
-                    }
+        } else {
+            for (int i = 0; i < size; i++) {
+                if (element.equals(elements[i])) {
+                    return remove(i);
                 }
             }
-            throw new NoSuchElementException("Element not found: " + element);
         }
+        throw new NoSuchElementException("Element not found: " + element);
+    }
 
     @Override
     public int size() {
