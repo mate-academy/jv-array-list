@@ -10,28 +10,6 @@ public class ArrayList<T> implements List<T> {
 
     ArrayList() {
         elements = (T[]) new Object[DEFAULT_CAPACITY];
-        size = 0;
-    }
-
-    private void ensureCapacity(int minCapacity) {
-        if (elements.length < minCapacity) {
-            int newCapacity = (int) (elements.length * GROWTH_FACTOR);
-            Object[] newElements = new Object[newCapacity];
-            System.arraycopy(elements, 0, newElements, 0, size);
-            elements = (T[]) newElements;
-        }
-    }
-
-    private void checkIndex(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index out of bounds: " + index);
-        }
-    }
-
-    private void checkNotEmpty() {
-        if (isEmpty()) {
-            throw new NoSuchElementException("List is Empty");
-        }
     }
 
     @Override
@@ -91,12 +69,17 @@ public class ArrayList<T> implements List<T> {
                     return remove(i);
                 }
             }
-        } else {
-            for (int i = 0; i < size; i++) {
-                if (element.equals(elements[i])) {
-                    return remove(i);
-                }
+            throw new NoSuchElementException("Element not found: null");
+        }
+        int index = -1;
+        for (int i = 0; i < size; i++) {
+            if (element.equals(elements[i])) {
+                index = i;
+                break;
             }
+        }
+        if (index != -1) {
+            return remove(index);
         }
         throw new NoSuchElementException("Element not found: " + element);
     }
@@ -110,4 +93,26 @@ public class ArrayList<T> implements List<T> {
     public boolean isEmpty() {
         return size == 0;
     }
+
+    private void ensureCapacity(int minCapacity) {
+        if (elements.length < minCapacity) {
+            int newCapacity = (int) (elements.length * GROWTH_FACTOR);
+            Object[] newElements = new Object[newCapacity];
+            System.arraycopy(elements, 0, newElements, 0, size);
+            elements = (T[]) newElements;
+        }
+    }
+
+    private void checkIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Index out of bounds: " + index);
+        }
+    }
+
+    private void checkNotEmpty() {
+        if (isEmpty()) {
+            throw new NoSuchElementException("List is Empty");
+        }
+    }
 }
+
