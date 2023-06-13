@@ -72,10 +72,7 @@ public class ArrayList<T> implements List<T> {
         indexCheck(index);
         T value;
         value = (T) array[index];
-
-        for (int i = index + 1; i < array.length; i++) {
-            array[i - 1] = array[i];
-        }
+        System.arraycopy(array,index + 1, array, index, size - index - 1);
         array[array.length - 1] = null;
         size--;
         return value;
