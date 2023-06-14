@@ -14,15 +14,15 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        isOnSizeLimit();
+        checkSizeAndGrow();
         internalStorage[size] = value;
         size++;
     }
 
     @Override
     public void add(T value, int index) {
-        addingIndexIsValid(index);
-        isOnSizeLimit();
+        checkAddingIndex(index);
+        checkSizeAndGrow();
         System.arraycopy(internalStorage, index,
                 internalStorage, index + 1,
                 size - index);
@@ -32,9 +32,6 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        if (list.size() == 0) {
-            return;
-        }
         for (int i = 0; i < list.size(); i++) {
             this.add(list.get(i));
         }
@@ -42,19 +39,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        indexIsValid(index);
+        checkIndex(index);
         return (T) internalStorage[index];
     }
 
     @Override
     public void set(T value, int index) {
-        indexIsValid(index);
+        checkIndex(index);
         internalStorage[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        indexIsValid(index);
+        checkIndex(index);
         final Object oldValue = internalStorage[index];
         if (index < size - 1) {
             System.arraycopy(internalStorage, index + 1, internalStorage, index, size - 1 - index);
@@ -76,34 +73,34 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public boolean isEmpty() {
-        return (size == 0);
+        return size == 0;
     }
 
-    private void isOnSizeLimit() {
+    private void checkSizeAndGrow() {
         if (size == internalStorage.length) {
             grow();
         }
     }
 
-    private void indexIsValid(int index) {
+    private void checkIndex(int index) {
         if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException(index);
+            throw new ArrayListIndexOutOfBoundsException(
+                    String.format("Index %d is out of array bounds.", index));
         }
     }
 
-    private void addingIndexIsValid(int index) {
+    private void checkAddingIndex(int index) {
         if (index > size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException(index);
+            throw new ArrayListIndexOutOfBoundsException(
+                    String.format("Index %d is out of array bounds.", index));
         }
     }
 
     private int indexOf(T element) {
-        if (size > 0) {
-            for (int i = 0; i < size; i++) {
-                if (internalStorage[i] == element
-                        || internalStorage[i] != null && internalStorage[i].equals(element)) {
-                    return i;
-                }
+        for (int i = 0; i < size; i++) {
+            if (internalStorage[i] == element
+                    || internalStorage[i] != null && internalStorage[i].equals(element)) {
+                return i;
             }
         }
         throw new NoSuchElementException();
