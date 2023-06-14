@@ -1,5 +1,7 @@
 package core.basesyntax;
 
+import java.util.NoSuchElementException;
+
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_SIZE = 10;
 
@@ -12,9 +14,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (size == internalStorage.length) {
-            grow();
-        }
+        isOnSizeLimit();
         internalStorage[size] = value;
         size++;
     }
@@ -22,10 +22,10 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         addingIndexIsValid(index);
-        if (index == internalStorage.length) {
-            grow();
-        }
-        System.arraycopy(internalStorage, index, internalStorage, index + 1, size - index);
+        isOnSizeLimit();
+        System.arraycopy(internalStorage, index,
+                internalStorage, index + 1,
+                size - index);
         internalStorage[index] = value;
         size++;
     }
@@ -38,11 +38,6 @@ public class ArrayList<T> implements List<T> {
         for (int i = 0; i < list.size(); i++) {
             this.add(list.get(i));
         }
-//        if (size + list.size() > internalStorage.length) {
-//            grow();
-//        }
-//        System.arraycopy(list, 0, internalStorage, size, list.size() - 1);
-//        size += list.size();
     }
 
     @Override
@@ -84,6 +79,12 @@ public class ArrayList<T> implements List<T> {
         return (size == 0);
     }
 
+    private void isOnSizeLimit() {
+        if (size == internalStorage.length) {
+            grow();
+        }
+    }
+
     private void indexIsValid(int index) {
         if (index >= size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException(index);
@@ -96,20 +97,19 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    //need to add all the checks, so it`s better to get a single method for that
     private int indexOf(T element) {
         if (size > 0) {
             for (int i = 0; i < size; i++) {
-                if (internalStorage[i].equals(element)) {
+                if (internalStorage[i] == element || internalStorage[i] != null && internalStorage[i].equals(element)) {
                     return i;
                 }
             }
         }
-        return -1;
+        throw new NoSuchElementException();
     }
 
     private void grow() {
-        int newSize = internalStorage.length + internalStorage.length >> 1;
+        int newSize = internalStorage.length + (internalStorage.length >> 1);
         Object[] newStorage = new Object[newSize];
         System.arraycopy(internalStorage, 0, newStorage, 0, internalStorage.length);
         internalStorage = newStorage;
