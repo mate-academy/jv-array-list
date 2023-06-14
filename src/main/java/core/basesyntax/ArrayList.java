@@ -22,7 +22,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (size + 1 > array.length) {
+        if (size == array.length) {
             resizeArray(array);
         }
         array[size] = value;
@@ -37,10 +37,12 @@ public class ArrayList<T> implements List<T> {
         }
         checkIndex(index);
         // case when added value into the middle of array:
-        Object lastElement = array[size - 1];
-        System.arraycopy(array, index, array, index + 1, size - index - 1);
-        set(value, index);
-        add((T) lastElement);
+        if (size == array.length) {
+            resizeArray(array);
+        }
+        System.arraycopy(array, index, array, index + 1, size - index);
+        array[index] = value;
+        size++;
     }
 
     @Override
@@ -65,8 +67,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
-        T value;
-        value = (T) array[index];
+        final T value = (T) array[index];
         System.arraycopy(array, index + 1, array, index, size - index - 1);
         array[array.length - 1] = null;
         size--;
