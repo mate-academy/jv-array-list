@@ -55,7 +55,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         indexIsValid(index);
-        Object oldValue = internalStorage[index];
+        final Object oldValue = internalStorage[index];
         if (index < size - 1) {
             System.arraycopy(internalStorage, index + 1, internalStorage, index, size - 1 - index);
         }
@@ -100,7 +100,8 @@ public class ArrayList<T> implements List<T> {
     private int indexOf(T element) {
         if (size > 0) {
             for (int i = 0; i < size; i++) {
-                if (internalStorage[i] == element || internalStorage[i] != null && internalStorage[i].equals(element)) {
+                if (internalStorage[i] == element
+                        || internalStorage[i] != null && internalStorage[i].equals(element)) {
                     return i;
                 }
             }
