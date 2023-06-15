@@ -71,10 +71,10 @@ public class ArrayList<T> implements List<T> {
         if (index >= size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Index " + index + " is invalid");
         }
-            if (size == elementData.length) {
-                elementData = grow();
-            }
-            elementData[index] = value;
+        if (size == elementData.length) {
+            elementData = grow();
+        }
+        elementData[index] = value;
     }
 
     @Override
