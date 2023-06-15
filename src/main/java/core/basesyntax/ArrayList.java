@@ -1,48 +1,137 @@
 package core.basesyntax;
 
+import java.util.NoSuchElementException;
+
 public class ArrayList<T> implements List<T> {
+    private static final int DEFAULT_SIZE = 10;
+    private T[] elementData;
+    private int size;
+
+    public ArrayList() {
+        this.elementData = (T[]) new Object[DEFAULT_SIZE];
+    }
+
     @Override
     public void add(T value) {
-
+        if (size == elementData.length) {
+            elementData = grow();
+        }
+        elementData[size] = value;
+        size++;
     }
 
     @Override
     public void add(T value, int index) {
-
+        if (index > size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Index " + index + " is invalid");
+        }
+        if (size == elementData.length) {
+            elementData = grow();
+        }
+        if (index < size) {
+            T[] tempElementData = (T[]) new Object[elementData.length];
+            System.arraycopy(elementData,0,tempElementData,0,index + 1);
+            tempElementData[index] = value;
+            System.arraycopy(elementData,index,tempElementData,index + 1,size - index);
+            elementData = tempElementData;
+            size++;
+            return;
+        }
+        if (index == size) {
+            elementData[size] = value;
+            size++;
+        }
     }
 
     @Override
     public void addAll(List<T> list) {
-
+        if (list == null) {
+            throw new ArrayListIndexOutOfBoundsException("Can't add list");
+        }
+        while (elementData.length < size + list.size()) {
+            elementData = grow();
+        }
+        for (int i = 0; i < list.size(); i++) {
+            elementData[size] = list.get(i);
+            size++;
+        }
     }
 
     @Override
     public T get(int index) {
-        return null;
+        if (index < size && index >= 0) {
+            return elementData[index];
+        } else {
+            throw new ArrayListIndexOutOfBoundsException("Index " + index + " is invalid");
+        }
     }
 
     @Override
     public void set(T value, int index) {
-
+        if (index >= size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Index " + index + " is invalid");
+        }
+        if (index == size) {
+            if (size == elementData.length) {
+                elementData = grow();
+            }
+            elementData[index] = value;
+            size++;
+        }
+        if (index < size) {
+            elementData[index] = value;
+        }
     }
 
     @Override
     public T remove(int index) {
-        return null;
+        T[] tempElementData = (T[]) new Object[elementData.length];
+        T deletedObject;
+        if (index + 1 == elementData.length) {
+            System.arraycopy(elementData,0,tempElementData,0,index);
+            deletedObject = elementData[index];
+            elementData = tempElementData;
+            size--;
+            return deletedObject;
+        }
+        if (index < size && index >= 0) {
+            System.arraycopy(elementData,0,tempElementData,0,index);
+            System.arraycopy(elementData,index + 1,tempElementData,index,size - index);
+            deletedObject = elementData[index];
+            elementData = tempElementData;
+            size--;
+            return deletedObject;
+        } else {
+            throw new ArrayListIndexOutOfBoundsException("Index " + index + " is invalid");
+        }
     }
 
     @Override
     public T remove(T element) {
-        return null;
+        for (int i = 0; i < size; i++) {
+            if ((elementData[i] == element) || elementData[i]
+                    != null && elementData[i].equals(element)) {
+                remove(i);
+                return element;
+            }
+        }
+        throw new NoSuchElementException("Such element does not exist");
     }
 
     @Override
     public int size() {
-        return 0;
+        return size;
     }
 
     @Override
     public boolean isEmpty() {
-        return false;
+        return size == 0 ? true : false;
+    }
+
+    private T[] grow() {
+        T[] tempElementData = (T[]) new Object[elementData.length + (elementData.length / 2)];
+        System.arraycopy(elementData,0,tempElementData,0,size);
+        elementData = tempElementData;
+        return elementData;
     }
 }
