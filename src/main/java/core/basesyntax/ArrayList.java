@@ -1,10 +1,8 @@
 package core.basesyntax;
 
 import java.util.NoSuchElementException;
-import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
-
     private static final int DAFAULT_CAPACITY = 10;
     private static final double GROW_FACTORY = 1.5;
     private int size;
@@ -16,7 +14,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        enaughCapacity(size + 1);
+        growArrayIfFull();
         internalArray[size++] = value;
     }
 
@@ -25,7 +23,7 @@ public class ArrayList<T> implements List<T> {
         if (index > size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Index is wrong: " + index);
         }
-        growIfArrayFull();
+        growArrayIfFull();
         System.arraycopy(internalArray, index, internalArray,
                 index + 1, size - index);
         internalArray[index] = value;
@@ -55,30 +53,20 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         checkIndex(index);
         T toRemoveElement = internalArray[index];
-        for (int i = index; i < size - 1; i++) {
-            internalArray[i] = internalArray[i + 1];
-        }
         size--;
+        System.arraycopy(internalArray, index + 1, internalArray, index, size - index);
         return toRemoveElement;
     }
 
     @Override
     public T remove(T element) {
-        boolean notExistToRemove = true;
         for (int i = 0; i < size; i++) {
-            if (Objects.equals(internalArray[i], element)) {
-                System.arraycopy(internalArray, i + 1, internalArray,
-                        i, size - i);
-                size--;
-                notExistToRemove = false;
-                return element;
+            if (element == internalArray[i] || internalArray[i] != null
+                    && internalArray[i].equals(element)) {
+                return remove(i);
             }
         }
-        if (notExistToRemove) {
-            throw new NoSuchElementException("Element "
-                    + element + " nor exist in List");
-        }
-        return element;
+        throw new NoSuchElementException("Element" + element + " is absent in the list.");
     }
 
     @Override
@@ -91,15 +79,7 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void enaughCapacity(int needCapacity) {
-        if (needCapacity >= internalArray.length) {
-            T[] newArray = (T[]) new Object[(int) (internalArray.length * GROW_FACTORY)];
-            System.arraycopy(internalArray, 0, newArray, 0, internalArray.length);
-            internalArray = newArray;
-        }
-    }
-
-    private void growIfArrayFull() {
+    private void growArrayIfFull() {
         if (internalArray.length == size) {
             T[] newArray = (T[]) new Object[(int) (internalArray.length * GROW_FACTORY)];
             System.arraycopy(internalArray, 0, newArray, 0, internalArray.length);
