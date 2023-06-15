@@ -128,9 +128,6 @@ public class ArrayList<T> implements List<T> {
     }
 
     private boolean isInvalid(int index) {
-        if (index >= size || index < 0) {
-            return true;
-        }
-        return false;
+        return index >= size || index < 0;
     }
 }
