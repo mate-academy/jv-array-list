@@ -8,39 +8,31 @@ public class ArrayList<T> implements List<T> {
     private int size;
 
     public ArrayList() {
-        this.elementData = (T[]) new Object[DEFAULT_SIZE];
+        elementData = (T[]) new Object[DEFAULT_SIZE];
     }
 
     @Override
     public void add(T value) {
-        if (size == elementData.length) {
-            elementData = grow();
-        }
-        elementData[size] = value;
-        size++;
+        elementData = (size == elementData.length) ? grow() : elementData;
+        elementData[size++] = value;
     }
 
     @Override
     public void add(T value, int index) {
-        if (index > size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index " + index + " is invalid");
+        elementData = (size == elementData.length) ? grow() : elementData;
+        if (index == size) {
+            add(value);
+            return;
         }
-        if (size == elementData.length) {
-            elementData = grow();
-        }
+        validateIndex(index);
         if (index < size) {
             T[] tempElementData = (T[]) new Object[elementData.length];
             System.arraycopy(elementData, 0, tempElementData, 0, index + 1);
             tempElementData[index] = value;
-            System.arraycopy(elementData, index, tempElementData, index + 1, size - index);
+            System.arraycopy(elementData, index, tempElementData, index + 1, size++ - index);
             elementData = tempElementData;
-            size++;
-            return;
         }
-        if (index == size) {
-            elementData[size] = value;
-            size++;
-        }
+
     }
 
     @Override
@@ -52,49 +44,31 @@ public class ArrayList<T> implements List<T> {
             elementData = grow();
         }
         for (int i = 0; i < list.size(); i++) {
-            elementData[size] = list.get(i);
-            size++;
+            add(list.get(i));
         }
     }
 
     @Override
     public T get(int index) {
-        if (isInvalid(index)) {
-            throw new ArrayListIndexOutOfBoundsException("Index " + index + " is invalid");
-        }
+        validateIndex(index);
         return elementData[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (isInvalid(index)) {
-            throw new ArrayListIndexOutOfBoundsException("Index " + index + " is invalid");
-        }
-        if (size == elementData.length) {
-            elementData = grow();
-        }
+        validateIndex(index);
         elementData[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (isInvalid(index)) {
-            throw new ArrayListIndexOutOfBoundsException("Index " + index + " is invalid");
-        }
-        T[] tempElementData = (T[]) new Object[elementData.length];
-        T deletedObject;
+        validateIndex(index);
+        T deletedObject = elementData[index];
         if (index + 1 == elementData.length) {
-            System.arraycopy(elementData,0,tempElementData,0,index);
-            deletedObject = elementData[index];
-            elementData = tempElementData;
             size--;
             return deletedObject;
         }
-        System.arraycopy(elementData, 0, tempElementData, 0, index);
-        System.arraycopy(elementData, index + 1, tempElementData, index, size - index);
-        deletedObject = elementData[index];
-        elementData = tempElementData;
-        size--;
+        System.arraycopy(elementData, index + 1, elementData, index, size-- - index);
         return deletedObject;
     }
 
@@ -107,7 +81,7 @@ public class ArrayList<T> implements List<T> {
                 return element;
             }
         }
-        throw new NoSuchElementException("Such element does not exist");
+        throw new NoSuchElementException("Element " + element + " does not exist");
     }
 
     @Override
@@ -121,13 +95,15 @@ public class ArrayList<T> implements List<T> {
     }
 
     private T[] grow() {
-        T[] tempElementData = (T[]) new Object[elementData.length + (elementData.length / 2)];
+        T[] tempElementData = (T[]) new Object[elementData.length + (elementData.length >> 1)];
         System.arraycopy(elementData, 0, tempElementData, 0, size);
         elementData = tempElementData;
         return elementData;
     }
 
-    private boolean isInvalid(int index) {
-        return index >= size || index < 0;
+    private void validateIndex(int index) {
+        if (index >= size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Index " + index + " is invalid");
+        }
     }
 }
