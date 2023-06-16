@@ -19,20 +19,14 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
+        if (index > size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Index " + index + " is invalid");
+        }
         elementData = (size == elementData.length) ? grow() : elementData;
-        if (index == size) {
-            add(value);
-            return;
+        if (index <= size) {
+            System.arraycopy(elementData, index, elementData, index + 1, size++ - index);
+            elementData[index] = value;
         }
-        validateIndex(index);
-        if (index < size) {
-            T[] tempElementData = (T[]) new Object[elementData.length];
-            System.arraycopy(elementData, 0, tempElementData, 0, index + 1);
-            tempElementData[index] = value;
-            System.arraycopy(elementData, index, tempElementData, index + 1, size++ - index);
-            elementData = tempElementData;
-        }
-
     }
 
     @Override
@@ -75,8 +69,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if ((elementData[i] == element) || elementData[i]
-                    != null && elementData[i].equals(element)) {
+            if ((elementData[i] == element)
+                    || elementData[i] != null && elementData[i].equals(element)) {
                 remove(i);
                 return element;
             }
