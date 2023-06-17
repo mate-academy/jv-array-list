@@ -6,7 +6,6 @@ public class ArrayList<T> implements List<T> {
     private static final int INITIALIZATION_SIZE = 10;
     private static final double ARRAY_RATIO = 1.5;
     private T[] values;
-    private int currentSize;
     private int size;
 
     public ArrayList() {
@@ -15,9 +14,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (size >= currentSize) {
-            grow();
-        }
+        growIfArrayFull();
         values[size] = value;
         size++;
     }
@@ -37,9 +34,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        if (list.size() > currentSize - size) {
-            grow();
-        }
+        growIfArrayFull();
         for (int i = 0; i < list.size(); i++) {
             values[size] = list.get(i);
             size++;
@@ -103,9 +98,10 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    public void grow() {
-        currentSize *= ARRAY_RATIO;
-        System.arraycopy(values, 0,
-                values = (T[]) new Object[currentSize], 0, size);
+    public void growIfArrayFull() {
+        if (values.length == size) {
+            System.arraycopy(values, 0,
+                    values = (T[]) new Object[(int) (size * ARRAY_RATIO)], 0, size);
+        }
     }
 }
