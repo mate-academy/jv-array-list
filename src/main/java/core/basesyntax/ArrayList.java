@@ -21,7 +21,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        checkIndex(index);
+        checkIndex(index, size);
         T[] newValues = (T[]) new Object[values.length + 1];
         if (size > 0) {
             System.arraycopy(values, 0, newValues, 0, values.length);
@@ -42,19 +42,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        checkIndex(index);
+        checkIndex(index, size - 1);
         return values[index];
     }
 
     @Override
     public void set(T value, int index) {
-        checkIndex(index);
+        checkIndex(index,size - 1);
         values[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        checkIndex(index);
+        checkIndex(index, size - 1);
         T[] newValues = (T[]) new Object[values.length - 1];
         System.arraycopy(values, 0, newValues, 0, index);
         System.arraycopy(values, index + 1, newValues, index, values.length - index - 1);
@@ -91,7 +91,7 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private void checkIndex(int index) {
+    private void checkIndex(int index, int size) {
         if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException("Index is invalid");
         }
