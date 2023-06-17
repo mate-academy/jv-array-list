@@ -10,8 +10,7 @@ public class ArrayList<T> implements List<T> {
     private int size;
 
     public ArrayList() {
-        currentSize = INITIALIZATION_SIZE;
-        values = (T[]) new Object[currentSize];
+        values = (T[]) new Object[INITIALIZATION_SIZE];
     }
 
     @Override
