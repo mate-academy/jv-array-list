@@ -7,7 +7,7 @@ public class ArrayList<T> implements List<T> {
     private static final double ARRAY_RATIO = 1.5;
     private T[] values;
     private int currentSize;
-    private int lastElement = 0;
+    private int size;
 
     public ArrayList() {
         currentSize = INITIALIZATION_SIZE;
@@ -16,16 +16,16 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (lastElement >= currentSize) {
+        if (size >= currentSize) {
             grow();
         }
-        values[lastElement] = value;
-        lastElement++;
+        values[size] = value;
+        size++;
     }
 
     @Override
     public void add(T value, int index) {
-        if (index < 0 || index > lastElement) {
+        if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException("Index is invalid");
         }
         T[] newValues = (T[]) new Object[values.length + 1];
@@ -33,23 +33,23 @@ public class ArrayList<T> implements List<T> {
         newValues[index] = value;
         System.arraycopy(values, index, newValues, index + 1, values.length - index);
         values = newValues;
-        lastElement++;
+        size++;
     }
 
     @Override
     public void addAll(List<T> list) {
-        if (list.size() > currentSize - lastElement) {
+        if (list.size() > currentSize - size) {
             grow();
         }
         for (int i = 0; i < list.size(); i++) {
-            values[lastElement] = list.get(i);
-            lastElement++;
+            values[size] = list.get(i);
+            size++;
         }
     }
 
     @Override
     public T get(int index) {
-        if (index >= 0 && index < lastElement) {
+        if (index >= 0 && index < size) {
             return values[index];
         }
         throw new ArrayListIndexOutOfBoundsException("Index is invalid");
@@ -57,7 +57,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void set(T value, int index) {
-        if (index >= 0 && index < lastElement) {
+        if (index >= 0 && index < size) {
             values[index] = value;
             return;
         }
@@ -66,13 +66,13 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(int index) {
-        if (index >= 0 && index < lastElement) {
+        if (index >= 0 && index < size) {
             T[] newValues = (T[]) new Object[values.length - 1];
             System.arraycopy(values, 0, newValues, 0, index);
             System.arraycopy(values, index + 1, newValues, index, values.length - index - 1);
             T removedElement = values[index];
             values = newValues;
-            lastElement--;
+            size--;
             return removedElement;
         }
         throw new ArrayListIndexOutOfBoundsException("Index is invalid");
@@ -87,7 +87,7 @@ public class ArrayList<T> implements List<T> {
                 System.arraycopy(values, i + 1, newValues, i, values.length - i - 1);
                 T removedElement = values[i];
                 values = newValues;
-                lastElement--;
+                size--;
                 return removedElement;
             }
         }
@@ -96,17 +96,17 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public int size() {
-        return lastElement;
+        return size;
     }
 
     @Override
     public boolean isEmpty() {
-        return lastElement == 0;
+        return size == 0;
     }
 
     public void grow() {
         currentSize *= ARRAY_RATIO;
         System.arraycopy(values, 0,
-                values = (T[]) new Object[currentSize], 0, lastElement);
+                values = (T[]) new Object[currentSize], 0, size);
     }
 }
