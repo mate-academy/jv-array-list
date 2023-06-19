@@ -15,7 +15,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        growIfArrayFull();
+        growArrayIfFull();
         values[size] = value;
         size++;
     }
@@ -31,7 +31,6 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        growIfArrayFull();
         for (int i = 0; i < list.size(); i++) {
             add(list.get(i));
         }
@@ -45,16 +44,14 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void set(T value, int index) {
-        checkIndex(index,size - 1);
+        checkIndex(index, size - 1);
         values[index] = value;
     }
 
     public T remove(int index) {
         checkIndex(index, size - 1);
-        T[] newValues = Arrays.copyOf(values, values.length - 1);
-        System.arraycopy(values, index + 1, newValues, index, values.length - index - 1);
         T removedElement = values[index];
-        values = newValues;
+        System.arraycopy(values, index + 1, values, index,size - index - 1);
         size--;
         return removedElement;
     }
@@ -66,7 +63,7 @@ public class ArrayList<T> implements List<T> {
                 return remove(i);
             }
         }
-        throw new NoSuchElementException();
+        throw new NoSuchElementException("Element not found: " + element);
     }
 
     @Override
@@ -79,7 +76,7 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void growIfArrayFull() {
+    private void growArrayIfFull() {
         if (values.length == size) {
             System.arraycopy(values, 0,
                     values = (T[]) new Object[(int) (size * ARRAY_RATIO)], 0, size);
@@ -88,7 +85,8 @@ public class ArrayList<T> implements List<T> {
 
     private void checkIndex(int index, int size) {
         if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("Index is invalid");
+            throw new ArrayListIndexOutOfBoundsException("Index is invalid. Index: "
+                    + index + ". Size: " + size);
         }
     }
 }
