@@ -1,15 +1,14 @@
 package core.basesyntax;
 
-import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    private static final int INITIAL_CAPICITY = 10;
+    private static final int INITIAL_CAPACITY = 10;
     private int size;
     private Object[] elementData;
 
     public ArrayList() {
-        elementData = new Object[INITIAL_CAPICITY];
+        elementData = new Object[INITIAL_CAPACITY];
     }
 
     @Override
@@ -41,7 +40,13 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-
+        int totalLengthOfMergedArrays = elementData.length + list.size();
+        while (elementData.length < totalLengthOfMergedArrays) {
+            growElementData();
+        }
+        for (int i = 0; i < list.size(); i++) {
+            add(list.get(i));
+        }
     }
 
     @Override
@@ -63,6 +68,11 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         T elementToReturn = get(index);
+        if (index == size - 1) {
+            elementData[index] = null;
+            size--;
+            return elementToReturn;
+        }
         System.arraycopy(elementData, index + 1, elementData, index, size - index);
         size--;
         return elementToReturn;
@@ -71,7 +81,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if (elementData[i].equals(element)) {
+            if ((elementData[i] == null && element == null)
+                    || (elementData[i] != null && elementData[i].equals(element))) {
                 return remove(i);
             }
         }
