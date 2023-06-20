@@ -25,14 +25,13 @@ public class ArrayList<T> implements List<T> {
             add(value);
             return;
         }
-        if (isIndexCorrect(index)) {
-            if (size + 1 == elements.length) {
-                growElementData();
-            }
-            System.arraycopy(elements, index, elements, index + 1, size - index);
-            elements[index] = value;
-            size++;
+        checkIndex(index);
+        if (size + 1 == elements.length) {
+            growElementData();
         }
+        System.arraycopy(elements, index, elements, index + 1, size - index);
+        elements[index] = value;
+        size++;
     }
 
     @Override
@@ -44,13 +43,13 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        checkIndexForGetAndSetOperations(index);
+        checkIndex(index);
         return (T) elements[index];
     }
 
     @Override
     public void set(T value, int index) {
-        checkIndexForGetAndSetOperations(index);
+        checkIndex(index);
         elements[index] = value;
     }
 
@@ -89,26 +88,14 @@ public class ArrayList<T> implements List<T> {
         elements = (T[]) increasedArr;
     }
 
-    private void checkIndexForGetAndSetOperations(int index) {
+    private void checkIndex(int index) {
         if (index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Wrong index " + index + "! "
                     + "Index must not be the negative digit");
         }
-        if (index == size) {
+        if (index == size || index > size) {
             throw new ArrayListIndexOutOfBoundsException("Wrong index" + index + "! "
                     + "Index value must be less than size");
         }
-    }
-
-    private boolean isIndexCorrect(int index) {
-        if (index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Wrong index " + index + "! "
-                    + "Index must not be the negative digit");
-        }
-        if (index > size) {
-            throw new ArrayListIndexOutOfBoundsException("Wrong index" + index + "! "
-                    + "Index value must be less than size");
-        }
-        return true;
     }
 }
