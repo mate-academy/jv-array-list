@@ -5,19 +5,18 @@ import java.util.NoSuchElementException;
 public class ArrayList<T> implements List<T> {
     private static final int INITIAL_CAPACITY = 10;
     private int size;
-    private Object[] elementData;
+    private T[] elements;
 
     public ArrayList() {
-        elementData = new Object[INITIAL_CAPACITY];
+        elements = (T[]) new Object[INITIAL_CAPACITY];
     }
 
     @Override
     public void add(T value) {
-        if (size == elementData.length) {
+        if (size == elements.length) {
             growElementData();
         }
-        elementData[size] = value;
-        size++;
+        elements[size++] = value;
     }
 
     @Override
@@ -26,24 +25,18 @@ public class ArrayList<T> implements List<T> {
             add(value);
             return;
         }
-        if (index > -1 && index < size) {
-            if (size + 1 == elementData.length) {
+        if (isIndexCorrect(index)) {
+            if (size + 1 == elements.length) {
                 growElementData();
             }
-            System.arraycopy(elementData, index, elementData, index + 1, size - index);
-            elementData[index] = value;
+            System.arraycopy(elements, index, elements, index + 1, size - index);
+            elements[index] = value;
             size++;
-            return;
         }
-        throw new ArrayListIndexOutOfBoundsException("Wrong index!");
     }
 
     @Override
     public void addAll(List<T> list) {
-        int totalLengthOfMergedArrays = elementData.length + list.size();
-        while (elementData.length < totalLengthOfMergedArrays) {
-            growElementData();
-        }
         for (int i = 0; i < list.size(); i++) {
             add(list.get(i));
         }
@@ -51,29 +44,20 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index < 0 || index == size) {
-            throw new ArrayListIndexOutOfBoundsException("Wrong index!");
-        }
-        return (T) elementData[index];
+        checkIndexForGetAndSetOperations(index);
+        return (T) elements[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index < 0 || index == size) {
-            throw new ArrayListIndexOutOfBoundsException("Wrong index!");
-        }
-        elementData[index] = value;
+        checkIndexForGetAndSetOperations(index);
+        elements[index] = value;
     }
 
     @Override
     public T remove(int index) {
         T elementToReturn = get(index);
-        if (index == size - 1) {
-            elementData[index] = null;
-            size--;
-            return elementToReturn;
-        }
-        System.arraycopy(elementData, index + 1, elementData, index, size - index);
+        System.arraycopy(elements, index + 1, elements, index, size - index - 1);
         size--;
         return elementToReturn;
     }
@@ -81,8 +65,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if ((elementData[i] == null && element == null)
-                    || (elementData[i] != null && elementData[i].equals(element))) {
+            if (elements[i] == element
+                    || elements[i] != null && elements[i].equals(element)) {
                 return remove(i);
             }
         }
@@ -100,8 +84,31 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void growElementData() {
-        Object[] increasedArr = new Object[(int) (elementData.length * 1.5)];
-        System.arraycopy(elementData, 0, increasedArr, 0, elementData.length);
-        elementData = increasedArr;
+        Object[] increasedArr = new Object[(int) (elements.length * 1.5)];
+        System.arraycopy(elements, 0, increasedArr, 0, elements.length);
+        elements = (T[]) increasedArr;
+    }
+
+    private void checkIndexForGetAndSetOperations(int index) {
+        if (index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Wrong index " + index + "! "
+                    + "Index must not be the negative digit");
+        }
+        if (index == size) {
+            throw new ArrayListIndexOutOfBoundsException("Wrong index" + index + "! "
+                    + "Index value must be less than size");
+        }
+    }
+
+    private boolean isIndexCorrect(int index) {
+        if (index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Wrong index " + index + "! "
+                    + "Index must not be the negative digit");
+        }
+        if (index > size) {
+            throw new ArrayListIndexOutOfBoundsException("Wrong index" + index + "! "
+                    + "Index value must be less than size");
+        }
+        return true;
     }
 }
