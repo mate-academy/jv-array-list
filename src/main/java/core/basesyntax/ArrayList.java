@@ -5,21 +5,20 @@ import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
     public static final int DEFAULT_CAPACITY = 10;
-    public static final double DEFAULT_CAPACITY_K = 1.5;
-    public static final Object[] EMPTY_INITIAL_ARRAY = {};
+    public static final double DEFAULT_CAPACITY_GROW_COEFFICIENT = 1.5;
     private Object[] elementData;
     private int size;
     private int capacity;
 
     public ArrayList() {
-        this.elementData = EMPTY_INITIAL_ARRAY;
+        this.elementData = new Object[DEFAULT_CAPACITY];
+        this.capacity = DEFAULT_CAPACITY;
     }
 
     public ArrayList(int capacity) {
-        if (capacity > 0) {
+        if (capacity >= 0) {
             this.elementData = new Object[capacity];
-        } else if (capacity == 0) {
-            this.elementData = EMPTY_INITIAL_ARRAY;
+            this.capacity = capacity;
         } else {
             throw new IllegalArgumentException("Illegal Capacity: " + capacity);
         }
@@ -27,7 +26,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        checkCapacity(DEFAULT_CAPACITY_K);
+        checkCapacity();
         elementData[size] = value;
         size++;
     }
@@ -37,29 +36,18 @@ public class ArrayList<T> implements List<T> {
         if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException("Index is out of bound");
         }
-        checkCapacity(DEFAULT_CAPACITY_K);
-        if (index == size) {
-            elementData[index] = value;
-        } else {
-            Object[] arrayBuffer = new Object[capacity];
-            if (index != 0) {
-                System.arraycopy(elementData, 0, arrayBuffer, 0, index);
-            }
-            System.arraycopy(elementData, index, arrayBuffer, index + 1, size - index);
-            arrayBuffer[index] = value;
-            elementData = arrayBuffer;
+        checkCapacity();
+        if (index != size) {
+            System.arraycopy(elementData, index, elementData, index + 1, size - index);
         }
+        elementData[index] = value;
         size++;
     }
 
     @Override
     public void addAll(List<T> list) {
-        int listSize = list.size();
-        size += listSize;
-        double k = size / capacity;
-        checkCapacity(k);
-        for (int i = 0; i < listSize; i++) {
-            elementData[size - listSize + i] = list.get(i);
+        for (int i = 0; i < list.size(); i++) {
+            add(list.get(i));
         }
     }
 
@@ -79,16 +67,9 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         checkIndex(index);
         final T removed = (T) elementData[index];
-        for (int i = index; i < size - 1; i++) {
-            elementData[i] = elementData[i + 1];
-        }
         size--;
-        if (size == 0) {
-            capacity = 0;
-            elementData = EMPTY_INITIAL_ARRAY;
-        } else if (capacity / size >= DEFAULT_CAPACITY_K) {
-            elementData = resize();
-        }
+        System.arraycopy(elementData, index + 1, elementData, index, size - index);
+        elementData[size] = null;
         return removed;
     }
 
@@ -97,31 +78,11 @@ public class ArrayList<T> implements List<T> {
         if (size == 0) {
             throw new NoSuchElementException("Array list is empty");
         }
-        boolean elementExist = false;
-        T oldElement = null;
-        int index = 0;
-        for (int i = 0; i < size; i++) {
-            if (Objects.equals(element,elementData[i])) {
-                elementExist = true;
-                oldElement = (T) elementData[i];
-                index = i;
-            }
-        }
-        if (elementExist) {
-            for (int i = index; i < size - 1; i++) {
-                elementData[i] = elementData[i + 1];
-            }
-            size--;
-            if (size == 0) {
-                capacity = 0;
-                elementData = EMPTY_INITIAL_ARRAY;
-            } else if (capacity / size >= DEFAULT_CAPACITY_K) {
-                elementData = resize();
-            }
-            return oldElement;
-        } else {
+        int index = indexOf(element);
+        if (index == -1) {
             throw new NoSuchElementException("Element not found in ArrayList");
         }
+        return remove(index);
     }
 
     @Override
@@ -134,20 +95,20 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private Object[] grow(double k) {
-        capacity = (int) (capacity * k);
+    private Object[] grow() {
+        capacity = (int) (capacity * DEFAULT_CAPACITY_GROW_COEFFICIENT);
         Object[] newCapacityArray = new Object[capacity];
         System.arraycopy(elementData,0, newCapacityArray,0, size);
         return newCapacityArray;
     }
 
-    private void checkCapacity(double k) {
+    private void checkCapacity() {
         if (capacity == 0) {
             elementData = new Object[DEFAULT_CAPACITY];
             capacity = DEFAULT_CAPACITY;
         }
         if (size >= capacity) {
-            elementData = grow(k);
+            elementData = grow();
         }
     }
 
@@ -157,10 +118,12 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private Object[] resize() {
-        capacity = (int) (capacity / DEFAULT_CAPACITY_K);
-        Object[] newCapacityArray = new Object[capacity];
-        System.arraycopy(elementData,0, newCapacityArray,0, size);
-        return newCapacityArray;
+    private int indexOf(T element) {
+        for (int i = 0; i < size; i++) {
+            if (Objects.equals(element,elementData[i])) {
+                return i;
+            }
+        }
+        return -1;
     }
 }
