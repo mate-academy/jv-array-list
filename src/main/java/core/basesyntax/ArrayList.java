@@ -21,9 +21,9 @@ public class ArrayList<T> implements List<T> {
     }
 
     public void add(T value, int index) {
-        checkIndex(index, size);
+        checkIndexForAdd(index);
         T[] newValues = Arrays.copyOf(values, values.length + 1);
-        System.arraycopy(newValues, index, newValues, index + 1, size - index);
+        System.arraycopy(values, index, newValues, index + 1, size + 1);
         newValues[index] = value;
         values = newValues;
         size++;
@@ -38,18 +38,18 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        checkIndex(index, size - 1);
+        checkIndex(index);
         return values[index];
     }
 
     @Override
     public void set(T value, int index) {
-        checkIndex(index, size - 1);
+        checkIndex(index);
         values[index] = value;
     }
 
     public T remove(int index) {
-        checkIndex(index, size - 1);
+        checkIndex(index);
         T removedElement = values[index];
         System.arraycopy(values, index + 1, values, index,size - index - 1);
         size--;
@@ -85,7 +85,14 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private void checkIndex(int index, int size) {
+    private void checkIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Index is invalid. Index: "
+                    + index + ". Size: " + size);
+        }
+    }
+
+    private void checkIndexForAdd(int index) {
         if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException("Index is invalid. Index: "
                     + index + ". Size: " + size);
