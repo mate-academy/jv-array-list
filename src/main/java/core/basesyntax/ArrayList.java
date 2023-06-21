@@ -78,8 +78,10 @@ public class ArrayList<T> implements List<T> {
 
     private void growArrayIfFull() {
         if (values.length == size) {
-            System.arraycopy(values, 0,
-                    values = (T[]) new Object[(int) (size * ARRAY_RATIO)], 0, size);
+            int newCapacity = (int) (size * ARRAY_RATIO);
+            T[] newValues = (T[]) new Object[newCapacity];
+            System.arraycopy(values, 0, newValues, 0, size);
+            values = newValues;
         }
     }
 
