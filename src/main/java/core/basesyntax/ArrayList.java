@@ -2,7 +2,6 @@ package core.basesyntax;
 
 import java.util.Arrays;
 import java.util.NoSuchElementException;
-import org.apache.commons.lang.ArrayUtils;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
@@ -30,8 +29,7 @@ public class ArrayList<T> implements List<T> {
         if (isStorageFull()) {
             growStorage();
         }
-        elementData[size] = value;
-        size++;
+        elementData[size++] = value;
     }
 
     @Override
@@ -41,7 +39,7 @@ public class ArrayList<T> implements List<T> {
         if (size == elementData.length) {
             growStorage();
         }
-        elementData = ArrayUtils.add(elementData, index, value);
+        System.arraycopy(elementData, index, elementData, index + 1, size - index);
         elementData[index] = value;
         size++;
     }
@@ -77,7 +75,7 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         checkIndex(index, size);
         final T oldValue = (T) elementData[index];
-        elementData = ArrayUtils.remove(elementData, index);
+        System.arraycopy(elementData, index + 1, elementData, index, size - index - 1);
         size--;
         return oldValue;
     }
