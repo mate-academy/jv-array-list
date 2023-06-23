@@ -6,31 +6,10 @@ public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
 
     private int size;
-    private T[] elementData = (T[]) new Object[DEFAULT_CAPACITY];
+    private T[] elementData;
 
-    private void throwArrayListIndexOutOfBoundsException() {
-        throw new ArrayListIndexOutOfBoundsException("Array List Index Out Of Bounds Exception");
-
-    }
-
-    private void resizeArray() {
-        final int newCapacity = elementData.length + elementData.length / 2;
-        T[] newArray = (T[]) new Object[newCapacity];
-        System.arraycopy(elementData, 0, newArray, 0, size);
-        elementData = newArray;
-    }
-
-    private void shiftElementsToRight(int startIndex) {
-        for (int i = size - 1; i >= startIndex; i--) {
-            elementData[i + 1] = elementData[i];
-        }
-    }
-
-    private void shiftElementsToLeft(int startIndex) {
-        for (int i = startIndex; i < size - 1; i++) {
-            elementData[i] = elementData[i + 1];
-        }
-        elementData[size - 1] = null;
+    public ArrayList() {
+        this.elementData = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
     @Override
@@ -107,11 +86,7 @@ public class ArrayList<T> implements List<T> {
             if ((element == null && elementData[i] == null)
                     || (element != null && elementData[i] != null
                     && elementData[i].equals(element))) {
-                final T removedElement = elementData[i];
-                elementData[i] = null;
-                shiftElementsToLeft(i);
-                size--;
-                return removedElement;
+                return remove(i);
             }
         }
         throw new NoSuchElementException("Element not found");
@@ -125,6 +100,28 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private void throwArrayListIndexOutOfBoundsException() {
+        throw new ArrayListIndexOutOfBoundsException("Array List Index Out Of Bounds Exception");
+    }
+
+    private void resizeArray() {
+        final int newCapacity = elementData.length + elementData.length / 2;
+        T[] newArray = (T[]) new Object[newCapacity];
+        System.arraycopy(elementData, 0, newArray, 0, size);
+        elementData = newArray;
+    }
+
+    private void shiftElementsToRight(int startIndex) {
+        System.arraycopy(elementData, startIndex, elementData,
+                startIndex + 1, size - startIndex);
+    }
+
+    private void shiftElementsToLeft(int startIndex) {
+        System.arraycopy(elementData, startIndex + 1, elementData,
+                startIndex, size - startIndex - 1);
+        elementData[size - 1] = null;
     }
 
 }
