@@ -15,10 +15,10 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void checkIndex(int index) {
-    if (index < 0 || index >= size) {
-        throw new ArrayListIndexOutOfBoundsException(
-                "Index " + index + " out of bounds for size " + size);
-    }
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException(
+                    "Index " + index + " out of bounds for size " + size);
+        }
     }
 
     private void checkIndexForAdd(int index) {
