@@ -66,7 +66,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
-        T removedValue = elements[index];
+        T removedValue;
+        removedValue = elements[index];
         int numToMove = size - index - 1;
         if (numToMove > 0) {
             System.arraycopy(elements, index + 1, elements, index, numToMove);
