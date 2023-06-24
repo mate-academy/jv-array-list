@@ -11,7 +11,6 @@ public class ArrayList<T> implements List<T> {
 
     public ArrayList() {
         elements = new Object[DEFAULT_CAPACITY];
-        size = 0;
     }
 
     @Override
@@ -35,7 +34,7 @@ public class ArrayList<T> implements List<T> {
     public void addAll(List<T> list) {
         ensureCapacity(size + list.size());
         for (int i = 0; i < list.size(); i++) {
-            elements[size++] = list.get(i);
+            add(list.get(i));
         }
     }
 
