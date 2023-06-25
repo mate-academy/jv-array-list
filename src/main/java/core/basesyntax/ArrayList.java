@@ -56,7 +56,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("index  "
+            throw new ArrayListIndexOutOfBoundsException("Index  "
                     + index + "is outside the list");
         }
         return elements[index];
@@ -65,7 +65,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void set(T value, int index) {
         if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("index  "
+            throw new ArrayListIndexOutOfBoundsException("Index  "
                     + index + "is outside the list");
         }
         elements[index] = value;
@@ -74,7 +74,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("index  " + index + "is outside the list");
+            throw new ArrayListIndexOutOfBoundsException("Index  " + index + "is outside the list");
         }
         final T value = elements[index];
         T[] buffer = (T[]) new Object[elements.length];
