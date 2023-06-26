@@ -29,6 +29,65 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
+    @Override
+    public boolean add(T element) {
+        ensureCapacity(size + 1);
+        elements[size] = element;
+        size++;
+        return true;
+    }
+
+    @Override
+    public void add(T value, int index) {
+        if (index < 0 || index > size) {
+            throw new ArrayListIndexOutOfBoundsException("Index out of bounds: " + index);
+        }
+        if (size == elements.length) {
+            ensureCapacity(size + 1);
+        }
+        for (int i = size; i > index; i--) {
+            elements[i] = elements[i - 1];
+        }
+        elements[index] = value;
+        size++;
+    }
+
+    @Override
+    public boolean addAll(Collection<? extends T> c) {
+        ensureCapacity(size + c.size());
+        int i = size;
+        for (T element : c) {
+            elements[i] = element;
+            i++;
+        }
+        size += c.size();
+        return true;
+    }
+
+    @Override
+    public boolean addAll(int index, Collection<? extends T> c) {
+        checkIndexBounds(index);
+        ensureCapacity(size + c.size());
+        int numElementsToShift = size - index;
+        if (numElementsToShift > 0) {
+            System.arraycopy(elements, index, elements, index + c.size(), numElementsToShift);
+        }
+        for (T element : c) {
+            elements[index++] = element;
+            size++;
+        }
+        return true;
+    }
+
+    @Override
+    public void add(int index, T element) {
+        checkIndexBounds(index);
+        ensureCapacity(size + 1);
+        System.arraycopy(elements, index, elements, index + 1, size - index);
+        elements[index] = element;
+        size++;
+    }
+
     private void checkIndexBounds(int index) {
         if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException("Index out of bounds: " + index);
@@ -103,29 +162,6 @@ public class ArrayList<T> implements List<T> {
     }
 
     @Override
-    public boolean add(T element) {
-        ensureCapacity(size + 1);
-        elements[size] = element;
-        size++;
-        return true;
-    }
-
-    @Override
-    public void add(T value, int index) {
-        if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("Index out of bounds: " + index);
-        }
-        if (size == elements.length) {
-            ensureCapacity(size + 1);
-        }
-        for (int i = size; i > index; i--) {
-            elements[i] = elements[i - 1];
-        }
-        elements[index] = value;
-        size++;
-    }
-
-    @Override
     public void addAll(List<T> list) {
         Object[] objects = list.toArray();
         for (Object object : objects) {
@@ -150,33 +186,6 @@ public class ArrayList<T> implements List<T> {
             if (!contains(element)) {
                 return false;
             }
-        }
-        return true;
-    }
-
-    @Override
-    public boolean addAll(Collection<? extends T> c) {
-        ensureCapacity(size + c.size());
-        int i = size;
-        for (T element : c) {
-            elements[i] = element;
-            i++;
-        }
-        size += c.size();
-        return true;
-    }
-
-    @Override
-    public boolean addAll(int index, Collection<? extends T> c) {
-        checkIndexBounds(index);
-        ensureCapacity(size + c.size());
-        int numElementsToShift = size - index;
-        if (numElementsToShift > 0) {
-            System.arraycopy(elements, index, elements, index + c.size(), numElementsToShift);
-        }
-        for (T element : c) {
-            elements[index++] = element;
-            size++;
         }
         return true;
     }
@@ -234,15 +243,6 @@ public class ArrayList<T> implements List<T> {
         T previousElement = (T) elements[index];
         elements[index] = element;
         return previousElement;
-    }
-
-    @Override
-    public void add(int index, T element) {
-        checkIndexBounds(index);
-        ensureCapacity(size + 1);
-        System.arraycopy(elements, index, elements, index + 1, size - index);
-        elements[index] = element;
-        size++;
     }
 
     @Override
