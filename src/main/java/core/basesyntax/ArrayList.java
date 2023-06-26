@@ -1,6 +1,12 @@
 package core.basesyntax;
 
-import java.util.*;
+
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+import java.util.Objects;
+import java.util.Collection;
+import java.util.ListIterator;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
