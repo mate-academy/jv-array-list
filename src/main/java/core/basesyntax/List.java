@@ -24,9 +24,9 @@ public interface List<T> {
 
     boolean addAll(Collection<? extends T> c);
 
-    boolean containsAll(Collection<?> c);
-
     boolean addAll(int index, Collection<? extends T> c);
+
+    boolean containsAll(Collection<?> c);
 
     boolean removeAll(Collection<?> c);
 
