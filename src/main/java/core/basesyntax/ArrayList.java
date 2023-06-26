@@ -156,26 +156,6 @@ public class ArrayList<T> implements List<T> {
     }
 
     @Override
-    public T remove(Object o) {
-        for (int i = 0; i < size; i++) {
-            if (Objects.equals(elements[i], o)) {
-                return remove(i);
-            }
-        }
-        throw new NoSuchElementException("Element not found: " + o);
-    }
-
-    @Override
-    public boolean containsAll(Collection<?> c) {
-        for (Object element : c) {
-            if (!contains(element)) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    @Override
     public boolean addAll(int index, Collection<? extends T> c) {
         checkIndexBounds(index);
         ensureCapacity(size + c.size());
@@ -186,6 +166,38 @@ public class ArrayList<T> implements List<T> {
         for (T element : c) {
             elements[index++] = element;
             size++;
+        }
+        return true;
+    }
+
+    @Override
+    public T remove(Object o) {
+        for (int i = 0; i < size; i++) {
+            if (Objects.equals(elements[i], o)) {
+                return remove(i);
+            }
+        }
+        throw new NoSuchElementException("Element not found: " + o);
+    }
+
+    @Override
+    public T remove(int index) {
+        checkIndexBounds(index);
+        T removedElement = (T) elements[index];
+        int numElementsToShift = size - index - 1;
+        if (numElementsToShift > 0) {
+            System.arraycopy(elements, index + 1, elements, index, numElementsToShift);
+        }
+        elements[--size] = null;
+        return removedElement;
+    }
+
+    @Override
+    public boolean containsAll(Collection<?> c) {
+        for (Object element : c) {
+            if (!contains(element)) {
+                return false;
+            }
         }
         return true;
     }
@@ -243,18 +255,6 @@ public class ArrayList<T> implements List<T> {
         T previousElement = (T) elements[index];
         elements[index] = element;
         return previousElement;
-    }
-
-    @Override
-    public T remove(int index) {
-        checkIndexBounds(index);
-        T removedElement = (T) elements[index];
-        int numElementsToShift = size - index - 1;
-        if (numElementsToShift > 0) {
-            System.arraycopy(elements, index + 1, elements, index, numElementsToShift);
-        }
-        elements[--size] = null;
-        return removedElement;
     }
 
     @Override

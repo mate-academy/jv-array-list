@@ -18,11 +18,13 @@ public interface List<T> {
 
     void add(T value, int index);
 
+    void add(int index, T element);
+
     void addAll(List<T> list);
 
-    boolean containsAll(Collection<?> c);
-
     boolean addAll(Collection<? extends T> c);
+
+    boolean containsAll(Collection<?> c);
 
     boolean addAll(int index, Collection<? extends T> c);
 
@@ -37,8 +39,6 @@ public interface List<T> {
     void set(T value, int index);
 
     T set(int index, T element);
-
-    void add(int index, T element);
 
     T remove(int index);
 
