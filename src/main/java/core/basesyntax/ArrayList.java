@@ -26,22 +26,16 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index > size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException(" The element can't be placed "
-                    + "at the position " + index);
-        }
         if (index == size) {
             add(value);
             return;
         }
+        checkIndexExist(index);
         if (size == elements.length) {
             growthElementsArray();
-            releaseCell(index);
-            elements[index] = value;
-            size++;
-            return;
         }
-        releaseCell(index);
+        System.arraycopy(elements,index,elements,index + 1,
+                elements.length - index - 1);
         elements[index] = value;
         size++;
     }
@@ -55,31 +49,21 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index  "
-                    + index + "is outside the list");
-        }
+        checkIndexExist(index);
         return elements[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index  "
-                    + index + "is outside the list");
-        }
+        checkIndexExist(index);
         elements[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index  " + index + "is outside the list");
-        }
+        checkIndexExist(index);
         final T value = elements[index];
-        T[] buffer = (T[]) new Object[elements.length];
-        rewriteArray(elements,buffer,index,0);
-        rewriteArray(buffer,elements,1,index);
+        System.arraycopy(elements,index + 1,elements,index,elements.length - index - 1);
         size--;
         return value;
     }
@@ -116,29 +100,18 @@ public class ArrayList<T> implements List<T> {
     }
 
     private T [] growthElementsArray() {
-        int newLength = elements.length + elements.length / 2;
         T[] buffer = (T[]) new Object[elements.length];
-        rewriteArray(elements, buffer, 0,0);
-        elements = (T[]) new Object[newLength];
-        rewriteArray(buffer, elements, 0,0);
+        System.arraycopy(elements,0,buffer,0,elements.length);
+        elements = (T[]) new Object[elements.length + elements.length / 2];
+        System.arraycopy(buffer,0,elements,0, buffer.length);
         return elements;
     }
 
-    private void rewriteArray(T[] in, T[] out, int startIn,int startOut) {
-        int j = startOut;
-        int i;
-        for (i = startIn; i < in.length; i++) {
-            if (j < out.length) {
-                out[j] = in[i];
-                j++;
-            }
+    private void checkIndexExist(int index) {
+        if (index >= size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Index  "
+                    + index + " is outside the list");
         }
-    }
-
-    private void releaseCell(int index) {
-        T[] buffer = (T[]) new Object[elements.length - index + 1];
-        rewriteArray(elements,buffer,index,0);
-        rewriteArray(buffer,elements,0,index + 1);
     }
 }
 
