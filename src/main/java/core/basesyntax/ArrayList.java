@@ -28,6 +28,7 @@ public class ArrayList<T> implements List<T> {
             elements = Arrays.copyOf(elements, newCapacity);
         }
     }
+
     private void checkIndexBounds(int index) {
         if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException("Index out of bounds: " + index);
@@ -332,8 +333,9 @@ public class ArrayList<T> implements List<T> {
 
             @Override
             public void remove() {
-                if (lastReturnedIndex < 0)
+                if (lastReturnedIndex < 0) {
                     throw new IllegalStateException();
+                }
                 ArrayList.this.remove(lastReturnedIndex);
                 if (lastReturnedIndex < cursor) {
                     cursor--;
