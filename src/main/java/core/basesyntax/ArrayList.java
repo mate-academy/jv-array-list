@@ -17,20 +17,22 @@ public class ArrayList<T> implements List<T> {
         int oldCapacity = elements.length;
         if (minCapacity > oldCapacity) {
             int newCapacity = (int) (oldCapacity * GROWTH_FACTOR);
-            if (newCapacity < minCapacity)
+            if (newCapacity < minCapacity) {
                 newCapacity = minCapacity;
+            }
             elements = Arrays.copyOf(elements, newCapacity);
         }
     }
-
     private void checkIndexBounds(int index) {
-        if (index < 0 || index >= size)
+        if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException("Index out of bounds: " + index);
+        }
     }
 
     private void checkElementExistence(T element) {
-        if (!contains(element))
+        if (!contains(element)) {
             throw new NoSuchElementException("Element not found: " + element);
+        }
     }
 
     @Override
@@ -46,8 +48,9 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean contains(Object o) {
         for (int i = 0; i < size; i++) {
-            if (Objects.equals(elements[i], o))
+            if (Objects.equals(elements[i], o)) {
                 return true;
+            }
         }
         return false;
     }
@@ -64,8 +67,9 @@ public class ArrayList<T> implements List<T> {
 
             @Override
             public T next() {
-                if (cursor >= size)
+                if (cursor >= size) {
                     throw new NoSuchElementException();
+                }
                 @SuppressWarnings("unchecked")
                 T element = (T) elements[cursor];
                 cursor++;
@@ -86,8 +90,9 @@ public class ArrayList<T> implements List<T> {
             return (E[]) Arrays.copyOf(elements, size, a.getClass());
         }
         System.arraycopy(elements, 0, a, 0, size);
-        if (a.length > size)
+        if (a.length > size) {
             a[size] = null;
+        }
         return a;
     }
 
@@ -136,8 +141,9 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean containsAll(Collection<?> c) {
         for (Object element : c) {
-            if (!contains(element))
+            if (!contains(element)) {
                 return false;
+            }
         }
         return true;
     }
@@ -248,8 +254,9 @@ public class ArrayList<T> implements List<T> {
     @Override
     public int indexOf(Object o) {
         for (int i = 0; i < size; i++) {
-            if (Objects.equals(elements[i], o))
+            if (Objects.equals(elements[i], o)) {
                 return i;
+            }
         }
         return -1;
     }
@@ -257,8 +264,9 @@ public class ArrayList<T> implements List<T> {
     @Override
     public int lastIndexOf(Object o) {
         for (int i = size - 1; i >= 0; i--) {
-            if (Objects.equals(elements[i], o))
+            if (Objects.equals(elements[i], o)) {
                 return i;
+            }
         }
         return -1;
     }
@@ -282,8 +290,9 @@ public class ArrayList<T> implements List<T> {
 
             @Override
             public T next() {
-                if (cursor >= size)
+                if (cursor >= size) {
                     throw new NoSuchElementException();
+                }
                 lastReturnedIndex = cursor;
                 @SuppressWarnings("unchecked")
                 T element = (T) elements[cursor++];
@@ -297,8 +306,9 @@ public class ArrayList<T> implements List<T> {
 
             @Override
             public T previous() {
-                if (cursor <= 0)
+                if (cursor <= 0) {
                     throw new NoSuchElementException();
+                }
                 lastReturnedIndex = --cursor;
                 @SuppressWarnings("unchecked")
                 T element = (T) elements[cursor];
@@ -320,15 +330,17 @@ public class ArrayList<T> implements List<T> {
                 if (lastReturnedIndex < 0)
                     throw new IllegalStateException();
                 ArrayList.this.remove(lastReturnedIndex);
-                if (lastReturnedIndex < cursor)
+                if (lastReturnedIndex < cursor) {
                     cursor--;
+                }
                 lastReturnedIndex = -1;
             }
 
             @Override
             public void set(T element) {
-                if (lastReturnedIndex < 0)
+                if (lastReturnedIndex < 0) {
                     throw new IllegalStateException();
+                }
                 ArrayList.this.set(lastReturnedIndex, element);
             }
 
