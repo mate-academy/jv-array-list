@@ -126,12 +126,33 @@ public class ArrayList<T> implements List<T> {
     }
 
     @Override
+    public void add(int index, T element) {
+        checkIndexBounds(index);
+        ensureCapacity(size + 1);
+        System.arraycopy(elements, index, elements, index + 1, size - index);
+        elements[index] = element;
+        size++;
+    }
+
+    @Override
     public void addAll(List<T> list) {
         Object[] objects = list.toArray();
         for (Object object : objects) {
             add((T) object);
         }
 
+    }
+
+    @Override
+    public boolean addAll(Collection<? extends T> c) {
+        ensureCapacity(size + c.size());
+        int i = size;
+        for (T element : c) {
+            elements[i] = element;
+            i++;
+        }
+        size += c.size();
+        return true;
     }
 
     @Override
@@ -151,18 +172,6 @@ public class ArrayList<T> implements List<T> {
                 return false;
             }
         }
-        return true;
-    }
-
-    @Override
-    public boolean addAll(Collection<? extends T> c) {
-        ensureCapacity(size + c.size());
-        int i = size;
-        for (T element : c) {
-            elements[i] = element;
-            i++;
-        }
-        size += c.size();
         return true;
     }
 
@@ -234,15 +243,6 @@ public class ArrayList<T> implements List<T> {
         T previousElement = (T) elements[index];
         elements[index] = element;
         return previousElement;
-    }
-
-    @Override
-    public void add(int index, T element) {
-        checkIndexBounds(index);
-        ensureCapacity(size + 1);
-        System.arraycopy(elements, index, elements, index + 1, size - index);
-        elements[index] = element;
-        size++;
     }
 
     @Override
