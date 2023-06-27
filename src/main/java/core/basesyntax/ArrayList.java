@@ -1,48 +1,168 @@
 package core.basesyntax;
 
+import java.util.NoSuchElementException;
+
 public class ArrayList<T> implements List<T> {
+    private static final byte INITIAL_CAPACITY = 10;
+    private static final int MAX_CAPACITY = Integer.MAX_VALUE;
+    private static final double CAPACITY_MULTIPLIER = 1.5;
+    private T[] elementData;
+    private int size;
+
+    public ArrayList() {
+        elementData = (T[]) new Object[INITIAL_CAPACITY];
+    }
+
     @Override
     public void add(T value) {
+        if (size == elementData.length) {
+            increaseCapacity();
+        }
 
+        insertElementAt(size, value);
     }
 
     @Override
     public void add(T value, int index) {
+        if (index < 0 || index > size) {
+            throw new ArrayListIndexOutOfBoundsException("Index " + index + " is out of bounds");
+        }
 
+        if (size == elementData.length) {
+            increaseCapacity();
+        }
+
+        if (index < size) {
+            shiftElementsRightAt(index);
+        }
+
+        insertElementAt(index, value);
     }
 
     @Override
     public void addAll(List<T> list) {
+        if (list == null) {
+            throw new RuntimeException("List must not be a null");
+        }
 
+        if (size + list.size() > elementData.length) {
+            increaseCapacity();
+        }
+
+        for (int i = 0, j = size; i < list.size(); i++, j++) {
+            insertElementAt(j, list.get(i));
+        }
     }
 
     @Override
     public T get(int index) {
-        return null;
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Index " + index + " is out of bounds");
+        }
+
+        return (T) elementData[index];
     }
 
     @Override
     public void set(T value, int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Index " + index + " is out of bounds");
+        }
 
+        elementData[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        return null;
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Index " + index + " is out of bounds");
+        }
+
+        return removeElementAt(index);
     }
 
     @Override
     public T remove(T element) {
-        return null;
+        int index = getElementIndex(element);
+
+        if (index == -1) {
+            throw new NoSuchElementException("Unable to find provided element in the list");
+        }
+
+        return removeElementAt(index);
     }
 
     @Override
     public int size() {
-        return 0;
+        return size;
     }
 
     @Override
     public boolean isEmpty() {
-        return false;
+        return size == 0;
+    }
+
+    private int getElementIndex(T element) {
+        for (int i = 0; i < size; i++) {
+            if (
+                    elementData[i] == element
+                    || (elementData[i] != null && elementData[i].equals(element))
+            ) {
+                return i;
+            }
+        }
+
+        return -1;
+    }
+
+    private void shiftElementsRightAt(int index) {
+        T[] newElementData = (T[]) new Object[elementData.length];
+
+        System.arraycopy(elementData, 0, newElementData, 0, index);
+        System.arraycopy(elementData, index, newElementData, index + 1, size - index);
+
+        elementData = newElementData;
+    }
+
+    private void shiftElementsLeftAt(int index) {
+        T[] newElementData = (T[]) new Object[elementData.length];
+
+        System.arraycopy(elementData, 0, newElementData, 0, index);
+        System.arraycopy(elementData, index + 1, newElementData, index, size - index - 1);
+
+        elementData = newElementData;
+    }
+
+    private void insertElementAt(int index, T value) {
+        elementData[index] = value;
+        size++;
+    }
+
+    private T removeElementAt(int index) {
+        T removedElement = elementData[index];
+
+        shiftElementsLeftAt(index);
+
+        size--;
+
+        return removedElement;
+    }
+
+    private void increaseCapacity() {
+        T[] newElementData = (T[]) new Object[newCapacity()];
+
+        System.arraycopy(elementData, 0, newElementData, 0, size);
+
+        elementData = newElementData;
+    }
+
+    private int newCapacity() {
+        long newCapacity = (long) (elementData.length * CAPACITY_MULTIPLIER);
+
+        if (newCapacity > MAX_CAPACITY) {
+            throw new RuntimeException("ArrayList capacity overflow");
+        }
+
+        return (int) newCapacity;
     }
 }
