@@ -12,20 +12,6 @@ public class ArrayList<T> implements List<T> {
         elements = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
-    public void checkIndex(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException(
-                    "Index " + index + " out of bounds for size: " + size);
-        }
-    }
-
-    public void checkIndexForAdd(int index) {
-        if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException(
-                    "Index " + index + " out of bounds for size: " + size);
-        }
-    }
-
     @Override
     public void add(T value) {
         ensureCapacity(size + 1);
@@ -88,7 +74,21 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    public void ensureCapacity(int minCapacity) {
+    private void checkIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException(
+                    "Index " + index + " out of bounds for size: " + size);
+        }
+    }
+
+    private void checkIndexForAdd(int index) {
+        if (index < 0 || index > size) {
+            throw new ArrayListIndexOutOfBoundsException(
+                    "Index " + index + " out of bounds for size: " + size);
+        }
+    }
+
+    private void ensureCapacity(int minCapacity) {
         int currentCapacity = elements.length;
         if (minCapacity > currentCapacity) {
             int newCapacity = currentCapacity + (currentCapacity >> 1);
@@ -98,7 +98,7 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    public int indexOf(T element) {
+    private int indexOf(T element) {
         for (int i = 0; i < elements.length; i++) {
             if (element == null) {
                 if (elements[i] == null) {
