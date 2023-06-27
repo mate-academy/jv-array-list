@@ -1,7 +1,6 @@
 package core.basesyntax;
 
 public interface List<T> {
-
     void add(T value);
 
     void add(T value, int index);
@@ -14,10 +13,9 @@ public interface List<T> {
 
     T remove(int index);
 
-    T remove(T t);
+    T remove(T element);
 
     int size();
 
     boolean isEmpty();
-
 }
