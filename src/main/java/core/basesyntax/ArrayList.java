@@ -4,13 +4,12 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    private static final Object[] DEFAULT_CAPACITY_EMPTY_ELEMENTDATA = {};
-    private static final Object[] DEFAULT_CAPACITY_ELEMENTDATA = new Object[DEFAULT_CAPACITY];
+    private static final double DEFAULT_SIZE_INCREASE = 1.5;
     private int size;
     private Object[] elementData;
 
     public ArrayList() {
-        this.elementData = DEFAULT_CAPACITY_EMPTY_ELEMENTDATA;
+        this.elementData = new Object[]{};
     }
 
     @Override
@@ -38,32 +37,11 @@ public class ArrayList<T> implements List<T> {
         size++;
     }
 
-    private void rangeCheckForAdd(int index) {
-        if (index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Wrong index " + index + "! "
-                    + "Index must not be the negative digit");
-        }
-        if (index == size || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("Wrong index" + index + "! "
-                    + "Index value must be less than size");
-        }
-    }
-
     @Override
     public void addAll(List<T> list) {
-        int numNew = list.size();
-        if (numNew == 0) {
-            return;
+        for (int i = 0; i < list.size(); i++) {
+            add(list.get(i));
         }
-
-        if (size + numNew > elementData.length) {
-            elementData = grow(size + numNew);
-        }
-
-        for (int i = 0; i < numNew; i++) {
-            elementData[size + i] = list.get(i);
-        }
-        size += numNew;
     }
 
     @Override
@@ -113,19 +91,7 @@ public class ArrayList<T> implements List<T> {
         }
 
         int oldSize = elementData.length;
-        int newSize = (int) (oldSize * 1.5);
-        Object[] newArray = new Object[newSize];
-        System.arraycopy(elementData, 0, newArray, 0, size);
-
-        return newArray;
-    }
-
-    private Object[] grow(int minCapacity) {
-        if (size == 0) {
-            initDefaultCapacityArray();
-        }
-
-        int newSize = (int) (minCapacity + 1);
+        int newSize = (int) (oldSize * DEFAULT_SIZE_INCREASE);
         Object[] newArray = new Object[newSize];
         System.arraycopy(elementData, 0, newArray, 0, size);
 
@@ -133,6 +99,13 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void initDefaultCapacityArray() {
-        this.elementData = DEFAULT_CAPACITY_ELEMENTDATA;
+        this.elementData = new Object[DEFAULT_CAPACITY];
+    }
+
+    private void rangeCheckForAdd(int index) {
+        if (index < 0 || index == size || index > size) {
+            throw new ArrayListIndexOutOfBoundsException("Wrong index" + index + "! "
+                    + "Index value must be less than size and greater -1");
+        }
     }
 }
