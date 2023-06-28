@@ -24,9 +24,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("Index " + index + " is out of bounds");
-        }
+        checkIndexBetweenBounds(index);
 
         if (size == elementData.length) {
             increaseCapacity();
@@ -52,27 +50,21 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index " + index + " is out of bounds");
-        }
+        checkIndexWithinBounds(index);
 
         return (T) elementData[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index " + index + " is out of bounds");
-        }
+        checkIndexWithinBounds(index);
 
         elementData[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index " + index + " is out of bounds");
-        }
+        checkIndexWithinBounds(index);
 
         return removeElementAt(index);
     }
@@ -109,6 +101,18 @@ public class ArrayList<T> implements List<T> {
         }
 
         return -1;
+    }
+
+    private void checkIndexBetweenBounds(int index) {
+        if (index < 0 || index > size) {
+            throw new ArrayListIndexOutOfBoundsException("Index " + index + " is out of bounds");
+        }
+    }
+
+    private void checkIndexWithinBounds(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Index " + index + " is out of bounds");
+        }
     }
 
     private void shiftElementsRightAt(int index) {
