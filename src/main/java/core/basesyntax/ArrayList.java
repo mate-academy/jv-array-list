@@ -31,7 +31,7 @@ public class ArrayList<T> implements List<T> {
         }
 
         if (index < size) {
-            shiftElementsRightAt(index);
+            System.arraycopy(elementData, index, elementData, index + 1, size - index);
         }
 
         insertElementAt(index, value);
@@ -115,20 +115,6 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private void shiftElementsRightAt(int index) {
-        T[] newElementData = (T[]) new Object[elementData.length];
-        System.arraycopy(elementData, 0, newElementData, 0, index);
-        System.arraycopy(elementData, index, newElementData, index + 1, size - index);
-        elementData = newElementData;
-    }
-
-    private void shiftElementsLeftAt(int index) {
-        T[] newElementData = (T[]) new Object[elementData.length];
-        System.arraycopy(elementData, 0, newElementData, 0, index);
-        System.arraycopy(elementData, index + 1, newElementData, index, size - index - 1);
-        elementData = newElementData;
-    }
-
     private void insertElementAt(int index, T value) {
         elementData[index] = value;
         size++;
@@ -136,7 +122,7 @@ public class ArrayList<T> implements List<T> {
 
     private T removeElementAt(int index) {
         T removedElement = elementData[index];
-        shiftElementsLeftAt(index);
+        System.arraycopy(elementData, index + 1, elementData, index, size - index - 1);
         size--;
         return removedElement;
     }
