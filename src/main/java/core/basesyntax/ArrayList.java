@@ -15,11 +15,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (size == elementData.length) {
-            increaseCapacity();
-        }
-
-        insertElementAt(size, value);
+        add(value, size);
     }
 
     @Override
@@ -34,7 +30,8 @@ public class ArrayList<T> implements List<T> {
             System.arraycopy(elementData, index, elementData, index + 1, size - index);
         }
 
-        insertElementAt(index, value);
+        elementData[index] = value;
+        size++;
     }
 
     @Override
@@ -66,7 +63,11 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         checkIndexWithinBounds(index);
 
-        return removeElementAt(index);
+        T removedElement = elementData[index];
+        System.arraycopy(elementData, index + 1, elementData, index, size - index - 1);
+        size--;
+
+        return removedElement;
     }
 
     @Override
@@ -77,7 +78,7 @@ public class ArrayList<T> implements List<T> {
             throw new NoSuchElementException("Unable to find provided element in the list");
         }
 
-        return removeElementAt(index);
+        return remove(index);
     }
 
     @Override
@@ -113,18 +114,6 @@ public class ArrayList<T> implements List<T> {
         if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException("Index " + index + " is out of bounds");
         }
-    }
-
-    private void insertElementAt(int index, T value) {
-        elementData[index] = value;
-        size++;
-    }
-
-    private T removeElementAt(int index) {
-        T removedElement = elementData[index];
-        System.arraycopy(elementData, index + 1, elementData, index, size - index - 1);
-        size--;
-        return removedElement;
     }
 
     private void increaseCapacity() {
