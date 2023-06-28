@@ -45,12 +45,8 @@ public class ArrayList<T> implements List<T> {
             throw new RuntimeException("List must not be a null");
         }
 
-        if (size + list.size() > elementData.length) {
-            increaseCapacity();
-        }
-
-        for (int i = 0, j = size; i < list.size(); i++, j++) {
-            insertElementAt(j, list.get(i));
+        for (int i = 0; i < list.size(); i++) {
+            add(list.get(i));
         }
     }
 
