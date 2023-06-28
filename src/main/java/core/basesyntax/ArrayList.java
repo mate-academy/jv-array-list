@@ -117,19 +117,15 @@ public class ArrayList<T> implements List<T> {
 
     private void shiftElementsRightAt(int index) {
         T[] newElementData = (T[]) new Object[elementData.length];
-
         System.arraycopy(elementData, 0, newElementData, 0, index);
         System.arraycopy(elementData, index, newElementData, index + 1, size - index);
-
         elementData = newElementData;
     }
 
     private void shiftElementsLeftAt(int index) {
         T[] newElementData = (T[]) new Object[elementData.length];
-
         System.arraycopy(elementData, 0, newElementData, 0, index);
         System.arraycopy(elementData, index + 1, newElementData, index, size - index - 1);
-
         elementData = newElementData;
     }
 
@@ -140,19 +136,14 @@ public class ArrayList<T> implements List<T> {
 
     private T removeElementAt(int index) {
         T removedElement = elementData[index];
-
         shiftElementsLeftAt(index);
-
         size--;
-
         return removedElement;
     }
 
     private void increaseCapacity() {
         T[] newElementData = (T[]) new Object[newCapacity()];
-
         System.arraycopy(elementData, 0, newElementData, 0, size);
-
         elementData = newElementData;
     }
 
