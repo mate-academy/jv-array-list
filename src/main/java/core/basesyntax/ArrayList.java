@@ -6,6 +6,7 @@ import java.util.NoSuchElementException;
 public class ArrayList<T> implements List<T> {
     private static final int INITIAL_CAPACITY = 10;
     private static final int MAX_ARRAY_SIZE = Integer.MAX_VALUE;
+    private static final float GROW_MULTIPLIER = 1.5f;
     private Object[] elementData;
     private int size;
 
@@ -42,20 +43,25 @@ public class ArrayList<T> implements List<T> {
     //////// Methods for addition
 
     private void ensureCapacityInternal(int minCapacity) {
-        if (minCapacity - elementData.length > 0) {
-            grow(minCapacity);
+        if (minCapacity > elementData.length) {
+            long potentialSize = (long) (size * GROW_MULTIPLIER);
+            if (potentialSize < MAX_ARRAY_SIZE) {
+                grow(minCapacity);
+            } else {
+                throw new ArrayListIndexOutOfBoundsException("Addition of "
+                        + minCapacity + " is to large to perform.");
+            }
         }
     }
 
     private void grow(int minCapacity) {
         int oldCapacity = elementData.length;
+        if (MAX_ARRAY_SIZE - minCapacity < elementData.length) {
+            throw new ArrayListIndexOutOfBoundsException("Addition of "
+                    + minCapacity + " is to large to perform.");
+        }
         int newCapacity = oldCapacity + (oldCapacity >> 1);
-        if (newCapacity - minCapacity < 0) {
-            newCapacity = minCapacity;
-        }
-        if (newCapacity - MAX_ARRAY_SIZE > 0) {
-            throw new OutOfMemoryError();
-        }
+        newCapacity = Math.max(minCapacity, newCapacity);
         elementData = Arrays.copyOf(elementData, newCapacity);
     }
 
