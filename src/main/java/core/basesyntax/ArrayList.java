@@ -5,7 +5,6 @@ import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    private static final double MAGNIFICATION_FACTOR = 1.5;
     private int size;
     private T[] items;
 
@@ -27,10 +26,8 @@ public class ArrayList<T> implements List<T> {
         if (size == items.length) {
             resize();
         }
-        if (index <= size) {
-            System.arraycopy(items, index, items, index + 1, size++ - index);
-            items[index] = value;
-        }
+        System.arraycopy(items, index, items, index + 1, size++ - index);
+        items[index] = value;
     }
 
     @Override
@@ -56,11 +53,7 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         checkIndex(index);
         T deletedObject = items[index];
-        if (index + 1 == items.length) {
-            size--;
-            return deletedObject;
-        }
-        System.arraycopy(items, index + 1, items, index, size-- - index);
+        System.arraycopy(items, index + 1, items, index, --size - index);
         return deletedObject;
     }
 
@@ -68,8 +61,7 @@ public class ArrayList<T> implements List<T> {
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
             if (Objects.equals(items[i], element)) {
-                remove(i);
-                return element;
+                return remove(i);
             }
         }
         throw new NoSuchElementException("Element " + element + " non-existent");
@@ -82,10 +74,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public boolean isEmpty() {
-        if (size >= 1) {
-            return false;
-        }
-        return true;
+        return size == 0;
     }
 
     private T[] resize() {
