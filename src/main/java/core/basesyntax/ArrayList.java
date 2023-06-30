@@ -107,31 +107,21 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        if (element == null) {
-            for (int i = 0; i < size; i++) {
-                if (elementData[i] == null) {
-                    fastRemove(i);
-                    return element;
-                }
+        boolean success = false;
+        int numMoved;
+        for (int i = 0; i < size; i++) {
+            if (element == null || element.equals(elementData[i])) {
+                numMoved = (size - 1) - i;
+                System.arraycopy(elementData, i + 1, elementData, i, numMoved);
+                elementData[--size] = null;
+                success = true;
+                return element;
             }
-        } else {
-            for (int i = 0; i < size; i++) {
-                if (element.equals(elementData[i])) {
-                    fastRemove(i);
-                    return element;
-                }
-            }
+        }
+        if (!success) {
             throw new NoSuchElementException("Element" + element + "is not present in ArrayList");
         }
         return null;
-    }
-
-    private void fastRemove(int index) {
-        int numMoved = size - index - 1;
-        if (numMoved > 0) {
-            System.arraycopy(elementData, index + 1, elementData, index, numMoved);
-        }
-        elementData[--size] = null;
     }
 
     @Override
