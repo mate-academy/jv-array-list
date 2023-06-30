@@ -14,9 +14,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (size >= elements.length) {
-            growthElementsArray();
-        }
+        growthElementsArray();
         elements[size] = value;
         size++;
     }
@@ -27,12 +25,10 @@ public class ArrayList<T> implements List<T> {
             add(value);
             return;
         }
-        checkIndexExist(index);
-        if (size == elements.length) {
-            growthElementsArray();
-        }
+        checkIndex(index);
+        growthElementsArray();
         System.arraycopy(elements,index,elements,index + 1,
-                elements.length - index - 1);
+                size - index);
         elements[index] = value;
         size++;
     }
@@ -46,19 +42,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        checkIndexExist(index);
+        checkIndex(index);
         return elements[index];
     }
 
     @Override
     public void set(T value, int index) {
-        checkIndexExist(index);
+        checkIndex(index);
         elements[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        checkIndexExist(index);
+        checkIndex(index);
         final T value = elements[index];
         System.arraycopy(elements,index + 1,elements,index,elements.length - index - 1);
         size--;
@@ -67,9 +63,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        if (isEmpty()) {
-            throw new ArrayListIndexOutOfBoundsException("Can't remove element from empty list");
-        }
+        checkListIsEmpty();
         int index;
         for (index = 0; index < elements.length; index++) {
             if (elements[index] == element
@@ -77,7 +71,7 @@ public class ArrayList<T> implements List<T> {
                 return remove(index);
             }
         }
-        throw new NoSuchElementException();
+        throw new NoSuchElementException("Element does not exist: " + element);
     }
 
     @Override
@@ -91,18 +85,26 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void growthElementsArray() {
-        T[] buffer = (T[]) new Object[elements.length];
-        for (int i = 0; i < elements.length; i++) {
-            buffer[i] = elements[i];
+        if (size >= elements.length) {
+            T[] buffer = (T[]) new Object[elements.length];
+            for (int i = 0; i < elements.length; i++) {
+                buffer[i] = elements[i];
+            }
+            elements = (T[]) new Object[elements.length + elements.length / 2];
+            System.arraycopy(buffer, 0, elements, 0, buffer.length);
         }
-        elements = (T[]) new Object[elements.length + elements.length / 2];
-        System.arraycopy(buffer,0,elements,0, buffer.length);
     }
 
-    private void checkIndexExist(int index) {
+    private void checkIndex(int index) {
         if (index >= size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Index  "
                     + index + " is outside the list");
+        }
+    }
+
+    private void checkListIsEmpty() {
+        if (isEmpty()) {
+            throw new ArrayListIndexOutOfBoundsException("Can't remove element from empty list");
         }
     }
 }
