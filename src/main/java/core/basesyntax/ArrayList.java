@@ -5,31 +5,23 @@ import java.util.NoSuchElementException;
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private static final double GROW_RATE = 1.5;
-    private T[] elements;
+    private Object[] elements;
     private int size;
 
     public ArrayList() {
-        elements = (T[]) new Object[DEFAULT_CAPACITY];
+        elements = new Object[DEFAULT_CAPACITY];
     }
 
     @Override
     public void add(T value) {
-        if (size == elements.length) {
-            grow();
-        }
+        ensureCapacity();
         elements[size++] = value;
     }
 
     @Override
     public void add(T value, int index) {
-        if (size == index) {
-            add(value);
-            return;
-        }
-        checkIndex(index);
-        if (size + 1 == elements.length) {
-            grow();
-        }
+        checkIndexForAdd(index);
+        ensureCapacity();
         System.arraycopy(elements, index, elements, index + 1, size - index);
         elements[index] = value;
         size++;
@@ -45,7 +37,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         checkIndex(index);
-        return elements[index];
+        return (T) elements[index];
     }
 
     @Override
@@ -65,12 +57,11 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        for (int i = 0; i < size; i++) {
-            if (elements[i] == element || elements[i] != null && elements[i].equals(element)) {
-                return remove(i);
-            }
+        int index = getIndex(element);
+        if (index == -1) {
+            throw new NoSuchElementException("There is no element such element");
         }
-        throw new NoSuchElementException("There is no element such element");
+        return remove(index);
     }
 
     @Override
@@ -84,19 +75,40 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void checkIndex(int index) {
-        if (index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Wrong index " + index + "! "
-                    + "Index must not be the negative digit");
+        if (index >= size || index < 0) {
+            throwIndexOutOfBounds(index);
         }
-        if (index == size || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("Wrong index" + index + "! "
-                    + "Index value must be less than size");
+    }
+
+    private void checkIndexForAdd(int index) {
+        if (index > size || index < 0) {
+            throwIndexOutOfBounds(index);
+        }
+    }
+
+    private void ensureCapacity() {
+        if (size == elements.length) {
+            grow();
         }
     }
 
     private void grow() {
         Object[] newArray = new Object[(int) (elements.length * GROW_RATE)];
         System.arraycopy(elements, 0, newArray, 0, elements.length);
-        elements = (T[]) newArray;
+        elements = newArray;
+    }
+
+    private int getIndex(T element) {
+        for (int i = 0; i < size; i++) {
+            if (elements[i] == element || elements[i] != null && elements[i].equals(element)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    private void throwIndexOutOfBounds(int index) {
+        throw new ArrayListIndexOutOfBoundsException("Wrong index" + index + "! "
+                + "Index value must be less than size");
     }
 }
