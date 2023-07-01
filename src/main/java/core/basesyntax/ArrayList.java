@@ -4,6 +4,7 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static int INITIAL_CAPACITY = 10;
+    private static final double RESIZE_FACTOR = 1.5;
     private int size;
     private T[] elements = (T[]) new Object[INITIAL_CAPACITY];
 
@@ -103,7 +104,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void changeSize() {
-        INITIAL_CAPACITY *= 1.5;
+        INITIAL_CAPACITY *= RESIZE_FACTOR;
         T[] tmp = elements;
         elements = (T[]) new Object[INITIAL_CAPACITY];
         for (int i = 0; i < size; i++) {
