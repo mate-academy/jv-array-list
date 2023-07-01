@@ -68,7 +68,8 @@ public class ArrayList<T> implements List<T> {
         Object item = null;
         int index = 0;
         for (; index < size; ++index) {
-            if (elements[index] == element || elements[index] != null && elements[index].equals(element)) {
+            if (elements[index] == element || elements[index] != null
+                    && elements[index].equals(element)) {
                 item = remove(index);
                 break;
             }
