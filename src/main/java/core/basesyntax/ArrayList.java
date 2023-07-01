@@ -1,39 +1,21 @@
 package core.basesyntax;
 
-import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private int size;
+    private int index;
     private Object[] elements;
 
     public ArrayList() {
         elements = new Object[DEFAULT_CAPACITY];
-        size = 0;
-    }
-
-    private void ensureCapacity() {
-        int newSize = (int) (elements.length * 1.5);
-        elements = Arrays.copyOf(elements, newSize);
-    }
-
-    private void rangeCheckForAdd(int index) {
-        if (index > size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index: " + index + ", Size " + index);
-        }
-    }
-
-    private void rangeCheck(int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index: " + index + ", Size " + index);
-        }
     }
 
     @Override
     public void add(T value) {
         if (size == elements.length) {
-            ensureCapacity();
+            grow();
         }
         elements[size] = value;
         ++size;
@@ -43,7 +25,7 @@ public class ArrayList<T> implements List<T> {
     public void add(T value, int index) {
         rangeCheckForAdd(index);
         if (size == elements.length) {
-            ensureCapacity();
+            grow();
         }
         System.arraycopy(elements, index,
                 elements, index + 1,
@@ -55,7 +37,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void addAll(List<T> list) {
         if (list.size() > elements.length - size) {
-            ensureCapacity();
+            grow();
         }
         for (int index = size, listIndex = 0; index < (size + list.size()); ++index, ++listIndex) {
             elements[index] = list.get(listIndex);
@@ -79,10 +61,7 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         rangeCheck(index);
         Object item = elements[index];
-        for (int i = index; i < size - 1; i++) {
-            elements[i] = elements[i + 1];
-        }
-        size--;
+        System.arraycopy(elements, index + 1, elements, index, --size - index);
         return (T) item;
     }
 
@@ -113,5 +92,24 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private void grow() {
+        int newSize = (int) (elements.length * 1.5);
+        Object[] newArray = new Object[newSize];
+        System.arraycopy(elements, 0, newArray, 0, elements.length);
+        elements = newArray;
+    }
+
+    private void rangeCheckForAdd(int index) {
+        if (index > size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Index: " + index + ", Size " + index);
+        }
+    }
+
+    private void rangeCheck(int index) {
+        if (index >= size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Index: " + index + ", Size " + index);
+        }
     }
 }
