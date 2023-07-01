@@ -28,11 +28,8 @@ public class ArrayList<T> implements List<T> {
         if (size == data.length) {
             growTo(getNewCapacity(size));
         }
-        T[] temporaryData = (T[]) new Object[data.length];
-        System.arraycopy(data, 0, temporaryData, 0, index);
-        temporaryData[index] = value;
-        System.arraycopy(data, index, temporaryData, index + 1, size - index);
-        data = temporaryData;
+        System.arraycopy(data, index, data, index + 1, size - index);
+        data[index] = value;
         size++;
     }
 
@@ -64,11 +61,8 @@ public class ArrayList<T> implements List<T> {
         if (isIncorrectIndex(index)) {
             throw new ArrayListIndexOutOfBoundsException("Incorrect index: " + index);
         }
-        T[] temporaryData = (T[]) new Object[data.length];
-        System.arraycopy(data, 0, temporaryData, 0, index);
-        System.arraycopy(data, index + 1, temporaryData, index, size - index - 1);
         T temporaryObject = data[index];
-        data = temporaryData;
+        System.arraycopy(data, index + 1, data, index, size - index - 1);
         size--;
         return temporaryObject;
     }
