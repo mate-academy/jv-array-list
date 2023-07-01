@@ -16,8 +16,7 @@ public class ArrayList<T> implements List<T> {
         if (size == data.length) {
             grow();
         }
-        data[size] = value;
-        size += 1;
+        data[size++] = value;
     }
 
     @Override
@@ -33,7 +32,7 @@ public class ArrayList<T> implements List<T> {
             System.arraycopy(data, index, data, index + 1, size - index);
         }
         data[index] = value;
-        size += 1;
+        size++;
     }
 
     @Override
@@ -45,33 +44,22 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException(
-                    "Can't get element. Element does not exist for this index");
-        }
+        checkIndex(index);
         return data[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException(
-                    "Can't set element. Element does not exist for this index");
-        }
+        checkIndex(index);
         data[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException(
-                    "Can't remove element. Element does not exist for this index");
-        }
+        checkIndex(index);
         T tmp = data[index];
-        for (int i = index; i < size - 1; i++) {
-            data[i] = data[i + 1];
-        }
-        size -= 1;
+        System.arraycopy(data, index + 1, data, index, size - index - 1);
+        size--;
         return tmp;
     }
 
@@ -101,9 +89,14 @@ public class ArrayList<T> implements List<T> {
     private void grow() {
         int newSize = size + (size >> 1);
         T[] newData = (T[]) new Object[newSize];
-        for (int i = 0; i < data.length; i++) {
-            newData[i] = data[i];
-        }
+        System.arraycopy(data, 0, newData, 0, data.length);
         data = newData;
+    }
+
+    private void checkIndex(int index) {
+        if (index >= size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException(
+                    "Element does not exist for this index");
+        }
     }
 }
