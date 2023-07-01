@@ -38,10 +38,9 @@ public class ArrayList<T> implements List<T> {
         if (list.size() > elements.length - size) {
             grow();
         }
-        for (int index = size, listIndex = 0; index < (size + list.size()); ++index, ++listIndex) {
-            elements[index] = list.get(listIndex);
+        for (int index = 0; index < list.size(); ++index) {
+            add(list.get(index));
         }
-        size += list.size();
     }
 
     @Override
@@ -69,10 +68,7 @@ public class ArrayList<T> implements List<T> {
         Object item = null;
         int index = 0;
         for (; index < size; ++index) {
-            if (elements[index] != null && elements[index].equals(element)) {
-                item = remove(index);
-                break;
-            } else if (elements[index] == element) {
+            if (elements[index] == element || elements[index] != null && elements[index].equals(element)) {
                 item = remove(index);
                 break;
             }
