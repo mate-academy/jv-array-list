@@ -108,14 +108,10 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         boolean success = false;
-        int numMoved;
         for (int i = 0; i < size; i++) {
-            if (element == null || element.equals(elementData[i])) {
-                numMoved = (size - 1) - i;
-                System.arraycopy(elementData, i + 1, elementData, i, numMoved);
-                elementData[--size] = null;
-                success = true;
-                return element;
+            if ((element == null && elementData[i] == null)
+                    || (element != null && element.equals(elementData[i]))) {
+                return remove(i);
             }
         }
         if (!success) {
