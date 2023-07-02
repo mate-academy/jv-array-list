@@ -48,25 +48,21 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         checkIndexWithinBounds(index);
-
         return (T) elementData[index];
     }
 
     @Override
     public void set(T value, int index) {
         checkIndexWithinBounds(index);
-
         elementData[index] = value;
     }
 
     @Override
     public T remove(int index) {
         checkIndexWithinBounds(index);
-
         T removedElement = elementData[index];
         System.arraycopy(elementData, index + 1, elementData, index, size - index - 1);
         size--;
-
         return removedElement;
     }
 
