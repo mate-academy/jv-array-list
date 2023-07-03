@@ -21,10 +21,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index > size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException(
-                    "Index out of bound exception");
-        }
+        indexExist(index);
         if (size == data.length) {
             grow();
         }
@@ -44,23 +41,23 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        checkIndex(index);
+        elementExist(index);
         return data[index];
     }
 
     @Override
     public void set(T value, int index) {
-        checkIndex(index);
+        elementExist(index);
         data[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        checkIndex(index);
-        T tmp = data[index];
+        elementExist(index);
+        T value = data[index];
         System.arraycopy(data, index + 1, data, index, size - index - 1);
         size--;
-        return tmp;
+        return value;
     }
 
     @Override
@@ -68,12 +65,12 @@ public class ArrayList<T> implements List<T> {
         for (int i = 0; i < size(); i++) {
             if ((data[i] == null && element == null)
                     || (data[i] != null && data[i].equals(element))) {
-                T tmp = data[i];
+                T value = data[i];
                 remove(i);
-                return tmp;
+                return value;
             }
         }
-        throw new NoSuchElementException();
+        throw new NoSuchElementException("Element: " + element);
     }
 
     @Override
@@ -93,10 +90,17 @@ public class ArrayList<T> implements List<T> {
         data = newData;
     }
 
-    private void checkIndex(int index) {
+    private void indexExist(int index) {
+        if (index > size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException(
+                    index + " Index out of bound exception for index");
+        }
+    }
+
+    private void elementExist(int index) {
         if (index >= size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException(
-                    "Element does not exist for this index");
+                    "Element does not exist for this index: " + index);
         }
     }
 }
