@@ -1,5 +1,6 @@
 package core.basesyntax;
 
+import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
@@ -7,7 +8,6 @@ public class ArrayList<T> implements List<T> {
     private static final double ARRAY_LENGTH_MULTIPLIER = 1.5;
     private int size;
     private Object[] majorArray;
-    private T[] oldArray;
     private T removedElement;
 
     public ArrayList() {
@@ -27,14 +27,14 @@ public class ArrayList<T> implements List<T> {
     public void add(T value, int index) {
         if (index > size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("The index is outside the array");
-        } else {
-            if (size + 1 >= majorArray.length) {
-                increasingMajorArray();
-            }
-            System.arraycopy(majorArray, index, majorArray, index + 1, size - index);
-            majorArray[index] = value;
-            size++;
         }
+        if (size + 1 >= majorArray.length) {
+            increasingMajorArray();
+        }
+        System.arraycopy(majorArray, index, majorArray, index + 1, size - index);
+        majorArray[index] = value;
+        size++;
+
     }
 
     @Override
@@ -50,44 +50,31 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("The index is outside the array");
-        } else {
-            return (T) majorArray[index];
-        }
+        checkIndex(index);
+        return (T) majorArray[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("The index is outside the array");
-        } else {
-            majorArray[index] = value;
-        }
+        checkIndex(index);
+        majorArray[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("The index is outside the array");
-        } else {
-            removedElement = (T) majorArray[index];
-            System.arraycopy(majorArray, index + 1, majorArray, index, size - index - 1);
-            size--;
-            majorArray[size] = null;
-            return removedElement;
-        }
+        checkIndex(index);
+        removedElement = (T) majorArray[index];
+        System.arraycopy(majorArray, index + 1, majorArray, index, size - index - 1);
+        size--;
+        majorArray[size] = null;
+        return removedElement;
     }
 
     @Override
     public T remove(T element) {
-        removedElement = element;
         for (int i = 0; i < size; i++) {
             if (element == majorArray[i] || element != null && element.equals(majorArray[i])) {
-                System.arraycopy(majorArray, i + 1, majorArray, i, size - i - 1);
-                majorArray[size] = null;
-                size--;
-                return removedElement;
+                return remove(i);
             }
         }
         throw new NoSuchElementException("There is no such element in ArrayList");
@@ -104,9 +91,13 @@ public class ArrayList<T> implements List<T> {
     }
 
     private Object[] increasingMajorArray() {
-        oldArray = (T[]) majorArray;
-        majorArray = new Object[(int) (majorArray.length * ARRAY_LENGTH_MULTIPLIER)];
-        System.arraycopy(oldArray, 0, majorArray, 0, oldArray.length);
-        return majorArray;
+        return majorArray =
+                Arrays.copyOf(majorArray, (int) (majorArray.length * ARRAY_LENGTH_MULTIPLIER));
+    }
+
+    private void checkIndex(int index) {
+        if (index >= size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("The index is outside the array");
+        }
     }
 }
