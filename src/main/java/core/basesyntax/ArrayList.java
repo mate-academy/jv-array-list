@@ -8,7 +8,6 @@ public class ArrayList<T> implements List<T> {
     private static final double ARRAY_LENGTH_MULTIPLIER = 1.5;
     private int size;
     private Object[] majorArray;
-    private T removedElement;
 
     public ArrayList() {
         majorArray = new Object[DEFAULT_CAPACITY];
@@ -62,6 +61,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(int index) {
+        T removedElement;
         checkIndex(index);
         removedElement = (T) majorArray[index];
         System.arraycopy(majorArray, index + 1, majorArray, index, size - index - 1);
