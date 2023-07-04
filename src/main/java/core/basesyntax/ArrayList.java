@@ -1,6 +1,7 @@
 package core.basesyntax;
 
 
+import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
     private Object[] array;
@@ -21,7 +22,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void expandArray() {
-        Object[] newArray = new Object[array.length + array.length >> 1];
+        Object[] newArray = new Object[array.length + (array.length >> 1)];
         for (int i = 0; i < array.length; i++) {
             newArray[i] = array[i];
         }
@@ -31,13 +32,22 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         checkIndex(index);
-        if (size == array.length) {
+        if (size + 1 >= array.length) {
             expandArray();
         }
-        for (int i = size; i > index; i--){
-            array[i] = array[i - 1];
+        if (size == 0) {
+            add(value);
+        } else if (size == 1) {
+            array[1] = array[0];
+            array[0] = value;
+            size++;
+        } else {
+            for (int i = size; i > index; i--) {
+                array[i] = array[i - 1];
+            }
+            array[index] = value;
+            size++;
         }
-        array[index] = value;
     }
 
     @Override
@@ -63,14 +73,15 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         checkIndex(index);
         T removedItem = (T) array[index];
-        for (int i = size; i > index; i--) {
-            array[i-1] = array[i];
+        for (int i = index; i < size - 1; i++) {
+            array[i] = array[i + 1];
         }
+        size--;
         return removedItem;
     }
 
     private void checkIndex(int index) {
-        if (index >= size) {
+        if (index >= size && index != 0) {
             throw new ArrayListIndexOutOfBoundsException("There is no element at index " + index);
         }
         if (index < 0) {
@@ -81,12 +92,15 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        T removedItem = element;
+        T removedItem = null;
         for (int i = 0; i < array.length; i++) {
             T castedObject = (T) array[i];
-            if (castedObject.equals(element)) {
+            if (Objects.equals(castedObject, element)) {
                 removedItem = remove(i);
             }
+        }
+        if (removedItem == null) {
+            throw new NoSuchElementException("There is no element " + element);
         }
         return removedItem;
     }
