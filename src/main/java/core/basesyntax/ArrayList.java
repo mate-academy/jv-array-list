@@ -22,22 +22,21 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         growIfArrayFull();
-        if (index < arraySize && index >= 0 || index == arraySize) {
+        if (index <= arraySize && index >= 0) {
             System.arraycopy(elementData, index, elementData, index + 1, arraySize - index);
             elementData[index] = value;
             arraySize++;
             return;
         }
-        throw new ArrayListIndexOutOfBoundsException("Index passed to method is invalid!");
+        throw new ArrayListIndexOutOfBoundsException("Index " + index + " is invalid!");
     }
 
     @Override
     public void addAll(List<T> list) {
-        growIfArrayFull();
         for (int i = 0; i < list.size(); i++) {
+            growIfArrayFull();
             elementData[arraySize] = list.get(i);
             arraySize++;
-            growIfArrayFull();
         }
     }
 
@@ -72,7 +71,7 @@ public class ArrayList<T> implements List<T> {
                 return remove(i);
             }
         }
-        throw new NoSuchElementException();
+        throw new NoSuchElementException("Element " + element + " is invalid!");
     }
 
     @Override
@@ -89,7 +88,7 @@ public class ArrayList<T> implements List<T> {
         if (index < arraySize && index >= 0) {
             return true;
         }
-        throw new ArrayListIndexOutOfBoundsException("Index passed to method is invalid!");
+        throw new ArrayListIndexOutOfBoundsException("Index " + index + " is invalid!");
     }
 
     private void growIfArrayFull() {
