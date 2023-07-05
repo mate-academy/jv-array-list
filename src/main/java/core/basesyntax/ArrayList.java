@@ -1,51 +1,41 @@
 package core.basesyntax;
 
-
-import java.util.Objects;
+import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    private Object[] array;
-    private int size;
+    private static final int DEFAULT_ARRAY_SIZE = 10;
+    private Object[] innerArray;
+    private int size = 0;
 
     public ArrayList() {
-        array = new Object[10];
+        innerArray = new Object[DEFAULT_ARRAY_SIZE];
         size = 0;
     }
 
     @Override
     public void add(T value) {
-        if (size == array.length) {
-            expandArray();
-        }
-        array[size] = value;
+        growIfArrayFull();
+        innerArray[size] = value;
         size++;
-    }
-
-    private void expandArray() {
-        Object[] newArray = new Object[array.length + (array.length >> 1)];
-        for (int i = 0; i < array.length; i++) {
-            newArray[i] = array[i];
-        }
-        array = newArray;
     }
 
     @Override
     public void add(T value, int index) {
-        checkIndex(index);
-        if (size + 1 >= array.length) {
-            expandArray();
+        if (index != size) {
+            checkIndex(index);
         }
+        growIfArrayFull();
         if (size == 0) {
             add(value);
         } else if (size == 1) {
-            array[1] = array[0];
-            array[0] = value;
+            innerArray[1] = innerArray[0];
+            innerArray[0] = value;
             size++;
         } else {
             for (int i = size; i > index; i--) {
-                array[i] = array[i - 1];
+                innerArray[i] = innerArray[i - 1];
             }
-            array[index] = value;
+            innerArray[index] = value;
             size++;
         }
     }
@@ -60,49 +50,37 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         checkIndex(index);
-        return (T) array[index];
+        return (T) innerArray[index];
     }
 
     @Override
     public void set(T value, int index) {
         checkIndex(index);
-        array[index] = value;
+        innerArray[index] = value;
     }
 
     @Override
     public T remove(int index) {
         checkIndex(index);
-        T removedItem = (T) array[index];
+        T removedItem = (T) innerArray[index];
         for (int i = index; i < size - 1; i++) {
-            array[i] = array[i + 1];
+            innerArray[i] = innerArray[i + 1];
         }
         size--;
         return removedItem;
     }
 
-    private void checkIndex(int index) {
-        if (index >= size && index != 0) {
-            throw new ArrayListIndexOutOfBoundsException("There is no element at index " + index);
-        }
-        if (index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("You can't input a negative index. "
-                    + index + " is below zero!");
-        }
-    }
-
     @Override
     public T remove(T element) {
         T removedItem = null;
-        for (int i = 0; i < array.length; i++) {
-            T castedObject = (T) array[i];
-            if (Objects.equals(castedObject, element)) {
-                removedItem = remove(i);
+        for (int i = 0; i < size; i++) {
+            T castedObject = (T) innerArray[i];
+            if ((castedObject == element) || (castedObject != null
+                    && castedObject.equals(element))) {
+                return remove(i);
             }
         }
-        if (removedItem == null) {
-            throw new NoSuchElementException("There is no element " + element);
-        }
-        return removedItem;
+        throw new NoSuchElementException("There is no element " + element);
     }
 
     @Override
@@ -113,5 +91,23 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private void growIfArrayFull() {
+        if (size + 1 >= innerArray.length) {
+            Object[] newArray = new Object[innerArray.length + (innerArray.length >> 1)];
+            System.arraycopy(innerArray, 0, newArray, 0, innerArray.length);
+            innerArray = newArray;
+        }
+    }
+
+    private void checkIndex(int index) {
+        if (index >= size && index != 0) {
+            throw new ArrayListIndexOutOfBoundsException("There is no element at index " + index);
+        }
+        if (index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("You can't input a negative index. "
+                    + index + " is below zero!");
+        }
     }
 }
