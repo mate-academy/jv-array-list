@@ -23,9 +23,7 @@ public class ArrayList<T> implements List<T> {
     public void add(T value, int index) {
         growIfArrayFull();
         if (index < arraySize && index >= 0 || index == arraySize) {
-            T[] oldArray = (T[]) new Object[elementData.length];
-            System.arraycopy(elementData, index, oldArray, index, arraySize - index);
-            System.arraycopy(oldArray, index, elementData, index + 1, arraySize - index);
+            System.arraycopy(elementData, index, elementData, index + 1, arraySize - index);
             elementData[index] = value;
             arraySize++;
             return;
@@ -45,53 +43,36 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (isIndexValid(index)) {
-            return elementData[index];
-        }
-        throw new ArrayListIndexOutOfBoundsException("Index passed to method is invalid!");
+        return isIndexValid(index) ? elementData[index] : null;
     }
 
     @Override
     public void set(T value, int index) {
         if (isIndexValid(index)) {
             elementData[index] = value;
-            return;
         }
-        throw new ArrayListIndexOutOfBoundsException("Index passed to method is invalid!");
     }
 
     @Override
     public T remove(int index) {
+        T oldData = null;
         growIfArrayFull();
         if (isIndexValid(index)) {
-            T[] oldArray = (T[]) new Object[elementData.length];
-            System.arraycopy(elementData, index + 1, oldArray, index, arraySize - index);
-            T oldData = elementData[index];
-            System.arraycopy(oldArray, index, elementData, index, arraySize - index);
+            oldData = elementData[index];
+            System.arraycopy(elementData, index + 1, elementData, index, arraySize - index);
             arraySize--;
-            return oldData;
         }
-        throw new ArrayListIndexOutOfBoundsException("Index passed to method is invalid!");
+        return oldData;
     }
 
     @Override
     public T remove(T element) {
-        int index = -1;
         for (int i = 0; i < arraySize; i++) {
             if (elementData[i] == element || element != null && element.equals(elementData[i])) {
-                index += (i + 1);
-                break;
+                return remove(i);
             }
         }
-        if (index == -1) {
-            throw new NoSuchElementException();
-        }
-        T[] oldArray = (T[]) new Object[elementData.length];
-        System.arraycopy(elementData, index + 1, oldArray, index, arraySize - index);
-        T oldData = elementData[index];
-        System.arraycopy(oldArray, index, elementData, index, arraySize - index);
-        arraySize--;
-        return oldData;
+        throw new NoSuchElementException();
     }
 
     @Override
@@ -105,15 +86,16 @@ public class ArrayList<T> implements List<T> {
     }
 
     private boolean isIndexValid(int index) {
-        return index < arraySize && index >= 0;
+        if (index < arraySize && index >= 0) {
+            return true;
+        }
+        throw new ArrayListIndexOutOfBoundsException("Index passed to method is invalid!");
     }
 
     private void growIfArrayFull() {
         if (arraySize == elementData.length) {
-            T[] oldArray = (T[]) new Object[elementData.length];
-            System.arraycopy(elementData, 0, oldArray, 0, oldArray.length);
-            elementData = (T[]) new Object[(int) (arraySize * ARRAY_MULTIPLIER)];
-            System.arraycopy(oldArray, 0, elementData, 0, oldArray.length);
+            System.arraycopy(elementData, 0,
+                    elementData = (T[]) new Object[(int) (arraySize * ARRAY_MULTIPLIER)], 0, arraySize);
         }
     }
 }
