@@ -4,15 +4,14 @@ import core.basesyntax.util.ObjectUtil;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    private static final int INITIAL_CAPACITY = 10;
+    private static int capacity = 10;
     private static final double RESIZE_FACTOR = 1.5;
-    private int capacity = INITIAL_CAPACITY;
     private int size;
-    private T[] elements = (T[]) new Object[INITIAL_CAPACITY];
+    private T[] elements = (T[]) new Object[capacity];
 
     @Override
     public void add(T value) {
-        changeSize();
+        checkCapacity();
         elements[size] = value;
         size++;
     }
@@ -20,7 +19,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         checkAddIndex(index);
-        changeSize();
+        checkCapacity();
         System.arraycopy(elements, index, elements, index + 1, size - index);
         elements[index] = value;
         size++;
@@ -29,31 +28,28 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void addAll(List<T> list) {
         for (int i = 0; i < list.size(); i++) {
-            changeSize();
-            elements[size] = list.get(i);
-            size++;
+            add(list.get(i));
         }
     }
 
     @Override
     public T get(int index) {
-        checkRemoveIndex(index);
+        checkIndex(index);
         return elements[index];
     }
 
     @Override
     public void set(T value, int index) {
-        checkRemoveIndex(index);
+        checkIndex(index);
         elements[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        checkRemoveIndex(index);
+        checkIndex(index);
         final T removeElement = elements[index];
-        for (int i = index; i < size - 1; i++) {
-            elements[i] = elements[i + 1];
-        }
+        int newSize = size - 1;
+        System.arraycopy(elements, index + 1, elements, index, newSize - index);
         elements[size - 1] = null;
         size--;
         return removeElement;
@@ -61,21 +57,8 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        if (element == null) {
-            size--;
-            return null;
-        }
-        T removeElement = null;
-        for (int i = 0; i < elements.length; i++) {
-            if (ObjectUtil.equals(elements[i], element)) {
-                removeElement = remove(i);
-            }
-        }
-        if (removeElement == null) {
-            throw new NoSuchElementException("Can't find element to remove ");
-        } else {
-            return removeElement;
-        }
+        remove(findIndex(element));
+        return element;
     }
 
     @Override
@@ -88,25 +71,39 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void changeSize() {
+    private void checkCapacity() {
         if (size == capacity) {
-            capacity *= RESIZE_FACTOR;
-            T[] tmp = elements;
-            elements = (T[]) new Object[capacity];
-            System.arraycopy(tmp, 0, elements, 0, size);
+            increaseCapacity();
         }
     }
 
-    private void checkRemoveIndex(int index) {
+    private void increaseCapacity() {
+        capacity *= RESIZE_FACTOR;
+        T[] tmp = elements;
+        elements = (T[]) new Object[capacity];
+        System.arraycopy(tmp, 0, elements, 0, size);
+    }
+
+    private void checkIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Can't access element at index " + index);
+            throw new ArrayListIndexOutOfBoundsException(
+                    String.format("Index %s out of bounds", index));
         }
     }
 
     private void checkAddIndex(int index) {
         if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("Can't access element at index " + index);
+            throw new ArrayListIndexOutOfBoundsException(
+                    String.format("Index %s out of bounds", index));
         }
     }
-}
 
+    private int findIndex(T element) {
+        for (int i = 0; i < elements.length; i++) {
+            if (ObjectUtil.equals(elements[i], element)) {
+                return i;
+            }
+        }
+        throw new NoSuchElementException("Can't remove element " + element);
+    }
+}
