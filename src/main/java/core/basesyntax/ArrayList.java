@@ -95,7 +95,8 @@ public class ArrayList<T> implements List<T> {
     private void growIfArrayFull() {
         if (arraySize == elementData.length) {
             System.arraycopy(elementData, 0,
-                    elementData = (T[]) new Object[(int) (arraySize * ARRAY_MULTIPLIER)], 0, arraySize);
+                    elementData = (T[]) new Object[(int) (arraySize * ARRAY_MULTIPLIER)],
+                    0, arraySize);
         }
     }
 }
