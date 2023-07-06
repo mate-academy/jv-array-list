@@ -51,6 +51,7 @@ public class ArrayListTest {
     }
 
 
+
     @Test(expected = ArrayListIndexOutOfBoundsException.class)
     public void addElementInTheNonExistentPosition() {
         ArrayList<String> arrayList = new ArrayList<>();
