@@ -1,6 +1,5 @@
 package core.basesyntax;
 
-import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
@@ -27,7 +26,7 @@ public class ArrayList<T> implements List<T> {
         if (index > size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("The index is outside the array");
         }
-        if (size + 1 >= majorArray.length) {
+        if (size == majorArray.length) {
             increasingMajorArray();
         }
         System.arraycopy(majorArray, index, majorArray, index + 1, size - index);
@@ -42,9 +41,8 @@ public class ArrayList<T> implements List<T> {
             if (size + list.size() == majorArray.length) {
                 increasingMajorArray();
             }
-            majorArray[k + size] = list.get(k);
+            add(list.get(k));
         }
-        size = size + list.size();
     }
 
     @Override
@@ -91,13 +89,17 @@ public class ArrayList<T> implements List<T> {
     }
 
     private Object[] increasingMajorArray() {
-        return majorArray =
-                Arrays.copyOf(majorArray, (int) (majorArray.length * ARRAY_LENGTH_MULTIPLIER));
+        Object[] oldMajorArray = majorArray;
+        majorArray = new Object[(int) (majorArray.length * ARRAY_LENGTH_MULTIPLIER)];
+        System.arraycopy(oldMajorArray, 0, majorArray, 0, oldMajorArray.length);
+        return majorArray;
     }
 
     private void checkIndex(int index) {
         if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("The index is outside the array");
+            throw new ArrayListIndexOutOfBoundsException(
+                    "Index " + index + " is outside the array");
         }
     }
+
 }
