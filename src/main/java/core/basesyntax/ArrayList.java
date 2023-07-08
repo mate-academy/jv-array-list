@@ -21,7 +21,6 @@ public class ArrayList<T> implements List<T> {
             this.add(value);
         } else {
             checkIndexIsValid(index);
-
             increaseListSizeByOne();
             for (int i = lastIndex(); i >= index; i--) {
                 array[i + 1] = array[i];
@@ -52,7 +51,6 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         T actualResult = get(index);
-
         for (int i = index; i < lastIndex(); i++) {
             array[i] = array[i + 1];
         }
