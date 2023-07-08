@@ -15,19 +15,18 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        add(value, size);
+        ensureSize(size++);
+        elements[size - 1] = new Element<>(value);
     }
 
     @Override
     public void add(T value, int index) {
-        int nextSize = size + 1;
-        validateIndex(index, nextSize);
-        ensureSize(nextSize);
-        if (index < size) {
-            System.arraycopy(elements, index, elements, index + 1, size - index);
+        validateIndex(index, ++size);
+        ensureSize(size);
+        if (index + 1 < size) {
+            System.arraycopy(elements, index, elements, index + 1, size - index - 1);
         }
         elements[index] = new Element<>(value);
-        size++;
     }
 
     @Override
