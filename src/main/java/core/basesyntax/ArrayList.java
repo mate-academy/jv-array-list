@@ -97,7 +97,12 @@ public class ArrayList<T> implements List<T> {
     }
 
     private T[] createArray(T value, int arraySize) {
-        return (T[]) Array.newInstance(value.getClass(), arraySize);
+        if (value == null && elements != null && elements.length > 0) {
+            value = elements[0];
+        }
+        return (T[]) Array.newInstance((value != null)
+                            ? value.getClass()
+                            : Object.class, arraySize);
     }
 
     private void validateIndex(int index) {
