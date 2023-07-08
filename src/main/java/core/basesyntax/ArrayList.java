@@ -12,13 +12,13 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        ensureSize(size++, value);
+        ensureSize(++size, value);
         elements[size - 1] = value;
     }
 
     @Override
     public void add(T value, int index) {
-        ensureSize(size++, value);
+        ensureSize(++size, value);
         validateIndex(index);
         if (index + 1 < size) {
             System.arraycopy(elements, index, elements, index + 1, size - index - 1);
