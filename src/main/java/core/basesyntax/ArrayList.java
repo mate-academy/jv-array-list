@@ -4,12 +4,13 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int INITIAL_SIZE = 10;
+    private static final double GROW_FACTOR = 1.5;
 
-    private Object[] elements;
+    private Element<T>[] elements;
     private int size;
 
     public ArrayList() {
-        this.elements = new Object[INITIAL_SIZE];
+        this.elements = new Element[INITIAL_SIZE];
     }
 
     @Override
@@ -19,18 +20,22 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        validateIndex(index, size + 1);
-        ensureSize(size + 1);
+        int nextSize = size + 1;
+        validateIndex(index, nextSize);
+        ensureSize(nextSize);
         if (index < size) {
             System.arraycopy(elements, index, elements, index + 1, size - index);
         }
-        elements[index] = value;
+        elements[index] = new Element<>(value);
         size++;
     }
 
     @Override
     public void addAll(List<T> list) {
-        if (list == null || list.size() == 0) {
+        if (list == null) {
+            throw new NullPointerException("Input list is null");
+        }
+        if (list.size() == 0) {
             return;
         }
         for (int i = 0; i < list.size(); i++) {
@@ -39,23 +44,21 @@ public class ArrayList<T> implements List<T> {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public T get(int index) {
         validateIndex(index);
-        return (T) elements[index];
+        return elements[index].getValue();
     }
 
     @Override
     public void set(T value, int index) {
         validateIndex(index);
-        elements[index] = value;
+        elements[index] = new Element<>(value);
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public T remove(int index) {
         validateIndex(index);
-        final T value = (T) elements[index];
+        final T value = elements[index].getValue();
         size--;
         if (index < size) {
             System.arraycopy(elements, index + 1, elements, index, size - index);
@@ -66,11 +69,12 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
+        Element<T> holder = new Element<>(element);
         for (int i = 0; i < size; i++) {
-            if ((elements[i] == element)
-                    || (elements[i] != null && elements[i].equals(element))) {
+            if ((elements[i] == holder)
+                    || (elements[i] != null && elements[i].equals(holder))) {
                 remove(i);
-                return element;
+                return holder.getValue();
             }
         }
         throw new NoSuchElementException("No such element in the list: " + element);
@@ -88,7 +92,7 @@ public class ArrayList<T> implements List<T> {
 
     private void ensureSize(int size) {
         if (size >= elements.length) {
-            Object[] newArray = new Object[elements.length * 3 / 2];
+            Element<T>[] newArray = new Element[(int) (elements.length * GROW_FACTOR)];
             System.arraycopy(elements, 0, newArray, 0, elements.length);
             elements = newArray;
         }
