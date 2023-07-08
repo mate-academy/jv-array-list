@@ -12,14 +12,14 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        ensureSize(++size, value);
+        enlargeArrayIfNeeded(value);
         elements[size - 1] = value;
     }
 
     @Override
     public void add(T value, int index) {
-        int prevSize = size++;
-        ensureSize(size, value);
+        int prevSize = size;
+        enlargeArrayIfNeeded(value);
         validateIndex(index);
         if (index < prevSize) {
             System.arraycopy(elements, index, elements, index + 1, prevSize - index);
@@ -86,11 +86,12 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void ensureSize(int size, T value) {
+    private void enlargeArrayIfNeeded(T value) {
         if (elements == null) {
             elements = createArray(value, INITIAL_SIZE);
         }
-        if (size >= elements.length) {
+        size++;
+        if (size > elements.length) {
             T[] newArray = createArray(value, (int) (elements.length * GROW_FACTOR));
             System.arraycopy(elements, 0, newArray, 0, elements.length);
             elements = newArray;
