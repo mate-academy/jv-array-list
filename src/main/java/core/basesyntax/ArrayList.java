@@ -18,10 +18,11 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        ensureSize(++size, value);
+        int prevSize = size++;
+        ensureSize(size, value);
         validateIndex(index);
-        if (index + 1 < size) {
-            System.arraycopy(elements, index, elements, index + 1, size - index - 1);
+        if (index < prevSize) {
+            System.arraycopy(elements, index, elements, index + 1, prevSize - index);
         }
         elements[index] = value;
     }
