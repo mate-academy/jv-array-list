@@ -19,7 +19,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         ensureSize(size++, value);
-        validateIndex(index, size);
+        validateIndex(index);
         if (index + 1 < size) {
             System.arraycopy(elements, index, elements, index + 1, size - index - 1);
         }
@@ -106,15 +106,11 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void validateIndex(int index) {
-        validateIndex(index, size);
-    }
-
-    private void validateIndex(int index, int upperBound) {
         if (elements == null) {
             throw new ArrayListIndexOutOfBoundsException("Index is not valid: "
                     + index + "; array has not been initialized");
         }
-        if (index >= upperBound) {
+        if (index >= size) {
             throw new ArrayListIndexOutOfBoundsException("Index is not valid: "
                     + index + "; index greater than array size; array size: " + size);
         }
