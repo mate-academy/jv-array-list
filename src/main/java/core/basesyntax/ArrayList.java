@@ -23,18 +23,19 @@ public class ArrayList<T> implements List<T> {
         return elementData = Arrays.copyOf(elementData, newCapacity);
     }
 
-    @Override
     public void add(T value, int index) {
-        if (index < 0 || index > size + 1 ) {
+        if (index < 0 || index > size + 1) {
             throw new ArrayListIndexOutOfBoundsException("Index is out of bounds");
         }
-        if (size == elementData.length || index > size) elementData = grow();
+        if (size == elementData.length || index > size) {
+            elementData = grow();
+        }
         Object[] elementsAfterIndex = new Object[this.size - index + 1];
         for (int i = 0; i < elementsAfterIndex.length; i++) {
             elementsAfterIndex[i] = elementData[index + i];
         }
         elementData[index] = value;
-        for (int i = index +  1; i <= size; i++) {
+        for (int i = index + 1; i <= size; i++) {
             elementData[i] = elementsAfterIndex[i - index - 1];
         }
         size++;
@@ -42,9 +43,9 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-       for (int i = 0; i < list.size(); i++) {
-           T elem = (T) list.get(i);
-           add(elem);
+        for (int i = 0; i < list.size(); i++) {
+            T elem = (T) list.get(i);
+            add(elem);
         }
     }
 
@@ -79,8 +80,9 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-       for (int i = 0; i < elementData.length; i++) {
-            if ((elementData[i] != null && element != null && elementData[i].equals(element)) || (elementData[i] == null && element == null)) {
+        for (int i = 0; i < elementData.length; i++) {
+            if ((elementData[i] != null && element != null && elementData[i].equals(element))
+                    || (elementData[i] == null && element == null)) {
                 return remove(i);
             }
         }
