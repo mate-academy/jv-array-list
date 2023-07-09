@@ -17,12 +17,7 @@ public class ArrayList<T> implements List<T> {
         size++;
     }
 
-    private Object[] grow() {
-        int oldCapacity = elementData.length;
-        int newCapacity = oldCapacity + (oldCapacity >> 1);
-        return elementData = Arrays.copyOf(elementData, newCapacity);
-    }
-
+    @Override
     public void add(T value, int index) {
         if (index < 0 || index > size + 1) {
             throw new ArrayListIndexOutOfBoundsException("Index is out of bounds");
@@ -47,6 +42,12 @@ public class ArrayList<T> implements List<T> {
             T elem = (T) list.get(i);
             add(elem);
         }
+    }
+
+    private Object[] grow() {
+        int oldCapacity = elementData.length;
+        int newCapacity = oldCapacity + (oldCapacity >> 1);
+        return elementData = Arrays.copyOf(elementData, newCapacity);
     }
 
     @Override
