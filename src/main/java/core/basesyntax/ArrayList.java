@@ -23,7 +23,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         if (index < 0 || index > size()) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index");
+            throw new ArrayListIndexOutOfBoundsException("Invalid index " + index);
         }
         if (listSize == elements.length) {
             resizeArrayList();
@@ -90,10 +90,9 @@ public class ArrayList<T> implements List<T> {
 
     private int indexOf(T element) {
         for (int i = 0; i < size(); i++) {
-            if (element == null && elements[i] == null) {
-                return i;
-            }
-            if (elements[i] != null && element != null && element.equals(elements[i])) {
+            if ((element == null && elements[i] == null)
+                    || (elements[i] != null && element != null
+                    && element.equals(elements[i]))) {
                 return i;
             }
         }
@@ -103,10 +102,11 @@ public class ArrayList<T> implements List<T> {
     private void indexValidation(int index) {
         if (index >= size()) {
             throw new ArrayListIndexOutOfBoundsException("Index can't "
-                    + "be bigger than ArrayList size");
+                    + "be bigger than ArrayList size(index: " + index + ")");
         }
         if (index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index can't be less than 0");
+            throw new ArrayListIndexOutOfBoundsException("Index can't be less than 0(index: "
+                    + index + ")");
         }
     }
 }
