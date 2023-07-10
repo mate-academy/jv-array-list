@@ -1,7 +1,7 @@
 package core.basesyntax;
 
-import java.util.Objects;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_SIZE_ARRAY = 10;
@@ -55,7 +55,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
-        T rmElement = (T) elementArray[index];
+        final T rmElement = (T) elementArray[index];
         --size;
         System.arraycopy(elementArray, index + 1, elementArray, index, size - index);
         elementArray[size] = null;
@@ -82,6 +82,7 @@ public class ArrayList<T> implements List<T> {
             increase();
         }
     }
+
     private void checkIndex(int index) {
         if (index >= size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Index " + index + " out of bounds ");
