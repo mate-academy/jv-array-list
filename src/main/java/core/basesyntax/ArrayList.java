@@ -3,16 +3,15 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-
     private static final int INITIAL_CAPACITY = 10;
-    private Object[] elementData = new Object[INITIAL_CAPACITY];
+    private static final double GROW_FACTOR = 1.5;
+    private T[] elementData = (T[]) new Object[INITIAL_CAPACITY];
     private int size;
 
     @Override
     public void add(T value) {
         ensureArrayCapacity();
-        elementData[size] = value;
-        size++;
+        elementData[size++] = value;
     }
 
     @Override
@@ -57,8 +56,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if ((elementData[i] == null && element == null)
-                    || (elementData[i] != null && elementData[i].equals(element))) {
+            if (elementData[i] == element || elementData[i] != null
+                    && elementData[i].equals(element)) {
                 return remove(i);
             }
         }
@@ -79,11 +78,11 @@ public class ArrayList<T> implements List<T> {
     private void ensureArrayCapacity() {
         if (size >= elementData.length) {
             int oldCapacity = elementData.length;
-            int newCapacity = oldCapacity + (oldCapacity >> 1);
+            int newCapacity = (int)(oldCapacity * GROW_FACTOR);
             Object[] newElementData = new Object[newCapacity];
             System.arraycopy(elementData, 0,
                     newElementData, 0, oldCapacity);
-            this.elementData = newElementData;
+            this.elementData = (T[]) newElementData;
         }
     }
 
