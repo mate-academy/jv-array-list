@@ -1,22 +1,17 @@
 package core.basesyntax;
 
+import core.basesyntax.util.ObjectUtil;
 import java.util.NoSuchElementException;
-import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
-    private static final int INITIAL_CAPACITY = 10;
+    private static int capacity = 10;
     private static final double RESIZE_FACTOR = 1.5;
     private int size;
-    private T[] elements;
-
-    public ArrayList() {
-        elements = (T[]) new Object[INITIAL_CAPACITY];
-        size = 0;
-    }
+    private T[] elements = (T[]) new Object[capacity];
 
     @Override
     public void add(T value) {
-        ensureCapacity(size + 1);
+        checkCapacity();
         elements[size] = value;
         size++;
     }
@@ -24,7 +19,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         checkAddAtIndex(index);
-        ensureCapacity(size + 1);
+        checkCapacity();
         System.arraycopy(elements, index, elements, index + 1, size - index);
         elements[index] = value;
         size++;
@@ -75,13 +70,18 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void ensureCapacity(int capacity) {
-        if (capacity > elements.length) {
-            int newCapacity = (int) (elements.length * RESIZE_FACTOR);
-            T[] newElements = (T[]) new Object[newCapacity];
-            System.arraycopy(elements, 0, newElements, 0, size);
-            elements = newElements;
+    private void checkCapacity() {
+        if (capacity == size) {
+            increaseCapacity();
         }
+    }
+
+    private void increaseCapacity() {
+        capacity *= RESIZE_FACTOR;
+        T[] newElements = elements;
+        elements = (T[]) new Object[capacity];
+        System.arraycopy(newElements, 0, elements, 0, size);
+
     }
 
     private void checkIndex(int index) {
@@ -98,7 +98,7 @@ public class ArrayList<T> implements List<T> {
 
     private int findElement(T element) {
         for (int i = 0; i < size; i++) {
-            if (Objects.equals(elements[i], element)) {
+            if (ObjectUtil.equals(elements[i], element)) {
                 return i;
             }
         }
