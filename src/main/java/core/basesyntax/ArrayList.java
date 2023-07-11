@@ -3,19 +3,18 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    private int capacity;
+    private static final int DEFAULT_CAPACITY = 10;
     private int size;
     private T[] array;
 
     public ArrayList() {
-        this.capacity = 10;
-        this.array = (T[]) new Object[capacity];
+        this.array = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
     @Override
     public void add(T value) {
-        if (size >= capacity) {
-            grow(capacity);
+        if (size >= array.length) {
+            grow(size);
         }
         array[size] = value;
         size++;
@@ -67,7 +66,7 @@ public class ArrayList<T> implements List<T> {
     public T remove(T element) {
         int index = getIndexOf(element);
         if (index == -1) {
-            throw new NoSuchElementException("Couldn't find file '" + element + "'!");
+            throw new NoSuchElementException("Couldn't find element '" + element + "'!");
         }
         return remove(index);
     }
@@ -82,13 +81,6 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void grow(int minCapacity) {
-        capacity = minCapacity + (minCapacity >> 1);
-        T[] oldArray = array;
-        array = (T[]) new Object[capacity];
-        System.arraycopy(oldArray, 0, array, 0, minCapacity);
-    }
-
     public int getIndexOf(T element) {
         for (int i = 0; i < size; i++) {
             if ((array[i] == element) || array[i] != null && array[i].equals(element)) {
@@ -96,6 +88,13 @@ public class ArrayList<T> implements List<T> {
             }
         }
         return -1;
+    }
+
+    private void grow(int minCapacity) {
+        int newCapacity = minCapacity + (minCapacity >> 1);
+        T[] oldArray = array;
+        array = (T[]) new Object[newCapacity];
+        System.arraycopy(oldArray, 0, array, 0, minCapacity);
     }
 
     private void checkIndex(int index) {
