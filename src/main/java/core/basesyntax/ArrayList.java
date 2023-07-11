@@ -49,7 +49,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         arrayListIndexOutOfBoundException(index);
-        return (T) elements[index];
+        return (T)elements[index];
     }
 
     @Override
@@ -133,8 +133,9 @@ public class ArrayList<T> implements List<T> {
     private void removeElement(int index) {
         if (index == elements.length - 1) {
             elements[size - 1] = null;
-        }
+        } else {
         System.arraycopy(elements,index + 1, elements, index, size - index - 1);
+        }
         size--;
     }
 }
