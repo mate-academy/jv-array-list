@@ -4,8 +4,10 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     public static final int INITIAL_ARRAY_SIZE = 10;
+    public static final int RESIZE_NUMBER = 5;
+
     private T[] arr;
-    private int elementsCount = 0;
+    private int elementsCount;
 
     public ArrayList() {
         arr = (T[]) new Object[INITIAL_ARRAY_SIZE];
@@ -19,7 +21,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        checkIfIndexCorrectWhileAddNewElements(index);
+        checkIndexWhileAddElement(index);
         checkIfNeedArrayResize();
         shiftArrayToRight(index);
         arr[index] = value;
@@ -35,19 +37,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        checkIfIndexCorrectInGeneralCase(index);
+        checkIfIndexCorrect(index);
         return arr[index];
     }
 
     @Override
     public void set(T value, int index) {
-        checkIfIndexCorrectInGeneralCase(index);
+        checkIfIndexCorrect(index);
         arr[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        checkIfIndexCorrectInGeneralCase(index);
+        checkIfIndexCorrect(index);
         final T removedElement = arr[index];
         shiftArrayToLeft(index);
         arr[elementsCount - 1] = null;
@@ -98,19 +100,19 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void resizeArray() {
-        int newArrayCapacity = arr.length + 5;
+        int newArrayCapacity = arr.length + RESIZE_NUMBER;
         T[] resizedArray = (T[]) new Object[newArrayCapacity];
         System.arraycopy(arr, 0, resizedArray, 0, elementsCount);
         arr = resizedArray;
     }
 
-    private void checkIfIndexCorrectInGeneralCase(int index) {
+    private void checkIfIndexCorrect(int index) {
         if (index < 0 || index >= elementsCount) {
             throw new ArrayListIndexOutOfBoundsException("Index out of range: " + index);
         }
     }
 
-    private void checkIfIndexCorrectWhileAddNewElements(int index) {
+    private void checkIndexWhileAddElement(int index) {
         if (index < 0 || index > elementsCount) {
             throw new ArrayListIndexOutOfBoundsException("Index out of range: " + index);
         }
