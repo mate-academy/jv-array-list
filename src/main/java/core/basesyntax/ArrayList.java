@@ -134,7 +134,7 @@ public class ArrayList<T> implements List<T> {
         if (index == elements.length - 1) {
             elements[size - 1] = null;
         } else {
-        System.arraycopy(elements,index + 1, elements, index, size - index - 1);
+            System.arraycopy(elements,index + 1, elements, index, size - index - 1);
         }
         size--;
     }
