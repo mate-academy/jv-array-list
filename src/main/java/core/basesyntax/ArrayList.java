@@ -7,17 +7,17 @@ public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private static final double RESIZE_FACTOR = 1.5;
 
-    private Object[] elementData;
+    private T[] elementData;
     private int size;
 
     public ArrayList() {
-        elementData = new Object[DEFAULT_CAPACITY];
+        elementData = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
     @Override
     public void add(T value) {
         if (size == elementData.length) {
-            growArray();
+            elementData = growArray();
         }
         elementData[size++] = value;
     }
@@ -26,9 +26,11 @@ public class ArrayList<T> implements List<T> {
     public void add(T value, int index) {
         checkIndexForAdd(index);
         if (size == elementData.length) {
-            growArray();
+            elementData = growArray();
         }
-        System.arraycopy(elementData, index, elementData, index + 1, size - index);
+        for (int i = size; i > index; i--) {
+            elementData[i] = elementData[i - 1];
+        }
         elementData[index] = value;
         size++;
     }
@@ -80,9 +82,9 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void growArray() {
+    private T[] growArray() {
         int newCapacity = (int) (elementData.length * RESIZE_FACTOR);
-        elementData = Arrays.copyOf(elementData, newCapacity);
+        return Arrays.copyOf(elementData, newCapacity);
     }
 
     private void checkIndex(int index) {
@@ -98,7 +100,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     private T elementData(int index) {
-        return (T) elementData[index];
+        return elementData[index];
     }
 
     private int indexOf(T element) {
