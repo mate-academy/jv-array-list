@@ -6,12 +6,16 @@ import java.util.Objects;
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_SIZE_ARRAY = 10;
     private static final double INCREASE_SIZE_NUM = 1.5;
-    private T[] elementArray = (T[]) new Object[DEFAULT_SIZE_ARRAY];
+    private T[] elementArray;
     private int size;
+
+    public ArrayList() {
+        elementArray = (T[]) new Object[DEFAULT_SIZE_ARRAY];
+    }
 
     @Override
     public void add(T value) {
-        checkCapacity();
+        GrowIfFull();
         elementArray[size] = value;
         ++size;
     }
@@ -19,7 +23,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         checkIndexAdd(index);
-        checkCapacity();
+        GrowIfFull();
         System.arraycopy(elementArray, index, elementArray, index + 1, size - index);
         elementArray[index] = value;
         ++size;
@@ -32,8 +36,7 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    @Override
-    public void increase() {
+    private void increase() {
         int newSize = (int) (elementArray.length * INCREASE_SIZE_NUM);
         T[] increaseArray = (T[]) new Object[newSize];
         System.arraycopy(elementArray, 0, increaseArray, 0, elementArray.length);
@@ -77,7 +80,7 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void checkCapacity() {
+    private void GrowIfFull() {
         if (size == elementArray.length) {
             increase();
         }
