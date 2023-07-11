@@ -68,12 +68,8 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         isIndexValid(index + 1);
         final T result = data[index];
-        if (index == size - 1) {
-            data[index] = null;
-        } else {
-            System.arraycopy(data, index + 1, data, index, size - index);
-            data[size - 1] = null;
-        }
+        System.arraycopy(data, index + 1, data, index, size - index - 1);
+        data[size - 1] = null;
         size--;
         return result;
     }
