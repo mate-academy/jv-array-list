@@ -49,6 +49,7 @@ public class ArrayList<T> implements List<T> {
         if (list.isEmpty()) {
             return;
         }
+
         int newSize = size + list.size();
         if (newSize > values.length) {
             resizeArray(newSize);
