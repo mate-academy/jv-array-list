@@ -3,9 +3,9 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    private static final int DEFAULT_ARRAY_SIZE = 10;
-    private Object[] innerArray = new Object[DEFAULT_ARRAY_SIZE];
-    private int size = 0;
+    private static final int DEFAULT_CAPACITY = 10;
+    private Object[] innerArray = new Object[DEFAULT_CAPACITY];
+    private int size;
 
     @Override
     public void add(T value) {
@@ -20,17 +20,9 @@ public class ArrayList<T> implements List<T> {
             checkIndex(index);
         }
         growIfArrayFull();
-        if (size == 0) {
-            add(value);
-        } else if (size == 1) {
-            innerArray[1] = innerArray[0];
-            innerArray[0] = value;
-            size++;
-        } else {
-            System.arraycopy(innerArray, index, innerArray, index + 1, size - index);
-            innerArray[index] = value;
-            size++;
-        }
+        System.arraycopy(innerArray, index, innerArray, index + 1, size - index);
+        innerArray[index] = value;
+        size++;
     }
 
     @Override
