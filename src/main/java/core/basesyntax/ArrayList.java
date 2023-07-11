@@ -5,8 +5,6 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_SIZE = 10;
-    private static final int CODE_ADD_COPY = 1;
-    private static final int CODE_MINUS_COPY = -1;
 
     private T[] values;
     private int size;
@@ -18,8 +16,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value) {
         checkSize();
-        values[size] = value;
-        size++;
+        values[size++] = value;
     }
 
     @Override
@@ -104,10 +101,10 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private T[] grow() {
+    private void grow() {
         int oldCapacity = values.length;
         int newCapacity = oldCapacity + (oldCapacity >> 1);
-        return values = Arrays.copyOf(values, newCapacity);
+        values = Arrays.copyOf(values, newCapacity);
     }
 
 }
