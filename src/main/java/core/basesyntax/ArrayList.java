@@ -15,7 +15,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        GrowIfFull();
+        growIfFull();
         elementArray[size] = value;
         ++size;
     }
@@ -23,7 +23,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         checkIndexAdd(index);
-        GrowIfFull();
+        growIfFull();
         System.arraycopy(elementArray, index, elementArray, index + 1, size - index);
         elementArray[index] = value;
         ++size;
@@ -80,7 +80,7 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void GrowIfFull() {
+    private void growIfFull() {
         if (size == elementArray.length) {
             increase();
         }
