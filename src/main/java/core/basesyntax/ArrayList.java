@@ -7,7 +7,11 @@ public class ArrayList<T> implements List<T> {
     private static int capacity = 10;
     private static final double RESIZE_FACTOR = 1.5;
     private int size;
-    private T[] elements = (T[]) new Object[capacity];
+    private T[] elements;
+
+    public ArrayList() {
+        elements = (T[]) new Object[capacity];
+    }
 
     @Override
     public void add(T value) {
@@ -47,11 +51,11 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         checkAddIndex(index);
         int updateSize = size - 1;
-        final T remove = elements[index];
+        final T removedElement = elements[index];
         System.arraycopy(elements, index + 1, elements, index, updateSize - index);
         elements[size - 1] = null;
         size--;
-        return remove;
+        return removedElement;
     }
 
     @Override
