@@ -16,18 +16,14 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (size == elementData.length) {
-            elementData = growArray();
-        }
+        growArray();
         elementData[size++] = value;
     }
 
     @Override
     public void add(T value, int index) {
         checkIndexForAdd(index);
-        if (size == elementData.length) {
-            elementData = growArray();
-        }
+        growArray();
         for (int i = size; i > index; i--) {
             elementData[i] = elementData[i - 1];
         }
@@ -82,9 +78,11 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private T[] growArray() {
+    private void growArray() {
         int newCapacity = (int) (elementData.length * RESIZE_FACTOR);
-        return Arrays.copyOf(elementData, newCapacity);
+        if (size == elementData.length) {
+            elementData = Arrays.copyOf(elementData, newCapacity);
+        }
     }
 
     private void checkIndex(int index) {
