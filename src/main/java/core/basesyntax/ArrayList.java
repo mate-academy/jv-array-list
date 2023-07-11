@@ -4,13 +4,8 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_ARRAY_SIZE = 10;
-    private Object[] innerArray;
+    private Object[] innerArray = new Object[DEFAULT_ARRAY_SIZE];
     private int size = 0;
-
-    public ArrayList() {
-        innerArray = new Object[DEFAULT_ARRAY_SIZE];
-        size = 0;
-    }
 
     @Override
     public void add(T value) {
