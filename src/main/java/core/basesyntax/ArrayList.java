@@ -19,7 +19,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("There`s no existing index in list: " + index);
+            throw new ArrayListIndexOutOfBoundsException("Absent index in list: " + index);
         }
         checkSize();
         System.arraycopy(elements, index, elements, index + 1, size - index);
@@ -61,12 +61,13 @@ public class ArrayList<T> implements List<T> {
     public T remove(T element) {
         int indexOfElement = 0;
         for (int i = 0; i < elements.length; i++) {
-            if (elements[i] == null && element == null || elements[i] != null && elements[i].equals(element)) {
+            if (elements[i] == null && element == null
+                    || elements[i] != null && elements[i].equals(element)) {
                 indexOfElement = i;
                 return remove(indexOfElement);
             }
         }
-            throw new NoSuchElementException("There`s no such element");
+        throw new NoSuchElementException("There`s no such element");
     }
 
     @Override
