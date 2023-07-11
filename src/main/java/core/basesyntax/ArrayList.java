@@ -87,7 +87,7 @@ public class ArrayList<T> implements List<T> {
         if (indexOfElement != -1) {
             return remove(indexOfElement);
         }
-        throw new NoSuchElementException();
+        throw new NoSuchElementException("Can't find the element - " + element);
     }
 
     @Override
