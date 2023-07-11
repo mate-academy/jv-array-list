@@ -4,8 +4,8 @@ import java.util.NoSuchElementException;
 import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
-    private T[] values;
     private static final int START_CAPACITY = 10;
+    private T[] values;
     private int size;
 
     public ArrayList() {
@@ -58,7 +58,6 @@ public class ArrayList<T> implements List<T> {
             values[size + i] = list.get(i);
         }
         size = newSize;
-
     }
 
     @Override
@@ -82,7 +81,7 @@ public class ArrayList<T> implements List<T> {
         if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
         }
-        T removedValue = values[index];
+        final T removedValue = values[index];
         System.arraycopy(values, index + 1, values, index, size - index - 1);
         values[size - 1] = null;
         size--;
