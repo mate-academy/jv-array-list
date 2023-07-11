@@ -6,8 +6,12 @@ public class ArrayList<T> implements List<T> {
     private static final int STOCK_ARRAY_LENGTH = 10;
     private static final float GROWTH_COEFICIENT = 1.5f;
 
-    private T[] array = (T[]) new Object[STOCK_ARRAY_LENGTH];
-    private int listSize = 0;
+    private T[] array;
+    private int listSize;
+
+    public ArrayList() {
+        this.array = (T[]) new Object[STOCK_ARRAY_LENGTH];
+    }
 
     @Override
     public void add(T value) {
