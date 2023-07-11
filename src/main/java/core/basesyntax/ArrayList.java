@@ -1,7 +1,6 @@
 package core.basesyntax;
 
 import java.util.NoSuchElementException;
-import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_SIZE_ARRAY = 10;
@@ -100,10 +99,15 @@ public class ArrayList<T> implements List<T> {
 
     private int findObject(T object) {
         for (int i = 0; i < size; ++i) {
-            if (Objects.equals(elementArray[i], object)) {
+            if (equals(elementArray[i], object)) {
                 return i;
             }
         }
         throw new NoSuchElementException("This " + object + "does not exist in array");
+    }
+
+    private boolean equals(T firstObject, T secondObject) {
+        return (firstObject == secondObject)
+                || (firstObject != null && firstObject.equals(secondObject));
     }
 }
