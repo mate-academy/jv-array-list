@@ -3,7 +3,6 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    private static final int NATURAL_NUMBER_BORDERLINE = 0;
     private static final int DEFAULT_CAPACITY = 10;
     private static final double CAPACITY_MULTIPLY_BY = 1.5;
     private static final String NEGATIVE_INDEX_ERROR = "Index should be natural number";
@@ -22,40 +21,32 @@ public class ArrayList<T> implements List<T> {
         } else if (capacity == 0) {
             data = (T[]) new Object[]{};
         } else {
-            throw new ArrayListIndexOutOfBoundsException(NEGATIVE_INDEX_ERROR);
+            throw new IllegalArgumentException(NEGATIVE_INDEX_ERROR);
         }
     }
 
     @Override
     public void add(T value) {
-        if (size < data.length) {
-            data[size] = value;
-            size++;
-        } else {
-            this.ensureCapacity();
-            this.add(value);
+        if (size >= data.length) {
+            increaseCapacity();
         }
+        data[size] = value;
+        size++;
     }
 
     @Override
     public void add(T value, int index) {
         isIndexValid(index);
-        if (size < data.length) {
-            System.arraycopy(data, index, data, index + 1, size - index);
-            data[index] = value;
-            size++;
-        } else {
-            this.ensureCapacity();
-            this.add(value, index);
+        if (size >= data.length) {
+            increaseCapacity();
         }
+        System.arraycopy(data, index, data, index + 1, size - index);
+        data[index] = value;
+        size++;
     }
 
     @Override
     public void addAll(List<T> list) {
-        if (size + list.size() > data.length) {
-            this.ensureCapacity();
-            this.addAll(list);
-        }
         for (int i = size; i < (size + list.size()); i++) {
             data[i] = list.get(i - size);
         }
@@ -111,20 +102,17 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public boolean isEmpty() {
-        return this.size() == 0;
+        return size == 0;
     }
 
-    private void ensureCapacity() {
+    private void increaseCapacity() {
         T[] newData = (T[]) new Object[(int)(size * CAPACITY_MULTIPLY_BY)];
         System.arraycopy(data, 0, newData, 0, size);
         data = newData;
     }
 
     private void isIndexValid(int index) {
-        if (index < NATURAL_NUMBER_BORDERLINE) {
-            throw new ArrayListIndexOutOfBoundsException(NEGATIVE_INDEX_ERROR);
-        }
-        if (index > size) {
+        if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException(INDEX_OUT_OF_SIZE_ERROR);
         }
     }
