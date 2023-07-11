@@ -27,9 +27,7 @@ public class ArrayList<T> implements List<T> {
             innerArray[0] = value;
             size++;
         } else {
-            for (int i = size; i > index; i--) {
-                innerArray[i] = innerArray[i - 1];
-            }
+            System.arraycopy(innerArray, index, innerArray, index + 1, size - index);
             innerArray[index] = value;
             size++;
         }
@@ -58,24 +56,14 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         checkIndex(index);
         T removedItem = (T) innerArray[index];
-        for (int i = index; i < size - 1; i++) {
-            innerArray[i] = innerArray[i + 1];
-        }
+        System.arraycopy(innerArray, index + 1, innerArray, index, size - index);
         size--;
         return removedItem;
     }
 
     @Override
     public T remove(T element) {
-        T removedItem = null;
-        for (int i = 0; i < size; i++) {
-            T castedObject = (T) innerArray[i];
-            if ((castedObject == element) || (castedObject != null
-                    && castedObject.equals(element))) {
-                return remove(i);
-            }
-        }
-        throw new NoSuchElementException("There is no element " + element);
+        return remove(findIndexByElement(element));
     }
 
     @Override
@@ -104,5 +92,17 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayListIndexOutOfBoundsException("You can't input a negative index. "
                     + index + " is below zero!");
         }
+    }
+
+    private int findIndexByElement(T element) {
+        T removedItem = null;
+        for (int i = 0; i < size; i++) {
+            T castedObject = (T) innerArray[i];
+            if ((castedObject == element) || (castedObject != null
+                    && castedObject.equals(element))) {
+                return i;
+            }
+        }
+        throw new NoSuchElementException("There is no element " + element);
     }
 }
