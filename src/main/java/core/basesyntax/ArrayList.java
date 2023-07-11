@@ -12,15 +12,12 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value) {
         checkSize();
-        elements[size] = value;
-        size++;
+        elements[size++] = value;
     }
 
     @Override
     public void add(T value, int index) {
-        if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("out of bound exception");
-        }
+        checkIndex(index);
         checkSize();
         System.arraycopy(elements, index, elements, index + 1, size - index);
         elements[index] = value;
@@ -36,25 +33,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("out of bound exception");
-        }
+        checkAddIndex(index);
         return elements[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("out of bound exception");
-        }
+        checkAddIndex(index);
         elements[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("out of bound exception");
-        }
+        checkAddIndex(index);
         int updateSize = size - 1;
         final T remove = elements[index];
         System.arraycopy(elements, index + 1, elements, index, updateSize - index);
@@ -81,10 +72,7 @@ public class ArrayList<T> implements List<T> {
 
     private void checkSize() {
         if (size == capacity) {
-            capacity *= RESIZE_FACTOR;
-            T[] copy = elements;
-            elements = (T[]) new Object[capacity];
-            System.arraycopy(copy, 0, elements, 0, size);
+            grow();
         }
     }
 
@@ -95,5 +83,27 @@ public class ArrayList<T> implements List<T> {
             }
         }
         throw new NoSuchElementException("Can't remove element " + element);
+    }
+
+    private void checkAddIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException(String.format("Out of bound exception."
+                    + " %s is not included in the length %s", index, size()));
+        }
+    }
+
+    private void checkIndex(int index) {
+        if (index < 0 || index > size) {
+            throw new ArrayListIndexOutOfBoundsException(
+                    String.format("Out of bound exception."
+                            + " %s is not included in the length %s", index, size()));
+        }
+    }
+
+    private void grow() {
+        capacity *= RESIZE_FACTOR;
+        T[] copy = elements;
+        elements = (T[]) new Object[capacity];
+        System.arraycopy(copy, 0, elements, 0, size);
     }
 }
