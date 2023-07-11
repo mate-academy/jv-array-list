@@ -98,6 +98,7 @@ public class ArrayList<T> implements List<T> {
     private void growIfNeeded() {
         if (elements.length == 1 && elements.length == size) {
             Object[] newArray = new Object[DEFAULT_CAPACITY];
+            System.arraycopy(elements, 0, newArray, 0, size);
             elements = newArray;
         }
         if (elements.length == size) {
