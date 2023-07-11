@@ -39,14 +39,9 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        isIndexNatural(index);
-        if (index > size) {
-            throw new ArrayListIndexOutOfBoundsException(INDEX_OUT_OF_SIZE_ERROR);
-        }
+        isIndexValid(index);
         if (size < data.length) {
-            for (int i = size; i > index; i--) {
-                data[i] = data [i - 1];
-            }
+            System.arraycopy(data, index, data, index + 1, size - index);
             data[index] = value;
             size++;
         } else {
@@ -69,33 +64,26 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        isIndexNatural(index);
-        if (index >= size) {
-            throw new ArrayListIndexOutOfBoundsException(INDEX_OUT_OF_SIZE_ERROR);
-        }
+        isIndexValid(index + 1);
         return data[index];
     }
 
     @Override
     public void set(T value, int index) {
-        isIndexNatural(index);
-        if (index >= size) {
-            throw new ArrayListIndexOutOfBoundsException(INDEX_OUT_OF_SIZE_ERROR);
-        }
+        isIndexValid(index + 1);
         data[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        isIndexNatural(index);
-        if (index >= size) {
-            throw new ArrayListIndexOutOfBoundsException(INDEX_OUT_OF_SIZE_ERROR);
-        }
+        isIndexValid(index + 1);
         final T result = data[index];
-        for (int i = index; i < size - 1; i++) {
-            data[i] = data[i + 1];
+        if (index == size - 1) {
+            data[index] = null;
+        } else {
+            System.arraycopy(data, index + 1, data, index, size - index);
+            data[size - 1] = null;
         }
-        data[size - 1] = null;
         size--;
         return result;
     }
@@ -132,9 +120,12 @@ public class ArrayList<T> implements List<T> {
         data = newData;
     }
 
-    private void isIndexNatural(int index) {
+    private void isIndexValid(int index) {
         if (index < NATURAL_NUMBER_BORDERLINE) {
             throw new ArrayListIndexOutOfBoundsException(NEGATIVE_INDEX_ERROR);
+        }
+        if (index > size) {
+            throw new ArrayListIndexOutOfBoundsException(INDEX_OUT_OF_SIZE_ERROR);
         }
     }
 
