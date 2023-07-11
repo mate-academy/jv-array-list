@@ -4,10 +4,14 @@ import core.basesyntax.util.ObjectUtil;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    private static int capacity = 10;
+    private static final int CAPACITY = 10;
     private static final double RESIZE_FACTOR = 1.5;
     private int size;
-    private T[] elements = (T[]) new Object[capacity];
+    private T[] elements;
+
+    public ArrayList() {
+        elements = (T[]) new Object[CAPACITY];
+    }
 
     @Override
     public void add(T value) {
@@ -18,7 +22,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        checkAddAtIndex(index);
+        checkAddIndex(index);
         checkCapacity();
         System.arraycopy(elements, index, elements, index + 1, size - index);
         elements[index] = value;
@@ -71,17 +75,16 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void checkCapacity() {
-        if (capacity == size) {
+        if (elements.length == size) {
             increaseCapacity();
         }
     }
 
     private void increaseCapacity() {
-        capacity *= RESIZE_FACTOR;
+        int capacity = (int) Math.round(elements.length * RESIZE_FACTOR);
         T[] newElements = elements;
         elements = (T[]) new Object[capacity];
         System.arraycopy(newElements, 0, elements, 0, size);
-
     }
 
     private void checkIndex(int index) {
@@ -90,7 +93,7 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private void checkAddAtIndex(int index) {
+    private void checkAddIndex(int index) {
         if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException("Index out of bounds: " + index);
         }
