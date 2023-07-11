@@ -4,8 +4,12 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    private Object[] innerArray = new Object[DEFAULT_CAPACITY];
+    private Object[] innerArray;
     private int size;
+
+    public ArrayList() {
+        innerArray = new Object[DEFAULT_CAPACITY];
+    }
 
     @Override
     public void add(T value) {
@@ -77,12 +81,8 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void checkIndex(int index) {
-        if (index >= size && index != 0) {
-            throw new ArrayListIndexOutOfBoundsException("There is no element at index " + index);
-        }
-        if (index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("You can't input a negative index. "
-                    + index + " is below zero!");
+        if (index >= size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Index " + index + "out of bounds");
         }
     }
 
