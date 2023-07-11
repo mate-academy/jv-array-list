@@ -11,7 +11,6 @@ public class ArrayList<T> implements List<T> {
 
     public ArrayList() {
         elements = new Object[DEFAULT_CAPACITY];
-        size = 0;
     }
 
     @Override
@@ -31,9 +30,7 @@ public class ArrayList<T> implements List<T> {
         if (size == elements.length) {
             expandCapacity();
         }
-        for (int i = size; i > index; i--) {
-            elements[i] = elements[i - 1];
-        }
+        System.arraycopy(elements, index, elements, index + 1, size - index);
         elements[index] = value;
         size++;
     }
@@ -68,9 +65,7 @@ public class ArrayList<T> implements List<T> {
         checkIndex(index);
         final T removedElement = (T) elements[index];
 
-        for (int i = index; i < size - 1; i++) {
-            elements[i] = elements[i + 1];
-        }
+        System.arraycopy(elements, index + 1, elements, index, size - index - 1);
 
         elements[size - 1] = null;
         size--;
@@ -81,14 +76,9 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if (element == null) {
-                if (elements[i] == null) {
-                    return remove(i);
-                }
-            } else {
-                if (element.equals(elements[i])) {
-                    return remove(i);
-                }
+            if (element == null && elements[i] == null || element != null
+                    && element.equals(elements[i])) {
+                return remove(i);
             }
         }
         throw new NoSuchElementException("Element not found: " + element);
