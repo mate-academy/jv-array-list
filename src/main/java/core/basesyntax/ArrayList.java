@@ -40,7 +40,7 @@ public class ArrayList<T> implements List<T> {
         int requiredCapacity = size + list.size();
         ensureCapacity(requiredCapacity);
         for (int i = 0; i < list.size(); i++) {
-            elementData[size++] = list.get(i);
+            add(list.get(i));
         }
     }
 
