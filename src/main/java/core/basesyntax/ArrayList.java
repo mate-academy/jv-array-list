@@ -1,7 +1,7 @@
 package core.basesyntax;
 
+import java.util.Arrays;
 import java.util.NoSuchElementException;
-import org.apache.commons.lang.ObjectUtils;
 
 public class ArrayList<T> implements List<T> {
     private static int capacity = 10;
@@ -21,7 +21,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        checkIndex(index);
+        checkAddIndex(index);
         checkSize();
         System.arraycopy(elements, index, elements, index + 1, size - index);
         elements[index] = value;
@@ -37,19 +37,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        checkAddIndex(index);
+        checkIndex(index);
         return elements[index];
     }
 
     @Override
     public void set(T value, int index) {
-        checkAddIndex(index);
+        checkIndex(index);
         elements[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        checkAddIndex(index);
+        checkIndex(index);
         int updateSize = size - 1;
         final T removedElement = elements[index];
         System.arraycopy(elements, index + 1, elements, index, updateSize - index);
@@ -60,8 +60,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        remove(getIndexByElement(element));
-        return element;
+        return remove(getIndexByElement(element));
     }
 
     @Override
@@ -81,26 +80,25 @@ public class ArrayList<T> implements List<T> {
     }
 
     private int getIndexByElement(T element) {
-        for (int i = 0; i < elements.length; i++) {
-            if (ObjectUtils.equals(elements[i], element)) {
-                return i;
-            }
+        int index = Arrays.asList(elements).indexOf(element);
+        if (index != -1) {
+            return index;
         }
         throw new NoSuchElementException("Can't remove element " + element);
     }
 
-    private void checkAddIndex(int index) {
+    private void checkIndex(int index) {
         if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException(String.format("Out of bound exception."
-                    + " %s is not included in the length %s", index, size()));
+                    + " %s is not included in the length %s", index, size));
         }
     }
 
-    private void checkIndex(int index) {
+    private void checkAddIndex(int index) {
         if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException(
                     String.format("Out of bound exception."
-                            + " %s is not included in the length %s", index, size()));
+                            + " %s is not included in the length %s", index, size));
         }
     }
 
