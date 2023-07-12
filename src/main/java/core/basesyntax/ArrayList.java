@@ -30,22 +30,12 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Incorrect index provided");
-        }
-        if (index > size && index < size + ONE) {
-            size = index;
-        } else if (index > size + ONE) {
-            throw new ArrayListIndexOutOfBoundsException("Incorrect index provided");
-        }
-        int newLength = size + ONE;
-        if (newLength >= elementData.length || index > elementData.length) {
+        validateAddIndex(index);
+        if (size + ONE >= elementData.length || index >= elementData.length) {
             elementData = grow();
         }
-        if (index != size + ONE) {
-            System.arraycopy(elementData, index, elementData,
-                    index + ONE, newLength - index);
-        }
+        System.arraycopy(elementData, index, elementData, index + ONE,
+                size + ONE - index);
         elementData[index] = value;
         size++;
     }
@@ -119,6 +109,12 @@ public class ArrayList<T> implements List<T> {
 
     private void validateIndex(int index) {
         if (index >= size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Incorrect index provided");
+        }
+    }
+
+    private void validateAddIndex(int index) {
+        if (index > size + ONE || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Incorrect index provided");
         }
     }
