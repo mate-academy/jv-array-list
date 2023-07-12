@@ -1,7 +1,6 @@
 package core.basesyntax;
 
 import java.util.NoSuchElementException;
-import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
@@ -10,7 +9,7 @@ public class ArrayList<T> implements List<T> {
 
     public ArrayList(int capacity) {
         if (capacity <= 0) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("Illegal Capacity: " + capacity);
         }
         elements = new Object[capacity];
     }
@@ -25,7 +24,7 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private void makeSizeBigger() {
+    private void resizeIfNeed() {
         if (elements.length == size) {
             Object[] newArray = new Object[elements.length * 2];
             System.arraycopy(elements, 0, newArray, 0, size);
@@ -34,9 +33,17 @@ public class ArrayList<T> implements List<T> {
     }
 
     private int indexOf(T element) {
-        for (int i = 0; i < size; i++) {
-            if (Objects.equals(element, elements[i])) {
-                return i;
+        if (element == null) {
+            for (int i = 0; i < size; i++) {
+                if (elements[i] == null) {
+                    return i;
+                }
+            }
+        } else {
+            for (int i = 0; i < size; i++) {
+                if (element.equals(elements[i])) {
+                    return i;
+                }
             }
         }
         return -1;
@@ -44,7 +51,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        makeSizeBigger();
+        resizeIfNeed();
         elements[size] = value;
         size++;
     }
@@ -54,7 +61,7 @@ public class ArrayList<T> implements List<T> {
         if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException("Index out of bounds: " + index);
         }
-        makeSizeBigger();
+        resizeIfNeed();
         System.arraycopy(elements, index, elements, index + 1, size - index);
         elements[index] = value;
         size++;
@@ -62,7 +69,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        makeSizeBigger();
+        resizeIfNeed();
         for (int i = 0; i < list.size(); i++) {
             elements[size] = list.get(i);
             size++;
