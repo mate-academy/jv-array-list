@@ -4,9 +4,14 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final double MAGNIFICATION_FACTOR = 1.5;
-    private static int defaultCapacity = 10;
+    private static final int DEFAULT_CAPACITY = 10;
     private int size;
-    private T[] elements = (T[]) new Object[defaultCapacity];
+    private T[] elements;
+
+    public ArrayList() {
+        elements = (T[]) new Object[DEFAULT_CAPACITY];
+        size = 0;
+    }
 
     @Override
     public void add(T value) {
@@ -74,8 +79,8 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void growIfArrayFull() {
-        if (size == defaultCapacity) {
-            defaultCapacity *= MAGNIFICATION_FACTOR;
+        if (size == elements.length) {
+            int defaultCapacity = (int) (elements.length * MAGNIFICATION_FACTOR);
             T[] value = elements;
             elements = (T[]) new Object[defaultCapacity];
             System.arraycopy(value, 0, elements, 0, size);
@@ -83,12 +88,8 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void indexCheck(int listIndex) {
-        if (listIndex < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Entered negative index " + listIndex);
-        }
-        if (listIndex >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Entered index " + listIndex
-                    + " exceeds the size");
+        if (listIndex < 0 || listIndex >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Index " + listIndex + " out of bound");
         }
     }
 }
