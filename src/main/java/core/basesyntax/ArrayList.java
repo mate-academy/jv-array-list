@@ -24,8 +24,10 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        rangeCheckForAdd(index);
-        if (size == elementData.length) {
+        if (index != size) {
+            rangeCheck(index);
+        }
+        if (size >= elementData.length) {
             elementData = grow();
         }
         System.arraycopy(this.elementData, index, this.elementData, index + 1, size - index);
@@ -33,40 +35,14 @@ public class ArrayList<T> implements List<T> {
         size++;
     }
 
-    private void rangeCheckForAdd(int index) {
-        if (index > size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException(outOfBoundsMsg(index));
-        }
-    }
-
-    private void rangeCheck(int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException(outOfBoundsMsg(index));
-        }
-    }
-
-    private String outOfBoundsMsg(int index) {
-        return "Index: " + index + ", Size: " + size;
-    }
-
     @Override
     public void addAll(List<T> list) {
-        Object[] a = list.toArray();
-        int numNew = a.length;
-        if (numNew == 0) {
+        if (list.size() == 0) {
             return;
         }
-        Object[] elementData;
-        final int s;
-        if (numNew > (elementData = this.elementData).length - (s = size)) {
-            elementData = grow(s + numNew);
+        for (int i = 0; i < list.size(); i++) {
+            add(list.get(i));
         }
-        System.arraycopy(a, 0, elementData, s, numNew);
-        size = s + numNew;
-    }
-
-    public Object[] toArray() {
-        return Arrays.copyOf(elementData, size);
     }
 
     @Override
@@ -115,14 +91,6 @@ public class ArrayList<T> implements List<T> {
         return element;
     }
 
-    private void fastRemove(Object[] es, int i) {
-        final int newSize;
-        if ((newSize = size - 1) > i) {
-            System.arraycopy(es, i + 1, es, i, newSize - i);
-        }
-        es[size = newSize] = null;
-    }
-
     @Override
     public int size() {
         return size;
@@ -131,6 +99,24 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private void rangeCheck(int index) {
+        if (index >= size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException(outOfBoundsMsg(index));
+        }
+    }
+
+    private String outOfBoundsMsg(int index) {
+        return "Index: " + index + "out of bounds, cause size is: " + size;
+    }
+
+    private void fastRemove(Object[] es, int i) {
+        final int newSize;
+        if ((newSize = size - 1) > i) {
+            System.arraycopy(es, i + 1, es, i, newSize - i);
+        }
+        es[size = newSize] = null;
     }
 
     private Object[] grow() {
