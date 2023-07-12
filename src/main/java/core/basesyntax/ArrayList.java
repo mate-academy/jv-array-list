@@ -4,27 +4,27 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     public static final int INITIAL_ARRAY_SIZE = 10;
-    public static final int RESIZE_NUMBER = 5;
+    public static final double RESIZE_NUMBER = 1.5;
 
-    private T[] arr;
+    private T[] initialArr;
     private int elementsCount;
 
     public ArrayList() {
-        arr = (T[]) new Object[INITIAL_ARRAY_SIZE];
+        initialArr = (T[]) new Object[INITIAL_ARRAY_SIZE];
     }
 
     @Override
     public void add(T value) {
-        checkIfNeedArrayResize();
-        arr[elementsCount++] = value;
+        checkResize();
+        initialArr[elementsCount++] = value;
     }
 
     @Override
     public void add(T value, int index) {
-        checkIndexWhileAddElement(index);
-        checkIfNeedArrayResize();
+        checkIndexForAdd(index);
+        checkResize();
         shiftArrayToRight(index);
-        arr[index] = value;
+        initialArr[index] = value;
         elementsCount++;
     }
 
@@ -37,39 +37,31 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        checkIfIndexCorrect(index);
-        return arr[index];
+        checkIndex(index);
+        return initialArr[index];
     }
 
     @Override
     public void set(T value, int index) {
-        checkIfIndexCorrect(index);
-        arr[index] = value;
+        checkIndex(index);
+        initialArr[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        checkIfIndexCorrect(index);
-        final T removedElement = arr[index];
+        checkIndex(index);
+        final T removedElement = initialArr[index];
         shiftArrayToLeft(index);
-        arr[elementsCount - 1] = null;
+        initialArr[elementsCount - 1] = null;
         elementsCount--;
         return removedElement;
     }
 
     @Override
     public T remove(T element) {
-        if (element == null) {
-            for (int i = 0; i < elementsCount; i++) {
-                if (arr[i] == null) {
-                    return remove(i);
-                }
-            }
-        } else {
-            int index = findCorrectIndex(element);
-            if (index != -1) {
-                return remove(index);
-            }
+        int index = findCorrectIndex(element);
+        if (index != -1) {
+            return remove(index);
         }
         throw new NoSuchElementException("Element not found: " + element);
     }
@@ -84,35 +76,36 @@ public class ArrayList<T> implements List<T> {
         return elementsCount == 0;
     }
 
-    private void checkIfNeedArrayResize() {
-        if (elementsCount == arr.length) {
+    private void checkResize() {
+        if (elementsCount == initialArr.length) {
             resizeArray();
         }
     }
 
     private void shiftArrayToRight(int shiftIndex) {
-        checkIfNeedArrayResize();
-        System.arraycopy(arr, shiftIndex, arr, shiftIndex + 1, elementsCount - shiftIndex);
+        System.arraycopy(initialArr, shiftIndex, initialArr,
+                shiftIndex + 1, elementsCount - shiftIndex);
     }
 
     private void shiftArrayToLeft(int shiftIndex) {
-        System.arraycopy(arr, shiftIndex + 1, arr, shiftIndex, elementsCount - shiftIndex - 1);
+        System.arraycopy(initialArr, shiftIndex + 1, initialArr,
+                shiftIndex, elementsCount - shiftIndex - 1);
     }
 
     private void resizeArray() {
-        int newArrayCapacity = arr.length + RESIZE_NUMBER;
+        int newArrayCapacity = (int) (initialArr.length * RESIZE_NUMBER);
         T[] resizedArray = (T[]) new Object[newArrayCapacity];
-        System.arraycopy(arr, 0, resizedArray, 0, elementsCount);
-        arr = resizedArray;
+        System.arraycopy(initialArr, 0, resizedArray, 0, elementsCount);
+        initialArr = resizedArray;
     }
 
-    private void checkIfIndexCorrect(int index) {
+    private void checkIndex(int index) {
         if (index < 0 || index >= elementsCount) {
             throw new ArrayListIndexOutOfBoundsException("Index out of range: " + index);
         }
     }
 
-    private void checkIndexWhileAddElement(int index) {
+    private void checkIndexForAdd(int index) {
         if (index < 0 || index > elementsCount) {
             throw new ArrayListIndexOutOfBoundsException("Index out of range: " + index);
         }
@@ -120,7 +113,8 @@ public class ArrayList<T> implements List<T> {
 
     private int findCorrectIndex(T element) {
         for (int i = 0; i < elementsCount; i++) {
-            if (arr[i] != null && arr[i].equals(element)) {
+            if (initialArr[i] == element || initialArr[i] != null
+                    && initialArr[i].equals(element)) {
                 return i;
             }
         }
