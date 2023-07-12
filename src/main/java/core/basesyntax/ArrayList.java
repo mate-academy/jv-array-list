@@ -4,7 +4,6 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private T[] values;
-
     private int size;
 
     public ArrayList() {
