@@ -22,7 +22,11 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        checkAddIndexOfBoundException(index);
+        if (index == size) {
+            add(value);
+            return;
+        }
+        checkIndexOfBoundException(index);
         checkForGrow();
         System.arraycopy(items, index, items, index + 1, size - index);
         items[index] = value;
@@ -32,7 +36,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void addAll(List<T> list) {
         for (int i = 0; i < list.size(); i++) {
-            grow();
+            checkForGrow();
             items[size] = list.get(i);
             size++;
         }
@@ -64,10 +68,12 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        for (int i = 0; i < items.length; i++) {
-            if (element == items[i] || element != null && element.equals(items[i])) {
-                return remove(i);
+        int indexCounter = 0;
+        for (T item : items) {
+            if (element == item || element != null && element.equals(item)) {
+                return remove(indexCounter);
             }
+            indexCounter++;
         }
         throw new NoSuchElementException("Element " + element + " are not exist.");
     }
@@ -97,12 +103,6 @@ public class ArrayList<T> implements List<T> {
 
     private void checkIndexOfBoundException(int index) {
         if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index " + index + " out of bound.");
-        }
-    }
-
-    private void checkAddIndexOfBoundException(int index) {
-        if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException("Index " + index + " out of bound.");
         }
     }
