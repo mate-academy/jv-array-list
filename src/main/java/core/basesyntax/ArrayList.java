@@ -1,13 +1,13 @@
 package core.basesyntax;
 
 import java.util.NoSuchElementException;
-import org.apache.commons.lang.ObjectUtils;
+import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
-    private static int dimension = 10;
+    private static int capacity = 10;
     private static final double INCREASING_COEFFICIENT = 1.5;
     private int size;
-    private T[] array = (T[]) new Object[dimension];
+    private T[] array = (T[]) new Object[capacity];
 
     @Override
     public void add(T value) {
@@ -58,7 +58,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if (ObjectUtils.equals(element, array[i])) {
+            if (Objects.equals(element, array[i])) {
                 remove(i);
                 return element;
             }
@@ -78,9 +78,9 @@ public class ArrayList<T> implements List<T> {
 
     public void addable() {
         if (array.length == size) {
-            dimension = (int) (dimension * INCREASING_COEFFICIENT);
+            capacity = (int) (capacity * INCREASING_COEFFICIENT);
             T[] tmpArray = array;
-            array = (T[]) new Object[dimension];
+            array = (T[]) new Object[capacity];
             System.arraycopy(tmpArray, 0, array, 0, size);
         }
     }
