@@ -5,12 +5,13 @@ import java.util.NoSuchElementException;
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private static final double DEFAULT_RESIZE_VALUE = 1.5;
-    private int changeableCapacity = 10;
+    private int changeableCapacity;
     private int size;
     private T[] elements;
 
     public ArrayList() {
         elements = (T[]) new Object[DEFAULT_CAPACITY];
+        changeableCapacity = 10;
     }
 
     @Override
