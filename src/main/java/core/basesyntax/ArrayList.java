@@ -44,7 +44,7 @@ public class ArrayList<T> implements List<T> {
         }
         if (index > size && index < size + ONE_ELEMENT) {
             size = index;
-        } else if (index > size && index > size + ONE_ELEMENT) {
+        } else if (index > size + ONE_ELEMENT) {
             throw new ArrayListIndexOutOfBoundsException("Incorrect index provided");
         }
         int newLength = size + ONE_ELEMENT;
@@ -72,25 +72,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Incorrect index provided");
-        }
+        validateIndex(index);
         return (T) elementData[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Incorrect index provided");
-        }
+        validateIndex(index);
         elementData[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Incorrect index provided");
-        }
+        validateIndex(index);
         final Object temp = elementData[index];
         if (index != size - ONE_ELEMENT) {
             System.arraycopy(elementData, index + ONE_ELEMENT, elementData, index, size - index);
@@ -134,5 +128,11 @@ public class ArrayList<T> implements List<T> {
             }
         }
         return -1;
+    }
+
+    private void validateIndex(int index) {
+        if (index >= size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Incorrect index provided");
+        }
     }
 }
