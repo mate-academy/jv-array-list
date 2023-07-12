@@ -5,7 +5,7 @@ import java.util.NoSuchElementException;
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private static final int EMPTY_SIZE = 0;
-    private static final double SIZE_INCREASE = 1.5;
+    private static final double SIZE_MULTIPLIER = 1.5;
     private int size;
     private T[] items;
 
@@ -26,7 +26,7 @@ public class ArrayList<T> implements List<T> {
             add(value);
             return;
         }
-        checkIndexOfBoundException(index);
+        checkIndexOfBound(index);
         checkForGrow();
         System.arraycopy(items, index, items, index + 1, size - index);
         items[index] = value;
@@ -44,19 +44,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        checkIndexOfBoundException(index);
+        checkIndexOfBound(index);
         return items[index];
     }
 
     @Override
     public void set(T value, int index) {
-        checkIndexOfBoundException(index);
+        checkIndexOfBound(index);
         items[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        checkIndexOfBoundException(index);
+        checkIndexOfBound(index);
         final T removedItem = items[index];
         for (int i = index; i < size - 1; i++) {
             items[i] = items[i + 1];
@@ -68,12 +68,10 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        int indexCounter = 0;
-        for (T item : items) {
-            if (element == item || element != null && element.equals(item)) {
-                return remove(indexCounter);
+        for (int i = 0; i < items.length; i++) {
+            if (element == items[i] || element != null && element.equals(items[i])) {
+                return remove(i);
             }
-            indexCounter++;
         }
         throw new NoSuchElementException("Element " + element + " are not exist.");
     }
@@ -89,7 +87,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void grow() {
-        int newSize = (int) (items.length * SIZE_INCREASE);
+        int newSize = (int) (items.length * SIZE_MULTIPLIER);
         T[] oldItems = items;
         items = (T[]) new Object[newSize];
         System.arraycopy(oldItems, 0, items, 0, size);
@@ -101,7 +99,7 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private void checkIndexOfBoundException(int index) {
+    private void checkIndexOfBound(int index) {
         if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException("Index " + index + " out of bound.");
         }
