@@ -4,44 +4,12 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_SIZE_ARRAY = 10;
-    private static final double INCREASE_SIZE_NUM = 1.5;
+    private static final double INCREASE_SIZE_NUMBER = 1.5;
     private T[] elementArray;
     private int size;
 
     public ArrayList() {
         elementArray = (T[]) new Object[DEFAULT_SIZE_ARRAY];
-    }
-
-    private void growIfFull() {
-        if (size == elementArray.length) {
-            increase();
-        }
-    }
-
-    private void checkIndex(int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index " + index + " out of bounds ");
-        }
-    }
-
-    private void checkIndexAdd(int index) {
-        if (index > size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index " + index + " out of bounds ");
-        }
-    }
-
-    private int findIndex(T object) {
-        for (int i = 0; i < size; ++i) {
-            if (equals(elementArray[i], object)) {
-                return i;
-            }
-        }
-        throw new NoSuchElementException("This " + object + "does not exist in array");
-    }
-
-    private boolean equals(T firstObject, T secondObject) {
-        return firstObject == secondObject
-                || firstObject != null && firstObject.equals(secondObject);
     }
 
     @Override
@@ -65,13 +33,6 @@ public class ArrayList<T> implements List<T> {
         for (int i = 0; i < list.size(); ++i) {
             add(list.get(i));
         }
-    }
-
-    private void increase() {
-        int newSize = (int) (elementArray.length * INCREASE_SIZE_NUM);
-        T[] increaseArray = (T[]) new Object[newSize];
-        System.arraycopy(elementArray, 0, increaseArray, 0, elementArray.length);
-        elementArray = increaseArray;
     }
 
     @Override
@@ -109,5 +70,44 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private void growIfFull() {
+        if (size == elementArray.length) {
+            increase();
+        }
+    }
+
+    private void checkIndex(int index) {
+        if (index >= size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Index " + index + " out of bounds ");
+        }
+    }
+
+    private void checkIndexAdd(int index) {
+        if (index > size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Index " + index + " out of bounds ");
+        }
+    }
+
+    private int findIndex(T object) {
+        for (int i = 0; i < size; ++i) {
+            if (equals(elementArray[i], object)) {
+                return i;
+            }
+        }
+        throw new NoSuchElementException("This " + object + "does not exist in array");
+    }
+
+    private boolean equals(T firstObject, T secondObject) {
+        return firstObject == secondObject
+                || firstObject != null && firstObject.equals(secondObject);
+    }
+
+    private void increase() {
+        int newSize = (int) (elementArray.length * INCREASE_SIZE_NUMBER);
+        T[] increaseArray = (T[]) new Object[newSize];
+        System.arraycopy(elementArray, 0, increaseArray, 0, elementArray.length);
+        elementArray = increaseArray;
     }
 }
