@@ -33,17 +33,9 @@ public class ArrayList<T> implements List<T> {
     }
 
     private int indexOf(T element) {
-        if (element == null) {
-            for (int i = 0; i < size; i++) {
-                if (elements[i] == null) {
-                    return i;
-                }
-            }
-        } else {
-            for (int i = 0; i < size; i++) {
-                if (element.equals(elements[i])) {
-                    return i;
-                }
+        for (int i = 0; i < size; i++) {
+            if (element == elements[i] || element != null && element.equals(elements[i])) {
+                return i;
             }
         }
         return -1;
