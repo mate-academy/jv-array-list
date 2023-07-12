@@ -29,12 +29,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        int newLength = size + ONE_ELEMENT;
-        if (newLength > elementData.length) {
-            elementData = grow();
-        }
-        elementData[size] = value;
-        size++;
+        add(value,size);
     }
 
     @Override
