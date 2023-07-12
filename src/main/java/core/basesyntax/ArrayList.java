@@ -5,25 +5,13 @@ import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
     private static final int START_CAPACITY = 10;
+    private static final double ENLARGEMENT_COEFFICIENT = 1.5;
     private T[] values;
     private int size;
 
     public ArrayList() {
         this.values = (T[]) new Object[START_CAPACITY];
         size = 0;
-    }
-
-    private void resizeArray(int newSize) {
-        T[] newValues = (T[]) new Object[newSize];
-        System.arraycopy(values, 0, newValues, 0, size);
-        values = newValues;
-    }
-
-    private void resizeArrayIfNeeded() {
-        if (size == values.length) {
-            int newSize = (int) (values.length * 1.5);
-            resizeArray(newSize);
-        }
     }
 
     @Override
@@ -62,25 +50,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
-        }
+        checkIndex(index);
         return values[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
-        }
+        checkIndex(index);
         values[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
-        }
+        checkIndex(index);
         final T removedValue = values[index];
         System.arraycopy(values, index + 1, values, index, size - index - 1);
         values[size - 1] = null;
@@ -106,5 +88,24 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private void checkIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
+        }
+    }
+
+    private void resizeArray(int newSize) {
+        T[] newValues = (T[]) new Object[newSize];
+        System.arraycopy(values, 0, newValues, 0, size);
+        values = newValues;
+    }
+
+    private void resizeArrayIfNeeded() {
+        if (size == values.length) {
+            int newSize = (int) (values.length * ENLARGEMENT_COEFFICIENT);
+            resizeArray(newSize);
+        }
     }
 }
