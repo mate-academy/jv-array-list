@@ -7,6 +7,10 @@ public class ArrayList<T> implements List<T> {
     private Object[] elements;
     private int size;
 
+    public ArrayList() {
+        this(DEFAULT_CAPACITY);
+    }
+
     public ArrayList(int capacity) {
         if (capacity <= 0) {
             throw new IllegalArgumentException("Illegal Capacity: " + capacity);
@@ -14,36 +18,9 @@ public class ArrayList<T> implements List<T> {
         elements = new Object[capacity];
     }
 
-    public ArrayList() {
-        this(DEFAULT_CAPACITY);
-    }
-
-    private void checkIndex(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index out of bounds: " + index);
-        }
-    }
-
-    private void resizeIfNeed() {
-        if (elements.length == size) {
-            Object[] newArray = new Object[elements.length * 2];
-            System.arraycopy(elements, 0, newArray, 0, size);
-            elements = newArray;
-        }
-    }
-
-    private int indexOf(T element) {
-        for (int i = 0; i < size; i++) {
-            if (element == elements[i] || element != null && element.equals(elements[i])) {
-                return i;
-            }
-        }
-        return -1;
-    }
-
     @Override
     public void add(T value) {
-        resizeIfNeed();
+        resizeIfNeeded();
         elements[size] = value;
         size++;
     }
@@ -53,7 +30,7 @@ public class ArrayList<T> implements List<T> {
         if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException("Index out of bounds: " + index);
         }
-        resizeIfNeed();
+        resizeIfNeeded();
         System.arraycopy(elements, index, elements, index + 1, size - index);
         elements[index] = value;
         size++;
@@ -61,10 +38,9 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        resizeIfNeed();
+        resizeIfNeeded();
         for (int i = 0; i < list.size(); i++) {
-            elements[size] = list.get(i);
-            size++;
+            add(list.get(i));
         }
     }
 
@@ -83,9 +59,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
-        T removedElement = (T) elements[index];
-        System.arraycopy(elements, index + 1, elements, index, size - index - 1);
-        size--;
+        final T removedElement = (T) elements[index];
+        removeElementAtIndex(index);
         return removedElement;
     }
 
@@ -94,9 +69,7 @@ public class ArrayList<T> implements List<T> {
         int index = indexOf(element);
         if (index >= 0) {
             final T removedElement = (T)elements[index];
-            System.arraycopy(elements, index + 1, elements, index, size - index - 1);
-            elements[size - 1] = null;
-            size--;
+            removeElementAtIndex(index);
             return removedElement;
         } else {
             throw new NoSuchElementException("Element not found: " + element);
@@ -111,5 +84,34 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private void removeElementAtIndex(int index) {
+        System.arraycopy(elements, index + 1, elements, index, size - index - 1);
+        elements[size - 1] = null;
+        size--;
+    }
+
+    private void checkIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Index out of bounds: " + index);
+        }
+    }
+
+    private void resizeIfNeeded() {
+        if (elements.length == size) {
+            Object[] newArray = new Object[elements.length * 2];
+            System.arraycopy(elements, 0, newArray, 0, size);
+            elements = newArray;
+        }
+    }
+
+    private int indexOf(T element) {
+        for (int i = 0; i < size; i++) {
+            if (element == elements[i] || element != null && element.equals(elements[i])) {
+                return i;
+            }
+        }
+        return -1;
     }
 }
