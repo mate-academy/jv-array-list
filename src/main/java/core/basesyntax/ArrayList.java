@@ -4,7 +4,7 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    private static final int ONE_ELEMENT = 1;
+    private static final int ONE = 1;
     private static final double SIZE_GROWTH_INDEX = 1.5;
 
     private Object[] elementData;
@@ -37,18 +37,18 @@ public class ArrayList<T> implements List<T> {
         if (index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Incorrect index provided");
         }
-        if (index > size && index < size + ONE_ELEMENT) {
+        if (index > size && index < size + ONE) {
             size = index;
-        } else if (index > size + ONE_ELEMENT) {
+        } else if (index > size + ONE) {
             throw new ArrayListIndexOutOfBoundsException("Incorrect index provided");
         }
-        int newLength = size + ONE_ELEMENT;
+        int newLength = size + ONE;
         if (newLength >= elementData.length || index > capacity) {
             elementData = grow();
         }
-        if (index != size + ONE_ELEMENT) {
+        if (index != size + ONE) {
             System.arraycopy(elementData, index, elementData,
-                    index + ONE_ELEMENT, newLength - index);
+                    index + ONE, newLength - index);
         }
         elementData[index] = value;
         size++;
@@ -76,20 +76,20 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         validateIndex(index);
-        final Object temp = elementData[index];
-        if (index != size - ONE_ELEMENT) {
-            System.arraycopy(elementData, index + ONE_ELEMENT, elementData, index, size - index);
+        final Object removedElement = elementData[index];
+        if (index != size - ONE) {
+            System.arraycopy(elementData, index + ONE, elementData, index, size - index);
         }
-        elementData[size - ONE_ELEMENT] = null;
+        elementData[size - ONE] = null;
         size--;
-        return (T) temp;
+        return (T) removedElement;
     }
 
     @Override
     public T remove(T element) {
-        int index = checkIndex(element);
+        int index = findElementIndex(element);
         if (index == -1) {
-            throw new NoSuchElementException("There is no such element in the array");
+            throw new NoSuchElementException("There is no such element in the array: " + element);
         }
         return remove(index);
     }
@@ -107,11 +107,11 @@ public class ArrayList<T> implements List<T> {
     private Object[] grow() {
         capacity = (int) (capacity * SIZE_GROWTH_INDEX);
         Object[] increasedArray = new Object[capacity];
-        System.arraycopy(elementData,0, increasedArray, 0,elementData.length);
+        System.arraycopy(elementData, 0, increasedArray, 0, elementData.length);
         return increasedArray;
     }
 
-    private int checkIndex(T value) {
+    private int findElementIndex(T value) {
         for (int i = 0; i < elementData.length; i++) {
             if (elementData[i] == value
                     || (elementData[i] != null && elementData[i].equals(value))) {
