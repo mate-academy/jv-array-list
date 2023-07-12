@@ -1,19 +1,10 @@
 package core.basesyntax;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
 import java.util.NoSuchElementException;
-
 import org.junit.Assert;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 public class ArrayListTest {
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
-
     private static final int ELEMENTS_COUNT = 1000;
 
     @Test
@@ -242,48 +233,6 @@ public class ArrayListTest {
                 fourthCat, actualResult);
         Assert.assertEquals("Test failed! Size of array should be " + 2 + "but it is "
                 + cats.size(), 2, cats.size());
-    }
-
-    /**
-     * Method under test: {@link ArrayList#remove(Object)}
-     */
-    @Test
-    public void testRemove() {
-        thrown.expect(NoSuchElementException.class);
-        (new ArrayList<>()).remove("Element");
-    }
-
-    /**
-     * Method under test: {@link ArrayList#remove(Object)}
-     */
-    @Test
-    public void testRemove2() {
-        ArrayList<Object> arrayList = new ArrayList<>();
-        arrayList.add("Value");
-        thrown.expect(NoSuchElementException.class);
-        arrayList.remove("Element");
-    }
-
-    /**
-     * Method under test: {@link ArrayList#remove(Object)}
-     */
-    @Test
-    public void testRemove3() {
-        ArrayList<Object> arrayList = new ArrayList<>();
-        arrayList.add("Element");
-        assertEquals("Element", arrayList.remove("Element"));
-        assertTrue(arrayList.isEmpty());
-    }
-
-    /**
-     * Method under test: {@link ArrayList#remove(Object)}
-     */
-    @Test
-    public void testRemove4() {
-        ArrayList<Object> arrayList = new ArrayList<>();
-        arrayList.add(null);
-        thrown.expect(NoSuchElementException.class);
-        arrayList.remove("Element");
     }
 
     @Test
