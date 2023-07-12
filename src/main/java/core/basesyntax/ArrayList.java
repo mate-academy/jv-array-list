@@ -15,8 +15,8 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        increaseListSizeByOne();
-        array[listSize - 1] = value;
+        increaseArrayIfNeeded();
+        array[listSize++] = value;
     }
 
     @Override
@@ -25,7 +25,8 @@ public class ArrayList<T> implements List<T> {
             add(value);
         } else {
             checkIndexIsValid(index);
-            increaseListSizeByOne();
+            listSize++;
+            increaseArrayIfNeeded();
             System.arraycopy(array, index, array, index + 1, listSize - index);
             array[index] = value;
         }
@@ -79,8 +80,7 @@ public class ArrayList<T> implements List<T> {
         return listSize == 0;
     }
 
-    private void increaseListSizeByOne() {
-        listSize++;
+    private void increaseArrayIfNeeded() {
         if (listSize == array.length) {
             changeArrayLength((int)(listSize * GROWTH_COEFFICIENT));
         }
