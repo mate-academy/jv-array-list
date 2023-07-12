@@ -19,7 +19,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        checkAdditionRange(index);
+        checkIndexRange(index, true);
         growIfArrayFull();
         System.arraycopy(values, index, values, index + 1, currentListSize - index);
         values[index] = value;
@@ -35,19 +35,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        checkIndexRange(index);
+        checkIndexRange(index, false);
         return values[index];
     }
 
     @Override
     public void set(T value, int index) {
-        checkIndexRange(index);
+        checkIndexRange(index, false);
         values[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        checkIndexRange(index);
+        checkIndexRange(index, false);
         T removeElement = values[index];
         currentListSize--;
         System.arraycopy(values,index + 1,values,index,currentListSize - index);
@@ -75,8 +75,9 @@ public class ArrayList<T> implements List<T> {
     }
 
     public void growIfArrayFull() {
-        if (currentListSize == values.length) {
-            int oldCapacity = values.length;
+        int currentLength = values.length;
+        if (currentListSize == currentLength) {
+            int oldCapacity = currentLength;
             int newCapacity = oldCapacity + (oldCapacity >> 1);
             T[] newValues = (T[]) new Object[newCapacity];
             System.arraycopy(values, 0, newValues, 0, currentListSize);
@@ -84,16 +85,16 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private void checkAdditionRange(int index) {
-        if (index < 0 || index > currentListSize) {
-            throw new ArrayListIndexOutOfBoundsException(index
-                    + " is out of bounds for adding to the list");
-        }
-    }
-
-    private void checkIndexRange(int index) {
-        if (index < 0 || index >= currentListSize) {
-            throw new ArrayListIndexOutOfBoundsException(index + " is out of bounds");
+    private void checkIndexRange(int index, boolean isAddition) {
+        if (isAddition) {
+            if (index < 0 || index > currentListSize) {
+                throw new ArrayListIndexOutOfBoundsException(index
+                        + " is out of bounds for adding to the list");
+            }
+        } else {
+            if (index < 0 || index >= currentListSize) {
+                throw new ArrayListIndexOutOfBoundsException(index + " is out of bounds");
+            }
         }
     }
 }
