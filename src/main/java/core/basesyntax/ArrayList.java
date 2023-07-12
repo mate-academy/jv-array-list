@@ -1,5 +1,6 @@
 package core.basesyntax;
 
+import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
@@ -20,7 +21,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        rangeCheckIndexAdd(index);
+        checkIndex(index,true);
         growIfArrayFull();
         System.arraycopy(elementData, index, elementData, index + 1, size - index);
         elementData[index] = value;
@@ -29,26 +30,26 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        for (int i = 0; i < list.size(); i++) {
-            add(list.get(i));
+        for (T element : list) {
+            add(element);
         }
     }
 
     @Override
     public T get(int index) {
-        checkIndex(index);
+        checkIndex(index, false);
         return elementData[index];
     }
 
     @Override
     public void set(T value, int index) {
-        checkIndex(index);
+        checkIndex(index,false);
         elementData[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        checkIndex(index);
+        checkIndex(index,false);
         T removeElement = elementData[index];
         size--;
         System.arraycopy(elementData,index + 1,elementData,index,size - index);
@@ -84,15 +85,28 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private void rangeCheckIndexAdd(int index) {
-        if (index < 0 || index > size) {
+    private void checkIndex(int index, boolean checkCondition) {
+        if (index < 0 || (checkCondition ? index > size : index >= size)) {
             throw new ArrayListIndexOutOfBoundsException("Index is invalid: " + index);
         }
     }
 
-    private void checkIndex(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index is invalid: " + index);
-        }
+    @Override
+    public Iterator<T> iterator() {
+        return new Iterator<T>() {
+            private int position = 0;
+
+            @Override
+            public boolean hasNext() {
+                return size > position;
+            }
+
+            @Override
+            public T next() {
+                T value = elementData[position];
+                position++;
+                return value;
+            }
+        };
     }
 }
