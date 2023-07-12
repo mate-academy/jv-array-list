@@ -4,18 +4,18 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     public static final int DEFAULT_SIZE_DATA = 10;
-    public static final double INCREASE_BY = 1.5;
+    public static final double RESIZE_INDEX = 1.5;
     private int size;
-    private T[] dataType;
+    private T[] dataObject;
 
     public ArrayList() {
-        dataType = (T[]) new Object[DEFAULT_SIZE_DATA];
+        dataObject = (T[]) new Object[DEFAULT_SIZE_DATA];
     }
 
     @Override
     public void add(T value) {
         getArrayList();
-        dataType[size] = value;
+        dataObject[size] = value;
         size++;
     }
 
@@ -24,8 +24,8 @@ public class ArrayList<T> implements List<T> {
 
         getIndexFrom(index);
         getArrayList();
-        System.arraycopy(dataType,index,dataType,index + 1, size - index);
-        dataType[index] = value;
+        System.arraycopy(dataObject, index, dataObject, index + 1, size - index);
+        dataObject[index] = value;
         size++;
     }
 
@@ -38,22 +38,22 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        getIndex(index);
-        return dataType[index];
+        indexValidation(index);
+        return dataObject[index];
     }
 
     @Override
     public void set(T value, int index) {
-        getIndex(index);
-        dataType[index] = value;
+        indexValidation(index);
+        dataObject[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        getIndex(index);
-        T deleteArray = dataType[index];
+        indexValidation(index);
+        T deleteArray = dataObject[index];
         size--;
-        System.arraycopy(dataType,index + 1, dataType,index, size - index);
+        System.arraycopy(dataObject, index + 1, dataObject, index, size - index);
         return deleteArray;
     }
 
@@ -61,8 +61,8 @@ public class ArrayList<T> implements List<T> {
     public T remove(T element) {
         for (int j = 0; j < size; j++) {
             if (element != null
-                    && element.equals(dataType[j])
-                    || element == dataType[j]) {
+                    && element.equals(dataObject[j])
+                    || element == dataObject[j]) {
                 return remove(j);
             }
         }
@@ -79,18 +79,9 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void getIndex(int index) {
+    private void indexValidation(int index) {
         if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException("Index is not supported" + index);
-        }
-    }
-
-    private void getArrayList() {
-        if (size == dataType.length) {
-            int add = (int) (size * INCREASE_BY);
-            T[] tempArray = (T[]) new Object[add];
-            System.arraycopy(dataType, 0, tempArray,0,dataType.length);
-            dataType = tempArray;
         }
     }
 
@@ -99,5 +90,16 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayListIndexOutOfBoundsException("Index is not supported" + index);
         }
     }
+
+    private void getArrayList() {
+        if (size == dataObject.length) {
+            int add = (int) (size * RESIZE_INDEX);
+            T[] tempArray = (T[]) new Object[add];
+            System.arraycopy(dataObject, 0, tempArray, 0, dataObject.length);
+            dataObject = tempArray;
+        }
+    }
 }
+
+
 
