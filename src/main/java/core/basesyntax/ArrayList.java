@@ -12,6 +12,38 @@ public class ArrayList<T> implements List<T> {
         elementArray = (T[]) new Object[DEFAULT_SIZE_ARRAY];
     }
 
+    private void growIfFull() {
+        if (size == elementArray.length) {
+            increase();
+        }
+    }
+
+    private void checkIndex(int index) {
+        if (index >= size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Index " + index + " out of bounds ");
+        }
+    }
+
+    private void checkIndexAdd(int index) {
+        if (index > size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Index " + index + " out of bounds ");
+        }
+    }
+
+    private int findIndex(T object) {
+        for (int i = 0; i < size; ++i) {
+            if (equals(elementArray[i], object)) {
+                return i;
+            }
+        }
+        throw new NoSuchElementException("This " + object + "does not exist in array");
+    }
+
+    private boolean equals(T firstObject, T secondObject) {
+        return firstObject == secondObject
+                || firstObject != null && firstObject.equals(secondObject);
+    }
+
     @Override
     public void add(T value) {
         growIfFull();
@@ -57,16 +89,16 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
-        final T rmElement = (T) elementArray[index];
+        final T elementRemove = (T) elementArray[index];
         --size;
         System.arraycopy(elementArray, index + 1, elementArray, index, size - index);
         elementArray[size] = null;
-        return rmElement;
+        return elementRemove;
     }
 
     @Override
     public T remove(T element) {
-        return remove(findObject(element));
+        return remove(findIndex(element));
     }
 
     @Override
@@ -77,37 +109,5 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
-    }
-
-    private void growIfFull() {
-        if (size == elementArray.length) {
-            increase();
-        }
-    }
-
-    private void checkIndex(int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index " + index + " out of bounds ");
-        }
-    }
-
-    private void checkIndexAdd(int index) {
-        if (index > size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index " + index + " out of bounds ");
-        }
-    }
-
-    private int findObject(T object) {
-        for (int i = 0; i < size; ++i) {
-            if (equals(elementArray[i], object)) {
-                return i;
-            }
-        }
-        throw new NoSuchElementException("This " + object + "does not exist in array");
-    }
-
-    private boolean equals(T firstObject, T secondObject) {
-        return (firstObject == secondObject)
-                || (firstObject != null && firstObject.equals(secondObject));
     }
 }
