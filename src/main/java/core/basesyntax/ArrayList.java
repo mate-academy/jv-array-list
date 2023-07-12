@@ -1,30 +1,30 @@
 package core.basesyntax;
 
+import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-public class ArrayList<T> implements List<T> {
+public class ArrayList<T> implements List<T>, Iterable {
     private static final int DEFAULT_CAPACITY = 10;
     private static final double RESIZE_CONSTANT = 1.5;
     private static final int EMPTY_SIZE = 0;
-    private Object[] elementData;
+    private T[] elementData;
     private int size;
-    private int newCapacity;
 
     public ArrayList() {
-        elementData = new Object[DEFAULT_CAPACITY];
+        elementData = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
     @Override
     public void add(T value) {
-        resize();
+        grow();
         elementData[size] = value;
         size++;
     }
 
     @Override
     public void add(T value, int index) {
-        checkForAdd(index);
-        resize();
+        indexOutOfBoundCheck(index);
+        grow();
         System.arraycopy(elementData, index,
                 elementData, index + 1,
                 size - index);
@@ -34,31 +34,30 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        for (int i = 0; i < list.size(); i++) {
-            resize();
-            elementData[size] = list.get(i);
-            size++;
+        for (Object element : list) {
+            if (element != null) {
+                grow();
+                add((T) element);
+            }
         }
     }
 
     @Override
     public T get(int index) {
-        indexOutOfBoundCheck(index);
-        checkForAdd(index);
-        return (T) elementData[index];
+        indexOutOfBoundCheck(index + 1);
+        return elementData[index];
     }
 
     @Override
     public void set(T value, int index) {
-        indexOutOfBoundCheck(index);
-        checkForAdd(index);
+        indexOutOfBoundCheck(index + 1);
         elementData[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        indexOutOfBoundCheck(index);
-        final T elementToRemove = (T) elementData[index];
+        indexOutOfBoundCheck(index + 1);
+        final T elementToRemove = elementData[index];
         for (int i = index; i < size - 1; i++) {
             elementData[i] = elementData[i + 1];
         }
@@ -87,26 +86,35 @@ public class ArrayList<T> implements List<T> {
         return size == EMPTY_SIZE;
     }
 
-    private void checkForAdd(int index) {
-        if (index > size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index " + index
-                    + " is out of bounds " + size);
-        }
+    @Override
+    public Iterator<T> iterator() {
+        return new Iterator<>() {
+            private int currentIndex = 0;
+            @Override
+            public boolean hasNext() {
+                return currentIndex < size && elementData[currentIndex] != null;
+            }
+
+            @Override
+            public T next() {
+                return elementData[currentIndex++];
+            }
+        };
     }
 
     private void indexOutOfBoundCheck(int index) {
-        if (index < 0 || index >= size) {
+        if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException("Index " + index
                     + " is out of bounds " + size);
         }
     }
 
-    private void resize() {
+    private void grow() {
         if (elementData.length == size) {
-            newCapacity = (int) (elementData.length * RESIZE_CONSTANT);
-            Object[] temp = elementData;
-            elementData = new Object[newCapacity];
-            System.arraycopy(temp, 0, elementData, 0, size);
+            int newCapacity = (int) (elementData.length * RESIZE_CONSTANT);
+            Object[] oldElementData = elementData;
+            elementData = (T[])new Object[newCapacity];
+            System.arraycopy(oldElementData, 0, elementData, 0, size);
         }
     }
 }
