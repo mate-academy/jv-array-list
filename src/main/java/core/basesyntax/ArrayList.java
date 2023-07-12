@@ -16,7 +16,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        resizeCheck();
+        resize();
         elementData[size] = value;
         size++;
     }
@@ -24,7 +24,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         checkForAdd(index);
-        resizeCheck();
+        resize();
         System.arraycopy(elementData, index,
                 elementData, index + 1,
                 size - index);
@@ -101,16 +101,12 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private void resizeCheck() {
-        if (elementData.length < size + 1) {
-            resize();
-        }
-    }
-
     private void resize() {
-        newCapacity = (int) (elementData.length * RESIZE_CONSTANT);
-        Object[] temp = elementData;
-        elementData = new Object[newCapacity];
-        System.arraycopy(temp,0,elementData,0,size);
+        if (elementData.length == size) {
+            newCapacity = (int) (elementData.length * RESIZE_CONSTANT);
+            Object[] temp = elementData;
+            elementData = new Object[newCapacity];
+            System.arraycopy(temp, 0, elementData, 0, size);
+        }
     }
 }
