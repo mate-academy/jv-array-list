@@ -11,6 +11,10 @@ public class ArrayList<T> implements List<T> {
     private int capacity = DEFAULT_CAPACITY;
     private int size;
 
+    public ArrayList() {
+        this.elementData = new Object[capacity];
+    }
+
     public ArrayList(int initialCapacity) {
         if (initialCapacity >= 0 && initialCapacity < capacity) {
             this.elementData = new Object[capacity];
@@ -21,10 +25,6 @@ public class ArrayList<T> implements List<T> {
             throw new IllegalArgumentException("Illegal Capacity: "
                     + initialCapacity);
         }
-    }
-
-    public ArrayList() {
-        this.elementData = new Object[capacity];
     }
 
     @Override
