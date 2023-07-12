@@ -8,16 +8,15 @@ public class ArrayList<T> implements List<T> {
     private static final double SIZE_GROWTH_INDEX = 1.5;
 
     private Object[] elementData;
-    private int capacity = DEFAULT_CAPACITY;
     private int size;
 
     public ArrayList() {
-        this.elementData = new Object[capacity];
+        this.elementData = new Object[DEFAULT_CAPACITY];
     }
 
     public ArrayList(int initialCapacity) {
         if (initialCapacity > 0) {
-            this.elementData = new Object[capacity];
+            this.elementData = new Object[DEFAULT_CAPACITY];
         } else {
             throw new IllegalArgumentException("Illegal Capacity: "
                     + initialCapacity);
@@ -40,7 +39,7 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayListIndexOutOfBoundsException("Incorrect index provided");
         }
         int newLength = size + ONE;
-        if (newLength >= elementData.length || index > capacity) {
+        if (newLength >= elementData.length || index > elementData.length) {
             elementData = grow();
         }
         if (index != size + ONE) {
@@ -102,7 +101,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     private Object[] grow() {
-        capacity = (int) (capacity * SIZE_GROWTH_INDEX);
+        int capacity = (int) (elementData.length * SIZE_GROWTH_INDEX);
         Object[] increasedArray = new Object[capacity];
         System.arraycopy(elementData, 0, increasedArray, 0, elementData.length);
         return increasedArray;
