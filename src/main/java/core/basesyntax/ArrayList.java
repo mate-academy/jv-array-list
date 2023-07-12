@@ -11,24 +11,25 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        checkIfArrayIsFull();
+        growIfArrayFull();
         objects[size] = value;
         size++;
     }
 
     @Override
     public void add(T value, int index) {
-        checkIfArrayIsFull();
+        growIfArrayFull();
         checkBoundForAdding(index);
-        for (int i = objects.length - 1; i > index; i--) {
-            objects[i] = objects[i - 1];
-        }
+        System.arraycopy(objects, index, objects, index + 1, size - index);
         objects[index] = value;
         size++;
     }
 
     @Override
     public void addAll(List<T> list) {
+        if (size + list.size() > objects.length) {
+            grow();
+        }
         for (int i = 0; i < list.size(); i++) {
             objects[size] = list.get(i);
             size++;
@@ -51,10 +52,8 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         checkForBounds(index);
         T temp = objects[index];
-        for (int j = index; j < size - 1; j++) {
-            objects[j] = objects[j + 1];
-        }
         size--;
+        System.arraycopy(objects, index + 1, objects, index, size - index);
         return temp;
     }
 
@@ -81,7 +80,7 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    public void checkIfArrayIsFull() {
+    public void growIfArrayFull() {
         if (size == objects.length) {
             grow();
         }
