@@ -16,14 +16,17 @@ public class ArrayList<T> implements List<T> {
     public ArrayList(int initCapacity) {
         if (initCapacity < 0) {
             throw new IllegalArgumentException(
-                    "Can't create array with negative length");
+                    "Can't create array with negative length, please use positive values");
+        } else if (initCapacity == 0) {
+            throw new IllegalArgumentException(
+                    "Can't create empty array, please use positive values");
         }
         elements = (T[])new Object[initCapacity];
     }
 
     @Override
     public void add(T value) {
-        growIfFuel();
+        growIfFull();
         elements[size] = value;
         size++;
     }
@@ -33,7 +36,7 @@ public class ArrayList<T> implements List<T> {
         if (index != size) {
             checkIndexOutOfBoundException(index);
         }
-        growIfFuel();
+        growIfFull();
         System.arraycopy(elements, index, elements, index + 1, size - index);
         elements[index] = value;
         size++;
@@ -41,7 +44,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        for (T element: list) {
+        for (T element : list) {
             add(element);
         }
     }
@@ -103,14 +106,14 @@ public class ArrayList<T> implements List<T> {
         };
     }
 
-    private void growIfFuel() {
-        if (elements.length == 1 && elements.length == size) {
-            T[] newArray = (T[])new Object[DEFAULT_CAPACITY];
-            System.arraycopy(elements, 0, newArray, 0, size);
-            elements = newArray;
-        }
+    private void growIfFull() {
         if (elements.length == size) {
-            int newCapacity = (int)(elements.length * GROWTH_FACTOR);
+            int newCapacity;
+            if (elements.length == 1) {
+                newCapacity = DEFAULT_CAPACITY;
+            } else {
+                newCapacity = (int)(elements.length * GROWTH_FACTOR);
+            }
             T[] newArray = (T[]) new Object[newCapacity];
             System.arraycopy(elements, 0, newArray, 0, size);
             elements = newArray;
@@ -141,11 +144,10 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void fastRemoveElement(int index) {
-        if (index == elements.length - 1) {
-            elements[size - 1] = null;
-        } else {
+        if (index != elements.length - 1) {
             System.arraycopy(elements,index + 1, elements, index, size - index - 1);
         }
+        elements[size - 1] = null;
         size--;
     }
 }
