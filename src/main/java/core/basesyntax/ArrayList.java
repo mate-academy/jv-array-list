@@ -81,7 +81,8 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private int getIndexOf(T element) {
+    @Override
+    public int getIndexOf(T element) {
         for (int i = 0; i < size; i++) {
             if (array[i] == element || array[i] != null && array[i].equals(element)) {
                 return i;
