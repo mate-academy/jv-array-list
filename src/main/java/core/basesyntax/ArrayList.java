@@ -16,11 +16,8 @@ public class ArrayList<T> implements List<T> {
     }
 
     public ArrayList(int initialCapacity) {
-        if (initialCapacity >= 0 && initialCapacity < capacity) {
+        if (initialCapacity > 0) {
             this.elementData = new Object[capacity];
-        } else if (initialCapacity > capacity) {
-            this.elementData = new Object[capacity];
-            this.elementData = grow();
         } else {
             throw new IllegalArgumentException("Illegal Capacity: "
                     + initialCapacity);
