@@ -7,7 +7,11 @@ public class ArrayList<T> implements List<T> {
     private static final int EMPTY_SIZE = 0;
     private static final double SIZE_INCREASE = 1.5;
     private int size;
-    private T[] items = (T[]) new Object[DEFAULT_CAPACITY];
+    private T[] items;
+
+    public ArrayList() {
+        items = (T[]) new Object[DEFAULT_CAPACITY];
+    }
 
     @Override
     public void add(T value) {
