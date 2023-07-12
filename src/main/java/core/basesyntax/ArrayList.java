@@ -6,26 +6,25 @@ public class ArrayList<T> implements List<T> {
     public static final int DEFAULT_SIZE_DATA = 10;
     public static final double RESIZE_INDEX = 1.5;
     private int size;
-    private T[] dataObject;
+    private T[] items;
 
     public ArrayList() {
-        dataObject = (T[]) new Object[DEFAULT_SIZE_DATA];
+        items = (T[]) new Object[DEFAULT_SIZE_DATA];
     }
 
     @Override
     public void add(T value) {
         getArrayList();
-        dataObject[size] = value;
+        items[size] = value;
         size++;
     }
 
     @Override
     public void add(T value, int index) {
-
-        getIndexFrom(index);
+        indexAdd(index);
         getArrayList();
-        System.arraycopy(dataObject, index, dataObject, index + 1, size - index);
-        dataObject[index] = value;
+        System.arraycopy(items, index, items, index + 1, size - index);
+        items[index] = value;
         size++;
     }
 
@@ -39,21 +38,21 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         indexValidation(index);
-        return dataObject[index];
+        return items[index];
     }
 
     @Override
     public void set(T value, int index) {
         indexValidation(index);
-        dataObject[index] = value;
+        items[index] = value;
     }
 
     @Override
     public T remove(int index) {
         indexValidation(index);
-        T deleteArray = dataObject[index];
+        T deleteArray = items[index];
         size--;
-        System.arraycopy(dataObject, index + 1, dataObject, index, size - index);
+        System.arraycopy(items, index + 1, items, index, size - index);
         return deleteArray;
     }
 
@@ -61,8 +60,8 @@ public class ArrayList<T> implements List<T> {
     public T remove(T element) {
         for (int j = 0; j < size; j++) {
             if (element != null
-                    && element.equals(dataObject[j])
-                    || element == dataObject[j]) {
+                    && element.equals(items[j])
+                    || element == items[j]) {
                 return remove(j);
             }
         }
@@ -81,25 +80,22 @@ public class ArrayList<T> implements List<T> {
 
     private void indexValidation(int index) {
         if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index is not supported" + index);
+            throw new ArrayListIndexOutOfBoundsException("Index is not supported " + index);
         }
     }
 
-    private void getIndexFrom(int index) {
+    private void indexAdd(int index) {
         if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("Index is not supported" + index);
+            throw new ArrayListIndexOutOfBoundsException("Index is out of bound " + index);
         }
     }
 
     private void getArrayList() {
-        if (size == dataObject.length) {
+        if (size == items.length) {
             int add = (int) (size * RESIZE_INDEX);
             T[] tempArray = (T[]) new Object[add];
-            System.arraycopy(dataObject, 0, tempArray, 0, dataObject.length);
-            dataObject = tempArray;
+            System.arraycopy(items, 0, tempArray, 0, items.length);
+            items = tempArray;
         }
     }
 }
-
-
-
