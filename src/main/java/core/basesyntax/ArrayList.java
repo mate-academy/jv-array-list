@@ -60,7 +60,7 @@ public class ArrayList<T> implements List<T> {
                 return remove(i);
             }
         }
-        throw new NoSuchElementException("Element not found(");
+        throw new NoSuchElementException("Element not found: " + element);
     }
 
     @Override
