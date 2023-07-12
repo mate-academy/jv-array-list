@@ -6,12 +6,16 @@ public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private static final double DEFAULT_RESIZE_VALUE = 1.5;
     private int changeableCapacity = 10;
-    private int size = 0;
-    private T[] elements = ((T[]) new Object[DEFAULT_CAPACITY]);
+    private int size;
+    private T[] elements;
+
+    public ArrayList() {
+        elements = (T[]) new Object[DEFAULT_CAPACITY];
+    }
 
     @Override
     public void add(T value) {
-        checkSize();
+        growIfFull();
         elements[size] = value;
         size++;
     }
@@ -21,7 +25,7 @@ public class ArrayList<T> implements List<T> {
         if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException("Absent index in list: " + index);
         }
-        checkSize();
+        growIfFull();
         System.arraycopy(elements, index, elements, index + 1, size - index);
         elements[index] = value;
         size++;
@@ -50,7 +54,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         isIndexValid(index);
-        checkSize();
+        growIfFull();
         T removedElement = elements[index];
         System.arraycopy(elements, index + 1, elements, index, size - index);
         size--;
@@ -67,7 +71,7 @@ public class ArrayList<T> implements List<T> {
                 return remove(indexOfElement);
             }
         }
-        throw new NoSuchElementException("There`s no such element");
+        throw new NoSuchElementException("There`s no such element: " + element);
     }
 
     @Override
@@ -81,7 +85,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void resize() {
-        changeableCapacity = (int) (changeableCapacity * DEFAULT_RESIZE_VALUE);
+        changeableCapacity = (int) (elements.length * DEFAULT_RESIZE_VALUE);
         T[] oldArray = elements;
         elements = (T[]) (new Object[changeableCapacity]);
         System.arraycopy(oldArray, 0, elements, 0, size);
@@ -93,7 +97,7 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private void checkSize() {
+    private void growIfFull() {
         if (size == changeableCapacity) {
             resize();
         }
