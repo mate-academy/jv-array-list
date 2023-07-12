@@ -8,13 +8,13 @@ public class ArrayList<T> implements List<T> {
     private T[] array;
 
     public ArrayList() {
-        this.array = (T[]) new Object[DEFAULT_CAPACITY];
+        array = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
     @Override
     public void add(T value) {
-        if (size >= array.length) {
-            grow(size);
+        if (size == array.length) {
+            grow();
         }
         array[size] = value;
         size++;
@@ -26,7 +26,7 @@ public class ArrayList<T> implements List<T> {
             checkIndex(index);
         }
         if (size == array.length) {
-            grow(size);
+            grow();
         }
         System.arraycopy(array, index, array, index + 1, size - index);
         array[index] = value;
@@ -81,20 +81,20 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    public int getIndexOf(T element) {
+    private int getIndexOf(T element) {
         for (int i = 0; i < size; i++) {
-            if ((array[i] == element) || array[i] != null && array[i].equals(element)) {
+            if (array[i] == element || array[i] != null && array[i].equals(element)) {
                 return i;
             }
         }
         return -1;
     }
 
-    private void grow(int minCapacity) {
-        int newCapacity = minCapacity + (minCapacity >> 1);
+    private void grow() {
+        int newCapacity = size + (size >> 1);
         T[] oldArray = array;
         array = (T[]) new Object[newCapacity];
-        System.arraycopy(oldArray, 0, array, 0, minCapacity);
+        System.arraycopy(oldArray, 0, array, 0, size);
     }
 
     private void checkIndex(int index) {
