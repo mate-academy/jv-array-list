@@ -4,13 +4,13 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int STOCK_ARRAY_LENGTH = 10;
-    private static final float GROWTH_COEFICIENT = 1.5f;
+    private static final float GROWTH_COEFFICIENT = 1.5f;
 
     private T[] array;
     private int listSize;
 
     public ArrayList() {
-        this.array = (T[]) new Object[STOCK_ARRAY_LENGTH];
+        array = (T[]) new Object[STOCK_ARRAY_LENGTH];
     }
 
     @Override
@@ -22,13 +22,11 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         if (index == listSize) {
-            this.add(value);
+            add(value);
         } else {
             checkIndexIsValid(index);
             increaseListSizeByOne();
-            for (int i = lastIndex(); i >= index; i--) {
-                array[i + 1] = array[i];
-            }
+            System.arraycopy(array, index, array, index + 1, listSize - index);
             array[index] = value;
         }
     }
@@ -36,7 +34,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void addAll(List<T> list) {
         for (int i = 0; i < list.size(); i++) {
-            this.add(list.get(i));
+            add(list.get(i));
         }
     }
 
@@ -55,22 +53,20 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         T actualResult = get(index);
-        for (int i = index; i < lastIndex(); i++) {
-            array[i] = array[i + 1];
-        }
+        System.arraycopy(array, index + 1, array, index, listSize - index - 1);
         listSize--;
         return actualResult;
     }
 
     @Override
     public T remove(T element) {
-        int indexOfElement = getIndexOf(element);
-        if (indexOfElement == -1) {
-            throw new NoSuchElementException("there is no " + element + " in ArrayList");
+        for (int i = 0; i < listSize; i++) {
+            if (array[i] == element
+                    || array[i] != null && array[i].equals(element)) {
+                return remove(i);
+            }
         }
-        T actualResult = get(indexOfElement);
-        remove(indexOfElement);
-        return actualResult;
+        throw new NoSuchElementException("there is no " + element + " in ArrayList");
     }
 
     @Override
@@ -86,36 +82,19 @@ public class ArrayList<T> implements List<T> {
     private void increaseListSizeByOne() {
         listSize++;
         if (listSize == array.length) {
-            changeArrayLengthTo((int)(listSize * GROWTH_COEFICIENT));
+            changeArrayLength((int)(listSize * GROWTH_COEFFICIENT));
         }
     }
 
-    private void changeArrayLengthTo(int newSize) {
+    private void changeArrayLength(int newSize) {
         T[] previousList = array;
         array = (T[]) new Object[newSize];
         System.arraycopy(previousList, 0, array, 0, previousList.length);
     }
 
     private void checkIndexIsValid(int index) {
-        if (index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index cant be < 0");
+        if (index < 0 || index >= listSize) {
+            throw new ArrayListIndexOutOfBoundsException("Invalid index; index = " + index);
         }
-        if (index >= listSize) {
-            throw new ArrayListIndexOutOfBoundsException("index cant be >= ArrayList size");
-        }
-    }
-
-    private int getIndexOf(T element) {
-        for (int i = 0; i < listSize - 1; i++) {
-            if (array[i] == element
-                    || array[i] != null && array[i].equals(element)) {
-                return i;
-            }
-        }
-        return -1;
-    }
-
-    private int lastIndex() {
-        return listSize - 1;
     }
 }
