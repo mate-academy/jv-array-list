@@ -1,23 +1,19 @@
 package core.basesyntax;
 
-import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    private static final Object[] DEFAULTCAPACITY_EMPTY_ELEMENTDATA = {};
     private Object[] elementData;
     private int size = 0;
 
     public ArrayList() {
-        elementData = DEFAULTCAPACITY_EMPTY_ELEMENTDATA;
+        elementData = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
     @Override
     public void add(T value) {
-        if (size == elementData.length) {
-            elementData = grow();
-        }
+        growIfNeeded();
         elementData[size] = value;
         size++;
     }
@@ -27,9 +23,7 @@ public class ArrayList<T> implements List<T> {
         if (index != size) {
             rangeCheck(index);
         }
-        if (size >= elementData.length) {
-            elementData = grow();
-        }
+        growIfNeeded();
         System.arraycopy(this.elementData, index, this.elementData, index + 1, size - index);
         this.elementData[index] = value;
         size++;
@@ -37,6 +31,9 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
+        if (list.size() == 0) {
+            return;
+        }
         for (int i = 0; i < list.size(); i++) {
             add(list.get(i));
         }
@@ -57,10 +54,9 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         rangeCheck(index);
-        final Object[] es = elementData;
-        T oldValue = (T) es[index];
-        fastRemove(es, index);
-        return oldValue;
+        T valueToReturn = get(index);
+        fastRemove(elementData, index);
+        return valueToReturn;
     }
 
     @Override
@@ -82,7 +78,7 @@ public class ArrayList<T> implements List<T> {
                     }
                 }
             }
-            throw new NoSuchElementException();
+            throw new NoSuchElementException("Element you want to remove does not exit");
         }
         fastRemove(es, i);
         return element;
@@ -98,35 +94,35 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void rangeCheck(int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException(outOfBoundsMsg(index));
+    private void growIfNeeded() {
+        if (size >= elementData.length) {
+            grow();
         }
     }
 
-    private String outOfBoundsMsg(int index) {
+    private void rangeCheck(int index) {
+        if (index >= size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException(createIndexOutOfBoundsMsg(index));
+        }
+    }
+
+    private String createIndexOutOfBoundsMsg(int index) {
         return "Index: " + index + "out of bounds, cause size is: " + size;
     }
 
-    private void fastRemove(Object[] es, int i) {
+    private void fastRemove(Object[] elementData, int i) {
         final int newSize;
         if ((newSize = size - 1) > i) {
-            System.arraycopy(es, i + 1, es, i, newSize - i);
+            System.arraycopy(elementData, i + 1, elementData, i, newSize - i);
         }
-        es[size = newSize] = null;
+        elementData[size = newSize] = null;
     }
 
-    private Object[] grow() {
-        return grow(size + 1);
-    }
-
-    private Object[] grow(int minCapacity) {
+    private void grow() {
         int oldCapacity = elementData.length;
-        if (oldCapacity > 0 || elementData != DEFAULTCAPACITY_EMPTY_ELEMENTDATA) {
-            int newCapacity = oldCapacity + (oldCapacity >> 1);
-            return elementData = Arrays.copyOf(elementData, newCapacity);
-        } else {
-            return elementData = new Object[Math.max(DEFAULT_CAPACITY, minCapacity)];
-        }
+        int newCapacity = oldCapacity + (oldCapacity >> 1);
+        T[] oldArray = (T[]) elementData;
+        elementData = (T[]) new Object[newCapacity];
+        System.arraycopy(oldArray, 0, elementData, 0, oldCapacity);
     }
 }
