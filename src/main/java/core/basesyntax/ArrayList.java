@@ -27,7 +27,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (checkIndex()) {
+        if (needsIncreasing()) {
             increaseCapacity();
         }
         data[size] = value;
@@ -36,8 +36,8 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        isIndexValid(index);
-        if (checkIndex()) {
+        checkIndex(index);
+        if (needsIncreasing()) {
             increaseCapacity();
         }
         System.arraycopy(data, index, data, index + 1, size - index);
@@ -54,19 +54,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        isIndexValid(index + 1);
+        checkIndex(index + 1);
         return data[index];
     }
 
     @Override
     public void set(T value, int index) {
-        isIndexValid(index + 1);
+        checkIndex(index + 1);
         data[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        isIndexValid(index + 1);
+        checkIndex(index + 1);
         final T result = data[index];
         System.arraycopy(data, index + 1, data, index, size - index - 1);
         data[size - 1] = null;
@@ -76,19 +76,14 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        int index = -1;
         for (int i = 0; i < size; i++) {
             T item = data[i];
-            if ((item != null && item.equals(element))
-                    || (item == null && element == null)) {
-                index = i;
-                break;
+            if (item != null && item.equals(element)
+                    || item == element) {
+                return remove(i);
             }
         }
-        if (index == -1) {
-            throw new NoSuchElementException(ELEMENT_DOES_NOT_EXISTS);
-        }
-        return remove(index);
+        throw new NoSuchElementException(ELEMENT_DOES_NOT_EXISTS);
     }
 
     @Override
@@ -107,14 +102,14 @@ public class ArrayList<T> implements List<T> {
         data = newData;
     }
 
-    private void isIndexValid(int index) {
+    private void checkIndex(int index) {
         if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException(
                     (index < 0) ? NEGATIVE_INDEX_MESSAGE : INDEX_OUT_OF_SIZE_ERROR);
         }
     }
 
-    private boolean checkIndex() {
+    private boolean needsIncreasing() {
         return size >= data.length;
     }
 }
