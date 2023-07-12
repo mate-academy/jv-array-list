@@ -35,40 +35,12 @@ public class ArrayList<T> implements List<T> {
 
     }
 
-    private void addInsideArray(T value, int index) {
-        if (size + AMOUNT_OF_ADDED_VALUES_TO_ARRAY == values.length) {
-            grow();
-        }
-        T[] tempValues = (T[]) new Object[values.length];
-        System.arraycopy(values, STARTING_ARRAY_INDEX, tempValues, STARTING_ARRAY_INDEX, index);
-        tempValues[index] = value;
-        System.arraycopy(values, index, tempValues, index + AMOUNT_OF_ADDED_VALUES_TO_ARRAY,
-                values.length - index - AMOUNT_OF_ADDED_VALUES_TO_ARRAY);
-        values = tempValues;
-        size++;
-    }
-
     @Override
     public void addAll(List<T> list) {
         for (int i = 0; i < list.size(); i++) {
             add(list.get(i));
         }
 
-    }
-
-    private void addInList(T value) {
-        values[size] = value;
-        size++;
-    }
-
-    private void grow() {
-        T[] grownArray = growFullArray();
-        System.arraycopy(values, STARTING_ARRAY_INDEX, grownArray, STARTING_ARRAY_INDEX, size);
-        values = grownArray;
-    }
-
-    private T[] growFullArray() {
-        return (T[]) new Object[(int) (values.length * NUMBER_OF_GROWING_ARRAY_LENGTH)];
     }
 
     @Override
@@ -92,12 +64,46 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if ((values[i] == element)
-                    || (values[i] != null && values[i].equals(element))) {
+            if (values[i] == element
+                    || values[i] != null && values[i].equals(element)) {
                 return remove(i);
             }
         }
         throw new NoSuchElementException("arrayList do not contain " + element);
+    }
+
+    @Override
+    public int size() {
+        return size;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return size == 0;
+    }
+
+    private void addInsideArray(T value, int index) {
+        if (size + AMOUNT_OF_ADDED_VALUES_TO_ARRAY == values.length) {
+            grow();
+        }
+        T[] tempValues = (T[]) new Object[values.length];
+        System.arraycopy(values, STARTING_ARRAY_INDEX, tempValues, STARTING_ARRAY_INDEX, index);
+        tempValues[index] = value;
+        System.arraycopy(values, index, tempValues, index + AMOUNT_OF_ADDED_VALUES_TO_ARRAY,
+                values.length - index - AMOUNT_OF_ADDED_VALUES_TO_ARRAY);
+        values = tempValues;
+        size++;
+    }
+
+    private void addInList(T value) {
+        values[size] = value;
+        size++;
+    }
+
+    private void grow() {
+        T[] grownArray = (T[]) new Object[(int) (values.length * NUMBER_OF_GROWING_ARRAY_LENGTH)];
+        System.arraycopy(values, STARTING_ARRAY_INDEX, grownArray, STARTING_ARRAY_INDEX, size);
+        values = grownArray;
     }
 
     private void checkIndex(int index) {
@@ -115,15 +121,5 @@ public class ArrayList<T> implements List<T> {
         values = tempValues;
         size--;
         return removedValue;
-    }
-
-    @Override
-    public int size() {
-        return size;
-    }
-
-    @Override
-    public boolean isEmpty() {
-        return size == 0;
     }
 }
