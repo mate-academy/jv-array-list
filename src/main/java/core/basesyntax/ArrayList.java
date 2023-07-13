@@ -16,7 +16,7 @@ public class ArrayList<T> implements List<T>, Iterable {
 
     @Override
     public void add(T value) {
-        grow();
+        growIfFull();
         elementData[size] = value;
         size++;
     }
@@ -24,7 +24,7 @@ public class ArrayList<T> implements List<T>, Iterable {
     @Override
     public void add(T value, int index) {
         indexOutOfBoundCheck(index);
-        grow();
+        growIfFull();
         System.arraycopy(elementData, index,
                 elementData, index + 1,
                 size - index);
@@ -36,7 +36,7 @@ public class ArrayList<T> implements List<T>, Iterable {
     public void addAll(List<T> list) {
         for (Object element : list) {
             if (element != null) {
-                grow();
+                growIfFull();
                 add((T) element);
             }
         }
@@ -58,9 +58,7 @@ public class ArrayList<T> implements List<T>, Iterable {
     public T remove(int index) {
         indexOutOfBoundCheck(index + 1);
         final T elementToRemove = elementData[index];
-        for (int i = index; i < size - 1; i++) {
-            elementData[i] = elementData[i + 1];
-        }
+        System.arraycopy(elementData, index + 1, elementData, index, size - index - 1);
         size--;
         elementData[size] = null;
         return elementToRemove;
@@ -109,7 +107,7 @@ public class ArrayList<T> implements List<T>, Iterable {
         }
     }
 
-    private void grow() {
+    private void growIfFull() {
         if (elementData.length == size) {
             int newCapacity = (int) (elementData.length * RESIZE_CONSTANT);
             Object[] oldElementData = elementData;
