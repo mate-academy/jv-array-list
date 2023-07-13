@@ -11,7 +11,6 @@ public class ArrayList<T> implements List<T> {
 
     public ArrayList() {
         elements = new Object[DEFAULT_CAPACITY];
-        size = 0;
     }
 
     @Override
@@ -102,10 +101,10 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void ensureCapacity(int capacity) {
-        if (capacity > elements.length) {
+    private void ensureCapacity(int size) {
+        if (size > elements.length) {
             int newCapacity = (int) (elements.length * GROWTH_FACTOR);
-            elements = Arrays.copyOf(elements, Math.max(newCapacity, capacity));
+            elements = Arrays.copyOf(elements, Math.max(newCapacity, size));
         }
     }
 }
