@@ -21,20 +21,21 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
+        if (index != size) {
+            checkIndexInBounds(index);
+        }
         if (size == elementData.length) {
             elementData = grow();
         }
-        size++;
-        checkIndexInBounds(index);
-        System.arraycopy(elementData, index, elementData, index + 1, size - index - 1);
+        System.arraycopy(elementData, index, elementData, index + 1, size - index);
         elementData[index] = value;
+        size++;
     }
 
     @Override
     public void addAll(List<T> list) {
         for (int i = 0; i < list.size(); i++) {
-            T elem = (T) list.get(i);
-            add(elem);
+            add(list.get(i));
         }
     }
 
@@ -89,7 +90,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void checkIndexInBounds(int index) {
-        if (index != 0 && (index < 0 || index >= size)) {
+        if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException("Index "
                     + index + " is out of bounds: " + size);
         }
