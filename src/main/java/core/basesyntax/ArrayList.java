@@ -1,19 +1,19 @@
 package core.basesyntax;
 
-import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    private static final int DEFAULT_SIZE = 10;
-    private static final Object[] EMPTY_SIZE = {};
-    private int size = 0;
-    private Object[] values = new Object[DEFAULT_SIZE];
+    private static final int DEFAULT_CAPACITY = 10;
+    private int size;
+    private T[] values;
+
+    public ArrayList() {
+        values = (T[]) new Object[DEFAULT_CAPACITY];
+    }
 
     @Override
     public void add(T value) {
-        if (size == values.length) {
-            values = grow(size + 1);
-        }
+        growIfArrayFull();
         values[size] = value;
         size++;
     }
@@ -23,9 +23,7 @@ public class ArrayList<T> implements List<T> {
         if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException("There are no values for this index");
         }
-        if (size == values.length) {
-            values = grow(size + 1);
-        }
+        growIfArrayFull();
         for (int i = size; i > index; i--) {
             values[i] = values[i - 1];
         }
@@ -35,45 +33,37 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        int numNew = list.size();
-        Object[] newValues = new Object[size + numNew];
-        if (numNew > (values.length - size)) {
-            values = grow(size + numNew);
+        int listSize = list.size();
+        T[] newValues = (T[]) new Object[size + listSize];
+        if (listSize > (values.length - size)) {
+            values = grow(size + listSize);
         }
         System.arraycopy(values, 0, newValues, 0, size);
         for (int i = size, k = 0; i < newValues.length; i++, k++) {
-            newValues[i] = list.get(k);
+            add(list.get(k));
         }
-        values = newValues;
-        size += numNew;
     }
 
     @Override
     public T get(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("There are no values for this index");
-        }
-        return (T) values[index];
+        checkIndex(index);
+        return values[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("There are no values for this index");
-        }
+        checkIndex(index);
         values[index] = value;
     }
 
     @Override
     public T remove(int index) {
         final T removedElement = get(index);
-        Object[] newValues = new Object[size];
-        if (index >= 0) {
-            System.arraycopy(values, 0, newValues, 0, index);
-        }
+        T[] newValues = (T[]) new Object[size];
+        System.arraycopy(values, 0, newValues, 0, index);
         if (newValues.length - (index + 1) >= 0) {
             System.arraycopy(values, index + 1, newValues,
-                    index + 1 - 1, newValues.length - (index + 1));
+                    index, newValues.length - (index + 1));
         }
         values = newValues;
         size--;
@@ -100,13 +90,26 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private Object[] grow(int minCapacity) {
+    private T[] grow(int minCapacity) {
         int oldCapacity = values.length;
-        if (oldCapacity > 0 || values != EMPTY_SIZE) {
+        if (oldCapacity > 0 || values != null) {
             int newCapacity = oldCapacity + (oldCapacity >> 1);
-            return Arrays.copyOf(values, newCapacity);
-        } else {
-            return new Object[Math.max(DEFAULT_SIZE, minCapacity)];
+            T[] newValues = (T[]) new Object[newCapacity];
+            System.arraycopy(values, 0, newValues, 0, size);
+            return newValues;
+        }
+        return null;
+    }
+
+    private void checkIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("There are no values for this index");
+        }
+    }
+
+    private void growIfArrayFull() {
+        if (size == values.length) {
+            values = grow(size + 1);
         }
     }
 }
