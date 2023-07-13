@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    private static int capacity = 10;
+    private static final int capacity = 10;
     private static final double RESIZE_FACTOR = 1.5;
     private int size;
     private T[] elements;
@@ -15,14 +15,14 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        checkSize();
+        growIfNeed();
         elements[size++] = value;
     }
 
     @Override
     public void add(T value, int index) {
+        growIfNeed();
         checkAddIndex(index);
-        checkSize();
         System.arraycopy(elements, index, elements, index + 1, size - index);
         elements[index] = value;
         size++;
@@ -73,8 +73,8 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void checkSize() {
-        if (size == capacity) {
+    private void growIfNeed() {
+        if (size == elements.length) {
             grow();
         }
     }
@@ -103,7 +103,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void grow() {
-        capacity *= RESIZE_FACTOR;
+        int capacity = (int) (elements.length * RESIZE_FACTOR);
         T[] copy = elements;
         elements = (T[]) new Object[capacity];
         System.arraycopy(copy, 0, elements, 0, size);
