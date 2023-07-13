@@ -63,24 +63,8 @@ public class ArrayList<T> implements List<T> {
     public T remove(T element) {
         final Object[] es = elementData;
         final int size = this.size;
-        int i = 0;
-        found: {
-            if (element == null) {
-                for (; i < size; i++) {
-                    if (es[i] == null) {
-                        break found;
-                    }
-                }
-            } else {
-                for (; i < size; i++) {
-                    if (element.equals(es[i])) {
-                        break found;
-                    }
-                }
-            }
-            throw new NoSuchElementException("Element you want to remove does not exit");
-        }
-        fastRemove(es, i);
+        int indexToDelete = returnIndexOfElement(element, es, size);
+        fastRemove(es, indexToDelete);
         return element;
     }
 
@@ -92,6 +76,25 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private int returnIndexOfElement(T element, Object[] es, int size) {
+        int i = 0;
+        if (element == null) {
+            for (; i < size; i++) {
+                if (es[i] == null) {
+                    return i;
+                }
+            }
+        } else {
+            for (; i < size; i++) {
+                if (element.equals(es[i])) {
+                    return i;
+                }
+            }
+            throw new NoSuchElementException("Element you want to remove does not exit");
+        }
+        return i;
     }
 
     private void growIfNeeded() {
