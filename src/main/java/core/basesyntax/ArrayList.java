@@ -1,24 +1,25 @@
 package core.basesyntax;
 
-import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    private static final Object[] EMPTY_ELEMENT_DATA = {};
+    private static final double GROWTH_FACTOR = 1.5;
     private Object[] elementData;
     private int size;
 
     public ArrayList(int initialCapacity) {
-        if (initialCapacity >= 0) {
+        if (initialCapacity > DEFAULT_CAPACITY) {
             elementData = new Object[initialCapacity];
+        } else if (initialCapacity >= 0) {
+            elementData = new Object[DEFAULT_CAPACITY];
         } else {
             throw new IllegalArgumentException("Illegal Capacity: " + initialCapacity);
         }
     }
 
     public ArrayList() {
-        elementData = EMPTY_ELEMENT_DATA;
+        elementData = new Object[DEFAULT_CAPACITY];
     }
 
     @Override
@@ -42,14 +43,10 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void addAll(List<T> list) {
         if (list == null) {
-            return;
-        }
-        while (list.size() > elementData.length - size) {
-            grow();
+            throw new IllegalArgumentException("Argument 'list' can`t be null");
         }
         for (int i = 0; i < list.size(); i++) {
-            elementData[size] = list.get(i);
-            size++;
+            add(list.get(i));
         }
     }
 
@@ -107,18 +104,11 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private void grow(int minCapacity) {
-        int oldCapacity = elementData.length;
-        if (oldCapacity > 0 || elementData != EMPTY_ELEMENT_DATA) {
-            int newCapacity = (int) (oldCapacity * 1.5);
-            elementData = Arrays.copyOf(elementData, newCapacity);
-        } else {
-            elementData = new Object[Math.max(DEFAULT_CAPACITY, minCapacity)];
-        }
-    }
-
     private void grow() {
-        grow(size + 1);
+        int newCapacity = (int) (elementData.length * 1.5);
+        Object[] newElementData = new Object[newCapacity];
+        System.arraycopy(elementData, 0, newElementData, 0, size);
+        elementData = newElementData;
     }
 
     private void fastRemove(int i) {
