@@ -6,12 +6,8 @@ import java.util.NoSuchElementException;
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private static final double GROWTH_FACTOR = 1.5;
-    private Object[] elements;
+    private Object[] elements = new Object[DEFAULT_CAPACITY];
     private int size;
-
-    public ArrayList() {
-        elements = new Object[DEFAULT_CAPACITY];
-    }
 
     @Override
     public void add(T value) {
