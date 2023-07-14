@@ -39,25 +39,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
-        }
+        checkIndex(index);
         return (T) elements[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
-        }
+        checkIndex(index);
         elements[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
-        }
+        checkIndex(index);
         T removedElement = (T) elements[index];
         System.arraycopy(elements, index + 1, elements, index, size - index - 1);
         elements[--size] = null;
@@ -66,20 +60,17 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        int index = indexOf(element);
+        int index = getIndexOf(element);
         if (index == -1) {
             throw new NoSuchElementException("Element not found: " + element);
         }
         return remove(index);
     }
 
-    private int indexOf(T element) {
+    private int getIndexOf(T element) {
         for (int i = 0; i < size; i++) {
-            if (element == null) {
-                if (elements[i] == null) {
-                    return i;
-                }
-            } else if (element.equals(elements[i])) {
+            if ((element == null && elements[i] == null)
+                    || (element != null && element.equals(elements[i]))) {
                 return i;
             }
         }
@@ -96,23 +87,22 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
+    private void checkIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
+        }
+    }
+
     private void ensureCapacity() {
         if (size >= elements.length) {
             int newCapacity = calculateNewCapacity();
             T[] newElements = (T[]) new Object[newCapacity];
-            for (int i = 0; i < size; i++) {
-                newElements[i] = (T) elements[i];
-            }
+            System.arraycopy(elements, 0, newElements, 0, size);
             elements = newElements;
         }
     }
 
     private int calculateNewCapacity() {
-        int newCapacity = (int) (elements.length * GROWTH_FACTOR);
-        if (newCapacity < size) {
-            newCapacity = size;
-        }
-        return newCapacity;
+        return (int) (elements.length * GROWTH_FACTOR);
     }
 }
-
