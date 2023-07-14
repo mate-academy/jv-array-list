@@ -15,14 +15,13 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value) {
         ensureCapacity();
-        elements[size++] = value;
+        elements[size] = value;
+        size++;
     }
 
     @Override
     public void add(T value, int index) {
-        if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
-        }
+        checkIndexForAdd(index);
         ensureCapacity();
         System.arraycopy(elements, index, elements, index + 1, size - index);
         elements[index] = value;
@@ -33,7 +32,7 @@ public class ArrayList<T> implements List<T> {
     public void addAll(List<T> list) {
         ensureCapacity();
         for (int i = 0; i < list.size(); i++) {
-            elements[size++] = list.get(i);
+            add(list.get(i));
         }
     }
 
@@ -89,6 +88,12 @@ public class ArrayList<T> implements List<T> {
 
     private void checkIndex(int index) {
         if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
+        }
+    }
+
+    private void checkIndexForAdd(int index) {
+        if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
         }
     }
