@@ -14,7 +14,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value) {
         if (size == dataArray.length) {
-            extensionArray();
+            increaseArrayCapacity();
         }
         dataArray[size] = value;
         size++;
@@ -22,15 +22,13 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        checkIndexInclusive(index);
         if (size == dataArray.length) {
-            extensionArray();
+            increaseArrayCapacity();
         }
-
-        if (index != size) {
-            System.arraycopy(dataArray, index, dataArray, index + 1, size - index);
+        if (index < 0 || index > size) {
+            throw new ArrayListIndexOutOfBoundsException("Index " + index + " Size" + size);
         }
-
+        System.arraycopy(dataArray, index, dataArray, index + 1, size - index);
         dataArray[index] = value;
         size++;
     }
@@ -38,35 +36,28 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void addAll(List<T> list) {
         for (int i = 0; i < list.size(); i++) {
-            if ((size + list.size()) >= dataArray.length) {
-                extensionArray();
-            }
             add(list.get(i));
         }
     }
 
     @Override
     public T get(int index) {
-        checkIndexExclusive(index);
+        checkIndex(index);
         return (T) dataArray[index];
     }
 
     @Override
     public void set(T value, int index) {
-        checkIndexExclusive(index);
+        checkIndex(index);
         dataArray[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        checkIndexExclusive(index);
+        checkIndex(index);
         T removeArrayIndex = (T) dataArray[index];
         size--;
-
-        if (index != size) {
-            System.arraycopy(dataArray,index + 1, dataArray, index, size - index);
-        }
-
+        System.arraycopy(dataArray,index + 1, dataArray, index, size - index);
         return removeArrayIndex;
     }
 
@@ -88,24 +79,18 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public boolean isEmpty() {
-        return size < 1;
+        return size == 0;
     }
 
-    private void extensionArray() {
-        Object[] oldArray = dataArray;
-        dataArray = (T[]) new Object[oldArray.length + (oldArray.length >> 1)];
-        System.arraycopy(oldArray,0, dataArray,0,size);
-    }
-
-    private void checkIndexInclusive(int index) {
-        if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("Index " + index + " Size" + size);
-        }
-    }
-
-    private void checkIndexExclusive(int index) {
+    private void checkIndex(int index) {
         if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException("Index " + index + " Size" + size);
         }
+    }
+
+    private void increaseArrayCapacity() {
+        Object[] oldArray = dataArray;
+        dataArray = (T[]) new Object[oldArray.length + (oldArray.length >> 1)];
+        System.arraycopy(oldArray,0, dataArray,0,size);
     }
 }
