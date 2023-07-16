@@ -1,6 +1,5 @@
 package core.basesyntax;
 
-import java.lang.reflect.Array;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
@@ -10,16 +9,20 @@ public class ArrayList<T> implements List<T> {
     private T[] elements;
     private int size;
 
+    public ArrayList() {
+        this.elements = (T[]) new Object[INITIAL_SIZE];
+    }
+
     @Override
     public void add(T value) {
-        addCellForNewElement(value);
+        addCellForNewElement();
         elements[size - 1] = value;
     }
 
     @Override
     public void add(T value, int index) {
         int prevSize = size;
-        addCellForNewElement(value);
+        addCellForNewElement();
         validateIndex(index);
         if (index < prevSize) {
             System.arraycopy(elements, index, elements, index + 1, prevSize - index);
@@ -31,9 +34,6 @@ public class ArrayList<T> implements List<T> {
     public void addAll(List<T> list) {
         if (list == null) {
             throw new NullPointerException("Input list is null");
-        }
-        if (list.size() == 0) {
-            return;
         }
         for (int i = 0; i < list.size(); i++) {
             add(list.get(i));
@@ -86,25 +86,13 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void addCellForNewElement(T value) {
-        if (elements == null) {
-            elements = createArray(value, INITIAL_SIZE);
-        }
+    private void addCellForNewElement() {
         size++;
         if (size > elements.length) {
-            T[] newArray = createArray(value, (int) (elements.length * GROW_FACTOR));
+            T[] newArray = (T[]) new Object[(int) (elements.length * GROW_FACTOR)];
             System.arraycopy(elements, 0, newArray, 0, elements.length);
             elements = newArray;
         }
-    }
-
-    private T[] createArray(T value, int arraySize) {
-        if (value == null && elements != null && elements.length > 0) {
-            value = elements[0];
-        }
-        return (T[]) Array.newInstance((value != null)
-                            ? value.getClass()
-                            : Object.class, arraySize);
     }
 
     private void validateIndex(int index) {
