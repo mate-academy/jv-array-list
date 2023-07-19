@@ -51,14 +51,12 @@ public class ArrayList<T> implements List<T> {
     @SuppressWarnings("unchecked")
     public T get(int index) {
         checkIndex(index);
-
         return (T) elementData[index];
     }
 
     @Override
     public void set(T value, int index) {
         checkIndex(index);
-
         elementData[index] = value;
     }
 
@@ -81,7 +79,7 @@ public class ArrayList<T> implements List<T> {
             }
         }
 
-        throw new NoSuchElementException("Value not found");
+        throw new NoSuchElementException("Element not found: " + element);
     }
 
     @Override
@@ -96,9 +94,7 @@ public class ArrayList<T> implements List<T> {
 
     private Object[] expand(Object[] elementData) {
         Object[] newStorageKey = new Object[elementData.length + (elementData.length >> 1)];
-
         System.arraycopy(elementData, 0, newStorageKey, 0, elementData.length);
-
         return newStorageKey;
     }
 
@@ -113,7 +109,8 @@ public class ArrayList<T> implements List<T> {
 
     private void checkIndex(int index) {
         if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Unreachable index");
+            throw new ArrayListIndexOutOfBoundsException("Incorrect index " + index
+                    + " for ArrayList size " + size);
         }
     }
 
