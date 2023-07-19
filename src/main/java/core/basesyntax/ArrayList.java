@@ -1,9 +1,8 @@
 package core.basesyntax;
 
-import java.util.Arrays;
+import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-
     private static final int DEFAULT_CAPACITY = 10;
 
     private Object[] elementData;
@@ -25,7 +24,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index > size || index < 0 ) {
+        if (index > size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Incorrect index");
         }
 
@@ -49,8 +48,9 @@ public class ArrayList<T> implements List<T> {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public T get(int index) {
-        if (index >= size || index < 0 ) {
+        if (index >= size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Incorrect index");
         }
 
@@ -59,7 +59,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void set(T value, int index) {
-        if (index >= size || index < 0 ) {
+        if (index >= size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Incorrect index");
         }
 
@@ -68,12 +68,28 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(int index) {
-        return null;
+        if (index >= size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Incorrect index");
+        }
+
+        final Object[] objects = elementData;
+
+        @SuppressWarnings("unchecked") T oldValue = (T) objects[index];
+        fastRemove(objects, index);
+
+        return oldValue;
     }
 
     @Override
     public T remove(T element) {
-        return null;
+        for (int i = 0; i < size(); i++) {
+            if ((element == null && elementData[i] == null)
+                    || (element != null && element.equals(elementData[i]))) {
+                return remove(i);
+            }
+        }
+
+        throw new NoSuchElementException("Value not found");
     }
 
     @Override
@@ -92,6 +108,15 @@ public class ArrayList<T> implements List<T> {
         System.arraycopy(elementData, 0, newStorageKey, 0, elementData.length);
 
         return newStorageKey;
+    }
+
+    private void fastRemove(Object[] objects, int i) {
+        final int newSize = size - 1;
+        if (newSize > i) {
+            System.arraycopy(objects, i + 1, objects, i, newSize - i);
+        }
+
+        objects[size = newSize] = null;
     }
 
 }
