@@ -50,27 +50,21 @@ public class ArrayList<T> implements List<T> {
     @Override
     @SuppressWarnings("unchecked")
     public T get(int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Incorrect index");
-        }
+        checkIndex(index);
 
         return (T) elementData[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Incorrect index");
-        }
+        checkIndex(index);
 
         elementData[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Incorrect index");
-        }
+        checkIndex(index);
 
         final Object[] objects = elementData;
 
@@ -110,13 +104,19 @@ public class ArrayList<T> implements List<T> {
         return newStorageKey;
     }
 
-    private void fastRemove(Object[] objects, int i) {
+    private void fastRemove(Object[] objects, int index) {
         final int newSize = size - 1;
-        if (newSize > i) {
-            System.arraycopy(objects, i + 1, objects, i, newSize - i);
+        if (newSize > index) {
+            System.arraycopy(objects, index + 1, objects, index, newSize - index);
         }
 
         objects[size = newSize] = null;
+    }
+
+    private void checkIndex(int index) {
+        if (index >= size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Unreachable index");
+        }
     }
 
 }
