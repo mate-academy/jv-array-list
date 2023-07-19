@@ -66,10 +66,8 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         checkIndex(index);
 
-        final Object[] objects = elementData;
-
-        @SuppressWarnings("unchecked") T oldValue = (T) objects[index];
-        fastRemove(objects, index);
+        @SuppressWarnings("unchecked") T oldValue = (T) elementData[index];
+        fastRemove(elementData, index);
 
         return oldValue;
     }
