@@ -10,12 +10,12 @@ public class ArrayList<T> implements List<T> {
 
     public ArrayList() {
         capacity = DEFAULT_CAPACITY;
-        elements = new Object[DEFAULT_CAPACITY];
+        elements = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
     public ArrayList(int capacity) {
         this.capacity = capacity;
-        elements = new Object[capacity];
+        elements = (T[]) new Object[capacity];
     }
 
     @Override
@@ -24,13 +24,12 @@ public class ArrayList<T> implements List<T> {
             increaseCapacity();
         }
         elements[size++] = value;
-
     }
 
     @Override
     public void add(T value, int index) {
         if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("Wrong index");
+            getArrayListIndexOutOfBoundsException();
         }
         if (size + 1 >= capacity) {
             increaseCapacity();
@@ -38,9 +37,7 @@ public class ArrayList<T> implements List<T> {
         if (index > size) {
             index = size;
         }
-        for (int i = size; i >= index; i--) {
-            elements[i + 1] = elements[i];
-        }
+        System.arraycopy(elements, 0, elements, 1, size);
         elements[index] = value;
         size++;
     }
@@ -59,8 +56,9 @@ public class ArrayList<T> implements List<T> {
         if ((index < size) && (index >= 0)) {
             return (T) elements[index];
         } else {
-            throw new ArrayListIndexOutOfBoundsException("Wrong index");
+            getArrayListIndexOutOfBoundsException();
         }
+        return null;
     }
 
     @Override
@@ -69,7 +67,7 @@ public class ArrayList<T> implements List<T> {
             Object o = elements[index];
             elements[index] = value;
         } else {
-            throw new ArrayListIndexOutOfBoundsException("Wrong index");
+            getArrayListIndexOutOfBoundsException();
         }
     }
 
@@ -80,32 +78,21 @@ public class ArrayList<T> implements List<T> {
             o = get(index);
             shiftToLeft(index);
         } else {
-            throw new ArrayListIndexOutOfBoundsException("Wrong index");
+            getArrayListIndexOutOfBoundsException();
         }
         return (T) o;
     }
 
     @Override
     public T remove(T element) {
-        if ((size == 0)) {
-            return null;
-        }
-        int i;
-        for (i = 0; i < size; i++) {
-            if (elements[i] == null && element == null) {
-                break;
-            }
-            if ((elements[i] != null) && (elements[i].equals(element))) {
-                break;
-            }
-        }
-        if (i < size) {
-            shiftToLeft(i);
-            return element;
-        } else {
-            throw new NoSuchElementException("Wrong element");
-        }
 
+        for (int i = 0; i < size; i++) {
+            if (elements[i] == element || elements[i] != null && elements[i].equals(element)) {
+                return remove(i);
+            }
+
+        }
+        throw new NoSuchElementException();
     }
 
     @Override
@@ -137,6 +124,10 @@ public class ArrayList<T> implements List<T> {
             System.arraycopy(elements, start + 1, elements, start, size - start);
         }
         elements[size] = null;
+    }
+
+    private void getArrayListIndexOutOfBoundsException() {
+        throw new ArrayListIndexOutOfBoundsException("Wrong input data");
     }
 }
 
