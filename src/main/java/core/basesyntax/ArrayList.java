@@ -4,8 +4,8 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    private int size = 0;
-    private int capacity = 0;
+    private int size;
+    private int capacity;
     private Object[] elements;
 
     public ArrayList() {
@@ -16,27 +16,6 @@ public class ArrayList<T> implements List<T> {
     public ArrayList(int capacity) {
         this.capacity = capacity;
         elements = new Object[capacity];
-    }
-
-    private void increaseCapacity() {
-        capacity = capacity * 3 / 2;
-        Object[] newArray = new Object[capacity];
-        for (int i = 0; i < size; i++) {
-            newArray[i] = elements[i];
-            elements[i] = null;
-        }
-        elements = newArray;
-    }
-
-    private void shiftToLeft(int start) {
-        size--;
-        if (size <= 0) {
-            return;
-        }
-        if (size != start) {
-            System.arraycopy(elements, start + 1, elements, start, size - start);
-        }
-        elements[size] = null;
     }
 
     @Override
@@ -140,6 +119,24 @@ public class ArrayList<T> implements List<T> {
             return true;
         }
         return false;
+    }
+
+    private void increaseCapacity() {
+        capacity = capacity * 3 / 2;
+        Object[] newArray = new Object[capacity];
+        System.arraycopy(elements, 0, newArray, 0, size);
+        elements = newArray;
+    }
+
+    private void shiftToLeft(int start) {
+        size--;
+        if (size <= 0) {
+            return;
+        }
+        if (size != start) {
+            System.arraycopy(elements, start + 1, elements, start, size - start);
+        }
+        elements[size] = null;
     }
 }
 
