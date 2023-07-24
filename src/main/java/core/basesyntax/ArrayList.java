@@ -31,9 +31,6 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        if (list == null) {
-            throw new NullPointerException("List cannot be null");
-        }
         for (int i = 0; i < list.size(); i++) {
             add(list.get(i));
         }
@@ -41,19 +38,25 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        checkIndex(index);
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Index out of bounds: " + index);
+        }
         return elements[index];
     }
 
     @Override
     public void set(T value, int index) {
-        checkIndex(index);
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Index out of bounds: " + index);
+        }
         elements[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        checkIndex(index);
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Index out of bounds: " + index);
+        }
         T removedElement = elements[index];
         System.arraycopy(elements, index + 1, elements, index, size - index - 1);
         elements[--size] = null;
@@ -83,23 +86,11 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void ensureCapacity() {
-        if (elements.length < size + 1) {
+        if (elements.length <= size) {
             int newCapacity = (int) (elements.length * GROWTH_FACTOR);
             Object[] newElements = new Object[newCapacity];
             System.arraycopy(elements, 0, newElements, 0, size);
             elements = (T[]) newElements;
-        }
-    }
-
-    private void checkIndex(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index out of bounds: " + index);
-        }
-    }
-
-    private void checkNotEmpty() {
-        if (isEmpty()) {
-            throw new NoSuchElementException("List is Empty");
         }
     }
 }
