@@ -28,14 +28,9 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index < 0 || index > size) {
-            getArrayListIndexOutOfBoundsException();
-        }
+        checkIndexForAdd(index);
         if (size + 1 >= capacity) {
             increaseCapacity();
-        }
-        if (index > size) {
-            index = size;
         }
         System.arraycopy(elements, 0, elements, 1, size);
         elements[index] = value;
@@ -44,43 +39,30 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        if (list != null && !list.isEmpty()) {
-            for (int i = 0; i < list.size(); i++) {
-                add((T) list.get(i));
-            }
+        for (int i = 0; i < list.size(); i++) {
+            add((T) list.get(i));
         }
     }
 
     @Override
     public T get(int index) {
-        if ((index < size) && (index >= 0)) {
-            return (T) elements[index];
-        } else {
-            getArrayListIndexOutOfBoundsException();
-        }
-        return null;
+        checkIndex(index);
+        return (T) elements[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if ((index < size) && (index >= 0)) {
-            Object o = elements[index];
-            elements[index] = value;
-        } else {
-            getArrayListIndexOutOfBoundsException();
-        }
+        checkIndex(index);
+        elements[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        Object o = null;
-        if ((index < size) && (index >= 0)) {
-            o = get(index);
-            shiftToLeft(index);
-        } else {
-            getArrayListIndexOutOfBoundsException();
-        }
-        return (T) o;
+        checkIndex(index);
+        T removed = (T) elements[index];
+        System.arraycopy(elements, index + 1, elements, index, size - index - 1);
+        elements[--size] = null;
+        return removed;
     }
 
     @Override
@@ -109,21 +91,22 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void increaseCapacity() {
-        capacity = capacity * 3 / 2;
+        capacity = (capacity * 3) / 2 + 1;
         Object[] newArray = new Object[capacity];
         System.arraycopy(elements, 0, newArray, 0, size);
         elements = newArray;
     }
 
-    private void shiftToLeft(int start) {
-        size--;
-        if (size <= 0) {
-            return;
+    private void checkIndex(int index) {
+        if ((index > size - 1 || index < 0)) {
+            getArrayListIndexOutOfBoundsException();
         }
-        if (size != start) {
-            System.arraycopy(elements, start + 1, elements, start, size - start);
+    }
+
+    private void checkIndexForAdd(int index) {
+        if ((index > size || index < 0)) {
+            getArrayListIndexOutOfBoundsException();
         }
-        elements[size] = null;
     }
 
     private void getArrayListIndexOutOfBoundsException() {
