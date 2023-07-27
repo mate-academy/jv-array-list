@@ -13,25 +13,16 @@ public class ArrayList<T> implements List<T> {
         elements = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
-    public ArrayList(int capacity) {
-        this.capacity = capacity;
-        elements = (T[]) new Object[capacity];
-    }
-
     @Override
     public void add(T value) {
-        if (size >= capacity) {
-            increaseCapacity();
-        }
+        ensureCapacity();
         elements[size++] = value;
     }
 
     @Override
     public void add(T value, int index) {
         checkIndexForAdd(index);
-        if (size + 1 >= capacity) {
-            increaseCapacity();
-        }
+        ensureCapacity();
         System.arraycopy(elements, 0, elements, 1, size);
         elements[index] = value;
         size++;
@@ -74,7 +65,7 @@ public class ArrayList<T> implements List<T> {
             }
 
         }
-        throw new NoSuchElementException();
+        throw new NoSuchElementException("The element not founded. Please choose another element");
     }
 
     @Override
@@ -84,10 +75,13 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public boolean isEmpty() {
-        if (size == 0) {
-            return true;
+        return size == 0;
+    }
+
+    private void ensureCapacity() {
+        if (size >= capacity) {
+            increaseCapacity();
         }
-        return false;
     }
 
     private void increaseCapacity() {
@@ -99,18 +93,24 @@ public class ArrayList<T> implements List<T> {
 
     private void checkIndex(int index) {
         if ((index > size - 1 || index < 0)) {
-            getArrayListIndexOutOfBoundsException();
+            getArrayListIndexOutOfBoundsException(index);
         }
     }
 
     private void checkIndexForAdd(int index) {
         if ((index > size || index < 0)) {
-            getArrayListIndexOutOfBoundsException();
+            getArrayListIndexOutOfBoundsException(index);
         }
     }
 
-    private void getArrayListIndexOutOfBoundsException() {
-        throw new ArrayListIndexOutOfBoundsException("Wrong input data");
+    private void getArrayListIndexOutOfBoundsException(int index) {
+        if (index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Wrong input data: Index - "
+                    + index + " is less 0");
+        } else {
+            throw new ArrayListIndexOutOfBoundsException("Wrong input data: Index - "
+                    + index + " is more size " + size);
+        }
     }
 }
 
