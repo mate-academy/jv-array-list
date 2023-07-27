@@ -104,13 +104,10 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void getArrayListIndexOutOfBoundsException(int index) {
-        if (index < 0) {
+
             throw new ArrayListIndexOutOfBoundsException("Wrong input data: Index - "
-                    + index + " is less 0");
-        } else {
-            throw new ArrayListIndexOutOfBoundsException("Wrong input data: Index - "
-                    + index + " is more size " + size);
-        }
+                    + index + " is out of boundaries");
+
     }
 }
 
