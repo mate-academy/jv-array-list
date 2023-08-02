@@ -1,14 +1,14 @@
 package core.basesyntax;
 
-import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static int DEFAULT_CAPACITY = 10;
     private int size = 0;
-    private Object[] storage = new Object[DEFAULT_CAPACITY];
+    private Object[] storage;
 
     public ArrayList() {
+        this.storage = new Object[DEFAULT_CAPACITY];
     }
 
     @Override
@@ -95,7 +95,12 @@ public class ArrayList<T> implements List<T> {
 
     private void growIfArrayFull() {
         if (size >= storage.length) {
-            storage = Arrays.copyOf(storage, storage.length + (storage.length >> 1));
+            int newArraySize = storage.length + (storage.length >> 1);
+            Object[] newStorage = new Object[newArraySize];
+
+            System.arraycopy(storage, 0, newStorage, 0, storage.length);
+
+            storage = newStorage;
         }
     }
 }
