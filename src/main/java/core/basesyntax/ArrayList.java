@@ -29,9 +29,7 @@ public class ArrayList<T> implements List<T> {
         } else {
             this.checkIndex(index);
             this.add(arrayList[size - 1]);
-            for (int i = size - 2; i > index; i--) {
-                arrayList[i] = arrayList[i - 1];
-            }
+            System.arraycopy(arrayList, index, arrayList, index + 1, size - index - 2);
             arrayList[index] = value;
         }
     }
@@ -61,9 +59,7 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         this.checkIndex(index);
         final T element = arrayList[index];
-        for (int i = index; i < size - 1; i++) {
-            arrayList[i] = arrayList[i + 1];
-        }
+        System.arraycopy(arrayList, index + 1, arrayList, index, size - index - 1);
         size--;
         arrayList[size] = null;
         return element;
