@@ -81,9 +81,9 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void grow() {
-        T[] newArrayList = (T[]) new Object[list.length + (list.length >> 1)];
-        System.arraycopy(list, 0, newArrayList, 0, size);
-        list = newArrayList;
+        T[] newList = (T[]) new Object[list.length + (list.length >> 1)];
+        System.arraycopy(list, 0, newList, 0, size);
+        list = newList;
     }
 
     private void checkIndex(int index) {
