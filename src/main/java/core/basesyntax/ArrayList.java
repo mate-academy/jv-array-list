@@ -5,12 +5,12 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int INITIAL_CAPACITY = 10;
+    private static final int ENSURE_MULTIPLIER = 2;
     private T[] elements;
     private int size;
 
     public ArrayList() {
         elements = (T[]) new Object[INITIAL_CAPACITY];
-        size = 0;
     }
 
     @Override
@@ -42,27 +42,28 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
+    public void throwOutOfBoundException(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Element with index "
+                + index + " does not exists!");
+        }
+    }
+
     @Override
     public T get(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Wrong index!");
-        }
+        throwOutOfBoundException(index);
         return elements[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Wrong index!");
-        }
+        throwOutOfBoundException(index);
         elements[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Wrong index!");
-        }
+        throwOutOfBoundException(index);
         T removedElement = elements[index];
         System.arraycopy(elements, index + 1, elements, index, size - index - 1);
         size--;
@@ -72,9 +73,6 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         int index = indexOf(element);
-        if (index == -1) {
-            return null;
-        }
         return remove(index);
     }
 
@@ -90,7 +88,7 @@ public class ArrayList<T> implements List<T> {
 
     private void ensureCapacity() {
         if (size == elements.length) {
-            elements = Arrays.copyOf(elements, 2 * size);
+            elements = Arrays.copyOf(elements, size * ENSURE_MULTIPLIER);
         }
     }
 
@@ -104,14 +102,12 @@ public class ArrayList<T> implements List<T> {
     }
 
     public boolean equals(Object element1, Object element2) {
-        if (element1 != null && element2 == null || element1 == null && element2 != null) {
-            return false;
-        }
-        if (element1 == null && element2 == null
-                || element1 == element2
-                || element1.equals(element2)) {
+        if (element1 == element2) {
             return true;
         }
-        return false;
+        if (element1 == null || element2 == null) {
+            return false;
+        }
+        return element1.equals(element2);
     }
 }
