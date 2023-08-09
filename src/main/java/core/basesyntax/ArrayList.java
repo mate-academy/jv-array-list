@@ -20,13 +20,11 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        growIfArrayFull();
         if (index > size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Index: " + index + ", Bounds: " + size);
         }
-        for (int i = size - 1; i >= index; i--) {
-            valus[i + 1] = valus[i];
-        }
+        growIfArrayFull();
+        System.arraycopy(valus, index, valus, index + 1, size - index);
         valus[index] = value;
         size++;
     }
@@ -61,9 +59,7 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayListIndexOutOfBoundsException("Index: " + index + ", Bounds: " + size);
         }
         T removeElement = (T) valus[index];
-        for (int i = index; i < size - 1; i++) {
-            valus[i] = valus[i + 1];
-        }
+        System.arraycopy(valus, index + 1, valus, index, size - index - 1);
         size--;
         return removeElement;
     }
@@ -72,13 +68,8 @@ public class ArrayList<T> implements List<T> {
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
             if (valus[i] == element || valus[i] != null && valus[i].equals(element)) {
-                for (int j = i; j < valus.length; j++) {
-                    if (j + 1 > size - 1) {
-                        size = size - 1;
-                        break;
-                    }
-                    valus[j] = valus[j + 1];
-                }
+                System.arraycopy(valus, i + 1, valus, i, size - i);
+                size--;
                 return element;
             }
         }
