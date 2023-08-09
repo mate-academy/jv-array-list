@@ -10,7 +10,6 @@ public class ArrayList<T> implements List<T> {
 
     public ArrayList() {
         elements = (T[]) new Object[DEFAULT_CAPACITY];
-        size = 0;
     }
 
     @Override
@@ -81,10 +80,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public boolean isEmpty() {
-        if (size == 0) {
-            return true;
-        }
-        return false;
+        return size == 0;
     }
 
     private void resize() {
@@ -96,17 +92,10 @@ public class ArrayList<T> implements List<T> {
     }
 
     private int indexOf(T element) {
-        if (element == null) {
-            for (int i = 0; i < size; i++) {
-                if (elements[i] == null) {
-                    return i;
-                }
-            }
-        } else {
-            for (int i = 0; i < size; i++) {
-                if (element.equals(elements[i])) {
-                    return i;
-                }
+        for (int i = 0; i < size; i++) {
+            if ((element == null && elements[i] == null)
+                    || (element != null && element.equals(elements[i]))) {
+                return i;
             }
         }
         return -1;
