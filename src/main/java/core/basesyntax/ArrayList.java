@@ -89,9 +89,6 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private void grow() {
-        storage = Arrays.copyOf(storage, (int) (storage.length * 1.5));
-    }
 
     private void checkIfIndexExists(int index) {
         if (index < 0 || index >= currentTailIndex) {
