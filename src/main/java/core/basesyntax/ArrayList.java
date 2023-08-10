@@ -32,26 +32,25 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void addAll(List<T> list) {
         for (int i = 0; i < list.size(); i++) {
-            valus[size] = list.get(i);
-            size = size + 1;
+            add(list.get(i));
         }
     }
 
     @Override
     public T get(int index) {
-        getArrayListIndexOutOfBoundsException(index);
+        checkIndex(index);
         return (T) valus[index];
     }
 
     @Override
     public void set(T value, int index) {
-        getArrayListIndexOutOfBoundsException(index);
+        checkIndex(index);
         valus[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        getArrayListIndexOutOfBoundsException(index);
+        checkIndex(index);
         T removeElement = (T) valus[index];
         System.arraycopy(valus, index + 1, valus, index, size - index - 1);
         size--;
@@ -86,7 +85,7 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private void getArrayListIndexOutOfBoundsException(int index) {
+    private void checkIndex(int index) {
         if (index >= size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Index: " + index + ", Bounds: " + size);
         }
