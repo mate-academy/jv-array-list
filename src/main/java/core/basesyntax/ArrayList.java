@@ -17,13 +17,13 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        growIfArrayFull();
-
-        if (index < 0 || index > currentTailIndex) {
-            throw new ArrayListIndexOutOfBoundsException("Can't add by index " + index
-                + "while current index is " + currentTailIndex);
+        if (index == currentTailIndex) {
+            add(value);
+            return;
         }
 
+        checkIfIndexExists(index);
+        growIfArrayFull();
         System.arraycopy(storage, index, storage, index + 1, currentTailIndex - index);
         currentTailIndex++;
         set(value, index);
@@ -31,10 +31,6 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        while (list.size() + currentTailIndex > storage.length) {
-            grow();
-        }
-
         for (int i = 0; i < list.size(); i++) {
             add(list.get(i));
         }
@@ -91,10 +87,6 @@ public class ArrayList<T> implements List<T> {
         if (currentTailIndex == storage.length) {
             storage = Arrays.copyOf(storage, (int) (storage.length * 1.5));
         }
-    }
-
-    private void grow() {
-        storage = Arrays.copyOf(storage, (int) (storage.length * 1.5));
     }
 
     private void checkIfIndexExists(int index) {
