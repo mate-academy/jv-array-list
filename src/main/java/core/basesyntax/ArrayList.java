@@ -17,13 +17,12 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        growIfArrayFull();
-
-        if (index < 0 || index > currentTailIndex) {
-            throw new ArrayListIndexOutOfBoundsException("Can't add by index " + index
-                + "while current index is " + currentTailIndex);
+        if (index == currentTailIndex) {
+            add(value);
+            return;
         }
-
+        checkIfIndexExists(index);
+        growIfArrayFull();
         System.arraycopy(storage, index, storage, index + 1, currentTailIndex - index);
         currentTailIndex++;
         set(value, index);
