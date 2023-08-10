@@ -1,19 +1,15 @@
 package core.basesyntax;
 
-import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    private static final int DEFAULT_ARRAY_SIZE = 10;
+    private static final int DEFAULT_SIZE = 10;
     private static final double GROWTH_COEFFICIENT = 1.5;
-    private static final String INDEX_OUT_OF_BOUNDS = "Index is out of bounds";
-    private static final String NO_SUCH_ELEMENT = "No %s in array list";
     private T[] elements;
-    private int size;
+    private int size = 0;
 
     public ArrayList() {
-        this.elements = (T[]) new Object[DEFAULT_ARRAY_SIZE];
-        this.size = 0;
+        this.elements = (T[]) new Object[DEFAULT_SIZE];
     }
 
     @Override
@@ -48,19 +44,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        checkSetGetRemoveIndex(index);
+        checkGetIndex(index);
         return elements[index];
     }
 
     @Override
     public void set(T value, int index) {
-        checkSetGetRemoveIndex(index);
+        checkGetIndex(index);
         elements[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        checkSetGetRemoveIndex(index);
+        checkGetIndex(index);
         T oldElementValue = elements[index];
         if (size - 1 > index) {
             System.arraycopy(elements, index + 1, elements, index, size - 1);
@@ -73,20 +69,13 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        int indexOfElement = 0;
-        boolean isFound = false;
         for (int i = 0; i < size; i++) {
             if ((elements[i] != null && elements[i].equals(element))
-                    || (elements[i] == null && element == null)) {
-                indexOfElement = i;
-                isFound = true;
-                break;
+                    || (elements[i] == element)) {
+                return remove(i);
             }
         }
-        if (!isFound) {
-            throw new NoSuchElementException(String.format(NO_SUCH_ELEMENT, element.toString()));
-        }
-        return remove(indexOfElement);
+        throw new NoSuchElementException(String.format("No %s in array list", element.toString()));
     }
 
     @Override
@@ -109,18 +98,20 @@ public class ArrayList<T> implements List<T> {
 
     private void grow() {
         int newLength = (int) (elements.length * GROWTH_COEFFICIENT);
-        elements = Arrays.copyOf(elements, newLength);
+        T[] tempArray = (T[]) new Object[newLength];
+        System.arraycopy(elements, 0, tempArray, 0, size);
+        elements = tempArray;
     }
 
     private void checkAddIndex(int index) {
-        if ((!isEmpty() && index > size) || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException(INDEX_OUT_OF_BOUNDS);
+        if (index > size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Index is out of bounds");
         }
     }
 
-    private void checkSetGetRemoveIndex(int index) {
-        if ((!isEmpty() && index >= size) || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException(INDEX_OUT_OF_BOUNDS);
+    private void checkGetIndex(int index) {
+        if (index >= size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Index is out of bounds");
         }
     }
 }
