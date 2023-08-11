@@ -4,8 +4,8 @@ import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    private static int default_capacity = 10;
-    private Object[] elementData = new Object[default_capacity];
+    private static final int DEFAULT_CAPACITY = 10;
+    private Object[] elementData = new Object[DEFAULT_CAPACITY];
     private int size;
 
     @Override
@@ -19,12 +19,12 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index >= 0 && index <= size) {
+        if (index <= size && index >= 0) {
             if (size >= elementData.length) {
                 elementData = grow();
             }
-            for (int i = size; i > index; i--) {
-                elementData[i] = elementData[i - 1];
+            if (size - index >= 0) {
+                System.arraycopy(elementData, index, elementData, index + 1, size - index);
             }
             elementData[index] = value;
             size++;
@@ -56,9 +56,9 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void set(T value, int index) {
-        if (index < 0) {
+        if (indexLessThenZero(index)) {
             throw new ArrayListIndexOutOfBoundsException("Index must be > 0");
-        } else if (index >= size) {
+        } else if (indexGreaterOrEqualsSize(index)) {
             throw new ArrayListIndexOutOfBoundsException("The non existent position");
         } else {
             elementData[index] = value;
@@ -67,9 +67,9 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(int index) {
-        if (index < 0) {
+        if (indexLessThenZero(index)) {
             throw new ArrayListIndexOutOfBoundsException("Index must be > 0");
-        } else if (index >= size) {
+        } else if (indexGreaterOrEqualsSize(index)) {
             throw new ArrayListIndexOutOfBoundsException("The non existent position");
         } else {
             Object oldValue = elementData[index];
@@ -115,5 +115,13 @@ public class ArrayList<T> implements List<T> {
 
     private Object[] grow(int totalSize) {
         return elementData = Arrays.copyOf(elementData, totalSize);
+    }
+
+    private boolean indexLessThenZero(int index) {
+        return index < 0;
+    }
+
+    private boolean indexGreaterOrEqualsSize(int index) {
+        return index >= size;
     }
 }
