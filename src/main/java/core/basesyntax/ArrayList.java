@@ -1,6 +1,7 @@
 package core.basesyntax;
 
 import java.util.NoSuchElementException;
+import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
@@ -10,16 +11,6 @@ public class ArrayList<T> implements List<T> {
 
     public ArrayList() {
         array = new Object[DEFAULT_CAPACITY];
-        size = 0;
-    }
-
-    private void ensureCapacity(int minCapacity) {
-        if (minCapacity > array.length) {
-            int newCapacity = (int) Math.max(minCapacity, array.length * GROWTH_FACTOR);
-            Object[] newArray = new Object[newCapacity];
-            System.arraycopy(array, 0, newArray, 0, size);
-            array = newArray;
-        }
     }
 
     @Override
@@ -77,8 +68,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if (element == null ? array[i] == null : element.equals(array[i])) {
-                return remove(i);
+            if (Objects.equals(element, array[i])) {
+                return removeAtIndex(i);
             }
         }
         throw new NoSuchElementException("Element not found: " + element);
@@ -92,5 +83,35 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private void validateIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
+        }
+    }
+
+    private void ensureCapacity(int minCapacity) {
+        if (minCapacity > array.length) {
+            int newCapacity = (int) Math.max(minCapacity, array.length * GROWTH_FACTOR);
+            Object[] newArray = new Object[newCapacity];
+            System.arraycopy(array, 0, newArray, 0, size);
+            array = newArray;
+        }
+    }
+
+    private T removeAtIndex(int index) {
+        validateIndex(index);
+
+        final T removedElement = (T) array[index];
+
+        for (int i = index; i < size - 1; i++) {
+            array[i] = array[i + 1];
+        }
+
+        array[size - 1] = null;
+        size--;
+
+        return removedElement;
     }
 }
