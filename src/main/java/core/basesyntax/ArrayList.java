@@ -6,11 +6,11 @@ import java.util.NoSuchElementException;
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private Object[] elements;
-    private int index;
+    private int position;
 
     public ArrayList() {
         elements = new Object[DEFAULT_CAPACITY];
-        index = -1;
+        position = -1;
     }
 
     @Override
@@ -18,7 +18,7 @@ public class ArrayList<T> implements List<T> {
         if (isNeedToResize()) {
             grow();
         }
-        elements[++index] = value;
+        elements[++position] = value;
     }
 
     @Override
@@ -29,7 +29,7 @@ public class ArrayList<T> implements List<T> {
         }
         System.arraycopy(elements, index, elements, index + 1, size() - index);
         elements[index] = value;
-        this.index++;
+        this.position++;
     }
 
     @Override
@@ -56,9 +56,9 @@ public class ArrayList<T> implements List<T> {
         checkIndexToGet(index);
         T toRemove = (T) elements[index];
         if (!isLastIndex(index)) {
-            System.arraycopy(elements, index + 1, elements, index, this.index - index);
+            System.arraycopy(elements, index + 1, elements, index, position - index);
         }
-        elements[this.index--] = null;
+        elements[position--] = null;
         return toRemove;
     }
 
@@ -69,7 +69,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public int size() {
-        return index + 1;
+        return position + 1;
     }
 
     @Override
@@ -99,7 +99,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     private boolean isLastIndex(int index) {
-        return index == this.index;
+        return index == position;
     }
 
     private int getIndexByValue(T value) {
