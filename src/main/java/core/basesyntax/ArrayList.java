@@ -15,7 +15,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value) {
         if (size == values.length) {
-            arrayGrowth(size);
+            growArray(size);
         }
         values[size] = value;
         size++;
@@ -23,10 +23,12 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        checkRangeForIndexForAdd(index);
+        //checkRangeForIndexForAdd(index);
         if (size == values.length) {
-            arrayGrowth(size);
+            add(value);
+            return;
         }
+        checkRangeForIndex(index);
         System.arraycopy(values, index, values, index + 1, size - index);
         values[index] = value;
         size++;
@@ -55,8 +57,7 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         checkRangeForIndex(index);
         final T elementRemove = values[index];
-        int newSize;
-        newSize = size - 1;
+        int newSize = size - 1;
         if (newSize > index) {
             System.arraycopy(values, index + 1, values, index, newSize - index);
         }
@@ -84,11 +85,11 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void checkRangeForIndexForAdd(int index) {
+    /*private void checkRangeForIndexForAdd(int index) {
         if (index != 0 && (index < 0 || index > size)) {
             throw new ArrayListIndexOutOfBoundsException("The index does not exist");
         }
-    }
+    }*/
 
     private void checkRangeForIndex(int index) {
         if (index != 0 && (index < 0 || index >= size)) {
@@ -96,7 +97,7 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private void arrayGrowth(int index) {
+    private void growArray(int index) {
         if (index >= values.length) {
             int newLength = values.length + values.length / 2;
             values = Arrays.copyOf(values, newLength);
