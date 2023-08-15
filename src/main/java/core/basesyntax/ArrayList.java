@@ -14,21 +14,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (size == values.length) {
-            growArray(size);
-        }
+        growArray();
         values[size] = value;
         size++;
     }
 
     @Override
     public void add(T value, int index) {
-        //checkRangeForIndexForAdd(index);
-        if (size == values.length) {
+        if (index == size) {
             add(value);
             return;
         }
         checkRangeForIndex(index);
+        growArray();
         System.arraycopy(values, index, values, index + 1, size - index);
         values[index] = value;
         size++;
@@ -97,8 +95,8 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private void growArray(int index) {
-        if (index >= values.length) {
+    private void growArray() {
+        if (size == values.length) {
             int newLength = values.length + values.length / 2;
             values = Arrays.copyOf(values, newLength);
         }
