@@ -10,26 +10,26 @@ public class ArrayList<T> implements List<T> {
 
     public ArrayList() {
         elements = new Object[DEFAULT_CAPACITY];
-        position = -1;
+        position = 0;
     }
 
     @Override
     public void add(T value) {
-        if (isNeedToResize()) {
+        if (isFull()) {
             grow();
         }
-        elements[++position] = value;
+        elements[position++] = value;
     }
 
     @Override
     public void add(T value, int index) {
         checkIndexToAdd(index);
-        if (isNeedToResize()) {
+        if (isFull()) {
             grow();
         }
         System.arraycopy(elements, index, elements, index + 1, size() - index);
         elements[index] = value;
-        this.position++;
+        position++;
     }
 
     @Override
@@ -55,10 +55,10 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         checkIndexToGet(index);
         T toRemove = (T) elements[index];
-        if (!isLastIndex(index)) {
-            System.arraycopy(elements, index + 1, elements, index, position - index);
+        if (!isFull()) {
+            System.arraycopy(elements, index + 1, elements, index, position - (index+1));
         }
-        elements[position--] = null;
+        elements[--position] = null;
         return toRemove;
     }
 
@@ -69,7 +69,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public int size() {
-        return position + 1;
+        return position;
     }
 
     @Override
@@ -77,13 +77,15 @@ public class ArrayList<T> implements List<T> {
         return size() <= 0;
     }
 
-    private boolean isNeedToResize() {
+    private boolean isFull() {
         return size() >= elements.length;
     }
 
     private void grow() {
         int newLength = size() + (size() >> 1);
-        elements = Arrays.copyOf(elements, newLength);
+        Object[] tempArr = new Object[newLength];
+        System.arraycopy(elements, 0, tempArr, 0, size());
+        elements = tempArr;
     }
 
     private void checkIndexToAdd(int index) {
@@ -96,10 +98,6 @@ public class ArrayList<T> implements List<T> {
         if (index >= size() || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Invalid index");
         }
-    }
-
-    private boolean isLastIndex(int index) {
-        return index == position;
     }
 
     private int getIndexByValue(T value) {
