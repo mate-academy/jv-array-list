@@ -5,7 +5,7 @@ import java.util.NoSuchElementException;
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private T[] elements;
-    private int size = 0;
+    private int size;
 
     public ArrayList() {
         elements = (T[]) new Object[DEFAULT_CAPACITY];
@@ -85,8 +85,7 @@ public class ArrayList<T> implements List<T> {
 
     public void ifIndexOutOfBounds(int index, int upperBound) {
         if (index > upperBound || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException(
-                    new IndexOutOfBoundsException().getMessage());
+            throw new ArrayListIndexOutOfBoundsException("Index is out of range.");
         }
     }
 
