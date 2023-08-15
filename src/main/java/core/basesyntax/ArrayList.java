@@ -1,6 +1,5 @@
 package core.basesyntax;
 
-import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
@@ -56,7 +55,7 @@ public class ArrayList<T> implements List<T> {
         checkIndexToGet(index);
         T toRemove = (T) elements[index];
         if (!isFull()) {
-            System.arraycopy(elements, index + 1, elements, index, position - (index+1));
+            System.arraycopy(elements, index + 1, elements, index, position - (index + 1));
         }
         elements[--position] = null;
         return toRemove;
