@@ -20,7 +20,7 @@ public class ArrayList<T> implements List<T> {
             size++;
             return;
         }
-        objects = Arrays.copyOf(objects, size + MAX_ARRAY_SIZE / 2);
+        arrayGrow();
         objects[size] = value;
         size++;
     }
@@ -35,9 +35,7 @@ public class ArrayList<T> implements List<T> {
             add(value);
             return;
         }
-        if (size >= MAX_ARRAY_SIZE) {
-            objects = Arrays.copyOf(objects, size + MAX_ARRAY_SIZE / 2);
-        }
+        arrayGrow();
         System.arraycopy(objects, index == 0 ? 0 : index - 1,
                 objects, index == 0 ? 1 : index, size);
         objects[index] = value;
@@ -111,5 +109,11 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private void arrayGrow() {
+        if (size >= MAX_ARRAY_SIZE) {
+            objects = Arrays.copyOf(objects, size + MAX_ARRAY_SIZE / 2);
+        }
     }
 }
