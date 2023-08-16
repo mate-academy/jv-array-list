@@ -1,12 +1,10 @@
 package core.basesyntax;
 
-import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private int size;
-    private int index;
     private Object [] elementData;
 
     public ArrayList() {
@@ -16,8 +14,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value) {
         elementData = growIfArrayFull();
-        elementData[index] = value;
-        index++;
+        elementData[size] = value;
         size++;
     }
 
@@ -25,11 +22,8 @@ public class ArrayList<T> implements List<T> {
     public void add(T value, int index) {
         rangeCheckForAdd(index);
         elementData = growIfArrayFull();
-        Object [] newElementData = new Object[elementData.length];
-        System.arraycopy(elementData,index,newElementData,0,elementData.length - index);
+        System.arraycopy(elementData,index,elementData,index + 1,elementData.length - (index + 1));
         elementData[index] = value;
-        System.arraycopy(newElementData,0,elementData,
-                index + 1,newElementData.length - (index + 1));
         size++;
     }
 
@@ -56,7 +50,10 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         indexCheck(index);
-        return (T) minusElementInArray(elementData,index);
+        T removed = (T) elementData[index];
+        System.arraycopy(elementData,index + 1,elementData,index,size - 1 - index);
+        elementData[--size] = null;
+        return removed;
     }
 
     @Override
@@ -64,10 +61,10 @@ public class ArrayList<T> implements List<T> {
         for (int i = 0; i < elementData.length; i++) {
             if ((elementData[i] == element)
                     || (elementData[i] != null && elementData[i].equals(element))) {
-                return (T) minusElementInArray(elementData,i);
+                return remove(i);
             }
         }
-        throw new NoSuchElementException("Element not present");
+        throw new NoSuchElementException("Element: " + element + " not present");
     }
 
     @Override
@@ -87,25 +84,17 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void indexCheck(int index) {
-        if (index >= 0 && index < size) {
-            return;
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Index is invalid");
         }
-        throw new ArrayListIndexOutOfBoundsException("Index is invalid");
-    }
-
-    private Object minusElementInArray(Object[] elementData, int index) {
-        Object [] newElementData = new Object[elementData.length];
-        System.arraycopy(elementData,index + 1,newElementData,0,elementData.length - (index + 1));
-        Object element = elementData[index];
-        System.arraycopy(newElementData,0,elementData,index,elementData.length - index);
-        size -= 1;
-        return element;
     }
 
     private Object[] growIfArrayFull() {
         if (size == elementData.length) {
             int newCapacity = (int)(size * 1.5);
-            return Arrays.copyOf(elementData,newCapacity);
+            Object [] newElementData = new Object[newCapacity];
+            System.arraycopy(elementData,0,newElementData,0,size);
+            return newElementData;
         }
         return elementData;
     }
