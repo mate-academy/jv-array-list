@@ -102,7 +102,7 @@ public class ArrayList<T> implements List<T> {
     private int getIndexByValue(T value) {
         for (int i = 0; i < size(); i++) {
             T current = (T) elements[i];
-            if ((current != null && current.equals(value)) || current == value) {
+            if (current == value || current != null && current.equals(value)) {
                 return i;
             }
         }
