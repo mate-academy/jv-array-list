@@ -7,19 +7,17 @@ import java.util.Objects;
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private static final double GROWTH_FACTOR = 1.5;
-    private Object[] elements;
+    private T[] elements;
     private int size;
 
     public ArrayList() {
-        elements = new Object[DEFAULT_CAPACITY];
-        size = 0;
+        elements = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
     @Override
     public void add(T value) {
-        ensureCapacity(size + 1);
-        elements[size] = value;
-        size++;
+        ensureCapacity();
+        elements[size++] = value;
     }
 
     @Override
@@ -28,7 +26,7 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
         }
 
-        ensureCapacity(size + 1);
+        ensureCapacity();
 
         System.arraycopy(elements, index, elements, index + 1, size - index);
         elements[index] = value;
@@ -45,7 +43,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         checkIndex(index);
-        return cast(elements[index]);
+        return elements[index];
     }
 
     @Override
@@ -58,7 +56,7 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         checkIndex(index);
 
-        T removedElement = cast(elements[index]);
+        T removedElement = elements[index];
         System.arraycopy(elements, index + 1, elements, index, size - index - 1);
         size--;
         return removedElement;
@@ -84,8 +82,8 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void ensureCapacity(int requiredCapacity) {
-        if (requiredCapacity > elements.length) {
+    private void ensureCapacity() {
+        if (size >= elements.length) {
             int newCapacity = (int) (elements.length * GROWTH_FACTOR);
             elements = Arrays.copyOf(elements, newCapacity);
         }
@@ -95,10 +93,5 @@ public class ArrayList<T> implements List<T> {
         if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
         }
-    }
-
-    @SuppressWarnings("unchecked")
-    private T cast(Object obj) {
-        return (T) obj;
     }
 }
