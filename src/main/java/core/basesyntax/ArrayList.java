@@ -3,17 +3,17 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
+    private static final int CAPACITY = 10;
     private StackTraceElement[] stackTraceElements = Thread.currentThread().getStackTrace();
     private final int indexMethod = stackTraceElements.length - 2;
     private StackTraceElement element = stackTraceElements[indexMethod];
-    private int capacity = 10;
-    private Object[] elementData = new Object[capacity];
+    private Object[] elementData = new Object[CAPACITY];
     private int size = 0;
 
     @Override
     public void add(T value) {
-        if (size >= capacity) {
-            elementData = grow();
+        if (size >= elementData.length) {
+            elementData = grow(elementData.length);
         }
         elementData[size++] = value;
     }
@@ -24,8 +24,8 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayListIndexOutOfBoundsException(
                     "Can't add element by this index, method: " + element);
         }
-        if (++size >= capacity) {
-            elementData = grow();
+        if (++size >= elementData.length) {
+            elementData = grow(elementData.length);
         }
         if (index == 0) {
             System.arraycopy(elementData, 0, elementData, 1, size);
@@ -39,8 +39,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void addAll(List<T> list) {
         int currentCapacity = elementData.length;
-        while (currentCapacity + list.size() > capacity) {
-            elementData = grow();
+        while (currentCapacity + list.size() > elementData.length) {
+            elementData = grow(elementData.length);
         }
         for (int i = size, j = 0; j < list.size(); i++, j++) {
             elementData[i] = list.get(j);
@@ -95,9 +95,9 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private Object[] grow() {
-        capacity *= 1.5;
-        Object[] array = new Object[capacity];
+    private Object[] grow(int currentLength) {
+        currentLength *= 1.5;
+        Object[] array = new Object[currentLength];
         System.arraycopy(elementData, 0, array, 0, size);
         return array;
     }
