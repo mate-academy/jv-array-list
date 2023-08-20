@@ -30,13 +30,9 @@ public class ArrayList<T> implements List<T> {
         if (size == elementData.length) {
             grow(size);
         }
-
-        for (int i = size; i > index; i--) {
-            elementData[i] = elementData[i - 1];
-        }
+        System.arraycopy(elementData,index,elementData,index + 1,size - index);
         elementData[index] = value;
         size++;
-
     }
 
     @Override
