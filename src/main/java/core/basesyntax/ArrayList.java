@@ -1,11 +1,17 @@
 package core.basesyntax;
 
 import java.util.NoSuchElementException;
+import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
+    private static final double arrayVolumeAdd = 1.5;
     private static final int DEFAULT_CAPACITY = 10;
-    private Object[] elementData = new Object [DEFAULT_CAPACITY];
-    private int size = 0;
+    private Object[] elementData;
+    private int size;
+
+    public ArrayList() {
+        this.elementData = new Object [DEFAULT_CAPACITY];
+    }
 
     @Override
     public void add(T value) {
@@ -36,7 +42,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void addAll(List<T> list) {
         for (int i = 0; i < list.size(); i++) {
-            add(list.get(i),size);
+            add(list.get(i));
 
         }
     }
@@ -56,7 +62,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         checkIndex(index, 0, size - 1);
-        final T t = (T)elementData[index];
+        final T element = (T)elementData[index];
         int numMoved = size - index - 1;
         if (numMoved > 0) {
             System.arraycopy(elementData, index + 1, elementData, index,
@@ -64,33 +70,22 @@ public class ArrayList<T> implements List<T> {
         }
         elementData[--size] = null;
 
-        return t;
+        return element;
 
     }
 
     @Override
     public T remove(T element) {
 
-        int index = -1;
         for (int i = 0; i < size; i++) {
-            if (elementData[i] == element) {
+            if (Objects.equals(elementData[i], element)) {
                 checkIndex(i, 0, size - 1);
                 remove(i);
-                index = i;
-                i = size;
-            } else if (elementData[i] != null && elementData[i].equals(element)) {
-                checkIndex(i, 0, size - 1);
-                remove(i);
-                index = i;
-                i = size;
+                return element;
             }
         }
 
-        if (index == -1) {
-            throw new NoSuchElementException("No such element present");
-        } else {
-            return element;
-        }
+        throw new NoSuchElementException("No such element present");
     }
 
     @Override
@@ -110,8 +105,8 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void grow(int minCapacity) {
-        minCapacity *= 1.5;
-        String[] extendedArray = new String[minCapacity];
+        minCapacity *= arrayVolumeAdd;
+        T[] extendedArray = (T[]) new Object[minCapacity];
         System.arraycopy(elementData,0,extendedArray,0,elementData.length);
         elementData = extendedArray;
     }
