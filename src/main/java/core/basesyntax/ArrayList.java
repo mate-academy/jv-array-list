@@ -29,12 +29,11 @@ public class ArrayList<T> implements List<T> {
         }
         if (index == 0) {
             System.arraycopy(elementData, 0, elementData, 1, size);
-            elementData[0] = value;
         } else {
             System.arraycopy(elementData, 0, elementData, 0, index);
             System.arraycopy(elementData, index, elementData, index + 1, size - index);
-            elementData[index] = value;
         }
+        elementData[index] = value;
     }
 
     @Override
