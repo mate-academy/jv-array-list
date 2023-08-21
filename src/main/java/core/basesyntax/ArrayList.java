@@ -4,7 +4,6 @@ import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-
     private static int MAX_ARRAY_SIZE = 10;
     private int size;
     private Object[] objects;
@@ -15,7 +14,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        arrayGrow();
+        grow();
         objects[size] = value;
         size++;
     }
@@ -27,7 +26,7 @@ public class ArrayList<T> implements List<T> {
             return;
         }
         checkIndex(index);
-        arrayGrow();
+        grow();
         System.arraycopy(objects, index == 0 ? 0 : index - 1,
                 objects, index == 0 ? 1 : index, size);
         objects[index] = value;
@@ -85,7 +84,7 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void arrayGrow() {
+    private void grow() {
         if (size >= objects.length) {
             System.arraycopy(objects, 0, objects = new Object[size + MAX_ARRAY_SIZE / 2], 0, size);
         }
