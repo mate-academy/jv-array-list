@@ -3,17 +3,22 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    private static final int CAPACITY = 10;
+    private static final int DEFAULT_CAPACITY = 10;
     private StackTraceElement[] stackTraceElements = Thread.currentThread().getStackTrace();
     private final int indexMethod = stackTraceElements.length - 2;
     private StackTraceElement element = stackTraceElements[indexMethod];
-    private Object[] elementData = new Object[CAPACITY];
-    private int size = 0;
+    private Object[] elementData;
+    private int size;
+
+    ArrayList() {
+        size = 0;
+        elementData = new Object[DEFAULT_CAPACITY];
+    }
 
     @Override
     public void add(T value) {
         if (size >= elementData.length) {
-            elementData = grow(elementData.length);
+            grow();
         }
         elementData[size++] = value;
     }
@@ -25,12 +30,11 @@ public class ArrayList<T> implements List<T> {
                     "Can't add element by this index, method: " + element);
         }
         if (++size >= elementData.length) {
-            elementData = grow(elementData.length);
+            grow();
         }
         if (index == 0) {
             System.arraycopy(elementData, 0, elementData, 1, size);
         } else {
-            System.arraycopy(elementData, 0, elementData, 0, index);
             System.arraycopy(elementData, index, elementData, index + 1, size - index);
         }
         elementData[index] = value;
@@ -40,34 +44,32 @@ public class ArrayList<T> implements List<T> {
     public void addAll(List<T> list) {
         int currentCapacity = elementData.length;
         while (currentCapacity + list.size() > elementData.length) {
-            elementData = grow(elementData.length);
+            grow();
         }
-        for (int i = size, j = 0; j < list.size(); i++, j++) {
-            elementData[i] = list.get(j);
-            this.size++;
+        for (int j = 0; j < list.size(); j++) {
+            add(list.get(j));
         }
     }
 
     @Override
     public T get(int index) {
-        returnException(index);
+        indexCheck(index);
         return (T) elementData[index];
     }
 
     @Override
     public void set(T value, int index) {
-        returnException(index);
+        indexCheck(index);
         elementData[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        returnException(index);
+        indexCheck(index);
         T removedElement = (T)elementData[index];
         if (index == 0) {
             System.arraycopy(elementData, 1, elementData, 0, --size);
         } else {
-            System.arraycopy(elementData, 0, elementData, 0, index - 1);
             System.arraycopy(elementData, index + 1, elementData, index, --size - index);
         }
         elementData[size] = null;
@@ -76,7 +78,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        int index = indexCheck(element);
+        int index = getIndexOfElement(element);
         if (index == -1) {
             throw new NoSuchElementException(
                     "There is no such element in ArrayList, method: " + element);
@@ -95,14 +97,14 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private Object[] grow(int currentLength) {
-        currentLength *= 1.5;
-        Object[] array = new Object[currentLength];
+    private void grow() {
+        int newCapacity = (int)(elementData.length * 1.5);
+        Object[] array = new Object[newCapacity];
         System.arraycopy(elementData, 0, array, 0, size);
-        return array;
+        elementData = array;
     }
 
-    private int indexCheck(T element) {
+    private int getIndexOfElement(T element) {
         int index = -1;
         for (int i = 0; i < size; i++) {
             if (element == null ? element == elementData[i]
@@ -114,7 +116,7 @@ public class ArrayList<T> implements List<T> {
         return index;
     }
 
-    private void returnException(int index) {
+    private void indexCheck(int index) {
         if (size <= index || index < 0) {
             throw new ArrayListIndexOutOfBoundsException(
                     "Incorrect index in the method: " + element);
