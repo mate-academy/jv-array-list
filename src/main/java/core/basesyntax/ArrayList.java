@@ -57,7 +57,7 @@ public class ArrayList<T> implements List<T> {
         if (index != elements.length - 1) {
             System.arraycopy(elements, index + 1, elements, index, size - index);
         }
-        size--;
+        elements[--size] = null;
         return deletedElement;
     }
 
