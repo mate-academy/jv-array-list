@@ -17,8 +17,7 @@ public class ArrayList<T> implements List<T> {
         if (values.length == size) {
             grow();
         }
-        values[size] = value;
-        size++;
+        values[size++] = value;
     }
 
     @Override
@@ -45,18 +44,17 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(int index) {
-        Object removeElement;
         checkIndex(index);
-        removeElement = values[index];
+        T removeElement = values[index];
         System.arraycopy(values, index + 1, values, index, size - index - 1);
         size--;
-        return (T) removeElement;
+        return removeElement;
     }
 
     @Override
     public T remove(T element) {
         for (int i = 0; i < size(); i++) {
-            if ((values[i] == element)
+            if (values[i] == element
                     || element != null
                     && element.equals(values[i])) {
                 return remove(i);
@@ -89,7 +87,7 @@ public class ArrayList<T> implements List<T> {
 
     private void checkIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException(index + " index is not valid.");
+            throw new ArrayListIndexOutOfBoundsException(index + " index is not valid for size " + size);
         }
     }
 
