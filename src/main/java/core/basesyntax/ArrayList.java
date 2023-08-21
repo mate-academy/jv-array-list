@@ -77,13 +77,13 @@ public class ArrayList<T> implements List<T> {
 
     private void sizeCheck() {
         if (size == elements.length) {
-            increaseCapacity(elements.length);
+            grow(elements.length);
         }
     }
 
-    private void increaseCapacity(int capacity) {
+    private void grow(int capacity) {
         int newCapacity = capacity + capacity / 2;
-        Object [] destinationArray = new Object[newCapacity];
+        Object[] destinationArray = new Object[newCapacity];
         System.arraycopy(elements, 0, destinationArray, 0, size);
         elements = destinationArray;
     }
