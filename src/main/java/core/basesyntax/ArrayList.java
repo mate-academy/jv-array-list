@@ -4,7 +4,7 @@ import java.util.NoSuchElementException;
 import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
-    private static final double arrayVolumeAdd = 1.5;
+    private static final double GROW_MULTIPLIER = 1.5;
     private static final int DEFAULT_CAPACITY = 10;
     private T[] elementData;
     private int size;
@@ -15,20 +15,18 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-
         if (size == elementData.length) {
             grow(size);
         }
         elementData[size++] = value;
-
     }
 
     @Override
     public void add(T value, int index) {
+        checkIndex(index, 0, size);
         if (size == elementData.length) {
             grow(size);
         }
-        checkIndex(index, 0, size);
         System.arraycopy(elementData, index, elementData, index + 1, size - index);
         elementData[index] = value;
         size++;
@@ -57,25 +55,20 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         checkIndex(index, 0, size - 1);
         final T element = (T)elementData[index];
-
         System.arraycopy(elementData, index + 1, elementData, index,
                     size - index - 1);
         elementData[--size] = null;
-
         return element;
-
     }
 
     @Override
     public T remove(T element) {
-
         for (int i = 0; i < size; i++) {
             if (Objects.equals(elementData[i], element)) {
                 remove(i);
                 return element;
             }
         }
-
         throw new NoSuchElementException("No such element present: " + element);
     }
 
@@ -97,7 +90,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void grow(int minCapacity) {
-        minCapacity *= arrayVolumeAdd;
+        minCapacity *= GROW_MULTIPLIER;
         T[] extendedArray = (T[]) new Object[minCapacity];
         System.arraycopy(elementData, 0, extendedArray, 0, elementData.length);
         elementData = extendedArray;
