@@ -57,11 +57,9 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         checkIndex(index, 0, size - 1);
         final T element = (T)elementData[index];
-        int numMoved = size - index - 1;
-        if (numMoved >= 0) {
-            System.arraycopy(elementData, index + 1, elementData, index,
-                    numMoved);
-        }
+
+        System.arraycopy(elementData, index + 1, elementData, index,
+                    size - index - 1);
         elementData[--size] = null;
 
         return element;
