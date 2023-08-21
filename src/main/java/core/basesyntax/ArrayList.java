@@ -1,6 +1,5 @@
 package core.basesyntax;
 
-import java.util.Arrays;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 
@@ -19,9 +18,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (elements.length <= size + 1) {
-            elements = Arrays.copyOf(elements, (int) (elements.length * 1.5));
-        }
+        checkArraySize();
         elements[size] = value;
         size++;
     }
@@ -29,12 +26,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         indexCheckFotInsert(index);
-        if (elements.length <= size + 1) {
-            elements = Arrays.copyOf(elements, (int) (elements.length * 1.5));
-        }
-        for (int i = size; i > index; i--) {
-            elements[i] = elements[i - 1];
-        }
+        checkArraySize();
+        System.arraycopy(elements, index, elements, index + 1, size - index);
         elements[index] = value;
         size++;
     }
@@ -66,9 +59,7 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         indexCheckFoUpdDel(index);
         T oldValue = elements(index);
-        for (int i = index; i < size; i++) {
-            elements[i] = elements[i + 1];
-        }
+        System.arraycopy(elements, index + 1, elements, index, size - index);
         size--;
         return oldValue;
     }
@@ -106,6 +97,14 @@ public class ArrayList<T> implements List<T> {
     private void indexCheckFoUpdDel(int index) {
         if (index >= size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException(INDEX_EXCEPTION_MESSAGE + index);
+        }
+    }
+
+    private void checkArraySize() {
+        if (elements.length <= size + 1) {
+            Object[] newArray = new Object[(int) (elements.length * 1.5)];
+            System.arraycopy(elements, 0, newArray, 0, elements.length);
+            elements = newArray;
         }
     }
 }
