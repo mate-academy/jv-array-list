@@ -4,7 +4,7 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    private int size = 0;
+    private int size;
 
     private Object[] elements;
 
@@ -59,14 +59,9 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if (element == null) {
-                if (elements[i] == null) {
-                    return remove(i);
-                }
-            } else {
-                if (element.equals(elements[i])) {
-                    return remove(i);
-                }
+            if (element == null && elements[i] == null
+                    || element != null && element.equals(elements[i])) {
+                return remove(i);
             }
         }
         throw new NoSuchElementException("There is no such an element");
@@ -84,7 +79,7 @@ public class ArrayList<T> implements List<T> {
     private Object[] removeResize(int index) {
         Object[] update = new Object[elements.length];
         System.arraycopy(elements, 0, update, 0, index);
-        System.arraycopy(elements, index + 1, update, index,size - index - 1);
+        System.arraycopy(elements, index + 1, update, index, size - index - 1);
         return update;
     }
 
