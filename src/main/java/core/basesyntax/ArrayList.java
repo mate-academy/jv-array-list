@@ -22,18 +22,15 @@ public class ArrayList<T> implements List<T> {
     public void add(T value, int index) {
         if (checkAddIndex(index)) {
             growIfFull();
-            elements = addResize(value, index);
+            elements = addResize(index);
+            elements[index] = value;
             size++;
         }
     }
 
-    private Object[] addResize(T value, int index) {
-        Object[] update = new Object[elements.length];
-        System.arraycopy(elements, 0, update, 0, index);
-        update[index] = value;
-        System.arraycopy(elements, index, update, index + 1,
-                size - index);
-        return update;
+    private Object[] addResize(int index) {
+        System.arraycopy(elements, index, elements, index + 1, size - index);
+        return elements;
     }
 
     @Override
@@ -59,12 +56,11 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if (element == null && elements[i] == null
-                    || element != null && element.equals(elements[i])) {
+            if (element == elements[i] || element != null && element.equals(elements[i])) {
                 return remove(i);
             }
         }
-        throw new NoSuchElementException("There is no such an element");
+        throw new NoSuchElementException("There is no such an element " + element);
     }
 
     @Override
@@ -72,15 +68,13 @@ public class ArrayList<T> implements List<T> {
         checkIndex(index);
         T removeValue = (T) elements[index];
         elements = removeResize(index);
-        size--;
+        elements[--size] = null;
         return removeValue;
     }
 
     private Object[] removeResize(int index) {
-        Object[] update = new Object[elements.length];
-        System.arraycopy(elements, 0, update, 0, index);
-        System.arraycopy(elements, index + 1, update, index, size - index - 1);
-        return update;
+        System.arraycopy(elements, index + 1, elements, index, size - index - 1);
+        return elements;
     }
 
     @Override
