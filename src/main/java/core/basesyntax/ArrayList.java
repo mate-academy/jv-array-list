@@ -1,14 +1,12 @@
 package core.basesyntax;
 
 import java.util.NoSuchElementException;
-import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
-    private static final String INDEX_EXCEPTION_MESSAGE = "We haven't element at index ";
-    private static final String AVAILABILITY_EXCEPTION_MESSAGE = "We don't have element: ";
+    private static final String INDEX_EXCEPTION_MESSAGE = "Element missing for given index ";
+    private static final String AVAILABILITY_EXCEPTION_MESSAGE = "Element missing: ";
     private static final int DEFAULT_CAPACITY = 10;
     private int size;
-
     private Object[] elements;
 
     public ArrayList() {
@@ -48,11 +46,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void set(T value, int index) {
         indexCheckFoUpdDel(index);
-        for (int i = 0; i < size; i++) {
-            if (i == index) {
-                elements[i] = value;
-            }
-        }
+        elements[index] = value;
     }
 
     @Override
@@ -67,7 +61,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if (Objects.equals(elements[i], element)) {
+            if (elements[i] == element || elements[i] != null && elements[i].equals(element)) {
                 return remove(i);
             }
         }
