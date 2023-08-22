@@ -4,11 +4,11 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    private Object[] elements;
+    private T[] elements;
     private int size;
 
     public ArrayList() {
-        elements = new Object[DEFAULT_CAPACITY];
+        elements = (T[]) new Object[DEFAULT_CAPACITY];
         size = 0;
     }
 
@@ -24,7 +24,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("Wrong index in method add()");
+            throw new ArrayListIndexOutOfBoundsException("Wrong index " + index);
         }
         if (size == elements.length) {
             resizeArray();
@@ -71,7 +71,7 @@ public class ArrayList<T> implements List<T> {
                 return remove(i);
             }
         }
-        throw new NoSuchElementException("Element not found");
+        throw new NoSuchElementException("Element " + element + " not found");
     }
 
     @Override
@@ -86,12 +86,12 @@ public class ArrayList<T> implements List<T> {
 
     private void checkIndex(int index) {
         if (index < 0 || index > size - 1) {
-            throw new ArrayListIndexOutOfBoundsException("Wrong index in method remove()");
+            throw new ArrayListIndexOutOfBoundsException("Wrong index " + index);
         }
     }
 
     private void resizeArray() {
-        Object[] moreElements = new Object[(int) (elements.length * 1.5)];
+        T[] moreElements = (T[]) new Object[(int) (elements.length * 1.5)];
         System.arraycopy(elements, 0, moreElements, 0, elements.length);
         elements = moreElements;
     }
