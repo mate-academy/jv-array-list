@@ -23,14 +23,14 @@ public class ArrayList<T> implements List<T> {
     public void add(T value, int index) {
         checkIndex(index);
         resizeIfNeeded();
-        System.arraycopy(list,index,list,index + 1,size - index);
+        System.arraycopy(list, index, list, index + 1, size - index);
         list[index] = value;
         size++;
     }
 
     @Override
     public void addAll(List<T> list) {
-        for (int i = 0;i < list.size();i++) {
+        for (int i = 0; i < list.size(); i++) {
             add(list.get(i));
         }
     }
@@ -51,7 +51,7 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         checkIndexBounds(index);
         T removedElement = list[index];
-        System.arraycopy(list,index + 1,list,index,size - index - 1);
+        System.arraycopy(list, index + 1, list, index, size - index - 1);
         size--;
         return removedElement;
     }
@@ -62,10 +62,7 @@ public class ArrayList<T> implements List<T> {
         if (index == -1) {
             throw new NoSuchElementException("No such element");
         }
-        T removedElement = list[index];
-        System.arraycopy(list, index + 1,list,index,size - index - 1);
-        size--;
-        return removedElement;
+        return remove(index);
     }
 
     @Override
