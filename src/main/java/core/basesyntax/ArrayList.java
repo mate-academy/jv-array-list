@@ -9,7 +9,6 @@ public class ArrayList<T> implements List<T> {
 
     public ArrayList() {
         list = (T[]) new Object[DEFAULT_CAPACITY];
-        size = 0;
     }
 
     @Override
@@ -58,11 +57,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        int index = elementCheck(element);
-        if (index == -1) {
-            throw new NoSuchElementException("No such element");
-        }
-        return remove(index);
+        return remove(findElementIndex(element));
     }
 
     @Override
@@ -75,14 +70,15 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    public void resizeIfNeeded() {
-        if (list.length == size) {
-            int oldCapacity = list.length;
-            int newCapacity = oldCapacity + (oldCapacity >> 1);
-            Object[] newArray = new Object[newCapacity];
-            System.arraycopy(list, 0, newArray, 0, size);
-            list = (T[]) newArray;
+    private void resizeIfNeeded() {
+        if (size < list.length) {
+            return;
         }
+        int oldCapacity = list.length;
+        int newCapacity = oldCapacity + (oldCapacity >> 1);
+        Object[] newArray = new Object[newCapacity];
+        System.arraycopy(list, 0, newArray, 0, size);
+        list = (T[]) newArray;
     }
 
     private void checkIndex(int index) {
@@ -91,13 +87,13 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private int elementCheck(T element) {
+    private int findElementIndex(T element) {
         for (int i = 0; i < size; i++) {
             if (list[i] != null && list[i].equals(element) || list[i] == element) {
                 return i;
             }
         }
-        return -1;
+        throw new NoSuchElementException("No such value");
     }
 
     private void checkIndexBounds(int index) {
