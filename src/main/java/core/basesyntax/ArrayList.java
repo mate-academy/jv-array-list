@@ -3,14 +3,12 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    private static final String INDEX_EXCEPTION_MESSAGE = "Element missing for given index ";
-    private static final String AVAILABILITY_EXCEPTION_MESSAGE = "Element missing: ";
     private static final int DEFAULT_CAPACITY = 10;
+    private static final double PERCENTAGE_ARRAY_GROWTH = 1.5D;
     private int size;
     private Object[] elements;
 
     public ArrayList() {
-        this.size = 0;
         elements = new Object[DEFAULT_CAPACITY];
     }
 
@@ -23,7 +21,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        indexCheckFotInsert(index);
+        checkIndexFotInsert(index);
         checkArraySize();
         System.arraycopy(elements, index, elements, index + 1, size - index);
         elements[index] = value;
@@ -39,23 +37,23 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        indexCheckFoUpdDel(index);
-        return elements(index);
+        checkIndexForUpdateAndDelete(index);
+        return (T) elements[index];
     }
 
     @Override
     public void set(T value, int index) {
-        indexCheckFoUpdDel(index);
+        checkIndexForUpdateAndDelete(index);
         elements[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        indexCheckFoUpdDel(index);
-        T oldValue = elements(index);
+        checkIndexForUpdateAndDelete(index);
+        T removedElement = (T) elements[index];
         System.arraycopy(elements, index + 1, elements, index, size - index);
         size--;
-        return oldValue;
+        return removedElement;
     }
 
     @Override
@@ -65,7 +63,7 @@ public class ArrayList<T> implements List<T> {
                 return remove(i);
             }
         }
-        throw new NoSuchElementException(AVAILABILITY_EXCEPTION_MESSAGE + element.toString());
+        throw new NoSuchElementException("Element missing: " + element.toString());
     }
 
     @Override
@@ -78,27 +76,26 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private T elements(int index) {
-        return (T) elements[index];
-    }
-
-    private void indexCheckFotInsert(int index) {
+    private void checkIndexFotInsert(int index) {
         if (index > size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException(INDEX_EXCEPTION_MESSAGE + index);
+            throw new ArrayListIndexOutOfBoundsException("Element missing for given index "
+                    + index);
         }
     }
 
-    private void indexCheckFoUpdDel(int index) {
+    private void checkIndexForUpdateAndDelete(int index) {
         if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException(INDEX_EXCEPTION_MESSAGE + index);
+            throw new ArrayListIndexOutOfBoundsException("Element missing for given index "
+                    + index);
         }
     }
 
     private void checkArraySize() {
-        if (elements.length <= size + 1) {
-            Object[] newArray = new Object[(int) (elements.length * 1.5)];
-            System.arraycopy(elements, 0, newArray, 0, elements.length);
-            elements = newArray;
+        if (size + 1 < elements.length) {
+            return;
         }
+        Object[] newArray = new Object[(int) (elements.length * PERCENTAGE_ARRAY_GROWTH)];
+        System.arraycopy(elements, 0, newArray, 0, elements.length);
+        elements = newArray;
     }
 }
