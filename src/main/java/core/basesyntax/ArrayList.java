@@ -34,6 +34,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public T get(int index) {
         checkIndex(index);
         return (T) elements[index];
@@ -56,12 +57,13 @@ public class ArrayList<T> implements List<T> {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public T remove(int index) {
         checkIndex(index);
-        T removeValue = (T) elements[index];
+        T removedValue = (T) elements[index];
         System.arraycopy(elements, index + 1, elements, index, size - index - 1);
         elements[--size] = null;
-        return removeValue;
+        return removedValue;
     }
 
     @Override
@@ -71,7 +73,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public boolean isEmpty() {
-        return size <= 0;
+        return size == 0;
     }
 
     private void growIfFull() {
