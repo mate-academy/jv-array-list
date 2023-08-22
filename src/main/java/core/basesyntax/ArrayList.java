@@ -13,7 +13,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        grow();
+        growIfArrayFull();
         objects[size] = value;
         size++;
     }
@@ -25,7 +25,7 @@ public class ArrayList<T> implements List<T> {
             return;
         }
         checkIndex(index);
-        grow();
+        growIfArrayFull();
         System.arraycopy(objects, index, objects, index + 1, size - index);
         objects[index] = value;
         size++;
@@ -83,7 +83,7 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void grow() {
+    private void growIfArrayFull() {
         if (size >= objects.length) {
             System.arraycopy(objects, 0, objects = new Object[size + MAX_ARRAY_SIZE / 2], 0, size);
         }
