@@ -9,7 +9,6 @@ public class ArrayList<T> implements List<T> {
 
     public ArrayList() {
         elements = new Object[DEFAULT_CAPACITY];
-        size = 0;
     }
 
     @Override
@@ -22,9 +21,8 @@ public class ArrayList<T> implements List<T> {
     public void add(T value, int index) {
         growListSize();
         if (index > size + 1 || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Wrong index!");
-        } else if (index == size) {
-            add(value);
+            throw new ArrayListIndexOutOfBoundsException("Wrong index " + index
+                    + " for size " + size);
         } else {
             System.arraycopy(elements, index, elements, index + 1, size - index);
             elements[index] = value;
@@ -97,7 +95,8 @@ public class ArrayList<T> implements List<T> {
 
     private void checkIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Wrong index!");
+            throw new ArrayListIndexOutOfBoundsException("Wrong index " + index
+                    + " for size " + size);
         }
     }
 }
