@@ -97,7 +97,7 @@ public class ArrayList<T> implements List<T> {
         int oldCapacity = data.length;
         int newCapacity = oldCapacity + (oldCapacity >> 1);
         Object[] resizedCopy = new Object[newCapacity];
-        System.arraycopy(data, 0, resizedCopy,0, size);
+        System.arraycopy(data, 0, resizedCopy, 0, size);
         data = resizedCopy;
     }
 }
