@@ -90,6 +90,7 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
+
     private void resizeArray() {
         T[] moreElements = (T[]) new Object[(int) (elements.length * 1.5)];
         System.arraycopy(elements, 0, moreElements, 0, elements.length);
