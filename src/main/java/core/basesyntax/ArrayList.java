@@ -27,13 +27,12 @@ public class ArrayList<T> implements List<T> {
         if (size == elements.length) {
             growIfArrayFull();
         }
-        if (index >= 0 && index <= size) {
-            System.arraycopy(elements, index, elements, index + 1, size - index);
-            elements[index] = value;
-            size++;
-        } else {
-            throw new ArrayListIndexOutOfBoundsException("Index is incorrect: " + index);
+        if (index > size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Index out of bounds " + index);
         }
+        System.arraycopy(elements, index, elements, index + 1, size - index);
+        elements[index] = value;
+        size++;
     }
 
     @Override
@@ -45,32 +44,23 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index < size && index >= 0) {
-            return (T) elements[index];
-        } else {
-            throw new ArrayListIndexOutOfBoundsException("Index is incorrect: " + index);
-        }
+        checkOutOfBounds(index);
+        return (T) elements[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index < size && index >= 0) {
-            elements[index] = value;
-        } else {
-            throw new ArrayListIndexOutOfBoundsException("Index is incorrect: " + index);
-        }
+        checkOutOfBounds(index);
+        elements[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index < size && index >= 0) {
-            T removedElement = (T) elements[index];
-            System.arraycopy(elements, index + 1, elements, index, size - index - 1);
-            size--;
-            return removedElement;
-        } else {
-            throw new ArrayListIndexOutOfBoundsException("Index is incorrect: " + index);
-        }
+        checkOutOfBounds(index);
+        T removedElement = (T) elements[index];
+        System.arraycopy(elements, index + 1, elements, index, size - index - 1);
+        size--;
+        return removedElement;
     }
 
     @Override
@@ -95,6 +85,12 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private void checkOutOfBounds(int index) {
+        if (index >= size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Index is incorrect: " + index);
+        }
     }
 
     private void growIfArrayFull() {
