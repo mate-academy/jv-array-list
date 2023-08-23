@@ -9,12 +9,11 @@ public class ArrayList<T> implements List<T> {
 
     public ArrayList() {
         elementData = new Object[DEFAULT_CAPACITY];
-        size = 0;
     }
 
     @Override
     public void add(T value) {
-        if (size() == elementData.length) {
+        if (size == elementData.length) {
             elementData = grow();
         }
         elementData[size] = value;
