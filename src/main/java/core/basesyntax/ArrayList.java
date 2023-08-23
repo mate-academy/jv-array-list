@@ -4,7 +4,7 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    private static final byte INCREMENT_VALUE = 1;
+    private static final int INCREMENT_VALUE = 1;
 
     private Object[] elements;
     private int size;
@@ -15,7 +15,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        ensureCapacity(size + INCREMENT_VALUE);
+        resize();
         elements[size++] = value;
     }
 
@@ -24,7 +24,7 @@ public class ArrayList<T> implements List<T> {
         if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
         }
-        ensureCapacity(size + INCREMENT_VALUE);
+        resize();
         System.arraycopy(elements, index, elements, index + 1, size - index);
         elements[index] = value;
         size++;
@@ -32,7 +32,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        ensureCapacity(size + list.size());
+        resize();
         for (int i = 0; i < list.size(); i++) {
             add(list.get(i));
         }
@@ -80,20 +80,13 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void ensureCapacity(int minCapacity) {
-        if (minCapacity > elements.length) {
+    private void resize() {
+        if (size == elements.length) {
             int newCapacity = elements.length + (elements.length >> INCREMENT_VALUE);
-            resize(newCapacity);
+            Object[] newElements = new Object[newCapacity];
+            System.arraycopy(elements, 0, newElements, 0, size);
+            elements = newElements;
         }
-    }
-
-    private void resize(int newCapacity) {
-        if (newCapacity < size) {
-            throw new IllegalArgumentException("New capacity cannot be less than current size");
-        }
-        Object[] newElements = new Object[newCapacity];
-        System.arraycopy(elements, 0, newElements, 0, size);
-        elements = newElements;
     }
 
     private void checkOutOfBounds(int index) {
