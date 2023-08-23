@@ -9,16 +9,12 @@ public class ArrayList<T> implements List<T> {
 
     public ArrayList() {
         elements = new Object[DEFAULT_CAPACITY];
-        size = 0;
     }
 
     @Override
     public void add(T value) {
-        if (elements.length == size) {
-            resize();
-        }
-        elements[size] = value;
-        size++;
+        resize();
+        elements[size++] = value;
     }
 
     @Override
@@ -30,7 +26,7 @@ public class ArrayList<T> implements List<T> {
             resize();
         }
         System.arraycopy(elements, index, elements, index + 1, size - index);
-        elements[index] = value;
+        elements[index++] = value;
         size++;
     }
 
@@ -44,27 +40,20 @@ public class ArrayList<T> implements List<T> {
     @SuppressWarnings("unchecked")
     @Override
     public T get(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Can't get index");
-        }
+        checkIndex(index);
         return (T) elements[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Can't get index");
-        }
+        checkIndex(index);
         elements[index] = value;
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public T remove(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Can't get index");
-        }
-        T removedElement = (T)elements[index];
+        checkIndex(index);
+        T removedElement = get(index);
         System.arraycopy(elements, index + 1, elements, index, size - index - 1);
         size--;
         return removedElement;
@@ -73,10 +62,12 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         int index = getElementIndex(element);
-        if (index < 0) {
-            throw new NoSuchElementException("Can't remove element");
+        try {
+            remove(index);
+        } catch (RuntimeException e) {
+            throw new NoSuchElementException("Can't remove element" + e);
         }
-        return remove(index);
+        return element;
     }
 
     @Override
@@ -89,13 +80,18 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    public void resize() {
+    private void resize() {
         if (elements.length == size) {
             Object[] newArray = new Object[elements.length * 2];
             System.arraycopy(elements, 0, newArray, 0, size);
             elements = newArray;
         }
+    }
 
+    public void checkIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Can't get index");
+        }
     }
 
     public int getElementIndex(T element) {
