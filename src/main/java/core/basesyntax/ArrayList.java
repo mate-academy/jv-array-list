@@ -16,7 +16,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value) {
         if (size == elements.length) {
-            grow();
+            growIfArrayFull();
         }
         elements[size] = value;
         size++;
@@ -25,14 +25,14 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         if (size == elements.length) {
-            grow();
+            growIfArrayFull();
         }
         if (index >= 0 && index <= size) {
             System.arraycopy(elements, index, elements, index + 1, size - index);
             elements[index] = value;
             size++;
         } else {
-            throw new ArrayListIndexOutOfBoundsException("Index is incorrect");
+            throw new ArrayListIndexOutOfBoundsException("Index is incorrect: " + index);
         }
     }
 
@@ -48,7 +48,7 @@ public class ArrayList<T> implements List<T> {
         if (index < size && index >= 0) {
             return (T) elements[index];
         } else {
-            throw new ArrayListIndexOutOfBoundsException("Index is incorrect");
+            throw new ArrayListIndexOutOfBoundsException("Index is incorrect: " + index);
         }
     }
 
@@ -57,7 +57,7 @@ public class ArrayList<T> implements List<T> {
         if (index < size && index >= 0) {
             elements[index] = value;
         } else {
-            throw new ArrayListIndexOutOfBoundsException("Index is incorrect");
+            throw new ArrayListIndexOutOfBoundsException("Index is incorrect: " + index);
         }
     }
 
@@ -69,7 +69,7 @@ public class ArrayList<T> implements List<T> {
             size--;
             return removedElement;
         } else {
-            throw new ArrayListIndexOutOfBoundsException("Index is incorrect");
+            throw new ArrayListIndexOutOfBoundsException("Index is incorrect: " + index);
         }
     }
 
@@ -84,7 +84,7 @@ public class ArrayList<T> implements List<T> {
                 return removedElement;
             }
         }
-        throw new NoSuchElementException("Element not found");
+        throw new NoSuchElementException("Element not found: " + element);
     }
 
     @Override
@@ -97,7 +97,7 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void grow() {
+    private void growIfArrayFull() {
         int newSize = (int) Math.round(elements.length * GROW_INDEX);
         Object[] newElements = new Object[newSize];
         System.arraycopy(elements, 0, newElements, 0, size);
