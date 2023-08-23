@@ -1,8 +1,6 @@
 package core.basesyntax;
 
-import java.util.Arrays;
 import java.util.NoSuchElementException;
-import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
@@ -11,7 +9,6 @@ public class ArrayList<T> implements List<T> {
 
     public ArrayList() {
         elements = new Object[DEFAULT_CAPACITY];
-        size = 0;
     }
 
     @Override
@@ -22,18 +19,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        size++;
-        checkIndex(index);
+        if (index < 0 || index > size) {
+            throw new ArrayListIndexOutOfBoundsException("No such index in the list: " + index);
+        }
         ensureCapacity();
         System.arraycopy(elements, index, elements, index + 1, size - index);
         elements[index] = value;
+        size++;
     }
 
     @Override
     public void addAll(List<T> list) {
-        ensureCapacity();
         for (int i = 0; i < list.size(); i++) {
-            elements[size++] = list.get(i);
+            add(list.get(i));
         }
     }
 
@@ -61,7 +59,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if (Objects.equals(elements[i], element)) {
+            if (element == elements[i]
+                || (element != null && element.equals(elements[i]))) {
                 return remove(i);
             }
         }
@@ -80,13 +79,16 @@ public class ArrayList<T> implements List<T> {
 
     private void ensureCapacity() {
         if (size == elements.length) {
-            elements = Arrays.copyOf(elements, size * 3 / 2 + 1);
+            int newCapacity = size * 3 / 2 + 1;
+            Object[] newElements = new Object[newCapacity];
+            System.arraycopy(elements, 0, newElements, 0, size);
+            elements = newElements;
         }
     }
 
     private void checkIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index out of bounds");
+            throw new ArrayListIndexOutOfBoundsException("No such index in the list: " + index);
         }
     }
 }
