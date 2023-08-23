@@ -56,7 +56,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(int index) {
-        checkBound(index);
+        checkOutOfBounds(index);
         T elementToRemove = (T) elements[index];
         if (index != elements.length - 1) {
             System.arraycopy(elements, index + 1, elements, index, size - index);
