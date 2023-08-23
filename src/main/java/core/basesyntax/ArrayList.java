@@ -1,12 +1,11 @@
 package core.basesyntax;
 
-import java.util.Arrays;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    public static final double PERCENTAGE_ARRAY_GROWTH = 1.5D;
+    private static final double PERCENTAGE_ARRAY_GROWTH = 1.5D;
     private Object[] elementData;
     private int size;
 
@@ -28,17 +27,9 @@ public class ArrayList<T> implements List<T> {
         size++;
     }
 
-    private void resizeIfNeeded() {
-        if (elementData.length == size) {
-            Object[] newArray = new Object[(int) (elementData.length * PERCENTAGE_ARRAY_GROWTH)];
-            System.arraycopy(elementData, 0, newArray, 0, size);
-            elementData = newArray;
-        }
-    }
-
     @Override
     public void add(T value, int index) {
-        indexExsist(index, size);
+        indexExsist(index, size + 1);
         resizeIfNeeded();
         System.arraycopy(elementData, index, elementData, index + 1, size - index);
         elementData[index] = value;
@@ -47,7 +38,9 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-
+        for (int index = 0; index < list.size(); index++) {
+            add(list.get(index));
+        }
     }
 
     @Override
@@ -69,14 +62,18 @@ public class ArrayList<T> implements List<T> {
         indexExsist(index, size);
         T removedElement = (T) elementData[index];
         System.arraycopy(elementData, index + 1, elementData, index, size - index - 1);
-        size --;
+        size--;
 
         return removedElement;
     }
 
     @Override
     public T remove(T element) {
-        return  null;
+        int index = getIndexByValue(element);
+        if (index == -1) {
+            throw new NoSuchElementException();
+        }
+        return remove(index);
     }
 
     @Override
@@ -91,8 +88,24 @@ public class ArrayList<T> implements List<T> {
 
     private void indexExsist(int index, int size) {
         if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException();
+            throw new ArrayListIndexOutOfBoundsException("Element is not exsist");
         }
     }
 
+    private int getIndexByValue(T value) {
+        for (int index = 0; index < size; index++) {
+            if (Objects.equals(elementData[index], value)) {
+                return index;
+            }
+        }
+        return -1;
+    }
+
+    private void resizeIfNeeded() {
+        if (elementData.length == size) {
+            Object[] newArray = new Object[(int) (elementData.length * PERCENTAGE_ARRAY_GROWTH)];
+            System.arraycopy(elementData, 0, newArray, 0, size);
+            elementData = newArray;
+        }
+    }
 }
