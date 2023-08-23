@@ -58,6 +58,7 @@ public class ArrayList<T> implements List<T> {
         elements[index] = value;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public T remove(int index) {
         if (index < 0 || index >= size) {
