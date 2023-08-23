@@ -21,11 +21,11 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        indexInsertion(index);
+        size++;
+        checkIndex(index);
         ensureCapacity();
         System.arraycopy(elements, index, elements, index + 1, size - index);
         elements[index] = value;
-        size++;
     }
 
     @Override
@@ -38,20 +38,20 @@ public class ArrayList<T> implements List<T> {
     @Override
     @SuppressWarnings("unchecked")
     public T get(int index) {
-        indexAdditionAndDeletion(index);
+        checkIndex(index);
         return (T) elements[index];
     }
 
     @Override
     public void set(T value, int index) {
-        indexAdditionAndDeletion(index);
+        checkIndex(index);
         elements[index] = value;
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public T remove(int index) {
-        indexAdditionAndDeletion(index);
+        checkIndex(index);
         T removedElement = (T) elements[index];
         System.arraycopy(elements, index + 1, elements, index, size - index - 1);
         size--;
@@ -88,14 +88,8 @@ public class ArrayList<T> implements List<T> {
 
     }
 
-    private void indexInsertion(int index) {
-        if (index > size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index" + index);
-        }
-    }
-
-    private void indexAdditionAndDeletion(int index) {
-        if (index >= size || index < 0) {
+    private void checkIndex(int index) {
+        if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException("Invalid index" + index);
         }
     }
