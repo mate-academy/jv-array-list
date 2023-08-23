@@ -4,7 +4,7 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    private static final double GROW_INDEX = 1.5;
+    private static final double GROW_MULTIPLIER = 1.5;
     private int size;
     private Object[] elements;
 
@@ -15,19 +15,18 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value) {
         if (size == elements.length) {
-            growIfArrayFull();
+            growArray();
         }
-        elements[size] = value;
-        size++;
+        elements[size++] = value;
     }
 
     @Override
     public void add(T value, int index) {
-        if (size == elements.length) {
-            growIfArrayFull();
-        }
         if (index > size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Index out of bounds " + index);
+        }
+        if (size == elements.length) {
+            growArray();
         }
         System.arraycopy(elements, index, elements, index + 1, size - index);
         elements[index] = value;
@@ -65,8 +64,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if ((elements[i] != null && elements[i].equals(element))
-                    || (elements[i] == element)) {
+            if (elements[i] != null && elements[i].equals(element)
+                    || elements[i] == element) {
                 T removedElement = (T) elements[i];
                 System.arraycopy(elements, i + 1, elements, i, size - i - 1);
                 size--;
@@ -92,8 +91,8 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private void growIfArrayFull() {
-        int newSize = (int) Math.round(elements.length * GROW_INDEX);
+    private void growArray() {
+        int newSize = (int) Math.round(elements.length * GROW_MULTIPLIER);
         Object[] newElements = new Object[newSize];
         System.arraycopy(elements, 0, newElements, 0, size);
         elements = newElements;
