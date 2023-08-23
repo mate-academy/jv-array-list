@@ -44,13 +44,13 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        checkBound(index);
+        checkOutOfBounds(index);
         return (T) elements[index];
     }
 
     @Override
     public void set(T value, int index) {
-        checkBound(index);
+        checkOutOfBounds(index);
         elements[index] = value;
     }
 
@@ -86,7 +86,7 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void checkBound(int index) {
+    private void checkOutOfBounds(int index) {
         if (index >= size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Index out of bound: " + index);
         }
