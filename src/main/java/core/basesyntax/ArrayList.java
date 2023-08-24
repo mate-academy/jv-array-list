@@ -1,39 +1,40 @@
 package core.basesyntax;
 
 import java.util.NoSuchElementException;
+import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
 
-    private int sizeOfList = 10;
-    private int lastIndex;
+    private static final int SIZE_OF_LIST = 10;
+    private int size;
     private Object[] list;
 
     ArrayList() {
-        list = new Object[sizeOfList];
+        list = new Object[SIZE_OF_LIST];
     }
 
     @Override
     public void add(T value) {
-        if (lastIndex >= list.length) {
+        if (size >= list.length) {
             increaseCapacity();
         }
-        list[lastIndex] = value;
-        lastIndex++;
+        list[size] = value;
+        size++;
     }
 
     @Override
     public void add(T value, int index) {
         checkIndexAdd(index);
-        if (lastIndex < index || index < 0) {
+        if (size < index || index < 0) {
             throw new ArrayListIndexOutOfBoundsException(
                     "Can't add element by this index");
         }
-        if (lastIndex == list.length) {
+        if (size == list.length) {
             increaseCapacity();
         }
-        System.arraycopy(list, index, list, index + 1, lastIndex - index);
+        System.arraycopy(list, index, list, index + 1, size - index);
         list[index] = value;
-        lastIndex++;
+        size++;
 
     }
 
@@ -47,6 +48,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public T get(int index) {
         checkIndex(index);
         return (T) list[index];
@@ -60,11 +62,12 @@ public class ArrayList<T> implements List<T> {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public T remove(int index) {
         checkIndex(index);
         T removedElement = (T) list[index];
-        System.arraycopy(list, index + 1, list, index, --lastIndex - index);
-        list[lastIndex] = null;
+        System.arraycopy(list, index + 1, list, index, --size - index);
+        list[size] = null;
         return removedElement;
     }
 
@@ -83,30 +86,31 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public int size() {
-        return lastIndex;
+        return size;
     }
 
     @Override
     public boolean isEmpty() {
-        return lastIndex == 0;
+        return size == 0;
     }
 
     private void increaseCapacity() {
-        int newCapacity = (int) ((int) list.length * 1.5);
+        final double multiplication = 1.5;
+        int newCapacity = (int) (list.length * multiplication);
         Object[] copiedElements = new Object[newCapacity];
-        System.arraycopy(list, 0, copiedElements, 0, lastIndex);
+        System.arraycopy(list, 0, copiedElements, 0, size);
         list = copiedElements;
     }
 
     private void checkIndexAdd(int index) {
-        if (lastIndex < index || index < 0) {
+        if (size < index || index < 0) {
             throw new ArrayListIndexOutOfBoundsException(
                     "Incorrect index");
         }
     }
 
     private void checkIndex(int index) {
-        if (lastIndex <= index || index < 0) {
+        if (size <= index || index < 0) {
             throw new ArrayListIndexOutOfBoundsException(
                     "Incorrect index");
         }
@@ -114,9 +118,8 @@ public class ArrayList<T> implements List<T> {
 
     private int getIndexOfElement(T element) {
         int index = -1;
-        for (int i = 0; i < lastIndex; i++) {
-            if ((element == null && element == list[i])
-                    || (element != null && element.equals(list[i]))) {
+        for (int i = 0; i < size; i++) {
+            if (Objects.equals(element, list[i])) {
                 index = i;
                 break;
             }
