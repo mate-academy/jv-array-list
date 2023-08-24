@@ -22,9 +22,7 @@ public class ArrayList<T> implements List<T> {
         if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException("Can't add value by index");
         }
-        if (elements.length == size) {
-            resize();
-        }
+        resize();
         System.arraycopy(elements, index, elements, index + 1, size - index);
         elements[index++] = value;
         size++;
@@ -37,7 +35,6 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public T get(int index) {
         checkIndex(index);
