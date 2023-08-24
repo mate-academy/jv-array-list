@@ -3,15 +3,16 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    private static final double GROW_COEFFICIENT = 0.75;
+    private static final double GROW_COEFFICIENT = 0.5;
     private static final byte DEFAULT_SIZE = 10;
     private int size = DEFAULT_SIZE;
-    private int currentIndex = 0;
+    private int currentIndex;
     private T[] storage;
 
     @SuppressWarnings("unchecked")
     public ArrayList() {
         storage = (T[]) new Object[DEFAULT_SIZE];
+        currentIndex = 0;
     }
 
     @Override
@@ -23,9 +24,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         if (index > currentIndex || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException(
-                    String.format("Index: %d, Size: %d", index, currentIndex)
-            );
+            throwErrorMsg();
         }
         shouldGrow();
 
@@ -102,9 +101,13 @@ public class ArrayList<T> implements List<T> {
 
     private void validateIndex(int index) {
         if (index >= currentIndex || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException(
-                    String.format("Index: %d, Size: %d", currentIndex, size)
-            );
+            throwErrorMsg();
         }
+    }
+
+    private void throwErrorMsg() {
+        throw new ArrayListIndexOutOfBoundsException(
+                String.format("Index: %d, Size: %d", currentIndex, size)
+        );
     }
 }
