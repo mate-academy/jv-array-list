@@ -9,14 +9,11 @@ public class ArrayList<T> implements List<T> {
 
     public ArrayList() {
         array = new Object[START_CAPACITY];
-        size = 0;
     }
 
     @Override
     public void add(T value) {
-        if (size == array.length) {
-            extendArray();
-        }
+        extendArray();
         array[size++] = value;
     }
 
@@ -65,7 +62,8 @@ public class ArrayList<T> implements List<T> {
     public T remove(T element) {
         int index = getIndexByValue(element);
         if (index == -1) {
-            throw new NoSuchElementException("There is no such element in the list");
+            throw new NoSuchElementException("There is no such element in the list. "
+                    + "\"Element\"" + element + "\"doesn't exist\".");
         }
         return remove(index);
     }
@@ -93,11 +91,13 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void extendArray() {
-        int oldCapacity = array.length;
-        int newCapacity = oldCapacity + (oldCapacity >> 1);
-        Object[] copiedElements = new Object[newCapacity];
-        System.arraycopy(array, 0, copiedElements, 0, size);
-        array = copiedElements;
+        if (size == array.length) {
+            int oldCapacity = array.length;
+            int newCapacity = oldCapacity + (oldCapacity >> 1);
+            Object[] copiedElements = new Object[newCapacity];
+            System.arraycopy(array, 0, copiedElements, 0, size);
+            array = copiedElements;
+        }
     }
 
     private int getIndexByValue(T value) {
