@@ -1,10 +1,8 @@
 package core.basesyntax;
 
 import java.util.NoSuchElementException;
-import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
-
     private static final int SIZE_OF_LIST = 10;
     private int size;
     private Object[] list;
@@ -119,7 +117,7 @@ public class ArrayList<T> implements List<T> {
     private int getIndexOfElement(T element) {
         int index = -1;
         for (int i = 0; i < size; i++) {
-            if (Objects.equals(element, list[i])) {
+            if (list[i] == element || element != null && element.equals(list[i])) {
                 index = i;
                 break;
             }
