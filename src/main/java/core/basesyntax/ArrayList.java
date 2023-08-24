@@ -61,13 +61,12 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        int index = getElementIndex(element);
-        try {
-            remove(index);
-        } catch (RuntimeException e) {
-            throw new NoSuchElementException("Can't remove element" + e);
+        for (int i = 0; i < size; i++) {
+            if (elements[i] == element || elements[i] != null && elements[i].equals(element)){
+                return remove(i);
+            }
         }
-        return element;
+        throw new NoSuchElementException("Element does not exist" + element);
     }
 
     @Override
@@ -88,20 +87,9 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    public void checkIndex(int index) {
+    private void checkIndex(int index) {
         if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException("Can't get index");
         }
-    }
-
-    public int getElementIndex(T element) {
-        int index = -1;
-        for (int i = 0; i < size; i++) {
-            if (element != null && element.equals(elements[i])
-                    || element == elements[i]) {
-                index = i;
-            }
-        }
-        return index;
     }
 }
