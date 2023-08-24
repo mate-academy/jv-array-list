@@ -4,10 +4,11 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int SIZE_OF_LIST = 10;
+    private static double MULTYPLYCATION = 1.5;
     private int size;
     private Object[] list;
 
-    ArrayList() {
+    public ArrayList() {
         list = new Object[SIZE_OF_LIST];
     }
 
@@ -16,37 +17,28 @@ public class ArrayList<T> implements List<T> {
         if (size >= list.length) {
             increaseCapacity();
         }
-        list[size] = value;
-        size++;
+        list[size++] = value;
     }
 
     @Override
     public void add(T value, int index) {
         checkIndexAdd(index);
-        if (size < index || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException(
-                    "Can't add element by this index");
-        }
         if (size == list.length) {
             increaseCapacity();
         }
         System.arraycopy(list, index, list, index + 1, size - index);
         list[index] = value;
         size++;
-
     }
 
     @Override
     public void addAll(List<T> list) {
         for (int i = 0; i < list.size(); i++) {
             add(list.get(i));
-
         }
-
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public T get(int index) {
         checkIndex(index);
         return (T) list[index];
@@ -56,11 +48,9 @@ public class ArrayList<T> implements List<T> {
     public void set(T value, int index) {
         checkIndex(index);
         list[index] = value;
-
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public T remove(int index) {
         checkIndex(index);
         T removedElement = (T) list[index];
@@ -71,7 +61,6 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-
         int index = getIndexOfElement(element);
         try {
             remove(index);
@@ -93,8 +82,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void increaseCapacity() {
-        final double multiplication = 1.5;
-        int newCapacity = (int) (list.length * multiplication);
+        int newCapacity = (int) (list.length * MULTYPLYCATION);
         Object[] copiedElements = new Object[newCapacity];
         System.arraycopy(list, 0, copiedElements, 0, size);
         list = copiedElements;
@@ -110,7 +98,7 @@ public class ArrayList<T> implements List<T> {
     private void checkIndex(int index) {
         if (size <= index || index < 0) {
             throw new ArrayListIndexOutOfBoundsException(
-                    "Incorrect index");
+                    "Incorrect index" + index);
         }
     }
 
