@@ -24,7 +24,7 @@ public class ArrayList<T> implements List<T> {
     public void add(T value, int index) {
         if (index < 0 || index > cursor) {
             throw new ArrayListIndexOutOfBoundsException("Index ["
-                    + index + "] is out of List range");
+                      + index + "] is out of List range");
         }
         if (elements.length == cursor) {
             resize();
@@ -45,7 +45,7 @@ public class ArrayList<T> implements List<T> {
     public T get(int index) {
         if (index < 0 || index > cursor - 1) {
             throw new ArrayListIndexOutOfBoundsException("Index ["
-                    + index + "] is out of List range");
+                      + index + "] is out of List range");
         }
         return (T) elements[index];
     }
@@ -54,7 +54,7 @@ public class ArrayList<T> implements List<T> {
     public void set(T value, int index) {
         if (index < 0 || index > cursor - 1) {
             throw new ArrayListIndexOutOfBoundsException("Index ["
-                    + index + "] is out of List range");
+                      + index + "] is out of List range");
         }
         elements[index] = value;
     }
@@ -63,7 +63,7 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         if (index < 0 || index > cursor - 1) {
             throw new ArrayListIndexOutOfBoundsException("Index ["
-                    + index + "] is out of List range");
+                      + index + "] is out of List range");
         }
         T removedElement = (T) elements[index];
         System.arraycopy(elements, index + 1, elements, index, cursor - index - 1);
