@@ -66,13 +66,12 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         int index = getIndex(element);
-        try {
-            remove(index);
-        } catch (RuntimeException e) {
+        if (index == -1) {
             throw new NoSuchElementException(
                     "There is no such element in ArrayList, method: " + element);
+        } else {
+            return remove(index);
         }
-        return element;
     }
 
     @Override
@@ -86,7 +85,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void resize() {
-        int newCapacity = (int)(values.length * 1.5);
+        int newCapacity = (int) (values.length * 1.5);
         Object[] array = new Object[newCapacity];
         System.arraycopy(values, 0, array, 0, size);
         values = array;
@@ -107,7 +106,7 @@ public class ArrayList<T> implements List<T> {
     private void checkIndex(int index) {
         if (size <= index || index < 0) {
             throw new ArrayListIndexOutOfBoundsException(
-                    "Incorrect index");
+                    "Incorrect index" + index + " for list size " + size);
         }
     }
 }
