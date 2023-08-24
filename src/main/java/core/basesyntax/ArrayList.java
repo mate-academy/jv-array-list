@@ -94,8 +94,7 @@ public class ArrayList<T> implements List<T> {
     private int getIndex(T element) {
         int index = -1;
         for (int i = 0; i < size; i++) {
-            if ((element == null && element == values[i])
-                    || (element != null && element.equals(values[i]))) {
+            if ((element == values[i]) || (element != null && element.equals(values[i]))) {
                 index = i;
                 break;
             }
