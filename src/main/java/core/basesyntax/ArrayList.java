@@ -5,28 +5,25 @@ import java.util.NoSuchElementException;
 public class ArrayList<T> implements List<T> {
     private static final double GROW_COEFFICIENT = 0.5;
     private static final byte DEFAULT_SIZE = 10;
-    private int size = DEFAULT_SIZE;
     private int currentIndex;
     private T[] storage;
 
-    @SuppressWarnings("unchecked")
     public ArrayList() {
         storage = (T[]) new Object[DEFAULT_SIZE];
-        currentIndex = 0;
     }
 
     @Override
     public void add(T value) {
-        shouldGrow();
+        resizeStorage();
         storage[currentIndex++] = value;
     }
 
     @Override
     public void add(T value, int index) {
         if (index > currentIndex || index < 0) {
-            throwErrorMsg();
+            throwIndexOutOfBounds();
         }
-        shouldGrow();
+        resizeStorage();
 
         System.arraycopy(storage, index, storage, index + 1, currentIndex - index);
         storage[index] = value;
@@ -65,17 +62,17 @@ public class ArrayList<T> implements List<T> {
     public T remove(T element) {
         int index = -1;
         for (int i = 0; i < currentIndex; i++) {
-            if ((element == null && storage[i] == null)
-                    || (element != null && element.equals(storage[i]))) {
+            if (element == null && storage[i] == null
+                    || element != null && element.equals(storage[i])) {
                 index = i;
             }
         }
 
-        if (index == -1) {
-            throw new NoSuchElementException("Element was not found in list");
+        if (index >= 0) {
+            return remove(index);
         }
 
-        return remove(index);
+        throw new NoSuchElementException("Element was not found in the list");
     }
 
     @Override
@@ -88,26 +85,24 @@ public class ArrayList<T> implements List<T> {
         return currentIndex == 0;
     }
 
-    @SuppressWarnings("unchecked")
-    private void shouldGrow() {
-        if (currentIndex == size) {
+    private void resizeStorage() {
+        if (currentIndex == storage.length) {
             int newSize = (int) (storage.length + storage.length * GROW_COEFFICIENT);
             Object[] tempArray = new Object[newSize];
-            System.arraycopy(storage, 0, tempArray, 0, size);
+            System.arraycopy(storage, 0, tempArray, 0, storage.length);
             storage = (T[]) tempArray;
-            size = newSize;
         }
     }
 
     private void validateIndex(int index) {
         if (index >= currentIndex || index < 0) {
-            throwErrorMsg();
+            throwIndexOutOfBounds();
         }
     }
 
-    private void throwErrorMsg() {
+    private void throwIndexOutOfBounds() {
         throw new ArrayListIndexOutOfBoundsException(
-                String.format("Index: %d, Size: %d", currentIndex, size)
+                String.format("Index: %d, Size: %d", currentIndex, storage.length)
         );
     }
 }
