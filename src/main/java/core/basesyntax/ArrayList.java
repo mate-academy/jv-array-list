@@ -4,6 +4,7 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
+    private static final double GROW_MULTIPLAYER = 1.5;
     private Object[] values;
     private int size;
 
@@ -23,7 +24,7 @@ public class ArrayList<T> implements List<T> {
     public void add(T value, int index) {
         if (size < index || index < 0) {
             throw new ArrayListIndexOutOfBoundsException(
-                    "Can't add element by this index");
+                    "Can't add element by this index: " + index);
         }
         if (size == values.length) {
             resize();
@@ -40,7 +41,6 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public T get(int index) {
         checkIndex(index);
@@ -53,7 +53,6 @@ public class ArrayList<T> implements List<T> {
         values[index] = value;
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public T remove(int index) {
         checkIndex(index);
@@ -69,9 +68,8 @@ public class ArrayList<T> implements List<T> {
         if (index == -1) {
             throw new NoSuchElementException(
                     "There is no such element in ArrayList, method: " + element);
-        } else {
-            return remove(index);
         }
+        return remove(index);
     }
 
     @Override
@@ -85,7 +83,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void resize() {
-        int newCapacity = (int) (values.length * 1.5);
+        int newCapacity = (int) (values.length * GROW_MULTIPLAYER);
         Object[] array = new Object[newCapacity];
         System.arraycopy(values, 0, array, 0, size);
         values = array;
@@ -94,7 +92,7 @@ public class ArrayList<T> implements List<T> {
     private int getIndex(T element) {
         int index = -1;
         for (int i = 0; i < size; i++) {
-            if ((element == values[i]) || (element != null && element.equals(values[i]))) {
+            if (element == values[i] || element != null && element.equals(values[i])) {
                 index = i;
                 break;
             }
