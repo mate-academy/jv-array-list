@@ -11,7 +11,6 @@ public class ArrayList<T> implements List<T> {
 
     public ArrayList() {
         elements = new Object[DEFAULT_CAPACITY];
-        size = 0;
     }
 
     @Override
@@ -39,7 +38,6 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public T get(int index) {
         checkIfIndexFits(index);
@@ -52,7 +50,6 @@ public class ArrayList<T> implements List<T> {
         elements[index] = value;
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public T remove(int index) {
         checkIfIndexFits(index);
@@ -64,10 +61,11 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        if (findIndex(element) == -1) {
+        int index = index(element);
+        if (index == -1) {
             throw new NoSuchElementException("There is no such element in the list, " + element);
         }
-        return remove(findIndex(element));
+        return remove(index);
     }
 
     @Override
@@ -102,7 +100,7 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private int findIndex(T element) {
+    private int index(T element) {
         int index = -1;
         for (int i = 0; i < size; i++) {
             if (elements[i] == element
