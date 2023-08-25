@@ -21,6 +21,10 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
+        if (index == size) {
+            add(value);
+            return;
+        }
         checkAddID(index);
         provideCapacity(size + 1);
         System.arraycopy(elements, index, elements,
@@ -34,7 +38,6 @@ public class ArrayList<T> implements List<T> {
         for (int i = 0; i < list.size(); i++) {
             add(list.get(i));
         }
-
     }
 
     @Override
