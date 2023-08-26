@@ -8,7 +8,6 @@ public class ArrayList<T> implements List<T> {
     private int size;
     private T[] list;
 
-    @SuppressWarnings("unchecked")
     public ArrayList() {
         list = (T[]) new Object[DEFAULT_CAPACITY];
     }
@@ -40,7 +39,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         checkIndex(index);
-        return (T) list[index];
+        return list[index];
     }
 
     @Override
@@ -52,15 +51,16 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
-        T removed = (T) list[index];
+        T removed = list[index];
         System.arraycopy(list, index + 1, list, index, size - index - 1);
-        size--;
+        list[--size] = null;
         return removed;
     }
 
     @Override
     public T remove(T element) {
-        remove(findIndexByElement(element));
+        int elementIndex = findIndexByElement(element);
+        remove(elementIndex);
         return element;
     }
 
@@ -82,7 +82,7 @@ public class ArrayList<T> implements List<T> {
 
     private void checkIndexWhenAdd(int index) {
         if (index > size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index " + index + " is out of bounds");
+            throw new ArrayListIndexOutOfBoundsException("Invalid index " + index);
         }
     }
 
