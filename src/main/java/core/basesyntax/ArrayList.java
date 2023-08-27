@@ -4,45 +4,11 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    private static final Object[] DEFAULTCAPACITY_EMPTY_ELEMENTDATA = {};
     private Object[] elementData;
     private int size;
 
     public ArrayList() {
-        this.elementData = DEFAULTCAPACITY_EMPTY_ELEMENTDATA;
-    }
-
-    private Object[] grow(int minCapacity) {
-        int oldCapacity = elementData.length;
-        if ((oldCapacity > 0) || (elementData != DEFAULTCAPACITY_EMPTY_ELEMENTDATA)) {
-            int newCapacity = oldCapacity + (oldCapacity >> 1);
-            Object[] elementDataWithNewCapacity = new Object[newCapacity];
-            System.arraycopy(elementData, 0, elementDataWithNewCapacity,0, size);
-            return elementData = elementDataWithNewCapacity;
-        } else {
-            return elementData = new Object[Math.max(DEFAULT_CAPACITY, minCapacity)];
-        }
-    }
-
-    private Object[] grow() {
-        return grow(size + 1);
-    }
-
-    private void checkIndexRange(int index, int size) {
-        if ((index < 0) || (index > size)) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
-        }
-    }
-
-    private int findRemovedElementIndex(T element) {
-        for (int i = 0; i < size; i++) {
-            if ((element == elementData[i])
-                    || ((element != null)
-                    && (element.equals(elementData[i])))) {
-                return i;
-            }
-        }
-        throw new NoSuchElementException("No such element in ArrayList");
+        this.elementData = new Object[DEFAULT_CAPACITY];
     }
 
     @Override
@@ -101,7 +67,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        int index = findRemovedElementIndex(element);
+        int index = findElementIndex(element);
         return remove(index);
 
     }
@@ -114,5 +80,34 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private Object[] grow(int minCapacity) {
+        int oldCapacity = elementData.length;
+        int newCapacity = oldCapacity + (oldCapacity >> 1);
+        Object[] elementDataWithNewCapacity = new Object[newCapacity];
+        System.arraycopy(elementData, 0, elementDataWithNewCapacity,0, size);
+        return elementData = elementDataWithNewCapacity;
+    }
+
+    private Object[] grow() {
+        return grow(size + 1);
+    }
+
+    private void checkIndexRange(int index, int size) {
+        if ((index < 0) || (index > size)) {
+            throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
+        }
+    }
+
+    private int findElementIndex(T element) {
+        for (int i = 0; i < size; i++) {
+            if ((element == elementData[i])
+                    || ((element != null)
+                    && (element.equals(elementData[i])))) {
+                return i;
+            }
+        }
+        throw new NoSuchElementException("No such element in ArrayList");
     }
 }
