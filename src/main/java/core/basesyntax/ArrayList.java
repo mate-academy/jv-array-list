@@ -111,6 +111,7 @@ public class ArrayList<T> implements List<T> {
         for (int i = 0; i < list.size(); i++) {
             arrayValues[i] = list.get(i);
         }
+
         return arrayValues;
     }
 }
