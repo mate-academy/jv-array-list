@@ -5,11 +5,11 @@ import java.util.NoSuchElementException;
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private static final double LOAD_FACTOR = 1.5;
-    private T[] elements;
+    private Object[] elements;
     private int size;
 
     public ArrayList() {
-        elements = (T[]) new Object[DEFAULT_CAPACITY];
+        elements = new Object[DEFAULT_CAPACITY];
     }
 
     @Override
@@ -42,7 +42,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         checkIndex(index, size);
-        return elements[index];
+        return (T) elements[index];
     }
 
     @Override
@@ -57,7 +57,7 @@ public class ArrayList<T> implements List<T> {
         checkIndex(index, size);
         for (int i = 0; i < size; i++) {
             if (i == index) {
-                removedElemen = elements[i];
+                removedElemen = (T) elements[i];
             }
         }
         System.arraycopy(elements, index + 1, elements, index, size - index - 1);
@@ -72,7 +72,7 @@ public class ArrayList<T> implements List<T> {
         for (int i = 0; i < size; i++) {
             if (elements[i] == element || elements[i] != null && elements[i].equals(element)) {
                 index = i;
-                removedElement = elements[i];
+                removedElement = (T) elements[i];
             }
         }
         if (index == -1) {
@@ -101,10 +101,10 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void resizeIfNeeded() {
-        if (size == elements.length) {
+        if (size >= elements.length - 2) {
             Object[] newArray = new Object[(int) (elements.length + elements.length * LOAD_FACTOR)];
             System.arraycopy(elements, 0, newArray, 0, size);
-            elements = (T[]) newArray;
+            elements = newArray;
         }
     }
 }
