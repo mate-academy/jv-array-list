@@ -30,13 +30,9 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        Object[] newArray = new Object[list.size()];
-        for (int i = 0; i < newArray.length; i++) {
-            newArray[i] = list.get(i);
+        for (int i = 0; i < list.size(); i++) {
+            add(list.get(i));
         }
-        resizeIfNeeded();
-        System.arraycopy(newArray, 0, elements, size, newArray.length);
-        size = size + newArray.length;
     }
 
     @Override
