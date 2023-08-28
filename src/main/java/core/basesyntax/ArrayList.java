@@ -25,7 +25,7 @@ public class ArrayList<T> implements List<T> {
             add(value);
             return;
         }
-        checkAddID(index);
+        checkIndex(index);
         provideCapacity(size + 1);
         System.arraycopy(elements, index, elements,
                 index + 1, size - index);
@@ -42,19 +42,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        checkID(index);
+        checkIndex(index);
         return elements[index];
     }
 
     @Override
     public void set(T value, int index) {
-        checkID(index);
+        checkIndex(index);
         elements[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        checkID(index);
+        checkIndex(index);
         T detail = elements[index];
         System.arraycopy(elements, index
                 + 1, elements, index, --size - index);
@@ -80,15 +80,8 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void checkID(int index) {
+    private void checkIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index "
-                    + index + "is out of bounds for size: " + size);
-        }
-    }
-
-    private void checkAddID(int index) {
-        if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException("Index "
                     + index + "is out of bounds for size: " + size);
         }
@@ -106,11 +99,7 @@ public class ArrayList<T> implements List<T> {
 
     private int indexOf(T element) {
         for (int i = 0; i < elements.length; i++) {
-            if (element == null) {
-                if (elements[i] == null) {
-                    return i;
-                }
-            } else if (element.equals(elements[i])) {
+            if (element == elements[i] || element != null && element.equals(elements[i])) {
                 return i;
             }
         }
