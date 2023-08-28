@@ -34,7 +34,6 @@ public class ArrayList<T> implements List<T> {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public T get(int index) {
         indexValidation(index);
         return (T) elements[index];
@@ -47,7 +46,6 @@ public class ArrayList<T> implements List<T> {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public T remove(int index) {
         indexValidation(index);
         T element = (T) elements[index];
@@ -86,13 +84,13 @@ public class ArrayList<T> implements List<T> {
 
     private void indexValidation(int index) {
         if (index < 0 || index > size - 1) {
-            throw new ArrayListIndexOutOfBoundsException("Index does not exist");
+            throw new ArrayListIndexOutOfBoundsException("Index does not exist " + index);
         }
     }
 
     private void addIndexValidation(int index) {
         if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("Index does not exist");
+            throw new ArrayListIndexOutOfBoundsException("Index does not exist " + index);
         }
     }
 }
