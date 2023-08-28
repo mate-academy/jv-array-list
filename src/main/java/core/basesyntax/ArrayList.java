@@ -4,6 +4,7 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int START_SIZE = 10;
+    private static final double GROW_COEFFICIENT = 1.5;
     private int cursor;
     private T[] elements;
 
@@ -16,16 +17,12 @@ public class ArrayList<T> implements List<T> {
         if (elements.length == cursor) {
             resize();
         }
-        elements[cursor] = value;
-        cursor++;
+        elements[cursor++] = value;
     }
 
     @Override
     public void add(T value, int index) {
-        if (index < 0 || index > cursor) {
-            throw new ArrayListIndexOutOfBoundsException("Index ["
-                      + index + "] is out of List range");
-        }
+        checkAddIndex(index);
         if (elements.length == cursor) {
             resize();
         }
@@ -43,28 +40,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index < 0 || index > cursor - 1) {
-            throw new ArrayListIndexOutOfBoundsException("Index ["
-                      + index + "] is out of List range");
-        }
+        checkGetSetRemoveIndex(index);
         return (T) elements[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index < 0 || index > cursor - 1) {
-            throw new ArrayListIndexOutOfBoundsException("Index ["
-                      + index + "] is out of List range");
-        }
+        checkGetSetRemoveIndex(index);
         elements[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index < 0 || index > cursor - 1) {
-            throw new ArrayListIndexOutOfBoundsException("Index ["
-                      + index + "] is out of List range");
-        }
+        checkGetSetRemoveIndex(index);
         T removedElement = (T) elements[index];
         System.arraycopy(elements, index + 1, elements, index, cursor - index - 1);
         cursor--;
@@ -93,8 +81,20 @@ public class ArrayList<T> implements List<T> {
         return cursor == 0;
     }
 
+    public void checkAddIndex(int index) {
+        if (index < 0 || index > cursor) {
+            throw new ArrayListIndexOutOfBoundsException("Index out of bounds: " + index);
+        }
+    }
+
+    public void checkGetSetRemoveIndex(int index) {
+        if (index < 0 || index > cursor - 1) {
+            throw new ArrayListIndexOutOfBoundsException("Index out of bounds: " + index);
+        }
+    }
+
     public void resize() {
-        int tempCursor = (int) (cursor * 1.5);
+        int tempCursor = (int) (cursor * GROW_COEFFICIENT);
         T[] tempArray = (T[])new Object[tempCursor];
         System.arraycopy(elements, 0, tempArray, 0, cursor);
         elements = tempArray;
