@@ -3,9 +3,10 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
+    private static final double INCREASED = 1.5;
     private static final int CAPACITY = 10;
     private Object[] elements;
-    private int count;
+    private int size;
 
     public ArrayList() {
         elements = new Object[CAPACITY];
@@ -16,7 +17,7 @@ public class ArrayList<T> implements List<T> {
         if (isFull()) {
             grow();
         }
-        elements[count++] = value;
+        elements[size++] = value;
     }
 
     @Override
@@ -25,9 +26,9 @@ public class ArrayList<T> implements List<T> {
         if (isFull()) {
             grow();
         }
-        System.arraycopy(elements, index, elements, index + 1, size() - index);
+        System.arraycopy(elements, index, elements, index + 1, size - index);
         elements[index] = value;
-        count++;
+        size++;
     }
 
     @Override
@@ -54,9 +55,9 @@ public class ArrayList<T> implements List<T> {
         checkIndexToGet(index);
         T toRemove = (T) elements[index];
         if (!isFull()) {
-            System.arraycopy(elements, index + 1, elements, index, count - (index + 1));
+            System.arraycopy(elements, index + 1, elements, index, size - (index + 1));
         }
-        elements[--count] = null;
+        elements[--size] = null;
         return toRemove;
     }
 
@@ -67,39 +68,39 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public int size() {
-        return count;
+        return size;
     }
 
     @Override
     public boolean isEmpty() {
-        return size() <= 0;
+        return size == 0;
     }
 
     private boolean isFull() {
-        return size() >= elements.length;
+        return size >= elements.length;
     }
 
     private void grow() {
-        Object[] tempArr = new Object[(int) (elements.length * 1.5)];
-        System.arraycopy(elements, 0, tempArr, 0, size());
+        Object[] tempArr = new Object[(int) (elements.length * INCREASED)];
+        System.arraycopy(elements, 0, tempArr, 0, size);
         elements = tempArr;
     }
 
     private void checkIndexToAdd(int index) {
-        if (index > size() || index < 0) {
+        if (index > size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Invalid index");
         }
     }
 
     private void checkIndexToGet(int index) {
-        if (index >= size() || index < 0) {
+        if (index >= size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Invalid index");
         }
     }
 
     private int getIndexByValue(T value) {
         int index = -1;
-        for (int i = 0; i < count; i++) {
+        for (int i = 0; i < size; i++) {
             if (elements[i] == value || value != null
                     && value.equals(elements[i])) {
                 return i;
