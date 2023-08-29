@@ -15,8 +15,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value) {
         resizeIfNeeded();
-        elements[size] = value;
-        size++;
+        elements[size++] = value;
     }
 
     @Override
@@ -49,31 +48,21 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(int index) {
-        T removedElemen = null;
         checkIndex(index, size);
-        for (int i = 0; i < size; i++) {
-            if (i == index) {
-                removedElemen = (T) elements[i];
-            }
-        }
+        T removedElement = get(index);
         System.arraycopy(elements, index + 1, elements, index, size - index - 1);
         size--;
-        return removedElemen;
+        return removedElement;
     }
 
     @Override
     public T remove(T element) {
-        T removedElement = null;
-        int index = -1;
-        for (int i = 0; i < size; i++) {
-            if (elements[i] == element || elements[i] != null && elements[i].equals(element)) {
-                index = i;
-                removedElement = (T) elements[i];
-            }
-        }
+        T removedElement;
+        int index = findElement(element);
         if (index == -1) {
             throw new NoSuchElementException("No such element was found");
         } else {
+            removedElement = get(index);
             System.arraycopy(elements, index + 1, elements, index, size - 1 - index);
             size--;
         }
@@ -97,10 +86,20 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void resizeIfNeeded() {
-        if (size >= elements.length - 2) {
+        if (size == elements.length) {
             Object[] newArray = new Object[(int) (elements.length + elements.length * LOAD_FACTOR)];
             System.arraycopy(elements, 0, newArray, 0, size);
             elements = newArray;
         }
+    }
+
+    private int findElement(T element) {
+        int index = -1;
+        for (int i = 0; i < size; i++) {
+            if (elements[i] == element || elements[i] != null && elements[i].equals(element)) {
+                index = i;
+            }
+        }
+        return index;
     }
 }
