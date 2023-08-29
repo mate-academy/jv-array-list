@@ -19,7 +19,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        addIndexValidation(index);
+        validateIndex(index);
         increaseCapasity();
         System.arraycopy(elements, index, elements, index + 1, size - index);
         elements[index] = value;
@@ -88,7 +88,7 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private void addIndexValidation(int index) {
+    private void validateIndex(int index) {
         if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException("Index does not exist " + index);
         }
