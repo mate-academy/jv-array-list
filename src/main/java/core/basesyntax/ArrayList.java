@@ -31,7 +31,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void addAll(List<T> list) {
         Object[] objects = convertListInArray(list);
-        resizeIdNeeded();
+        resizeIdNeeded(size + objects.length);
         System.arraycopy(objects, 0, elements, size, objects.length);
         size = size + objects.length;
     }
@@ -84,6 +84,14 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
+    private void resizeIdNeeded(int arrayLength) {
+        if (elements.length < arrayLength) {
+            Object[] newArray = new Object[arrayLength];
+            System.arraycopy(elements, 0,newArray,0, size);
+            elements = newArray;
+        }
+    }
+
     private void checkIndex(int index, int length) {
         if (index < 0 || index >= length) {
             throw new ArrayListIndexOutOfBoundsException("index is not valid");
@@ -111,7 +119,6 @@ public class ArrayList<T> implements List<T> {
         for (int i = 0; i < list.size(); i++) {
             arrayValues[i] = list.get(i);
         }
-
         return arrayValues;
     }
 }
