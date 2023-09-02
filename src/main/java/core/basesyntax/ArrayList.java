@@ -1,9 +1,18 @@
 package core.basesyntax;
 
 public class ArrayList<T> implements List<T> {
+    private static final int DEFAULT_CAPACITY = 10;
+    private T[] elementData;
+    private int size;
+
+    public ArrayList() {
+        elementData = (T[]) new Object[DEFAULT_CAPACITY];
+    }
     @Override
     public void add(T value) {
-
+        elementData = growIfArrayFull();
+        elementData[size] = value;
+        size++;
     }
 
     @Override
@@ -38,11 +47,22 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public int size() {
-        return 0;
+        return size;
     }
 
     @Override
     public boolean isEmpty() {
-        return false;
+        return size == 0;
+    }
+
+    private T[] growIfArrayFull() {
+        T[] grownArray = elementData;
+        int oldCapacity = elementData.length;
+        if (size == oldCapacity) {
+            int newCapacity = oldCapacity + (oldCapacity >> 1);
+            grownArray = (T[]) new Object[newCapacity];
+            System.arraycopy(elementData, 0, grownArray, 0, size);
+        }
+        return grownArray;
     }
 }
