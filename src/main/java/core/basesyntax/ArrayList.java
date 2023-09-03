@@ -20,11 +20,12 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        elementData = growIfArrayFull();
-        if (index > size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index
-                    + ". Your index must be in the range from 0 to " + size + " inclusive.");
+        if (index == size) {
+            add(value);
+            return;
         }
+        checkIndex(index);
+        growIfArrayFull();
         System.arraycopy(elementData, index, elementData, index + 1, size - index);
         elementData[index] = value;
         size++;
@@ -83,11 +84,13 @@ public class ArrayList<T> implements List<T> {
     private T[] growIfArrayFull() {
         T[] grownArray = elementData;
         int oldCapacity = elementData.length;
-        if (size == oldCapacity) {
-            int newCapacity = oldCapacity + (oldCapacity >> 1);
-            grownArray = (T[]) new Object[newCapacity];
-            System.arraycopy(elementData, 0, grownArray, 0, size);
+        if (size < oldCapacity) {
+            return grownArray;
         }
+        int newCapacity = elementData.length + (elementData.length >> 1);
+        grownArray = (T[]) new Object[newCapacity];
+        System.arraycopy(elementData, 0, grownArray, 0, size);
+        elementData = grownArray;
         return grownArray;
     }
 
