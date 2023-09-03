@@ -4,50 +4,37 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-
+    private static final double INCREASING_CONSTANT = 1.5;
     private int capacity;
     private int size;
-    private Object[] elementDate;
+    private T[] elementData;
 
     public ArrayList() {
-        this.elementDate = new Object[DEFAULT_CAPACITY];
+        this.elementData = (T[]) new Object[DEFAULT_CAPACITY];
         capacity = DEFAULT_CAPACITY;
     }
 
-    private Object[] grow() {
-        capacity = (int) (capacity * 1.5);
-        Object[] newObjectsArray = new Object[capacity];
-        System.arraycopy(this.elementDate, 0, newObjectsArray, 0, size);
+    private T[] grow(int oldCapacity) {
+        capacity = (int) (oldCapacity * INCREASING_CONSTANT);
+        T[] newObjectsArray = (T[]) new Object[capacity];
+        System.arraycopy(this.elementData, 0, newObjectsArray, 0, size);
         return newObjectsArray;
     }
 
-    private Object[] grow(int elements) {
-        capacity = (int) (elements * 1.5);
-        Object[] newObjectsArray = new Object[capacity];
-        System.arraycopy(this.elementDate, 0, newObjectsArray, 0, size);
-        return newObjectsArray;
-    }
-
-    private void checkIndex(int index) {
-        if (index >= size || index < 0) {
+    private void checkIndex(int index, boolean isIncludingSizeValue) {
+        if (index > size || index < 0 || (!isIncludingSizeValue && index == size)) {
             throw new ArrayListIndexOutOfBoundsException("The specified index is outside the list");
         }
     }
 
-    private Object[] expansion(int index) {
-        Object[] newObjectsArray = new Object[capacity];
-        System.arraycopy(this.elementDate, 0, newObjectsArray, 0, index);
-        System.arraycopy(this.elementDate, index, newObjectsArray,
+    private void expansion(int index) {
+        System.arraycopy(this.elementData, index, elementData,
                 index + 1, size - index);
-        return newObjectsArray;
     }
 
-    private Object[] compression(int index) {
-        Object[] newObjectsArray = new Object[capacity];
-        System.arraycopy(this.elementDate, 0, newObjectsArray, 0, index);
-        System.arraycopy(this.elementDate, index + 1, newObjectsArray, index, size - index - 1);
+    private void compression(int index) {
+        System.arraycopy(this.elementData, index + 1, this.elementData, index, size - index - 1);
         increaseSize(-1);
-        return newObjectsArray;
     }
 
     private void increaseSize(int value) {
@@ -57,22 +44,20 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value) {
         if (size == capacity) {
-            this.elementDate = grow();
+            this.elementData = grow(size);
         }
-        this.elementDate[size] = value;
+        this.elementData[size] = value;
         increaseSize(1);
     }
 
     @Override
     public void add(T value, int index) {
-        if (index > size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("The specified index is outside the list");
-        }
+        checkIndex(index, true);
         if (size == capacity) {
-            this.elementDate = grow();
+            this.elementData = grow(capacity);
         }
-        this.elementDate = expansion(index);
-        this.elementDate[index] = value;
+        expansion(index);
+        this.elementData[index] = value;
         size++;
     }
 
@@ -84,42 +69,41 @@ public class ArrayList<T> implements List<T> {
 
         int newSize = this.size + list.size() - 1;
         if (newSize >= capacity) {
-            this.elementDate = grow(newSize);
+            this.elementData = grow(newSize);
         }
 
         for (int number = 0; number < list.size(); number++) {
-            this.elementDate[this.size] = list.get(number);
+            this.elementData[this.size] = list.get(number);
             increaseSize(1);
         }
     }
 
     @Override
     public T get(int index) {
-        checkIndex(index);
-        return (T) this.elementDate[index];
+        checkIndex(index, false);
+        return this.elementData[index];
     }
 
     @Override
     public void set(T value, int index) {
-        checkIndex(index);
-        this.elementDate[index] = value;
+        checkIndex(index, false);
+        this.elementData[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        checkIndex(index);
-        T removed = (T) this.elementDate[index];
-        this.elementDate = compression(index);
+        checkIndex(index, false);
+        T removed = this.elementData[index];
+        compression(index);
         return removed;
     }
 
     @Override
     public T remove(T element) {
         for (int number = 0; number < size; number++) {
-            if (element == this.elementDate[number]
-                    || element != null && element.equals(this.elementDate[number])) {
-                this.elementDate = compression(number);
-                return element;
+            if (element == this.elementData[number]
+                    || element != null && element.equals(this.elementData[number])) {
+                return remove(number);
             }
         }
         throw new NoSuchElementException("The specified element does not exist");
