@@ -2,7 +2,7 @@
 
 #### Don't begin class or method implementation with empty line.
 Remove all redundant empty lines, be careful :)
-#### Don't use class Objects.
+#### Don't use Objects, Arrays, or any other util class.
 #### Any magic numbers should be constants
 Your code should be easy to read. Move all hardcoded values to constant fields and give them informative names.
 
