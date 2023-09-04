@@ -2,6 +2,7 @@ package core.basesyntax;
 
 import java.util.Arrays;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
     private static final int INITIAL_CAPACITY = 10;
@@ -73,20 +74,12 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        int index = -1;
         for (int i = 0; i < size; i++) {
-            boolean isElementEqual = element == null || array[i] == null
-                    ? element == array[i] : array[i].equals(element);
-            if (isElementEqual) {
-                index = i;
-                break;
+            if (Objects.equals(element, array[i])) {
+                return remove(i);
             }
         }
-        if (index == -1) {
-            throw new NoSuchElementException("No Such Element");
-        } else {
-            return remove(index);
-        }
+        throw new NoSuchElementException("No Such Element");
     }
 
     @Override
