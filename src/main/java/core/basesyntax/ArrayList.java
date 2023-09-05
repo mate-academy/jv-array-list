@@ -26,17 +26,12 @@ public class ArrayList<T> implements List<T> {
             add(value);
             return;
         }
-
         checkIndex(index);
-
         if (size == arrayList.length) {
             resizeArray();
         }
-
-        if (index < size) {
-            System.arraycopy(arrayList, index, arrayList, index + 1, arrayList.length - index - 1);
-            arrayList[index] = value;
-        }
+        System.arraycopy(arrayList, index, arrayList, index + 1, arrayList.length - index - 1);
+        arrayList[index] = value;
         size++;
     }
 
@@ -56,35 +51,24 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void set(T value, int index) {
         checkIndex(index);
-        if (index < size) {
-            arrayList[index] = value;
-        } else if (index <= size) {
-            arrayList[size] = value;
-        }
-
+        arrayList[index] = value;
     }
 
     @Override
     public T remove(int index) {
         checkIndex(index);
-
         final T returnValue = arrayList[index];
         System.arraycopy(arrayList, index + 1, arrayList, index, arrayList.length - index - 1);
         arrayList[size - 1] = null;
         size--;
-
         return returnValue;
     }
 
     @Override
     public T remove(T element) {
-        int index = searchElement(element);
-        if (index != -1) {
-            remove(index);
-            return element;
-        } else {
-            throw new NoSuchElementException("don't have this element");
-        }
+        T removeElement = arrayList[searchElement(element)];
+        remove(searchElement(element));
+        return removeElement;
     }
 
     @Override
@@ -115,13 +99,11 @@ public class ArrayList<T> implements List<T> {
     }
 
     private int searchElement(T element) {
-        int index = -1;
         for (int i = 0; i < size; i++) {
             if (arrayList[i] == null ? element == null : arrayList[i].equals(element)) {
-                index = i;
-                return index;
+                return i;
             }
         }
-        return index;
+        throw new NoSuchElementException("don't have this element");
     }
 }
