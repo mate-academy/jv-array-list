@@ -36,8 +36,6 @@ public class ArrayList<T> implements List<T> {
         if (index < size) {
             System.arraycopy(arrayList, index, arrayList, index + 1, arrayList.length - index - 1);
             arrayList[index] = value;
-        } else {
-            arrayList[size] = value;
         }
         size++;
     }
