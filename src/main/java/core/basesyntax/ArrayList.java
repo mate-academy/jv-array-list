@@ -19,19 +19,6 @@ public class ArrayList<T> implements List<T> {
         }
         arrayList[indexSize] = value;
         indexSize++;
-
-        /*1if (indexSize < size()){
-            arrayList[indexSize] = value;
-        } else {
-            Object[] newArrayList = new Object[indexSize + indexSize / 2];
-            for (int i = 0; i < arrayList.length; i++) {
-                newArrayList[i] = arrayList[i];
-            }
-            arrayList = newArrayList;
-        }
-        indexSize++;
-
-         */
     }
 
     @Override
