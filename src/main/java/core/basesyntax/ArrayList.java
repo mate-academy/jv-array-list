@@ -33,15 +33,6 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        int count = 1;
-        for (int j = 0; j < count; j++) {
-            if (list.size() > (arrayList.length - size)) {
-                growArrayIfItIsFull();
-                count++;
-            } else {
-                break;
-            }
-        }
         for (int i = 0; i < list.size(); i++) {
             add(list.get(i));
         }
@@ -69,13 +60,10 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        T resultForElement = null;
         for (int i = 0; i < size; i++) {
             if ((element == null && arrayList[i] == null)
                     || (element != null && element.equals(arrayList[i]))) {
-                resultForElement = arrayList[i];
-                dataTransferWhenRemove(i + 1, i);
-                return resultForElement;
+                return remove(i);
             }
         }
         throw new NoSuchElementException("No such element exists");
