@@ -23,12 +23,13 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         outOfBoundsCheckForMethodAddByIndex(index);
-        if (arrayList.length - size == 0) {
+        if (arrayList.length == size) {
             growArrayIfItIsFull();
         }
         System.arraycopy(arrayList, index, arrayList, index + 1, size - index);
         arrayList[index] = value;
         size++;
+
     }
 
     @Override
@@ -76,15 +77,18 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public boolean isEmpty() {
-        return size == 0 ? true : false;
+        return size == 0;
     }
 
     private void growArrayIfItIsFull() {
+        if (arrayList.length < size) {
+            return;
+        }
         int incrementStep = arrayList.length / 2;
+
         T[] arrayListTemp = (T[]) new Object[arrayList.length + incrementStep];
         System.arraycopy(arrayList, 0, arrayListTemp, 0, size);
-        arrayList = (T[]) new Object[arrayListTemp.length];
-        System.arraycopy(arrayListTemp, 0, arrayList, 0, arrayListTemp.length);
+        arrayList = arrayListTemp;
     }
 
     private void outOfBoundsCheck(int index) {
