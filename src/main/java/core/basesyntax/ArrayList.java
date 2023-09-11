@@ -1,33 +1,32 @@
 package core.basesyntax;
 
 import java.util.NoSuchElementException;
+import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    private T[] arrayList;
+    private T[] elementData;
     private int size;
 
     public ArrayList() {
-        arrayList = (T[]) new Object[DEFAULT_CAPACITY];
+        elementData = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
     @Override
     public void add(T value) {
-        arrayList[size] = value;
-        size++;
-        if (size == arrayList.length) {
-            growArrayIfItIsFull();
-        }
+        checkBeforeGrow();
+        elementData[size++] = value;
     }
 
     @Override
     public void add(T value, int index) {
-        outOfBoundsCheckForMethodAddByIndex(index);
-        if (arrayList.length == size) {
-            growArrayIfItIsFull();
+        if (index > size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException(
+                    "the index is not valid index: " + index + " size: " + size);
         }
-        System.arraycopy(arrayList, index, arrayList, index + 1, size - index);
-        arrayList[index] = value;
+        checkBeforeGrow();
+        System.arraycopy(elementData, index, elementData, index + 1, size - index);
+        elementData[index] = value;
         size++;
 
     }
@@ -42,19 +41,20 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         outOfBoundsCheck(index);
-        return arrayList[index];
+        return elementData[index];
     }
 
     @Override
     public void set(T value, int index) {
         outOfBoundsCheck(index);
-        arrayList[index] = value;
+        elementData[index] = value;
     }
 
     @Override
     public T remove(int index) {
+        checkBeforeGrow();
         outOfBoundsCheck(index);
-        T result = arrayList[index];
+        T result = elementData[index];
         dataTransferWhenRemove(index + 1, index);
         return result;
     }
@@ -62,8 +62,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if ((element == null && arrayList[i] == null)
-                    || (element != null && element.equals(arrayList[i]))) {
+            if (Objects.equals(element, elementData[i])) {
                 return remove(i);
             }
         }
@@ -80,34 +79,29 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void growArrayIfItIsFull() {
-        if (arrayList.length < size) {
-            return;
-        }
-        int incrementStep = arrayList.length / 2;
+    private void grow() {
+        int incrementStep = elementData.length / 2;
 
-        T[] arrayListTemp = (T[]) new Object[arrayList.length + incrementStep];
-        System.arraycopy(arrayList, 0, arrayListTemp, 0, size);
-        arrayList = arrayListTemp;
+        T[] arrayListTemp = (T[]) new Object[elementData.length + incrementStep];
+        System.arraycopy(elementData, 0, arrayListTemp, 0, size);
+        elementData = arrayListTemp;
     }
 
     private void outOfBoundsCheck(int index) {
         if (index >= size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException(
-                    "the index is not valid");
-        }
-    }
-
-    private void outOfBoundsCheckForMethodAddByIndex(int index) {
-        if (index > size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException(
-                    "the index is not valid");
+                    "the index is not valid index: " + index + " size: " + size);
         }
     }
 
     private void dataTransferWhenRemove(int index1, int index2) {
-        System.arraycopy(arrayList, index1, arrayList, index2, size - index2);
-        arrayList[size - 1] = null;
-        size--;
+        System.arraycopy(elementData, index1, elementData, index2, size - index2);
+        elementData[--size] = null;
+    }
+
+    private void checkBeforeGrow() {
+        if (elementData.length == size) {
+            grow();
+        }
     }
 }
