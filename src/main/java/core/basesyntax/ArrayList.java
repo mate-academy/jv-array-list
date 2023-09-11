@@ -8,6 +8,7 @@ public class ArrayList<T> implements List<T> {
     private T[] elements;
     private int size;
 
+    @SuppressWarnings("unchecked")
     public ArrayList() {
         elements = (T[]) new Object[DEFAULT_CAPACITY];
     }
@@ -23,6 +24,7 @@ public class ArrayList<T> implements List<T> {
     public void add(T value, int index) {
         if (index == size) {
             add(value);
+            return;
         }
         checkIndex(index);
         settingCapacity(size + 1);
@@ -53,16 +55,21 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
-        T returnValue = elements[index];
+        final T returnValue = elements[index];
         System.arraycopy(elements, index + 1, elements, index, --size - index);
         return returnValue;
     }
 
     @Override
     public T remove(T element) {
+        if (element == null) {
+            size--;
+            return null;
+        }
         int index = indexOf(element);
         if (index != ELEMENT_NOT_FOUND) {
-            return remove(index);
+            remove(index);
+            return element;
         }
         throw new NoSuchElementException("Detail not found: " + element);
     }
@@ -77,6 +84,7 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
+    @SuppressWarnings("unchecked")
     public void settingCapacity(int minCapacity) {
         int currentCapacity = elements.length;
         if (minCapacity > currentCapacity) {
@@ -97,7 +105,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     public int indexOf(T element) {
-        for (int i = 0; i < elements.length; i++) {
+        for (int i = 0; i < size; i++) {
             if (element != null && element.equals(elements[i])) {
                 return i;
             }
