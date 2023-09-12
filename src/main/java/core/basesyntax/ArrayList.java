@@ -1,10 +1,10 @@
 package core.basesyntax;
 
 import java.util.NoSuchElementException;
-import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
+    private static final double GROW_FACTOR = 1.5;
     private T[] elementData;
     private int size;
 
@@ -62,11 +62,11 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if (Objects.equals(element, elementData[i])) {
+            if (element == elementData[i] || (element != null && element.equals(elementData[i]))) {
                 return remove(i);
             }
         }
-        throw new NoSuchElementException("No such element exists");
+        throw new NoSuchElementException("No such element exists: " + element);
     }
 
     @Override
@@ -80,9 +80,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void grow() {
-        int incrementStep = elementData.length / 2;
-
-        T[] arrayListTemp = (T[]) new Object[elementData.length + incrementStep];
+        T[] arrayListTemp = (T[]) new Object[(int) (elementData.length * GROW_FACTOR)];
         System.arraycopy(elementData, 0, arrayListTemp, 0, size);
         elementData = arrayListTemp;
     }
