@@ -5,6 +5,7 @@ import java.util.NoSuchElementException;
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private static final int ELEMENT_NOT_FOUND = -1;
+    private static final double GROW_FACTOR = 1.5;
     private T[] elements;
     private int size;
 
@@ -15,7 +16,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        settingCapacity(size + 1);
+        settingCapacity();
         elements[size] = value;
         size++;
     }
@@ -27,7 +28,7 @@ public class ArrayList<T> implements List<T> {
             return;
         }
         checkIndex(index);
-        settingCapacity(size + 1);
+        settingCapacity();
         System.arraycopy(elements, index, elements, index + 1, size - index);
         elements[index] = value;
         size++;
@@ -62,16 +63,12 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        if (element == null) {
-            size--;
-            return null;
-        }
         int index = indexOf(element);
-        if (index != ELEMENT_NOT_FOUND) {
-            remove(index);
-            return element;
+        if (index == ELEMENT_NOT_FOUND) {
+            throw new NoSuchElementException("Element not found" + element);
         }
-        throw new NoSuchElementException("Detail not found: " + element);
+        remove(index);
+        return element;
     }
 
     @Override
@@ -85,11 +82,11 @@ public class ArrayList<T> implements List<T> {
     }
 
     @SuppressWarnings("unchecked")
-    public void settingCapacity(int minCapacity) {
+    public void settingCapacity() {
+        int minCapacity = size + 1;
         int currentCapacity = elements.length;
         if (minCapacity > currentCapacity) {
-            int newCapacity = currentCapacity + (currentCapacity >> 1);
-            T[] newElements = (T[]) new Object[newCapacity];
+            T[] newElements = (T[]) new Object[(int) (elements.length * GROW_FACTOR)];
             System.arraycopy(elements, 0, newElements, 0, size);
             elements = newElements;
         }
@@ -106,7 +103,8 @@ public class ArrayList<T> implements List<T> {
 
     public int indexOf(T element) {
         for (int i = 0; i < size; i++) {
-            if (element != null && element.equals(elements[i])) {
+            if ((element == null && elements[i] == null)
+                    || (element != null && element.equals(elements[i]))) {
                 return i;
             }
         }
