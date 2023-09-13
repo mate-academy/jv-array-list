@@ -9,7 +9,6 @@ public class ArrayList<T> implements List<T> {
     private T[] elements;
     private int size;
 
-    @SuppressWarnings("unchecked")
     public ArrayList() {
         elements = (T[]) new Object[DEFAULT_CAPACITY];
     }
@@ -81,8 +80,7 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    @SuppressWarnings("unchecked")
-    public void settingCapacity() {
+    private void settingCapacity() {
         int minCapacity = size + 1;
         int currentCapacity = elements.length;
         if (minCapacity > currentCapacity) {
@@ -92,7 +90,7 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    public void checkIndex(int index) {
+    private void checkIndex(int index) {
         if (index >= size) {
             throw new ArrayListIndexOutOfBoundsException("Index" + index + "is too large");
         }
@@ -101,7 +99,7 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    public int indexOf(T element) {
+    private int indexOf(T element) {
         for (int i = 0; i < size; i++) {
             if ((element == null && elements[i] == null)
                     || (element != null && element.equals(elements[i]))) {
