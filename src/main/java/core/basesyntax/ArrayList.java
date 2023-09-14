@@ -69,7 +69,7 @@ public class ArrayList<T> implements List<T> {
         if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException("Entered invalid index, try again !");
         }
-        T removedValue = get(index);
+        final T removedValue = get(index);
         System.arraycopy(dataBase, index + 1, dataBase, index, size - index - 1);
         dataBase[size - 1] = null;
         size--;
@@ -80,7 +80,7 @@ public class ArrayList<T> implements List<T> {
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
             if ((element == dataBase[i]) || (element != null && element.equals(dataBase[i]))) {
-                T removedValue = (T) dataBase[i];
+                final T removedValue = (T) dataBase[i];
                 System.arraycopy(dataBase, i + 1, dataBase, i, size - i - 1);
                 dataBase[size - 1] = null;
                 size--;
