@@ -8,6 +8,10 @@ public class ArrayList<T> implements List<T> {
     private T[] values;
     private int size;
 
+    public ArrayList() {
+        values = (T[]) new Object[DEFAULT_CAPACITY];
+    }
+
     @Override
     public void add(T value) {
         checkAndExpandArray();
@@ -15,18 +19,16 @@ public class ArrayList<T> implements List<T> {
     }
 
     @Override
-    public void add(T value, int index) throws ArrayListIndexOutOfBoundsException {
-        checkBounds(index, size + 1);
+    public void add(T value, int index) {
         if (index == size) {
             add(value);
-        } else {
-            checkAndExpandArray();
-            for (int i = size; i > index; i--) {
-                values[i] = values[i - 1];
-            }
-            values[index] = value;
-            size++;
+            return;
         }
+        checkBounds(index);
+        checkAndExpandArray();
+        System.arraycopy(values, index, values, index + 1, size - index);
+        values[index] = value;
+        size++;
     }
 
     @Override
@@ -40,30 +42,28 @@ public class ArrayList<T> implements List<T> {
     }
 
     @Override
-    public T get(int index) throws ArrayListIndexOutOfBoundsException {
-        checkBounds(index, size);
+    public T get(int index) {
+        checkBounds(index);
         return (T) values[index];
     }
 
     @Override
-    public void set(T value, int index) throws ArrayListIndexOutOfBoundsException {
-        checkBounds(index, size);
+    public void set(T value, int index) {
+        checkBounds(index);
         values[index] = value;
     }
 
     @Override
-    public T remove(int index) throws ArrayListIndexOutOfBoundsException {
-        checkBounds(index, size);
+    public T remove(int index) {
+        checkBounds(index);
         final T result = (T) values[index];
-        for (int i = index; i < size - 1; i++) {
-            values[i] = values[i + 1];
-        }
+        System.arraycopy(values, index + 1, values, index, size - index - 1);
         values[--size] = null;
         return result;
     }
 
     @Override
-    public T remove(T element) throws NoSuchElementException {
+    public T remove(T element) {
         for (int i = 0; i < size; i++) {
             if (Objects.equals(values[i], element)) {
                 return remove(i);
@@ -83,9 +83,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void checkAndExpandArray() {
-        if (values == null) {
-            values = (T[]) new Object[DEFAULT_CAPACITY];
-        } else if (values.length == size) {
+        if (values.length == size) {
             int newSize = values.length + (values.length >> 1);
             T[] newValues = (T[]) new Object[newSize];
             System.arraycopy(values, 0, newValues, 0, values.length);
@@ -93,11 +91,10 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private void checkBounds(int index, int availableSize)
-            throws ArrayListIndexOutOfBoundsException {
-        if (index >= availableSize || index < 0) {
+    private void checkBounds(int index) {
+        if (index >= size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Index " + index
-                    + " out of bounds, available array size: " + availableSize);
+                    + " out of bounds, available array size: " + size);
         }
     }
 }
