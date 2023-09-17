@@ -9,7 +9,6 @@ public class ArrayList<T> implements List<T> {
 
     public ArrayList() {
         elements = new Object[DEFAULT_CAPACITY];
-        size = 0;
     }
 
     @Override
@@ -59,11 +58,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        T removeElement = (T) elements[getIndex(element)];
-        System.arraycopy(elements, getIndex(element) + 1,
-                elements, getIndex(element), size - getIndex(element) - 1);
-        size--;
-        return element;
+        return remove(getIndex(element));
     }
 
     @Override
@@ -78,9 +73,9 @@ public class ArrayList<T> implements List<T> {
 
     private void resizeIdNeeded() {
         if (elements.length == size) {
-            Object[] newArray = new Object[elements.length << 1];
-            System.arraycopy(elements, 0,newArray,0, size);
-            elements = newArray;
+            resizeIdNeeded(size << 1);
+        } else {
+            resizeIdNeeded(size);
         }
     }
 
