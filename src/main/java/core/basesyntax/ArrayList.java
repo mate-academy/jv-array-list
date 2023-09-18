@@ -34,17 +34,17 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayListIndexOutOfBoundsException("Incorrect index " + index);
         }
 
-        growIfNeed();
-
         if (index == size) {
             add(value);
         } else if (index == 0) {
+            growIfNeed();
             T[] newElements = (T[]) new Object[elements.length];
             newElements[index] = value;
             System.arraycopy(elements, 0, newElements, 1, size);
             elements = newElements;
             size++;
         } else {
+            growIfNeed();
             T[] newElements = (T[]) new Object[elements.length];
             System.arraycopy(elements, 0, newElements, 0, index);
             newElements[index] = value;
