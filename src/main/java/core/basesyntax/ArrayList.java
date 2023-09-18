@@ -38,29 +38,21 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index < 0 || index >= size()) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index");
-        }
-        return (T) elements[index];
+        return getElementAtIndex(index);
     }
 
     @Override
-
     public void set(T value, int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index");
-        }
+        T oldValue = getElementAtIndex(index);
         elements[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid element");
-        }
-        final T removedValue = (T) get(index);
-        for (int i = index; i < size - 1; i++) {
-            elements[i] = elements[i + 1];
+        final T removedValue = getElementAtIndex(index);
+        int numToCopy = size - index - 1;
+        if (numToCopy > 0) {
+            System.arraycopy(elements, index + 1, elements, index, numToCopy);
         }
         elements[size - 1] = null;
         size--;
@@ -68,12 +60,12 @@ public class ArrayList<T> implements List<T> {
     }
 
     public T remove(T element) {
-        for (int i = 0; i < size; i++) {
-            if (Objects.equals(elements[i], element)) {
-                return remove(i);
-            }
+        int index = indexOf(element);
+        if (index != -1) {
+            return remove(index);
+        } else {
+            throw new NoSuchElementException("Element not found " + element);
         }
-        throw new NoSuchElementException("Element not found " + element);
     }
 
     @Override
@@ -93,6 +85,22 @@ public class ArrayList<T> implements List<T> {
             System.arraycopy(elements, 0, newArray, 0, size);
             elements = newArray;
         }
+    }
+
+    private T getElementAtIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Invalid index");
+        }
+        return (T) elements[index];
+    }
+
+    private int indexOf(T element) {
+        for (int i = 0; i < size; i++) {
+            if (Objects.equals(elements[i], element)) {
+                return i;
+            }
+        }
+        return -1;
     }
 }
 
