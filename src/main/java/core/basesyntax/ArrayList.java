@@ -3,6 +3,7 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
+    private static final double GROW_FACTOR = 1.5;
     private static final int NOT_FOUND = -1;
     private static final int DEFAULT_CAPACITY = 10;
     private T[] elements;
@@ -30,26 +31,14 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("Incorrect index " + index);
-        }
+        isIndexValid(index, index > size);
 
         if (index == size) {
             add(value);
-        } else if (index == 0) {
-            growIfNeed();
-            T[] newElements = (T[]) new Object[elements.length];
-            newElements[index] = value;
-            System.arraycopy(elements, 0, newElements, 1, size);
-            elements = newElements;
-            size++;
         } else {
             growIfNeed();
-            T[] newElements = (T[]) new Object[elements.length];
-            System.arraycopy(elements, 0, newElements, 0, index);
-            newElements[index] = value;
-            System.arraycopy(elements, index, newElements, index + 1, size - index + 1);
-            elements = newElements;
+            System.arraycopy(elements, index, elements, index + 1, size - index);
+            elements[index] = value;
             size++;
         }
     }
@@ -57,48 +46,35 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void addAll(List<T> list) {
         for (int i = 0; i < list.size(); i++) {
-            growIfNeed();
-            elements[size] = list.get(i);
-            size++;
+            add(list.get(i));
         }
     }
 
     @Override
     public T get(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Incorrect index " + index);
-        }
+        isIndexValid(index, index >= size);
 
         return elements[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Incorrect index " + index);
-        }
+        isIndexValid(index, index >= size);
 
         elements[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Incorrect index " + index);
-        }
+        isIndexValid(index, index >= size);
 
         T oldValue = elements[index];
         if (index == size - 1) {
             elements[index] = null;
         } else if (index == 0) {
-            T[] newElements = (T[]) new Object[elements.length];
-            System.arraycopy(elements, 1, newElements, 0, size);
-            elements = newElements;
+            System.arraycopy(elements, 1, elements, 0, size);
         } else {
-            T[] newElements = (T[]) new Object[elements.length];
-            System.arraycopy(elements, 0, newElements, 0, index);
-            System.arraycopy(elements, index + 1, newElements, index, size - index);
-            elements = newElements;
+            System.arraycopy(elements, index + 1, elements, index, size - index);
         }
 
         size--;
@@ -108,7 +84,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         int index = findElement(element);
-        if (index == -1) {
+        if (index == NOT_FOUND) {
             throw new NoSuchElementException("Element: " + element + " not found");
         }
 
@@ -138,9 +114,16 @@ public class ArrayList<T> implements List<T> {
     private void growIfNeed() {
         int valuesLength = elements.length;
         if (size == valuesLength) {
-            T[] extendedValues = (T[]) new Object[valuesLength + (int) (valuesLength * 1.5)];
+            T[] extendedValues =
+                    (T[]) new Object[valuesLength + (int) (valuesLength * GROW_FACTOR)];
             System.arraycopy(elements, 0, extendedValues, 0, valuesLength);
             elements = extendedValues;
+        }
+    }
+
+    private void isIndexValid(int index, boolean accordingToSize) {
+        if (index < 0 || accordingToSize) {
+            throw new ArrayListIndexOutOfBoundsException("Incorrect index " + index);
         }
     }
 }
