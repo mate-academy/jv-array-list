@@ -24,22 +24,21 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value) {
         growIfNeed();
-
-        elements[size] = value;
-        size++;
+        elements[size++] = value;
     }
 
     @Override
     public void add(T value, int index) {
-        isIndexValid(index, index > size);
+        if (index < 0 || index > size) {
+            throw new ArrayListIndexOutOfBoundsException("Incorrect index " + index);
+        }
 
         if (index == size) {
             add(value);
         } else {
             growIfNeed();
-            System.arraycopy(elements, index, elements, index + 1, size - index);
+            System.arraycopy(elements, index, elements, index + 1, size++ - index);
             elements[index] = value;
-            size++;
         }
     }
 
@@ -52,32 +51,26 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        isIndexValid(index, index >= size);
-
+        isIndexValid(index);
         return elements[index];
     }
 
     @Override
     public void set(T value, int index) {
-        isIndexValid(index, index >= size);
-
+        isIndexValid(index);
         elements[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        isIndexValid(index, index >= size);
+        isIndexValid(index);
 
         T oldValue = elements[index];
         if (index == size - 1) {
             elements[index] = null;
-        } else if (index == 0) {
-            System.arraycopy(elements, 1, elements, 0, size);
-        } else {
-            System.arraycopy(elements, index + 1, elements, index, size - index);
         }
 
-        size--;
+        System.arraycopy(elements, index + 1, elements, index, --size - index);
         return oldValue;
     }
 
@@ -114,15 +107,15 @@ public class ArrayList<T> implements List<T> {
     private void growIfNeed() {
         int valuesLength = elements.length;
         if (size == valuesLength) {
-            T[] extendedValues =
+            T[] extendedArray =
                     (T[]) new Object[valuesLength + (int) (valuesLength * GROW_FACTOR)];
-            System.arraycopy(elements, 0, extendedValues, 0, valuesLength);
-            elements = extendedValues;
+            System.arraycopy(elements, 0, extendedArray, 0, valuesLength);
+            elements = extendedArray;
         }
     }
 
-    private void isIndexValid(int index, boolean accordingToSize) {
-        if (index < 0 || accordingToSize) {
+    private void isIndexValid(int index) {
+        if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException("Incorrect index " + index);
         }
     }
