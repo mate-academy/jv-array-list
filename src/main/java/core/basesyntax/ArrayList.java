@@ -68,6 +68,9 @@ public class ArrayList<T> implements List<T> {
         T oldValue = elements[index];
         if (index == size - 1) {
             elements[index] = null;
+
+            size--;
+            return oldValue;
         }
 
         System.arraycopy(elements, index + 1, elements, index, --size - index);
@@ -116,7 +119,8 @@ public class ArrayList<T> implements List<T> {
 
     private void isIndexValid(int index) {
         if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Incorrect index " + index);
+            throw new ArrayListIndexOutOfBoundsException("Incorrect index " + index
+                    + ". Size of array is: " + size);
         }
     }
 }
