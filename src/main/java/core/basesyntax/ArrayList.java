@@ -4,6 +4,7 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
+    private static final double GROW_FACTOR = 1.5;
     private int size;
     private T[] data;
 
@@ -13,25 +14,25 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (isCapacityFull()) {
+        if (size == data.length) {
             extendCapacity();
         }
-        data[size] = value;
-        size++;
+        data[size++] = value;
     }
 
     @Override
     public void add(T value, int index) {
-        checkIndexValidationForAdd(index);
-        if (isCapacityFull()) {
+        if (index < 0 || index > size) {
+            throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index
+                    + " for size: " + size);
+        }
+        if (size == data.length) {
             extendCapacity();
         }
         if (index == size) {
             add(value);
         } else {
-            for (int i = size - 1; i >= index; i--) {
-                data[i + 1] = data[i];
-            }
+            System.arraycopy(data, index, data, index + 1, size - index);
             data[index] = value;
             size++;
         }
@@ -60,11 +61,8 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         checkIndexValidation(index);
         final T removedObject = data[index];
-        for (int i = index; i < size - 1; i++) {
-            data[i] = data[i + 1];
-        }
-        data[size - 1] = null;
-        size--;
+        System.arraycopy(data, index + 1, data, index, size - index - 1);
+        data[--size] = null;
         return removedObject;
     }
 
@@ -76,7 +74,7 @@ public class ArrayList<T> implements List<T> {
                 return remove(i);
             }
         }
-        throw new NoSuchElementException("no such element in ArrayList");
+        throw new NoSuchElementException("No such element in ArrayList: " + element);
     }
 
     @Override
@@ -90,27 +88,16 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void extendCapacity() {
-        int newCapacity = (int) (data.length * 1.5);
+        int newCapacity = (int) (data.length * GROW_FACTOR);
         T[] dataWithNewCapacity = (T[]) new Object[newCapacity];
-        for (int i = 0; i < data.length; i++) {
-            dataWithNewCapacity[i] = data[i];
-        }
+        System.arraycopy(data, 0, dataWithNewCapacity, 0, data.length);
         data = dataWithNewCapacity;
     }
 
     private void checkIndexValidation(int index) {
         if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index");
+            throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index
+                    + " for size: " + size);
         }
-    }
-
-    private void checkIndexValidationForAdd(int index) {
-        if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index");
-        }
-    }
-
-    private boolean isCapacityFull() {
-        return size == data.length;
     }
 }
