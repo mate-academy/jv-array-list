@@ -20,7 +20,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        IndexOutOfBoundsExceptionForAdd(index);
+        indexOutOfBoundsExceptionForAdd(index);
         growIfArrayFull();
         System.arraycopy(values, index, values, index + 1, size - index);
         values[index] = value;
@@ -36,13 +36,13 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        IndexOutOfBoundsException(index);
+        indexOutOfBoundsException(index);
         return (T) values[index];
     }
 
     @Override
     public void set(T value, int index) {
-        IndexOutOfBoundsException(index);
+        indexOutOfBoundsException(index);
         for (int i = 0; i < size; i++) {
             if (i == index) {
                 values[i] = value;
@@ -52,7 +52,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(int index) {
-        IndexOutOfBoundsException(index);
+        indexOutOfBoundsException(index);
         Object removedValue = values[index];
         int numMoved = size - index - 1;
         System.arraycopy(values, index + 1, values, index, numMoved);
@@ -63,7 +63,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if (element == values[i] ||  element != null && element.equals(values[i])) {
+            if (element == values[i] || element != null && element.equals(values[i])) {
                 remove(i);
                 return element;
             }
@@ -90,11 +90,15 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    public void IndexOutOfBoundsException(int index) {
-        if (index < 0 || index >= size) throw new ArrayListIndexOutOfBoundsException("Invalid index");
+    public void indexOutOfBoundsException(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Invalid index");
+        }
     }
 
-    public void IndexOutOfBoundsExceptionForAdd(int index) {
-        if (index < 0 || index > size) throw new ArrayListIndexOutOfBoundsException("Invalid index");
+    public void indexOutOfBoundsExceptionForAdd(int index) {
+        if (index < 0 || index > size) {
+            throw new ArrayListIndexOutOfBoundsException("Invalid index");
+        }
     }
 }
