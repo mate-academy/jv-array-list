@@ -20,7 +20,11 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        indexOutOfBoundsExceptionForAdd(index);
+        if (index == size) {
+            add(value);
+            return;
+        }
+        checkIndex(index);
         growIfArrayFull();
         System.arraycopy(values, index, values, index + 1, size - index);
         values[index] = value;
@@ -36,13 +40,13 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        indexOutOfBoundsException(index);
+        checkIndex(index);
         return (T) values[index];
     }
 
     @Override
     public void set(T value, int index) {
-        indexOutOfBoundsException(index);
+        checkIndex(index);
         for (int i = 0; i < size; i++) {
             if (i == index) {
                 values[i] = value;
@@ -52,7 +56,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(int index) {
-        indexOutOfBoundsException(index);
+        checkIndex(index);
         Object removedValue = values[index];
         int numMoved = size - index - 1;
         System.arraycopy(values, index + 1, values, index, numMoved);
@@ -90,14 +94,8 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    public void indexOutOfBoundsException(int index) {
+    public void checkIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index");
-        }
-    }
-
-    public void indexOutOfBoundsExceptionForAdd(int index) {
-        if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException("Invalid index");
         }
     }
