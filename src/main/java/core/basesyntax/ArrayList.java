@@ -68,20 +68,12 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        int elementPosition = -1;
         for (int i = 0; i < size(); i++) {
             if (element == elements[i] || element != null && element.equals(elements[i])) {
-                elementPosition = i;
+                return remove(i);
             }
         }
-        if (elementPosition == -1) {
-            throw new NoSuchElementException("element was not found");
-        }
-        T removedElement = elements[elementPosition];
-        System.arraycopy(elements, elementPosition + 1, elements, elementPosition,
-                size() - elementPosition);
-        size--;
-        return removedElement;
+        throw new NoSuchElementException("element was not found");
     }
 
     @Override
