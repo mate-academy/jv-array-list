@@ -15,18 +15,18 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (size == elementData.length) {
-            expandCapacity();
-        }
+        expandCapacity();
         elementData[size++] = value;
     }
 
     @Override
     public void add(T value, int index) {
-        checkIndex(index);
-        if (size == elementData.length) {
-            expandCapacity();
+        if (index == size) {
+            add(value);
+            return;
         }
+        checkIndex(index);
+        expandCapacity();
         System.arraycopy(elementData, index, elementData, index + 1, size - index);
         elementData[index] = value;
         size++;
@@ -42,13 +42,11 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         checkIndex(index);
-        checkIndexEqualsSize(index);
         return (T) elementData[index];
     }
 
     @Override
     public void set(T value, int index) {
-        checkIndexEqualsSize(index);
         checkIndex(index);
         T oldValue = (T) elementData[index];
         elementData[index] = value;
@@ -58,7 +56,6 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
-        checkIndexEqualsSize(index);
         final Object[] elements = elementData;
         T oldElement = (T) elements[index];
         final int newSize;
@@ -90,10 +87,12 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void expandCapacity() {
-        int newCapacity = (int) (elementData.length * 1.5);
-        Object[] newElements = new Object[newCapacity];
-        System.arraycopy(elementData, 0, newElements, 0, size);
-        elementData = newElements;
+        if (size == elementData.length) {
+            int newCapacity = (int) (elementData.length * 1.5);
+            Object[] newElements = new Object[newCapacity];
+            System.arraycopy(elementData, 0, newElements, 0, size);
+            elementData = newElements;
+        }
     }
 
     private int indexOf(T element) {
@@ -107,13 +106,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void checkIndex(int index) {
-        if (index > size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Excepted index is incorrect");
-        }
-    }
-
-    private void checkIndexEqualsSize(int index) {
-        if (index == size) {
+        if (index >= size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Excepted index is incorrect");
         }
     }
