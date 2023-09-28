@@ -4,13 +4,13 @@ import com.google.common.base.Objects;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-
     private static final int DEFAULT_CAPACITY = 10;
-    private Object[] elementData;
+    private static final double GROW_FACTOR = 1.5;
+    private T[] elementData;
     private int size;
 
     public ArrayList() {
-        elementData = new Object[DEFAULT_CAPACITY];
+        elementData = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
     @Override
@@ -48,9 +48,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void set(T value, int index) {
         checkIndex(index);
-        T oldValue = (T) elementData[index];
         elementData[index] = value;
-
     }
 
     @Override
@@ -68,10 +66,9 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-
         int index = indexOf(element);
         if (index == -1) {
-            throw new NoSuchElementException("Element  not found");
+            throw new NoSuchElementException("Element with value '" + element + "' not found");
         }
         return remove(index);
     }
@@ -88,8 +85,8 @@ public class ArrayList<T> implements List<T> {
 
     private void expandCapacity() {
         if (size == elementData.length) {
-            int newCapacity = (int) (elementData.length * 1.5);
-            Object[] newElements = new Object[newCapacity];
+            int newCapacity = (int) (elementData.length * GROW_FACTOR);
+            T[] newElements = (T[]) new Object[newCapacity];
             System.arraycopy(elementData, 0, newElements, 0, size);
             elementData = newElements;
         }
@@ -107,7 +104,8 @@ public class ArrayList<T> implements List<T> {
 
     private void checkIndex(int index) {
         if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Excepted index is incorrect");
+            throw new ArrayListIndexOutOfBoundsException("Excepted index : " + index
+                    + " is incorrect for size:  " + size);
         }
     }
 }
