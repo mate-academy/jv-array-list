@@ -48,9 +48,6 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        while (arrayList.length <= size + list.size()) {
-            arrayList = letItGrow();
-        }
         for (int i = 0; i < list.size(); i++) {
             add(list.get(i));
         }
@@ -83,27 +80,12 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        boolean isPresent = false;
-        if (element == null) {
-            for (int i = 0; i < arrayList.length; i++) {
-                if (element == arrayList[i]) {
-                    remove(i);
-                    isPresent = true;
-                    break;
-                }
+        for (int i = 0; i < size; i++) {
+            if (element == arrayList[i] || element != null && element.equals(arrayList[i])) {
+                return remove(i);
             }
         }
-        for (int i = 0; i < arrayList.length; i++) {
-            if (arrayList[i] != null && arrayList[i].equals(element)) {
-                remove(i);
-                isPresent = true;
-                break;
-            }
-        }
-        if (isPresent == false) {
-            throw new NoSuchElementException("Element not found");
-        }
-        return isPresent == true ? element : null;
+        throw new NoSuchElementException("Elements do not exist" + element);
     }
 
     @Override
