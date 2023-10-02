@@ -4,6 +4,7 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
+    private static final double COEFFICIENT = 1.5;
     private T[] values;
     private int size;
 
@@ -12,7 +13,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void resize() {
-        int newCapacity = (int) (values.length * 1.5);
+        int newCapacity = (int) (values.length * COEFFICIENT);
         T[] newArray = (T[]) new Object[newCapacity];
         System.arraycopy(values, 0, newArray, 0, size);
         values = newArray;
@@ -30,7 +31,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("Can't add value to index");
+            throw new ArrayListIndexOutOfBoundsException("Can't add " + value + " to " + index);
         }
         if (size == values.length) {
             resize();
@@ -43,10 +44,10 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void addAll(List<T> list) {
         if (list == null) {
-            return;
+            throw new NullPointerException("List is null");
         }
         if (size + list.size() > values.length) {
-            int newCapacity = (int) (Math.max(size + list.size(), values.length * 1.5));
+            int newCapacity = (int) (Math.max(size + list.size(), values.length * COEFFICIENT));
             T[] newArray = (T[]) new Object[newCapacity];
             System.arraycopy(values, 0, newArray, 0, size);
             values = newArray;
