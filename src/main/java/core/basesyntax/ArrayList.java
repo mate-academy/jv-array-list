@@ -1,11 +1,11 @@
 package core.basesyntax;
 
-import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
 
     private static final int DEFAULT_CAPACITY = 10;
+    private static final double GROW_FACTOR = 1.5;
     private T[] storage;
     private int size;
 
@@ -18,8 +18,7 @@ public class ArrayList<T> implements List<T> {
         if (size == storage.length) {
             grow();
         }
-        storage[size] = value;
-        size++;
+        storage[size++] = value;
     }
 
     @Override
@@ -55,38 +54,35 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void set(T value, int index) throws ArrayListIndexOutOfBoundsException {
         getIndexValidation(index);
-        this.storage[index] = value;
+        storage[index] = value;
     }
 
     @Override
     public T remove(int index) throws ArrayListIndexOutOfBoundsException {
         getIndexValidation(index);
         T valueToBeRemoved = storage[index];
-        if (size > 0) {
-            System.arraycopy(storage, 0, storage, 0, index);
-            System.arraycopy(storage, index + 1, storage, index, size - index - 1);
-            size--;
-        }
+        System.arraycopy(storage, index + 1, storage, index, size - index - 1);
+        size--;
         return valueToBeRemoved;
     }
 
     @Override
-    public T remove(T value) throws NoSuchElementException {
-        containsValue(value);
+    public T remove(T value) {
         T valueToBeRemoved = null;
         if (size > 0) {
-            T[] resultStorage = (T[]) new Object[storage.length];
-            int resultIndex = 0;
             for (int i = 0; i < size; i++) {
                 if ((value == null && storage[i] == null)
                         || (value != null && value.equals(storage[i]))) {
                     valueToBeRemoved = storage[i];
                     size--;
-                } else {
-                    resultStorage[resultIndex++] = storage[i];
+                    System.arraycopy(storage, i + 1, storage, i, size - i);
+                    storage[size] = null;
+                    break;
                 }
             }
-            storage = resultStorage;
+            if (valueToBeRemoved == null && value != null) {
+                throw new NoSuchElementException("There is no such value in the storage! " + value);
+            }
         }
         return valueToBeRemoved;
     }
@@ -102,7 +98,9 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void grow() {
-        storage = Arrays.copyOf(storage, (int) (storage.length * 1.5));
+        T[] newStorage = (T[]) new Object[(int) (storage.length * GROW_FACTOR)];
+        System.arraycopy(storage, 0, newStorage, 0, size);
+        storage = newStorage;
     }
 
     private void getIndexValidation(int index) throws ArrayListIndexOutOfBoundsException {
@@ -110,23 +108,4 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayListIndexOutOfBoundsException("Invalid index! " + index);
         }
     }
-
-    private void containsValue(T value) throws NoSuchElementException {
-        if (value == null) {
-            for (T data : storage) {
-                if (data == null) {
-                    return;
-                }
-            }
-        } else {
-            for (T data : storage) {
-                if (value.equals(data)) {
-                    return;
-                }
-            }
-        }
-        throw new NoSuchElementException("There is no such value in the storage! " + value);
-    }
 }
-
-
