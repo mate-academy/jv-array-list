@@ -30,9 +30,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("Can't add " + value + " to " + index);
-        }
+        checkIndex(index, value);
         if (size == values.length) {
             resize();
         }
@@ -52,33 +50,26 @@ public class ArrayList<T> implements List<T> {
             System.arraycopy(values, 0, newArray, 0, size);
             values = newArray;
         }
-        for (int i = 0; i < list.size(); i++) {
-            T element = list.get(i);
+        for (T element : list) {
             add(element);
         }
     }
 
     @Override
     public T get(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index is wrong");
-        }
+        checkIndex(index);
         return values[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index is wrong");
-        }
+        checkIndex(index);
         values[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index is wrong");
-        }
+        checkIndex(index);
         T removedValue = values[index];
         System.arraycopy(values, index + 1, values, index, size - index - 1);
         size--;
@@ -105,4 +96,17 @@ public class ArrayList<T> implements List<T> {
     public boolean isEmpty() {
         return size == 0;
     }
+
+    private void checkIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Index is wrong");
+        }
+    }
+
+    private void checkIndex(int index, T value) {
+        if (index < 0 || index > size) {
+            throw new ArrayListIndexOutOfBoundsException("Can't add " + value + " to " + index);
+        }
+    }
+
 }
