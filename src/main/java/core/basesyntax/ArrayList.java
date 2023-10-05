@@ -14,29 +14,40 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        arrayIncrease(size + 1);
+        if (size == data.length) {
+            arrayIncrease(size + 1);
+        }
+
         data[size] = value;
         size++;
     }
 
     @Override
     public void add(T value, int index) {
-        arrayIncrease(size + 1);
+        if (size == data.length) {
+            arrayIncrease(size + 1);
+        }
+
         if (checkIndex(index) || index == size) {
             System.arraycopy(data, index, data, index + 1, size - index);
             data[index] = value;
             size++;
         } else {
-            throw new ArrayListIndexOutOfBoundsException("Index is not exists");
+            throw new ArrayListIndexOutOfBoundsException("Index " + index + " is not exists");
         }
     }
 
     @Override
     public void addAll(List<T> list) {
-        int temp = size;
+        int temp = size + list.size();
+
+        if (temp > data.length) {
+            arrayIncrease(temp + 1);
+        }
+
+        int fromIndex = size;
         for (int i = 0; i < list.size(); i++) {
-            arrayIncrease(size + 1);
-            data[i + temp] = list.get(i);
+            data[i + fromIndex] = list.get(i);
             size++;
         }
     }
@@ -46,7 +57,7 @@ public class ArrayList<T> implements List<T> {
         if (checkIndex(index)) {
             return data[index];
         } else {
-            throw new ArrayListIndexOutOfBoundsException("Index is not exists");
+            throw new ArrayListIndexOutOfBoundsException("Index " + index + " is not exists");
         }
     }
 
@@ -55,7 +66,7 @@ public class ArrayList<T> implements List<T> {
         if (checkIndex(index)) {
             data[index] = value;
         } else {
-            throw new ArrayListIndexOutOfBoundsException("Index is not exists");
+            throw new ArrayListIndexOutOfBoundsException("Cannot set element on index " + index);
         }
     }
 
@@ -73,18 +84,18 @@ public class ArrayList<T> implements List<T> {
 
             return value;
         } else {
-            throw new ArrayListIndexOutOfBoundsException("Index is not exists");
+            throw new ArrayListIndexOutOfBoundsException("Cannot remove element on index " + index);
         }
     }
 
     @Override
-    public T remove(T element) throws NoSuchElementException {
+    public T remove(T element) {
         int index = findIndex(element);
         if (index != -1) {
             System.arraycopy(data, index + 1, data, index, size - index);
             size--;
         } else {
-            throw new NoSuchElementException("Index is not exists");
+            throw new NoSuchElementException("Element is not exists");
         }
 
         return element;
@@ -114,10 +125,8 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void arrayIncrease(int length) {
-        if (length > DEFAULT_LENGTH) {
-            T[] copy = (T[]) new Object[length + length >> 1];
-            System.arraycopy(data, 0, copy, 0, data.length);
-            data = copy;
-        }
+        T[] copy = (T[]) new Object[length + length >> 1];
+        System.arraycopy(data, 0, copy, 0, data.length);
+        data = copy;
     }
 }
