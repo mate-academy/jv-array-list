@@ -37,7 +37,7 @@ public class ArrayListTest {
         Assert.assertEquals("Test", arrayList.get(0));
         Assert.assertEquals("Test failed! Can't correctly add element by index " + 1,
                 "Academy", arrayList.get(1));
-        Assert.assertEquals("for", arrayList.get(2));
+        Assert.assertEquals("Mate", arrayList.get(2));
         Assert.assertEquals("Mate", arrayList.get(3));
         arrayList.add(null, 0);
         Assert.assertEquals("Test failed! Size of array should be " + 5 + "but it is "
