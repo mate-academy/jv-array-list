@@ -36,30 +36,26 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        while (list.size() > (storage.length - size)) {
-            grow();
-        }
         for (int i = 0; i < list.size(); i++) {
-            storage[size] = list.get(i);
-            size++;
+            add(list.get(i));
         }
     }
 
     @Override
     public T get(int index) throws ArrayListIndexOutOfBoundsException {
-        getIndexValidation(index);
+        checkIndex(index);
         return storage[index];
     }
 
     @Override
     public void set(T value, int index) throws ArrayListIndexOutOfBoundsException {
-        getIndexValidation(index);
+        checkIndex(index);
         storage[index] = value;
     }
 
     @Override
     public T remove(int index) throws ArrayListIndexOutOfBoundsException {
-        getIndexValidation(index);
+        checkIndex(index);
         T valueToBeRemoved = storage[index];
         System.arraycopy(storage, index + 1, storage, index, size - index - 1);
         size--;
@@ -68,23 +64,18 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T value) {
-        T valueToBeRemoved = null;
-        if (size > 0) {
-            for (int i = 0; i < size; i++) {
-                if ((value == null && storage[i] == null)
-                        || (value != null && value.equals(storage[i]))) {
-                    valueToBeRemoved = storage[i];
-                    size--;
-                    System.arraycopy(storage, i + 1, storage, i, size - i);
-                    storage[size] = null;
-                    break;
-                }
+        T valueToBeRemoved;
+        for (int i = 0; i < size; i++) {
+            if (storage[i] != null && storage[i].equals(value) || storage[i] == value) {
+                valueToBeRemoved = storage[i];
+                size--;
+                System.arraycopy(storage, i + 1, storage, i, size - i);
+                storage[size] = null;
+                return valueToBeRemoved;
             }
-            if (valueToBeRemoved == null && value != null) {
-                throw new NoSuchElementException("There is no such value in the storage! " + value);
-            }
+
         }
-        return valueToBeRemoved;
+        throw new NoSuchElementException("There is no such value: " + value);
     }
 
     @Override
@@ -103,9 +94,10 @@ public class ArrayList<T> implements List<T> {
         storage = newStorage;
     }
 
-    private void getIndexValidation(int index) throws ArrayListIndexOutOfBoundsException {
-        if ((index < 0) || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index! " + index);
+    private void checkIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Invalid index "
+                    + index + " for size: " + size);
         }
     }
 }
