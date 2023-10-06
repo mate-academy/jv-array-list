@@ -15,20 +15,16 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (size == storage.length) {
-            grow();
-        }
+        growIfStorageFull();
         storage[size++] = value;
     }
 
     @Override
-    public void add(T value, int index) throws ArrayListIndexOutOfBoundsException {
-        if ((index < 0) || index > size) {
+    public void add(T value, int index) {
+        if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException("Invalid index! " + index);
         }
-        if (size == storage.length) {
-            grow();
-        }
+        growIfStorageFull();
         System.arraycopy(storage, index, storage, index + 1, size - index);
         storage[index] = value;
         size++;
@@ -42,19 +38,19 @@ public class ArrayList<T> implements List<T> {
     }
 
     @Override
-    public T get(int index) throws ArrayListIndexOutOfBoundsException {
+    public T get(int index) {
         checkIndex(index);
         return storage[index];
     }
 
     @Override
-    public void set(T value, int index) throws ArrayListIndexOutOfBoundsException {
+    public void set(T value, int index) {
         checkIndex(index);
         storage[index] = value;
     }
 
     @Override
-    public T remove(int index) throws ArrayListIndexOutOfBoundsException {
+    public T remove(int index) {
         checkIndex(index);
         T valueToBeRemoved = storage[index];
         System.arraycopy(storage, index + 1, storage, index, size - index - 1);
@@ -88,10 +84,12 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void grow() {
-        T[] newStorage = (T[]) new Object[(int) (storage.length * GROW_FACTOR)];
-        System.arraycopy(storage, 0, newStorage, 0, size);
-        storage = newStorage;
+    private void growIfStorageFull() {
+        if (size == storage.length) {
+            T[] newStorage = (T[]) new Object[(int) (storage.length * GROW_FACTOR)];
+            System.arraycopy(storage, 0, newStorage, 0, size);
+            storage = newStorage;
+        }
     }
 
     private void checkIndex(int index) {
