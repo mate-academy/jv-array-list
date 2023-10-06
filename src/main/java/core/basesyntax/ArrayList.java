@@ -1,6 +1,5 @@
 package core.basesyntax;
 
-import java.util.Arrays;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 
@@ -16,16 +15,19 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value) {
         ensureCapacity(size + 1);
-        array[size++] = value; // Додати переданий елемент до списку
+        array[size++] = value;
     }
 
     @Override
     public void add(T value, int index) {
-        validateIndex(index);
+        if (index < 0 || index > size) {
+            throw new ArrayListIndexOutOfBoundsException("Index out of range: " + index);
+        }
         ensureCapacity(size + 1);
         System.arraycopy(array, index, array, index + 1, size - index);
-        array[index] = value; // Додати переданий елемент на вказаний індекс
+        array[index] = value;
         size++;
+
     }
 
     @Override
@@ -61,7 +63,7 @@ public class ArrayList<T> implements List<T> {
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
             if (Objects.equals(element, array[i])) {
-                remove(i);
+                return remove(i);
             }
         }
         throw new NoSuchElementException("Element not found");
@@ -80,7 +82,9 @@ public class ArrayList<T> implements List<T> {
     private void ensureCapacity(int minCapacity) {
         if (minCapacity > array.length) {
             int newCapacity = Math.max(array.length + array.length >> 1, minCapacity);
-            array = Arrays.copyOf(array, newCapacity);
+            T[] newElements = (T[]) new Object[newCapacity];
+            System.arraycopy(array, 0, newElements, 0, size);
+            array = newElements;
         }
     }
 
