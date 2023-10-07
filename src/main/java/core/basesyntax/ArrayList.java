@@ -83,20 +83,22 @@ public class ArrayList<T> implements List<T> {
         if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException("Index out of bounds");
         }
+        final T removedElement = (T) elements[i];
         System.arraycopy(elements, index + 1, elements, index, size - index - 1);
         elements[size - 1] = null;
         size--;
-        return (T) elements[index];
+        return removedElement;
     }
 
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
             if (Objects.equals(elements[i], element)) {
+                final T removedElement = (T) elements[i];
                 System.arraycopy(elements, i + 1, elements, i, size - i - 1);
                 elements[size - 1] = null;
                 size--;
-                return (T) elements[i];
+                return removedElement;
             }
         }
         throw new java.util.NoSuchElementException("Element not found");
