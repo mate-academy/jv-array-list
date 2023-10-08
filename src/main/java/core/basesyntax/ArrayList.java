@@ -13,8 +13,13 @@ public class ArrayList<T> implements List<T> {
     private static final String NO_SUCH_ELEMENT_MESSAGE = "There is no such element in list.";
     private static final String INDEX_OUT_OF_BOUNDS_MESSAGE = "This index does not exist in list.";
 
-    private Object[] data = new Object[DEFAULT_CAPACITY];
-    private int size = 0;
+    private Object[] data;
+    private int size;
+
+    public ArrayList() {
+        data = new Object[DEFAULT_CAPACITY];
+        size = EMPTY_LIST_VALUE;
+    }
 
     private Object[] grow() {
         data = data.length > EMPTY_LIST_VALUE
