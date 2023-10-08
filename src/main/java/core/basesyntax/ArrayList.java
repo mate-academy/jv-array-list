@@ -43,8 +43,8 @@ public class ArrayList<T> implements List<T> {
         while (size + list.size() > values.length) {
                resize();
         }
-        for (T element : list) {
-            add(element);
+        for (int i = 0; i < list.size(); i++) {
+            add(list.get(i));
         }
     }
 
