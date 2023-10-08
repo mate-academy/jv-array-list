@@ -21,9 +21,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (size == values.length) {
-            resize();
-        }
+        checkResize();
         values[size] = value;
         size++;
     }
@@ -31,9 +29,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         checkIndex(index, value);
-        if (size == values.length) {
-            resize();
-        }
+        checkResize();
         System.arraycopy(values, index, values, index + 1, size - index);
         values[index] = value;
         size++;
@@ -44,11 +40,8 @@ public class ArrayList<T> implements List<T> {
         if (list == null) {
             throw new NullPointerException("List is null");
         }
-        if (size + list.size() > values.length) {
-            int newCapacity = (int) (Math.max(size + list.size(), values.length * COEFFICIENT));
-            T[] newArray = (T[]) new Object[newCapacity];
-            System.arraycopy(values, 0, newArray, 0, size);
-            values = newArray;
+        while (size + list.size() > values.length) {
+               resize();
         }
         for (T element : list) {
             add(element);
@@ -106,6 +99,12 @@ public class ArrayList<T> implements List<T> {
     private void checkIndex(int index, T value) {
         if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException("Can't add " + value + " to " + index);
+        }
+    }
+
+    private void checkResize() {
+        if (size == values.length) {
+            resize();
         }
     }
 
