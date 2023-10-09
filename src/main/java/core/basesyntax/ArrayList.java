@@ -1,34 +1,32 @@
 package core.basesyntax;
 
+import java.util.NoSuchElementException;
+
 public class ArrayList<T> implements List<T> {
-    static final int DEFAULT_SIZE = 10;
+    private final static int DEFAULT_SIZE = 10;
     private Object[] objects;
-    //private int newSize = objects.length + (objects.length / 2);
     private int size;
 
     public ArrayList() {
         objects = new Object[DEFAULT_SIZE];
         size = 0;
-
-    }
-
-    public void copyArray(Object[] objects, Object[] copiedArray) {
-        System.arraycopy(objects, 0, copiedArray, 0, objects.length);
     }
 
     public void resize() {
-        Object[] copied;
-        if (size >= objects.length) {
-            copyArray(objects, copied = new Object[objects.length + (objects.length / 2)]);
+        int newSize;
+        if (objects.length >= DEFAULT_SIZE) {
+            newSize = objects.length + (objects.length / 2);
         } else {
-            copyArray(objects, copied = new Object[objects.length + 1]);
+            newSize = objects.length + 1;
         }
-        objects = copied;
+        Object[] newArray = new Object[newSize];
+        System.arraycopy(objects, 0, newArray, 0, size);
+        objects = newArray;
     }
 
     public void checkIndex(int index) {
-        if (index > size || index < 0) {
-            throw new ArrayIndexOutOfBoundsException("Index: " + index + "Size: " + size);
+        if (size < index || index < 0) {
+            throw new ArrayIndexOutOfBoundsException("can't find such index");
         }
     }
 
@@ -47,12 +45,8 @@ public class ArrayList<T> implements List<T> {
     public void add(T value, int index) {
         try {
             checkIndex(index);
-            if (size >= objects.length) {
-                Object[] arrayCopy = new Object[objects.length + (objects.length / 2)];
-                System.arraycopy(objects, 0, arrayCopy, 0, objects.length);
-                objects = arrayCopy;
-            }
-            System.arraycopy(objects, index + 1, objects, index + 2, size - index - 1);
+            resize();
+            System.arraycopy(objects, index + 1, objects, index + 2, size - (size - index));
             objects[index] = value;
             size++;
         } catch (Exception e) {
@@ -64,13 +58,15 @@ public class ArrayList<T> implements List<T> {
     public void addAll(List<T> list) {
         try {
             if (!list.isEmpty()) {
-                if (size + list.size() >= objects.length) {
+                if (size + list.size() >= DEFAULT_SIZE) {
                     resize();
                 }
-                for (int i = 0; i <= objects.length; i++) {
-                    objects[size] = list.get(i);
+                Object[] arr = new Object[list.size()];
+                for (int i = 0; i < list.size(); i++) {
+                    arr[i] = list.get(i);
                 }
-                size += list.size();
+                System.arraycopy(arr, 0, objects, size, arr.length);
+                size += arr.length;
             }
         } catch (Exception e) {
             throw new ArrayListIndexOutOfBoundsException("Can't find an element");
@@ -99,15 +95,13 @@ public class ArrayList<T> implements List<T> {
         } catch (Exception e) {
             throw new ArrayListIndexOutOfBoundsException("Can't find an element");
         }
-
     }
 
     @Override
     public T remove(int index) {
         try {
             checkIndex(index);
-            int i = index;
-            T removed = (T) objects[i];
+            T removed = (T) objects[index];
             System.arraycopy(objects, index + 1, objects, index, size - index - 1);
             objects[size - 1] = null;
             size--;
@@ -115,17 +109,25 @@ public class ArrayList<T> implements List<T> {
         } catch (Exception e) {
             throw new ArrayListIndexOutOfBoundsException("Can 't find an element");
         }
-
     }
 
     @Override
-    public T remove(T element) {
-        /*if (size != 0) {
-            try {
-
+     public T remove(T element) {
+        int index = 0;
+        for (int i = 0; i < size; i++) {
+            if (element == objects[i]) {
+                index = i;
+                break;
             }
-        }*/
-        return null;
+        }
+        if (index < 0) {
+            throw new NoSuchElementException();
+        }
+        T removed = (T) objects[index];
+        System.arraycopy(objects, index + 1, objects, index, size - index - 1);
+        objects[size - 1] = null;
+        size--;
+        return removed;
     }
 
     @Override
