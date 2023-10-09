@@ -9,7 +9,6 @@ public class ArrayList<T> implements List<T> {
 
     public ArrayList() {
         data = (T[]) new Object[DEFAULT_LENGTH];
-        size = 0;
     }
 
     @Override
@@ -45,10 +44,8 @@ public class ArrayList<T> implements List<T> {
             arrayIncrease(temp + 1);
         }
 
-        int fromIndex = size;
         for (int i = 0; i < list.size(); i++) {
-            data[i + fromIndex] = list.get(i);
-            size++;
+            add(list.get(i));
         }
     }
 
@@ -125,7 +122,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void arrayIncrease(int length) {
-        T[] copy = (T[]) new Object[length + length >> 1];
+        T[] copy = (T[]) new Object[length + (length >> 1)];
         System.arraycopy(data, 0, copy, 0, data.length);
         data = copy;
     }
