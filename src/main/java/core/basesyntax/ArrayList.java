@@ -4,6 +4,19 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int MAX_ITEMS_NUMBER = 10;
+    private static final int ACCURACY_OF_ONE = 1;
+    private static final int GROWTH_FACTOR = 1;
+    private static final int INITIAL_POSITION = 0;
+    private static String MESSAGE_AT_REMOVE_EXCEPTION = "Cant remove value "
+            + "of this index because arrayList size is :";
+    private static String MESSAGE_AT_ADD_EXCEPTION = "Can't add value to "
+            + "this index because arrayList size is: ";
+    private static String MESSAGE_AT_GET_EXCEPTION = "Cant get value "
+            + "of this index because arrayList size is :";
+    private static String MESSAGE_AT_SET_EXCEPTION = "Cant set value "
+            + "to this index because arrayList size is :";
+    private static String MESSAGE_AT_REMOVE_NO_SUCH_ELEMENT_EXCEPTION = "Cant remove element "
+            + "because there is no such element in the list :";
     private T[] values;
     private int usedSpace;
 
@@ -17,21 +30,17 @@ public class ArrayList<T> implements List<T> {
     }
 
     public void add(T value, int index) {
-        if (index > usedSpace || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Can't add value to "
-                    + "this index because arrayList size is: "
-                    + usedSpace);
-        }
+        checkIfIndexOutOfBoundsException(MESSAGE_AT_ADD_EXCEPTION, index);
         growIfArrayFull();
         addValueToIndex(index, value);
     }
 
     private void growIfArrayFull() {
-        if (usedSpace == values.length - 1) {
+        if (usedSpace == values.length - ACCURACY_OF_ONE) {
             int oldCapacity = values.length;
-            int newCapacity = oldCapacity + (oldCapacity >> 1);
+            int newCapacity = oldCapacity + (oldCapacity >> GROWTH_FACTOR);
             Object[] tempValues = new Object[newCapacity];
-            System.arraycopy(values, 0, tempValues, 0, usedSpace);
+            System.arraycopy(values, INITIAL_POSITION, tempValues, INITIAL_POSITION, usedSpace);
             values = (T[])new Object[newCapacity];
             values = (T[]) tempValues;
         }
@@ -39,11 +48,11 @@ public class ArrayList<T> implements List<T> {
 
     private void grow() {
         int oldCapacity = values.length;
-        int newCapacity = oldCapacity + (oldCapacity >> 1);
+        int newCapacity = oldCapacity + (oldCapacity >> GROWTH_FACTOR);
         Object[] tempValues = new Object[newCapacity];
-        System.arraycopy(values, 0, tempValues, 0, usedSpace);
+        System.arraycopy(values, INITIAL_POSITION, tempValues, INITIAL_POSITION, usedSpace);
         values = (T[])new Object[newCapacity];
-        values = (T[]) tempValues;
+        values = (T[])tempValues;
     }
 
     public void addAll(List<T> list) {
@@ -56,29 +65,17 @@ public class ArrayList<T> implements List<T> {
     }
 
     public T get(int index) {
-        if (index >= usedSpace || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Cant get value "
-                    + "of this index because arrayList size is :"
-                    + usedSpace);
-        }
-        return (T) values[index];
+        checkIfIndexOutOfBoundsException(MESSAGE_AT_GET_EXCEPTION, index + ACCURACY_OF_ONE);
+        return values[index];
     }
 
     public void set(T value, int index) {
-        if (index >= usedSpace || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Cant set value "
-                    + "to this index because arrayList size is :"
-                    + usedSpace);
-        }
+        checkIfIndexOutOfBoundsException(MESSAGE_AT_SET_EXCEPTION, index + ACCURACY_OF_ONE);
         values[index] = value;
     }
 
     public T remove(int index) {
-        if (index >= usedSpace || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Cant remove value "
-                    + "of this index because arrayList size is :"
-                    + usedSpace);
-        }
+        checkIfIndexOutOfBoundsException(MESSAGE_AT_REMOVE_EXCEPTION, index + ACCURACY_OF_ONE);
         T value = values[index];
         removeValueFromIndex(index);
         return value;
@@ -92,8 +89,7 @@ public class ArrayList<T> implements List<T> {
                 return value;
             }
         }
-        throw new NoSuchElementException("Cant remove element "
-                + "because there is no such element in the list :");
+        throw new NoSuchElementException(MESSAGE_AT_REMOVE_NO_SUCH_ELEMENT_EXCEPTION);
     }
 
     public int size() {
@@ -105,19 +101,20 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void addValueToIndex(int index, T value) {
-        T[] tempValues = (T[]) new Object[values.length];
-        System.arraycopy(values, 0, tempValues, 0, index);
-        tempValues[index] = value;
-        System.arraycopy(values, index, tempValues, index + 1, usedSpace - index);
-        values = tempValues;
+        System.arraycopy(values, index, values, index + ACCURACY_OF_ONE, usedSpace - index);
+        values[index] = value;
         usedSpace++;
     }
 
     private void removeValueFromIndex(int index) {
-        T[] tempValues = (T[]) new Object[values.length];
-        System.arraycopy(values,0, tempValues,0, index);
-        System.arraycopy(values, index + 1, tempValues, index, usedSpace - index);
-        values = tempValues;
+        System.arraycopy(values, INITIAL_POSITION, values, INITIAL_POSITION, index);
+        System.arraycopy(values, index + ACCURACY_OF_ONE, values, index, usedSpace - index);
         usedSpace--;
+    }
+
+    private void checkIfIndexOutOfBoundsException(String message, int index) {
+        if (index > usedSpace || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException(message + usedSpace);
+        }
     }
 }
