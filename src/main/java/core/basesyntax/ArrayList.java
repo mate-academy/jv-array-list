@@ -3,7 +3,6 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-
     private static final int DEFAULT_CAPACITY = 10;
     private static final double GROW_FACTOR = 1.5;
     private T[] storage;
@@ -53,23 +52,16 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         checkIndex(index);
         T valueToBeRemoved = storage[index];
-        System.arraycopy(storage, index + 1, storage, index, size - index - 1);
-        size--;
+        System.arraycopy(storage, index + 1, storage, index, --size - index);
         return valueToBeRemoved;
     }
 
     @Override
     public T remove(T value) {
-        T valueToBeRemoved;
         for (int i = 0; i < size; i++) {
             if (storage[i] != null && storage[i].equals(value) || storage[i] == value) {
-                valueToBeRemoved = storage[i];
-                size--;
-                System.arraycopy(storage, i + 1, storage, i, size - i);
-                storage[size] = null;
-                return valueToBeRemoved;
+                return remove(i);
             }
-
         }
         throw new NoSuchElementException("There is no such value: " + value);
     }
