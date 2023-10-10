@@ -11,12 +11,10 @@ public class ArrayList<T> implements List<T> {
 
     public ArrayList() {
         elementData = new Object[DEFAULT_CAPACITY];
-        size = 0;
     }
 
     public ArrayList(int capacity) {
         elementData = new Object[capacity];
-        size = 0;
     }
 
     @Override
@@ -69,7 +67,7 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         checkIndex(index);
         T oldElement = get(index);
-        fastRemove(index);
+        internalRemove(index);
         return oldElement;
     }
 
@@ -79,7 +77,7 @@ public class ArrayList<T> implements List<T> {
         return remove(indexOfElement);
     }
 
-    private void fastRemove(int index) {
+    private void internalRemove(int index) {
         int newSize = size - 1;
         if (newSize > index) {
             System.arraycopy(elementData,index + 1, elementData, index, newSize);
