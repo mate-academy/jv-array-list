@@ -7,29 +7,26 @@ public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private static final int BIT_SHIFT_VALUE = 1;
     private static final int ONE_ELEMENT_SIZE = 1;
-    private static final int EMPTY_LIST_VALUE = 0;
     private static final int FIRST_ELEMENT_INDEX = 0;
     private static final int NO_SUCH_ELEMENT_INDEX = -1;
-    private static final String NO_SUCH_ELEMENT_MESSAGE = "There is no such element in list.";
-    private static final String INDEX_OUT_OF_BOUNDS_MESSAGE = "This index does not exist in list.";
+    private static final String NO_SUCH_ELEMENT_MESSAGE = "There is no element"
+            + " with index %d in list.";
+    private static final String INDEX_OUT_OF_BOUNDS_MESSAGE = "Index %d does not exist in list.";
 
     private Object[] data;
     private int size;
 
     public ArrayList() {
         data = new Object[DEFAULT_CAPACITY];
-        size = EMPTY_LIST_VALUE;
     }
 
     private Object[] grow() {
-        data = data.length > EMPTY_LIST_VALUE
-                ? Arrays.copyOf(data, data.length + (data.length >> BIT_SHIFT_VALUE))
-                : new Object[DEFAULT_CAPACITY];
+        data = Arrays.copyOf(data, data.length + (data.length >> BIT_SHIFT_VALUE));
         return data;
     }
 
     private int getIndexByElement(T element) {
-        for (int i = 0; i < data.length; i++) {
+        for (int i = 0; i < size; i++) {
             if (data[i] == element || (data[i] != null && data[i].equals(element))) {
                 return i;
             }
@@ -38,20 +35,23 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void checkAddByIndex(int index) {
-        if (index < EMPTY_LIST_VALUE || index > size) {
-            throw new ArrayListIndexOutOfBoundsException(INDEX_OUT_OF_BOUNDS_MESSAGE);
+        if (index < FIRST_ELEMENT_INDEX || index > size) {
+            throw new ArrayListIndexOutOfBoundsException(
+                    String.format(INDEX_OUT_OF_BOUNDS_MESSAGE, index));
         }
     }
 
     private void checkGetByIndex(int index) {
-        if (index < EMPTY_LIST_VALUE || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException(INDEX_OUT_OF_BOUNDS_MESSAGE);
+        if (index < FIRST_ELEMENT_INDEX || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException(String
+                    .format(INDEX_OUT_OF_BOUNDS_MESSAGE, index));
         }
     }
 
     private void checkElementByIndex(int index) {
-        if (index < EMPTY_LIST_VALUE || index > size) {
-            throw new NoSuchElementException(NO_SUCH_ELEMENT_MESSAGE);
+        if (index < FIRST_ELEMENT_INDEX || index > size) {
+            throw new NoSuchElementException(String
+                    .format(NO_SUCH_ELEMENT_MESSAGE, index));
         }
     }
 
@@ -87,7 +87,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void set(T value, int index) {
         checkGetByIndex(index);
-        data[index] = data[index] != null ? value : data[index];
+        data[index] = value;
     }
 
     @Override
@@ -102,10 +102,8 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        checkElementByIndex(getIndexByElement(element));
-        int elementIndex = getIndexByElement(element)
-                >= FIRST_ELEMENT_INDEX
-                ? getIndexByElement(element) : NO_SUCH_ELEMENT_INDEX;
+        int elementIndex = getIndexByElement(element);
+        checkElementByIndex(elementIndex);
         System.arraycopy(data, elementIndex + 1, data, elementIndex, size - elementIndex);
         size--;
         return element;
@@ -118,6 +116,6 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public boolean isEmpty() {
-        return size == EMPTY_LIST_VALUE;
+        return size == FIRST_ELEMENT_INDEX;
     }
 }
