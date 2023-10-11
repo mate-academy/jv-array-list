@@ -2,7 +2,6 @@ package core.basesyntax;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    private static final double GROWTH_INDEX = 1.5;
     private Object[] elements;
     private int size;
 
@@ -12,19 +11,13 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (size == elements.length) {
-            arrayIncrease();
-        }
+        ensureCapacity(size + 1);
         elements[size++] = value;
     }
 
     @Override
     public void add(T value, int index) {
         ensureCapacity(size + 1);
-        if (size == elements.length) {
-            arrayIncrease();
-        }
-
         if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException("Index out of bounds");
         }
@@ -65,11 +58,6 @@ public class ArrayList<T> implements List<T> {
         elements[index] = value;
     }
 
-    private void arrayIncrease() {
-        int newCapacity = (int) (elements.length * GROWTH_INDEX);
-        ensureCapacity(newCapacity);
-    }
-
     @Override
     public T remove(int index) {
         checkIndex(index);
@@ -85,11 +73,7 @@ public class ArrayList<T> implements List<T> {
         for (int i = 0; i < size; i++) {
             if ((elements[i] == null && element == null)
                     || (elements[i] != null && elements[i].equals(element))) {
-                final T removedElement = (T) elements[i];
-                System.arraycopy(elements, i + 1, elements, i, size - i - 1);
-                elements[size - 1] = null;
-                size--;
-                return removedElement;
+                return remove(i);
             }
         }
         throw new java.util.NoSuchElementException("Element not found");
