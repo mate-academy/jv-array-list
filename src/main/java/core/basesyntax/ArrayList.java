@@ -1,11 +1,11 @@
 package core.basesyntax;
 
-import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int BASE_SIZE = 10;
-    private static final String INDEX_EXCEPTION_MESSAGE = "Provided index is < 0 or > list size. Please, provide valid index.";
+    private static final String INDEX_EXCEPTION_MESSAGE = "Provided index "
+            + "is < 0 or > list size. Please, provide valid index.";
     private Object[] objects;
     private int size;
 
@@ -21,28 +21,12 @@ public class ArrayList<T> implements List<T> {
             }
             Object[] newArray = new Object[newLength];
             System.arraycopy(objects, 0, newArray,0, objects.length);
-            objects = new Object[]{newArray};
-        }
-    }
-
-
-    private void expandArray() {
-        objects = new Object[size + (size >> 1)];
-    }
-    private void checkEmptySpace() {
-        if (size >= objects.length) {
-            Object[] newArray = new Object[objects.length + (objects.length >> 1)];
-            System.arraycopy(objects, 0, newArray,0, objects.length);
-            objects = new Object[]{newArray};
+            objects = newArray;
         }
     }
 
     private void sizeIncrease() {
         size++;
-    }
-
-    private void sizeDecrease() {
-        size--;
     }
 
     private void validateIndex(int index) {
@@ -95,8 +79,7 @@ public class ArrayList<T> implements List<T> {
         validateIndex(index);
         T returnValue = (T) objects[index];
         System.arraycopy(objects, index + 1, objects, index, size - index - 1);
-        sizeDecrease();
-        objects[size] = null;
+        objects[--size] = null;
         return returnValue;
     }
 
