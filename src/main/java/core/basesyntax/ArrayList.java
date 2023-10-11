@@ -30,9 +30,8 @@ public class ArrayList<T> implements List<T> {
             grow();
         }
 
-        for (int i = size; i > index; i--) {
-            data[i] = data[i - 1];
-        }
+        System.arraycopy(data, index, data, index + 1, size - index);
+        data[index] = value;
         data[index] = value;
         size++;
     }
