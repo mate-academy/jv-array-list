@@ -61,7 +61,6 @@ public class ArrayList<T> implements List<T> {
         }
         array[size - 1] = null;
         size--;
-
         return removed;
     }
 
