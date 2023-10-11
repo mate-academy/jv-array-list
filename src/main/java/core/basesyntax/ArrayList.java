@@ -7,16 +7,6 @@ public class ArrayList<T> implements List<T> {
     private static final int ACCURACY_OF_ONE = 1;
     private static final int GROWTH_FACTOR = 1;
     private static final int INITIAL_POSITION = 0;
-    private static String MESSAGE_AT_REMOVE_EXCEPTION = "Cant remove value "
-            + "of this index because arrayList size is :";
-    private static String MESSAGE_AT_ADD_EXCEPTION = "Can't add value to "
-            + "this index because arrayList size is: ";
-    private static String MESSAGE_AT_GET_EXCEPTION = "Cant get value "
-            + "of this index because arrayList size is :";
-    private static String MESSAGE_AT_SET_EXCEPTION = "Cant set value "
-            + "to this index because arrayList size is :";
-    private static String MESSAGE_AT_REMOVE_NO_SUCH_ELEMENT_EXCEPTION = "Cant remove element "
-            + "because there is no such element in the list :";
     private T[] values;
     private int usedSpace;
 
@@ -30,7 +20,9 @@ public class ArrayList<T> implements List<T> {
     }
 
     public void add(T value, int index) {
-        checkIfIndexOutOfBoundsException(MESSAGE_AT_ADD_EXCEPTION, index);
+        checkIfIndexOutOfBoundsException("Can't add value to "
+                + "this index because arrayList size is: ",
+                index);
         growIfArrayFull();
         addValueToIndex(index, value);
     }
@@ -65,17 +57,23 @@ public class ArrayList<T> implements List<T> {
     }
 
     public T get(int index) {
-        checkIfIndexOutOfBoundsException(MESSAGE_AT_GET_EXCEPTION, index + ACCURACY_OF_ONE);
+        checkIfIndexOutOfBoundsException("Cant get value "
+                + "of this index because arrayList size is :",
+                index + ACCURACY_OF_ONE);
         return values[index];
     }
 
     public void set(T value, int index) {
-        checkIfIndexOutOfBoundsException(MESSAGE_AT_SET_EXCEPTION, index + ACCURACY_OF_ONE);
+        checkIfIndexOutOfBoundsException("Cant set value "
+                + "to this index because arrayList size is :",
+                index + ACCURACY_OF_ONE);
         values[index] = value;
     }
 
     public T remove(int index) {
-        checkIfIndexOutOfBoundsException(MESSAGE_AT_REMOVE_EXCEPTION, index + ACCURACY_OF_ONE);
+        checkIfIndexOutOfBoundsException("Cant remove value "
+                + "of this index because arrayList size is :",
+                index + ACCURACY_OF_ONE);
         T value = values[index];
         removeValueFromIndex(index);
         return value;
@@ -89,7 +87,8 @@ public class ArrayList<T> implements List<T> {
                 return value;
             }
         }
-        throw new NoSuchElementException(MESSAGE_AT_REMOVE_NO_SUCH_ELEMENT_EXCEPTION);
+        throw new NoSuchElementException("Cant remove element "
+                + "because there is no such element in the list :");
     }
 
     public int size() {
