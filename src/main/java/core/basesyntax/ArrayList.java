@@ -77,7 +77,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        T resultValue = null;
+        T resultValue;
         hasElement(element);
         int index = getIndex(element);
         resultValue = (T) elementData[index];
@@ -125,6 +125,7 @@ public class ArrayList<T> implements List<T> {
             if (elementData[i] == element
                     || (elementData[i] != null && elementData[i].equals(element))) {
                 hasElement = true;
+                break;
             }
         }
         if (!hasElement) {
