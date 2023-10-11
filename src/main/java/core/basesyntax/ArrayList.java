@@ -26,9 +26,7 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
         }
         grow();
-        for (int i = size; i > index; i--) {
-            array[i] = array[i - 1];
-        }
+        System.arraycopy(array, index, array, index + 1, size - index);
         array[index] = value;
         size++;
     }
@@ -56,9 +54,7 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         checkIndex(index);
         final T removed = array[index];
-        for (int i = index; i < size - 1; i++) {
-            array[i] = array[i + 1];
-        }
+        System.arraycopy(array, index + 1, array, index, size - index - 1);
         array[size - 1] = null;
         size--;
         return removed;
@@ -98,4 +94,3 @@ public class ArrayList<T> implements List<T> {
     }
 
 }
-
