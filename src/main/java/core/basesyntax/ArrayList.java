@@ -8,7 +8,8 @@ public class ArrayList<T> implements List<T> {
     private static final int START_SIZE = 0;
     private static final int INDEX_LOWER_BOUND = 0;
     private static final double CAPACITY_MULTIPLIER = 1.5;
-    private static final String INVALID_INDEX_MESSAGE = "The provided index is invalid. Please double-check it. Index: ";
+    private static final String INVALID_INDEX_MESSAGE = "The provided index is invalid. "
+            + "Please double-check it. Index: ";
     private Object[] elementData;
     private int size;
 
