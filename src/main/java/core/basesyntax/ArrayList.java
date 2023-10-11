@@ -1,10 +1,10 @@
 package core.basesyntax;
 
 import java.util.NoSuchElementException;
-import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
+    private static final int ARRAY_IS_EMPTY = 0;
     private Object[] elementData;
     private int currentSize;
 
@@ -70,7 +70,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < currentSize; i++) {
-            if (Objects.equals(element, elementData[i])) {
+            if ((elementData[i] != null && elementData[i].equals(element))
+                    || element == elementData[i]) {
                 return remove(i);
             }
         }
@@ -84,7 +85,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public boolean isEmpty() {
-        return currentSize == 0;
+        return currentSize == ARRAY_IS_EMPTY;
     }
 
     private void growIfArrayFull() {
