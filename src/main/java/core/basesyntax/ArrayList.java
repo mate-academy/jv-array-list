@@ -5,6 +5,10 @@ import java.util.NoSuchElementException;
 import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
+    private static final String INDEX_OUT_OF_BOUNDS_MESSAGE =
+            "Index: is out of bounds of array";
+    private static final String NO_SUCH_ELEMENT_MESSAGE =
+            "There is no such element in the List: ";
     private static final int DEFAULT_CAPACITY = 10;
     private Object[] elementData;
     private int size;
@@ -115,15 +119,13 @@ public class ArrayList<T> implements List<T> {
 
     private void checkIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index: " + index
-                    + " is out of bounds of array");
+            throw new ArrayListIndexOutOfBoundsException(INDEX_OUT_OF_BOUNDS_MESSAGE + index);
         }
     }
 
     private void checkIndexForAdd(int index) {
         if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("Index: " + index
-                    + " is out of bounds of array");
+            throw new ArrayListIndexOutOfBoundsException(INDEX_OUT_OF_BOUNDS_MESSAGE + index);
         }
     }
 
@@ -137,7 +139,7 @@ public class ArrayList<T> implements List<T> {
                 return i;
             }
         }
-        throw new NoSuchElementException("There is no " + elementToFind + " in the List");
+        throw new NoSuchElementException(NO_SUCH_ELEMENT_MESSAGE + elementToFind);
     }
 
     private Object[] convertListToArray(List<T> list) {
