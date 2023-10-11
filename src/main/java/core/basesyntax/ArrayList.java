@@ -1,9 +1,8 @@
 package core.basesyntax;
 
 import java.util.Arrays;
-import java.util.Objects;
 import java.util.NoSuchElementException;
-
+import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_SIZE = 10;
@@ -56,13 +55,14 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
-        T removedValue = array[index];
+        final T removed = array[index];
         for (int i = index; i < size - 1; i++) {
             array[i] = array[i + 1];
         }
         array[size - 1] = null;
         size--;
-        return removedValue;
+
+        return removed;
     }
 
     @Override
@@ -97,5 +97,6 @@ public class ArrayList<T> implements List<T> {
             array = Arrays.copyOf(array, newCapacity);
         }
     }
+
 }
 
