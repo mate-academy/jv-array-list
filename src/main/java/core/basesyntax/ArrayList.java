@@ -14,20 +14,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        growIfArrayFull();
+        ensureCapacity(currentSize + 1);
         elementData[currentSize++] = value;
     }
 
     @Override
     public void add(T value, int index) {
         checkIndex(index, currentSize);
-        growIfArrayFull();
+        ensureCapacity(currentSize + 1);
         if (index == currentSize) {
             elementData[currentSize++] = value;
             return;
         }
-        int tailLength = currentSize - index;
-        System.arraycopy(elementData, index, elementData, index + 1, tailLength);
+        System.arraycopy(elementData, index, elementData, index + 1, currentSize - index);
         elementData[index] = value;
         currentSize++;
     }
@@ -35,7 +34,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void addAll(List<T> list) {
         int minLength = Math.max(list.size() + currentSize, DEFAULT_CAPACITY);
-        grow(minLength);
+        ensureCapacity(minLength);
         for (int i = 0; i < list.size(); i++) {
             elementData[currentSize++] = list.get(i);
         }
@@ -88,17 +87,14 @@ public class ArrayList<T> implements List<T> {
         return currentSize == ARRAY_IS_EMPTY;
     }
 
-    private void growIfArrayFull() {
-        if (currentSize == elementData.length) {
-            grow(elementData.length);
-        }
-    }
 
-    private void grow(int minLength) {
-        int newCapacity = (int) (minLength + (minLength * 1.5));
-        Object[] tmp = new Object[newCapacity];
-        System.arraycopy(elementData, 0, tmp, 0, currentSize);
-        elementData = tmp;
+    private void ensureCapacity(int minLength) {
+        if (minLength > currentSize) {
+            int newCapacity = (int) (minLength + (minLength * 1.5));
+            Object[] tmp = new Object[newCapacity];
+            System.arraycopy(elementData, 0, tmp, 0, currentSize);
+            elementData = tmp;
+        }
     }
 
     private void checkIndex(int index, int upperBound) {
