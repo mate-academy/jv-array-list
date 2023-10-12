@@ -87,7 +87,6 @@ public class ArrayList<T> implements List<T> {
         return currentSize == ARRAY_IS_EMPTY;
     }
 
-
     private void ensureCapacity(int minLength) {
         if (minLength > currentSize) {
             int newCapacity = (int) (minLength + (minLength * 1.5));
