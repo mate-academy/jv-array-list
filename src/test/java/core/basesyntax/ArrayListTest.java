@@ -37,7 +37,7 @@ public class ArrayListTest {
         Assert.assertEquals("Test", arrayList.get(0));
         Assert.assertEquals("Test failed! Can't correctly add element by index " + 1,
                 "Academy", arrayList.get(1));
-        Assert.assertEquals("Mate", arrayList.get(2));
+        Assert.assertEquals("for", arrayList.get(2));
         Assert.assertEquals("Mate", arrayList.get(3));
         arrayList.add(null, 0);
         Assert.assertEquals("Test failed! Size of array should be " + 5 + "but it is "
@@ -196,7 +196,7 @@ public class ArrayListTest {
         Assert.assertEquals("Test failed! Remove was incorrect",
                 "Private", arrayList.get(3));
         actualResult = arrayList.remove("String");
-        Assert.assertEquals(String.format("Test failed! Returned value should be \"%s\", "
+         Assert.assertEquals(String.format("Test failed! Returned value should be \"%s\", "
                 + "but was \"%s\"\n", "String", actualResult), "String", actualResult);
         actualSize = arrayList.size();
         Assert.assertEquals(String.format("Test failed! Size of array after removing element "
