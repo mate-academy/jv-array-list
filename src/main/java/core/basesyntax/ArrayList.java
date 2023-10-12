@@ -2,6 +2,8 @@ package core.basesyntax;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
+    private static final String indexOutOfBoundsMassage = "Index out of bounds";
+    private static final String noSuchElementMassage = "Element not found";
     private Object[] elements;
     private int size;
 
@@ -19,12 +21,9 @@ public class ArrayList<T> implements List<T> {
     public void add(T value, int index) {
         ensureCapacity(size + 1);
         if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("Index out of bounds");
+            throw new ArrayListIndexOutOfBoundsException(indexOutOfBoundsMassage);
         }
-
-        for (int i = size; i > index; i--) {
-            elements[i] = elements[i - 1];
-        }
+        System.arraycopy(elements, index, elements, index + 1, size - index);
         elements[index] = value;
         size++;
     }
@@ -76,7 +75,7 @@ public class ArrayList<T> implements List<T> {
                 return remove(i);
             }
         }
-        throw new java.util.NoSuchElementException("Element not found");
+        throw new java.util.NoSuchElementException(noSuchElementMassage);
     }
 
     @Override
@@ -91,7 +90,7 @@ public class ArrayList<T> implements List<T> {
 
     private void checkIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index out of bounds");
+            throw new ArrayListIndexOutOfBoundsException(indexOutOfBoundsMassage);
         }
     }
 }
