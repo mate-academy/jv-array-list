@@ -3,22 +3,9 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    private Object [] storage = new Object[10];
+    private static final int DEFAULT_CAPACITY = 10;
+    private Object[] storage = new Object[DEFAULT_CAPACITY];
     private int size = 0;
-
-    private void validateIndex(int index) {
-        if ((index < 0) || (index > size - 1)) {
-            throw new ArrayListIndexOutOfBoundsException("Not found index: " + index);
-        }
-    }
-
-    private void increaseStorage() {
-        int oldCapacity = storage.length;
-        int newCapacity = oldCapacity + (oldCapacity >> 1);
-        Object [] increasedStorage = new Object[newCapacity];
-        System.arraycopy(storage, 0, increasedStorage, 0, size);
-        storage = increasedStorage;
-    }
 
     @Override
     public void add(T value) {
@@ -83,6 +70,30 @@ public class ArrayList<T> implements List<T> {
         return element;
     }
 
+    @Override
+    public int size() {
+        return size;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return size == 0;
+    }
+
+    private void validateIndex(int index) {
+        if ((index < 0) || (index > size - 1)) {
+            throw new ArrayListIndexOutOfBoundsException("Not found index: " + index);
+        }
+    }
+
+    private void increaseStorage() {
+        int oldCapacity = storage.length;
+        int newCapacity = oldCapacity + (oldCapacity >> 1);
+        Object [] increasedStorage = new Object[newCapacity];
+        System.arraycopy(storage, 0, increasedStorage, 0, size);
+        storage = increasedStorage;
+    }
+
     private int indexOf(T value) {
         for (int i = 0; i < size(); i++) {
             if ((value == storage[i])
@@ -92,15 +103,5 @@ public class ArrayList<T> implements List<T> {
         }
         throw new NoSuchElementException("Not found element with value: "
                 + value);
-    }
-
-    @Override
-    public int size() {
-        return size;
-    }
-
-    @Override
-    public boolean isEmpty() {
-        return size == 0;
     }
 }
