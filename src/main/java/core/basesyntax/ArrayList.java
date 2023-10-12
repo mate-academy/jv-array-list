@@ -4,6 +4,8 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
+    private static final String NO_SUCH_ELEMENT = "No such element present ";
+    private static final String INVALID_INDEX = "Invalid index ";
     private T[] values;
     private int size;
 
@@ -21,7 +23,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         if (index > size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index " + index);
+            throw new ArrayListIndexOutOfBoundsException(INVALID_INDEX + index);
         }
         growIfArrayFull();
         System.arraycopy(values, index, values, index + 1, size - index);
@@ -64,12 +66,13 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if (get(i) == element || get(i) != null && get(i).equals(element)) {
+            T currentValue = get(i);
+            if (currentValue == element || currentValue != null && currentValue.equals(element)) {
                 remove(i);
                 return element;
             }
         }
-        throw new NoSuchElementException("No such element present " + element);
+        throw new NoSuchElementException(NO_SUCH_ELEMENT + element);
     }
 
     @Override
@@ -82,14 +85,14 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    public void grow() {
+    private void grow() {
         int newSize = values.length + (values.length >> 1);
         T[] largerCapacity = (T[]) new Object[newSize];
         System.arraycopy(values, 0, largerCapacity,0, size);
         values = largerCapacity;
     }
 
-    public void growIfArrayFull() {
+    private void growIfArrayFull() {
         if (size == values.length) {
             grow();
         }
@@ -97,7 +100,7 @@ public class ArrayList<T> implements List<T> {
 
     private void checkIndex(int index) {
         if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index " + index);
+            throw new ArrayListIndexOutOfBoundsException(INVALID_INDEX + index);
         }
     }
 }
