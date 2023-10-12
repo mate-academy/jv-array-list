@@ -5,17 +5,17 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    private static final int START_SIZE = 0;
     private static final int INDEX_LOWER_BOUND = 0;
     private static final double CAPACITY_MULTIPLIER = 1.5;
     private static final String INVALID_INDEX_MESSAGE = "The provided index is invalid. "
             + "Please double-check it. Index: ";
+    private static final String INVALID_ELEMENT_MESSAGE = "The provided element is not present "
+            + "in the list. Please double-check it.";
     private Object[] elementData;
     private int size;
 
     public ArrayList() {
         elementData = new Object[DEFAULT_CAPACITY];
-        size = START_SIZE;
     }
 
     @Override
@@ -41,9 +41,6 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        if (size + list.size() >= elementData.length) {
-            elementData = grow();
-        }
         for (int i = 0; i < list.size(); i++) {
             add(list.get(i));
         }
@@ -76,12 +73,10 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        T resultValue;
         hasElement(element);
         int index = getIndex(element);
-        resultValue = (T) elementData[index];
-        System.arraycopy(elementData, index + 1, elementData, index, size - index - 1);
-        size--;
+        T resultValue = get(index);
+        remove(index);
         return resultValue;
     }
 
@@ -96,10 +91,6 @@ public class ArrayList<T> implements List<T> {
     }
 
     private Object[] grow() {
-        return grow(size + 1);
-    }
-
-    private Object[] grow(int minCapacity) {
         int newCapacity = (int) (elementData.length * CAPACITY_MULTIPLIER);
         return elementData = Arrays.copyOf(elementData, newCapacity);
     }
@@ -117,28 +108,29 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void hasElement(T element) {
-        boolean hasElement = false;
         for (int i = 0; i < size; i++) {
-            if (elementData[i] == element
-                    || (elementData[i] != null && elementData[i].equals(element))) {
-                hasElement = true;
-                break;
+            if (containsElement(element, i)) {
+                return;
             }
         }
-        if (!hasElement) {
-            throw new NoSuchElementException("The provided element is not present in the list."
-                    + " Please double-check it.");
-        }
+        throw new NoSuchElementException(INVALID_ELEMENT_MESSAGE);
     }
 
     private int getIndex(T element) {
         int index = 0;
         for (int i = 0; i < size; i++) {
-            if (elementData[i] == element
-                    || (elementData[i] != null && elementData[i].equals(element))) {
+            if (containsElement(element, i)) {
                 index = i;
             }
         }
         return index;
+    }
+
+    private boolean containsElement(T element, int index) {
+        if (elementData[index] == element
+                || (elementData[index] != null && elementData[index].equals(element))) {
+            return true;
+        }
+        return false;
     }
 }
