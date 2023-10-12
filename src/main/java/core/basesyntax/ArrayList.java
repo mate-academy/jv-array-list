@@ -58,9 +58,6 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void set(T value, int index) {
         rangeCheckForRemoveAndSetAndGet(index);
-        if (size == elementData.length) {
-            elementData = grow();
-        }
         System.arraycopy(elementData, index, elementData, index + 1, size + 1);
         elementData[index] = value;
     }
