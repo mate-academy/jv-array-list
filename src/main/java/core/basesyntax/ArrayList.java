@@ -32,9 +32,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("Index: " + index + ", Size: " + size);
-        }
+        validateIndex(index);
         ensureCapacity(size + 1);
         System.arraycopy(array, index, array, index + 1, size - index);
         array[index] = value;
@@ -51,13 +49,13 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        validateIndex(index);
+        validateIndex(index + 1);
         return (T) array[index];
     }
 
     @Override
     public void set(T value, int index) {
-        validateIndex(index);
+        validateIndex(index + 1);
         array[index] = value;
     }
 
@@ -68,23 +66,16 @@ public class ArrayList<T> implements List<T> {
         if (numMoved > 0) {
             System.arraycopy(array, index + 1, array, index, numMoved);
         }
-        array[--size] = null;
+        size--;
         return oldValue;
     }
 
     @Override
     public T remove(T element) {
-        if (element == null) {
-            for (int i = 0; i < size; i++) {
-                if (array[i] == null) {
-                    return remove(i);
-                }
-            }
-        } else {
-            for (int i = 0; i < size; i++) {
-                if (element.equals(array[i])) {
-                    return remove(i);
-                }
+        for (int i = 0; i < size; i++) {
+            if ((element == null && array[i] == null)
+                    || (element != null && element.equals(array[i]))) {
+                return remove(i);
             }
         }
         throw new NoSuchElementException("Element not found");
@@ -101,8 +92,9 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void validateIndex(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index: " + index + ", Size: " + size);
+        if (index < 0 || index > size) {
+            throw new ArrayListIndexOutOfBoundsException("Index: " + index + " out of bound!!"
+                    + " Current size: " + size);
         }
     }
 }
