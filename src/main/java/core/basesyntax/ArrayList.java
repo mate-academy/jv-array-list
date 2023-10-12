@@ -3,24 +3,24 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    private static final int BASE_SIZE = 10;
+    private static final int BASE_CAPACITY = 10;
     private static final String INDEX_EXCEPTION_MESSAGE = "Provided index "
             + "is < 0 or > list size. Please, provide valid index.";
     private Object[] objects;
     private int size;
 
     public ArrayList() {
-        this.objects = new Object[BASE_SIZE];
+        this.objects = new Object[BASE_CAPACITY];
     }
 
     private void checkFreeSpace(int neededSpace) {
         if (neededSpace > objects.length) {
-            int newLength = (int)(objects.length * 1.5);
+            int newLength = (int) (objects.length * 1.5);
             if (newLength < neededSpace) {
                 newLength = neededSpace;
             }
             Object[] newArray = new Object[newLength];
-            System.arraycopy(objects, 0, newArray,0, objects.length);
+            System.arraycopy(objects, 0, newArray, 0, objects.length);
             objects = newArray;
         }
     }
@@ -38,8 +38,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value) {
         checkFreeSpace(size + 1);
-        objects[size] = value;
-        sizeIncrease();
+        objects[size++] = value;
     }
 
     @Override
@@ -78,6 +77,10 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         validateIndex(index);
         T returnValue = (T) objects[index];
+        if (index == size - 1) {
+            objects[--size] = null;
+            return returnValue;
+        }
         System.arraycopy(objects, index + 1, objects, index, size - index - 1);
         objects[--size] = null;
         return returnValue;
@@ -100,6 +103,6 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public boolean isEmpty() {
-        return size == 0 || objects == null;
+        return size == 0;
     }
 }
