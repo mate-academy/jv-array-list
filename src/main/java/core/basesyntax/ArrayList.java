@@ -3,15 +3,16 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
+    private static final String INVALID_INDEX = "Invalid index: ";
+    private static final String NOT_FOUND_VALUE = "Not found element like: ";
     private static final int CAPACITY = 10;
     private Object[] storage = new Object[CAPACITY];
     private int size = 0;
 
     @Override
     public void add(T value) {
-        if (size == storage.length) {
-            increaseCapacity();
-        }
+        increaseCapacity();
+
         storage[size] = value;
         size++;
     }
@@ -19,11 +20,9 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("Cannot add value on this index");
+            throw new ArrayListIndexOutOfBoundsException(INVALID_INDEX + index);
         }
-        if (size == storage.length) {
-            increaseCapacity();
-        }
+        increaseCapacity();
 
         System.arraycopy(storage, index, storage, index + 1,size - index);
         storage[index] = value;
@@ -32,33 +31,26 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        int listSize = list.size();
-        if ((listSize + size) > storage.length) {
-            increaseCapacity();
-        }
-        for (int i = 0; i < listSize; i++) {
+        for (int i = 0; i < list.size(); i++) {
             add(list.get(i));
         }
     }
 
     @Override
     public T get(int index) {
-        rangeCheckForAdd(index);
+        checkIndex(index);
         return (T) storage[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index >= 0 && index < size) {
-            storage[index] = value;
-        } else {
-            throw new ArrayListIndexOutOfBoundsException("Cannot set value on this index" + index);
-        }
+        checkIndex(index);
+        storage[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        rangeCheckForAdd(index);
+        checkIndex(index);
         T oldValue = get(index);
 
         System.arraycopy(storage, index + 1, storage, index, size - index - 1);
@@ -69,8 +61,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         int index = indexOf(element);
-        remove(index);
-        return element;
+        return remove(index);
     }
 
     @Override
@@ -84,16 +75,18 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void increaseCapacity() {
-        int oldCapacity = storage.length;
-        int newCapacity = oldCapacity + (oldCapacity >> 1);
-        Object [] increasedStorage = new Object[newCapacity];
-        System.arraycopy(storage, 0, increasedStorage, 0, size);
-        storage = increasedStorage;
+        if (size == storage.length) {
+            int oldCapacity = storage.length;
+            int newCapacity = oldCapacity + (oldCapacity >> 1);
+            Object[] increasedStorage = new Object[newCapacity];
+            System.arraycopy(storage, 0, increasedStorage, 0, size);
+            storage = increasedStorage;
+        }
     }
 
-    private void rangeCheckForAdd(int index) {
+    private void checkIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index is not correct: " + index);
+            throw new ArrayListIndexOutOfBoundsException(INVALID_INDEX + index);
         }
     }
 
@@ -104,6 +97,6 @@ public class ArrayList<T> implements List<T> {
                 return i;
             }
         }
-        throw new NoSuchElementException("Not found element like " + value);
+        throw new NoSuchElementException(NOT_FOUND_VALUE + value);
     }
 }
