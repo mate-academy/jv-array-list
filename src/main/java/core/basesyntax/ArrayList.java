@@ -1,6 +1,7 @@
 package core.basesyntax;
 
 import java.util.Arrays;
+import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
@@ -49,7 +50,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index < 0 | index > size) {
+        if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException("Such index don not exist");
         }
         return array[index];
@@ -57,7 +58,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void set(T value, int index) {
-        if (index < 0 || index > size) {
+        if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException("Can not set in such index");
         }
         array[index] = value;
@@ -91,7 +92,7 @@ public class ArrayList<T> implements List<T> {
                 return removedElement;
             }
         }
-        return null;
+        throw new NoSuchElementException("Element not found");
     }
 
     @Override
