@@ -90,7 +90,7 @@ public class ArrayList<T> implements List<T> {
                 return remove(i);
             }
         }
-        throw new NoSuchElementException("e");
+        throw new NoSuchElementException("Element doesn't exist");
     }
 
     @Override
