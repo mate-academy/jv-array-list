@@ -23,8 +23,17 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
+    private void checkSize(List<T> list) {
+        int expectedSize = list.size() + currentSize;
+        if (expectedSize > arrayList.length) {
+            do {
+                arrayList = grow();
+            } while (expectedSize < arrayList.length);
+        }
+    }
+
     private void checkIndex(int index) {
-        if (index >= currentSize || index < 0) {
+        if (index > currentSize || index < 0) {
             throw new ArrayListIndexOutOfBoundsException(
                     String.format("Array size is %d. Index %d out of bounds.",
                             currentSize, index));
@@ -57,11 +66,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index > currentSize || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException(
-                    String.format("Array size is %d. Index %d out of bounds.",
-                            currentSize, index));
-        }
+        checkIndex(index);
         checkSize();
         System.arraycopy(arrayList, index, arrayList, index + 1, currentSize - index);
         arrayList[index] = value;
@@ -70,12 +75,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        int expectedSize = list.size() + currentSize;
-        if (expectedSize > arrayList.length) {
-            do {
-                arrayList = grow();
-            } while (expectedSize < arrayList.length);
-        }
+        checkSize(list);
         for (int i = 0; i < list.size(); i++) {
             add(list.get(i));
         }
@@ -83,19 +83,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        checkIndex(index);
+        checkIndex(index + 1);
         return (T) arrayList[index];
     }
 
     @Override
     public void set(T value, int index) {
-        checkIndex(index);
+        checkIndex(index + 1);
         arrayList[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        checkIndex(index);
+        checkIndex(index + 1);
         return removeElementByIndex(index);
     }
 
