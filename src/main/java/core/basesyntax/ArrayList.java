@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    private static final int DEFAULT_CAPACITY = 0;
+    private static final int DEFAULT_CAPACITY = 10;
     private static final int DEFAULT_SIZE = 0;
     private Object[] array;
     private int size;
@@ -15,7 +15,10 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void ensureCapacity(int minCapacity) {
-        if (minCapacity > array.length) {
+        if (array.length == 0) {
+            int newCapacity = Math.max(DEFAULT_CAPACITY, minCapacity);
+            array = Arrays.copyOf(array, newCapacity);
+        } else if (minCapacity > array.length) {
             int newCapacity = array.length + (array.length >> 1);
             if (newCapacity < minCapacity) {
                 newCapacity = minCapacity;
