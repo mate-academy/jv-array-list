@@ -32,7 +32,6 @@ public class ArrayList<T> implements List<T> {
 
         System.arraycopy(data, index, data, index + 1, size - index);
         data[index] = value;
-        data[index] = value;
         size++;
     }
 
@@ -60,9 +59,7 @@ public class ArrayList<T> implements List<T> {
         checkIndex(index, size);
         final T removedValue = get(index);
         if (size > 1) {
-            for (int i = index; i < size - 1; i++) {
-                data[i] = data[i + 1];
-            }
+            System.arraycopy(data, index + 1, data, index, size - 1 - index);
         }
         data[size - 1] = null;
         size--;
@@ -72,8 +69,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if ((element == null && data[i] == null) 
-                    || (element != null && element.equals(data[i]))) {
+            if (element == data[i] || element != null && element.equals(data[i])) {
                 return remove(i);
             }
         }
