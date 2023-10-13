@@ -13,7 +13,7 @@ public class ArrayList<T> implements List<T> {
         this.objects = new Object[BASE_CAPACITY];
     }
 
-    private void checkFreeSpace(int neededSpace) {
+    private void expandListIfNeeded(int neededSpace) {
         if (neededSpace > objects.length) {
             int newLength = (int) (objects.length * 1.5);
             if (newLength < neededSpace) {
@@ -25,10 +25,6 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private void sizeIncrease() {
-        size++;
-    }
-
     private void validateIndex(int index) {
         if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException(INDEX_EXCEPTION_MESSAGE);
@@ -37,7 +33,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        checkFreeSpace(size + 1);
+        expandListIfNeeded(size + 1);
         objects[size++] = value;
     }
 
@@ -46,18 +42,18 @@ public class ArrayList<T> implements List<T> {
         if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException(INDEX_EXCEPTION_MESSAGE);
         }
-        checkFreeSpace(size + 1);
+        expandListIfNeeded(size + 1);
         System.arraycopy(objects, index, objects, index + 1, size - index);
         objects[index] = value;
-        sizeIncrease();
+        size++;
     }
 
     @Override
     public void addAll(List<T> list) {
-        checkFreeSpace(size + list.size());
+        expandListIfNeeded(size + list.size());
         for (int i = 0; i < list.size(); i++) {
             objects[size] = list.get(i);
-            sizeIncrease();
+            size++;
         }
     }
 
@@ -77,20 +73,26 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         validateIndex(index);
         T returnValue = (T) objects[index];
-        if (index == size - 1) {
-            objects[--size] = null;
-            return returnValue;
+        if (index != size - 1) {
+            System.arraycopy(objects, index + 1, objects, index, size - index - 1);
         }
-        System.arraycopy(objects, index + 1, objects, index, size - index - 1);
         objects[--size] = null;
         return returnValue;
     }
 
     @Override
     public T remove(T element) {
-        for (int i = 0; i < size; i++) {
-            if (element == null ? objects[i] == null : element.equals(objects[i])) {
-                return remove(i);
+        if (element == null) {
+            for (int i = 0; i < size; i++) {
+                if (objects[i] == null) {
+                    return remove(i);
+                }
+            }
+        } else {
+            for (int i = 0; i < size; i++) {
+                if (element.equals(objects[i])) {
+                    return remove(i);
+                }
             }
         }
         throw new NoSuchElementException("No such value in the list");
