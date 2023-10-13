@@ -93,7 +93,7 @@ public class ArrayList<T> implements List<T> {
 
     private void rangeCheckForAdd(int index) {
         if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("error");
+            throw new ArrayListIndexOutOfBoundsException("Index is not correct: " + index);
         }
     }
 
