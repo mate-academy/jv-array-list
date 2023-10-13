@@ -80,19 +80,11 @@ public class ArrayList<T> implements List<T> {
         return returnValue;
     }
 
-    @Override
     public T remove(T element) {
-        if (element == null) {
-            for (int i = 0; i < size; i++) {
-                if (objects[i] == null) {
-                    return remove(i);
-                }
-            }
-        } else {
-            for (int i = 0; i < size; i++) {
-                if (element.equals(objects[i])) {
-                    return remove(i);
-                }
+        for (int i = 0; i < size; i++) {
+            if ((objects[i] == null && element == null) || (element != null && element.equals(
+                    objects[i]))) {
+                return remove(i);
             }
         }
         throw new NoSuchElementException("No such value in the list");
