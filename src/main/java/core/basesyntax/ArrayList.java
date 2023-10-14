@@ -3,6 +3,8 @@ package core.basesyntax;
 public class ArrayList<T> implements List<T> {
     private static final double GROWTH_INDEX = 1.5;
     private static final int INITIAL_CAPACITY = 10;
+    private static final String ERROR_ELEMENT_NOT_FOUND_MESSAGE = "No such element found";
+    private static final String ERROR_INDEX_OUTSIDE_ARRAY_MESSAGE = "Index outside array";
     private Object[] elements;
     private int numberOfElements;
 
@@ -28,8 +30,9 @@ public class ArrayList<T> implements List<T> {
             rangeIndexCheck(index);
         }
 
-        for (int i = numberOfElements; i > index; i--) {
-            elements[i] = elements[i - 1];
+        if (index <= numberOfElements) {
+            System.arraycopy(elements, index, elements,
+                    index + 1, numberOfElements - index);
         }
         elements[index] = value;
         numberOfElements++;
@@ -37,9 +40,8 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        checkCapacity(numberOfElements + list.size(), list.size());
         for (int i = 0; i < list.size(); i++) {
-            elements[numberOfElements++] = list.get(i);
+            this.add(list.get(i));
         }
     }
 
@@ -71,11 +73,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         int index = findIndex(element);
-        if (index != -1) {
-            remove(index);
-        } else {
-            throw new java.util.NoSuchElementException("No such element found");
-        }
+        remove(index);
         return element;
     }
 
@@ -91,34 +89,28 @@ public class ArrayList<T> implements List<T> {
 
     private int findIndex(T element) {
         for (int i = 0; i < numberOfElements; i++) {
-            if (element == null && elements[i] == null) {
-                return i;
-            }
-            if (elements[i] != null && elements[i].equals(element)) {
+            if ((element == null && elements[i] == null)
+                    || (elements[i] != null && elements[i].equals(element))) {
                 return i;
             }
         }
-        return -1;
+        throw new java.util.NoSuchElementException(ERROR_ELEMENT_NOT_FOUND_MESSAGE);
     }
 
-    private void checkCapacity(int newSize, int size) {
-        if (newSize > size) {
-            Object[] newElements = new Object[calculateCapacity(newSize, size)];
+    private void checkCapacity(int newSize, int capacity) {
+        if (newSize > capacity) {
+            while (newSize > capacity) {
+                capacity = (int) (capacity * GROWTH_INDEX);
+            }
+            Object[] newElements = new Object[capacity];
             System.arraycopy(elements, 0, newElements, 0, numberOfElements);
             elements = newElements;
         }
     }
 
-    private int calculateCapacity(int newSize, int capacity) {
-        while (newSize > capacity) {
-            capacity = (int) (capacity * GROWTH_INDEX);
-        }
-        return capacity;
-    }
-
     private void rangeIndexCheck(int index) {
         if (index >= numberOfElements || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index " + index + " outside array");
+            throw new ArrayListIndexOutOfBoundsException(ERROR_INDEX_OUTSIDE_ARRAY_MESSAGE);
         }
     }
 }
