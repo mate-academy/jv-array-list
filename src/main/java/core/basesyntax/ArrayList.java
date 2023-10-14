@@ -3,6 +3,10 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
+    private static final String INDEX_OUT_OF_BOUNDS_MESSAGE = "Wrong index: %d for this value: %s";
+    private static final String NULL_LIST_MESSAGE = "List equal null";
+    private static final String INDEX_CHECK_FAIL_MESSAGE = "Incorrect index";
+    private static final String NO_ELEMENT_MESSAGE = "There is no element";
     private static final int DEFAULT_CAPACITY = 10;
     private T[] values;
     private int size;
@@ -32,20 +36,19 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("It`s wrong index: "
-                    + index + " for this value: " + value);
+            throw new ArrayListIndexOutOfBoundsException(String
+                    .format(INDEX_OUT_OF_BOUNDS_MESSAGE, index, value));
         }
         growIfArrayFull(size + 1);
         System.arraycopy(values, index, values, index + 1, size - index);
         values[index] = value;
         size++;
-
     }
 
     @Override
     public void addAll(List<T> list) {
         if (list == null) {
-            throw new NullPointerException("List equal null");
+            throw new NullPointerException(NULL_LIST_MESSAGE);
         }
         growIfArrayFull(size + list.size());
         for (int i = 0; i < list.size(); i++) {
@@ -78,11 +81,11 @@ public class ArrayList<T> implements List<T> {
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
             if (element != null && element.equals(values[i])
-                    || element == null && values[i] == null) {
+                    || element == values[i]) {
                 return remove(i);
             }
         }
-        throw new NoSuchElementException("There is no element");
+        throw new NoSuchElementException(NO_ELEMENT_MESSAGE);
     }
 
     @Override
@@ -97,7 +100,7 @@ public class ArrayList<T> implements List<T> {
 
     private void checkIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Incorrect index");
+            throw new ArrayListIndexOutOfBoundsException(INDEX_CHECK_FAIL_MESSAGE);
         }
     }
 }
