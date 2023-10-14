@@ -10,7 +10,7 @@ public class ArrayList<T> implements List<T> {
 
     public ArrayList(int initialCapacity) {
         if (initialCapacity < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Capacity can't a minus number!");
+            throw new RuntimeException("Capacity can't a minus number!");
         }
         arrayUnderneath = (T[]) new Object[initialCapacity];
     }
@@ -39,7 +39,14 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-
+        int firstEmptyIndex = size;
+        int indexFollower = 0;
+        size += list.size();
+        growIfArrayFull();
+        for (int i = firstEmptyIndex; i < size; i++) {
+            arrayUnderneath[i] = list.get(indexFollower);
+            indexFollower++;
+        }
     }
 
     @Override
@@ -107,7 +114,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void growIfArrayFull() {
-        if (size == arrayUnderneath.length) {
+        while (size >= arrayUnderneath.length) {
             int newArraySize = (int) Math.round(arrayUnderneath.length * GROWTH_MULTIPLIER);
             T[] newArray = (T[]) new Object[newArraySize];
             System.arraycopy(arrayUnderneath, 0, newArray, 0, arrayUnderneath.length);
