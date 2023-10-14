@@ -48,7 +48,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(int index) {
-        return null;
+        validIndexCheck(index);
     }
 
     @Override
@@ -88,6 +88,12 @@ public class ArrayList<T> implements List<T> {
             T[] newArray = (T[]) new Object[newArraySize];
             System.arraycopy(arrayUnderneath, 0, newArray, 0, arrayUnderneath.length);
             arrayUnderneath = newArray;
+        }
+    }
+
+    private void validIndexCheck(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
         }
     }
 }
