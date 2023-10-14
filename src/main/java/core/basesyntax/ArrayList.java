@@ -21,14 +21,20 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        growIfArrayFull();
-        arrayUnderneath[size] = value;
         size++;
+        growIfArrayFull();
+        arrayUnderneath[size - 1] = value;
     }
 
     @Override
     public void add(T value, int index) {
-
+        if (index < 0 || index > size) {
+            throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
+        }
+        size++;
+        growIfArrayFull();
+        moveElementsRight(index + 1);
+        arrayUnderneath[index] = value;
     }
 
     @Override
@@ -38,38 +44,56 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        return null;
+        validIndexCheck(index);
+        return arrayUnderneath[index];
     }
 
     @Override
     public void set(T value, int index) {
-
+        validIndexCheck(index);
+        arrayUnderneath[index] = value;
     }
 
     @Override
     public T remove(int index) {
         validIndexCheck(index);
+        T elementToRemove = arrayUnderneath[index];
+        moveElementsLeft(index);
+        return elementToRemove;
     }
 
     @Override
     public T remove(T element) {
         int indexToRemove = -1;
-        T foundedElement = null;
+        T elementToRemove = null;
+
+        if (element == null) {
+            for (int i = 0; i < size; i++) {
+                if (element == arrayUnderneath[i]) {
+                    elementToRemove = arrayUnderneath[i];
+                    indexToRemove = i;
+                    break;
+                }
+            }
+            if (indexToRemove == -1) {
+                throw new NoSuchElementException("No such element: " + element);
+            }
+            moveElementsLeft(indexToRemove);
+            return elementToRemove;
+        }
+
         for (int i = 0; i < size; i++) {
             if (element.equals(arrayUnderneath[i])) {
-                foundedElement = arrayUnderneath[i];
+                elementToRemove = arrayUnderneath[i];
+                indexToRemove = i;
                 break;
             }
-            indexToRemove++;
         }
         if (indexToRemove == -1) {
             throw new NoSuchElementException("No such element: " + element);
         }
-        for (int i = indexToRemove; i < size; i++) {
-            arrayUnderneath[i] = arrayUnderneath[i + 1];
-        }
-        size--;
-        return foundedElement;
+        moveElementsLeft(indexToRemove);
+        return elementToRemove;
     }
 
     @Override
@@ -94,6 +118,19 @@ public class ArrayList<T> implements List<T> {
     private void validIndexCheck(int index) {
         if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
+        }
+    }
+
+    private void moveElementsLeft(int startingIndex) {
+        for (int i = startingIndex; i < size; i++) {
+            arrayUnderneath[i] = arrayUnderneath[i + 1];
+        }
+        size--;
+    }
+
+    private void moveElementsRight(int startingIndex) {
+        for (int i = size - 1; i >= startingIndex; i--) {
+            arrayUnderneath[i] = arrayUnderneath[i - 1];
         }
     }
 }
