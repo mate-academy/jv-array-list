@@ -33,9 +33,6 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        if (list.size() + size > values.length) {
-            grow();
-        }
         for (int i = 0; i < list.size(); i++) {
             add(list.get(i));
         }
@@ -68,8 +65,7 @@ public class ArrayList<T> implements List<T> {
         for (int i = 0; i < size; i++) {
             T currentValue = get(i);
             if (currentValue == element || currentValue != null && currentValue.equals(element)) {
-                remove(i);
-                return element;
+                return remove(i);
             }
         }
         throw new NoSuchElementException(NO_SUCH_ELEMENT + element);
@@ -85,16 +81,12 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void grow() {
-        int newSize = values.length + (values.length >> 1);
-        T[] largerCapacity = (T[]) new Object[newSize];
-        System.arraycopy(values, 0, largerCapacity,0, size);
-        values = largerCapacity;
-    }
-
     private void growIfArrayFull() {
         if (size == values.length) {
-            grow();
+            int newSize = values.length + (values.length >> 1);
+            T[] largerCapacity = (T[]) new Object[newSize];
+            System.arraycopy(values, 0, largerCapacity,0, size);
+            values = largerCapacity;
         }
     }
 
