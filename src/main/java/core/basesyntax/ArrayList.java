@@ -20,9 +20,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (size == elementData.length) {
-            elementData = grow();
-        }
+        ensureCapacity();
         elementData[size] = value;
         size++;
     }
@@ -30,9 +28,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         rangeCheckForAdd(index);
-        if (size == elementData.length) {
-            elementData = grow();
-        }
+        ensureCapacity();
         System.arraycopy(elementData, index, elementData,
                 index + 1, size - index);
         elementData[index] = value;
@@ -55,7 +51,6 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void set(T value, int index) {
         rangeCheckForRemoveAndSetAndGet(index);
-        System.arraycopy(elementData, index, elementData, index + 1, size + 1);
         elementData[index] = value;
     }
 
@@ -73,7 +68,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        hasElement(element);
+        ensureElementsPresence(element);
         int index = getIndex(element);
         T resultValue = get(index);
         remove(index);
@@ -107,7 +102,7 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private void hasElement(T element) {
+    private void ensureElementsPresence(T element) {
         for (int i = 0; i < size; i++) {
             if (containsElement(element, i)) {
                 return;
@@ -132,5 +127,11 @@ public class ArrayList<T> implements List<T> {
             return true;
         }
         return false;
+    }
+
+    private void ensureCapacity() {
+        if (size == elementData.length) {
+            elementData = grow();
+        }
     }
 }
