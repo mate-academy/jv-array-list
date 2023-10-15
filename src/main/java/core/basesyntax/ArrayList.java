@@ -8,6 +8,9 @@ public class ArrayList<T> implements List<T> {
     private static final double RESIZE_MULTIPLIER = 1.5;
     private T[] arrayList;
     private int size;
+    private final String message = "Index should be in the range 0 to ";
+    private final String message2 = "Elements do not exist";
+    private final String message3 = "Capacity can't be less than 0";
 
     public ArrayList() {
         this.arrayList = (T[]) new Object[DEFAULT_CAPACITY];
@@ -15,33 +18,22 @@ public class ArrayList<T> implements List<T> {
 
     public ArrayList(int capacity) {
         if (capacity < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Capacity can't be less than 0");
+            throw new ArrayListIndexOutOfBoundsException(message3);
         }
         this.arrayList = (T[]) new Object [capacity];
     }
 
     @Override
     public void add(T value) {
-        if (size == arrayList.length) {
-            arrayList = letItGrow();
-
-        }
-        arrayList[size] = value;
-        size++;
+        grow();
+        arrayList[size++] = value;
     }
 
     @Override
     public void add(T value, int index) {
         isCorrectIndex(index, size);
-        if (size + 1 > arrayList.length) {
-            arrayList = letItGrow();
-        }
-        if (size != 0) {
-            System.arraycopy(arrayList, index, arrayList, index + 1, size - index);
-
-        } else {
-            System.arraycopy(arrayList, index, arrayList, index + 1, size);
-        }
+        grow();
+        System.arraycopy(arrayList, index, arrayList, index + 1, size - index);
         arrayList[index] = value;
         size++;
     }
@@ -69,11 +61,7 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         isCorrectIndex(index, size - 1);
         T removedObject = arrayList[index];
-        if (index == size - 1) {
-            System.arraycopy(arrayList, index, arrayList, index, 1);
-        } else {
-            System.arraycopy(arrayList, index + 1, arrayList, index, size - 1);
-        }
+        System.arraycopy(arrayList, index + 1, arrayList, index, size - index - 1);
         size--;
         return removedObject;
     }
@@ -85,7 +73,7 @@ public class ArrayList<T> implements List<T> {
                 return remove(i);
             }
         }
-        throw new NoSuchElementException("Elements do not exist" + element);
+        throw new NoSuchElementException(message2 + element);
     }
 
     @Override
@@ -98,15 +86,17 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private T[] letItGrow() {
-        return arrayList = Arrays.copyOf(arrayList,
-                (int)Math. round(arrayList.length * RESIZE_MULTIPLIER));
+    private T[] grow() {
+        if (size == arrayList.length) {
+            arrayList = Arrays.copyOf(arrayList,
+                    (int) Math.round(arrayList.length * RESIZE_MULTIPLIER));
+        }
+        return arrayList;
     }
 
-    private void isCorrectIndex(int index,int size) {
+    private void isCorrectIndex(int index, int size) {
         if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("Index should be in the range 0 to "
-                    + size);
+            throw new ArrayListIndexOutOfBoundsException(message + size);
         }
     }
 }
