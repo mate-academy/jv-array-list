@@ -6,22 +6,22 @@ import java.util.NoSuchElementException;
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private static final double GROWTH_FACTOR = 1.5;
+    private static final String NO_SUCH_ELEMENT_MESSAGE = "Element not found: ";
+    private static final String INDEX_OUT_OF_BOUND_MESSAGE = "Index out of bound: ";
     private Object[] elementData = new Object[DEFAULT_CAPACITY];
     private int size;
 
     @Override
     public void add(T value) {
         if (size == elementData.length) {
-            grow();
+            growIfNeeded();
         }
         elementData[size++] = value;
     }
 
     @Override
     public void add(T value, int index) {
-        if (size == elementData.length) {
-            grow();
-        }
+        growIfNeeded();
         if (index != size) {
             checkIndex(index);
             System.arraycopy(elementData, index, elementData, index + 1, size - index);
@@ -32,7 +32,9 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        ensureCapacity(size + list.size());
+        if (size + list.size() >= elementData.length) {
+            growIfNeeded();
+        }
         for (int i = 0; i < list.size(); i++) {
             add(list.get(i));
         }
@@ -67,7 +69,7 @@ public class ArrayList<T> implements List<T> {
                 return remove(i);
             }
         }
-        throw new NoSuchElementException("Element not found: " + element);
+        throw new NoSuchElementException(NO_SUCH_ELEMENT_MESSAGE + element);
     }
 
     @Override
@@ -82,19 +84,14 @@ public class ArrayList<T> implements List<T> {
 
     private void checkIndex(int index) {
         if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Wrong index: " + index
-                    + ", Size: " + size);
+            throw new ArrayListIndexOutOfBoundsException(INDEX_OUT_OF_BOUND_MESSAGE + index);
         }
     }
 
-    private void ensureCapacity(int capacity) {
-        if (capacity >= elementData.length) {
-            grow();
+    private void growIfNeeded() {
+        if (size == elementData.length) {
+            int newCapacity = (int) (elementData.length * GROWTH_FACTOR);
+            elementData = Arrays.copyOf(elementData, newCapacity);
         }
-    }
-
-    private void grow() {
-        int newCapacity = (int) (elementData.length * GROWTH_FACTOR);
-        elementData = Arrays.copyOf(elementData, newCapacity);
     }
 }
