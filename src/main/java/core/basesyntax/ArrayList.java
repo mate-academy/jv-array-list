@@ -1,6 +1,7 @@
 package core.basesyntax;
 
 import java.util.Arrays;
+import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
@@ -21,7 +22,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException(" ");
+            throwOutOfBoundsException(index);
         }
 
         ensureCapacity(size + 1);
@@ -43,8 +44,8 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("Index out of bounds");
+        if (index < 0 || index > size - 1) {
+            throwOutOfBoundsException(index);
         }
         return (T) array[index];
     }
@@ -52,7 +53,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void set(T value, int index) {
         if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index out of bounds");
+            throwOutOfBoundsException(index);
         }
         array[index] = value;
     }
@@ -60,29 +61,29 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index out of bounds");
+            throwOutOfBoundsException(index);
         }
-
-        T removedValue = (T) array[index];
-
+        final T removedValue = (T) array[index];
         for (int i = index; i < size - 1; i++) {
             array[i] = array[i + 1];
         }
-
         array[size - 1] = null;
         size--;
-
         return removedValue;
     }
 
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if (element.equals(array[i])) {
+            if ((array[i] == null) || (element == null)) {
+                if (element == array[i]) {
+                    return remove(i);
+                }
+            } else if (element.hashCode() == array[i].hashCode()) {
                 return remove(i);
             }
         }
-        return null;
+        throw new NoSuchElementException("There is no such element");
     }
 
     @Override
@@ -102,9 +103,8 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    public static class ArrayListIndexOutOfBoundsException extends IndexOutOfBoundsException {
-        public ArrayListIndexOutOfBoundsException(String message) {
-            super(message);
-        }
+    private void throwOutOfBoundsException(int index) {
+        throw new ArrayListIndexOutOfBoundsException("Given index is out of bounds for this list, "
+                + "given index: " + index);
     }
 }
