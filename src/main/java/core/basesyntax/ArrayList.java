@@ -41,7 +41,7 @@ public class ArrayList<T> implements List<T> {
         if (!indexCheckForExist(index, size)) {
             throw new ArrayListIndexOutOfBoundsException("Index out of range");
         }
-        return (T)elementData[index];
+        return (T) elementData[index];
     }
 
     @Override
@@ -54,39 +54,37 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(int index) {
+        final int newSize;
         if (!indexCheckForExist(index, size)) {
             throw new ArrayListIndexOutOfBoundsException("Index is out of range");
         }
-        final Object[] temp = elementData;
         T oldValue = (T) elementData[index];
-        fastRemove(temp, index);
+        if ((newSize = size - 1) > index) {
+            System.arraycopy(elementData, index + 1, elementData, index, newSize - index);
+        }
+        elementData[size = newSize] = null;
         return oldValue;
     }
 
     @Override
     public T remove(T element) {
-        final int size = this.size;
-        int i;
-        boolean noElement = false;
-        if (element == null) {
-            for (i = 0; i < size; i++) {
-                if (elementData[i] == null) {
-                    break;
-                }
+        final int newSize;
+        int index;
+        for (index = 0; index < size; index++) {
+            if (element == elementData[index]
+                    || (element != null && element.equals(elementData[index]))) {
+                break;
             }
-        } else {
-            for (i = 0; i < size; i++) {
-                if (element.equals(elementData[i])) {
-                    break;
-                }
-                if (i == size - 1) {
-                    throw new NoSuchElementException("NO such element");
-                }
+            if (index == size - 1) {
+                throw new NoSuchElementException("NO such element");
             }
         }
-        Object removedValue = elementData[i];
-        fastRemove(elementData, i);
-        return (T)removedValue;
+        Object removedValue = elementData[index];
+        if ((newSize = size - 1) > index) {
+            System.arraycopy(elementData, index + 1, elementData, index, newSize - index);
+        }
+        elementData[size = newSize] = null;
+        return (T) removedValue;
     }
 
     @Override
@@ -107,15 +105,6 @@ public class ArrayList<T> implements List<T> {
         if (index > size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Index is out of range");
         }
-
-    }
-
-    private void fastRemove(Object[] array, int index) {
-        final int newSize;
-        if ((newSize = size - 1) > index) {
-            System.arraycopy(array, index + 1, array, index, newSize - index);
-        }
-        array[size = newSize] = null;
     }
 
     private void resizeWhenFull() {
@@ -124,9 +113,8 @@ public class ArrayList<T> implements List<T> {
             int oldLength = elementData.length;
             int newLength = oldLength + (Math.round((float) oldLength / 2));
             Object[] newValue = new Object[newLength];
-            System.arraycopy(oldValue,0,newValue,0,oldValue.length);
+            System.arraycopy(oldValue, 0, newValue, 0, oldValue.length);
             elementData = newValue;
         }
     }
 }
-
