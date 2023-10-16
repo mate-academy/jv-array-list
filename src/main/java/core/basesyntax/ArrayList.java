@@ -13,9 +13,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (size == elementData.length) {
-            growIfNeeded();
-        }
+        growIfNeeded();
         elementData[size++] = value;
     }
 
@@ -32,9 +30,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        if (size + list.size() >= elementData.length) {
-            growIfNeeded();
-        }
+        growIfNeeded();
         for (int i = 0; i < list.size(); i++) {
             add(list.get(i));
         }
@@ -64,7 +60,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if ((elementData[i] == null && element == null)
+            if ((elementData[i] == element)
                     || (elementData[i] != null && elementData[i].equals(element))) {
                 return remove(i);
             }
