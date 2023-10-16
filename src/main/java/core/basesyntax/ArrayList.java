@@ -33,19 +33,14 @@ public class ArrayList<T> implements List<T> {
         }
         size++;
         growIfArrayFull();
-        moveElementsRight(index + 1);
+        System.arraycopy(arrayUnderneath, index, arrayUnderneath, index + 1, arrayUnderneath.length - (index + 1));
         arrayUnderneath[index] = value;
     }
 
     @Override
     public void addAll(List<T> list) {
-        int firstEmptyIndex = size;
-        int indexFollower = 0;
-        size += list.size();
-        growIfArrayFull();
-        for (int i = firstEmptyIndex; i < size; i++) {
-            arrayUnderneath[i] = list.get(indexFollower);
-            indexFollower++;
+        for (int i = 0; i < list.size(); i++) {
+            add(list.get(i));
         }
     }
 
@@ -65,42 +60,21 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         validIndexCheck(index);
         T elementToRemove = arrayUnderneath[index];
-        moveElementsLeft(index);
+        removeElement(index);
         return elementToRemove;
     }
 
     @Override
     public T remove(T element) {
-        int indexToRemove = -1;
-        T elementToRemove = null;
-
-        if (element == null) {
-            for (int i = 0; i < size; i++) {
-                if (element == arrayUnderneath[i]) {
-                    elementToRemove = arrayUnderneath[i];
-                    indexToRemove = i;
-                    break;
-                }
-            }
-            if (indexToRemove == -1) {
-                throw new NoSuchElementException("No such element: " + element);
-            }
-            moveElementsLeft(indexToRemove);
-            return elementToRemove;
-        }
-
         for (int i = 0; i < size; i++) {
-            if (element.equals(arrayUnderneath[i])) {
-                elementToRemove = arrayUnderneath[i];
-                indexToRemove = i;
-                break;
+            if (element == arrayUnderneath[i] || (element != null
+                    && element.equals(arrayUnderneath[i]))) {
+                T elementToRemove = arrayUnderneath[i];
+                removeElement(i);
+                return elementToRemove;
             }
         }
-        if (indexToRemove == -1) {
-            throw new NoSuchElementException("No such element: " + element);
-        }
-        moveElementsLeft(indexToRemove);
-        return elementToRemove;
+        throw new NoSuchElementException("No such element: " + element);
     }
 
     @Override
@@ -114,7 +88,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void growIfArrayFull() {
-        while (size >= arrayUnderneath.length) {
+        if (size >= arrayUnderneath.length) {
             int newArraySize = (int) Math.round(arrayUnderneath.length * GROWTH_MULTIPLIER);
             T[] newArray = (T[]) new Object[newArraySize];
             System.arraycopy(arrayUnderneath, 0, newArray, 0, arrayUnderneath.length);
@@ -128,16 +102,9 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private void moveElementsLeft(int startingIndex) {
-        for (int i = startingIndex; i < size; i++) {
-            arrayUnderneath[i] = arrayUnderneath[i + 1];
-        }
+    private void removeElement(int indexToRemove) {
+        System.arraycopy(arrayUnderneath, indexToRemove + 1, arrayUnderneath, indexToRemove,
+                arrayUnderneath.length - (indexToRemove + 1));
         size--;
-    }
-
-    private void moveElementsRight(int startingIndex) {
-        for (int i = size - 1; i >= startingIndex; i--) {
-            arrayUnderneath[i] = arrayUnderneath[i - 1];
-        }
     }
 }
