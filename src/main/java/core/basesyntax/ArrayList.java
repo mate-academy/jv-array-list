@@ -33,7 +33,8 @@ public class ArrayList<T> implements List<T> {
         }
         size++;
         growIfArrayFull();
-        System.arraycopy(arrayUnderneath, index, arrayUnderneath, index + 1, arrayUnderneath.length - (index + 1));
+        System.arraycopy(arrayUnderneath, index, arrayUnderneath, index + 1,
+                arrayUnderneath.length - (index + 1));
         arrayUnderneath[index] = value;
     }
 
