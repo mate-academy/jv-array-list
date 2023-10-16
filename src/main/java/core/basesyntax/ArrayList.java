@@ -114,12 +114,9 @@ public class ArrayList<T> implements List<T> {
         for (index = 0; index < size; index++) {
             if (element == elementData[index]
                     || (element != null && element.equals(elementData[index]))) {
-                break;
-            }
-            if (index == size - 1) {
-                throw new NoSuchElementException(NO_ELEMENT_ERROR_MSG);
+                return index;
             }
         }
-        return index;
+        throw new NoSuchElementException(NO_ELEMENT_ERROR_MSG);
     }
 }
