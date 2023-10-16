@@ -17,9 +17,6 @@ public class ArrayList<T> implements List<T> {
     private void growIfArrayFull() {
         if (size >= array.length) {
             int newCapacity = (int) (array.length * GROWTH_NUMBER);
-            if (newCapacity <= size) {
-                newCapacity = size + 1;
-            }
             array = Arrays.copyOf(array, newCapacity);
         }
     }
@@ -33,7 +30,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("Such index can not be add" + index);
+            throw new ArrayListIndexOutOfBoundsException("Value can not be added to such index: "
+                    + index);
         }
         growIfArrayFull();
         System.arraycopy(array, index, array, index + 1, size - index);
@@ -51,7 +49,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Such index don not exist");
+            throw new ArrayListIndexOutOfBoundsException("Such index do not exist: " + index);
         }
         return array[index];
     }
@@ -59,7 +57,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void set(T value, int index) {
         if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Can not set in such index");
+            throw new ArrayListIndexOutOfBoundsException("Value can`t be set to such index: "
+                    + index);
         }
         array[index] = value;
     }
@@ -67,7 +66,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         if (index < 0 | index > size) {
-            throw new ArrayListIndexOutOfBoundsException("Such index don not exist");
+            throw new ArrayListIndexOutOfBoundsException("Such index do not exist: "
+                    + index);
         }
         T removeIndex = get(index);
         int moveStep = size - index - 1;
@@ -92,7 +92,7 @@ public class ArrayList<T> implements List<T> {
                 return removedElement;
             }
         }
-        throw new NoSuchElementException("Element not found");
+        throw new NoSuchElementException("Element not found: " + element);
     }
 
     @Override
