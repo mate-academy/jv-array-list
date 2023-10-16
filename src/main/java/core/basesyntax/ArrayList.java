@@ -4,13 +4,13 @@ import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
+    private static final String ELEMENTS_EXISTS_MESSAGE = "Elements do not exist";
+    private static final String CAPACITY_MESSAGE = "Capacity can't be less than 0";
+    private static final String INDEX_MESSAGE = "Index should be in the range 0 to ";
     private static final int DEFAULT_CAPACITY = 10;
     private static final double RESIZE_MULTIPLIER = 1.5;
     private T[] arrayList;
     private int size;
-    private final String message = "Index should be in the range 0 to ";
-    private final String message2 = "Elements do not exist";
-    private final String message3 = "Capacity can't be less than 0";
 
     public ArrayList() {
         this.arrayList = (T[]) new Object[DEFAULT_CAPACITY];
@@ -18,7 +18,7 @@ public class ArrayList<T> implements List<T> {
 
     public ArrayList(int capacity) {
         if (capacity < 0) {
-            throw new ArrayListIndexOutOfBoundsException(message3);
+            throw new ArrayListIndexOutOfBoundsException(CAPACITY_MESSAGE);
         }
         this.arrayList = (T[]) new Object [capacity];
     }
@@ -73,7 +73,7 @@ public class ArrayList<T> implements List<T> {
                 return remove(i);
             }
         }
-        throw new NoSuchElementException(message2 + element);
+        throw new NoSuchElementException(ELEMENTS_EXISTS_MESSAGE + element);
     }
 
     @Override
@@ -86,17 +86,16 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private T[] grow() {
+    private void grow() {
         if (size == arrayList.length) {
             arrayList = Arrays.copyOf(arrayList,
                     (int) Math.round(arrayList.length * RESIZE_MULTIPLIER));
         }
-        return arrayList;
     }
 
     private void isCorrectIndex(int index, int size) {
         if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException(message + size);
+            throw new ArrayListIndexOutOfBoundsException(INDEX_MESSAGE + size);
         }
     }
 }
