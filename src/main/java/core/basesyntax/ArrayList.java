@@ -30,10 +30,8 @@ public class ArrayList<T> implements List<T> {
             rangeIndexCheck(index);
         }
 
-        if (index <= numberOfElements) {
-            System.arraycopy(elements, index, elements,
-                    index + 1, numberOfElements - index);
-        }
+        System.arraycopy(elements, index, elements,
+                index + 1, numberOfElements - index);
         elements[index] = value;
         numberOfElements++;
     }
@@ -60,11 +58,9 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         rangeIndexCheck(index);
-        final T removedElement = (T)elements[index];
-
-        for (int i = index + 1; i < numberOfElements; i++) {
-            elements[i - 1] = elements[i];
-        }
+        final T removedElement = (T) elements[index];
+        System.arraycopy(elements, index + 1, elements, index,
+                numberOfElements - index - 1);
         elements[numberOfElements - 1] = null;
         numberOfElements--;
         return removedElement;
@@ -89,7 +85,7 @@ public class ArrayList<T> implements List<T> {
 
     private int findIndex(T element) {
         for (int i = 0; i < numberOfElements; i++) {
-            if ((element == null && elements[i] == null)
+            if (element == elements[i]
                     || (elements[i] != null && elements[i].equals(element))) {
                 return i;
             }
