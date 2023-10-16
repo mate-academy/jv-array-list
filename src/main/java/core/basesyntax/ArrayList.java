@@ -58,9 +58,7 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         rangeCheckForRemoveAndSetAndGet(index);
         final T resultValue = (T) elementData[index];
-        if (index < size - 1) {
-            System.arraycopy(elementData, index + 1, elementData, index, size - index - 1);
-        }
+        System.arraycopy(elementData, index + 1, elementData, index, size - index - 1);
         elementData[size - 1] = null;
         size--;
         return resultValue;
@@ -104,7 +102,7 @@ public class ArrayList<T> implements List<T> {
 
     private void ensureElementsPresence(T element) {
         for (int i = 0; i < size; i++) {
-            if (containsElement(element, i)) {
+            if (isEquals(element, i)) {
                 return;
             }
         }
@@ -114,19 +112,16 @@ public class ArrayList<T> implements List<T> {
     private int getIndex(T element) {
         int index = 0;
         for (int i = 0; i < size; i++) {
-            if (containsElement(element, i)) {
+            if (isEquals(element, i)) {
                 index = i;
             }
         }
         return index;
     }
 
-    private boolean containsElement(T element, int index) {
-        if (elementData[index] == element
-                || (elementData[index] != null && elementData[index].equals(element))) {
-            return true;
-        }
-        return false;
+    private boolean isEquals(T element, int index) {
+        return (elementData[index] == element
+                || (elementData[index] != null && elementData[index].equals(element)));
     }
 
     private void ensureCapacity() {
