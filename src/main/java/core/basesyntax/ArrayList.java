@@ -27,7 +27,7 @@ public class ArrayList<T> implements List<T> {
         }
         extendArray();
         checkIndex(index);
-        arrayElements = copyArray(index, index + 1, size - index);
+        System.arraycopy(arrayElements, index, arrayElements, index + 1, size - index);
         arrayElements[index] = value;
         size++;
     }
@@ -55,7 +55,7 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         checkIndex(index);
         T removedElement = arrayElements[index];
-        arrayElements = copyArray(index + 1, index, size - index - 1);
+        System.arraycopy(arrayElements,index + 1, arrayElements, index, size - index - 1);
         size--;
         return removedElement;
     }
@@ -88,33 +88,14 @@ public class ArrayList<T> implements List<T> {
 
     private void extendArray() {
         if (arrayElements.length == size) {
-            arrayElements = copyToBiggerArray(arrayElements, (int) (size * ARRAY_SIZE_MULTIPLIER));
+            T[] newArrayElements = (T[]) new Object[(int) (size * ARRAY_SIZE_MULTIPLIER)];
+            System.arraycopy(arrayElements, 0, newArrayElements, 0, size);
+            arrayElements = newArrayElements;
         }
-    }
-
-    private T[] copyToBiggerArray(T[] elements, int newCapacity) {
-        T[] result = (T[]) new Object[newCapacity];
-        for (int i = 0; i < elements.length; i++) {
-            result[i] = elements[i];
-        }
-        return result;
     }
 
     private Boolean equals(T firstElement, T secondElement) {
         return (firstElement == secondElement)
                 || (firstElement != null && firstElement.equals(secondElement));
-    }
-
-    private T[] copyArray(int srcPos, int destPos, int length) {
-        int counter = 0;
-        T[] temporary = (T[]) new Object[destPos + length + 1];
-        for (int i = 0; i < destPos; i++) {
-            temporary[i] = arrayElements[i];
-        }
-        while (counter < length) {
-            temporary[destPos + counter] = arrayElements[srcPos + counter];
-            counter++;
-        }
-        return temporary;
     }
 }
