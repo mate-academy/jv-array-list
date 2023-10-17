@@ -7,34 +7,30 @@ public class ArrayList<T> implements List<T> {
     private static final String INDEX_ERROR_MESSAGE =
             "The passed index is not allowed";
     private static final String ELEMENT_NOT_FOUND_MESSAGE = "Element not found";
-    private Object[] elementData;
+    private Object[] elements;
     private int size;
 
     public ArrayList() {
-        this.elementData = new Object[DEFAULT_CAPACITY_FOR_ARRAY];
+        this.elements = new Object[DEFAULT_CAPACITY_FOR_ARRAY];
     }
 
     @Override
     public void add(T value) {
-        if (size == elementData.length) {
-            resize();
-        }
-        elementData[size] = value;
+        checkSize();
+        elements[size] = value;
         size++;
     }
 
     @Override
     public void add(T value, int index) {
-        validateIndex(index, true);
-        if (size == elementData.length) {
-            resize();
-        }
+        validateIndexForAdd(index);
+        checkSize();
         if (size == index) {
             add(value);
         } else {
-            System.arraycopy(elementData, index, elementData, index + 1,
+            System.arraycopy(elements, index, elements, index + 1,
                     size - index);
-            set(value, index);
+            elements[index] = value;
             size++;
         }
     }
@@ -42,43 +38,37 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void addAll(List<T> list) {
         int listSize = list.size();
-        while (size + listSize > elementData.length) {
+        while (size + listSize > elements.length) {
             resize();
         }
-        System.arraycopy(toArray(list), 0, elementData, size, listSize);
+        System.arraycopy(toArray(list), 0, elements, size, listSize);
         size += listSize;
     }
 
     @Override
     public T get(int index) {
-        validateIndex(index, false);
-        return (T) elementData[index];
+        validateIndexNotForAdd(index);
+        return (T) elements[index];
     }
 
     @Override
     public void set(T value, int index) {
-        validateIndex(index, false);
-        elementData[index] = value;
+        validateIndexNotForAdd(index);
+        elements[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        validateIndex(index, false);
-        final T element = this.get(index);
-        System.arraycopy(elementData, index + 1, elementData, index,
-                size - index - 1);
-        size--;
-        elementData[size] = null;
+        validateIndexNotForAdd(index);
+        final T element = (T) elements[index];
+        removeElement(index);
         return element;
     }
 
     @Override
     public T remove(T element) {
-        int index = findIndexOfElementToRemove(element);
-        System.arraycopy(elementData, index + 1, elementData, index,
-                size - index - 1);
-        size--;
-        elementData[size] = null;
+        int index = findIndexOfElement(element);
+        removeElement(index);
         return element;
     }
 
@@ -92,11 +82,16 @@ public class ArrayList<T> implements List<T> {
         return this.size() == 0;
     }
 
+    private void checkSize() {
+        if (size == elements.length) {
+            resize();
+        }
+    }
+
     private void resize() {
-        Object[] oldArray = elementData;
-        int newCapacityForArray = oldArray.length + (oldArray.length >> 1);
-        elementData = new Object[newCapacityForArray];
-        System.arraycopy(oldArray, 0, elementData, 0, oldArray.length);
+        Object[] oldArray = elements;
+        elements = new Object[oldArray.length + (oldArray.length >> 1)];
+        System.arraycopy(oldArray, 0, elements, 0, oldArray.length);
     }
 
     private Object[] toArray(List<T> list) {
@@ -108,23 +103,32 @@ public class ArrayList<T> implements List<T> {
         return result;
     }
 
-    private void validateIndex(int index, boolean isForAdd) {
-        if (isForAdd && (index < 0 || index > size)) {
-            throw new ArrayListIndexOutOfBoundsException(INDEX_ERROR_MESSAGE);
-        }
-        if (!isForAdd && (index < 0 || index >= size)) {
+    private void validateIndexForAdd(int index) {
+        if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException(INDEX_ERROR_MESSAGE);
         }
     }
 
-    private int findIndexOfElementToRemove(T element) {
+    private void validateIndexNotForAdd(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException(INDEX_ERROR_MESSAGE);
+        }
+    }
+
+    private int findIndexOfElement(T element) {
         for (int i = 0; i < size; i++) {
-            T currentValue = this.get(i);
+            T currentValue = (T) elements[i];
             if (element == currentValue
                     || (element != null && element.equals(currentValue))) {
                 return i;
             }
         }
         throw new NoSuchElementException(ELEMENT_NOT_FOUND_MESSAGE);
+    }
+
+    private void removeElement(int index) {
+        System.arraycopy(elements, index + 1, elements, index,
+                size - index - 1);
+        elements[--size] = null;
     }
 }
