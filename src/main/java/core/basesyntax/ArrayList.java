@@ -19,7 +19,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        checkIndex(index, false);
+        checkExclusiveIndex(index);
         ensureCapacity(size + 1);
         System.arraycopy(array, index, array, index + 1, size - index);
         array[index] = value;
@@ -36,19 +36,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        checkIndex(index, true);
+        checkInclusiveIndex(index);
         return (T) array[index];
     }
 
     @Override
     public void set(T value, int index) {
-        checkIndex(index, true);
+        checkInclusiveIndex(index);
         array[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        checkIndex(index, true);
+        checkInclusiveIndex(index);
         T removedElement = (T) array[index];
         int numMoved = size - index - 1;
         if (numMoved > 0) {
@@ -86,15 +86,15 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void checkIndex(int index, boolean inclusive) {
-        if (inclusive) {
-            if (index < 0 || index >= size) {
-                throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
-            }
-        } else {
-            if (index < 0 || index > size) {
-                throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
-            }
+    private void checkInclusiveIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
+        }
+    }
+
+    private void checkExclusiveIndex(int index) {
+        if (index < 0 || index > size) {
+            throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
         }
     }
 
@@ -102,8 +102,8 @@ public class ArrayList<T> implements List<T> {
         if (minCapacity > array.length) {
             int newCapacity = Math.max(array.length * 3 / 2 + 1, minCapacity);
             Object[] newArray = new Object[newCapacity];
-            for (int i = 0; i < size; i++) {
-                newArray[i] = array[i];
+            if (size >= 0) {
+                System.arraycopy(array, 0, newArray, 0, size);
             }
             array = newArray;
         }
