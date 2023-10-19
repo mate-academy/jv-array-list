@@ -37,11 +37,15 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    @Override
-    public void add(T value) {
+    private void checkCapacity() {
         if (size == capacity) {
             grow();
         }
+    }
+
+    @Override
+    public void add(T value) {
+        checkCapacity();
         elementData[size] = value;
         size++;
     }
@@ -49,9 +53,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         checkAddIndex(index);
-        if (size == capacity) {
-            grow();
-        }
+        checkCapacity();
         System.arraycopy(elementData, index, elementData, index + 1, size - index);
         elementData[index] = value;
         size++;
@@ -95,7 +97,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < elementData.length; i++) {
-            if (elementData[i] == null ? element == null : elementData[i].equals(element)) {
+            if (elementData[i] != null && elementData[i].equals(element)
+                    || elementData[i] == null && element == null) {
                 return remove(i);
             }
         }
