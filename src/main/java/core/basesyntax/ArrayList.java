@@ -8,13 +8,13 @@ public class ArrayList<T> implements List<T> {
     private int size;
 
     public ArrayList() {
-        elementData = new Object[]{};
+        elementData = new Object[DEFAULT_CAPACITY];
     }
 
     @Override
     public void add(T value) {
         if (size == elementData.length) {
-            elementData = grow(size + 1);
+            grow();
         }
         elementData[size] = value;
         size++;
@@ -27,7 +27,7 @@ public class ArrayList<T> implements List<T> {
                     "Index " + index + " out of bounds for length" + elementData.length);
         }
         if (size == elementData.length) {
-            elementData = grow(size + 1);
+            grow();
         }
         System.arraycopy(elementData, index, elementData, index + 1, size - index);
         elementData[index] = value;
@@ -36,26 +36,13 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        if (size + list.size() >= elementData.length) {
-            elementData = grow(size + list.size());
+        while (size + list.size() >= elementData.length) {
+            grow();
         }
         for (int i = 0; i < list.size(); i++) {
             elementData[size + i] = list.get(i);
         }
         size += list.size();
-    }
-
-    private Object[] grow(int minCapacity) {
-        int oldCapacity = elementData.length;
-        if (oldCapacity > 0) {
-            int newCapacity = Math.max((int)(elementData.length * 1.5f), minCapacity);
-            Object[] newElementData = new Object[newCapacity];
-            System.arraycopy(elementData, 0, newElementData, 0, elementData.length);
-            elementData = newElementData;
-            return elementData;
-        } else {
-            return elementData = new Object[Math.max(DEFAULT_CAPACITY, minCapacity)];
-        }
     }
 
     @Override
@@ -111,5 +98,12 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayListIndexOutOfBoundsException(
                     "Index " + index + " out of bounds for length" + elementData.length);
         }
+    }
+
+    private void grow() {
+        int newCapacity = (int)(elementData.length * 1.5f);
+        Object[] newElementData = new Object[newCapacity];
+        System.arraycopy(elementData, 0, newElementData, 0, elementData.length);
+        elementData = newElementData;
     }
 }
