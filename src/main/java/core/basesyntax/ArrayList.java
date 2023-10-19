@@ -4,12 +4,11 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    private static final Object[] DEFAULT_CAPACITY_EMPTY_ELEMENT_DATA = {};
     private Object[] elementData;
     private int size;
 
     public ArrayList() {
-        elementData = DEFAULT_CAPACITY_EMPTY_ELEMENT_DATA;
+        elementData = new Object[]{};
     }
 
     @Override
@@ -18,7 +17,7 @@ public class ArrayList<T> implements List<T> {
             elementData = grow(size + 1);
         }
         elementData[size] = value;
-        size = size + 1;
+        size++;
     }
 
     @Override
@@ -32,7 +31,7 @@ public class ArrayList<T> implements List<T> {
         }
         System.arraycopy(elementData, index, elementData, index + 1, size - index);
         elementData[index] = value;
-        size = size + 1;
+        size++;
     }
 
     @Override
@@ -41,12 +40,12 @@ public class ArrayList<T> implements List<T> {
         for (int i = 0; i < list.size(); i++) {
             elementData[size + i] = list.get(i);
         }
-        size = size + list.size();
+        size += list.size();
     }
 
     private Object[] grow(int minCapacity) {
         int oldCapacity = elementData.length;
-        if (oldCapacity > 0 || elementData != DEFAULT_CAPACITY_EMPTY_ELEMENT_DATA) {
+        if (oldCapacity > 0) {
             int newCapacity = Math.max((int)(elementData.length * 1.5f), minCapacity);
             Object[] newElementData = new Object[newCapacity];
             System.arraycopy(elementData, 0, newElementData, 0, elementData.length);
@@ -75,7 +74,7 @@ public class ArrayList<T> implements List<T> {
         final T removedElement = elementData(index);
         System.arraycopy(elementData, index + 1, elementData, index, size - 1 - index);
         elementData[size - 1] = null;
-        size = size - 1;
+        size--;
         return removedElement;
     }
 
