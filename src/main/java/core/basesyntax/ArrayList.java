@@ -3,44 +3,14 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    private int capacity = 10;
+    private static final int INITIAL_CAPACITY = 10;
+    private int capacity;
     private Object[] elementData;
-    private int size = 0;
+    private int size;
 
     public ArrayList() {
+        capacity = INITIAL_CAPACITY;
         elementData = new Object[capacity];
-    }
-
-    private void grow() {
-        int oldCapacity = capacity;
-        capacity = capacity + (capacity >> 1);
-        Object[] tempArray = new Object[capacity];
-        System.arraycopy(elementData, 0, tempArray, 0, oldCapacity);
-        elementData = tempArray;
-    }
-
-    private void grow(int addedSize) {
-        while (addedSize > elementData.length - size) {
-            grow();
-        }
-    }
-
-    private void checkIndex(int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("There is no element with this index");
-        }
-    }
-
-    private void checkAddIndex(int index) {
-        if (index > size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("This index is invalid");
-        }
-    }
-
-    private void checkCapacity() {
-        if (size == capacity) {
-            grow();
-        }
     }
 
     @Override
@@ -98,7 +68,7 @@ public class ArrayList<T> implements List<T> {
     public T remove(T element) {
         for (int i = 0; i < elementData.length; i++) {
             if (elementData[i] != null && elementData[i].equals(element)
-                    || elementData[i] == null && element == null) {
+                    || elementData[i] == element) {
                 return remove(i);
             }
         }
@@ -113,5 +83,37 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private void grow() {
+        int oldCapacity = capacity;
+        capacity = capacity + (capacity >> 1);
+        Object[] tempArray = new Object[capacity];
+        System.arraycopy(elementData, 0, tempArray, 0, oldCapacity);
+        elementData = tempArray;
+    }
+
+    private void grow(int addedSize) {
+        while (addedSize > elementData.length - size) {
+            grow();
+        }
+    }
+
+    private void checkIndex(int index) {
+        if (index >= size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("There is no element with this index");
+        }
+    }
+
+    private void checkAddIndex(int index) {
+        if (index > size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("This index is invalid");
+        }
+    }
+
+    private void checkCapacity() {
+        if (size == capacity) {
+            grow();
+        }
     }
 }
