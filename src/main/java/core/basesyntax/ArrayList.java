@@ -12,7 +12,6 @@ public class ArrayList<T> implements List<T> {
 
     public ArrayList() {
         elements = (T[]) new Object[DEFAULT_CAPACITY];
-        size = 0;
     }
 
     @Override
@@ -30,7 +29,7 @@ public class ArrayList<T> implements List<T> {
             arraycopy(elements, index, elements, index + 1, size - index);
         }
         elements[index] = value;
-        resizeArray(1);
+        size++;
     }
 
     @Override
@@ -57,7 +56,7 @@ public class ArrayList<T> implements List<T> {
         checkIndexIsInBounds(index);
         T element = elements[index];
         arraycopy(elements, index + 1, elements, index, size - index - 1);
-        resizeArray(-1);
+        size--;
         return element;
     }
 
@@ -79,10 +78,6 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
-    }
-
-    private void resizeArray(int delta) {
-        size += delta;
     }
 
     private void checkIndexIsInBounds(int index) {
