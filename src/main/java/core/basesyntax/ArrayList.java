@@ -57,8 +57,8 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         validateIndex(index);
         final T removedElement = (T) array[index];
-        for (int i = index; i < size - 1; i++) {
-            array[i] = array[i + 1];
+        if (index < size - 1) {
+            System.arraycopy(array, index + 1, array, index, size - 1 - index);
         }
         array[size - 1] = null;
         size--;
@@ -66,18 +66,12 @@ public class ArrayList<T> implements List<T> {
     }
 
     public T remove(T element) {
-        int index = -1;
         for (int i = 0; i < size; i++) {
-            if ((element == null && array[i] == null)
-                    || (element != null && element.equals(array[i]))) {
-                index = i;
-                break;
+            if (element == array[i] || (element != null && element.equals(array[i]))) {
+                return remove(i);
             }
         }
-        if (index == -1) {
-            throw new NoSuchElementException("Element cannot be found " + element);
-        }
-        return remove(index);
+        throw new NoSuchElementException("Element cannot be found " + element);
     }
 
     @Override
