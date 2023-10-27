@@ -4,17 +4,17 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    private Object[] elementData;
+    private T[] elementData;
     private int size;
 
     public ArrayList() {
-        elementData = new Object[DEFAULT_CAPACITY];
+        elementData = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
     @Override
     public void add(T value) {
         if (size == elementData.length) {
-            grow();
+            grow(size + 1);
         }
         elementData[size] = value;
         size++;
@@ -23,11 +23,10 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException(
-                    "Index " + index + " out of bounds for length" + elementData.length);
+            throw new ArrayListIndexOutOfBoundsException(messageIndexOutOfBoundsException(index));
         }
         if (size == elementData.length) {
-            grow();
+            grow(size + 1);
         }
         System.arraycopy(elementData, index, elementData, index + 1, size - index);
         elementData[index] = value;
@@ -36,8 +35,8 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        while (size + list.size() >= elementData.length) {
-            grow();
+        if (size + list.size() > elementData.length) {
+            grow(size + list.size());
         }
         for (int i = 0; i < list.size(); i++) {
             elementData[size + i] = list.get(i);
@@ -95,15 +94,18 @@ public class ArrayList<T> implements List<T> {
 
     private void checkToCorrectIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException(
-                    "Index " + index + " out of bounds for length" + elementData.length);
+            throw new ArrayListIndexOutOfBoundsException(messageIndexOutOfBoundsException(index));
         }
     }
 
-    private void grow() {
-        int newCapacity = (int)(elementData.length * 1.5f);
-        Object[] newElementData = new Object[newCapacity];
+    private void grow(int minCapacity) {
+        int newCapacity = Math.max((int)(elementData.length * 1.5f), minCapacity);
+        T[] newElementData = (T[])new Object[newCapacity];
         System.arraycopy(elementData, 0, newElementData, 0, elementData.length);
         elementData = newElementData;
+    }
+
+    private String messageIndexOutOfBoundsException(int index) {
+        return "Index " + index + " out of bounds for length" + elementData.length;
     }
 }
