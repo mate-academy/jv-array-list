@@ -4,11 +4,11 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    private Object[] array;
+    private T[] array;
     private int size;
 
     public ArrayList() {
-        this.array = new Object[DEFAULT_CAPACITY];
+        this.array = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
     @Override
@@ -37,7 +37,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         checkInclusiveIndex(index);
-        return (T) array[index];
+        return array[index];
     }
 
     @Override
@@ -49,7 +49,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         checkInclusiveIndex(index);
-        T removedElement = (T) array[index];
+        T removedElement = array[index];
         int numMoved = size - index - 1;
         if (numMoved > 0) {
             System.arraycopy(array, index + 1, array, index, numMoved);
@@ -59,20 +59,12 @@ public class ArrayList<T> implements List<T> {
     }
 
     @Override
-    public T remove(Object element) {
-        if (element == null) {
+    public T remove(T element) {
             for (int i = 0; i < size; i++) {
-                if (array[i] == null) {
+                if ((element == null && array[i] == null) || (element != null && element.equals(array[i]))) {
                     return remove(i);
                 }
             }
-        } else {
-            for (int i = 0; i < size; i++) {
-                if (element.equals(array[i])) {
-                    return remove(i);
-                }
-            }
-        }
         throw new NoSuchElementException("Element not found: " + element);
     }
 
@@ -101,7 +93,7 @@ public class ArrayList<T> implements List<T> {
     private void ensureCapacity(int minCapacity) {
         if (minCapacity > array.length) {
             int newCapacity = Math.max(array.length * 3 / 2 + 1, minCapacity);
-            Object[] newArray = new Object[newCapacity];
+            T[] newArray = (T[])new Object[newCapacity];
             if (size >= 0) {
                 System.arraycopy(array, 0, newArray, 0, size);
             }
