@@ -4,6 +4,8 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
+    private static final float INCREASE_CAPACITY_PERCENT = 1.5F;
+    private static final int INCREASE_CAPACITY_ENSURE = 1;
     private T[] array;
     private int size;
 
@@ -13,14 +15,18 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        ensureCapacity(size + 1);
+        if (checkCapacity(size + 1)) {
+            ensureCapacity(size + 1);
+        }
         array[size++] = value;
     }
 
     @Override
     public void add(T value, int index) {
         checkExclusiveIndex(index);
-        ensureCapacity(size + 1);
+        if (checkCapacity(size + 1)) {
+            ensureCapacity(size + 1);
+        }
         System.arraycopy(array, index, array, index + 1, size - index);
         array[index] = value;
         size++;
@@ -28,9 +34,8 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        ensureCapacity(size + list.size());
         for (int i = 0; i < list.size(); i++) {
-            array[size++] = list.get(i);
+            add(list.get(i));
         }
     }
 
@@ -50,9 +55,8 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         checkInclusiveIndex(index);
         T removedElement = array[index];
-        int numMoved = size - index - 1;
-        if (numMoved > 0) {
-            System.arraycopy(array, index + 1, array, index, numMoved);
+        for (int i = index; i < size - 1; i++) {
+            array[i] = array[i + 1];
         }
         array[--size] = null;
         return removedElement;
@@ -91,13 +95,16 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
+    private boolean checkCapacity(int index) {
+        return index > array.length;
+    }
+
     private void ensureCapacity(int minCapacity) {
-        if (minCapacity > array.length) {
-            int newCapacity = Math.max(array.length * 3 / 2 + 1, minCapacity);
-            T[] newArray = (T[])new Object[newCapacity];
-            if (size >= 0) {
-                System.arraycopy(array, 0, newArray, 0, size);
-            }
+        int newCapacity = (int) ((array.length * INCREASE_CAPACITY_PERCENT)
+                + INCREASE_CAPACITY_ENSURE);
+        T[] newArray = (T[])new Object[newCapacity];
+        if (size >= 0) {
+            System.arraycopy(array, 0, newArray, 0, size);
             array = newArray;
         }
     }
