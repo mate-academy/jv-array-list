@@ -14,7 +14,9 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        checkToGrow(1);
+        if (size == elementData.length) {
+            grow(size + 1);
+        }
         elementData[size] = value;
         size++;
     }
@@ -24,7 +26,9 @@ public class ArrayList<T> implements List<T> {
         if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException(messageIndexOutOfBoundsException(index));
         }
-        checkToGrow(1);
+        if (size == elementData.length) {
+            grow(size + 1);
+        }
         System.arraycopy(elementData, index, elementData, index + 1, size - index);
         elementData[index] = value;
         size++;
@@ -32,7 +36,9 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        checkToGrow(list.size());
+        if (size + list.size() >= elementData.length) {
+            grow(size + list.size());
+        }
         for (int i = 0; i < list.size(); i++) {
             elementData[size + i] = list.get(i);
         }
@@ -90,15 +96,6 @@ public class ArrayList<T> implements List<T> {
     private void checkToCorrectIndex(int index) {
         if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException(messageIndexOutOfBoundsException(index));
-        }
-    }
-
-    private void checkToGrow(int count) {
-        if (count <= 0) {
-            throw new IllegalArgumentException("Count should be a positive integer");
-        }
-        if (size + count >= elementData.length) {
-            grow(count);
         }
     }
 
