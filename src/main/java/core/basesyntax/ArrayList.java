@@ -4,7 +4,7 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    private static final double MIN_CAPACITY = 1.5;
+    private static final double GROWING_FACTOR = 1.5;
     private Object[] elementData;
     private int size;
 
@@ -32,35 +32,26 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        growIfArrayFull();
         for (int i = 0; i < list.size(); i++) {
-            growIfArrayFull();
-            this.elementData[size] = list.get(i);
-            size++;
+            add(list.get(i));
         }
     }
 
     @Override
     public T get(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("incorrect index");
-        }
+        indexChecker(index);
         return (T) elementData[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("incorrect index");
-        }
+        indexChecker(index);
         elementData[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("incorrect index");
-        }
+        indexChecker(index);
         Object removedElement = elementData[index];
         System.arraycopy(elementData, index + 1, elementData, index, size - index - 1);
         size--;
@@ -69,7 +60,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        int position = index(element);
+        int position = getIndex(element);
         if (position < 0) {
             throw new NoSuchElementException("element does not exist");
         }
@@ -87,7 +78,7 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    public int index(T element) {
+    private int getIndex(T element) {
         for (int i = 0; i < size; i++) {
             if ((element == elementData[i])
                     || (element != null && element.equals(elementData[i]))) {
@@ -99,9 +90,16 @@ public class ArrayList<T> implements List<T> {
 
     private void growIfArrayFull() {
         if (elementData.length == size) {
-            Object[] newArray = new Object[(int) (elementData.length * MIN_CAPACITY)];
+            Object[] newArray = new Object[(int) (elementData.length * GROWING_FACTOR)];
             System.arraycopy(elementData, 0, newArray, 0, size);
             elementData = newArray;
         }
+    }
+
+    private void indexChecker(int index) {
+        if ((index < 0 || index >= size)) {
+            throw new ArrayListIndexOutOfBoundsException("incorrect index");
+        }
+
     }
 }
