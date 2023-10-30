@@ -4,6 +4,7 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
+    private static final float GROW_FACTOR = 1.5f;
     private T[] elementData;
     private int size;
 
@@ -13,9 +14,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (size == elementData.length) {
-            grow(size + 1);
-        }
+        checkToGrow(1);
         elementData[size] = value;
         size++;
     }
@@ -25,9 +24,7 @@ public class ArrayList<T> implements List<T> {
         if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException(messageIndexOutOfBoundsException(index));
         }
-        if (size == elementData.length) {
-            grow(size + 1);
-        }
+        checkToGrow(1);
         System.arraycopy(elementData, index, elementData, index + 1, size - index);
         elementData[index] = value;
         size++;
@@ -35,9 +32,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        if (size + list.size() > elementData.length) {
-            grow(size + list.size());
-        }
+        checkToGrow(list.size());
         for (int i = 0; i < list.size(); i++) {
             elementData[size + i] = list.get(i);
         }
@@ -98,8 +93,17 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
+    private void checkToGrow(int count) {
+        if (count <= 0) {
+            throw new IllegalArgumentException("Count should be a positive integer");
+        }
+        if (size + count >= elementData.length) {
+            grow(count);
+        }
+    }
+
     private void grow(int minCapacity) {
-        int newCapacity = Math.max((int)(elementData.length * 1.5f), minCapacity);
+        int newCapacity = Math.max((int)(elementData.length * GROW_FACTOR), minCapacity);
         T[] newElementData = (T[])new Object[newCapacity];
         System.arraycopy(elementData, 0, newElementData, 0, elementData.length);
         elementData = newElementData;
