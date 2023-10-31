@@ -33,7 +33,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void addAll(List<T> list) {
         if (size + list.size() >= elementData.length) {
-            growByCapacity(size + list.size());
+            growToCapacity(size + list.size());
         }
         for (int i = 0; i < list.size(); i++) {
             elementData[size + i] = list.get(i);
@@ -108,7 +108,7 @@ public class ArrayList<T> implements List<T> {
         elementData = newElementData;
     }
 
-    private void growByCapacity(int newCapacity) {
+    private void growToCapacity(int newCapacity) {
         T[] newElementData = (T[])new Object[newCapacity];
         System.arraycopy(elementData, 0, newElementData, 0, elementData.length);
         elementData = newElementData;
