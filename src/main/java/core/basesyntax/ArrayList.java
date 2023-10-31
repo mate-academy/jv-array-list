@@ -14,9 +14,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (size == elementData.length) {
-            grow(size + 1);
-        }
+        growIfNeed();
         elementData[size] = value;
         size++;
     }
@@ -26,9 +24,7 @@ public class ArrayList<T> implements List<T> {
         if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException(messageIndexOutOfBoundsException(index));
         }
-        if (size == elementData.length) {
-            grow(size + 1);
-        }
+        growIfNeed();
         System.arraycopy(elementData, index, elementData, index + 1, size - index);
         elementData[index] = value;
         size++;
@@ -37,7 +33,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void addAll(List<T> list) {
         if (size + list.size() >= elementData.length) {
-            grow(size + list.size());
+            growByCapacity(size + list.size());
         }
         for (int i = 0; i < list.size(); i++) {
             elementData[size + i] = list.get(i);
@@ -99,8 +95,20 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private void grow(int minCapacity) {
-        int newCapacity = Math.max((int)(elementData.length * GROW_FACTOR), minCapacity);
+    private void growIfNeed() {
+        if (size >= elementData.length) {
+            grow();
+        }
+    }
+
+    private void grow() {
+        int newCapacity = (int)(elementData.length * GROW_FACTOR);
+        T[] newElementData = (T[])new Object[newCapacity];
+        System.arraycopy(elementData, 0, newElementData, 0, elementData.length);
+        elementData = newElementData;
+    }
+
+    private void growByCapacity(int newCapacity) {
         T[] newElementData = (T[])new Object[newCapacity];
         System.arraycopy(elementData, 0, newElementData, 0, elementData.length);
         elementData = newElementData;
