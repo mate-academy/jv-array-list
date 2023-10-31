@@ -4,18 +4,17 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    private Object[] list;
+    private static final double GROWTH_FACTOR = 1.5;
+    private T[] list;
     private int size;
-    private int currentCapacity;
 
     public ArrayList() {
-        list = new Object[DEFAULT_CAPACITY];
-        currentCapacity = DEFAULT_CAPACITY;
+        list = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
     @Override
     public void add(T value) {
-        if (size == currentCapacity) {
+        if (size == list.length) {
             grow();
         }
         list[size] = value;
@@ -31,7 +30,7 @@ public class ArrayList<T> implements List<T> {
             add(value);
             return;
         }
-        if (size == currentCapacity) {
+        if (size == list.length) {
             grow();
         }
         System.arraycopy(list, index, list, index + 1, size - index);
@@ -49,9 +48,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         checkIndex(index);
-        @SuppressWarnings("unchecked")
-        T element = (T) list[index];
-        return element;
+        return list[index];
     }
 
     @Override
@@ -77,9 +74,7 @@ public class ArrayList<T> implements List<T> {
         if (elIndex < 0) {
             throw new NoSuchElementException("Specified element is not in list");
         }
-        T removedElement = get(elIndex);
-        remove(elIndex);
-        return removedElement;
+        return remove(elIndex);
     }
 
     @Override
@@ -93,8 +88,8 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void grow() {
-        currentCapacity += currentCapacity / 2;
-        Object[] enlargedArray = new Object[currentCapacity];
+        int newCapacity = (int) (list.length * GROWTH_FACTOR);
+        T[] enlargedArray = (T[]) new Object[newCapacity];
         System.arraycopy(list, 0, enlargedArray, 0, size);
         list = enlargedArray;
     }
