@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>mate-academy</groupId>
-    <artifactId>array-list</artifactId>
+    <artifactId>jv-array-list</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <properties>
