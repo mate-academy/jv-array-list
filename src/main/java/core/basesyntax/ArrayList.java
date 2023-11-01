@@ -34,11 +34,20 @@ public class ArrayList<T> implements List<T> {
         size++;
         throwNewIndexOutOfBoundsException(index);
         growIfArrayFull();
-        for (int currentIndex = size - 2; currentIndex > index; currentIndex--) {
+        int currentIndex = 1;
+        if(size == 2) {
             T tempCurrentValueHolder = values[currentIndex];
             T tempPreviousValueHolder = values[currentIndex - 1];
             values[currentIndex + 1] = tempCurrentValueHolder;
             values[currentIndex] = tempPreviousValueHolder;
+        }
+        else if (size > 2) {
+            for (currentIndex = size - 2; currentIndex > index; currentIndex--) {
+                T tempCurrentValueHolder = values[currentIndex];
+                T tempPreviousValueHolder = values[currentIndex - 1];
+                values[currentIndex + 1] = tempCurrentValueHolder;
+                values[currentIndex] = tempPreviousValueHolder;
+            }
         }
         values[index] = value;
     }
