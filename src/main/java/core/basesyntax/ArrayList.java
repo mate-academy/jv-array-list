@@ -5,10 +5,10 @@ import java.util.NoSuchElementException;
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_VOLUME = 10;
     private int size = 0;
-    private Object[] list;
+    private T[] list;
 
     public ArrayList() {
-        list = new Object[DEFAULT_VOLUME];
+        list = (T[]) new Object[DEFAULT_VOLUME];
     }
 
     @Override
@@ -43,7 +43,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         checkIndex(index);
-        return (T) list[index];
+        return list[index];
     }
 
     @Override
@@ -55,7 +55,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
-        T element = (T) list[index];
+        T element = list[index];
         if (index == size - 1) {
             list[index] = null;
         } else {
@@ -99,7 +99,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void increaseVolume() {
-        Object[] newList = new Object[(int) Math.round(list.length * 1.5)];
+        T[] newList = (T[]) new Object[(int) Math.round(list.length * 1.5)];
         System.arraycopy(list, 0, newList, 0, size);
         list = newList;
     }
