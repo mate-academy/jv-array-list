@@ -6,6 +6,7 @@ import java.util.NoSuchElementException;
 public class ArrayList<T> implements List<T> {
     private int maxListSize = 10;
     private T[] values;
+    private int capacity;
     private int size;
 
     public ArrayList() {
@@ -15,22 +16,24 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value) {
         growIfArrayFull();
-        values[size++] = value;
+        values[capacity++] = value;
+        size++;
     }
 
     @Override
     public void add(T value, int index) {
         growIfArrayFull();
-        size++;
+        capacity++;
         checkIndex(index);
-        if (size == 2) {
+        if (capacity == 2) {
             moveElementsToTheRight(1);
-        } else if (size > 2) {
-            for (int currentIndex = size - 2; currentIndex > index; currentIndex--) {
+        } else if (capacity > 2) {
+            for (int currentIndex = capacity - 2; currentIndex > index; currentIndex--) {
                 moveElementsToTheRight(currentIndex);
             }
         }
         values[index] = value;
+        size++;
     }
 
     @Override
@@ -63,7 +66,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        for (int index = 0; index < size; index++) {
+        for (int index = 0; index < capacity; index++) {
             if (element == values[index]
                     || (element != null && element.equals(values[index]))) {
                 return searchAndHoldRemovedElement(element, index);
@@ -83,11 +86,11 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void growIfArrayFull() {
-        if (size == maxListSize) {
+        if (capacity == maxListSize) {
             maxListSize = (int) (maxListSize + maxListSize * 0.5);
             T[] tempValues = values;
             values = (T[]) new Object[maxListSize];
-            System.arraycopy(tempValues, 0, values, 0, size);
+            System.arraycopy(tempValues, 0, values, 0, capacity);
         }
     }
 
@@ -100,16 +103,17 @@ public class ArrayList<T> implements List<T> {
 
     private T searchAndHoldRemovedElement(T element, int index) {
         int nextElementIndex = index + 1;
-        while (nextElementIndex < size) {
+        while (nextElementIndex < capacity) {
             values[index++] = values[nextElementIndex++];
         }
         values[index] = null;
+        capacity--;
         size--;
         return element;
     }
 
     private void checkIndex(int index) {
-        if (index < 0 || index >= size) {
+        if (index < 0 || index >= capacity) {
             throw new ArrayListIndexOutOfBoundsException("Index " + index
                     + " is Out of bounds for this ArrayList!");
         }
