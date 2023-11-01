@@ -4,12 +4,13 @@ import java.util.NoSuchElementException;
 
 @SuppressWarnings("unchecked")
 public class ArrayList<T> implements List<T> {
-    private int maxListSize = 10;
+    private static final double GROWTH_FACTOR = 1.5;
+    private static final int MAX_LIST_SIZE = 10;
     private T[] values;
     private int size;
 
     public ArrayList() {
-        values = (T[]) new Object[maxListSize];
+        values = (T[]) new Object[MAX_LIST_SIZE];
     }
 
     @Override
@@ -80,10 +81,10 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void growIfArrayFull() {
-        if (size == maxListSize) {
-            maxListSize = (int) (maxListSize + maxListSize * 0.5);
+        if (size == values.length) {
+            int newLength = (int) (values.length * GROWTH_FACTOR);
             T[] tempValues = values;
-            values = (T[]) new Object[maxListSize];
+            values = (T[]) new Object[newLength];
             System.arraycopy(tempValues, 0, values, 0, size);
         }
     }
