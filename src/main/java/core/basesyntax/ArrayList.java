@@ -55,14 +55,14 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
-        Object element = list[index];
+        T element = (T) list[index];
         if (index == size - 1) {
             list[index] = null;
         } else {
             System.arraycopy(list, index + 1, list, index, size - index);
         }
         size--;
-        return (T) element;
+        return element;
     }
 
     @Override
@@ -88,8 +88,7 @@ public class ArrayList<T> implements List<T> {
         return size < 1;
     }
 
-    @Override
-    public void checkIndex(int index) {
+    private void checkIndex(int index) {
         if (index < 0
                 || (index > size - 1
                 && index != 0)) {
@@ -99,8 +98,7 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    @Override
-    public void increaseVolume() {
+    private void increaseVolume() {
         Object[] newList = new Object[(int) Math.round(list.length * 1.5)];
         System.arraycopy(list, 0, newList, 0, size);
         list = newList;
