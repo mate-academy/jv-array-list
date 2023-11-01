@@ -23,7 +23,7 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
         }
         ensureCapacityInternal(size + 1);
-        System.arraycopy(elementData,0, elementData, index + 1, size - index);
+        System.arraycopy(elementData,index, elementData, index + 1, size - index);
         elementData[index] = value;
         size++;
     }
