@@ -41,6 +41,7 @@ public class ArrayList<T> implements List<T> {
     public void addAll(List<T> list) {
         int newSize = size + list.size();
         ensureCapacity(newSize);
+
         if (list instanceof ArrayList) {
             ArrayList<T> arrayList = (ArrayList<T>) list;
             System.arraycopy(arrayList.elements, 0, elements, size, arrayList.size);
@@ -49,6 +50,7 @@ public class ArrayList<T> implements List<T> {
                 elements[size + i] = list.get(i);
             }
         }
+
         size = newSize;
     }
 
@@ -124,4 +126,5 @@ public class ArrayList<T> implements List<T> {
             elements = newArray;
         }
     }
+
 }
