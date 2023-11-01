@@ -18,4 +18,8 @@ public interface List<T> {
     int size();
 
     boolean isEmpty();
+
+    void checkIndex(int index);
+
+    void increaseVolume(int newVolume);
 }
