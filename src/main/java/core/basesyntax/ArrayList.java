@@ -68,7 +68,7 @@ public class ArrayList<T> implements List<T> {
                 return searchAndHoldRemovedElement(element, index);
             }
         }
-        throw new NoSuchElementException();
+        throw new NoSuchElementException("The element given was not found");
     }
 
     @Override
@@ -109,7 +109,7 @@ public class ArrayList<T> implements List<T> {
 
     private void throwNewIndexOutOfBoundsException(int index) {
         if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Out of bounds!");
+            throw new ArrayListIndexOutOfBoundsException("Index " + index + " is Out of bounds for this ArrayList!");
         }
     }
 }
