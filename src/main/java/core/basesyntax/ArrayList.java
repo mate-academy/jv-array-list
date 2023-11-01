@@ -5,7 +5,7 @@ import java.util.NoSuchElementException;
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_VOLUME = 10;
     private static double INCREASING_MULTIPLICATOR = 1.5;
-    private int listSize = 0;
+    private int size = 0;
     private Object[] list;
 
     public ArrayList() {
@@ -18,24 +18,22 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (listSize == list.length) {
+        if (size == list.length) {
             increaseVolume((int) Math.round(list.length * INCREASING_MULTIPLICATOR));
         }
-        list[size()] = value;
-        listSize++;
+        list[size] = value;
+        size++;
     }
 
     @Override
     public void add(T value, int index) {
-        if (index != size()) {
+        if (index != size) {
             checkIndex(index);
         }
         increaseVolume(list.length + 1);
-        for (int i = size() - 1; i >= index; i--) {
-            list[i + 1] = list[i];
-        }
+        System.arraycopy(list, index, list, index + 1, size - index);
         list[index] = value;
-        listSize++;
+        size++;
     }
 
     @Override
@@ -61,10 +59,12 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         checkIndex(index);
         Object element = list[index];
-        for (int i = index; i < listSize - 1; i++) {
-            list[i] = list[i + 1];
+        if (index == size - 1) {
+            list[index] = null;
+        } else {
+            System.arraycopy(list, index + 1, list, index, size - index);
         }
-        listSize--;
+        size--;
         return (T) element;
     }
 
@@ -83,29 +83,29 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public int size() {
-        return listSize;
+        return size;
     }
 
     @Override
     public boolean isEmpty() {
-        return listSize < 1;
+        return size < 1;
     }
 
     @Override
     public void checkIndex(int index) {
         if (index < 0
-                || (index > size() - 1
+                || (index > size - 1
                 && index != 0)) {
             throw new ArrayListIndexOutOfBoundsException("Index doesn't exist. "
                     + "You should enter a number between 0 and "
-                    + size());
+                    + size);
         }
     }
 
     @Override
     public void increaseVolume(int newVolume) {
         Object[] newList = new Object[newVolume];
-        System.arraycopy(list, 0, newList, 0, size());
+        System.arraycopy(list, 0, newList, 0, size);
         list = newList;
     }
 }
