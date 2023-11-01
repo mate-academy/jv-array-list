@@ -22,7 +22,7 @@ public class ArrayList<T> implements List<T> {
     public void add(T value, int index) {
         growIfArrayFull();
         size++;
-        throwNewIndexOutOfBoundsException(index);
+        checkIndex(index);
         if (size == 2) {
             moveElementsToTheRight(1);
         } else if (size > 2) {
@@ -44,19 +44,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        throwNewIndexOutOfBoundsException(index);
+        checkIndex(index);
         return values[index];
     }
 
     @Override
     public void set(T value, int index) {
-        throwNewIndexOutOfBoundsException(index);
+        checkIndex(index);
         values[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        throwNewIndexOutOfBoundsException(index);
+        checkIndex(index);
         T deletedValue = values[index];
         return searchAndHoldRemovedElement(deletedValue, index);
     }
