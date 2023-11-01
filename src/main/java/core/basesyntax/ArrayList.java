@@ -46,7 +46,7 @@ public class ArrayList<T> implements List<T> {
     public T get(int index) {
         checkIndexInclusive(index);
 
-        return (T) values[index];
+        return values[index];
     }
 
     @Override
