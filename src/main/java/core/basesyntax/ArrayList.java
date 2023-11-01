@@ -4,7 +4,7 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_VOLUME = 10;
-    private int size = 0;
+    private int size;
     private T[] list;
 
     public ArrayList() {
