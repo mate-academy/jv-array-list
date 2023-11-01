@@ -6,7 +6,6 @@ import java.util.NoSuchElementException;
 public class ArrayList<T> implements List<T> {
     private int maxListSize = 10;
     private T[] values;
-    private int capacity;
     private int size;
 
     public ArrayList() {
