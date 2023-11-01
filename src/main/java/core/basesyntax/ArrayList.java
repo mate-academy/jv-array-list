@@ -4,7 +4,6 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_VOLUME = 10;
-    private static double INCREASING_MULTIPLICATOR = 1.5;
     private int size = 0;
     private Object[] list;
 
@@ -12,14 +11,10 @@ public class ArrayList<T> implements List<T> {
         list = new Object[DEFAULT_VOLUME];
     }
 
-    public ArrayList(int size) {
-        list = new Object[size];
-    }
-
     @Override
     public void add(T value) {
         if (size == list.length) {
-            increaseVolume((int) Math.round(list.length * INCREASING_MULTIPLICATOR));
+            increaseVolume();
         }
         list[size] = value;
         size++;
@@ -30,7 +25,9 @@ public class ArrayList<T> implements List<T> {
         if (index != size) {
             checkIndex(index);
         }
-        increaseVolume(list.length + 1);
+        if (size == list.length) {
+            increaseVolume();
+        }
         System.arraycopy(list, index, list, index + 1, size - index);
         list[index] = value;
         size++;
@@ -103,8 +100,8 @@ public class ArrayList<T> implements List<T> {
     }
 
     @Override
-    public void increaseVolume(int newVolume) {
-        Object[] newList = new Object[newVolume];
+    public void increaseVolume() {
+        Object[] newList = new Object[(int) Math.round(list.length * 1.5)];
         System.arraycopy(list, 0, newList, 0, size);
         list = newList;
     }

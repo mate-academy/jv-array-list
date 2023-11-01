@@ -21,5 +21,5 @@ public interface List<T> {
 
     void checkIndex(int index);
 
-    void increaseVolume(int newVolume);
+    void increaseVolume();
 }
