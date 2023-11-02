@@ -62,9 +62,7 @@ public class ArrayList<T> implements List<T> {
 
         final T removedValue = (T)values[index];
 
-        for (int i = index; i < size - 1; i++) {
-            values[i] = values[i + 1];
-        }
+        System.arraycopy(values, index + 1, values, index, size - index - 1);
 
         size--;
         values[size] = null;
