@@ -1,10 +1,8 @@
 package core.basesyntax;
 
-import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-
     private static final int DEFAULT_CAPACITY = 10;
     private static final double GROW = 1.5;
     private T [] elements;
@@ -98,7 +96,16 @@ public class ArrayList<T> implements List<T> {
     private void ensureCapacity(int minCapacity) {
         if (minCapacity > elements.length) {
             int newCapacity = (int) (elements.length * GROW);
-            elements = Arrays.copyOf(elements, Math.max(minCapacity, newCapacity));
+            if (newCapacity < minCapacity) {
+                newCapacity = minCapacity;
+            }
+            T[] newElements = (T[]) new Object[newCapacity];
+
+            for (int i = 0; i < elements.length; i++) {
+                newElements[i] = elements[i];
+            }
+
+            elements = newElements;
         }
     }
 }
