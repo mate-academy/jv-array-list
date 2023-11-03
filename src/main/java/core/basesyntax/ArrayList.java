@@ -88,7 +88,6 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-
     private void indexValidator(int index) {
         if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException("Index is not valid");
