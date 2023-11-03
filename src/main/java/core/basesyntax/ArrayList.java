@@ -1,6 +1,5 @@
 package core.basesyntax;
 
-
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
@@ -99,7 +98,8 @@ public class ArrayList<T> implements List<T> {
         }
         if (arrayIndex !=0) {
             Object[] newArray = new Object[arrayLength];
-            System.arraycopy(array, arrayIndex, newArray, arrayIndex-1, arraySize - arrayIndex);
+            System.arraycopy(array, arrayIndex, newArray, arrayIndex, arraySize);
+            System.arraycopy(array, arrayIndex+1, newArray, arrayIndex, arraySize - arrayIndex);
             array = newArray;
             arraySize--;
         }
