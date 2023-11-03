@@ -4,6 +4,7 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
+    private static final double GROWTH_FACTOR = 1.5;
     private int size;
     private T[] elementData;
 
@@ -24,9 +25,7 @@ public class ArrayList<T> implements List<T> {
         if (size == elementData.length) {
             grow(elementData, size);
         }
-        for (int i = size; i > index; i--) {
-            elementData[i] = elementData[i - 1];
-        }
+        System.arraycopy(elementData, index, elementData, index + 1, size - index);
         elementData[index] = value;
         size++;
     }
@@ -62,17 +61,9 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        if (element == null) {
-            for (int i = 0; i < size; i++) {
-                if (elementData[i] == null) {
-                    return remove(i);
-                }
-            }
-        } else {
-            for (int i = 0; i < size; i++) {
-                if (element.equals(elementData[i])) {
-                    return remove(i);
-                }
+        for (int i = 0; i < size; i++) {
+            if (element == null ? elementData[i] == null : element.equals(elementData[i])) {
+                return remove(i);
             }
         }
         throw new NoSuchElementException("Element not found");
@@ -102,7 +93,7 @@ public class ArrayList<T> implements List<T> {
 
     private void grow(T[] elementData, int size) {
         if ((size + 1) >= elementData.length) {
-            int newCapacity = elementData.length + (elementData.length >> 1);
+            int newCapacity = (int) (elementData.length * GROWTH_FACTOR);
             T[] newElementData = (T[]) new Object[newCapacity];
             System.arraycopy(elementData, 0, newElementData, 0, size);
             this.elementData = newElementData;
