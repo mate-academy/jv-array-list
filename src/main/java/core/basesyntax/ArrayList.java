@@ -3,65 +3,56 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    private int arrayLength;
+    private static final int DEFAULT_ARRAY_SIZE = 10;
+    private static final int INDEX_NULL = 0;
     private Object [] array;
-    private int arraySize;
-    private int arrayIndex;
-    private final int MINIMAL_ARRAY_SIZE;
+    private int arrayLength;
+    private int elementsAmount;
 
-    public ArrayList(){
-        MINIMAL_ARRAY_SIZE = 10;
-        arrayLength = MINIMAL_ARRAY_SIZE;
+    public ArrayList() {
+        arrayLength = DEFAULT_ARRAY_SIZE;
         array = new Object [arrayLength];
-        arrayIndex = 0;
     }
 
     @Override
     public void add(T value) {
-        if (arraySize == arrayLength) {
+        if (elementsAmount == arrayLength) {
             resize(arrayLength);
         }
-        array[arraySize] = value;
-        arraySize++;
-    }
-
-    public void resize (int actualLength) {
-        arrayLength = actualLength + MINIMAL_ARRAY_SIZE/2;
-        Object[]newArray = new Object[arrayLength];
-        System.arraycopy(array, arrayIndex, newArray, arrayIndex, arraySize);
-        array = newArray;
+        array[elementsAmount] = value;
+        elementsAmount++;
     }
 
     @Override
     public void add(T value, int index) {
-        if (index > arraySize || index < 0) {
+        if (index > elementsAmount || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Index is out of bound");
         }
         Object[]newArray = new Object[arrayLength];
-        System.arraycopy(array, arrayIndex, newArray, arrayIndex, arraySize-index);
-        System.arraycopy(array, index, newArray, index+1, arraySize-index);
+        System.arraycopy(array, INDEX_NULL, newArray, INDEX_NULL, elementsAmount);
+        System.arraycopy(array, index, newArray, index + 1, elementsAmount - index);
         newArray[index] = value;
         array = newArray;
-        arraySize++;
-        if (arraySize == arrayLength) {
+        elementsAmount++;
+        if (elementsAmount == arrayLength) {
             resize(arrayLength);
         }
     }
 
     @Override
     public void addAll(List<T> list) {
-        if ((list.size() + arraySize) > arrayLength){
-            resize(arraySize + list.size());
+        if ((list.size() + elementsAmount) > arrayLength) {
+            resize(elementsAmount + list.size());
         }
-        for (int i1 = 0; i1 < list.size(); i1++){
-            array[arraySize] = list.get(i1);
-            arraySize++;
+        for (int i1 = 0; i1 < list.size(); i1++) {
+            array[elementsAmount] = list.get(i1);
+            elementsAmount++;
         }
     }
 
     @Override
     public T get(int index) {
-        if (index >= arraySize || index < 0) {
+        if (index >= elementsAmount || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Index is out of bound");
         }
         return (T) array[index];
@@ -69,7 +60,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void set(T value, int index) {
-        if (index >= arraySize || index < 0) {
+        if (index >= elementsAmount || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Index is out of bound");
         }
         array[index] = value;
@@ -77,33 +68,30 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(int index) {
-        if (index < 0 || index >= arraySize){
+        if (index < 0 || index >= elementsAmount) {
             throw new ArrayListIndexOutOfBoundsException("Index is out of bound");
         }
-        T a = (T) array[index];
         Object[]newArray = new Object[arrayLength];
-        System.arraycopy(array, arrayIndex, newArray, arrayIndex, arraySize);
-        System.arraycopy(array, index+1, newArray, index, arraySize-(index+1));
+        System.arraycopy(array, INDEX_NULL, newArray, INDEX_NULL, elementsAmount);
+        elementsAmount--;
+        System.arraycopy(array, index + 1, newArray, index, elementsAmount - (index));
+        T indexElement = (T) array[index];
         array = newArray;
-        arraySize--;
-        return a;
+        return indexElement;
     }
 
     @Override
     public T remove(T element) {
-        for (int i = 0; i < arraySize; i++) {
+        int foundElementIndex = -1;
+        for (int i = 0; i < elementsAmount; i++) {
             if (equals(element, (T) array[i])) {
-                arrayIndex++;
+                foundElementIndex = i;
             }
         }
-        if (arrayIndex !=0) {
-            Object[] newArray = new Object[arrayLength];
-            System.arraycopy(array, arrayIndex, newArray, arrayIndex, arraySize);
-            System.arraycopy(array, arrayIndex+1, newArray, arrayIndex, arraySize - arrayIndex);
-            array = newArray;
-            arraySize--;
+        if (foundElementIndex != -1) {
+            remove(foundElementIndex);
         }
-        if (arrayIndex == 0){
+        if (foundElementIndex == -1) {
             throw new NoSuchElementException("Can`t find such element");
         }
         return element;
@@ -114,13 +102,20 @@ public class ArrayList<T> implements List<T> {
                 || firstElement != null && firstElement.equals(secondElement);
     }
 
+    public void resize(int actualLength) {
+        arrayLength = actualLength + DEFAULT_ARRAY_SIZE / 2;
+        Object[]newArray = new Object[arrayLength];
+        System.arraycopy(array, INDEX_NULL, newArray, INDEX_NULL, elementsAmount);
+        array = newArray;
+    }
+
     @Override
     public int size() {
-        return arraySize;
+        return elementsAmount;
     }
 
     @Override
     public boolean isEmpty() {
-        return arraySize == 0;
+        return elementsAmount == 0;
     }
 }
