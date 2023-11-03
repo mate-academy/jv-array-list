@@ -1,64 +1,49 @@
 package core.basesyntax;
 
+
 import java.util.NoSuchElementException;
+import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    private Object[] objects;
+    private T[] objects;
     private int size;
 
     public ArrayList() {
-        this(DEFAULT_CAPACITY);
-    }
-
-    public ArrayList(int size) {
-        objects = new Object[size];
+        objects = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
     @Override
     public void add(T value) {
-        if (size == objects.length) {
-            Object[] newArray = new Object[(int) (size * 1.5)];
-            System.arraycopy(objects, 0, newArray, 0, objects.length);
-            objects = newArray;
-        }
-        objects[size++] = value;
+        add(value, size);
     }
 
     @Override
     public void add(T value, int index) {
+        if (index > size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Wrong index");
+        }
+        if (size >= objects.length) {
+            grow();
+        }
+        if (index != size) {
+            System.arraycopy(objects, index, objects, index + 1, size - index);
+        }
+        objects[index] = value;
         size++;
-        rangeCheckForAdd(index);
-        Object[] elements = new Object[size + 1];
-        if (index >= 0) {
-            System.arraycopy(objects, 0, elements, 0, index);
-        }
-        elements[index] = value;
-        if (size - index >= 0) {
-            System.arraycopy(objects, index, elements, index + 1, size - index);
-        }
-        objects = elements;
     }
 
     @Override
     public void addAll(List<T> list) {
-        Object[] arrFromList = getArrayFromList(list);
-        Object[] newArray = new Object[size + arrFromList.length];
-        System.arraycopy(objects, 0, newArray, 0, size);
-        System.arraycopy(arrFromList, 0, newArray, size, arrFromList.length);
-        objects = newArray;
-        size += arrFromList.length;
+        for (int i = 0; i < list.size(); i++) {
+            add(list.get(i));
+        }
     }
 
     @Override
     public T get(int index) {
         rangeCheckForAdd(index);
-        for (int i = 0; i < objects.length; i++) {
-            if (index == i) {
-                return (T) objects[i];
-            }
-        }
-        return null;
+        return objects[index];
     }
 
     @Override
@@ -70,10 +55,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         rangeCheckForAdd(index);
-        T value = get(index);
-        for (int i = index; i < objects.length - 1; i++) {
-            objects[i] = objects[i + 1];
-        }
+        T value = objects[index];
+        System.arraycopy(objects, index + 1, objects, index, size - index - 1);
         size--;
         return value;
     }
@@ -98,6 +81,15 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
+    private void grow() {
+        if (objects.length == size) {
+            int newCapacity = size + (size >> 1);
+            T[] newArray = (T[]) new Object[newCapacity];
+            System.arraycopy(objects, 0, newArray, 0, objects.length);
+            objects = newArray;
+        }
+    }
+
     private int indexOf(T value) {
         if (value == null) {
             for (int i = 0; i < size; i++) {
@@ -107,7 +99,7 @@ public class ArrayList<T> implements List<T> {
             }
         } else {
             for (int i = 0; i < size; i++) {
-                if (value.equals(objects[i])) {
+                if (Objects.equals(objects[i], value)) {
                     return i;
                 }
             }
@@ -115,16 +107,8 @@ public class ArrayList<T> implements List<T> {
         return -1;
     }
 
-    private Object[] getArrayFromList(List<T> list) {
-        Object[] newArray = new Object[list.size()];
-        for (int i = 0; i < list.size(); i++) {
-            newArray[i] = list.get(i);
-        }
-        return newArray;
-    }
-
     private void rangeCheckForAdd(int index) {
-        if (index < 0 || index > size - 1) {
+       if (index >= size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Can't fount value");
         }
     }
