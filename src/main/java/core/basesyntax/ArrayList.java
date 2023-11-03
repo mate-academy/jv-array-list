@@ -4,10 +4,15 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    private static int MINIMAL_CAPACITY = 10;
-    private Object [] array = new Object[MINIMAL_CAPACITY];
+    private static int MINIMAL_CAPACITY;
+    private Object [] array;
     int arraySize = 0;
     int index = -1;
+
+    public ArrayList(){
+        MINIMAL_CAPACITY = 10;
+        array = new Object[MINIMAL_CAPACITY];
+    }
 
     @Override
     public void add(T value) {
@@ -78,7 +83,7 @@ public class ArrayList<T> implements List<T> {
         T a = (T) array[index];
         Object[]newArray = new Object[MINIMAL_CAPACITY];
         System.arraycopy(array, 0, newArray, 0, arraySize);
-        System.arraycopy(array, index+1, newArray, index, arraySize-index);
+        System.arraycopy(array, index+1, newArray, index, arraySize-(index+1));
         array = newArray;
         arraySize--;
         System.out.println(" RETURNS " + a);
