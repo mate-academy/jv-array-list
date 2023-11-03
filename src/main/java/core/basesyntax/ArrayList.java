@@ -5,6 +5,7 @@ import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
+    private static final double RESIZE_FACTOR = 1.5;
     private T[] objects;
     private int size;
 
@@ -82,7 +83,7 @@ public class ArrayList<T> implements List<T> {
 
     private void grow() {
         if (objects.length == size) {
-            int newCapacity = size + (size >> 1);
+            int newCapacity = (int) (size * RESIZE_FACTOR);
             T[] newArray = (T[]) new Object[newCapacity];
             System.arraycopy(objects, 0, newArray, 0, objects.length);
             objects = newArray;
