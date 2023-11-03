@@ -9,39 +9,20 @@ public class ArrayList<T> implements List<T> {
 
     public ArrayList() {
         this.elementData = (T[]) new Object[DEFAULT_CAPACITY];
-        this.size = 0;
-    }
-
-    public void indexValidator(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index is not valid");
-        }
-    }
-
-    public Object[] grow(T[] elementData, int size) {
-        if ((size + 1) >= elementData.length) {
-            int newCapacity = elementData.length + (elementData.length >> 1);
-            T[] newElementData = (T[]) new Object[newCapacity];
-            System.arraycopy(elementData, 0, newElementData, 0, size);
-            elementData = newElementData;
-        }
-        return elementData;
     }
 
     @Override
     public void add(T value) {
-        elementData = (T[]) grow(elementData, size);
+        grow(elementData, size);
         elementData[size] = value;
         size++;
     }
 
     @Override
     public void add(T value, int index) {
-        if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("Index is not valid");
-        }
+        addIndexValidator(index);
         if (size == elementData.length) {
-            elementData = (T[]) grow(elementData, size);
+            grow(elementData, size);
         }
         for (int i = size; i > index; i--) {
             elementData[i] = elementData[i - 1];
@@ -105,5 +86,27 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+
+    private void indexValidator(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Index is not valid");
+        }
+    }
+
+    private void addIndexValidator(int index) {
+        if (index < 0 || index > size) {
+            throw new ArrayListIndexOutOfBoundsException("Index is not valid");
+        }
+    }
+
+    private void grow(T[] elementData, int size) {
+        if ((size + 1) >= elementData.length) {
+            int newCapacity = elementData.length + (elementData.length >> 1);
+            T[] newElementData = (T[]) new Object[newCapacity];
+            System.arraycopy(elementData, 0, newElementData, 0, size);
+            this.elementData = newElementData;
+        }
     }
 }
