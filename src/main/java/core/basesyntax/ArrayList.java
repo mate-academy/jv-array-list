@@ -1,6 +1,5 @@
 package core.basesyntax;
 
-
 import java.util.NoSuchElementException;
 import java.util.Objects;
 
@@ -108,7 +107,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void rangeCheckForAdd(int index) {
-       if (index >= size || index < 0) {
+        if (index >= size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Can't fount value");
         }
     }
