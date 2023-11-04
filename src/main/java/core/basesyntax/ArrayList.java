@@ -4,8 +4,8 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    private static final double GROW = 1.5;
-    private T [] elements;
+    private static final double GROW_FACTOR = 1.5;
+    private T[] elements;
     private int size;
 
     public ArrayList() {
@@ -15,8 +15,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value) {
         ensureCapacity(size + 1);
-        elements[size] = value;
-        size++;
+        elements[size++] = value;
     }
 
     @Override
@@ -61,20 +60,13 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        if (element == null) {
-            for (int i = 0; i < size; i++) {
-                if (elements[i] == null) {
-                    return remove(i);
-                }
-            }
-        } else {
-            for (int i = 0; i < size; i++) {
-                if (element.equals(elements[i])) {
-                    return remove(i);
-                }
+        for (int i = 0; i < size; i++) {
+            if ((element == null && elements[i] == null)
+                    || (element != null && element.equals(elements[i]))) {
+                return remove(i);
             }
         }
-        throw new NoSuchElementException("Element not found");
+        throw new NoSuchElementException("Element not found" + element);
     }
 
     @Override
@@ -95,15 +87,13 @@ public class ArrayList<T> implements List<T> {
 
     private void ensureCapacity(int minCapacity) {
         if (minCapacity > elements.length) {
-            int newCapacity = (int) (elements.length * GROW);
+            int newCapacity = (int) (elements.length * GROW_FACTOR);
             if (newCapacity < minCapacity) {
                 newCapacity = minCapacity;
             }
             T[] newElements = (T[]) new Object[newCapacity];
 
-            for (int i = 0; i < elements.length; i++) {
-                newElements[i] = elements[i];
-            }
+            System.arraycopy(elements, 0, newElements, 0, elements.length);
 
             elements = newElements;
         }
