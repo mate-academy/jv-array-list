@@ -4,10 +4,10 @@ import java.util.NoSuchElementException;
 import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
-    private T[] elements;
-    private int size;
     private static final int DEFAULT_CAPACITY = 10;
     private static final double GROW_FACTOR = 1.5;
+    private T[] elements;
+    private int size;
 
     public ArrayList() {
         this.elements = (T[]) new Object[DEFAULT_CAPACITY];
@@ -19,14 +19,6 @@ public class ArrayList<T> implements List<T> {
         resizeIfNeeded();
         elements[size] = value;
         size++;
-    }
-
-    private void resizeIfNeeded() {
-        if (elements.length == size) {
-            Object[] newArray = new Object[(int) (elements.length * GROW_FACTOR)];
-            System.arraycopy(elements, 0, newArray, 0, size);
-            elements = (T[]) newArray;
-        }
     }
 
     @Override
@@ -91,6 +83,14 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private void resizeIfNeeded() {
+        if (elements.length == size) {
+            Object[] newArray = new Object[(int) (elements.length * GROW_FACTOR)];
+            System.arraycopy(elements, 0, newArray, 0, size);
+            elements = (T[]) newArray;
+        }
     }
 
     private void checkIndexIsInBounds(int index) {
