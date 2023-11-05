@@ -11,7 +11,6 @@ public class ArrayList<T> implements List<T> {
 
     public ArrayList() {
         this.elements = (T[]) new Object[DEFAULT_CAPACITY];
-        this.size = 0;
     }
 
     @Override
@@ -42,14 +41,12 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         checkIndexIsInBounds(index);
-        Objects.checkIndex(index, size);
         return elements[index];
     }
 
     @Override
     public void set(T value, int index) {
         checkIndexIsInBounds(index);
-        Objects.checkIndex(index, size);
         elements[index] = value;
     }
 
@@ -57,7 +54,6 @@ public class ArrayList<T> implements List<T> {
     @SuppressWarnings("uncheched")
     public T remove(int index) {
         checkIndexIsInBounds(index);
-        Objects.checkIndex(index, size);
         T removedElement = elements[index];
         System.arraycopy(elements, index + 1, elements, index, size - index - 1);
         size--;
@@ -65,7 +61,6 @@ public class ArrayList<T> implements List<T> {
     }
 
     @Override
-    @SuppressWarnings("uncheched")
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
             if (Objects.equals(elements[i], element)) {
@@ -87,7 +82,7 @@ public class ArrayList<T> implements List<T> {
 
     private void resizeIfNeeded() {
         if (elements.length == size) {
-            Object[] newArray = new Object[(int) (elements.length * GROW_FACTOR)];
+            T[] newArray = (T[]) new Object[(int) (elements.length * GROW_FACTOR)];
             System.arraycopy(elements, 0, newArray, 0, size);
             elements = (T[]) newArray;
         }
