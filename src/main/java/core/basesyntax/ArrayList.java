@@ -6,12 +6,12 @@ public class ArrayList<T> implements List<T> {
     private T[] array;
     private int lastElementIndex;
 
-    public ArrayList () {
+    public ArrayList() {
         array = (T[])new Object[10];
         lastElementIndex = -1;
     }
 
-    public ArrayList (T[] array) {
+    public ArrayList(T[] array) {
         this.array = array;
         lastElementIndex = array.length - 1;
     }
@@ -30,32 +30,32 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         if (index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index, can't be added to" +
-                    " non-existing position.");
-        } if (index == 0 && lastElementIndex < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Invalid index, can't be added to"
+                    + " non-existing position.");
+        }
+        if (index == 0 && lastElementIndex < 0) {
             array[0] = value;
             ++lastElementIndex;
             return;
         }
         if (index > lastElementIndex + 1) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index, can't be added to" +
-                    " non-existing position.");
+            throw new ArrayListIndexOutOfBoundsException("Invalid index, can't be added to"
+                    + " non-existing position.");
         }
         if (lastElementIndex == array.length - 1) {
             changeSize(1.5);
         }
         Object[] newArray = new Object[array.length];
-        for (int i = 0; i < index; ++i){
+        for (int i = 0; i < index; ++i) {
             newArray[i] = array[i];
         }
         newArray[index] = value;
-        for (int i = index + 1; i <= lastElementIndex + 1; ++i){
-            newArray[i] = array[i-1];
+        for (int i = index + 1; i <= lastElementIndex + 1; ++i) {
+            newArray[i] = array[i - 1];
         }
         ++lastElementIndex;
         array = (T[])newArray;
     }
-
 
     @Override
     public void addAll(List<T> list) {
@@ -74,12 +74,12 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         if (index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("You're trying" +
-                    " to get element, index of which is lower than 0");
+            throw new ArrayListIndexOutOfBoundsException("You're trying"
+                    + " to get element, index of which is lower than 0");
         }
         if (index > lastElementIndex) {
-            throw new ArrayListIndexOutOfBoundsException("You're trying" +
-                    " to get element, index of which is larger than array length.");
+            throw new ArrayListIndexOutOfBoundsException("You're trying"
+                    + " to get element, index of which is larger than array length.");
         }
         return array[index];
     }
@@ -87,12 +87,12 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void set(T value, int index) {
         if (index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("You're trying" +
-                    " to set element, index of which is lower than 0");
+            throw new ArrayListIndexOutOfBoundsException("You're trying"
+                    + " to set element, index of which is lower than 0");
         }
         if (index > lastElementIndex) {
-            throw new ArrayListIndexOutOfBoundsException("You're trying" +
-                    " to set element, index of which is larger than array length");
+            throw new ArrayListIndexOutOfBoundsException("You're trying"
+                    + " to set element, index of which is larger than array length");
         }
         array[index] = value;
     }
@@ -123,8 +123,8 @@ public class ArrayList<T> implements List<T> {
             }
         }
         if (index == -1) {
-            throw new NoSuchElementException("You're trying to remove element," +
-                    " that is not present in the list");
+            throw new NoSuchElementException("You're trying to remove element,"
+                    + " that is not present in the list");
         }
         remove(index);
         return element;
@@ -140,7 +140,7 @@ public class ArrayList<T> implements List<T> {
         if (lastElementIndex == -1) {
             return true;
         } else {
-        return false;
+            return false;
         }
     }
 
