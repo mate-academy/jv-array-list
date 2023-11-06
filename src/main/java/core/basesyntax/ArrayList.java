@@ -5,9 +5,11 @@ import java.util.NoSuchElementException;
 public class ArrayList<T> implements List<T> {
     private T[] array;
     private int lastElementIndex;
+    private final int baseSize = 10;
+    private final double enlargingSize = 1.5;
 
     public ArrayList() {
-        array = (T[])new Object[10];
+        array = (T[])new Object[baseSize];
         lastElementIndex = -1;
     }
 
@@ -22,86 +24,61 @@ public class ArrayList<T> implements List<T> {
             ++lastElementIndex;
             array[lastElementIndex] = value;
         } else {
-            changeSize(1.5);
+            changeSize(enlargingSize);
             add(value);
         }
     }
 
     @Override
     public void add(T value, int index) {
-        if (index < 0) {
+        if (index < 0 || index > lastElementIndex + 1) {
             throw new ArrayListIndexOutOfBoundsException("Invalid index, can't be added to"
                     + " non-existing position.");
         }
         if (index == 0 && lastElementIndex < 0) {
-            array[0] = value;
-            ++lastElementIndex;
+            add(value);
             return;
         }
-        if (index > lastElementIndex + 1) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index, can't be added to"
-                    + " non-existing position.");
-        }
+        ++lastElementIndex;
         if (lastElementIndex == array.length - 1) {
-            changeSize(1.5);
+            changeSize(enlargingSize);
         }
         Object[] newArray = new Object[array.length];
-        for (int i = 0; i < index; ++i) {
-            newArray[i] = array[i];
-        }
+        System.arraycopy(array, 0, newArray, 0, index);
         newArray[index] = value;
-        for (int i = index + 1; i <= lastElementIndex + 1; ++i) {
-            newArray[i] = array[i - 1];
-        }
-        ++lastElementIndex;
+        System.arraycopy(array, index, newArray, index + 1, array.length - index - 1);
         array = (T[])newArray;
     }
 
+
     @Override
     public void addAll(List<T> list) {
-        int expectedLength = (list.size() + lastElementIndex + 1);
+        int expectedLength = (list.size() + this.size());
         if (expectedLength <= array.length) {
             for (int i = 0; i < list.size(); ++i) {
-                ++lastElementIndex;
-                array[lastElementIndex] = list.get(i);
+                add(list.get(i));
             }
         } else {
-            changeSize(1.5);
+            changeSize(enlargingSize);
             addAll(list);
         }
     }
 
     @Override
     public T get(int index) {
-        if (index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("You're trying"
-                    + " to get element, index of which is lower than 0");
-        }
-        if (index > lastElementIndex) {
-            throw new ArrayListIndexOutOfBoundsException("You're trying"
-                    + " to get element, index of which is larger than array length.");
-        }
+        checkIfArgumentIsCorrect(index);
         return array[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("You're trying"
-                    + " to set element, index of which is lower than 0");
-        }
-        if (index > lastElementIndex) {
-            throw new ArrayListIndexOutOfBoundsException("You're trying"
-                    + " to set element, index of which is larger than array length");
-        }
+        checkIfArgumentIsCorrect(index);
         array[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index < 0 || index > lastElementIndex) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index, can't be removed");
-        }
+        checkIfArgumentIsCorrect(index);
         T temp = array[index];
         for (int i = index; i < lastElementIndex; ++i) {
             array[i] = array[i + 1];
@@ -137,11 +114,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public boolean isEmpty() {
-        if (lastElementIndex == -1) {
-            return true;
-        } else {
-            return false;
-        }
+        return (lastElementIndex == -1);
     }
 
     private T[] changeSize(double coefficient) {
@@ -158,5 +131,16 @@ public class ArrayList<T> implements List<T> {
         }
         array = (T[]) tempArray;
         return array;
+    }
+
+    private void checkIfArgumentIsCorrect (int argument) {
+        if (argument < 0) {
+            throw new ArrayListIndexOutOfBoundsException("You're trying"
+                    + " to access element, index of which is lower than 0");
+        }
+        if (argument > lastElementIndex) {
+            throw new ArrayListIndexOutOfBoundsException("You're trying"
+                    + " to access element, index of which is larger than array length.");
+        }
     }
 }
