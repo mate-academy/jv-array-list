@@ -10,20 +10,20 @@ public class ArrayList<T> implements List<T> {
     private int size;
 
     public ArrayList() {
-        this.elements = (T[]) new Object[DEFAULT_CAPACITY];
+        elements = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
     @Override
     public void add(T value) {
         resizeIfNeeded();
-        elements[size] = value;
-        size++;
+        elements[size++] = value;
     }
 
     @Override
     public void add(T value, int index) {
         if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
+            throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index + " or index is "
+                    + "greater than size " + size);
         }
         resizeIfNeeded();
         System.arraycopy(elements, index, elements, index + 1, size - index);
@@ -51,7 +51,6 @@ public class ArrayList<T> implements List<T> {
     }
 
     @Override
-    @SuppressWarnings("uncheched")
     public T remove(int index) {
         checkIndexIsInBounds(index);
         T removedElement = elements[index];
@@ -90,7 +89,8 @@ public class ArrayList<T> implements List<T> {
 
     private void checkIndexIsInBounds(int index) {
         if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Wrong index");
+            throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index + " or index is "
+                    + "smaller than zero " + size);
         }
     }
 }
