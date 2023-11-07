@@ -1,27 +1,15 @@
 package core.basesyntax;
 
-import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    private Object[] elements;
+    private static final double GROW_FACTOR = 1.5;
+    private T[] elements;
     private int size;
 
     public ArrayList() {
-        this.elements = new Object[DEFAULT_CAPACITY];
-        this.size = 0;
-    }
-
-    private void ensureCapacity(int minCapacity) {
-        int oldCapacity = elements.length;
-        if (minCapacity > oldCapacity) {
-            int newCapacity = (int) (oldCapacity * 1.5);
-            if (newCapacity < minCapacity) {
-                newCapacity = minCapacity;
-            }
-            elements = Arrays.copyOf(elements, newCapacity);
-        }
+        this.elements = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
     @Override
@@ -33,14 +21,12 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("Incorrect index " + index);
+            throw new ArrayListIndexOutOfBoundsException("Index out of range " + index
+                    + ", size is " + size);
         }
 
         ensureCapacity(size + 1);
-        for (int i = size; i > index; i--) {
-            elements[i] = elements[i - 1];
-        }
-
+        System.arraycopy(elements, index, elements, index + 1, size - index);
         elements[index] = value;
         size++;
     }
@@ -54,42 +40,29 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index out of range " + index);
-        }
-
-        return (T) elements[index];
+        checkIndex(index);
+        return elements[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index out of range " + index);
-        }
-
+        checkIndex(index);
         elements[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index out of range " + index);
-        }
-
-        final T removed = (T) elements[index];
-        for (int i = index; i < size - 1; i++) {
-            elements[i] = elements[i + 1];
-        }
-
-        elements[size - 1] = null;
-        size--;
+        checkIndex(index);
+        final T removed = elements[index];
+        System.arraycopy(elements, index + 1, elements, index, size - index - 1);
+        elements[--size] = null;
         return removed;
     }
 
     @Override
-    public T remove(T element) {
+    public T remove(T element) throws NoSuchElementException {
         for (int i = 0; i < size; i++) {
-            if ((element == null && elements[i] == null)
+            if ((element == elements[i])
                     || (element != null && element.equals(elements[i]))) {
                 return remove(i);
             }
@@ -105,5 +78,28 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private void ensureCapacity(int minCapacity) {
+        int oldCapacity = elements.length;
+        if (minCapacity > oldCapacity) {
+            int newCapacity = (int) (oldCapacity * GROW_FACTOR);
+            if (newCapacity < minCapacity) {
+                newCapacity = minCapacity;
+            }
+            if (newCapacity > elements.length) {
+                T[] newArray = (T[]) new Object[newCapacity];
+                System.arraycopy(elements, 0, newArray, 0, elements.length);
+                elements = newArray;
+            }
+
+        }
+    }
+
+    private void checkIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Index out of range " + index
+                    + ", size is " + size);
+        }
     }
 }
