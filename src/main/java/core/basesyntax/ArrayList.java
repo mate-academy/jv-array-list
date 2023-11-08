@@ -50,7 +50,6 @@ public class ArrayList<T> implements List<T> {
         array = (T[])newArray;
     }
 
-
     @Override
     public void addAll(List<T> list) {
         int expectedLength = (list.size() + this.size());
@@ -133,7 +132,7 @@ public class ArrayList<T> implements List<T> {
         return array;
     }
 
-    private void checkIfArgumentIsCorrect (int argument) {
+    private void checkIfArgumentIsCorrect(int argument) {
         if (argument < 0) {
             throw new ArrayListIndexOutOfBoundsException("You're trying"
                     + " to access element, index of which is lower than 0");
