@@ -4,23 +4,24 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    private Object[] values;
+    private static final double RESIZE_FACTOR = 1.5;
+    private T[] values;
     private int size;
 
     public ArrayList() {
-        values = new Object[DEFAULT_CAPACITY];
+        values = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
     @Override
     public void add(T value) {
-        resize(size);
+        resize();
         values[size++] = value;
     }
 
     @Override
     public void add(T value, int index) {
         rangeCheck(index);
-        resize(size);
+        resize();
         System.arraycopy(values, index, values, index + 1, size - index);
         values[index] = value;
         size++;
@@ -29,7 +30,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void addAll(List<T> list) {
         for (int i = 0; i < list.size(); i++) {
-            resize(size);
+            resize();
             values[size++] = list.get(i);
         }
     }
@@ -37,7 +38,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         rangeCheck(index + 1);
-        return (T) values[index];
+        return values[index];
     }
 
     @Override
@@ -49,13 +50,13 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         rangeCheck(index + 1);
-        Object removedValue = values[index];
+        T removedValue = values[index];
         int tailLength = size - index - 1;
         if (tailLength > 0) {
             System.arraycopy(values, index + 1, values, index, tailLength);
         }
         values[--size] = null;
-        return (T) removedValue;
+        return removedValue;
     }
 
     @Override
@@ -84,9 +85,9 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private void resize(int actualSize) {
-        if (actualSize == values.length) {
-            Object[] newValues = new Object[values.length + values.length << 1];
+    private void resize() {
+        if (size == values.length) {
+            T[] newValues = (T[]) new Object[(int) (values.length * RESIZE_FACTOR)];
             System.arraycopy(values, 0, newValues, 0, size);
             values = newValues;
         }
