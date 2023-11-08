@@ -60,20 +60,13 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        if (element == null) {
-            for (int i = 0; i < size; i++) {
-                if (elements[i] == null) {
-                    return remove(i);
-                }
-            }
-        } else {
-            for (int i = 0; i < size; i++) {
-                if (element.equals(elements[i])) {
-                    return remove(i);
-                }
+        for (int i = 0; i < size; i++) {
+            if (element != null && element.equals(elements[i])
+                    || (element == null && elements[i] == null)) {
+                return remove(i);
             }
         }
-        throw new NoSuchElementException("Element not found: " + element);
+        throw new NoSuchElementException("Element not exist in array: " + element);
     }
 
     @Override
