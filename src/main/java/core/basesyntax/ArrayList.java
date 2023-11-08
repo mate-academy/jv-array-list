@@ -4,25 +4,25 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private T[] array;
-    private int lastElementIndex;
+    private int size;
     private final int baseSize = 10;
     private final double enlargingSize = 1.5;
 
     public ArrayList() {
-        array = (T[])new Object[baseSize];
-        lastElementIndex = -1;
+        array = (T[]) new Object[baseSize];
+        size = 0;
     }
 
     public ArrayList(T[] array) {
         this.array = array;
-        lastElementIndex = array.length - 1;
+        size = array.length;
     }
 
     @Override
     public void add(T value) {
-        if (lastElementIndex < array.length - 1) {
-            ++lastElementIndex;
-            array[lastElementIndex] = value;
+        if (size < array.length) {
+            ++size;
+            array[size - 1] = value;
         } else {
             changeSize(enlargingSize);
             add(value);
@@ -31,69 +31,63 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index < 0 || index > lastElementIndex + 1) {
+        if (index < 0 || index > size + 1) {
             throw new ArrayListIndexOutOfBoundsException("Invalid index, can't be added to"
                     + " non-existing position.");
         }
-        if (index == 0 && lastElementIndex < 0) {
+        if (index == 0 && size <= 0) {
             add(value);
             return;
         }
-        ++lastElementIndex;
-        if (lastElementIndex == array.length - 1) {
+        ++size;
+        if (size == array.length) {
             changeSize(enlargingSize);
         }
         Object[] newArray = new Object[array.length];
         System.arraycopy(array, 0, newArray, 0, index);
         newArray[index] = value;
         System.arraycopy(array, index, newArray, index + 1, array.length - index - 1);
-        array = (T[])newArray;
+        array = (T[]) newArray; //without this array does not resize properly.
     }
 
     @Override
     public void addAll(List<T> list) {
         int expectedLength = (list.size() + this.size());
-        if (expectedLength <= array.length) {
-            for (int i = 0; i < list.size(); ++i) {
-                add(list.get(i));
-            }
-        } else {
+        if (expectedLength > array.length) {
             changeSize(enlargingSize);
-            addAll(list);
+        }
+        for (int i = 0; i < list.size(); ++i) {
+            add(list.get(i));
         }
     }
 
     @Override
     public T get(int index) {
-        checkIfArgumentIsCorrect(index);
+        checkIndex(index);
         return array[index];
     }
 
     @Override
     public void set(T value, int index) {
-        checkIfArgumentIsCorrect(index);
+        checkIndex(index);
         array[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        checkIfArgumentIsCorrect(index);
+        checkIndex(index);
         T temp = array[index];
-        for (int i = index; i < lastElementIndex; ++i) {
-            array[i] = array[i + 1];
-        }
-        lastElementIndex--;
+        System.arraycopy(array, index + 1, array, index, size - index - 1);
+        size--;
         return temp;
     }
 
     @Override
     public T remove(T element) {
         int index = -1;
-        for (int i = 0; i <= lastElementIndex; ++i) {
-            if (element == array[i]) {
-                index = i;
-                break;
-            } else if (element != null && element.equals(array[i])) {
+        for (int i = 0; i <= size - 1; ++i) {
+            if (element == array[i] |
+                    (element != null && element.equals(array[i]))) {
                 index = i;
                 break;
             }
@@ -108,36 +102,28 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public int size() {
-        return lastElementIndex + 1;
+        return size;
     }
 
     @Override
     public boolean isEmpty() {
-        return (lastElementIndex == -1);
+        return (size == 0);
     }
 
     private T[] changeSize(double coefficient) {
-        int newLength = (int)(array.length * coefficient);
+        int newLength = (int) (array.length * coefficient);
         Object[] tempArray = new Object[(int) newLength];
-        if (newLength > array.length) {
-            for (int i = 0; i < array.length; i++) {
-                tempArray[i] = array[i];
-            }
-        } else if (newLength < array.length) {
-            for (int i = 0; i < newLength; i++) {
-                tempArray[i] = array[i];
-            }
-        }
+        System.arraycopy(array, 0, tempArray, 0, array.length);
         array = (T[]) tempArray;
         return array;
     }
 
-    private void checkIfArgumentIsCorrect(int argument) {
-        if (argument < 0) {
+    private void checkIndex(int index) {
+        if (index < 0) {
             throw new ArrayListIndexOutOfBoundsException("You're trying"
                     + " to access element, index of which is lower than 0");
         }
-        if (argument > lastElementIndex) {
+        if (index > size - 1) {
             throw new ArrayListIndexOutOfBoundsException("You're trying"
                     + " to access element, index of which is larger than array length.");
         }
