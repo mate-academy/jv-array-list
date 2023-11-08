@@ -20,7 +20,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        rangeCheck(index);
+        checkExclusively(index);
         resize();
         System.arraycopy(values, index, values, index + 1, size - index);
         values[index] = value;
@@ -31,30 +31,27 @@ public class ArrayList<T> implements List<T> {
     public void addAll(List<T> list) {
         for (int i = 0; i < list.size(); i++) {
             resize();
-            values[size++] = list.get(i);
+            add(list.get(i));
         }
     }
 
     @Override
     public T get(int index) {
-        rangeCheck(index + 1);
+        checkInclusively(index);
         return values[index];
     }
 
     @Override
     public void set(T value, int index) {
-        rangeCheck(index + 1);
+        checkInclusively(index);
         values[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        rangeCheck(index + 1);
+        checkInclusively(index);
         T removedValue = values[index];
-        int tailLength = size - index - 1;
-        if (tailLength > 0) {
-            System.arraycopy(values, index + 1, values, index, tailLength);
-        }
+        System.arraycopy(values, index + 1, values, index, size - index - 1);
         values[--size] = null;
         return removedValue;
     }
@@ -79,8 +76,14 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void rangeCheck(int index) {
+    private void checkExclusively(int index) {
         if (index > size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Index: " + index + ", Size: " + size);
+        }
+    }
+
+    private void checkInclusively(int index) {
+        if (index >= size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Index: " + index + ", Size: " + size);
         }
     }
