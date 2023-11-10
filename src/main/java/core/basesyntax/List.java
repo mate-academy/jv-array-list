@@ -19,5 +19,5 @@ public interface List<T> {
 
     boolean isEmpty();
 
-    Object[] toArray();
+    T[] toArray();
 }

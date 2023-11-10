@@ -3,31 +3,31 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    public static final int INCREMENT = 1;
-    private static int arraySize = 10;
-    private Object[] arrayList = new Object[arraySize];
-    private int currentMaxIndex = 0;
-    private int size = 0;
+    private static final int DEFAULT_ARRAY_SIZE = 10;
+    private T[] arrayList;
+    private int size;
+
+    public ArrayList() {
+        arrayList = (T[]) new Object[DEFAULT_ARRAY_SIZE];
+    }
 
     @Override
     public void add(T value) {
         if (size == arrayList.length) {
             arrayList = extend();
         }
-        this.arrayList[currentMaxIndex] = value;
-        currentMaxIndex++;
+        this.arrayList[size] = value;
         size++;
     }
 
     @Override
     public void add(T value, int index) {
-        checkRange(index);
+        checkRangeToAdd(index);
         if (size == arrayList.length) {
             arrayList = extend();
         }
         System.arraycopy(arrayList, index, arrayList, index + 1, size - index);
         arrayList[index] = value;
-        currentMaxIndex++;
         size++;
     }
 
@@ -40,40 +40,35 @@ public class ArrayList<T> implements List<T> {
         if (additionalLength != 0) {
             System.arraycopy(list.toArray(), 0, arrayList, size, additionalLength);
             size += additionalLength;
-            currentMaxIndex += list.size();
         }
     }
 
     @Override
     public T get(int index) {
-        checkRange(index + INCREMENT);
-        return (T) arrayList[index];
+        checkRange(index);
+        return arrayList[index];
     }
 
     @Override
     public void set(T value, int index) {
-        checkRange(index + INCREMENT);
+        checkRange(index);
         arrayList[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        checkRange(index + INCREMENT);
-        final T previousValue = (T) arrayList[index];
-        removeByIndex(arrayList, index);
+        checkRange(index);
+        final T previousValue = arrayList[index];
+        System.arraycopy(arrayList, index + 1, arrayList, index, (size - 1) - index);
+        arrayList[size - 1] = null;
         size--;
-        currentMaxIndex--;
         return previousValue;
     }
 
     @Override
     public T remove(T element) {
         int index = findElementIndex(element);
-        final T previousValue = (T) arrayList[index];
-        removeByIndex(arrayList, index);
-        size--;
-        currentMaxIndex--;
-        return previousValue;
+        return remove(index);
     }
 
     @Override
@@ -86,33 +81,31 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private Object[] extend() {
-        arraySize += arraySize / 2;
-        Object[] copy = new Object[arraySize];
-        System.arraycopy(arrayList, 0, copy, 0, Math.min(arrayList.length, arraySize));
-        return copy;
+    private T[] extend() {
+        return extend(size + 1);
     }
 
-    private Object[] extend(int minCapacity) {
-        while (arraySize < minCapacity) {
-            arraySize += arraySize / 2;
+    private T[] extend(int minCapacity) {
+        int capacity = arrayList.length;
+        while (capacity < minCapacity) {
+            capacity += capacity / 2;
         }
-        Object[] copy = new Object[arraySize];
-        System.arraycopy(arrayList, 0, copy, 0, Math.min(arrayList.length, arraySize));
-        return copy;
+        Object[] copy = new Object[capacity];
+        System.arraycopy(arrayList, 0, copy, 0, Math.min(arrayList.length, capacity));
+        return (T[]) copy;
     }
 
     private void checkRange(int index) {
-        if (index > size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index : " + index + " out of bound");
+        if (index >= size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Index: " + index + " out of bound");
         }
     }
 
-    private void removeByIndex(Object[] data, int index) {
-        if (size - 1 > index) {
-            System.arraycopy(data, index + 1, data, index, (size - 1) - index);
+    private void checkRangeToAdd(int index) {
+        if (index > size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Index: " + index
+                                            + " out of bounds of addition");
         }
-        data[size] = null;
     }
 
     private int findElementIndex(T element) {
@@ -139,7 +132,8 @@ public class ArrayList<T> implements List<T> {
         return i;
     }
 
-    public Object[] toArray() {
+    @Override
+    public T[] toArray() {
         return this.arrayList;
     }
 }
