@@ -89,7 +89,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         checkIfIndexValid(index);
-        T value = get(index);
+        final T value = get(index);
         System.arraycopy(customArrayList, 0, customArrayList, 0, index);
         // If our element is last, no need to fetch second part of array
         // (there is no second part in fact, it will cause index exception)
