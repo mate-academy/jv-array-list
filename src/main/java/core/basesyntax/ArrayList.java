@@ -100,7 +100,7 @@ public class ArrayList<T> implements List<T> {
     public T remove(T element) {
         int index = findValueInArray(element);
         if (index == -1) {
-            throw new NoSuchElementException("DevCap: There is no such element friend");
+            throw new NoSuchElementException("DevCap: There is no such element in array");
         } else {
             return remove(index);
         }
