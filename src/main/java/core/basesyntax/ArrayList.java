@@ -1,18 +1,21 @@
 package core.basesyntax;
 
 import java.util.NoSuchElementException;
-import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_SIZE = 10;
     private static final double GROW_COEFFICIENT = 1.5;
-    private int size = 0;
-    private Object[] customArrayList = new Object[DEFAULT_SIZE];
+    private int size;
+    private T[] customArrayList;
+
+    public ArrayList(){
+        customArrayList = (T[]) new Object[DEFAULT_SIZE];
+    }
 
     private void growIfArrayFull() {
         if (size == customArrayList.length) {
             int newSize = (int) (customArrayList.length * GROW_COEFFICIENT);
-            Object[] biggerArrayList = new Object[newSize];
+            T[] biggerArrayList = (T[]) new Object[newSize];
             System.arraycopy(customArrayList, 0, biggerArrayList, 0, customArrayList.length);
             customArrayList = biggerArrayList;
         }
@@ -33,12 +36,17 @@ public class ArrayList<T> implements List<T> {
     private int findValueInArray(T value) {
         for (int i = 0; i < size; i++) {
             // Additional built in check for nulls
-            if (Objects.equals(customArrayList[i], value)) {
+            if (equals(customArrayList[i], value)) {
                 return i;
             }
         }
         // Element not found
         return -1;
+    }
+
+    // Custom Object.equals realisation
+    private boolean equals(Object a, Object b) {
+        return (a == b) || (a != null && a.equals(b));
     }
 
     private void changeSize(int delta) {
