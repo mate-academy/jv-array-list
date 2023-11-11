@@ -9,13 +9,6 @@ public class ArrayList<T> implements List<T> {
     private int size = 0;
     private Object[] customArrayList = new Object[DEFAULT_SIZE];
 
-    @Override
-    public void add(T value) {
-        growIfArrayFull();
-        customArrayList[size] = value;
-        changeSize(1);
-    }
-
     private void growIfArrayFull() {
         if (size == customArrayList.length) {
             int newSize = (int) (customArrayList.length * GROW_COEFFICIENT);
@@ -46,6 +39,17 @@ public class ArrayList<T> implements List<T> {
         }
         // Element not found
         return -1;
+    }
+
+    private void changeSize(int delta) {
+        size += delta;
+    }
+
+    @Override
+    public void add(T value) {
+        growIfArrayFull();
+        customArrayList[size] = value;
+        changeSize(1);
     }
 
     @Override
@@ -109,10 +113,6 @@ public class ArrayList<T> implements List<T> {
     @Override
     public int size() {
         return size;
-    }
-
-    private void changeSize(int delta) {
-        size += delta;
     }
 
     @Override
