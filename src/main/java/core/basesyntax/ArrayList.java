@@ -8,7 +8,7 @@ public class ArrayList<T> implements List<T> {
     private int size;
     private T[] customArrayList;
 
-    public ArrayList(){
+    public ArrayList() {
         customArrayList = (T[]) new Object[DEFAULT_SIZE];
     }
 
