@@ -1,41 +1,48 @@
 package core.basesyntax;
 
 import java.util.NoSuchElementException;
+import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_SIZE = 10;
     private static final double GROW_COEFFICIENT = 1.5;
-
+    private int size = 0;
     private Object[] customArrayList = new Object[DEFAULT_SIZE];
 
     @Override
     public void add(T value) {
         growIfArrayFull();
-        customArrayList[size()] = value;
+        customArrayList[size] = value;
+        changeSize(1);
     }
 
     private void growIfArrayFull() {
-        if (size()==customArrayList.length) {
-            int newSize = (int)(customArrayList.length*GROW_COEFFICIENT);
-//            Object[] biggerArrayList = new Object[newSize];
-            System.arraycopy(customArrayList, 0, customArrayList, 0, newSize);
+        if (size == customArrayList.length) {
+            int newSize = (int) (customArrayList.length * GROW_COEFFICIENT);
+            Object[] biggerArrayList = new Object[newSize];
+            System.arraycopy(customArrayList, 0, biggerArrayList, 0, customArrayList.length);
+            customArrayList = biggerArrayList;
         }
     }
 
-    @Override
-    public T get(int index) {
-        if (index >= size()) {
-            return null;
-        } else {
-            return (T) customArrayList[index];
+    private void checkIfIndexValid(int index) {
+        if (index >= size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("DevCap: IndexException");
+        }
+    }
+
+    private void checkIfIndexValidExclusive(int index) {
+        if (index > size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("DevCap: IndexException");
         }
     }
 
     private int findValueInArray(T value) {
-        for (int i = 0; i < size(); i++) {
-           if (customArrayList[i].equals(value)) {
-               return i;
-           }
+        for (int i = 0; i < size; i++) {
+            // Additional built in check for nulls
+            if (Objects.equals(customArrayList[i], value)) {
+                return i;
+            }
         }
         // Element not found
         return -1;
@@ -43,16 +50,14 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        growIfArrayFull();
-        int size = size();
-        if (index > size) {
-            throw new ArrayListIndexOutOfBoundsException(
-                    "Cannot add value to array at specified position, it is out of array");
-        } else if (index == size) {
+        checkIfIndexValidExclusive(index);
+        if (index == size) {
             add(value);
         } else {
-            System.arraycopy(customArrayList, index, customArrayList, index+1, customArrayList.length+1);
+            growIfArrayFull();
+            System.arraycopy(customArrayList, index, customArrayList, index + 1, size - index);
             customArrayList[index] = value;
+            changeSize(1);
         }
     }
 
@@ -65,23 +70,30 @@ public class ArrayList<T> implements List<T> {
     }
 
     @Override
-    public void set(T value, int index) {
-        // Set if this value exists
-        if (get(index) != null) {
-            customArrayList[index] = value;
-        }
+    public T get(int index) {
+        checkIfIndexValid(index);
+        // Caution, unchecked cast
+        return (T) customArrayList[index];
+    }
 
+    @Override
+    public void set(T value, int index) {
+        checkIfIndexValid(index);
+        customArrayList[index] = value;
     }
 
     @Override
     public T remove(int index) {
+        checkIfIndexValid(index);
         T value = get(index);
-        if (value!=null) {
-            System.arraycopy(customArrayList, index, customArrayList, index-1, customArrayList.length-1);
-            return value;
+        System.arraycopy(customArrayList, 0, customArrayList, 0, index);
+        // If our element is last, no need to fetch second part of array
+        // (there is no second part in fact, it will cause index exception)
+        if (index != size() - 1) {
+            System.arraycopy(customArrayList, index + 1, customArrayList, index, size - index);
         }
-        // If given not valid index
-        return null;
+        changeSize(-1);
+        return value;
     }
 
     @Override
@@ -96,16 +108,15 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public int size() {
-        for (int i = 0; i < customArrayList.length; i++) {
-            if (customArrayList[i] == null) {
-                return i;
-            }
-        }
-        throw new RuntimeException("DevCap: Logically program must not reach this line");
+        return size;
+    }
+
+    private void changeSize(int delta) {
+        size += delta;
     }
 
     @Override
     public boolean isEmpty() {
-        return size()==0;
+        return size() == 0;
     }
 }
