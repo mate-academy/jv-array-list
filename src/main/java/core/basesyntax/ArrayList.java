@@ -6,23 +6,21 @@ public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private static final double GROWTH_FACTOR = 1.5;
 
-    private Object[] elementData;
+    private T[] elementData;
     private int size;
 
     public ArrayList() {
-        this.elementData = new Object[DEFAULT_CAPACITY];
-        this.size = 0;
-    }
-
-    private void grow() {
-        int newCapacity = (int) (elementData.length * GROWTH_FACTOR);
-        Object[] newArray = new Object[newCapacity];
-        System.arraycopy(elementData, 0, newArray, 0, size);
-        elementData = newArray;
+        this.elementData = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
     private void checkIndex(int index) {
         if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Index: " + index + ", Size: " + size);
+        }
+    }
+
+    private void checkForAdd(int index) {
+        if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException("Index: " + index + ", Size: " + size);
         }
     }
@@ -37,17 +35,20 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("Index: " + index + ", Size: " + size);
-        }
-
+        checkForAdd(index);
         if (size == elementData.length) {
             grow();
         }
-
         System.arraycopy(elementData, index, elementData, index + 1, size - index);
         elementData[index] = value;
         size++;
+    }
+
+    private void grow() {
+        int newCapacity = (int) (elementData.length * GROWTH_FACTOR);
+        T[] newArray = (T[]) new Object[newCapacity];
+        System.arraycopy(elementData, 0, newArray, 0, size);
+        elementData = newArray;
     }
 
     @Override
@@ -72,7 +73,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
-        T removedValue = (T) elementData[index];
+        T removedValue = elementData[index];
         System.arraycopy(elementData, index + 1, elementData, index, size - index - 1);
         elementData[--size] = null;
         return removedValue;
