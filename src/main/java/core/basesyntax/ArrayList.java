@@ -12,40 +12,6 @@ public class ArrayList<T> implements List<T> {
         customArrayList = (T[]) new Object[DEFAULT_SIZE];
     }
 
-    private void growIfArrayIsFull() {
-        if (size == customArrayList.length) {
-            int newSize = (int) (customArrayList.length * GROWTH_MULTIPLIER);
-            T[] newCustomArrayList = (T[]) new Object[newSize];
-            System.arraycopy(customArrayList, 0, newCustomArrayList, 0, customArrayList.length);
-            customArrayList = newCustomArrayList;
-        }
-    }
-
-    private void indexValidation(int index) {
-        if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index");
-        }
-    }
-
-    private void indexValidationInclusive(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index");
-        }
-    }
-
-    private boolean equals(Object a, Object b) {
-        return (a == b) || (a != null && a.equals(b));
-    }
-
-    private int findElementInArray(T element) {
-        for (int i = 0; i < size; i++) {
-            if (equals(customArrayList[i], element)) {
-                return i;
-            }
-        }
-        return -1;
-    }
-
     @Override
     public void add(T value) {
         growIfArrayIsFull();
@@ -100,7 +66,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        int index = findElementInArray(element);
+        int index = findElementIndex(element);
         if (index == -1) {
             throw new NoSuchElementException("There is no such element");
         }
@@ -114,6 +80,43 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public boolean isEmpty() {
-        return size() == 0;
+        return size == 0;
     }
+
+    private void growIfArrayIsFull() {
+        if (size == customArrayList.length) {
+            int newSize = (int) (customArrayList.length * GROWTH_MULTIPLIER);
+            T[] newCustomArrayList = (T[]) new Object[newSize];
+            System.arraycopy(customArrayList, 0, newCustomArrayList, 0, customArrayList.length);
+            customArrayList = newCustomArrayList;
+        }
+    }
+
+    private void indexValidation(int index) {
+        if (index < 0 || index > size) {
+            throw new ArrayListIndexOutOfBoundsException("Index " + index
+                    + " is out of bounds for size " + size);
+        }
+    }
+
+    private void indexValidationInclusive(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Index " + index
+                    + " is out of bounds for size " + size);
+        }
+    }
+
+    private boolean equals(Object a, Object b) {
+        return (a == b) || (a != null && a.equals(b));
+    }
+
+    private int findElementIndex(T element) {
+        for (int i = 0; i < size; i++) {
+            if (equals(customArrayList[i], element)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
 }
