@@ -79,7 +79,6 @@ public class ArrayList<T> implements List<T> {
         throw new NoSuchElementException("Element not found: " + element);
     }
 
-
     @Override
     public int size() {
         return size;
