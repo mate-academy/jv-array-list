@@ -23,15 +23,7 @@ public class ArrayList<T> implements List<T> {
         checkCapacity();
         if (index != size) {
             validateIndex(index);
-            if (index < size) {
-                T[] afterValues = (T[]) new Object[size - index];
-                for (int i = index; i < size; i++) {
-                    afterValues[i - index] = elementData[i];
-                }
-                for (int i = index + 1; i < size + 1; i++) {
-                    elementData[i] = afterValues[i - index - 1];
-                }
-            }
+            System.arraycopy(elementData, index, elementData, index + 1, size - index);
         }
         elementData[index] = value;
         size++;
@@ -70,9 +62,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if (elementData[i] == null && element == null) {
-                return remove(i);
-            } else if (elementData[i] != null && elementData[i].equals(element)) {
+            if ((elementData[i] == null && element == null)
+                    || (elementData[i] != null && elementData[i].equals(element))) {
                 return remove(i);
             }
         }
@@ -90,7 +81,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void checkCapacity() {
-        if (size() == elementData.length) {
+        if (size == elementData.length) {
             T[] newElementData = (T[]) new Object[(int) (elementData.length * 1.5)];
             for (int i = 0; i < size; i++) {
                 newElementData[i] = elementData[i];
