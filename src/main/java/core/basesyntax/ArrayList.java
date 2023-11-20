@@ -3,30 +3,30 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    private final int capacity = 10;
-    private final int changeStep = 1;
-    private final int zeroIndex = 0;
-    private T[] userArray;
+    private static final double GROW_FACTOR = 1.5;
+    private T[] data;
     private int size;
 
     public ArrayList() {
-        userArray = (T[]) new Object[capacity];
+        data = (T[]) new Object[size];
     }
 
     @Override
     public void add(T value) {
-        changeCapacity(size + changeStep);
-        userArray[size++] = value;
+        changeCapacity();
+        data[size++] = value;
     }
 
     @Override
     public void add(T value, int index) {
-        if (index < zeroIndex || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("Wrong index of element");
+        if (index < 0 || index > size) {
+            throw new ArrayListIndexOutOfBoundsException("You must indicate"
+                    + " the index from 0 till " + (size - 1)
+                    + " but was " + index);
         }
-        changeCapacity(size + changeStep);
-        System.arraycopy(userArray, index, userArray, index + changeStep, size - index);
-        userArray[index] = value;
+        changeCapacity();
+        System.arraycopy(data, index, data, index + 1, size - index);
+        data[index] = value;
         size++;
     }
 
@@ -39,43 +39,35 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index < zeroIndex || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Wrong index of element");
-        } else {
-            return userArray[index];
-        }
+        checkIndex(index);
+        return data[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index < zeroIndex || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("This index not exist");
-        }
-        userArray[index] = value;
+        checkIndex(index);
+        data[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index < zeroIndex || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Wrong index of element");
-        }
-        T removeElement = userArray[index];
-        System.arraycopy(userArray, index + changeStep,
-                userArray, index, size - index - changeStep);
+        checkIndex(index);
+        T removeElement = data[index];
+        System.arraycopy(data, index + 1,
+                data, index, size - index - 1);
         size--;
         return removeElement;
     }
 
     @Override
     public T remove(T element) {
-        T removedElement;
         int indexRemove = findByValue(element);
-        if (indexRemove != -1) {
-            removedElement = userArray[indexRemove];
-            remove(indexRemove);
-        } else {
-            throw new NoSuchElementException("Element not found");
+        if (indexRemove == -1) {
+            throw new NoSuchElementException("Element " + element + " not found");
         }
+        T removedElement;
+        removedElement = data[indexRemove];
+        remove(indexRemove);
         return removedElement;
     }
 
@@ -89,26 +81,34 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void changeCapacity(int actualCapacity) {
-        int oldCapacity = userArray.length;
+    private void changeCapacity() {
+        int actualCapacity = size + 1;
+        int oldCapacity = data.length;
         if (actualCapacity > oldCapacity) {
-            int newCapacity = oldCapacity >> 1;
+            int newCapacity = (int) (oldCapacity * GROW_FACTOR);
             if (newCapacity < actualCapacity) {
                 newCapacity = actualCapacity;
             }
             Object[] newElements = new Object[newCapacity];
-            System.arraycopy(userArray, zeroIndex, newElements, zeroIndex, size);
-            userArray = (T[]) newElements;
+            System.arraycopy(data, 0, newElements, 0, size);
+            data = (T[]) newElements;
         }
     }
 
     private int findByValue(T element) {
         for (int i = 0; i < size; i++) {
-            if (element == null && userArray[i] == null
-                    || element != null && element.equals(userArray[i])) {
+            if (element == data[i] || element != null && element.equals(data[i])) {
                 return i;
             }
         }
         return -1;
+    }
+
+    private void checkIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("You must indicate"
+                     + " the index from 0 till " + (size - 1)
+                     + " but was " + index);
+        }
     }
 }
