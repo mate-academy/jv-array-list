@@ -5,17 +5,14 @@ import java.util.NoSuchElementException;
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private int size;
-    private int index;
     private Object[] data = new Object[DEFAULT_CAPACITY];
 
     @Override
     public void add(T value) {
-        try {
-            ArrayList.this.add(value, index);
-            index++;
-        } catch (ArrayListIndexOutOfBoundsException e) {
-            throw new RuntimeException("Index out of bounds!", e);
+        if (size == data.length) {
+            data = grow();
         }
+        data[size++] = value;
     }
 
     @Override
@@ -24,34 +21,16 @@ public class ArrayList<T> implements List<T> {
         if (size == data.length) {
             data = grow();
         }
-        if (data[index] == null) {
-            data[index] = value;
-            size++;
-        } else {
-            Object[] tempLeft = new Object[data.length];
-            Object[] tempRight = new Object[data.length];
-            System.arraycopy(data, 0, tempLeft, 0, index);
-            System.arraycopy(data, index, tempRight, 0, data.length - index);
-            data = new Object[data.length];
-            System.arraycopy(tempLeft, 0, data, 0, index);
-            data[index] = value;
-            System.arraycopy(tempRight, 0, data, index + 1, data.length - index - 1);
-            size++;
-        }
+        System.arraycopy(data, index, data, index + 1, size - index);
+        data[index] = value;
+        size++;
     }
 
     @Override
     public void addAll(List<T> list) {
-        Object[] listToArray = new Object[list.size()];
         for (int i = 0; i < list.size(); i++) {
-            listToArray[i] = list.get(i);
+            add(list.get(i));
         }
-        int newCapacity = size + listToArray.length;
-        Object[] newData = new Object[newCapacity];
-        System.arraycopy(data, 0, newData, 0, size);
-        System.arraycopy(listToArray, 0, newData, size, listToArray.length);
-        data = newData;
-        size = newCapacity;
     }
 
     @Override
@@ -84,20 +63,13 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        int index = 0;
-        int counter = 0;
         for (int i = 0; i < data.length; i++) {
             if ((element == null && data[i] == element)
                     || (element != null && element.equals(data[i]))) {
-                index = i;
-                counter++;
-                break;
+                return remove(i);
             }
         }
-        if (counter == 0) {
-            throw new NoSuchElementException("There is no such element in the list");
-        }
-        return remove(index);
+        throw new NoSuchElementException("There is no such element in the list");
     }
 
     @Override
