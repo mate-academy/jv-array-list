@@ -83,15 +83,10 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void changeCapacity() {
-
-        int actualCapacity = size + 1;
-        if (actualCapacity > DEFAULT_CAPACITY) {
-            int newCapacity = (int) (DEFAULT_CAPACITY * GROW_FACTOR);
-            if (newCapacity < actualCapacity) {
-                newCapacity = actualCapacity;
-            }
+        if (size == data.length) {
+            int newCapacity = (int) (data.length * GROW_FACTOR);
             Object[] newElements = new Object[newCapacity];
-            System.arraycopy(data, 0, newElements, 0, size);
+            System.arraycopy(data,0, newElements,0, size);
             data = (T[]) newElements;
         }
     }
