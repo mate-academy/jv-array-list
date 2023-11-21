@@ -5,23 +5,23 @@ import java.util.NoSuchElementException;
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITYY = 10;
     private static final double INCREMENT_INDEX = 1.5;
-    private T[] array = (T[]) new Object[DEFAULT_CAPACITYY];
-    private int size = 0;
+    private T[] array;
+    private int size;
+
+    ArrayList() {
+        array = (T[]) new Object[DEFAULT_CAPACITYY];
+    }
 
     @Override
     public void add(T value) {
-        resizeArray();
-        array[size] = value;
-        size++;
+        resizeArrayIfFull();
+        array[size++] = value;
     }
 
     @Override
     public void add(T value, int index) {
-        if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("You can't add element to index: "
-                    + index);
-        }
-        resizeArray();
+        checkIndexToAdd(index);
+        resizeArrayIfFull();
         System.arraycopy(array, index, array, index + 1, size - index);
         array[index] = value;
         size++;
@@ -78,7 +78,7 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void resizeArray() {
+    private void resizeArrayIfFull() {
         if (array.length == size) {
             T[] newArray = (T[]) new Object[(int) (size * INCREMENT_INDEX)];
             System.arraycopy(array, 0, newArray, 0, size);
@@ -89,6 +89,13 @@ public class ArrayList<T> implements List<T> {
     private void checkIndex(int index) {
         if (index >= size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Index: " + index + ", Size: " + size);
+        }
+    }
+
+    private void checkIndexToAdd(int index) {
+        if (index < 0 || index > size) {
+            throw new ArrayListIndexOutOfBoundsException("You can't add element to index: "
+                    + index);
         }
     }
 }
