@@ -4,23 +4,25 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
+    private static final int CAPACITY_DIVISOR = 2;
     private int size;
-    private Object[] data = new Object[DEFAULT_CAPACITY];
+    private Object[] data;
+
+    public ArrayList() {
+        this.size = 0;
+        this.data = new Object[DEFAULT_CAPACITY];
+    }
 
     @Override
     public void add(T value) {
-        if (size == data.length) {
-            data = grow();
-        }
+        grow();
         data[size++] = value;
     }
 
     @Override
     public void add(T value, int index) {
         indexRangeCheckForAdd(index);
-        if (size == data.length) {
-            data = grow();
-        }
+        grow();
         System.arraycopy(data, index, data, index + 1, size - index);
         data[index] = value;
         size++;
@@ -36,7 +38,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         indexRangeCheck(index);
-        return (T) data[index];
+        return data(index);
     }
 
     @Override
@@ -48,14 +50,11 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         indexRangeCheck(index);
-        final T removedElement = (T) data[index];
-        Object[] newData = new Object[size - 1];
-        System.arraycopy(data, 0, newData, 0, index);
+        T removedElement = data(index);
         if (index == size - 1) {
-            data = newData;
+            System.arraycopy(data, 0, data, 0, size - 1);
         } else {
-            System.arraycopy(data, index + 1, newData, index, size - index - 1);
-            data = newData;
+            System.arraycopy(data, index + 1, data, index, size - index - 1);
         }
         size--;
         return removedElement;
@@ -82,6 +81,10 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
+    private T data(int index) {
+        return (T) data[index];
+    }
+
     private void indexRangeCheck(int index) {
         if (index >= size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Index " + index
@@ -96,12 +99,13 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private Object[] grow() {
-        int oldCapacity = data.length;
-        int newCapacity = oldCapacity + oldCapacity / 2;
-        Object[] expandedData = new Object[newCapacity];
-        System.arraycopy(data, 0, expandedData, 0, oldCapacity);
-        data = expandedData;
-        return data;
+    private void grow() {
+        if (size == data.length) {
+            int oldCapacity = data.length;
+            int newCapacity = oldCapacity + oldCapacity / CAPACITY_DIVISOR;
+            Object[] expandedData = new Object[newCapacity];
+            System.arraycopy(data, 0, expandedData, 0, oldCapacity);
+            data = expandedData;
+        }
     }
 }
