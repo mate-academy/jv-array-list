@@ -6,11 +6,10 @@ public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private static final int CAPACITY_DIVISOR = 2;
     private int size;
-    private Object[] data;
+    private T[] data;
 
     public ArrayList() {
-        this.size = 0;
-        this.data = new Object[DEFAULT_CAPACITY];
+        data = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
     @Override
@@ -38,7 +37,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         indexRangeCheck(index);
-        return data(index);
+        return data[index];
     }
 
     @Override
@@ -50,7 +49,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         indexRangeCheck(index);
-        T removedElement = data(index);
+        T removedElement = data[index];
         if (index == size - 1) {
             System.arraycopy(data, 0, data, 0, size - 1);
         } else {
@@ -81,10 +80,6 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private T data(int index) {
-        return (T) data[index];
-    }
-
     private void indexRangeCheck(int index) {
         if (index >= size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Index " + index
@@ -103,7 +98,7 @@ public class ArrayList<T> implements List<T> {
         if (size == data.length) {
             int oldCapacity = data.length;
             int newCapacity = oldCapacity + oldCapacity / CAPACITY_DIVISOR;
-            Object[] expandedData = new Object[newCapacity];
+            T[] expandedData = (T[]) new Object[newCapacity];
             System.arraycopy(data, 0, expandedData, 0, oldCapacity);
             data = expandedData;
         }
