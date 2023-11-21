@@ -4,11 +4,12 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final double GROW_FACTOR = 1.5;
+    private static final int DEFAULT_CAPACITY = 10;
     private T[] data;
     private int size;
 
     public ArrayList() {
-        data = (T[]) new Object[size];
+        data = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
     @Override
@@ -82,10 +83,10 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void changeCapacity() {
+
         int actualCapacity = size + 1;
-        int oldCapacity = data.length;
-        if (actualCapacity > oldCapacity) {
-            int newCapacity = (int) (oldCapacity * GROW_FACTOR);
+        if (actualCapacity > DEFAULT_CAPACITY) {
+            int newCapacity = (int) (DEFAULT_CAPACITY * GROW_FACTOR);
             if (newCapacity < actualCapacity) {
                 newCapacity = actualCapacity;
             }
