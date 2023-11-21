@@ -3,12 +3,13 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    private static final int MAX_VALUE = 10;
-    private int sum = 0;
+    private static final int DEFAULT_VALUE = 10;
+    private static final double INCREASE_INDEX = 1.5;
+    private int sum;
     private T[] array;
 
     public ArrayList() {
-        array = (T[]) new Object[MAX_VALUE];
+        array = (T[]) new Object[DEFAULT_VALUE];
     }
 
     @Override
@@ -19,11 +20,10 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        checkIndex(index);
         checkArraySize();
-        for (int i = sum - 1; i >= index; i--) {
-            T element = array[i];
-            array[i + 1] = element;
+        checkIndex(index);
+        if (index != sum) {
+            System.arraycopy(array, index, array, index + 1, sum);
         }
         array[index] = value;
         sum++;
@@ -32,9 +32,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void addAll(List<T> list) {
         for (int i = 0; i < list.size(); i++) {
-            checkArraySize();
-            array[sum++] = list.get(i);
-            System.out.println(list.get(i));
+            add(list.get(i));
         }
     }
 
@@ -54,9 +52,8 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         checkIndex(index);
         final T removeElement = array[index];
-        for (int i = index + 1; i < sum; i++) {
-            T element = array[i];
-            array[i - 1] = element;
+        if (index != sum - 1) {
+            System.arraycopy(array, index + 1, array, index, sum);
         }
         sum--;
         array[sum] = null;
@@ -85,19 +82,13 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public boolean isEmpty() {
-        if (sum == 0) {
-            return true;
-        } else {
-            return false;
-        }
+        return sum == 0;
     }
 
     private void checkArraySize() {
         if (sum == array.length) {
-            T[] newArray = (T[]) new Object[(int) (array.length * 1.5)];
-            for (int i = 0; i < array.length; i++) {
-                newArray[i] = array[i];
-            }
+            T[] newArray = (T[]) new Object[(int) (array.length * INCREASE_INDEX)];
+            System.arraycopy(array, 0, newArray, 0, sum);
             array = newArray;
         }
     }
