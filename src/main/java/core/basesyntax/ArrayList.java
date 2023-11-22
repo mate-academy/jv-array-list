@@ -5,7 +5,7 @@ import java.util.NoSuchElementException;
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_VALUE = 10;
     private static final double INCREASE_INDEX = 1.5;
-    private int sum;
+    private int size;
     private T[] array;
 
     public ArrayList() {
@@ -15,18 +15,18 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value) {
         checkArraySize();
-        array[sum++] = value;
+        array[size++] = value;
     }
 
     @Override
     public void add(T value, int index) {
         checkArraySize();
         checkIndex(index);
-        if (index != sum) {
-            System.arraycopy(array, index, array, index + 1, sum);
+        if (index != size) {
+            System.arraycopy(array, index, array, index + 1, size);
         }
         array[index] = value;
-        sum++;
+        size++;
     }
 
     @Override
@@ -52,18 +52,18 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         checkIndex(index);
         final T removeElement = array[index];
-        if (index != sum - 1) {
-            System.arraycopy(array, index + 1, array, index, sum);
+        if (index != size - 1) {
+            System.arraycopy(array, index + 1, array, index, size);
         }
-        sum--;
-        array[sum] = null;
+        size--;
+        array[size] = null;
         return removeElement;
     }
 
     @Override
     public T remove(T element) {
         int index = -1;
-        for (int i = 0; i < sum; i++) {
+        for (int i = 0; i < size; i++) {
             if (array[i] == element || (array[i] != null && array[i].equals(element))) {
                 index = i;
                 break;
@@ -77,24 +77,24 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public int size() {
-        return sum;
+        return size;
     }
 
     @Override
     public boolean isEmpty() {
-        return sum == 0;
+        return size == 0;
     }
 
     private void checkArraySize() {
-        if (sum == array.length) {
+        if (size == array.length) {
             T[] newArray = (T[]) new Object[(int) (array.length * INCREASE_INDEX)];
-            System.arraycopy(array, 0, newArray, 0, sum);
+            System.arraycopy(array, 0, newArray, 0, size);
             array = newArray;
         }
     }
 
     private void checkIndex(int index) {
-        if (index < 0 || ((sum != 0 && sum != 5) && index >= sum)) {
+        if (index < 0 || ((size != 0 && size != 5) && index >= size)) {
             throw new ArrayListIndexOutOfBoundsException("Index is invalid");
         }
     }
