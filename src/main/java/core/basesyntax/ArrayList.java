@@ -33,20 +33,11 @@ public class ArrayList<T> implements List<T> {
     }
 
     @SuppressWarnings("unchecked")
-    private void grow(int size) {
-        int len = size + elements.length + (elements.length >> 1);
+    private void grow(int listSize) {
+        int len = listSize + elements.length + (elements.length >> 1);
         Object[] newElements = new Object[len];
         System.arraycopy(elements, 0, newElements, 0, elements.length);
         this.elements = (T[]) newElements;
-    }
-
-    private void validIndex(int index) {
-        if (index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("index: " + index + " is not valid");
-        }
-        if (index > elementsCount + 1) {
-            throw new ArrayListIndexOutOfBoundsException("index: " + index + " is not valid");
-        }
     }
 
     @Override
@@ -58,7 +49,7 @@ public class ArrayList<T> implements List<T> {
     @SuppressWarnings("unchecked")
     @Override
     public void add(T value, int index) {
-        validIndex(index);
+        validateIndexForAdd(index);
         if (index == elementsCount) {
             add(value);
             return;
@@ -90,22 +81,14 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        validIndexToGet(index);
+        validateIndexToGet(index);
         return elements[index];
     }
 
-    private void validIndexToGet(int index) {
-        if (index < 0 || index >= elementsCount) {
-            throw new ArrayListIndexOutOfBoundsException("index: " + index + " is not valid");
-        }
-    }
 
     @Override
     public void set(T value, int index) {
-        validIndex(index);
-        if (index > elementsCount - 1) {
-            throw new ArrayListIndexOutOfBoundsException("index: " + index + " is not valid");
-        }
+        validateIndexForSet(index);
         elements[index] = value;
     }
 
@@ -115,7 +98,6 @@ public class ArrayList<T> implements List<T> {
         T t = get(index);
         Object[] newElements = new Object[elements.length];
         System.arraycopy(elements, 0, newElements, 0, index);
-        elementsCount--;
         System.arraycopy(
                 elements,
                 index + 1,
@@ -123,14 +105,15 @@ public class ArrayList<T> implements List<T> {
                 index,
                 elements.length - index - 1
         );
+        elementsCount--;
         this.elements = (T[]) newElements;
         return t;
     }
 
     @Override
     public T remove(T element) {
-        if (elements[elementsCount-1] != null && elements[elementsCount-1].equals(element)) {
-            remove(elementsCount-1);
+        if (elements[elementsCount - 1] != null && elements[elementsCount - 1].equals(element)) {
+            return remove(elementsCount - 1);
         }
         for (int i = 0; i < elementsCount - 1; i++) {
             if (element == elements[i] || elements[i] != null && elements[i].equals(element)) {
@@ -148,6 +131,24 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return elementsCount == 0;
+    }
+
+    private void validateIndexForAdd(int index) {
+        if (index < 0 || index > elementsCount + 1) {
+            throw new ArrayListIndexOutOfBoundsException("index: " + index + " is not valid");
+        }
+    }
+
+    private void validateIndexForSet(int index) {
+        if (index < 0 || index > elementsCount - 1) {
+            throw new ArrayListIndexOutOfBoundsException("index: " + index + " is not valid");
+        }
+    }
+
+    private void validateIndexToGet(int index) {
+        if (index < 0 || index >= elementsCount) {
+            throw new ArrayListIndexOutOfBoundsException("index: " + index + " is not valid");
+        }
     }
 }
 
