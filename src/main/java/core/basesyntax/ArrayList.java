@@ -84,7 +84,7 @@ public class ArrayList<T> implements List<T> {
                 return indexOld;
             }
         }
-        throw new NoSuchElementException("Value " + element + " not found.");
+        throw new NoSuchElementException("Value " + element + " not found!");
     }
 
     @Override
