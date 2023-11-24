@@ -7,12 +7,10 @@ public class ArrayList<T> implements List<T> {
     private int elementsCount;
     private T[] elements;
 
-    @SuppressWarnings("unchecked")
     public ArrayList() {
         elements = (T[]) new Object[CAPACITY];
     }
 
-    @SuppressWarnings("unchecked")
     public ArrayList(int capacity) {
         ArrayList.CAPACITY = capacity;
         elements = (T[]) new Object[CAPACITY];
@@ -22,7 +20,6 @@ public class ArrayList<T> implements List<T> {
         return elementsCount == elements.length;
     }
 
-    @SuppressWarnings("unchecked")
     private void grow() {
         if (isFull()) {
             int len = elements.length + (elements.length >> 1);
@@ -32,7 +29,6 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    @SuppressWarnings("unchecked")
     private void grow(int listSize) {
         int len = listSize + elements.length + (elements.length >> 1);
         Object[] newElements = new Object[len];
@@ -46,7 +42,6 @@ public class ArrayList<T> implements List<T> {
         elements[elementsCount++] = value;
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public void add(T value, int index) {
         validateIndex(index, 1);
@@ -91,7 +86,6 @@ public class ArrayList<T> implements List<T> {
         elements[index] = value;
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public T remove(int index) {
         final T t = get(index);
