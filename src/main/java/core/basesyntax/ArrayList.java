@@ -3,17 +3,17 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    private static int CAPACITY = 10;
+    private int capacity = 10;
     private int elementsCount;
     private T[] elements;
 
     public ArrayList() {
-        elements = (T[]) new Object[CAPACITY];
+        elements = (T[]) new Object[capacity];
     }
 
     public ArrayList(int capacity) {
-        ArrayList.CAPACITY = capacity;
-        elements = (T[]) new Object[CAPACITY];
+        this.capacity = capacity;
+        elements = (T[]) new Object[capacity];
     }
 
     private boolean isFull() {
