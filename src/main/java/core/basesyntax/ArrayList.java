@@ -49,7 +49,7 @@ public class ArrayList<T> implements List<T> {
     @SuppressWarnings("unchecked")
     @Override
     public void add(T value, int index) {
-        validateIndexForAdd(index);
+        validateIndex(index, 1);
         if (index == elementsCount) {
             add(value);
             return;
@@ -81,14 +81,13 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        validateIndexToGet(index);
+        validateIndex(index, 0);
         return elements[index];
     }
 
-
     @Override
     public void set(T value, int index) {
-        validateIndexForSet(index);
+        validateIndex(index, 0);
         elements[index] = value;
     }
 
@@ -110,9 +109,14 @@ public class ArrayList<T> implements List<T> {
         return t;
     }
 
+    private T getLast() {
+        return elements[elementsCount - 1];
+    }
+
     @Override
     public T remove(T element) {
-        if (elements[elementsCount - 1] != null && elements[elementsCount - 1].equals(element)) {
+        T last = getLast();
+        if (last != null && last.equals(element)) {
             return remove(elementsCount - 1);
         }
         for (int i = 0; i < elementsCount - 1; i++) {
@@ -133,22 +137,9 @@ public class ArrayList<T> implements List<T> {
         return elementsCount == 0;
     }
 
-    private void validateIndexForAdd(int index) {
-        if (index < 0 || index > elementsCount + 1) {
-            throw new ArrayListIndexOutOfBoundsException("index: " + index + " is not valid");
-        }
-    }
-
-    private void validateIndexForSet(int index) {
-        if (index < 0 || index > elementsCount - 1) {
-            throw new ArrayListIndexOutOfBoundsException("index: " + index + " is not valid");
-        }
-    }
-
-    private void validateIndexToGet(int index) {
-        if (index < 0 || index >= elementsCount) {
+    private void validateIndex(int index, int shift) {
+        if (index < 0 || index >= elementsCount + shift) {
             throw new ArrayListIndexOutOfBoundsException("index: " + index + " is not valid");
         }
     }
 }
-
