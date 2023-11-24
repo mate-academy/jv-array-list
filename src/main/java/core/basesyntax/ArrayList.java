@@ -1,48 +1,139 @@
 package core.basesyntax;
 
+import java.util.NoSuchElementException;
+
 public class ArrayList<T> implements List<T> {
+    private int capacity = 10;
+    private int elementsCount;
+    private T[] elements;
+
+    public ArrayList() {
+        elements = (T[]) new Object[capacity];
+    }
+
+    public ArrayList(int capacity) {
+        this.capacity = capacity;
+        elements = (T[]) new Object[capacity];
+    }
+
+    private boolean isFull() {
+        return elementsCount == elements.length;
+    }
+
+    private void grow() {
+        if (isFull()) {
+            int len = elements.length + (elements.length >> 1);
+            Object[] newElements = new Object[len];
+            System.arraycopy(elements, 0, newElements, 0, elements.length);
+            this.elements = (T[]) newElements;
+        }
+    }
+
+    private void grow(int listSize) {
+        int len = listSize + elements.length + (elements.length >> 1);
+        Object[] newElements = new Object[len];
+        System.arraycopy(elements, 0, newElements, 0, elements.length);
+        this.elements = (T[]) newElements;
+    }
+
     @Override
     public void add(T value) {
-
+        grow();
+        elements[elementsCount++] = value;
     }
 
     @Override
     public void add(T value, int index) {
-
+        validateIndex(index, 1);
+        if (index == elementsCount) {
+            add(value);
+            return;
+        }
+        grow();
+        Object[] newElements = new Object[elements.length];
+        System.arraycopy(elements, 0, newElements, 0, index);
+        newElements[index] = value;
+        elementsCount++;
+        System.arraycopy(
+                elements,
+                index,
+                newElements,
+                index + 1,
+                elements.length - index - 1
+        );
+        this.elements = (T[]) newElements;
     }
 
     @Override
     public void addAll(List<T> list) {
-
+        if (elements.length - elementsCount < list.size()) {
+            grow(list.size());
+        }
+        for (int i = 0; i < list.size(); i++) {
+            elements[elementsCount++] = list.get(i);
+        }
     }
 
     @Override
     public T get(int index) {
-        return null;
+        validateIndex(index, 0);
+        return elements[index];
     }
 
     @Override
     public void set(T value, int index) {
-
+        validateIndex(index, 0);
+        elements[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        return null;
+        final T t = get(index);
+        Object[] newElements = new Object[elements.length];
+        System.arraycopy(elements, 0, newElements, 0, index);
+        System.arraycopy(
+                elements,
+                index + 1,
+                newElements,
+                index,
+                elements.length - index - 1
+        );
+        elementsCount--;
+        this.elements = (T[]) newElements;
+        return t;
     }
 
     @Override
     public T remove(T element) {
-        return null;
+        T last = getLast();
+        if (last != null && last.equals(element)) {
+            return remove(elementsCount - 1);
+        }
+        for (int i = 0; i < elementsCount - 1; i++) {
+            if (element == elements[i] || elements[i] != null && elements[i].equals(element)) {
+                return remove(i);
+            }
+        }
+        throw new NoSuchElementException("element does not exist");
     }
 
     @Override
     public int size() {
-        return 0;
+        return elementsCount;
     }
 
     @Override
     public boolean isEmpty() {
-        return false;
+        return elementsCount == 0;
+    }
+
+    private T getLast() {
+        return elements[elementsCount - 1];
+    }
+
+    private void validateIndex(int index, int shift) {
+        if (index < 0 || index >= elementsCount + shift) {
+            throw new ArrayListIndexOutOfBoundsException("index: " + index + " is not valid");
+        }
     }
 }
