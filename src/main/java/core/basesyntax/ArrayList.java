@@ -94,7 +94,7 @@ public class ArrayList<T> implements List<T> {
     @SuppressWarnings("unchecked")
     @Override
     public T remove(int index) {
-        T t = get(index);
+        final T t = get(index);
         Object[] newElements = new Object[elements.length];
         System.arraycopy(elements, 0, newElements, 0, index);
         System.arraycopy(
@@ -107,10 +107,6 @@ public class ArrayList<T> implements List<T> {
         elementsCount--;
         this.elements = (T[]) newElements;
         return t;
-    }
-
-    private T getLast() {
-        return elements[elementsCount - 1];
     }
 
     @Override
@@ -135,6 +131,10 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return elementsCount == 0;
+    }
+
+    private T getLast() {
+        return elements[elementsCount - 1];
     }
 
     private void validateIndex(int index, int shift) {
