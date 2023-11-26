@@ -4,23 +4,19 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int INITIAL_LENGTH = 10;
-    private int totalCount;
+    private static final double GROW_FACTOR = 1.5;
     private int filledCount;
-    private Object[] items;
+    private T[] items;
 
     public ArrayList() {
-        items = new Object[INITIAL_LENGTH];
-        totalCount = items.length;
-        filledCount = 0;
+        items = (T[]) new Object[INITIAL_LENGTH];
     }
 
     @Override
     public void add(T value) {
-        if (isFull()) {
-            grow();
-        }
+        growIfNeeded();
         items[filledCount] = value;
-        filledCount += 1;
+        filledCount++;
     }
 
     @Override
@@ -29,31 +25,27 @@ public class ArrayList<T> implements List<T> {
             checkOutOfBoundsException(index);
         }
 
-        if (isFull()) {
-            grow();
-        }
+        growIfNeeded();
+
         for (int i = filledCount; i >= index; i--) {
             items[i] = (i == index) ? value : items[i - 1];
         }
-        filledCount += 1;
+        filledCount++;
     }
 
     @Override
     public void addAll(List<T> list) {
-        int newSize = filledCount + list.size();
-        while (newSize > totalCount) {
-            grow();
+
+        for (int i = 0; i < list.size(); i++) {
+            add(list.get(i));
         }
-        for (int i = filledCount; i < newSize; i++) {
-            items[i] = list.get(i - filledCount);
-        }
-        filledCount = newSize;
+
     }
 
     @Override
     public T get(int index) {
         checkOutOfBoundsException(index);
-        return (T) items[index];
+        return items[index];
     }
 
     @Override
@@ -65,12 +57,11 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         checkOutOfBoundsException(index);
-        Object removedItem = items[index];
-        for (int i = index; i < filledCount; i++) {
-            items[i] = (i == filledCount - 1) ? null : items[i + 1];
-        }
-        filledCount -= 1;
-        return (T) removedItem;
+        final T removedItem = items[index];
+        System.arraycopy(items, index + 1, items, index, filledCount - 1 - index);
+        items[filledCount - 1] = null;
+        filledCount--;
+        return removedItem;
     }
 
     @Override
@@ -85,7 +76,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public int size() {
-        return this.filledCount;
+        return filledCount;
     }
 
     @Override
@@ -94,7 +85,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     private boolean isFull() {
-        return (filledCount == totalCount);
+        return (filledCount == items.length);
     }
 
     private void checkOutOfBoundsException(int index) {
@@ -104,24 +95,19 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private void grow() {
-        totalCount = (int) (totalCount * 1.5);
-        Object[] itemsToCopy = items;
-        items = new Object[totalCount];
+    private void growIfNeeded() {
+        if (!isFull()) {
+            return;
+        }
+        int totalCount = (int) (items.length * GROW_FACTOR);
+        T[] itemsToCopy = items;
+        items = (T[]) new Object[totalCount];
         System.arraycopy(itemsToCopy, 0, items, 0, itemsToCopy.length);
     }
 
-    private static boolean objectsAreEqual(Object object1, Object object2) {
+    private static boolean objectsAreEqual(Object obj1, Object obj2) {
 
-        if (object1 == object2) {
-            return true;
-        }
-
-        if (object1 == null || object2 == null) {
-            return false;
-        }
-
-        return object1.equals(object2);
+        return obj1 == obj2 || ((obj1 == null || obj2 == null) ? false : obj1.equals(obj2));
 
     }
 }
