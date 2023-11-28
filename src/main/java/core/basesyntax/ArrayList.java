@@ -1,48 +1,105 @@
 package core.basesyntax;
 
+import java.util.NoSuchElementException;
+
 public class ArrayList<T> implements List<T> {
+
+    private static final int DEFAULT_DATA_LENGTH = 10;
+    private static final double GROWTH_FACTOR = 1.5;
+    private Object[] data;
+    private int size;
+
+    public ArrayList() {
+        data = new Object[DEFAULT_DATA_LENGTH];
+    }
+
     @Override
     public void add(T value) {
-
+        ifGrow();
+        data[size] = value;
+        size++;
     }
 
     @Override
     public void add(T value, int index) {
-
+        checkIndex(index);
+        ifGrow();
+        System.arraycopy(data, index, data, index + 1, size - index);
+        data[index] = value;
+        size++;
     }
 
     @Override
     public void addAll(List<T> list) {
-
+        for (int i = 0; i < list.size(); i++) {
+            add(list.get(i));
+        }
     }
 
     @Override
     public T get(int index) {
-        return null;
+        checkIndexExclusive(index);
+        return (T) data[index];
     }
 
     @Override
     public void set(T value, int index) {
-
+        checkIndexExclusive(index);
+        data[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        return null;
+        checkIndexExclusive(index);
+        T oldValue = (T) data[index];
+        System.arraycopy(data, index + 1, data, index, size - index - 1);
+        size--;
+        return oldValue;
     }
 
     @Override
     public T remove(T element) {
-        return null;
+        for (int i = 0; i < size; i++) {
+            if (element == data[i] || data[i] != null && data[i].equals(element)) {
+                remove(i);
+                return element;
+            }
+        }
+        throw new NoSuchElementException("No such element exception");
     }
 
     @Override
     public int size() {
-        return 0;
+        return size;
     }
 
     @Override
     public boolean isEmpty() {
-        return false;
+        return size == 0;
     }
+
+    private Object[] grow(Object[] data) {
+        Object[] newArray = new Object[(int) (data.length * GROWTH_FACTOR)];
+        System.arraycopy(data, 0, newArray, 0, data.length);
+        return newArray;
+    }
+
+    private void checkIndex(int index) {
+        if (index < 0 || index > size) {
+            throw new ArrayListIndexOutOfBoundsException("Index out of bound");
+        }
+    }
+
+    private void checkIndexExclusive(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Index out of bound");
+        }
+    }
+
+    private void ifGrow() {
+        if (size == data.length) {
+            data = grow(data);
+        }
+    }
+
 }
