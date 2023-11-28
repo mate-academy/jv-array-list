@@ -15,8 +15,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value) {
         growIfNeeded();
-        items[filledCount] = value;
-        filledCount++;
+        items[filledCount++] = value;
     }
 
     @Override
@@ -24,22 +23,17 @@ public class ArrayList<T> implements List<T> {
         if (index != filledCount) {
             checkOutOfBoundsException(index);
         }
-
         growIfNeeded();
-
-        for (int i = filledCount; i >= index; i--) {
-            items[i] = (i == index) ? value : items[i - 1];
-        }
+        System.arraycopy(items, index, items, index + 1, filledCount - index);
+        items[index] = value;
         filledCount++;
     }
 
     @Override
     public void addAll(List<T> list) {
-
         for (int i = 0; i < list.size(); i++) {
             add(list.get(i));
         }
-
     }
 
     @Override
@@ -59,8 +53,7 @@ public class ArrayList<T> implements List<T> {
         checkOutOfBoundsException(index);
         final T removedItem = items[index];
         System.arraycopy(items, index + 1, items, index, filledCount - 1 - index);
-        items[filledCount - 1] = null;
-        filledCount--;
+        items[--filledCount] = null;
         return removedItem;
     }
 
@@ -84,10 +77,6 @@ public class ArrayList<T> implements List<T> {
         return (size() == 0);
     }
 
-    private boolean isFull() {
-        return (filledCount == items.length);
-    }
-
     private void checkOutOfBoundsException(int index) {
         if ((index >= filledCount) || index < 0) {
             throw new ArrayListIndexOutOfBoundsException(
@@ -96,7 +85,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void growIfNeeded() {
-        if (!isFull()) {
+        if (filledCount < items.length) {
             return;
         }
         int totalCount = (int) (items.length * GROW_FACTOR);
@@ -106,8 +95,6 @@ public class ArrayList<T> implements List<T> {
     }
 
     private static boolean objectsAreEqual(Object obj1, Object obj2) {
-
         return obj1 == obj2 || ((obj1 == null || obj2 == null) ? false : obj1.equals(obj2));
-
     }
 }
