@@ -5,7 +5,7 @@ import java.util.NoSuchElementException;
 public class ArrayList<T> implements List<T> {
     private static final int INITIAL_LENGTH = 10;
     private static final double GROW_FACTOR = 1.5;
-    private int filledCount;
+    private int size;
     private T[] items;
 
     public ArrayList() {
@@ -15,18 +15,18 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value) {
         growIfNeeded();
-        items[filledCount++] = value;
+        items[size++] = value;
     }
 
     @Override
     public void add(T value, int index) {
-        if (index != filledCount) {
+        if (index != size) {
             checkOutOfBoundsException(index);
         }
         growIfNeeded();
-        System.arraycopy(items, index, items, index + 1, filledCount - index);
+        System.arraycopy(items, index, items, index + 1, size - index);
         items[index] = value;
-        filledCount++;
+        size++;
     }
 
     @Override
@@ -52,14 +52,14 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         checkOutOfBoundsException(index);
         final T removedItem = items[index];
-        System.arraycopy(items, index + 1, items, index, filledCount - 1 - index);
-        items[--filledCount] = null;
+        System.arraycopy(items, index + 1, items, index, size - 1 - index);
+        items[--size] = null;
         return removedItem;
     }
 
     @Override
     public T remove(T element) {
-        for (int i = 0; i < filledCount; i++) {
+        for (int i = 0; i < size; i++) {
             if (objectsAreEqual(items[i], element)) {
                 return remove(i);
             }
@@ -69,23 +69,23 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public int size() {
-        return filledCount;
+        return size;
     }
 
     @Override
     public boolean isEmpty() {
-        return (size() == 0);
+        return (size == 0);
     }
 
     private void checkOutOfBoundsException(int index) {
-        if ((index >= filledCount) || index < 0) {
+        if ((index >= size) || index < 0) {
             throw new ArrayListIndexOutOfBoundsException(
-                    "Index " + index + " outside of array list size (" + filledCount + ")");
+                    "Index " + index + " outside of array list size (" + size + ")");
         }
     }
 
     private void growIfNeeded() {
-        if (filledCount < items.length) {
+        if (size < items.length) {
             return;
         }
         int totalCount = (int) (items.length * GROW_FACTOR);
