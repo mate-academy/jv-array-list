@@ -2,18 +2,16 @@ package core.basesyntax;
 
 import java.util.Arrays;
 import java.util.NoSuchElementException;
-import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
 
-    private static final int DEFAULT_ARRAY_ELEMENTS = 10;
+    private static final int DEFAULT_DATA_LENGTH = 10;
     private static final double GROWTH_FACTOR = 1.5;
     private Object[] data;
     private int size;
 
     public ArrayList() {
-        data = new Object[DEFAULT_ARRAY_ELEMENTS];
-        size = 0;
+        data = new Object[DEFAULT_DATA_LENGTH];
     }
 
     @Override
@@ -35,8 +33,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void addAll(List<T> list) {
         for (int i = 0; i < list.size(); i++) {
-            ifGrow();
-            data[size++] = list.get(i);
+            add(list.get(i));
         }
     }
 
@@ -66,7 +63,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if (Objects.equals(data[i], element)) {
+            if (element == data[i] || data[i] != null && data[i].equals(element)) {
                 remove(i);
                 return element;
             }
