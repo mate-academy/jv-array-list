@@ -13,43 +13,49 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void indexCheck(int index) {
-        if (index >= size || index < 0)
+        if (index < 0 || index >= size)
+            throw new ArrayListIndexOutOfBoundsException("Wrong index");
+    }
+
+    private void checkRange(int index) {
+        if (index < 0 || index >= elementData.length)
             throw new ArrayListIndexOutOfBoundsException("Wrong index");
     }
 
     @Override
     public void add(T value) {
         add(value, elementData, size);
-        //size++;
+    }
 
+    public T[] toArray(List<T> t) {
+        T[] arr = (T[]) new Object[t.size()];
+        for (int i = 0; i < t.size(); i++)
+            arr[i] = t.get(i);
+        return arr;
     }
 
     @Override
     public void add(T value, int index) {
-        indexCheck(index);
+        checkRange(index);
         final int s;
-        Object[] elementData;
-        if ((s = size) == (elementData = this.elementData).length)
-            elementData = grow();
-        System.arraycopy(elementData, index,
-                elementData, index + 1,
-                s - index);
-        elementData[index] = value;
+        Object[] newElementData;
+        if ((s = size) == (newElementData = this.elementData).length)
+            newElementData = grow();
+        System.arraycopy(elementData, index, newElementData, index + 1, s - index);
+        newElementData[index] = value;
         size = s + 1;
     }
 
     @Override
     public void addAll(List<T> list) {
-        //Object[] a = c.toArray();
-       // modCount++;
+        T[] listData = (T[]) new Object [list.size()];
+        listData = list.toArray(list);
         int numNew = list.size();
-        //if (numNew == 0)
-            //return false;
         T[] elementData;
         final int s;
         if (numNew > (elementData = this.elementData).length - (s = size))
             elementData = (T[]) grow(s + numNew);
-        System.arraycopy(elementData, 0, this.elementData, s, numNew);
+        System.arraycopy(listData, 0, elementData, s, numNew);
         size = s + numNew;
     }
 
@@ -68,10 +74,11 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         indexCheck(index);
-        T[] newElementData = (T[]) new  Object[elementData.length];
-        System.arraycopy(elementData, index , newElementData, index + 1, size - 1);
+        T value = get(index);
+        elementData = (T[]) grow(elementData.length + 1);
+        System.arraycopy(elementData, index + 1, elementData, index, size - index);
         size--;
-        return elementData[index];
+        return value;
     }
 
     @Override
