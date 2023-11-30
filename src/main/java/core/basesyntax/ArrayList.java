@@ -1,6 +1,7 @@
 package core.basesyntax;
 
 import java.util.Arrays;
+import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private int size;
@@ -13,8 +14,8 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void indexCheck(int index) {
-        if (index < 0 || index >= size)
-            throw new ArrayListIndexOutOfBoundsException("Wrong index");
+        if (index >= size() || index < 0)
+            throw new ArrayListIndexOutOfBoundsException("Non existed position");
     }
 
     private void checkRange(int index) {
@@ -24,7 +25,6 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        //if ()
         add(value, elementData, size);
     }
 
@@ -38,14 +38,11 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         checkRange(index);
-        //indexCheck(index);
-        //final int s;
-        //Object[] newElementData;
-        //if ((s = size) == (newElementData = this.elementData).length)
-            elementData = (T[]) grow(size +1);
-        System.arraycopy(elementData, index, elementData, index + 1, elementData.length - 1 - index);
+        elementData = (T[]) grow(size +1);
+        System.arraycopy(elementData, index, elementData, index + 1, elementData.length - index - 1);
+        size++;
+        indexCheck(index);
         elementData[index] = value;
-        size = size + 1;
     }
 
     @Override
@@ -76,6 +73,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         indexCheck(index);
+        checkRange(index);
         T value = get(index);
         elementData = (T[]) grow(elementData.length + 1);
         System.arraycopy(elementData, index + 1, elementData, index, size - index);
@@ -85,8 +83,20 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        //T value = get()
-        size--;
+        int index = -2;
+        for (int i = 0; i < elementData.length; i++) {
+            if (elementData[i] == element) {
+                index = i;
+                break;
+            }
+        }
+            if (index == -2) {
+                throw new NoSuchElementException();
+            } else {
+                remove(index);
+
+        }
+
         return element;
     }
 
