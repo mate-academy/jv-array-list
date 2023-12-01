@@ -2,6 +2,7 @@ package core.basesyntax;
 
 import java.util.Arrays;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
@@ -21,38 +22,12 @@ public class ArrayList<T> implements List<T> {
         return arr;
     }
 
-    private void indexCheck(int index) {
-        if (index >= size() || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Non existed position");
-        }
-    }
-
-    private void checkRange(int index) {
-        if (index < 0 || index >= elementData.length) {
-            throw new ArrayListIndexOutOfBoundsException("Wrong index");
-        }
-    }
-
     private void add(T e, Object[] elementData, int s) {
         if (s == elementData.length) {
             elementData = grow();
         }
         elementData[s] = e;
         size = s + 1;
-    }
-
-    private Object[] grow() {
-        return grow(size + 1);
-    }
-
-    private Object[] grow(int minCapacity) {
-        int oldCapacity = elementData.length;
-        if (oldCapacity > 0 || elementData != DEFAULTCAPACITY_EMPTY_ELEMENTDATA) {
-            int newCapacity = oldCapacity + (minCapacity - oldCapacity) + (oldCapacity >> 1);
-            return elementData = Arrays.copyOf(elementData, newCapacity);
-        } else {
-            return elementData = (T[]) new Object[Math.max(DEFAULT_CAPACITY, minCapacity)];
-        }
     }
 
     @Override
@@ -111,8 +86,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         int index = -1;
-        for (int i = 0; i < elementData.length; i++) {
-            if (elementData[i] == element) {
+        for (int i = 0; i < size; i++) {
+            if (elementData[i] == element || elementData[i] != null && elementData[i].equals(element)) {
                 index = i;
                 break;
             }
@@ -133,6 +108,32 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private void indexCheck(int index) {
+        if (index >= size() || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Non existed position");
+        }
+    }
+
+    private void checkRange(int index) {
+        if (index < 0 || index >= elementData.length) {
+            throw new ArrayListIndexOutOfBoundsException("Wrong index");
+        }
+    }
+
+    private Object[] grow() {
+        return grow(size + 1);
+    }
+
+    private Object[] grow(int minCapacity) {
+        int oldCapacity = elementData.length;
+        if (oldCapacity > 0 || elementData != DEFAULTCAPACITY_EMPTY_ELEMENTDATA) {
+            int newCapacity = oldCapacity + (minCapacity - oldCapacity) + (oldCapacity >> 1);
+            return elementData = Arrays.copyOf(elementData, newCapacity);
+        } else {
+            return elementData = (T[]) new Object[Math.max(DEFAULT_CAPACITY, minCapacity)];
+        }
     }
 }
 
