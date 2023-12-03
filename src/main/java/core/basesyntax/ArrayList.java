@@ -20,17 +20,13 @@ public class ArrayList<T> implements List<T> {
         return arr;
     }
 
-    private void add(T e, Object[] elementData, int s) {
-        if (s == this.elementData.length) {
-            this.elementData = (T[]) grow(size + 1);
-        }
-        this.elementData[s] = e;
-        size = s + 1;
-    }
-
     @Override
     public void add(T value) {
-        add(value, elementData, size);
+        if (size == this.elementData.length) {
+            this.elementData = (T[]) grow(size + 1);
+        }
+        this.elementData[size] = value;
+        size++;
     }
 
     @Override
