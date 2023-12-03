@@ -36,7 +36,6 @@ public class ArrayList<T> implements List<T> {
         System.arraycopy(elementData, index, elementData,
                 index + 1, elementData.length - index - 1);
         size++;
-        indexCheck(index);
         elementData[index] = value;
     }
 
@@ -108,7 +107,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void checkRange(int index) {
-        if (index < 0 || index >= elementData.length) {
+        if (index < 0 || index >= elementData.length || index > size) {
             throw new ArrayListIndexOutOfBoundsException("Wrong index");
         }
     }
