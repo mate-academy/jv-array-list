@@ -70,8 +70,6 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(int index) {
-        indexCheck(index);
-        checkRange(index);
         elementData = (T[]) grow(elementData.length + 1);
         T value = get(index);
         System.arraycopy(elementData, index + 1, elementData, index, size - index);
@@ -117,10 +115,6 @@ public class ArrayList<T> implements List<T> {
         if (index < 0 || index >= elementData.length) {
             throw new ArrayListIndexOutOfBoundsException("Wrong index");
         }
-    }
-
-    private Object[] grow() {
-        return grow(size + 1);
     }
 
     private Object[] grow(int minCapacity) {
