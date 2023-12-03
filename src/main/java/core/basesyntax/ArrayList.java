@@ -1,6 +1,5 @@
 package core.basesyntax;
 
-import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
@@ -22,10 +21,10 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void add(T e, Object[] elementData, int s) {
-        if (s == elementData.length) {
-            elementData = grow();
+        if (s == this.elementData.length) {
+            this.elementData = (T[]) grow(size + 1);
         }
-        elementData[s] = e;
+        this.elementData[s] = e;
         size = s + 1;
     }
 
@@ -47,16 +46,14 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        T[] listData = (T[]) new Object [list.size()];
+        int sizeList = list.size();
+        T[] listData = (T[]) new Object [sizeList];
         listData = list.toArray(list);
-        int numNew = list.size();
-        T[] elementData;
-        final int s;
-        if (numNew > (elementData = this.elementData).length - (s = size)) {
-            elementData = (T[]) grow(s + numNew);
+        if (sizeList > (this.elementData.length - size)) {
+            elementData = (T[]) grow(size + sizeList);
         }
-        System.arraycopy(listData, 0, elementData, s, numNew);
-        size = s + numNew;
+        System.arraycopy(listData, 0, this.elementData, size, sizeList);
+        size = size + sizeList;
     }
 
     @Override
@@ -111,7 +108,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void indexCheck(int index) {
-        if (index >= size() || index < 0) {
+        if (index >= size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Non existed position");
         }
     }
@@ -130,7 +127,9 @@ public class ArrayList<T> implements List<T> {
         int oldCapacity = elementData.length;
         if (oldCapacity > 0 || elementData != DEFAULTCAPACITY_EMPTY_ELEMENTDATA) {
             int newCapacity = oldCapacity + (minCapacity - oldCapacity) + (oldCapacity >> 1);
-            return elementData = Arrays.copyOf(elementData, newCapacity);
+            T[] increasedElementData = (T[]) new Object[newCapacity];
+            System.arraycopy(this.elementData, 0, increasedElementData, 0, size);
+            return increasedElementData;
         } else {
             return elementData = (T[]) new Object[Math.max(DEFAULT_CAPACITY, minCapacity)];
         }
