@@ -14,9 +14,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (size == this.elementData.length) {
-            this.elementData = (T[]) grow(size + 1);
-        }
+        grow();
         this.elementData[size] = value;
         size++;
     }
@@ -62,10 +60,10 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
             int index = indexOf(element);
-           if (index != -1) {
+            if (index != -1) {
                 return remove(index);
            }
-           throw new NoSuchElementException("Element njt found");
+           throw new NoSuchElementException("Element not found");
     }
 
     @Override
@@ -100,6 +98,12 @@ public class ArrayList<T> implements List<T> {
             }
         }
         return index;
+    }
+
+    private void grow() {
+        if (size == this.elementData.length) {
+            this.elementData = (T[]) grow(size + 1);
+        }
     }
 
     private Object[] grow(int minCapacity) {
