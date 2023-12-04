@@ -22,7 +22,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         checkRange(index);
-        elementData = (T[]) grow(size + 1);
+        grow(size + 1);
         System.arraycopy(elementData, index, elementData,
                 index + 1, elementData.length - index - 1);
         size++;
@@ -50,7 +50,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(int index) {
-        elementData = (T[]) grow(elementData.length + 1);
+        grow(elementData.length + 1);
         T value = get(index);
         System.arraycopy(elementData, index + 1, elementData, index, size - index);
         size--;
@@ -102,19 +102,19 @@ public class ArrayList<T> implements List<T> {
 
     private void grow() {
         if (size == this.elementData.length) {
-            this.elementData = (T[]) grow(size + 1);
+            grow(size + 1);
         }
     }
 
-    private Object[] grow(int minCapacity) {
+    private void grow(int minCapacity) {
         int oldCapacity = elementData.length;
         if (oldCapacity > 0 || elementData != DEFAULTCAPACITY_EMPTY_ELEMENTDATA) {
             int newCapacity = oldCapacity + (minCapacity - oldCapacity) + (oldCapacity >> 1);
             T[] increasedElementData = (T[]) new Object[newCapacity];
             System.arraycopy(this.elementData, 0, increasedElementData, 0, size);
-            return increasedElementData;
+            this.elementData = increasedElementData;
         } else {
-            return elementData = (T[]) new Object[Math.max(DEFAULT_CAPACITY, minCapacity)];
+            elementData = (T[]) new Object[Math.max(DEFAULT_CAPACITY, minCapacity)];
         }
     }
 }
