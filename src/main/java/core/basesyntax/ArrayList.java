@@ -3,9 +3,11 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
+
     private static final int DEFAULT_CAPACITY = 10;
-    private static final Object[] DEFAULTCAPACITY_EMPTY_ELEMENTDATA = {};
+
     private int size;
+
     private T[] elementData;
 
     public ArrayList() {
@@ -15,13 +17,15 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value) {
         grow();
-        this.elementData[size] = value;
-        size++;
+        elementData[size++] = value;
     }
 
     @Override
     public void add(T value, int index) {
-        checkRange(index);
+        if (index < 0 || index > size) {
+            throw new ArrayListIndexOutOfBoundsException("Index: " + index
+                    + " out of bound when size: " + size);
+        }
         grow(size + 1);
         System.arraycopy(elementData, index, elementData,
                 index + 1, elementData.length - index - 1);
@@ -63,7 +67,7 @@ public class ArrayList<T> implements List<T> {
         if (index != -1) {
             return remove(index);
         }
-        throw new NoSuchElementException("Element not found");
+        throw new NoSuchElementException("Element: " + element + " not found");
     }
 
     @Override
@@ -78,13 +82,8 @@ public class ArrayList<T> implements List<T> {
 
     private void indexCheck(int index) {
         if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Non existed position");
-        }
-    }
-
-    private void checkRange(int index) {
-        if (index < 0 || index >= elementData.length || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("Wrong index");
+            throw new ArrayListIndexOutOfBoundsException("Non existed position "
+                    + index + " when size is: " + size);
         }
     }
 
@@ -101,21 +100,17 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void grow() {
-        if (size == this.elementData.length) {
+        if (size == elementData.length) {
             grow(size + 1);
         }
     }
 
     private void grow(int minCapacity) {
         int oldCapacity = elementData.length;
-        if (oldCapacity > 0 || elementData != DEFAULTCAPACITY_EMPTY_ELEMENTDATA) {
-            int newCapacity = oldCapacity + (minCapacity - oldCapacity) + (oldCapacity >> 1);
-            T[] increasedElementData = (T[]) new Object[newCapacity];
-            System.arraycopy(this.elementData, 0, increasedElementData, 0, size);
-            this.elementData = increasedElementData;
-        } else {
-            elementData = (T[]) new Object[Math.max(DEFAULT_CAPACITY, minCapacity)];
-        }
+        int newCapacity = oldCapacity + (minCapacity - oldCapacity) + (oldCapacity >> 1);
+        T[] increasedElementData = (T[]) new Object[newCapacity];
+        System.arraycopy(elementData, 0, increasedElementData, 0, size);
+        elementData = increasedElementData;
     }
 }
 
