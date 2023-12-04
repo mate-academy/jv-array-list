@@ -1,7 +1,6 @@
 package core.basesyntax;
 
 import java.util.NoSuchElementException;
-import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
@@ -10,14 +9,6 @@ public class ArrayList<T> implements List<T> {
 
     public ArrayList() {
         elements = new Object[DEFAULT_CAPACITY];
-    }
-
-    private void resizeArrayIfNeeded() {
-        if (elements.length == size) {
-            Object[] newArray = new Object[elements.length + (elements.length >> 1)];
-            System.arraycopy(elements, 0, newArray, 0, size);
-            elements = newArray;
-        }
     }
 
     @Override
@@ -47,25 +38,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("You can't get value by this index ");
-        }
+        validIndex(index, "You can't get value by this index ");
         return (T) elements[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("You can't set value by this index ");
-        }
+        validIndex(index, "You can't set value by this index ");
         elements[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("You can't set value by this index ");
-        }
+        validIndex(index, "You can't set value by this index ");
         Object removedElement = elements[index];
         System.arraycopy(elements, index + 1, elements, index, size - index - 1);
         size--;
@@ -75,7 +60,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if (Objects.equals(elements[i], element)) {
+            if (element == elements[i] || (elements[i] != null && elements[i].equals(element))) {
                 System.arraycopy(elements, i + 1, elements, i, size - 1);
                 size--;
                 return element;
@@ -92,5 +77,19 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private void resizeArrayIfNeeded() {
+        if (elements.length == size) {
+            Object[] newArray = new Object[elements.length + (elements.length >> 1)];
+            System.arraycopy(elements, 0, newArray, 0, size);
+            elements = newArray;
+        }
+    }
+
+    private void validIndex(int index, String message) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException(message);
+        }
     }
 }
