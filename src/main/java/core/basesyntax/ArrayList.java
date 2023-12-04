@@ -59,11 +59,11 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-            int index = indexOf(element);
-            if (index != -1) {
-                return remove(index);
-           }
-           throw new NoSuchElementException("Element not found");
+        int index = indexOf(element);
+        if (index != -1) {
+            return remove(index);
+        }
+        throw new NoSuchElementException("Element not found");
     }
 
     @Override
