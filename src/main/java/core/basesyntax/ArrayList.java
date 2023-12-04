@@ -12,14 +12,6 @@ public class ArrayList<T> implements List<T> {
         elementData = (T[]) new Object [DEFAULT_CAPACITY];
     }
 
-    public T[] toArray(List<T> t) {
-        T[] arr = (T[]) new Object[t.size()];
-        for (int i = 0; i < t.size(); i++) {
-            arr[i] = t.get(i);
-        }
-        return arr;
-    }
-
     @Override
     public void add(T value) {
         if (size == this.elementData.length) {
@@ -41,14 +33,9 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        int sizeList = list.size();
-        T[] listData = (T[]) new Object [sizeList];
-        listData = list.toArray(list);
-        if (sizeList > (this.elementData.length - size)) {
-            elementData = (T[]) grow(size + sizeList);
+        for (int i = 0; i < list.size(); i++) {
+            add(list.get(i));
         }
-        System.arraycopy(listData, 0, this.elementData, size, sizeList);
-        size = size + sizeList;
     }
 
     @Override
@@ -74,20 +61,11 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        int index = -1;
-        for (int i = 0; i < size; i++) {
-            if (elementData[i] == element
-                    || elementData[i] != null && elementData[i].equals(element)) {
-                index = i;
-                break;
-            }
-        }
-        if (index == -1) {
-            throw new NoSuchElementException();
-        } else {
-            remove(index);
-        }
-        return element;
+            int index = indexOf(element);
+           if (index != -1) {
+                return remove(index);
+           }
+           throw new NoSuchElementException("Element njt found");
     }
 
     @Override
@@ -110,6 +88,18 @@ public class ArrayList<T> implements List<T> {
         if (index < 0 || index >= elementData.length || index > size) {
             throw new ArrayListIndexOutOfBoundsException("Wrong index");
         }
+    }
+
+    private int indexOf(T element) {
+        int index = -1;
+        for (int i = 0; i < size; i++) {
+            if (elementData[i] == element
+                    || elementData[i] != null && elementData[i].equals(element)) {
+                index = i;
+                break;
+            }
+        }
+        return index;
     }
 
     private Object[] grow(int minCapacity) {
