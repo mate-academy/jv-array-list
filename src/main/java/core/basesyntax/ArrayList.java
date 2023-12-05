@@ -38,19 +38,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        validIndex(index, "You can't get value by this index ");
+        validIndex(index);
         return (T) elements[index];
     }
 
     @Override
     public void set(T value, int index) {
-        validIndex(index, "You can't set value by this index ");
+        validIndex(index);
         elements[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        validIndex(index, "You can't set value by this index ");
+        validIndex(index);
         Object removedElement = elements[index];
         System.arraycopy(elements, index + 1, elements, index, size - index - 1);
         size--;
@@ -87,9 +87,10 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private void validIndex(int index, String message) {
+    private void validIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException(message);
+            throw new ArrayListIndexOutOfBoundsException("Invalid index " + index
+                    + ". Size = " + size);
         }
     }
 }
