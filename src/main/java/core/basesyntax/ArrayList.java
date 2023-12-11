@@ -25,7 +25,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("Index is invalid! Index: " + index + ", Size: " + size);
+            throw new ArrayListIndexOutOfBoundsException("Index is invalid! Index: "
+                    + index + ", Size: " + size);
         }
         resizeIfArrayIsFull();
         System.arraycopy(elements, index, elements, index + 1, size - index);
@@ -84,7 +85,8 @@ public class ArrayList<T> implements List<T> {
 
     private void resizeIfArrayIsFull() {
         if (size == elements.length) {
-            Object[] newElements = new Object[elements.length + (int)(elements.length * GROW_FACTOR)];
+            Object[] newElements = new Object[elements.length
+                    + (int) (elements.length * GROW_FACTOR)];
             System.arraycopy(elements, 0, newElements, 0, size);
             elements = (T[]) newElements;
         }
@@ -92,7 +94,8 @@ public class ArrayList<T> implements List<T> {
 
     private void checkIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index is invalid! Index: " + index + ", Size: " + size);
+            throw new ArrayListIndexOutOfBoundsException("Index is invalid! Index: "
+                    + index + ", Size: " + size);
         }
     }
 }
