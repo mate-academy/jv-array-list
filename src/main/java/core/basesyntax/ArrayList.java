@@ -4,11 +4,12 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    private Object[] elements;
+    private static final double GROW_FACTOR = 1.5;
+    private T[] elements;
     private int size;
 
     public ArrayList(int capacity) {
-        elements = new Object[capacity];
+        elements = (T[]) new Object[capacity];
     }
 
     public ArrayList() {
@@ -24,7 +25,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("Index is invalid!");
+            throw new ArrayListIndexOutOfBoundsException("Index is invalid! Index: " + index + ", Size: " + size);
         }
         resizeIfArrayIsFull();
         System.arraycopy(elements, index, elements, index + 1, size - index);
@@ -83,15 +84,15 @@ public class ArrayList<T> implements List<T> {
 
     private void resizeIfArrayIsFull() {
         if (size == elements.length) {
-            Object[] newElements = new Object[elements.length + (elements.length >> 1)];
+            Object[] newElements = new Object[elements.length + (int)(elements.length * GROW_FACTOR)];
             System.arraycopy(elements, 0, newElements, 0, size);
-            elements = newElements;
+            elements = (T[]) newElements;
         }
     }
 
     private void checkIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index is invalid!");
+            throw new ArrayListIndexOutOfBoundsException("Index is invalid! Index: " + index + ", Size: " + size);
         }
     }
 }
