@@ -6,52 +6,31 @@ public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_INITIAL_CAPACITY = 10;
     private static final int ONE_INDEX = 1;
     private static final int NULL_INDEX = 0;
-    private static final int NULL = 0;
-
     private T[] array = (T[])new Object[DEFAULT_INITIAL_CAPACITY];
     private int size;
 
     @Override
     public void add(T value) {
-
-        add(value,size);
+        add(value, size);
     }
 
     @Override
     public void add(T value, int index) {
-
         validateIndexForNewArray(index);
         if (size == array.length) {
             grow();
         }
-        if (index == size) {
-            array[size] = value;
-            size++;
-        } else {
-            for (int i = size; i >= index; i--) {
-                if (i != NULL_INDEX) {
-                    array[i] = array[i - ONE_INDEX];
-                }
-                if (i == index) {
-                    array[i] = value;
-                    size++;
-                }
-            }
+        if (index != size) {
+            System.arraycopy(array, index, array, index + ONE_INDEX, size - index);
         }
+        array[index] = value;
+        size++;
     }
 
     @Override
     public void addAll(List<T> list) {
-
-        int newSize = list.size() + size;
-        int lastIndex = NULL_INDEX;
-        while (newSize >= getCapacity()) {
-            grow();
-        }
-        for (int i = size; i < newSize; i++) {
-            array[i] = list.get(lastIndex);
-            lastIndex++;
-            size++;
+        for (int i = 0; i < list.size(); i++) {
+            add(list.get(i));
         }
     }
 
@@ -63,7 +42,6 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void set(T value, int index) {
-
         validateIndexForOldValue(index);
         array[index] = value;
     }
@@ -72,15 +50,11 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         validateIndexForOldValue(index);
         T valueToRemove = array[index];
-        if (index == size - ONE_INDEX) {
-            array[index] = null;
-            size--;
-            return valueToRemove;
+        int numMoved = size - index - ONE_INDEX;
+        if (numMoved > 0) {
+            System.arraycopy(array, index + ONE_INDEX, array, index, numMoved);
         }
-        for (int i = index; i < size; i++) {
-            array[i] = array[i + ONE_INDEX];
-        }
-        size--;
+        array[--size] = null; // Clear to let GC do its work
         return valueToRemove;
     }
 
@@ -88,8 +62,10 @@ public class ArrayList<T> implements List<T> {
     public T remove(T element) {
         int indexFind = -1;
         for (int i = NULL_INDEX; i < size; i++) {
-            if ((array[i] == null && element == null)
-                    || (array[i] != null && array[i].equals(element))) {
+            if (element == null && array[i] == null) {
+                indexFind = i;
+                break;
+            } else if (element != null && array[i] != null && array[i].equals(element)) {
                 indexFind = i;
                 break;
             }
@@ -107,7 +83,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public boolean isEmpty() {
-        return size == NULL;
+        return size == 0;
     }
 
     private void grow() {
