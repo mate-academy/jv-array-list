@@ -3,15 +3,13 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    private static final int DEFAULT_INITIAL_CAPACITY = 10;
-    private static final int ONE_INDEX = 1;
     private static final double GROW_FACTOR = 1.5;
     private T[] array;
 
     private int size;
 
     public ArrayList() {
-        this.array = (T[]) new Object[DEFAULT_INITIAL_CAPACITY];
+        this.array = (T[]) new Object[10];
     }
 
     @Override
@@ -25,9 +23,7 @@ public class ArrayList<T> implements List<T> {
         if (size == array.length) {
             grow();
         }
-        if (index != size) {
-            System.arraycopy(array, index, array, index + ONE_INDEX, size - index);
-        }
+        System.arraycopy(array, index, array, index + 1, size - index);
         array[index] = value;
         size++;
     }
@@ -55,10 +51,7 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         validateIndexForOldValue(index);
         T valueToRemove = array[index];
-        int numMoved = size - index - ONE_INDEX;
-        if (numMoved > 0) {
-            System.arraycopy(array, index + ONE_INDEX, array, index, numMoved);
-        }
+        System.arraycopy(array, index + 1, array, index, size - index - 1);
         array[--size] = null; // Clear to let GC do its work
         return valueToRemove;
     }
