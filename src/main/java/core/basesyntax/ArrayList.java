@@ -81,7 +81,7 @@ public class ArrayList<T> implements List<T> {
             }
         }
 
-        throw new NoSuchElementException("Can't delete this element, because it does not exsist.");
+        throw new NoSuchElementException("Can't delete this element, because it does not exist.");
     }
 
     @Override
