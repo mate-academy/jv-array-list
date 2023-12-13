@@ -5,9 +5,14 @@ import java.util.NoSuchElementException;
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_INITIAL_CAPACITY = 10;
     private static final int ONE_INDEX = 1;
-    private static final int NULL_INDEX = 0;
-    private T[] array = (T[])new Object[DEFAULT_INITIAL_CAPACITY];
+    private static final double GROW_FACTOR = 1.5;
+    private T[] array;
+
     private int size;
+
+    public ArrayList() {
+        this.array = (T[]) new Object[DEFAULT_INITIAL_CAPACITY];
+    }
 
     @Override
     public void add(T value) {
@@ -61,7 +66,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         int indexFind = -1;
-        for (int i = NULL_INDEX; i < size; i++) {
+        for (int i = 0; i < size; i++) {
             if (element == null && array[i] == null) {
                 indexFind = i;
                 break;
@@ -87,7 +92,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void grow() {
-        T[] newArray = (T[]) new Object[(int) (getCapacity() * 1.5)];
+        T[] newArray = (T[]) new Object[(int) (array.length * GROW_FACTOR)];
         for (int i = 0; i < size; i++) {
             newArray[i] = array[i];
         }
@@ -95,20 +100,16 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void validateIndexForNewArray(int index) {
-        if (index < NULL_INDEX || index > size) {
+        if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException("Index " + index
                     + " out of bounds size " + size);
         }
     }
 
     private void validateIndexForOldValue(int index) {
-        if (index < NULL_INDEX || index >= size) {
+        if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException("Index " + index
                     + " out of bounds size " + size);
         }
-    }
-
-    public int getCapacity() {
-        return array.length;
     }
 }
