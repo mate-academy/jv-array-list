@@ -82,7 +82,7 @@ public class ArrayList<T> implements List<T> {
         for (int i = 0; i < size; i++) {
 
             if (myList[i] == null) {
-                if  (element == null) {
+                if (element == null) {
                     size--;
                     for (int j = i; j < size; j++) {
                         myList[j] = myList[j + 1];
@@ -92,7 +92,7 @@ public class ArrayList<T> implements List<T> {
             } else {
                 if (myList[i].equals(element)) {
                     size--;
-                    for(int j = i; j < size; j++) {
+                    for (int j = i; j < size; j++) {
                         myList[j] = myList[j + 1];
                     }
                     return element;
