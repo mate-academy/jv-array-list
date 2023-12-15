@@ -1,5 +1,7 @@
 package core.basesyntax;
 
+import java.util.NoSuchElementException;
+
 public class ArrayList<T> implements List<T> {
     private static final int MAX_CAPACITY = 10;
     private int size;
@@ -23,22 +25,23 @@ public class ArrayList<T> implements List<T> {
               // throw ERROR
             throw new ArrayListIndexOutOfBoundsException("Index dosn't much");
         }
-        for(int i = size; i >= index;i--){
-            myList[i] = myList[i - 1];
+        if (size == capacity) {
+            resize();
+            add(value);
+        } else {
+            for (int i = size; i > index; i--) {
+                myList[i] = myList[i - 1];
+            }
+            myList[index] = value;
+            size++;
         }
-        if (size == capacity) {resize();}
-        myList[index] = value;
-        size++;
     }
 
     @Override
     public void addAll(List<T> list) {
         int j = 1;
-        for(int i = size; i < list.size() + size; i++){
-            if (size == capacity) {resize();}
-            myList[i] = list.get(j);
-            j++;
-            size++;
+        for(int i = 0; i < list.size(); i++){
+            add(list.get(i));
         }
     }
 
@@ -86,7 +89,7 @@ public class ArrayList<T> implements List<T> {
                 return  element;
             }
         }
-        return element;
+        throw new NoSuchElementException("NoSuchElement");
     }
 
     @Override
@@ -103,9 +106,8 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void resize(){
-        T[] oldList;
-        oldList = myList;
-        capacity += capacity % 2;
+        T[] oldList = myList;
+        capacity += capacity / 2;
         myList = (T[]) new Object[capacity];
         for(int i = 0; i < size; i++) {
             myList[i] = oldList[i];
