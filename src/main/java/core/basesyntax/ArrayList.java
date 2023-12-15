@@ -14,7 +14,9 @@ public class ArrayList<T> implements List<T> {
             myList = (T[]) new Object[MAX_CAPACITY];
             capacity = MAX_CAPACITY;
         }
-        if (size == capacity) {resize();}
+        if (size == capacity) {
+            resize();
+        }
         myList[size] = value;
         size++;
     }
@@ -24,7 +26,9 @@ public class ArrayList<T> implements List<T> {
         if ((index > size) || (index < 0)) {
             throw new ArrayListIndexOutOfBoundsException("Index dosn't much");
         }
-        if (size == capacity) {resize();}
+        if (size == capacity) {
+            resize();
+        }
         if (size == index) {
             add(value);
         } else {
@@ -61,16 +65,16 @@ public class ArrayList<T> implements List<T> {
     }
 
     @Override
-    public T remove(int index) throws ArrayListIndexOutOfBoundsException  {
+    public T remove(int index) throws ArrayListIndexOutOfBoundsException {
         if ((index >= size) || (index < 0)) {
             throw new ArrayListIndexOutOfBoundsException("Index dosn't much");
         }
         T element = myList[index];
         size--;
-        for(int i = index; i < size; i++) {
+        for (int i = index; i < size; i++) {
             myList[i] = myList[i + 1];
         }
-        return  element;
+        return element;
     }
 
     @Override
@@ -112,7 +116,7 @@ public class ArrayList<T> implements List<T> {
         return false;
     }
 
-    private void resize(){
+    private void resize() {
         T[] oldList = myList;
         capacity += capacity / 2;
         myList = (T[]) new Object[capacity];
