@@ -21,7 +21,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        checkIndex(index);
+        checkIndexForAdd(index);
         resizeIfNeeded();
         if (index != size) {
             System.arraycopy(elements, index, elements, index + 1, size - index);
@@ -42,7 +42,7 @@ public class ArrayList<T> implements List<T> {
         if (index == size) {
             throw new ArrayListIndexOutOfBoundsException("Your index is out of bounds " + index);
         } else {
-            checkIndex(index);
+            checkIndexForAdd(index);
         }
 
         return elements[index];
@@ -53,7 +53,7 @@ public class ArrayList<T> implements List<T> {
         if (index == size) {
             throw new ArrayListIndexOutOfBoundsException("Your index is out of bounds " + index);
         } else {
-            checkIndex(index);
+            checkIndexForAdd(index);
         }
 
         elements[index] = value;
@@ -64,7 +64,7 @@ public class ArrayList<T> implements List<T> {
         if (index == size) {
             throw new ArrayListIndexOutOfBoundsException("Your index is out of bounds " + index);
         } else {
-            checkIndex(index);
+            checkIndexForAdd(index);
         }
 
         T elementToRemove = elements[index];
@@ -113,7 +113,7 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private void checkIndex(int index) {
+    private void checkIndexForAdd(int index) {
         if ((index > size) || (index < 0)) {
             throw new ArrayListIndexOutOfBoundsException("Your index is out of bounds " + index);
         }
