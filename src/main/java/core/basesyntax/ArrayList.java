@@ -10,7 +10,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (this.isEmpty()){
+        if (this.isEmpty()) {
             myList = (T[]) new Object[MAX_CAPACITY];
             capacity = MAX_CAPACITY;
         }
@@ -21,12 +21,11 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) throws ArrayListIndexOutOfBoundsException {
-        if ((index > size)||(index < 0)){
-              // throw ERROR
+        if ((index > size) || (index < 0)) {
             throw new ArrayListIndexOutOfBoundsException("Index dosn't much");
         }
-        if (size == capacity) {
-            resize();
+        if (size == capacity) {resize();}
+        if (size == index) {
             add(value);
         } else {
             for (int i = size; i > index; i--) {
@@ -40,35 +39,31 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void addAll(List<T> list) {
         int j = 1;
-        for(int i = 0; i < list.size(); i++){
+        for (int i = 0; i < list.size(); i++) {
             add(list.get(i));
         }
     }
 
     @Override
     public T get(int index) throws ArrayListIndexOutOfBoundsException {
-        if ((index >= size)||(index < 0)){
+        if ((index >= size) || (index < 0)) {
             throw new ArrayListIndexOutOfBoundsException("Index dosn't much");
-//            return null;   // throw ERROR
         }
         return myList[index];
     }
 
     @Override
     public void set(T value, int index) throws ArrayListIndexOutOfBoundsException {
-        if ((index >= size)||(index < 0)){
+        if ((index >= size) || (index < 0)) {
             throw new ArrayListIndexOutOfBoundsException("Index dosn't much");
-
-//            return null;   // throw ERROR
         }
         myList[index] = value;
     }
 
     @Override
     public T remove(int index) throws ArrayListIndexOutOfBoundsException  {
-        if ((index >= size)||(index < 0)){
+        if ((index >= size) || (index < 0)) {
             throw new ArrayListIndexOutOfBoundsException("Index dosn't much");
-//            return null;   // throw ERROR
         }
         T element = myList[index];
         size--;
@@ -80,14 +75,26 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        for(int i = 0; i < size; i++) {
-            if (myList[i] == element){
-                size--;
-                for(int j = i; j < size; j++) {
-                    myList[j] = myList[j + 1];
+        for (int i = 0; i < size; i++) {
+
+            if (myList[i] == null) {
+                if  (element == null) {
+                    size--;
+                    for (int j = i; j < size; j++) {
+                        myList[j] = myList[j + 1];
+                    }
+                    return element;
                 }
-                return  element;
+            } else {
+                if (myList[i].equals(element)) {
+                    size--;
+                    for(int j = i; j < size; j++) {
+                        myList[j] = myList[j + 1];
+                    }
+                    return element;
+                }
             }
+
         }
         throw new NoSuchElementException("NoSuchElement");
     }
@@ -109,7 +116,7 @@ public class ArrayList<T> implements List<T> {
         T[] oldList = myList;
         capacity += capacity / 2;
         myList = (T[]) new Object[capacity];
-        for(int i = 0; i < size; i++) {
+        for (int i = 0; i < size; i++) {
             myList[i] = oldList[i];
         }
     }
