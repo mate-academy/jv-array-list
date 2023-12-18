@@ -64,14 +64,11 @@ public class ArrayList<T> implements List<T> {
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
             if (element == elementsData[i]
-                    || (element != null && element.equals(elementsData[i]))) {
-                T removedElements = elementsData[i];
-                System.arraycopy(elementsData, i + 1, elementsData, i, size - i - 1);
-                size--;
-                return removedElements;
+                    || element != null && element.equals(elementsData[i])) {
+                return remove(i);
             }
         }
-        throw new NoSuchElementException();
+        throw new NoSuchElementException("Couldn't find this element: " + element);
     }
 
     @Override
@@ -100,8 +97,8 @@ public class ArrayList<T> implements List<T> {
 
     private void checkIndexRemove(int index) {
         if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("This index is more "
-                    + "than size of ArrayList");
+            throw new ArrayListIndexOutOfBoundsException("This index: " + index + " is more "
+                    + "than size: " + size + "` of ArrayList");
         }
     }
 }
