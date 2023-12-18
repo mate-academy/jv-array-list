@@ -4,7 +4,7 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_SIZE = 10;
-    private static final double RESIZE_NUMBER = 1.5;
+    private static final double GROW_FACTOR = 1.5;
     private int size;
     private T[] elementsData;
 
@@ -15,8 +15,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value) {
         resizeLength();
-        elementsData[size] = value;
-        size++;
+        elementsData[size++] = value;
     }
 
     @Override
@@ -31,24 +30,20 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        Object[] compliet = new Object[size + list.size()];
-        System.arraycopy(elementsData, 0, compliet, 0, size);
         for (int i = 0; i < list.size(); i++) {
-            compliet[size + i] = list.get(i);
+            add(list.get(i));
         }
-        size = compliet.length;
-        elementsData = (T[]) compliet;
     }
 
     @Override
     public T get(int index) {
-        setEndGetCheck(index);
+        checkIndexRemove(index);
         return (T) elementsData[index];
     }
 
     @Override
     public void set(T value, int index) {
-        setEndGetCheck(index);
+        checkIndexRemove(index);
         elementsData[index] = value;
     }
 
@@ -60,6 +55,10 @@ public class ArrayList<T> implements List<T> {
         size--;
         return removedElements;
     }
+
+    // I cant use method remove(int index) in remove (T element)
+    // while i have NoSuchElementException, i try and i can t
+    //fix it
 
     @Override
     public T remove(T element) {
@@ -87,7 +86,7 @@ public class ArrayList<T> implements List<T> {
 
     private void resizeLength() {
         if (size == elementsData.length) {
-            T[] biggerArray = (T[]) new Object[(int) (elementsData.length * RESIZE_NUMBER)];
+            T[] biggerArray = (T[]) new Object[(int) (elementsData.length * GROW_FACTOR)];
             System.arraycopy(elementsData, 0, biggerArray, 0, size);
             elementsData = biggerArray;
         }
@@ -101,13 +100,6 @@ public class ArrayList<T> implements List<T> {
 
     private void checkIndexRemove(int index) {
         if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("This index is more "
-                    + "than size of ArrayList");
-        }
-    }
-
-    private void setEndGetCheck(int index) {
-        if (index > size - 1 || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("This index is more "
                     + "than size of ArrayList");
         }
