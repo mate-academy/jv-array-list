@@ -1,8 +1,6 @@
 package core.basesyntax;
 
-import java.util.Arrays;
 import java.util.NoSuchElementException;
-import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
     private static final int INITIAL_LENGTH = 10;
@@ -12,10 +10,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (size == array.length) {
-            grow();
-        }
-
+        growIfRequired();
         array[size++] = value;
     }
 
@@ -25,14 +20,8 @@ public class ArrayList<T> implements List<T> {
             add(value);
         } else {
             checkIndex(index);
-
-            if (size == array.length) {
-                grow();
-            }
-
-            for (int i = size; i > index; i--) {
-                array[i] = array[i - 1];
-            }
+            growIfRequired();
+            System.arraycopy(array, index, array, index + 1, size - index);
 
             size++;
             array[index] = value;
@@ -41,20 +30,8 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        int requiredSize = size + list.size();
-
-        if (array.length < requiredSize) {
-            int length = array.length;
-
-            while (length < requiredSize) {
-                length += length >> 1;
-            }
-
-            array = Arrays.copyOf(array, length);
-        }
-
         for (int i = 0; i < list.size(); i++) {
-            array[size++] = list.get(i);
+            add(list.get(i));
         }
     }
 
@@ -75,9 +52,7 @@ public class ArrayList<T> implements List<T> {
         checkIndex(index);
         final T element = array[index];
 
-        for (int i = index + 1; i < size; i++) {
-            array[i - 1] = array[i];
-        }
+        System.arraycopy(array, index + 1, array, index, size - index - 1);
 
         size--;
         array[size] = null;
@@ -109,7 +84,7 @@ public class ArrayList<T> implements List<T> {
 
     private int findElement(T element) {
         for (int i = 0; i < size; i++) {
-            if (Objects.equals(element, array[i])) {
+            if (element == array[i] || element != null && element.equals(array[i])) {
                 return i;
             }
         }
@@ -117,8 +92,13 @@ public class ArrayList<T> implements List<T> {
         throw new NoSuchElementException("Element not found.");
     }
 
-    private void grow() {
-        int len = array.length + (array.length >> 1);
-        array = Arrays.copyOf(array, len);
+    private void growIfRequired() {
+        if (size == array.length) {
+            T[] oldArray = array;
+            int len = array.length + (array.length >> 1);
+            array = (T[]) new Object[len];
+
+            System.arraycopy(oldArray, 0, array, 0, size);
+        }
     }
 }
