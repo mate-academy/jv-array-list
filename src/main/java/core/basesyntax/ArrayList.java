@@ -62,7 +62,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        return remove(findElement(element));
+        return remove(getElementIndex(element));
     }
 
     @Override
@@ -82,7 +82,7 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private int findElement(T element) {
+    private int getElementIndex(T element) {
         for (int i = 0; i < size; i++) {
             if (element == array[i] || element != null && element.equals(array[i])) {
                 return i;
