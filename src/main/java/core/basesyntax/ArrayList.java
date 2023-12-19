@@ -56,10 +56,6 @@ public class ArrayList<T> implements List<T> {
         return removedElements;
     }
 
-    // I cant use method remove(int index) in remove (T element)
-    // while i have NoSuchElementException, i try and i can t
-    //fix it
-
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
@@ -91,7 +87,8 @@ public class ArrayList<T> implements List<T> {
 
     private void checkIndex(int index) {
         if (index > size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index isn't correct");
+            throw new ArrayListIndexOutOfBoundsException("This index: " + index + " is more "
+                    + "than size: " + size + "` of ArrayList");
         }
     }
 
