@@ -32,6 +32,7 @@ public class ArrayList<T> implements List<T> {
         if (size == index) {
             add(value);
         } else {
+
             for (int i = size; i > index; i--) {
                 myList[i] = myList[i - 1];
             }
