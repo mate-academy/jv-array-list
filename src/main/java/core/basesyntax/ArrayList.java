@@ -13,21 +13,17 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (size >= objects.length) {
-            grow();
-        }
+        grow(size);
         objects[size] = value;
         size++;
     }
 
     @Override
     public void add(T value, int index) {
-        if (size == objects.length) {
-            grow();
-        }
+        grow(size);
         if (index > size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException(
-                    "Can't find the element under index " + index);
+                "Can't find the element by index " + index);
         }
         System.arraycopy(objects, index, objects, index + 1, objects.length - (index + 1));
         objects[index] = value;
@@ -37,11 +33,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void addAll(List<T> list) {
         int requiredSize = size + list.size();
-        if (requiredSize >= objects.length) {
-            while (objects.length <= requiredSize) {
-                grow();
-            }
-        }
+        grow(requiredSize);
         T[] listArray = (T[]) new Object[list.size()];
         for (int i = 0; i < listArray.length; i++) {
             listArray[i] = list.get(i);
@@ -52,28 +44,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException(
-                    "Can't find the element under index " + index);
-        }
+        findPossibleException(index);
         return objects[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException(
-                    "Can't find the element under index " + index);
-        }
+        findPossibleException(index);
         objects[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException(
-                    "Can't find the element under index " + index);
-        }
+        findPossibleException(index);
         T result = objects[index];
         System.arraycopy(objects, index + 1, objects, index, objects.length - (index + 1));
         size--;
@@ -103,10 +86,20 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    public void grow() {
+    public void grow(int size) {
         int objectsLength = objects.length;
-        System.arraycopy(objects, 0,
-                objects = (T[]) new Object[(int) (objects.length * 1.5)], 0,
-                objectsLength);
+            while (objectsLength <= size) {
+                System.arraycopy(objects, 0,
+                        objects = (T[]) new Object[(int) (objects.length * 1.5)], 0,
+                        objectsLength);
+                objectsLength = objects.length;
+            }
+    }
+
+    public void findPossibleException(int index) {
+        if (index >= size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException(
+                    "Can't find the element by index " + index);
+        }
     }
 }
