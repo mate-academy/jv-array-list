@@ -25,7 +25,9 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayListIndexOutOfBoundsException(
                 "Can't find the element by index " + index);
         }
-        System.arraycopy(objects, index, objects, index + 1, objects.length - (index + 1));
+        System.arraycopy(objects, index,
+                objects, index + 1,
+                objects.length - (index + 1));
         objects[index] = value;
         size++;
     }
@@ -38,7 +40,9 @@ public class ArrayList<T> implements List<T> {
         for (int i = 0; i < listArray.length; i++) {
             listArray[i] = list.get(i);
         }
-        System.arraycopy(listArray, 0, objects, size, listArray.length);
+        System.arraycopy(listArray, 0,
+                objects, size,
+                listArray.length);
         size += listArray.length;
     }
 
@@ -88,12 +92,12 @@ public class ArrayList<T> implements List<T> {
 
     public void grow(int size) {
         int objectsLength = objects.length;
-            while (objectsLength <= size) {
-                System.arraycopy(objects, 0,
-                        objects = (T[]) new Object[(int) (objects.length * 1.5)], 0,
-                        objectsLength);
-                objectsLength = objects.length;
-            }
+        while (objectsLength <= size) {
+            System.arraycopy(objects, 0,
+                    objects = (T[]) new Object[(int) (objects.length * 1.5)], 0,
+                    objectsLength);
+            objectsLength = objects.length;
+        }
     }
 
     public void findPossibleException(int index) {
