@@ -20,11 +20,11 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        grow(size);
         if (index > size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException(
-                "Can't find the element by index " + index);
+                    "Can't find the element by index " + index);
         }
+        grow(size);
         System.arraycopy(objects, index,
                 objects, index + 1,
                 objects.length - (index + 1));
@@ -34,35 +34,30 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        int requiredSize = size + list.size();
-        grow(requiredSize);
-        T[] listArray = (T[]) new Object[list.size()];
-        for (int i = 0; i < listArray.length; i++) {
-            listArray[i] = list.get(i);
+        for (int i = 0; i < list.size(); i++) {
+            add(list.get(i));
         }
-        System.arraycopy(listArray, 0,
-                objects, size,
-                listArray.length);
-        size += listArray.length;
     }
 
     @Override
     public T get(int index) {
-        findPossibleException(index);
+        checkIndex(index);
         return objects[index];
     }
 
     @Override
     public void set(T value, int index) {
-        findPossibleException(index);
+        checkIndex(index);
         objects[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        findPossibleException(index);
+        checkIndex(index);
         T result = objects[index];
-        System.arraycopy(objects, index + 1, objects, index, objects.length - (index + 1));
+        System.arraycopy(objects, index + 1,
+                objects, index,
+                objects.length - (index + 1));
         size--;
         return result;
     }
@@ -70,10 +65,9 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < objects.length; i++) {
-            if (objects[i] == element || objects[i] != null && objects[i].equals(element)) {
-                System.arraycopy(objects, i + 1, objects, i, objects.length - (i + 1));
-                size--;
-                return element;
+            if (objects[i] == element
+                    || objects[i] != null && objects[i].equals(element)) {
+                return remove(i);
             }
         }
         throw new NoSuchElementException(
@@ -91,16 +85,15 @@ public class ArrayList<T> implements List<T> {
     }
 
     public void grow(int size) {
-        int objectsLength = objects.length;
-        while (objectsLength <= size) {
+        int sumOfElementsToCopy = objects.length;
+        if (objects.length <= size) {
             System.arraycopy(objects, 0,
                     objects = (T[]) new Object[(int) (objects.length * 1.5)], 0,
-                    objectsLength);
-            objectsLength = objects.length;
+                    sumOfElementsToCopy);
         }
     }
 
-    public void findPossibleException(int index) {
+    private void checkIndex(int index) {
         if (index >= size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException(
                     "Can't find the element by index " + index);
