@@ -1,6 +1,5 @@
 package core.basesyntax;
 
-import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
@@ -15,14 +14,14 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        resize(size + 1);
+        resizeIfNeeded(size + 1);
         elements[size++] = value;
     }
 
     @Override
     public void add(T value, int index) {
-        checkIndex2(index);
-        resize(size + 1);
+        checkIndex(index, false);
+        resizeIfNeeded(size + 1);
         System.arraycopy(elements, index, elements, index + 1, size - index);
         elements[index] = value;
         size++;
@@ -37,19 +36,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        checkIndex1(index);
+        checkIndex(index, true);
         return elements[index];
     }
 
     @Override
     public void set(T value, int index) {
-        checkIndex1(index);
+        checkIndex(index,true);
         elements[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        checkIndex2(index);
+        checkIndex(index, false);
         T removed = get(index);
         System.arraycopy(elements, index + 1, elements, index, size - index - 1);
         elements[--size] = null;
@@ -85,10 +84,20 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void resize(int minCapacity) {
+    private void resizeIfNeeded(int minCapacity) {
         if (minCapacity > elements.length) {
             int newCapacity = elements.length + elements.length / 2;
-            elements = Arrays.copyOf(elements, newCapacity);
+            T[] newArray = (T[]) new Object[newCapacity];
+            for (int i = 0; i < elements.length; i++) {
+                newArray[i] = elements[i];
+            }
+            elements = newArray;
+        }
+    }
+
+    private void checkIndex(int index, boolean included) {
+        if (index < 0 || (included ? index >= size : index > size)) {
+            throw new ArrayListIndexOutOfBoundsException("Invalid index");
         }
     }
 
@@ -106,7 +115,7 @@ public class ArrayList<T> implements List<T> {
 
     private int getIndex(T element) {
         for (int i = 0; i < size; i++) {
-            if ((element == null && elements[i] == null)
+            if ((element == elements[i])
                     || (element != null && element.equals(elements[i]))) {
                 return i;
             }
