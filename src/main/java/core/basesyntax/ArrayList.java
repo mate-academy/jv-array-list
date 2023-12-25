@@ -101,18 +101,6 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private void checkIndex1(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index");
-        }
-    }
-
-    private void checkIndex2(int index) {
-        if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index");
-        }
-    }
-
     private int getIndex(T element) {
         for (int i = 0; i < size; i++) {
             if ((element == elements[i])
