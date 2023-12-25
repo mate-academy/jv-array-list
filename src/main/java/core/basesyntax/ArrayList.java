@@ -60,13 +60,13 @@ public class ArrayList<T> implements List<T> {
     public T remove(T element) {
         int index = getIndex(element);
         if (index != -1) {
-            T removed = (T) elements[index];
+            T removed = elements[index];
             remove(index);
             return removed;
         } else if (element == null) {
             for (int i = 0; i < size; i++) {
                 if (elements[i] == null) {
-                    T removed = (T) elements[i];
+                    T removed = elements[i];
                     remove(i);
                     return removed;
                 }
