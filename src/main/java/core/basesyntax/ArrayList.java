@@ -83,7 +83,7 @@ public class ArrayList<T> implements List<T> {
             }
         }
         if (indexToRemove == null) {
-            throw new NoSuchElementException("В массиве нет такого элемента");
+            throw new NoSuchElementException("No such element in array");
         }
         array = getArrayAfterRemove(indexToRemove);
         return element;
