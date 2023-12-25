@@ -84,6 +84,7 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
+    @SuppressWarnings("unchecked")
     private void resizeIfNeeded(int minCapacity) {
         if (minCapacity > elements.length) {
             int newCapacity = elements.length + elements.length / 2;
