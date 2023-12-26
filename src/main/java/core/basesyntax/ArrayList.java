@@ -6,30 +6,12 @@ public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_VALUE = 10;
     private static final double MORE_SIZE = 1.5;
 
-    private Object[] array;
+    private T[] array;;
 
     private int size;
 
     public ArrayList() {
-        array = new Object[DEFAULT_VALUE];
-        size = 0;
-    }
-
-    private void ensureCapacity() {
-        if (size == array.length) {
-            int extension = (int) (array.length * MORE_SIZE);
-            Object[] newArray = new Object[extension];
-            for (int i = 0; i < size; i++) {
-                newArray[i] = array[i];
-            }
-            array = newArray;
-        }
-    }
-
-    private void checkIndex(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
-        }
+        array = (T[]) new Object[DEFAULT_VALUE];
     }
 
     @Override
@@ -46,27 +28,21 @@ public class ArrayList<T> implements List<T> {
         }
         ensureCapacity();
         size++;
-        ensureCapacity();
-
-        for (int i = size - 1; i > index; i--) {
-            array[i] = array[i - 1];
-        }
+        System.arraycopy(array, index, array, index + 1, size - index - 1);
         array[index] = value;
     }
 
     @Override
     public void addAll(List<T> list) {
-        ensureCapacity();
         for (int i = 0; i < list.size(); i++) {
-            array[size++] = list.get(i);
-            ensureCapacity();
+            add(list.get(i));
         }
     }
 
     @Override
     public T get(int index) {
         checkIndex(index);
-        return (T) array[index];
+        return  array[index];
     }
 
     @Override
@@ -79,16 +55,10 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         checkIndex(index);
         Object[] tempArray = new Object[size - index - 1];
-        final T removedElement = (T) array[index];
-        for (int i = 0; i < tempArray.length; i++) {
-            tempArray[i] = array[index + 1 + i];
-        }
-        for (int i = index; i < size - 1; i++) {
-            array[i] = array[i + 1];
-        }
-        for (int i = 0; i < tempArray.length; i++) {
-            array[index + i] = tempArray[i];
-        }
+        final T removedElement = array[index];
+        System.arraycopy(array, index + 1, tempArray, 0, tempArray.length);
+        System.arraycopy(array, index + 1, array, index, size - index - 1);
+        System.arraycopy(tempArray, 0, array, index, tempArray.length);
         array[--size] = null;
         return removedElement;
     }
@@ -111,5 +81,22 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private void ensureCapacity() {
+        if (size == array.length) {
+            int extension = (int) (array.length * MORE_SIZE);
+            T [] newArray = (T[]) new Object[extension];
+            for (int i = 0; i < size; i++) {
+                newArray[i] = array[i];
+            }
+            array = newArray;
+        }
+    }
+
+    private void checkIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
+        }
     }
 }
