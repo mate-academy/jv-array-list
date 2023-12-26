@@ -13,32 +13,32 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        checkSize();
+        growIfArrayFull();
         array[size - 1] = value;
     }
 
     @Override
     public void add(T value, int index) {
-        if (index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index can't be less than zero");
-        } else if (index < size) {
-            size++;
-            T[] tempArray = (T[]) new Object[checkLength()];
-            for (int i = 0; i < index; i++) {
-                tempArray[i] = array[i];
-            }
-            if (index < size) {
-                for (int i = index + 1; i < tempArray.length; i++) {
-                    tempArray[i] = array[i - 1];
-                }
-            }
-            tempArray[index] = value;
-            array = tempArray;
-        } else if (index == size) {
+        if (index == size) {
             add(value);
-        } else {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index");
+            return;
         }
+        checkIndex(index);
+        // index less than size
+        size++;
+        T[] tempArray = (T[]) new Object[checkLength()];
+        if (index == 0) {
+            tempArray[0] = value;
+            System.arraycopy(array, 0, tempArray, index + 1, size - 1);
+        } else {
+            System.arraycopy(array, 0, tempArray, 0, index);
+            tempArray[index] = value;
+            if (index < size) {
+                System.arraycopy(array, index, tempArray, index + 1, array.length - (index + 1));
+            }
+        }
+        tempArray[index] = value;
+        array = tempArray;
     }
 
     @Override
@@ -99,7 +99,7 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void checkSize() {
+    private void growIfArrayFull() {
         if (size >= DEFAULT_SIZE) {
             resize();
         } else {
@@ -114,21 +114,15 @@ public class ArrayList<T> implements List<T> {
     private void resize() {
         size++;
         T[] tempArray = (T[]) new Object[size];
-        for (int i = 0; i < array.length; i++) {
-            tempArray[i] = array[i];
-        }
+        System.arraycopy(array, 0, tempArray, 0, array.length);
         array = tempArray;
     }
 
     private void resize(T[] newArray) {
         int tempSize = size + newArray.length;
         T[] tempArray = (T[]) new Object[tempSize];
-        for (int i = 0; i < size(); i++) {
-            tempArray[i] = array[i];
-        }
-        for (int y = 0; y < newArray.length; y++) {
-            tempArray[size + y] = newArray[y];
-        }
+        System.arraycopy(array, 0, tempArray, 0, size);
+        System.arraycopy(newArray, 0, tempArray, size, newArray.length);
         size = tempArray.length;
         array = tempArray;
     }
@@ -144,13 +138,9 @@ public class ArrayList<T> implements List<T> {
     private T[] getArrayAfterRemove(int index) {
         size--;
         T[] tempArray = (T[]) new Object[array.length];
-        for (int i = 0; i < index; i++) {
-            tempArray[i] = array[i];
-        }
+        System.arraycopy(array, 0, tempArray, 0, index);
         if (index < size) {
-            for (int i = index; i < size + 1; i++) {
-                tempArray[i] = array[i + 1];
-            }
+            System.arraycopy(array, index + 1, tempArray, index,array.length - (index + 1));
         }
         return tempArray;
     }
