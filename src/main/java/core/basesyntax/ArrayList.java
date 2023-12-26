@@ -6,7 +6,7 @@ public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_VALUE = 10;
     private static final double MORE_SIZE = 1.5;
 
-    private T[] array;;
+    private T[] array;
 
     private int size;
 
@@ -42,7 +42,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         checkIndex(index);
-        return  array[index];
+        return array[index];
     }
 
     @Override
