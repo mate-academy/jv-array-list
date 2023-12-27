@@ -13,6 +13,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
+        size++;
         growIfArrayFull();
         array[size - 1] = value;
     }
@@ -24,21 +25,10 @@ public class ArrayList<T> implements List<T> {
             return;
         }
         checkIndex(index);
-        // index less than size
         size++;
-        T[] tempArray = (T[]) new Object[checkLength()];
-        if (index == 0) {
-            tempArray[0] = value;
-            System.arraycopy(array, 0, tempArray, index + 1, size - 1);
-        } else {
-            System.arraycopy(array, 0, tempArray, 0, index);
-            tempArray[index] = value;
-            if (index < size) {
-                System.arraycopy(array, index, tempArray, index + 1, array.length - (index + 1));
-            }
-        }
-        tempArray[index] = value;
-        array = tempArray;
+        growIfArrayFull();
+        System.arraycopy(array, index, array, index + 1, size - (index + 1));
+        array[index] = value;
     }
 
     @Override
@@ -68,25 +58,20 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         checkIndex(index);
         T removedValue = array[index];
-        array = getArrayAfterRemove(index);
+        System.arraycopy(array, index + 1, array, index, size - 1 - index);
+        array[--size] = null;
         return removedValue;
     }
 
     @Override
     public T remove(T element) {
-        Integer indexToRemove = null;
         for (int i = 0; i < array.length; i++) {
-            if (array[i] == null && element == null || array[i] != null
+            if (array[i] == element || array[i] != null
                     && array[i].equals(element)) {
-                indexToRemove = i;
-                break;
+                return remove(i);
             }
         }
-        if (indexToRemove == null) {
             throw new NoSuchElementException("No such element in array");
-        }
-        array = getArrayAfterRemove(indexToRemove);
-        return element;
     }
 
     @Override
@@ -102,17 +87,10 @@ public class ArrayList<T> implements List<T> {
     private void growIfArrayFull() {
         if (size >= DEFAULT_SIZE) {
             resize();
-        } else {
-            size++;
         }
     }
 
-    private int checkLength() {
-        return size > array.length ? size : array.length;
-    }
-
     private void resize() {
-        size++;
         T[] tempArray = (T[]) new Object[size];
         System.arraycopy(array, 0, tempArray, 0, array.length);
         array = tempArray;
