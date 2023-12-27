@@ -13,9 +13,9 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        size++;
         growIfArrayFull();
-        array[size - 1] = value;
+        array[size] = value;
+        size++;
     }
 
     @Override
@@ -25,21 +25,17 @@ public class ArrayList<T> implements List<T> {
             return;
         }
         checkIndex(index);
-        size++;
         growIfArrayFull();
-        System.arraycopy(array, index, array, index + 1, size - (index + 1));
+        System.arraycopy(array, index, array, index + 1, size - index);
         array[index] = value;
+        size++;
     }
 
     @Override
     public void addAll(List<T> list) {
-        T[] tempArray = (T[]) new Object[list.size()];
-        int index = 0;
-        while (index < list.size()) {
-            tempArray[index] = list.get(index);
-            index++;
+        for (int i = 0; i < list.size(); i++) {
+            add(list.get(i));
         }
-        resize(tempArray);
     }
 
     @Override
@@ -71,7 +67,7 @@ public class ArrayList<T> implements List<T> {
                 return remove(i);
             }
         }
-        throw new NoSuchElementException("No such element in array");
+        throw new NoSuchElementException("There isn't \"" + element + "\" element in array");
     }
 
     @Override
@@ -91,25 +87,17 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void resize() {
-        T[] tempArray = (T[]) new Object[size];
+        T[] tempArray = (T[]) new Object[array.length + 1];
         System.arraycopy(array, 0, tempArray, 0, array.length);
-        array = tempArray;
-    }
-
-    private void resize(T[] newArray) {
-        int tempSize = size + newArray.length;
-        T[] tempArray = (T[]) new Object[tempSize];
-        System.arraycopy(array, 0, tempArray, 0, size);
-        System.arraycopy(newArray, 0, tempArray, size, newArray.length);
-        size = tempArray.length;
         array = tempArray;
     }
 
     private void checkIndex(int index) {
         if (index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index can't be less than zero");
+            throw new ArrayListIndexOutOfBoundsException("Index can't be less than zero: " + index);
         } else if (index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index");
+            throw new ArrayListIndexOutOfBoundsException("Invalid index. Max index in array:"
+                    + (size - 1) + " yours: " + index);
         }
     }
 
