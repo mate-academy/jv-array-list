@@ -4,6 +4,7 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
+    private static final double CAPACITY = 1.5;
     private T[] elements;
     private int size;
 
@@ -61,8 +62,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if ((elements[i] != null && elements[i].equals(element))
-                    || (elements[i] == element)) {
+            if (elements[i] != null && elements[i].equals(element)
+                    || elements[i] == element) {
                 return remove(i);
             }
         }
@@ -92,10 +93,8 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void calculateCapacity() {
-        int oldCapacity = elements.length;
-        int newCapacity = oldCapacity + (oldCapacity >> 1);
-        Object[] resize = new Object[newCapacity];
+        T[] resize = (T[]) new Object[(int) (size * CAPACITY)];
         System.arraycopy(elements, 0, resize, 0, size);
-        elements = (T[]) resize;
+        elements = resize;
     }
 }
