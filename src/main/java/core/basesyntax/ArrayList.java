@@ -93,8 +93,10 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void calculateCapacity() {
-        T[] resize = (T[]) new Object[(int) (size * CAPACITY)];
-        System.arraycopy(elements, 0, resize, 0, size);
-        elements = resize;
+        if (size == elements.length) {
+            T[] resize = (T[]) new Object[(int) (size * CAPACITY)];
+            System.arraycopy(elements, 0, resize, 0, size);
+            elements = resize;
+        }
     }
 }
