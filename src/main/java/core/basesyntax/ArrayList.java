@@ -81,13 +81,13 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void growIfArrayFull() {
-        if (size >= DEFAULT_SIZE) {
+        if (size >= array.length) {
             resize();
         }
     }
 
     private void resize() {
-        T[] tempArray = (T[]) new Object[array.length + 1];
+        T[] tempArray = (T[]) new Object[array.length + (array.length / 2)];
         System.arraycopy(array, 0, tempArray, 0, array.length);
         array = tempArray;
     }
@@ -99,15 +99,5 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayListIndexOutOfBoundsException("Invalid index. Max index in array:"
                     + (size - 1) + " yours: " + index);
         }
-    }
-
-    private T[] getArrayAfterRemove(int index) {
-        size--;
-        T[] tempArray = (T[]) new Object[array.length];
-        System.arraycopy(array, 0, tempArray, 0, index);
-        if (index < size) {
-            System.arraycopy(array, index + 1, tempArray, index,array.length - (index + 1));
-        }
-        return tempArray;
     }
 }
