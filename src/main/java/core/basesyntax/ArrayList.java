@@ -34,6 +34,11 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
+    /*IN MY PREVIOUS COMMIT #baf8c0e a for-each loop would not work in AddbyIndex.
+    for each isnt applicable to core.basesyntax.List<T>
+    I had to replace it with Iterator
+    Wyy???
+     */
     @Override
     public Iterator<T> iterator() {
         return new Iterator<T>() {
