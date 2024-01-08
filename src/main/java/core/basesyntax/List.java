@@ -1,5 +1,7 @@
 package core.basesyntax;
 
+import java.util.Iterator;
+
 public interface List<T> {
     void add(T value);
 
@@ -18,4 +20,6 @@ public interface List<T> {
     int size();
 
     boolean isEmpty();
+
+    //Iterator<T> iterator();
 }
