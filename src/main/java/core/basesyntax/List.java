@@ -20,6 +20,4 @@ public interface List<T> {
     int size();
 
     boolean isEmpty();
-
-    Iterator<T> iterator();
 }
