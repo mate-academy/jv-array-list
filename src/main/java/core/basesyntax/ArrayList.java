@@ -2,7 +2,7 @@ package core.basesyntax;
 
 import java.util.Objects;
 import java.util.NoSuchElementException;
-//import java.util.Iterator;
+import java.util.Iterator;
 
 public class ArrayList<T> implements List<T> {
     private static final int STARTING_CAPACITY = 10;
@@ -32,6 +32,26 @@ public class ArrayList<T> implements List<T> {
         if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
         }
+    }
+
+    @Override
+    public Iterator<T> iterator() {
+        return new Iterator<T>() {
+            private int currentIndex = 0;
+
+            @Override
+            public boolean hasNext() {
+                return currentIndex < size;
+            }
+
+            @Override
+            public T next() {
+                if (!hasNext()) {
+                    throw new NoSuchElementException();
+                }
+                return frame[currentIndex++];
+            }
+        };
     }
 
     private int findindexOf(T element) {
@@ -67,7 +87,9 @@ public class ArrayList<T> implements List<T> {
 
     public void addAll(List<T> list) {
         if (list != null) {
-            for (T value : list) {
+            java.util.Iterator<T> iterator = list.iterator();
+            while (iterator.hasNext()) {
+                T value = iterator.next();
                 add(value);
             }
         }

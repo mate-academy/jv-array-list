@@ -21,5 +21,5 @@ public interface List<T> {
 
     boolean isEmpty();
 
-    //Iterator<T> iterator();
+    Iterator<T> iterator();
 }
