@@ -1,8 +1,8 @@
 package core.basesyntax;
 
-import java.util.Objects;
-import java.util.NoSuchElementException;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
+import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
     private static final int STARTING_CAPACITY = 10;
