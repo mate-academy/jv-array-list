@@ -40,45 +40,45 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-        @Override
-        public T get( int index){
-            checkIndex(index);
-            return frame[index];
-        }
+    @Override
+    public T get(int index) {
+        checkIndex(index);
+        return frame[index];
+    }
 
-        @Override
-        public void set(T value,int index){
-            checkIndex(index);
-            frame[index] = value;
-        }
+    @Override
+    public void set(T value,int index) {
+        checkIndex(index);
+        frame[index] = value;
+    }
 
-        @Override
-        public T remove( int index){
-            checkIndex(index);
-            T removedElement = frame[index];
-            System.arraycopy(frame, index + 1, frame, index, size - index - 1);
-            frame[--size] = null;
-            return removedElement;
-        }
+    @Override
+    public T remove(int index) {
+        checkIndex(index);
+        T removedElement = frame[index];
+        System.arraycopy(frame, index + 1, frame, index, size - index - 1);
+        frame[--size] = null;
+        return removedElement;
+    }
 
-        @Override
-        public T remove(T element){
+    @Override
+    public T remove(T element) {
         int index = findindexOf(element);
-            if (index == -1) {
-                throw new NoSuchElementException(element + " not found");
-            }
-            return remove(index);
+        if (index == -1) {
+            throw new NoSuchElementException(element + " not found");
         }
+        return remove(index);
+    }
 
-        @Override
-        public int size () {
-            return size;
-        }
+    @Override
+    public int size() {
+        return size;
+    }
 
-        @Override
-        public boolean isEmpty() {
-            return size == 0;
-        }
+    @Override
+    public boolean isEmpty() {
+        return size == 0;
+    }
 
     private void checkCapacity() {
         if (size == frame.length) {
@@ -92,7 +92,7 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private void checkIndex( int index){
+    private void checkIndex(int index) {
         if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
         }
