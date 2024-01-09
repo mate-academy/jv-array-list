@@ -6,17 +6,17 @@ public class ArrayList<T> implements List<T> {
     private static final int STARTING_CAPACITY = 10;
     private static final double INCREASE_FACTOR = 1.5;
 
-    private T[] frame;
+    private T[] elements;
     private int size;
 
     public ArrayList() {
-        frame = (T[]) new Object[STARTING_CAPACITY];
+        elements = (T[]) new Object[STARTING_CAPACITY];
     }
 
     @Override
     public void add(T value) {
         checkCapacity();
-        frame[size++] = value;
+        elements[size++] = value;
     }
 
     @Override
@@ -26,9 +26,9 @@ public class ArrayList<T> implements List<T> {
         }
         checkCapacity();
 
-        System.arraycopy(frame, index, frame, index + 1, size - index);
+        System.arraycopy(elements, index, elements, index + 1, size - index);
 
-        frame[index] = value;
+        elements[index] = value;
         size++;
     }
 
@@ -43,21 +43,21 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         checkIndex(index);
-        return frame[index];
+        return elements[index];
     }
 
     @Override
     public void set(T value,int index) {
         checkIndex(index);
-        frame[index] = value;
+        elements[index] = value;
     }
 
     @Override
     public T remove(int index) {
         checkIndex(index);
-        T removedElement = frame[index];
-        System.arraycopy(frame, index + 1, frame, index, size - index - 1);
-        frame[--size] = null;
+        T removedElement = elements[index];
+        System.arraycopy(elements, index + 1, elements, index, size - index - 1);
+        elements[--size] = null;
         return removedElement;
     }
 
@@ -81,14 +81,12 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void checkCapacity() {
-        if (size == frame.length) {
-            int newCapacity = (int) (frame.length * INCREASE_FACTOR);
+        if (size == elements.length) {
+            int newCapacity = (int) (elements.length * INCREASE_FACTOR);
             T[] newArray = (T[]) new Object[newCapacity];
 
-            for (int i = 0; i < size; i++) {
-                newArray[i] = frame[i];
-            }
-            frame = newArray;
+            System.arraycopy(elements, 0, newArray, 0, size);
+            elements = newArray;
         }
     }
 
@@ -100,7 +98,7 @@ public class ArrayList<T> implements List<T> {
 
     private int findindexOf(T element) {
         for (int i = 0; i < size; i++) {
-            if (element == null ? frame[i] == null : element.equals(frame[i])) {
+            if (element == null ? elements[i] == null : element.equals(elements[i])) {
                 return i;
             }
         }
