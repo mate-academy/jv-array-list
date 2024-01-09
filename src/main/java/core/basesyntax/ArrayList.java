@@ -37,9 +37,6 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        if (list == null) {
-            throw new NullPointerException("Can't add null List to ArrayList");
-        }
         for (int i = 0; i < list.size(); i++) {
             add(list.get(i));
         }
@@ -114,7 +111,9 @@ public class ArrayList<T> implements List<T> {
     }
 
     private T[] grow(int capacity) {
-        return elementData = Arrays.copyOf(elementData, elementData.length + capacity);
+        int newCapacity = elementData.length + capacity;
+        T[] newElementData = (T[]) new Object[newCapacity];
+        System.arraycopy(elementData, 0, newElementData, 0, elementData.length);
+        return elementData = newElementData;
     }
-
 }
