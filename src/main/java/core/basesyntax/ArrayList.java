@@ -2,28 +2,14 @@ package core.basesyntax;
 
 import java.util.Arrays;
 import java.util.NoSuchElementException;
-import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    private static final Object[] EMPTY_ELEMENTDATA = {};
-    private static final Object[] DEFAULTCAPACITY_EMPTY_ELEMENTDATA = {};
     private T[] elementData;
     private int size;
 
     public ArrayList() {
         this.elementData = (T[]) new Object[DEFAULT_CAPACITY];
-    }
-
-    private T[] grow() {
-        return elementData = Arrays.copyOf(elementData, (int) (elementData.length * 1.5));
-    }
-
-    private void checkArrayListIndexOutOfBoundsException(int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index "
-                    + index + " out of bounds size " + size);
-        }
     }
 
     @Override
@@ -40,10 +26,7 @@ public class ArrayList<T> implements List<T> {
         if (size == elementData.length) {
             grow();
         }
-        if (index > size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index "
-                    + index + " out of bounds size " + size);
-        }
+        checkArrayListIndexOutOfBoundsExceptionForAdd(index);
         System.arraycopy(elementData, index, elementData, index + 1, size - index);
         this.elementData[index] = value;
         size++;
@@ -82,7 +65,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = size - 1; i >= 0; i--) {
-            if (Objects.equals(elementData[i], element)) {
+            if ((elementData[i] == element)
+                    || (elementData[i] != null && elementData[i].equals(element))) {
                 System.arraycopy(elementData, i + 1, elementData, i, size - 1 - i);
                 size -= 1;
                 return element;
@@ -102,5 +86,23 @@ public class ArrayList<T> implements List<T> {
             return false;
         }
         return true;
+    }
+
+    private T[] grow() {
+        return elementData = Arrays.copyOf(elementData, (int) (elementData.length * 1.5));
+    }
+
+    private void checkArrayListIndexOutOfBoundsException(int index) {
+        if (index >= size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Index "
+                    + index + " out of bounds size " + size);
+        }
+    }
+
+    private void checkArrayListIndexOutOfBoundsExceptionForAdd(int index) {
+        if (index > size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Index "
+                    + index + " out of bounds size " + size);
+        }
     }
 }
