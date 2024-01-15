@@ -5,12 +5,10 @@ import java.util.NoSuchElementException;
 public class ArrayList<T> implements List<T> {
     private static final Object[] EMPTY_ELEMENTDATA = {};
     private static final int DEFAULT_CAPACITY = 10;
-    private static final int ZERO = 0;
     private int size;
     private T[] values;
 
     public ArrayList() {
-        this.size = ZERO;
         this.values = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
@@ -24,22 +22,18 @@ public class ArrayList<T> implements List<T> {
     }
 
     @Override
-    public void add(T value, int index) throws ArrayListIndexOutOfBoundsException {
+    public void add(T value, int index) {
         checkBoundsIndex((index == size && size != 0) ? (index - 1) : index);
         int newSize = size + 1;
         if (newSize >= values.length) {
             values = grow(values.length);
         }
         T[] tempArray = (T[]) new Object[values.length];
-        for (int i = 0; i < index; i++) {
-            tempArray[i] = values[i];
-        }
+        System.arraycopy(values,0, tempArray, 0, index);
         tempArray[index] = backEmptyForNull(value);
-        for (int i = index + 1; i < newSize; i++) {
-            tempArray[i] = values[i - 1];
-        }
+        System.arraycopy(values, index, tempArray, index + 1, size - index);
         values = tempArray;
-        size++;
+        size = newSize;
     }
 
     @Override
@@ -74,16 +68,11 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) throws NoSuchElementException {
         checkBoundsIndex(index);
         T[] tempValues = (T[]) new Object[values.length];
-        int newSize = size - 1;
-        for (int i = 0; i < index; i++) {
-            tempValues[i] = values[i];
-        }
-        for (int i = index; i < newSize; i++) {
-            tempValues[i] = values[i + 1];
-        }
+        System.arraycopy(values, 0, tempValues, 0, index);
+        System.arraycopy(values, index + 1, tempValues, index, size - index - 1);
         T oldValue = get(index);
         values = tempValues;
-        size = newSize;
+        size--;
         return oldValue;
     }
 
@@ -115,9 +104,7 @@ public class ArrayList<T> implements List<T> {
     private T[] grow(int oldCapacity) {
         int newCapacity = oldCapacity + oldCapacity / 2;
         T[] newValues = (T[]) new Object[newCapacity];
-        for (int i = 0; i < values.length; i++) {
-            newValues[i] = values[i];
-        }
+        System.arraycopy(values, 0, newValues, 0, size);
         return newValues;
     }
 
