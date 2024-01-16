@@ -14,9 +14,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (size >= values.length) {
-            values = grow();
-        }
+        growIfNeeded(size);
         values[size++] = value;
     }
 
@@ -24,16 +22,14 @@ public class ArrayList<T> implements List<T> {
     public void add(T value, int index) {
         if (size == 0 && index == size) {
             add(value);
-        } else {
-            checkBoundsIndex((index == size && size != 0) ? (index - 1) : index);
-            int newSize = size + 1;
-            if (newSize >= values.length) {
-                values = grow();
-            }
-            System.arraycopy(values, index, values, index + 1, size - index);
-            values[index] = value;
-            size = newSize;
+            return;
         }
+        checkBoundsIndex(index == size ? index - 1 : index);
+        int newSize = size + 1;
+        growIfNeeded(newSize);
+        System.arraycopy(values, index, values, index + 1, size - index);
+        values[index] = value;
+        size = newSize;
     }
 
     @Override
@@ -44,13 +40,13 @@ public class ArrayList<T> implements List<T> {
     }
 
     @Override
-    public T get(int index) throws ArrayListIndexOutOfBoundsException {
+    public T get(int index) {
         checkBoundsIndex(index);
         return values[index];
     }
 
     @Override
-    public void set(T value, int index) throws ArrayListIndexOutOfBoundsException {
+    public void set(T value, int index) {
         checkBoundsIndex(index);
         values[index] = value;
     }
@@ -82,6 +78,12 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private void growIfNeeded(int size) {
+        if (size >= values.length) {
+            values = grow();
+        }
     }
 
     private T[] grow() {
