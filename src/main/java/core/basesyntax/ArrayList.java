@@ -3,37 +3,37 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    private static final Object[] EMPTY_ELEMENTDATA = {};
+    private static final float GROW_FACTOR = 1.5F;
     private static final int DEFAULT_CAPACITY = 10;
     private int size;
     private T[] values;
 
     public ArrayList() {
-        this.values = (T[]) new Object[DEFAULT_CAPACITY];
+        values = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
     @Override
     public void add(T value) {
         if (size >= values.length) {
-            values = grow(values.length);
+            values = grow();
         }
-        values[size] = value;
-        size++;
+        values[size++] = value;
     }
 
     @Override
     public void add(T value, int index) {
-        checkBoundsIndex((index == size && size != 0) ? (index - 1) : index);
-        int newSize = size + 1;
-        if (newSize >= values.length) {
-            values = grow(values.length);
+        if (size == 0 && index == size) {
+            add(value);
+        } else {
+            checkBoundsIndex((index == size && size != 0) ? (index - 1) : index);
+            int newSize = size + 1;
+            if (newSize >= values.length) {
+                values = grow();
+            }
+            System.arraycopy(values, index, values, index + 1, size - index);
+            values[index] = value;
+            size = newSize;
         }
-        T[] tempArray = (T[]) new Object[values.length];
-        System.arraycopy(values,0, tempArray, 0, index);
-        tempArray[index] = value;
-        System.arraycopy(values, index, tempArray, index + 1, size - index);
-        values = tempArray;
-        size = newSize;
     }
 
     @Override
@@ -46,50 +46,32 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) throws ArrayListIndexOutOfBoundsException {
         checkBoundsIndex(index);
-        for (int i = 0; i < size; i++) {
-            if (i == index) {
-                return ((values[i] == null) ? null : (T) values[i]);
-            }
-        }
-        return null;
+        return values[index];
     }
 
     @Override
     public void set(T value, int index) throws ArrayListIndexOutOfBoundsException {
         checkBoundsIndex(index);
-        for (int i = 0; i < size; i++) {
-            if (i == index) {
-                values[i] = value;
-            }
-        }
+        values[index] = value;
     }
 
     @Override
-    public T remove(int index) throws NoSuchElementException {
+    public T remove(int index) {
         checkBoundsIndex(index);
-        T[] tempValues = (T[]) new Object[values.length];
-        System.arraycopy(values, 0, tempValues, 0, index);
-        System.arraycopy(values, index + 1, tempValues, index, size - index - 1);
         T oldValue = get(index);
-        values = tempValues;
+        System.arraycopy(values, index + 1, values, index, size - index - 1);
         size--;
         return oldValue;
     }
 
     @Override
-    public T remove(T element) throws NoSuchElementException {
-        T foundValue = null;
-        int index = -1;
+    public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if ((element == null && get(i) == null)
-                    || ((element != null && get(i) != null) && get(i).equals(element))) {
-                index = i;
-                foundValue = remove(index);
-                break;
+            if (element == values[i] || element != null && element.equals(values[i])) {
+                return remove(i);
             }
         }
-        checkElement(foundValue, index);
-        return foundValue;
+        throw new NoSuchElementException("Element couldn't be found: " + element);
     }
 
     @Override
@@ -102,24 +84,17 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private T[] grow(int oldCapacity) {
-        int newCapacity = oldCapacity + oldCapacity / 2;
+    private T[] grow() {
+        int newCapacity = (int) (GROW_FACTOR * values.length);
         T[] newValues = (T[]) new Object[newCapacity];
         System.arraycopy(values, 0, newValues, 0, size);
         return newValues;
     }
 
     private void checkBoundsIndex(int index) {
-        if ((index >= size && size != 0) || index < 0) {
+        if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException("Index = " + index
                     + " are not exist for this array with size " + size);
         }
     }
-
-    private void checkElement(T value, int index) {
-        if (index < 0 || index > size) {
-            throw new NoSuchElementException("The element is not contained here: " + value);
-        }
-    }
-
 }
