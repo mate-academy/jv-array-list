@@ -17,7 +17,7 @@ public class ArrayList<T> implements List<T> {
         if (size >= values.length) {
             values = grow(values.length);
         }
-        values[size] = backEmptyForNull(value);
+        values[size] = value;
         size++;
     }
 
@@ -30,7 +30,7 @@ public class ArrayList<T> implements List<T> {
         }
         T[] tempArray = (T[]) new Object[values.length];
         System.arraycopy(values,0, tempArray, 0, index);
-        tempArray[index] = backEmptyForNull(value);
+        tempArray[index] = value;
         System.arraycopy(values, index, tempArray, index + 1, size - index);
         values = tempArray;
         size = newSize;
@@ -48,7 +48,7 @@ public class ArrayList<T> implements List<T> {
         checkBoundsIndex(index);
         for (int i = 0; i < size; i++) {
             if (i == index) {
-                return ((values[i].equals(EMPTY_ELEMENTDATA)) ? null : (T) values[i]);
+                return ((values[i] == null) ? null : (T) values[i]);
             }
         }
         return null;
@@ -59,7 +59,7 @@ public class ArrayList<T> implements List<T> {
         checkBoundsIndex(index);
         for (int i = 0; i < size; i++) {
             if (i == index) {
-                values[i] = backEmptyForNull(value);
+                values[i] = value;
             }
         }
     }
@@ -81,7 +81,8 @@ public class ArrayList<T> implements List<T> {
         T foundValue = null;
         int index = -1;
         for (int i = 0; i < size; i++) {
-            if (backEmptyForNull(element).equals(backEmptyForNull(get(i)))) {
+            if ((element == null && get(i) == null)
+                    || ((element != null && get(i) != null) && get(i).equals(element))) {
                 index = i;
                 foundValue = remove(index);
                 break;
@@ -106,10 +107,6 @@ public class ArrayList<T> implements List<T> {
         T[] newValues = (T[]) new Object[newCapacity];
         System.arraycopy(values, 0, newValues, 0, size);
         return newValues;
-    }
-
-    private T backEmptyForNull(T value) {
-        return ((value == null) ? (T) EMPTY_ELEMENTDATA : value);
     }
 
     private void checkBoundsIndex(int index) {
