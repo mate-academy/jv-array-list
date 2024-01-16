@@ -4,36 +4,11 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_SIZE = 10;
-    private int counter = 0;
+    private int counter;
     private T[] ownArrayList;
 
     public ArrayList() {
         ownArrayList = (T[]) new Object[DEFAULT_SIZE];
-    }
-
-    private void resizingAndCopyingArray(int numberOfNewElement, int numbersOfElementsToAdd) {
-        int newSizeArray = ownArrayList.length;
-        do {
-            newSizeArray = (int) (newSizeArray * 1.5);
-        } while ((counter + numbersOfElementsToAdd) > newSizeArray);
-        T[] newArrayList = (T[]) new Object[newSizeArray];
-        System.arraycopy(ownArrayList, 0, newArrayList, 0, numberOfNewElement);
-        if (counter > numberOfNewElement) {
-            System.arraycopy(ownArrayList, numberOfNewElement, newArrayList, numberOfNewElement + 1,
-                    ownArrayList.length - numberOfNewElement);
-        }
-        ownArrayList = newArrayList;
-    }
-
-    private void checkIndex(int index, int maxIndex) {
-        if (index < 0 || index >= maxIndex) {
-            throw new ArrayListIndexOutOfBoundsException("The index is wrong");
-        }
-    }
-
-    private void countingEndWriteValue(T value, int index) {
-        ownArrayList[index] = value;
-        counter++;
     }
 
     @Override
@@ -117,5 +92,30 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return counter == 0;
+    }
+
+    private void resizingAndCopyingArray(int numberOfNewElement, int numbersOfElementsToAdd) {
+        int newSizeArray = ownArrayList.length;
+        do {
+            newSizeArray = (int) (newSizeArray * 1.5);
+        } while ((counter + numbersOfElementsToAdd) > newSizeArray);
+        T[] newArrayList = (T[]) new Object[newSizeArray];
+        System.arraycopy(ownArrayList, 0, newArrayList, 0, numberOfNewElement);
+        if (counter > numberOfNewElement) {
+            System.arraycopy(ownArrayList, numberOfNewElement, newArrayList, numberOfNewElement + 1,
+                    ownArrayList.length - numberOfNewElement);
+        }
+        ownArrayList = newArrayList;
+    }
+
+    private void checkIndex(int index, int maxIndex) {
+        if (index < 0 || index >= maxIndex) {
+            throw new ArrayListIndexOutOfBoundsException("The index is wrong");
+        }
+    }
+
+    private void countingEndWriteValue(T value, int index) {
+        ownArrayList[index] = value;
+        counter++;
     }
 }
