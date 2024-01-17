@@ -1,41 +1,41 @@
 package core.basesyntax;
 
-
-import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-
     private static final int DEFAULT_CAPACITY = 10;
-
-
+    private static final int BIT_DIVIDER = 1;
+    private static final int SOURCE_POSITION = 0;
+    private static final int DESTINATION_POSITION = 0;
+    private static final int SHIFT_INDEX_NUMBER = 1;
+    private static final int SIZE_INITIALIZER = 0;
     private int size;
-    Object[] elements = new Object[DEFAULT_CAPACITY];
+    private Object[] elements;
+
+    public ArrayList() {
+        size = SIZE_INITIALIZER;
+        elements = new Object[DEFAULT_CAPACITY];
+    }
 
     @Override
     public void add(T value) {
-        ensureCapacity();
+        growIfArrayIsFull();
         elements[size++] = value;
     }
 
     @Override
     public void add(T value, int index) {
-        if (index < 0 || index >=size()) {
-            throw new ArrayListIndexOutOfBoundsException("Wishes index more than current list length");
-        }
-        ensureCapacity();
-        Object[] newElements = new Object[elements.length + 1];
-        System.arraycopy(elements, 0, newElements, 0, index - 2);
-        newElements[index-1] = value;
-        System.arraycopy(elements, index-1, newElements, index, elements.length);
-        elements = newElements;
-        size = size + 1;
-
+        checkIndex(index, index > size());
+        growIfArrayIsFull();
+        Object[] elements = this.elements;
+        System.arraycopy(elements, index, elements, index + SHIFT_INDEX_NUMBER, size - index);
+        elements[index] = value;
+        size++;
     }
 
     @Override
     public void addAll(List<T> list) {
-        ensureCapacity(list.size());
+        growForAddList(list.size());
         for (int i = 0; i < list.size(); i++) {
             elements[size + i] = list.get(i);
         }
@@ -44,29 +44,25 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index < 0 || index >=size()) {
-            throw new ArrayListIndexOutOfBoundsException("Wishes index more than current list length");
-        }
+        checkIndex(index, index >= size());
         return (T) elements[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index < 0 || index >=size()) {
-            throw new ArrayListIndexOutOfBoundsException("Wishes index more than current list length");
-        }
-
+        checkIndex(index, index >= size());
+        growIfArrayIsFull();
+        elements[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index < 0 || index >=size()) {
-            throw new ArrayListIndexOutOfBoundsException("Wishes index more than current list length");
-        }
+        checkIndex(index, index >= size());
+        Object[] newElements = new Object[size - SHIFT_INDEX_NUMBER];
+        System.arraycopy(elements, SOURCE_POSITION, newElements, DESTINATION_POSITION, index);
+        System.arraycopy(elements, index + SHIFT_INDEX_NUMBER,
+                newElements, index, newElements.length - index);
         T removedItem = (T) elements[index];
-        Object[] newElements = new Object[size - 1];
-        System.arraycopy(elements, 0, newElements, 0, index);
-        System.arraycopy(elements, index + 1, newElements, index, newElements.length - index);
         elements = newElements;
         size--;
         return removedItem;
@@ -87,7 +83,7 @@ public class ArrayList<T> implements List<T> {
                 return element;
             }
         }
-        throw new NoSuchElementException();
+        throw new NoSuchElementException("Element " + element + "doesn't exist in ArrayList");
     }
 
     @Override
@@ -100,22 +96,30 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void ensureCapacity() {
+    private void growIfArrayIsFull() {
         if (size == elements.length) {
-            int newCapacity = size + (size >> 1);
+            int newCapacity = size + (size >> BIT_DIVIDER);
             Object[] newElements = new Object[newCapacity];
-            System.arraycopy(elements, 0, newElements, 0, elements.length);
+            System.arraycopy(elements, SOURCE_POSITION, newElements,
+                    DESTINATION_POSITION, elements.length);
             elements = newElements;
         }
     }
 
-    private void ensureCapacity(int size) {
-        if (size >= elements.length) {
-            int newCapacity = size + (size >> 1);
+    private void growForAddList(int listSize) {
+        if (listSize >= elements.length) {
+            int newCapacity = size + listSize + ((size + listSize) >> BIT_DIVIDER);
             Object[] newElements = new Object[newCapacity];
-            System.arraycopy(elements, 0, newElements, 0, elements.length);
+            System.arraycopy(elements, SOURCE_POSITION, newElements,
+                    DESTINATION_POSITION, elements.length);
             elements = newElements;
         }
     }
 
+    private void checkIndex(int index, boolean outOfBoundCondition) {
+        if (index < 0 || outOfBoundCondition) {
+            throw new ArrayListIndexOutOfBoundsException("ArrayList index " + index
+                    + " out of bounds." + "Select an index by ArrayList length");
+        }
+    }
 }

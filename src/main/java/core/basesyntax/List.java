@@ -1,7 +1,5 @@
 package core.basesyntax;
 
-import java.util.Collections;
-
 public interface List<T> {
     void add(T value);
 
