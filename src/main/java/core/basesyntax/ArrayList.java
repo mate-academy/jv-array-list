@@ -1,17 +1,14 @@
 package core.basesyntax;
 
-import java.util.Arrays;
 import java.util.NoSuchElementException;
-import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    private static final Object[] DEFAULTCAPACITY_EMPTY_ELEMENTDATA = {};
     private Object[] elementData;
     private int size;
 
     public ArrayList() {
-        this.elementData = DEFAULTCAPACITY_EMPTY_ELEMENTDATA;
+        this.elementData = new Object[DEFAULT_CAPACITY];
     }
 
     @Override
@@ -27,7 +24,7 @@ public class ArrayList<T> implements List<T> {
         if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException("Index is not available: " + index);
         }
-        if (elementData == DEFAULTCAPACITY_EMPTY_ELEMENTDATA || size == elementData.length) {
+        if (size == elementData.length) {
             grow();
         }
         System.arraycopy(elementData, index, elementData, (index + 1), (size - index));
@@ -66,7 +63,8 @@ public class ArrayList<T> implements List<T> {
     public T remove(T element) {
         T equalsElement;
         for (int i = 0; i < elementData.length; i++) {
-            if (elementData[i] == element || Objects.equals(element, elementData[i])) {
+            T currentElement = (T) elementData[i];
+            if (equalsElement(currentElement, element)) {
                 equalsElement = element;
                 deleteElementInArray(i);
                 return equalsElement;
@@ -92,15 +90,10 @@ public class ArrayList<T> implements List<T> {
     private void grow(int minCapacity) {
         int oldCapacity = elementData.length;
         int newCapacity = oldCapacity + (oldCapacity >> 1);
-        if (newCapacity - oldCapacity == 0) {
-            elementData = new Object[DEFAULT_CAPACITY];
-            return;
-        }
-        if (newCapacity - minCapacity > 0) {
-            newCapacity = minCapacity;
-        }
         if (minCapacity > oldCapacity) {
-            elementData = Arrays.copyOf(elementData, newCapacity);
+            Object[] newArray = new Object[newCapacity];
+            System.arraycopy(elementData, 0, newArray, 0, elementData.length);
+            elementData = newArray;
         }
     }
 
@@ -114,5 +107,15 @@ public class ArrayList<T> implements List<T> {
         if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException("Illegal index: " + index);
         }
+    }
+
+    private <T> boolean equalsElement(T elementOne, T elementTwo) {
+        if (elementOne == elementTwo) {
+            return true;
+        }
+        if (elementOne == null || elementTwo == null) {
+            return false;
+        }
+        return elementOne.equals(elementTwo);
     }
 }
