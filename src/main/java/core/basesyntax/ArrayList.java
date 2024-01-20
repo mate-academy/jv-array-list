@@ -22,11 +22,13 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
+        if (index == size) {
+            add(value);
+            return;
+        }
         rangeCheckForAdd(index);
         checkCapacity();
-        System.arraycopy(elementData, index,
-                elementData, index + 1,
-                size - index);
+        System.arraycopy(elementData, index, elementData, index + 1, size - index);
         elementData[index] = value;
         size++;
     }
@@ -42,17 +44,13 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException(index + "is invalid");
-        }
+        rangeCheckForAdd(index);
         return (T) elementData[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException(index + "is invalid");
-        }
+        rangeCheckForAdd(index);
         elementData[index] = value;
     }
 
@@ -62,10 +60,9 @@ public class ArrayList<T> implements List<T> {
         try {
             oldElementData = (T) elementData[index];
             rangeCheckForAdd(index);
-            int amountOfCopiedNumbers = size - index - 1;
-            System.arraycopy(elementData, index + 1, elementData, index, amountOfCopiedNumbers);
+            System.arraycopy(elementData, index + 1, elementData, index, size - index - 1);
         } catch (ArrayIndexOutOfBoundsException e) {
-            throw new ArrayListIndexOutOfBoundsException(index + "is invalid");
+            throw new ArrayListIndexOutOfBoundsException(index + " is invalid index");
         }
         --size;
         return oldElementData;
@@ -75,7 +72,7 @@ public class ArrayList<T> implements List<T> {
     public T remove(T element) {
         int amountOfElement = 0;
         for (int i = 0; i < size; i++) {
-            if (elementData[i] == null && element == null
+            if (elementData[i] == element
                     || elementData[i] != null && elementData[i].equals(element)) {
                 amountOfElement++;
                 int amountOfCopiedNumbers = size - i - 1;
@@ -83,7 +80,7 @@ public class ArrayList<T> implements List<T> {
             }
         }
         if (amountOfElement == 0) {
-            throw new NoSuchElementException("no such element" + element + "present.");
+            throw new NoSuchElementException("No such element " + element + " present.");
         }
         --size;
         return element;
@@ -100,16 +97,15 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void rangeCheckForAdd(int index) throws ArrayIndexOutOfBoundsException {
-        if (index > size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException(index + "is invalid");
+        if (index >= size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException(index + " is invalid index");
         }
     }
 
     private void grow() {
         int newArrayCapacity = (int) (elementData.length * NEW_ARRAY_CAPACITY_FACTOR);
         Object[] newArrayList = new Object[newArrayCapacity];
-        System.arraycopy(elementData, 0,
-                newArrayList, 0, size);
+        System.arraycopy(elementData, 0, newArrayList, 0, size);
         elementData = newArrayList;
     }
 
