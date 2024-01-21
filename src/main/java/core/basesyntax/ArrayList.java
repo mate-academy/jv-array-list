@@ -4,13 +4,16 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_SIZE = 10;
-    private int capacity = DEFAULT_SIZE;
     private int size;
-    private T[] arrayData = (T[]) new Object[DEFAULT_SIZE];
+    private T[] arrayData;
+
+    public ArrayList(){
+        arrayData = (T[]) new Object[DEFAULT_SIZE];
+    }
 
     @Override
     public void add(T value) {
-        if (size == capacity) {
+        if (size == arrayData.length) {
             this.grow();
         }
         arrayData[size] = value;
@@ -22,8 +25,8 @@ public class ArrayList<T> implements List<T> {
         if (index > size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Index " + index + " out of size " + size);
         }
-        if (size == capacity) {
-            this.grow();
+        if (size == arrayData.length) {
+            grow();
         }
         System.arraycopy(arrayData, index, arrayData, index + 1, size - index);
         arrayData[index] = value;
@@ -32,8 +35,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        int size = list.size();
-        for (int i = 0; i < size; i++) {
+        for (int i = 0; i < list.size(); i++) {
             this.add(list.get(i));
         }
 
@@ -74,16 +76,14 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public boolean isEmpty() {
-
         return size == 0;
     }
 
     private void grow() {
-        capacity += capacity / 2;
+        int capacity = arrayData.length;
+        capacity += arrayData.length / 2;
         T[] newArrayData = (T[]) new Object[capacity];
-        for (int i = 0; i < arrayData.length; i++) {
-            newArrayData[i] = arrayData[i];
-        }
+        System.arraycopy(arrayData, 0, newArrayData, 0, size );
         arrayData = newArrayData;
     }
 
