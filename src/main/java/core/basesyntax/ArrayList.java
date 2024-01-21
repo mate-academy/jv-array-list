@@ -7,10 +7,10 @@ public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private static final double NEW_ARRAY_CAPACITY_FACTOR = 1.5;
     private int size;
-    private Object[] elementData;
+    private T[] elementData;
 
     public ArrayList() {
-        elementData = new Object[DEFAULT_CAPACITY];
+        elementData = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
     @Override
@@ -45,7 +45,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         rangeCheckForAdd(index);
-        return (T) elementData[index];
+        return elementData[index];
     }
 
     @Override
@@ -56,34 +56,22 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(int index) {
-        T oldElementData;
-        try {
-            oldElementData = (T) elementData[index];
-            rangeCheckForAdd(index);
-            System.arraycopy(elementData, index + 1, elementData, index, size - index - 1);
-        } catch (ArrayIndexOutOfBoundsException e) {
-            throw new ArrayListIndexOutOfBoundsException(index + " is invalid index");
-        }
-        --size;
+        rangeCheckForAdd(index);
+        T oldElementData = elementData[index];
+        System.arraycopy(elementData, index + 1, elementData, index, size - index - 1);
+        size--;
         return oldElementData;
     }
 
     @Override
     public T remove(T element) {
-        int amountOfElement = 0;
         for (int i = 0; i < size; i++) {
             if (elementData[i] == element
                     || elementData[i] != null && elementData[i].equals(element)) {
-                amountOfElement++;
-                int amountOfCopiedNumbers = size - i - 1;
-                System.arraycopy(elementData, i + 1, elementData, i, amountOfCopiedNumbers);
+                return remove(i);
             }
         }
-        if (amountOfElement == 0) {
-            throw new NoSuchElementException("No such element " + element + " present.");
-        }
-        --size;
-        return element;
+        throw new NoSuchElementException("No such element " + element + " present.");
     }
 
     @Override
@@ -98,7 +86,7 @@ public class ArrayList<T> implements List<T> {
 
     private void rangeCheckForAdd(int index) throws ArrayIndexOutOfBoundsException {
         if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException(index + " is invalid index");
+            throw new ArrayListIndexOutOfBoundsException(index + " is invalid index.");
         }
     }
 
@@ -106,7 +94,7 @@ public class ArrayList<T> implements List<T> {
         int newArrayCapacity = (int) (elementData.length * NEW_ARRAY_CAPACITY_FACTOR);
         Object[] newArrayList = new Object[newArrayCapacity];
         System.arraycopy(elementData, 0, newArrayList, 0, size);
-        elementData = newArrayList;
+        elementData = (T[]) newArrayList;
     }
 
     private void checkCapacity() {
