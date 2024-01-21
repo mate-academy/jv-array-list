@@ -7,7 +7,7 @@ public class ArrayList<T> implements List<T> {
     private int size;
     private T[] arrayData;
 
-    public ArrayList(){
+    public ArrayList() {
         arrayData = (T[]) new Object[DEFAULT_SIZE];
     }
 
@@ -83,7 +83,7 @@ public class ArrayList<T> implements List<T> {
         int capacity = arrayData.length;
         capacity += arrayData.length / 2;
         T[] newArrayData = (T[]) new Object[capacity];
-        System.arraycopy(arrayData, 0, newArrayData, 0, size );
+        System.arraycopy(arrayData, 0, newArrayData, 0, size);
         arrayData = newArrayData;
     }
 
