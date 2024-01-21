@@ -5,7 +5,7 @@ import java.util.NoSuchElementException;
 @SuppressWarnings("unchecked")
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    private static final double NEW_ARRAY_CAPACITY_FACTOR = 1.5;
+    private static final double GROW_FACTOR = 1.5;
     private int size;
     private T[] elementData;
 
@@ -16,8 +16,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value) {
         checkCapacity();
-        elementData[size] = value;
-        size++;
+        elementData[size++] = value;
     }
 
     @Override
@@ -36,9 +35,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void addAll(List<T> list) {
         for (int i = 0; i < list.size(); i++) {
-            checkCapacity();
-            elementData[size] = list.get(i);
-            size++;
+            add(list.get(i));
         }
     }
 
@@ -84,14 +81,15 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void rangeCheckForAdd(int index) throws ArrayIndexOutOfBoundsException {
+    private void rangeCheckForAdd(int index) {
         if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException(index + " is invalid index.");
+            throw new ArrayListIndexOutOfBoundsException(index + " is invalid index, because "
+                    + "size of ArrayList is " + size + ".");
         }
     }
 
-    private void grow() {
-        int newArrayCapacity = (int) (elementData.length * NEW_ARRAY_CAPACITY_FACTOR);
+    private void growIfNeeded() {
+        int newArrayCapacity = (int) (elementData.length * GROW_FACTOR);
         Object[] newArrayList = new Object[newArrayCapacity];
         System.arraycopy(elementData, 0, newArrayList, 0, size);
         elementData = (T[]) newArrayList;
@@ -99,7 +97,7 @@ public class ArrayList<T> implements List<T> {
 
     private void checkCapacity() {
         if (size == elementData.length) {
-            grow();
+            growIfNeeded();
         }
     }
 }
