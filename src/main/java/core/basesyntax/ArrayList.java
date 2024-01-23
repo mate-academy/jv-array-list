@@ -4,14 +4,13 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int INITIAL_ARRAY_SIZE = 10;
-    private static final int INITIAL_SIZE = 0;
-    private static final double EXPANDED_SIZE = 1.5;
-    private Object[] elementData;
+    private static final double RESIZE_FACTOR = 1.5;
+    private T[] elementData;
     private int size;
 
     public ArrayList() {
-        this.elementData = new Object[INITIAL_ARRAY_SIZE];
-        this.size = INITIAL_SIZE;
+        this.elementData = (T[]) new Object[INITIAL_ARRAY_SIZE];
+        this.size = 0;
     }
 
     @Override
@@ -22,24 +21,28 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index >= 0 && index <= size) {
-            expandCapacityIfArrayFull();
-            for (int i = size - 1; i >= index; i--) {
-                elementData[i + 1] = elementData[i];
-            }
-            elementData[index] = value;
-            size++;
-        } else {
-            throw new ArrayListIndexOutOfBoundsException("There is no index: " + index);
+        checkIndex(index, true);
+        expandCapacityIfArrayFull();
+        for (int i = size - 1; i >= index; i--) {
+            elementData[i + 1] = elementData[i];
+        }
+        elementData[index] = value;
+        size++;
+    }
+
+    private void checkIndex(int index, boolean inclusive) {
+        if ((inclusive && (index < 0 || index > size))
+                || (!inclusive && (index < 0 || index >= size))) {
+            throw new ArrayListIndexOutOfBoundsException("Theres no index " + index);
         }
     }
 
     private void expandCapacityIfArrayFull() {
         if (size == elementData.length) {
-            int newCapacity = (int) (elementData.length * EXPANDED_SIZE);
+            int newCapacity = (int) (elementData.length * RESIZE_FACTOR);
             Object[] newArray = new Object[newCapacity];
             System.arraycopy(elementData, 0, newArray, 0, size);
-            elementData = newArray;
+            elementData = (T[]) newArray;
         }
     }
 
@@ -52,49 +55,45 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index >= 0 && index < size) {
-            return (T) elementData[index];
-        }
-        throw new ArrayListIndexOutOfBoundsException("There is no index: " + index);
+        checkIndex(index, false);
+        return elementData[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index >= 0 && index <= size - 1) {
-            elementData[index] = value;
-        } else {
-            throw new ArrayListIndexOutOfBoundsException("There is no index: " + index);
-        }
+        checkIndex(index, false);
+        elementData[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index >= 0 && index < size) {
-            T removedValue = (T) elementData[index];
-            for (int i = index; i < size - 1; i++) {
-                elementData[i] = elementData[i + 1];
-            }
-            size--;
-            return removedValue;
-        } else {
-            throw new ArrayListIndexOutOfBoundsException("There is no index: " + index);
+        checkIndex(index, false);
+        T removedValue = elementData[index];
+        for (int i = index; i < size - 1; i++) {
+            elementData[i] = elementData[i + 1];
         }
+        size--;
+        return removedValue;
     }
 
     @Override
     public T remove(T element) {
+        int index = indexOf(element);
+        if (index != -1) {
+            return remove(index);
+        } else {
+            throw new NoSuchElementException("There's no element: " + element);
+        }
+    }
+
+    private int indexOf(T element) {
         for (int i = 0; i < size; ++i) {
             if ((elementData[i] == null && element == null)
                     || (elementData[i] != null && elementData[i].equals(element))) {
-                T removedElement = (T) elementData[i];
-                for (int j = i; j < size - 1; ++j) {
-                    elementData[j] = elementData[j + 1];
-                }
-                size--;
-                return removedElement;
+                return i;
             }
         }
-        throw new NoSuchElementException("There's no element" + element);
+        return -1;
     }
 
     @Override
