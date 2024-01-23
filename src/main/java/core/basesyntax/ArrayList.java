@@ -36,7 +36,7 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private void checkIndexForGet(int index) {
+    private void checkIndex(int index) {
         if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException("There is no index: " + index);
         }
@@ -60,7 +60,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        checkIndexForGet(index);
+        checkIndex(index);
         return elementData[index];
     }
 
@@ -80,7 +80,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(int index) {
-        checkIndexForRemove(index);
+        checkIndex(index);
         T removedValue = elementData[index];
         for (int i = index; i < size - 1; i++) {
             elementData[i] = elementData[i + 1];
@@ -96,12 +96,6 @@ public class ArrayList<T> implements List<T> {
             return remove(index);
         } else {
             throw new NoSuchElementException("There's no element: " + element);
-        }
-    }
-
-    private void checkIndexForRemove(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("There is no index: " + index);
         }
     }
 
