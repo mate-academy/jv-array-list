@@ -10,7 +10,6 @@ public class ArrayList<T> implements List<T> {
 
     public ArrayList() {
         this.elementData = (T[]) new Object[INITIAL_ARRAY_SIZE];
-        this.size = 0;
     }
 
     @Override
@@ -21,19 +20,25 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        checkIndex(index, true);
+        checkIndexForAdd(index);
         expandCapacityIfArrayFull();
         for (int i = size - 1; i >= index; i--) {
             elementData[i + 1] = elementData[i];
         }
         elementData[index] = value;
         size++;
+
     }
 
-    private void checkIndex(int index, boolean inclusive) {
-        if ((inclusive && (index < 0 || index > size))
-                || (!inclusive && (index < 0 || index >= size))) {
-            throw new ArrayListIndexOutOfBoundsException("Theres no index " + index);
+    private void checkIndexForAdd(int index) {
+        if (index < 0 || index > size) {
+            throw new ArrayListIndexOutOfBoundsException("There is no index: " + index);
+        }
+    }
+
+    private void checkIndexForGet(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("There is no index: " + index);
         }
     }
 
@@ -55,19 +60,27 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        checkIndex(index, false);
+        checkIndexForGet(index);
         return elementData[index];
     }
 
     @Override
     public void set(T value, int index) {
-        checkIndex(index, false);
+        checkIndexForSet(index);
         elementData[index] = value;
+    }
+
+    private void checkIndexForSet(int index) {
+        if (index >= 0 && index <= size - 1) {
+            return;
+        } else {
+            throw new ArrayListIndexOutOfBoundsException("There is no index: " + index);
+        }
     }
 
     @Override
     public T remove(int index) {
-        checkIndex(index, false);
+        checkIndexForRemove(index);
         T removedValue = elementData[index];
         for (int i = index; i < size - 1; i++) {
             elementData[i] = elementData[i + 1];
@@ -86,9 +99,15 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
+    private void checkIndexForRemove(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("There is no index: " + index);
+        }
+    }
+
     private int indexOf(T element) {
         for (int i = 0; i < size; ++i) {
-            if ((elementData[i] == null && element == null)
+            if ((elementData[i] == element)
                     || (elementData[i] != null && elementData[i].equals(element))) {
                 return i;
             }
