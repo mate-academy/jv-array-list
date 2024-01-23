@@ -14,13 +14,6 @@ public class ArrayList<T> implements List<T> {
         this.size = 0;
     }
 
-    private void ensureCapacity() {
-        if (size == array.length) {
-            int newCapacity = (int) (array.length * GROWTH_FACTOR);
-            array = Arrays.copyOf(array, newCapacity);
-        }
-    }
-
     @Override
     public void add(T value) {
         ensureCapacity();
@@ -29,7 +22,9 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        checkIndex(index);
+        if (index < 0 || index > size) {
+            throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
+        }
         ensureCapacity();
         System.arraycopy(array, index, array, index + 1, size - index);
         array[index] = value;
@@ -45,23 +40,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
-        }
+        validateIndex(index);
         return (T) array[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
-        }
+        validateIndex(index);
         array[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        checkIndex(index);
+        validateIndex(index);
         T removedElement = (T) array[index];
         System.arraycopy(array, index + 1, array, index, size - index - 1);
         array[--size] = null;
@@ -88,7 +79,14 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void checkIndex(int index) {
+    private void ensureCapacity() {
+        if (size == array.length) {
+            int newCapacity = (int) (array.length * GROWTH_FACTOR);
+            array = Arrays.copyOf(array, newCapacity);
+        }
+    }
+
+    private void validateIndex(int index) {
         if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
         }
