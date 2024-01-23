@@ -16,12 +16,17 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
+        if (size <= INITIAL_CAPACITY && biggerArray == null) {
+            values[size++] = value;
+        }
 
     }
 
     @Override
     public void add(T value, int index) {
-
+    if (!(checkIndexPosition(values,index))) {
+        throw new ArrayListIndexOutOfBoundsException("");
+    }
     }
 
     @Override
@@ -30,22 +35,32 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-
-        return null;
+       if ((checkIndexPosition(values, index))) {
+           throw new ArrayListIndexOutOfBoundsException("");
+       }
+        return values[index];
     }
     @Override
     public void set(T value, int index) {
-
+      if (!(checkIndexPosition(values, index))) {
+          throw new ArrayListIndexOutOfBoundsException("");
+      }
+      values[index] = value;
     }
 
     @Override
     public T remove(int index) {
-
+       if (!(checkIndexPosition(values, index))) {
+           throw new ArrayListIndexOutOfBoundsException("");
+       }
         return null;
     }
 
     @Override
     public T remove(T element) {
+      if (!(checkElement(values, element))) {
+          throw new NoSuchElementException("");
+      }
         return null;
     }
 
@@ -57,6 +72,20 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         if (size == 0){
+            return true;
+        }
+        return false;
+    }
+    public boolean checkElement(T[] values, T element) {
+        for (T value : values) {
+            if (element.equals(value)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    public boolean checkIndexPosition(T[] values, int index) {
+        if (!(index < 0 || index >= size)) {
             return true;
         }
         return false;
