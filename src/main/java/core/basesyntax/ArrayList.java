@@ -6,12 +6,12 @@ import java.util.NoSuchElementException;
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private static final double GROWTH_FACTOR = 1.5;
-    private Object[] array;
+    private T[] array;
     private int size;
 
     public ArrayList() {
-        this.array = new Object[DEFAULT_CAPACITY];
-        this.size = 0;
+        array = (T[]) new Object[DEFAULT_CAPACITY];
+        size = 0;
     }
 
     @Override
@@ -88,7 +88,10 @@ public class ArrayList<T> implements List<T> {
 
     private void validateIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
+            throw new ArrayListIndexOutOfBoundsException("Invalid index: "
+                    + index
+                    + ", size: "
+                    + size);
         }
     }
 }
