@@ -11,7 +11,6 @@ public class ArrayList<T> implements List<T> {
 
     public ArrayList() {
         array = (T[]) new Object[DEFAULT_CAPACITY];
-        size = 0;
     }
 
     @Override
@@ -82,7 +81,9 @@ public class ArrayList<T> implements List<T> {
     private void ensureCapacity() {
         if (size == array.length) {
             int newCapacity = (int) (array.length * GROWTH_FACTOR);
-            array = Arrays.copyOf(array, newCapacity);
+            T[] newArray = (T[]) new Object[newCapacity];
+            System.arraycopy(array, 0, newArray, 0, size);
+            array = newArray;
         }
     }
 
