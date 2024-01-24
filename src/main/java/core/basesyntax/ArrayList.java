@@ -3,21 +3,25 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    private static final int GROWING_NUMBER = 5;
-    private static final int FIRST_INDEX = 0;
+    private static final double GROWING_COEFFICIENT = 1.5;
     private static final int DEFAULT_LENGTH = 10;
-    private int size = 0;
+    private int size;
     private T[] elementData;
-    private T element;
 
     public ArrayList() {
         elementData = (T[]) new Object[DEFAULT_LENGTH];
     }
 
-    public T[] growIfArrayFull() {
-        T[] newElementData = (T[]) new Object[elementData.length + GROWING_NUMBER];
-        System.arraycopy(elementData, FIRST_INDEX, newElementData, FIRST_INDEX, size());
+    private T[] growIfArrayFull() {
+        T[] newElementData = (T[]) new Object[(int) (elementData.length * GROWING_COEFFICIENT)];
+        System.arraycopy(elementData, 0, newElementData, 0, size());
         return newElementData;
+    }
+
+    private void checkIfArrayListOutOfBounds(int index) {
+        if (index < 0 || index >= size()) {
+            throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
+        }
     }
 
     @Override
@@ -55,27 +59,20 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index < 0 || index >= size()) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
-        }
+        checkIfArrayListOutOfBounds(index);
         return elementData[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index < 0 || index >= size()) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
-        }
+        checkIfArrayListOutOfBounds(index);
         elementData[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index < 0 || index >= size()) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
-        }
-        element = elementData[index];
-        elementData[index] = null;
+        checkIfArrayListOutOfBounds(index);
+        T element = elementData[index];
         for (int i = index + 1; i < size; i++) {
             elementData[i - 1] = elementData[i];
         }
