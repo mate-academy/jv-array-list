@@ -22,12 +22,10 @@ public class ArrayList<T> implements List<T> {
     public void add(T value, int index) {
         checkIndexForAdd(index);
         expandCapacityIfArrayFull();
-        for (int i = size - 1; i >= index; i--) {
-            elementData[i + 1] = elementData[i];
-        }
+
+        System.arraycopy(elementData, index, elementData, index + 1, size - index);
         elementData[index] = value;
         size++;
-
     }
 
     private void checkIndexForAdd(int index) {
@@ -66,25 +64,15 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void set(T value, int index) {
-        checkIndexForSet(index);
+        checkIndex(index);
         elementData[index] = value;
-    }
-
-    private void checkIndexForSet(int index) {
-        if (index >= 0 && index <= size - 1) {
-            return;
-        } else {
-            throw new ArrayListIndexOutOfBoundsException("There is no index: " + index);
-        }
     }
 
     @Override
     public T remove(int index) {
         checkIndex(index);
         T removedValue = elementData[index];
-        for (int i = index; i < size - 1; i++) {
-            elementData[i] = elementData[i + 1];
-        }
+        System.arraycopy(elementData, index + 1, elementData, index, size - index - 1);
         size--;
         return removedValue;
     }
@@ -94,9 +82,8 @@ public class ArrayList<T> implements List<T> {
         int index = indexOf(element);
         if (index != -1) {
             return remove(index);
-        } else {
-            throw new NoSuchElementException("There's no element: " + element);
         }
+        throw new NoSuchElementException("There's no element: " + element);
     }
 
     private int indexOf(T element) {
