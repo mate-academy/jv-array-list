@@ -1,6 +1,5 @@
 package core.basesyntax;
 
-import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
@@ -13,10 +12,6 @@ public class ArrayList<T> implements List<T> {
         this.elementData = (T[]) DEFAULTCAPACITY_EMPTY_ELEMENTDATA;
     }
 
-    public String getElementData() {
-        return Arrays.toString(elementData);
-    }
-
     @Override
     public void add(T value) {
         resizeIfNeeded();
@@ -26,11 +21,12 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        resizeIfNeeded();
         if (index > size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("The specified index is"
                     + " larger than the array size");
         }
+        resizeIfNeeded();
+
         for (int i = size; i > index; i--) {
             elementData[i] = elementData[i - 1];
         }
@@ -66,12 +62,11 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(int index) {
-        resizeIfNeeded();
         if (index >= size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("The specified index is"
                     + " larger than the array size");
         }
-
+        resizeIfNeeded();
         T element = elementData[index];
 
         for (int i = index; i < size; i++) {
@@ -83,8 +78,8 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-
         boolean elementFound = false;
+
         for (int i = 0; i < size; i++) {
             if (elementData[i] == null || elementData[i] == element) {
                 remove(i);
