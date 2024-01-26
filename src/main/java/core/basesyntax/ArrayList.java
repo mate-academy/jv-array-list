@@ -4,12 +4,11 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    private static final Object[] DEFAULTCAPACITY_EMPTY_ELEMENTDATA = {};
     private T[] elementData;
     private int size;
 
     public ArrayList() {
-        this.elementData = (T[]) DEFAULTCAPACITY_EMPTY_ELEMENTDATA;
+        this.elementData = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
     @Override
@@ -44,58 +43,34 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("The specified index is"
-                    + " larger than the array size");
-        }
+        checkIndexException(index);
         return elementData[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("The specified index is"
-                    + " larger than the array size");
-        }
+        checkIndexException(index);
         elementData[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("The specified index is"
-                    + " larger than the array size");
-        }
+        checkIndexException(index);
         resizeIfNeeded();
-        T element = elementData[index];
-
-        for (int i = index; i < size; i++) {
-            elementData[i] = elementData[i + 1];
-        }
+        T removedElement = elementData[index];
+        System.arraycopy(elementData, index + 1, elementData, index, size - index - 1);
         size--;
-        return element;
+        return removedElement;
     }
 
     @Override
     public T remove(T element) {
-        boolean elementFound = false;
-
         for (int i = 0; i < size; i++) {
-            if (elementData[i] == null || elementData[i] == element) {
-                remove(i);
-                elementFound = true;
-                break;
-            } else if (elementData[i].equals(element)) {
-                remove(i);
-                elementFound = true;
-                break;
+            if (element == elementData[i] || element != null && element.equals(elementData[i])) {
+                return remove(i);
             }
         }
-
-        if (!elementFound) {
-            throw new NoSuchElementException("Element with such data was not found");
-        }
-        return element;
+        throw new NoSuchElementException("Element with such data was not found");
     }
 
     @Override
@@ -112,17 +87,19 @@ public class ArrayList<T> implements List<T> {
         if (size == elementData.length) {
             int oldCapacity = elementData.length;
             int newCapacity = oldCapacity + (oldCapacity >> 1);
-            int minCapacity = size + 1;
             T[] clonableObject = (T[]) new Object[newCapacity];
 
-            if (oldCapacity > 0 || elementData != DEFAULTCAPACITY_EMPTY_ELEMENTDATA) {
-                for (int i = 0; i < elementData.length; i++) {
-                    clonableObject[i] = elementData[i];
-                }
-                elementData = clonableObject;
-            } else {
-                elementData = (T[]) new Object[Math.max(DEFAULT_CAPACITY, minCapacity)];
+            for (int i = 0; i < elementData.length; i++) {
+                clonableObject[i] = elementData[i];
             }
+            elementData = clonableObject;
+        }
+    }
+
+    private void checkIndexException(int index) {
+        if (index >= size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("The specified index is"
+                    + " larger than the array size");
         }
     }
 }
