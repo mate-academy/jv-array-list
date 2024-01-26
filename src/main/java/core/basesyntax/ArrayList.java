@@ -6,7 +6,7 @@ import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    private static final  double GROWTH_FACTOR = 1.5;
+    private static final double GROWTH_FACTOR = 1.5;
 
     private Object[] array;
     private int size;
@@ -31,12 +31,12 @@ public class ArrayList<T> implements List<T> {
         ensureCapacity();
         System.arraycopy(array, index, array, index + 1, size - index);
         array[index] = value;
-        size ++;
+        size++;
     }
 
     @Override
     public void addAll(List<T> list) {
-        for (int i = 0; i < list.size(); i++)  {
+        for (int i = 0; i < list.size(); i++) {
             add(list.get(i));
         }
     }
