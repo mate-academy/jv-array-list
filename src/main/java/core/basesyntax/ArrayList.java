@@ -12,18 +12,6 @@ public class ArrayList<T> implements List<T> {
         elementData = (T[]) new Object[DEFAULT_LENGTH];
     }
 
-    private T[] growIfArrayFull() {
-        T[] newElementData = (T[]) new Object[(int) (elementData.length * GROWING_COEFFICIENT)];
-        System.arraycopy(elementData, 0, newElementData, 0, size());
-        return newElementData;
-    }
-
-    private void checkIfArrayListOutOfBounds(int index) {
-        if (index < 0 || index >= size()) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
-        }
-    }
-
     @Override
     public void add(T value) {
         if (size == elementData.length) {
@@ -73,9 +61,7 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         checkIfArrayListOutOfBounds(index);
         T element = elementData[index];
-        for (int i = index + 1; i < size; i++) {
-            elementData[i - 1] = elementData[i];
-        }
+        System.arraycopy(elementData, index + 1, elementData, index, size - index - 1);
         size--;
         return element;
     }
@@ -103,5 +89,17 @@ public class ArrayList<T> implements List<T> {
             return false;
         }
         return true;
+    }
+
+    private T[] growIfArrayFull() {
+        T[] newElementData = (T[]) new Object[(int) (elementData.length * GROWING_COEFFICIENT)];
+        System.arraycopy(elementData, 0, newElementData, 0, size());
+        return newElementData;
+    }
+
+    private void checkIfArrayListOutOfBounds(int index) {
+        if (index < 0 || index >= size()) {
+            throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
+        }
     }
 }
