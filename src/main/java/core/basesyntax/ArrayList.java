@@ -14,9 +14,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (size == elementData.length) {
-            elementData = growIfArrayFull();
-        }
+        elementData = growIfArrayFull();
         elementData[size++] = value;
     }
 
@@ -37,9 +35,6 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        if (list.size() > elementData.length) {
-            growIfArrayFull();
-        }
         for (int i = 0; i < list.size(); i++) {
             add(list.get(i));
         }
@@ -85,16 +80,16 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public boolean isEmpty() {
-        if (size() > 0) {
-            return false;
-        }
-        return true;
+        return !(size() > 0);
     }
 
     private T[] growIfArrayFull() {
-        T[] newElementData = (T[]) new Object[(int) (elementData.length * GROWING_COEFFICIENT)];
-        System.arraycopy(elementData, 0, newElementData, 0, size());
-        return newElementData;
+        if (size == elementData.length) {
+            T[] newElementData = (T[]) new Object[(int) (elementData.length * GROWING_COEFFICIENT)];
+            System.arraycopy(elementData, 0, newElementData, 0, size());
+            return newElementData;
+        }
+        return elementData;
     }
 
     private void checkIfArrayListOutOfBounds(int index) {
