@@ -1,8 +1,6 @@
 package core.basesyntax;
 
-import java.util.Arrays;
 import java.util.NoSuchElementException;
-import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
@@ -12,8 +10,7 @@ public class ArrayList<T> implements List<T> {
     private int size;
 
     public ArrayList() {
-        this.array = new Object[DEFAULT_CAPACITY];
-        this.size = 0;
+        array = new Object[DEFAULT_CAPACITY];
     }
 
     @Override
@@ -65,7 +62,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if (Objects.equals(element, array[i])) {
+            if ((element == null && array[i] == null) || (element != null && element.equals(array[i]))) {
                 return remove(i);
             }
         }
@@ -85,13 +82,20 @@ public class ArrayList<T> implements List<T> {
     private void ensureCapacity() {
         if (size == array.length) {
             int newCapacity = (int) (array.length * GROWTH_FACTOR);
-            array = Arrays.copyOf(array, newCapacity);
+            Object[] newArray = new Object[newCapacity];
+            for (int i = 0; i < size; i++) {
+                newArray[i] = array[i];
+            }
+            array = newArray;
         }
     }
 
     private void checkIndex(int index) {
-        if (index < 0 || index >= size) {
+        if (index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
+        }
+        if (index >= size) {
+            throw new ArrayListIndexOutOfBoundsException(index + " not within the size.");
         }
     }
 }
