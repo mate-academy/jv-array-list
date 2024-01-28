@@ -3,9 +3,7 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-
     private static final int DEFAULT_ITEMS_NUMBER = 10;
-
     private int size;
     private T[] elementData;
 
@@ -16,15 +14,16 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value) {
         checkToGrow();
-        elementData[size] = value;
-        size++;
+        elementData[size++] = value;
     }
 
     @Override
     public void add(T value, int index) {
-        if (index == size) {
+        if (!indexCheck(index) && index != size) {
+            throw new ArrayListIndexOutOfBoundsException("Index " + index + " is negative or out of bounds with size: " + size);
+        } else if (index == size) {
             add(value);
-        } else if (indexCheck(index)) {
+        } else {
             checkToGrow();
             T[] newElementData = (T[]) new Object[elementData.length];
             System.arraycopy(elementData, 0, newElementData, 0, index);
@@ -32,10 +31,7 @@ public class ArrayList<T> implements List<T> {
             System.arraycopy(elementData, index, newElementData, index + 1, size - index);
             elementData = newElementData;
             size++;
-        } else {
-            throw new ArrayListIndexOutOfBoundsException("Index Out of Bounds");
         }
-
     }
 
     private void checkToGrow() {
@@ -50,15 +46,8 @@ public class ArrayList<T> implements List<T> {
         elementData = newElementData;
     }
 
-    private void grow(int listSize) {
-        T[] newElementData = (T[]) new Object[size + listSize];
-        System.arraycopy(elementData, 0, newElementData, 0, elementData.length);
-        elementData = newElementData;
-    }
-
     @Override
     public void addAll(List<T> list) {
-        grow(list.size());
         for (int i = 0; i < list.size(); i++) {
             add(list.get(i), size);
         }
@@ -66,19 +55,18 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index <= size - 1 && index >= 0) {
-            return (T) elementData[index];
+        if (index >= size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Index " + index + " is negative or out of bounds with size: " + size);
         }
-        throw new ArrayListIndexOutOfBoundsException("Index Out Of Bounds");
+        return (T) elementData[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (indexCheck(index)) {
-            elementData[index] = value;
-        } else {
-            throw new ArrayListIndexOutOfBoundsException("Index is negative or out of bounds");
+        if (!indexCheck(index)) {
+            throw new ArrayListIndexOutOfBoundsException("Index " + index + " is negative or out of bounds with size: " + size);
         }
+        elementData[index] = value;
     }
 
     private boolean indexCheck(int index) {
@@ -88,7 +76,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         if (!indexCheck(index)) {
-            throw new ArrayListIndexOutOfBoundsException("Index is negative or out of bounds");
+            throw new ArrayListIndexOutOfBoundsException("Index " + index + " is negative or out of bounds with size: " + size);
         } else {
             T[] newElementData = (T[]) new Object[elementData.length];
             System.arraycopy(elementData, 0, newElementData, 0, index);
@@ -103,12 +91,12 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < elementData.length; i++) {
-            if ((elementData[i] == null && element == null)
+            if ((elementData[i] == element)
                     || (elementData[i] != null && elementData[i].equals(element))) {
                 return remove(i);
             }
         }
-        throw new NoSuchElementException("No such element");
+        throw new NoSuchElementException("No such element " + element);
     }
 
     @Override
@@ -120,5 +108,4 @@ public class ArrayList<T> implements List<T> {
     public boolean isEmpty() {
         return size == 0;
     }
-
 }
