@@ -20,7 +20,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         if (!indexCheck(index) && index != size) {
-            throw new ArrayListIndexOutOfBoundsException("Index " + index + " is negative or out of bounds with size: " + size);
+            throw new ArrayListIndexOutOfBoundsException("Index " + index
+                    + " is negative or out of bounds with size: " + size);
         } else if (index == size) {
             add(value);
         } else {
@@ -56,7 +57,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index " + index + " is negative or out of bounds with size: " + size);
+            throw new ArrayListIndexOutOfBoundsException("Index " + index
+                    + " is negative or out of bounds with size: " + size);
         }
         return (T) elementData[index];
     }
@@ -64,7 +66,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void set(T value, int index) {
         if (!indexCheck(index)) {
-            throw new ArrayListIndexOutOfBoundsException("Index " + index + " is negative or out of bounds with size: " + size);
+            throw new ArrayListIndexOutOfBoundsException("Index " + index
+                    + " is negative or out of bounds with size: " + size);
         }
         elementData[index] = value;
     }
@@ -76,7 +79,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         if (!indexCheck(index)) {
-            throw new ArrayListIndexOutOfBoundsException("Index " + index + " is negative or out of bounds with size: " + size);
+            throw new ArrayListIndexOutOfBoundsException("Index " + index
+                    + " is negative or out of bounds with size: " + size);
         } else {
             T[] newElementData = (T[]) new Object[elementData.length];
             System.arraycopy(elementData, 0, newElementData, 0, index);
