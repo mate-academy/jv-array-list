@@ -6,11 +6,11 @@ public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private static final double GROWTH_FACTOR = 1.5;
 
-    private Object[] array;
+    private T[] array;
     private int size;
 
     public ArrayList() {
-        array = new Object[DEFAULT_CAPACITY];
+        array = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
     @Override
@@ -41,7 +41,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         checkIndex(index);
-        return (T) array[index];
+        return array[index];
     }
 
     @Override
@@ -53,7 +53,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
-        T removedElement = (T) array[index];
+        T removedElement = array[index];
         System.arraycopy(array, index + 1, array, index, size - index - 1);
         array[--size] = null;
         return removedElement;
@@ -62,8 +62,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if ((element == null && array[i] == null)
-                    || (element != null && element.equals(array[i]))) {
+            if (element == array[i] || (element != null && element.equals(array[i]))) {
                 return remove(i);
             }
         }
@@ -84,19 +83,14 @@ public class ArrayList<T> implements List<T> {
         if (size == array.length) {
             int newCapacity = (int) (array.length * GROWTH_FACTOR);
             Object[] newArray = new Object[newCapacity];
-            for (int i = 0; i < size; i++) {
-                newArray[i] = array[i];
-            }
-            array = newArray;
+            System.arraycopy(array, 0, newArray, 0, size);
+            array = (T[]) newArray;
         }
     }
 
     private void checkIndex(int index) {
-        if (index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
-        }
-        if (index >= size) {
-            throw new ArrayListIndexOutOfBoundsException(index + " not within the size.");
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index + " for size " + size);
         }
     }
 }
