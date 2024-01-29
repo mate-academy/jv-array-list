@@ -49,26 +49,20 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (checkIndex(index)) {
-            throw new ArrayListIndexOutOfBoundsException("Index Out Of Bounds");
-        }
+        checkIndex(index);
         return elementData[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (checkIndex(index)) {
-            throw new ArrayListIndexOutOfBoundsException("Index out of Bounds");
-        }
+        checkIndex(index);
         elementData[index] = value;
     }
 
     @Override
     public T remove(int index) {
         T value;
-        if (checkIndex(index)) {
-            throw new ArrayListIndexOutOfBoundsException("Index out of Bounds");
-        }
+        checkIndex(index);
         value = elementData[index];
         System.arraycopy(elementData, index + 1, elementData, index,
                 elementData.length - (index + 1));
@@ -78,14 +72,15 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        T value;
         for (int i = 0; i < size; i++) {
-            if (element == elementData[i] || (element != null && element.equals(elementData[i]))) {
-                value = elementData[i];
+            if (element == elementData[i]
+                    || (element != null
+                    && element.equals(elementData[i]))) {
                 return remove(i);
             }
         }
-        throw new NoSuchElementException();
+        throw new NoSuchElementException("Element is not exist: "
+                + element);
     }
 
     @Override
@@ -107,6 +102,13 @@ public class ArrayList<T> implements List<T> {
     }
 
     private boolean checkIndex(int index) {
-        return index >= size || index < 0;
+        if (index >= size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException(
+                    "Index out of Bounds. Index have negative grade or greater then size of array:"
+                            + index
+                            + " "
+                            + size);
+        }
+        return true;
     }
 }
