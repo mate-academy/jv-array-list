@@ -41,10 +41,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index " + index
-                    + " is negative or out of bounds with size: " + size);
-        }
+        outOfBoundsCheck(index);
         return (T) elementData[index];
     }
 
@@ -57,11 +54,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         outOfBoundsCheck(index);
-        T[] newElementData = (T[]) new Object[elementData.length];
-        System.arraycopy(elementData, 0, newElementData, 0, index);
-        System.arraycopy(elementData, index + 1, newElementData, index, size - index - 1);
         T valueToRemove = (T) elementData[index];
-        elementData = newElementData;
+        System.arraycopy(elementData, index + 1, elementData, index, size - index - 1);
         size--;
         return valueToRemove;
     }
