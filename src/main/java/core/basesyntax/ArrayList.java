@@ -22,7 +22,7 @@ public class ArrayList<T> implements List<T> {
         if (index == size) {
             add(value);
         } else {
-            if(!indexCheck(index)){
+            if (!indexCheck(index)) {
                 throw new ArrayListIndexOutOfBoundsException("Index " + index
                         + " is negative or out of bounds with size: " + size);
             }
