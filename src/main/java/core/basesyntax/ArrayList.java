@@ -63,15 +63,13 @@ public class ArrayList<T> implements List<T> {
         T incomeElement;
         for (int i = 0; i < values.length; i++) {
             T currentElement = values[i];
-            if (currentElement == element
-                    || currentElement != null
-                    && currentElement.equals(element)) {
+            if (compareElementsFromArray(currentElement, element)) {
                 incomeElement = element;
                 deleteElementInArray(i);
                 return incomeElement;
             }
         }
-        throw new NoSuchElementException("");
+        throw new NoSuchElementException("Element is not found in the List" + element);
     }
 
     @Override
@@ -86,7 +84,7 @@ public class ArrayList<T> implements List<T> {
 
     private void checkIndexPosition(int index) {
         if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("");
+            throw new ArrayListIndexOutOfBoundsException("Index is out of bounds: " + index);
         }
     }
 
@@ -102,6 +100,11 @@ public class ArrayList<T> implements List<T> {
         System.arraycopy(values, index + 1, values, index,
                 values.length - index - 1);
         size--;
+    }
+
+    private boolean compareElementsFromArray(T currentElement, T element) {
+        return currentElement == element || currentElement != null
+                && currentElement.equals(element);
     }
 
     private void increaseSize() {
