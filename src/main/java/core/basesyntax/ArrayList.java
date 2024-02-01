@@ -1,16 +1,15 @@
 package core.basesyntax;
 
-import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private static final double GROWTH_FACTOR = 1.5;
-    private Object[] elements;
+    private T[] elements;
     private int size;
 
     public ArrayList() {
-        this.elements = new Object[DEFAULT_CAPACITY];
+        this.elements = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
     @Override
@@ -50,10 +49,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
-        T removedElement = (T) elements[index];
-        System.arraycopy(elements, index + 1, elements, index, size - index - 1);
-        size--;
-        return removedElement;
+        return getIndexRemove(index);
     }
 
     @Override
@@ -61,10 +57,7 @@ public class ArrayList<T> implements List<T> {
         for (int i = 0; i < size; i++) {
             if (element == null && elements[i] == null
                     || element != null && element.equals(elements[i])) {
-                T removedElement = (T) elements[i];
-                System.arraycopy(elements, i + 1, elements, i, size - i - 1);
-                size--;
-                return removedElement;
+                return getIndexRemove(i);
             }
         }
         throw new NoSuchElementException("Element " + element + " not found");
@@ -83,7 +76,9 @@ public class ArrayList<T> implements List<T> {
     private void ensureCapacity() {
         if (size == elements.length) {
             int newCapacity = (int) (elements.length * GROWTH_FACTOR);
-            elements = Arrays.copyOf(elements, newCapacity);
+            T[] newElements = (T[]) new Object[newCapacity];
+            System.arraycopy(elements, 0, newElements, 0, size);
+            elements = newElements;
         }
     }
 
@@ -97,5 +92,12 @@ public class ArrayList<T> implements List<T> {
         if (index < 0 || index > size + 1) {
             throw new ArrayListIndexOutOfBoundsException("Index " + index + " does not exist");
         }
+    }
+
+    private T getIndexRemove(int index) {
+        T removedElement = (T) elements[index];
+        System.arraycopy(elements, index + 1, elements, index, size - index - 1);
+        size--;
+        return removedElement;
     }
 }
