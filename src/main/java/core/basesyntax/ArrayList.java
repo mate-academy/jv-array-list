@@ -4,13 +4,12 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    private static final double GROW_NUM = 1.5;
+    private static final double GROW_FACTOR = 1.5;
     private int size;
     private T[] array;
 
     public ArrayList() {
-        array = (T[])new Object[DEFAULT_CAPACITY];
-
+        array = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
     @Override
@@ -27,7 +26,7 @@ public class ArrayList<T> implements List<T> {
         if (size == array.length) {
             array = grow();
         }
-        if (index - 1 > size || index < 0) {
+        if (index > size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Object index cannot be "
                     + "larger than the list size");
         }
@@ -69,27 +68,15 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        if (element == null) {
-            for (int i = 0; i < size; i++) {
-                if (array[i] == null) {
-                    T removeElement = array[i];
-                    int startIndex = i;
-                    int elementsToMove = size - i - 1;
-                    System.arraycopy(array, startIndex + 1, array, startIndex, elementsToMove);
-                    size--;
-                    return removeElement;
-                }
-            }
-        } else {
-            for (int i = 0; i < size; i++) {
-                if (element.equals(array[i])) {
-                    T removeElement = array[i];
-                    int startIndex = i;
-                    int elementsToMove = size - i - 1;
-                    System.arraycopy(array, startIndex + 1, array, startIndex, elementsToMove);
-                    size--;
-                    return removeElement;
-                }
+        for (int i = 0; i < size; i++) {
+            if ((element == null && array[i] == null)
+                    || (element != null && element.equals(array[i]))) {
+                T removeElement = array[i];
+                int startIndex = i;
+                int elementsToMove = size - i - 1;
+                System.arraycopy(array, startIndex + 1, array, startIndex, elementsToMove);
+                size--;
+                return removeElement;
             }
         }
         throw new NoSuchElementException("Can't find element for remove: " + element);
@@ -107,9 +94,9 @@ public class ArrayList<T> implements List<T> {
 
     private T[] grow() {
         int oldCapacity = array.length;
-        int newCapacity = (int)(oldCapacity * GROW_NUM);
-        T[] newArray = (T[])new Object[newCapacity];
-        System.arraycopy(array, 0, newArray,0, array.length);
+        int newCapacity = (int)(oldCapacity * GROW_FACTOR);
+        T[] newArray = (T[]) new Object[newCapacity];
+        System.arraycopy(array, 0, newArray, 0, array.length);
         return array = newArray;
     }
 
