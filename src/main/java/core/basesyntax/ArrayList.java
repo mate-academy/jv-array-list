@@ -18,25 +18,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (size >= elements.length) {
-            growArrayIfFull();
-        }
+        growArrayIfFull();
         elements[size] = value;
         size++;
     }
 
     @Override
     public void add(T value, int index) {
-        if (index > size || checkForNegativeIndex(index)) {
-            throw new ArrayListIndexOutOfBoundsException("Cannot add the value by index: "
-                    + "Index is out of bounds");
-        }
-        if (size + CHANGE_BY_ONE > elements.length) {
-            growArrayIfFull();
-        }
         if (index == size) {
-            elements[index] = value;
+            add(value);
+            return;
         }
+        checkIndex(index, "Cannot add the value by index: ");
+        growArrayIfFull();
         int numberOfElementsAfterIndex = size - index;
         System.arraycopy(elements, index,
                         elements, index + CHANGE_BY_ONE, numberOfElementsAfterIndex);
@@ -53,23 +47,20 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        checkIndexForException(index, "Cannot get the value by index: "
-                + "Index is out of bounds");
-        return (T) elements[index];
+        checkIndex(index, "Cannot get the value by index: ");
+        return elements[index];
     }
 
     @Override
     public void set(T value, int index) {
-        checkIndexForException(index, "Cannot set value by index: "
-                + "Index is out of bounds");
+        checkIndex(index, "Cannot set value by index: ");
         elements[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        checkIndexForException(index, "Cannot remove the element by index: "
-                + "Index is out of bounds");
-        T removedElement = (T) elements[index];
+        checkIndex(index, "Cannot remove the element by index: ");
+        T removedElement = elements[index];
         int startCopyIndex = index + CHANGE_BY_ONE;
         System.arraycopy(elements, startCopyIndex,
                         elements, index, size - startCopyIndex);
@@ -98,17 +89,19 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void growArrayIfFull() {
-        T[] enlargedElements = (T[]) new Object[elements.length
-                            + elements.length / DEFAULT_ARRAY_GROW_COEFFICIENT];
-        System.arraycopy(elements, ARRAY_BEGINNING_INDEX,
-                        enlargedElements, ARRAY_BEGINNING_INDEX, elements.length);
-        elements = enlargedElements;
+        if (size + CHANGE_BY_ONE > elements.length) {
+            T[] enlargedElements = (T[]) new Object[elements.length
+                    + elements.length / DEFAULT_ARRAY_GROW_COEFFICIENT];
+            System.arraycopy(elements, ARRAY_BEGINNING_INDEX,
+                    enlargedElements, ARRAY_BEGINNING_INDEX, elements.length);
+            elements = enlargedElements;
+        }
+
     }
 
-    private void checkIndexForException(int index, String message) {
+    private void checkIndex(int index, String message) {
         if (checkIndexGreaterEqualSize(index) || checkForNegativeIndex(index)) {
-            throw new ArrayListIndexOutOfBoundsException("Cannot get the value by index: "
-                    + "Index is out of bounds");
+            throw new ArrayListIndexOutOfBoundsException(message + "Index is out of bounds");
         }
     }
 
