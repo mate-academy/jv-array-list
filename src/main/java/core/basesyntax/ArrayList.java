@@ -1,19 +1,18 @@
 package core.basesyntax;
 
-import java.util.Arrays;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
-    private static int DEFAULT_SIZE;
-    private static int RESIZE_FACTOR;
+    private final int defaultSize;
+    private final double resizeFactor;
     private int size;
     private T[] elements;
 
     public ArrayList() {
-        DEFAULT_SIZE = 10;
-        RESIZE_FACTOR = 5;
-        elements = (T[]) new Object[DEFAULT_SIZE];
+        defaultSize = 10;
+        resizeFactor = 0.5;
+        elements = (T[]) new Object[defaultSize];
     }
 
     @Override
@@ -37,8 +36,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void addAll(List<T> list) {
         for (int i = 0; i < list.size(); i++) {
-            growArray();
-            elements[size++] = list.get(i);
+            add(list.get(i));
         }
     }
 
@@ -59,9 +57,7 @@ public class ArrayList<T> implements List<T> {
         exceptionCalling(index);
         T oldValue = elements[index];
         int numMoved = size - index - 1;
-        if (numMoved > 0) {
-            System.arraycopy(elements, index + 1, elements, index, numMoved);
-        }
+        System.arraycopy(elements, index + 1, elements, index, numMoved);
         elements[--size] = null;
         return oldValue;
     }
@@ -89,12 +85,11 @@ public class ArrayList<T> implements List<T> {
 
     private void growArray() {
         int currentCapacity = elements.length;
-        if (size + 1 > currentCapacity) {
-            int newCapacity = currentCapacity + (int) (currentCapacity * RESIZE_FACTOR);
-            if (newCapacity < size + 1) {
-                newCapacity = size + 1;
-            }
-            elements = Arrays.copyOf(elements, newCapacity);
+        if (size >= currentCapacity) {
+            int newCapacity = currentCapacity + (int) (currentCapacity * resizeFactor);
+            T[] array = (T[])new Object[newCapacity];
+            System.arraycopy(elements, 0, array, 0, currentCapacity);
+            elements = array;
         }
     }
 
