@@ -14,22 +14,14 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (size == array.length) {
-            array = grow();
-        }
+        array = growIfNeeded();
         array[size++] = value;
-
     }
 
     @Override
     public void add(T value, int index) {
-        if (size == array.length) {
-            array = grow();
-        }
-        if (index > size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Object index cannot be "
-                    + "larger than the list size");
-        }
+        checkBoundForAdd(index);
+        array = growIfNeeded();
         System.arraycopy(array, index, array, index + 1, size - index);
         array[index] = value;
         size++;
@@ -52,7 +44,6 @@ public class ArrayList<T> implements List<T> {
     public void set(T value, int index) {
         checkBound(index);
         array[index] = value;
-
     }
 
     @Override
@@ -92,15 +83,18 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private T[] grow() {
-        int oldCapacity = array.length;
-        int newCapacity = (int)(oldCapacity * GROW_FACTOR);
-        T[] newArray = (T[]) new Object[newCapacity];
-        System.arraycopy(array, 0, newArray, 0, array.length);
-        return array = newArray;
+    private T[] growIfNeeded() {
+        if (size == array.length) {
+            int oldCapacity = array.length;
+            int newCapacity = (int) (oldCapacity * GROW_FACTOR);
+            T[] newArray = (T[]) new Object[newCapacity];
+            System.arraycopy(array, 0, newArray, 0, array.length);
+            array = newArray;
+        }
+        return array;
     }
 
-    private boolean checkBound(int index) {
+    private void checkBound(int index) {
         if (index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Index can't be negative :" + index);
         }
@@ -108,6 +102,12 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayListIndexOutOfBoundsException("Bad input index: " + index
                     + "for size: " + size);
         }
-        return true;
+    }
+
+    private void checkBoundForAdd(int index) {
+        if (index > size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Object index cannot be "
+                    + "larger than the list size");
+        }
     }
 }
