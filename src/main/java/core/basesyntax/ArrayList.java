@@ -54,19 +54,18 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         checkIndexPosition(index);
         T removedElement = values[index];
-        deleteElementInArray(index);
+        System.arraycopy(values, index + 1, values, index,
+                values.length - index - 1);
+        size--;
         return removedElement;
     }
 
     @Override
     public T remove(T element) {
-        T incomeElement;
         for (int i = 0; i < values.length; i++) {
-            T currentElement = values[i];
-            if (compareElementsFromArray(currentElement, element)) {
-                incomeElement = element;
-                deleteElementInArray(i);
-                return incomeElement;
+            if (areEqualElements(values[i], element)) {
+                remove(i);
+                return element;
             }
         }
         throw new NoSuchElementException("Element is not found in the List" + element);
@@ -96,13 +95,7 @@ public class ArrayList<T> implements List<T> {
         values = newArray;
     }
 
-    private void deleteElementInArray(int index) {
-        System.arraycopy(values, index + 1, values, index,
-                values.length - index - 1);
-        size--;
-    }
-
-    private boolean compareElementsFromArray(T currentElement, T element) {
+    private boolean areEqualElements(T currentElement, T element) {
         return currentElement == element || currentElement != null
                 && currentElement.equals(element);
     }
