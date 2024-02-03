@@ -4,15 +4,13 @@ import java.util.NoSuchElementException;
 import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
-    private final int defaultSize;
-    private final double resizeFactor;
+    private static final int DEFAULT_SIZE = 10;
+    private static final double RESIZE_FACTOR = 0.5;
     private int size;
     private T[] elements;
 
     public ArrayList() {
-        defaultSize = 10;
-        resizeFactor = 0.5;
-        elements = (T[]) new Object[defaultSize];
+        elements = (T[]) new Object[DEFAULT_SIZE];
     }
 
     @Override
@@ -23,10 +21,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index > size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException(
-                    "The size of the list less than your index");
-        }
+        checkIndexForAdd(index);
         growArray();
         System.arraycopy(elements, index, elements, index + 1, size - index);
         elements[index] = value;
@@ -42,19 +37,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        exceptionCalling(index);
+        exceptionChecking(index);
         return elements[index];
     }
 
     @Override
     public void set(T value, int index) {
-        exceptionCalling(index);
+        exceptionChecking(index);
         elements[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        exceptionCalling(index);
+        exceptionChecking(index);
         T oldValue = elements[index];
         int numMoved = size - index - 1;
         System.arraycopy(elements, index + 1, elements, index, numMoved);
@@ -86,15 +81,21 @@ public class ArrayList<T> implements List<T> {
     private void growArray() {
         int currentCapacity = elements.length;
         if (size >= currentCapacity) {
-            int newCapacity = currentCapacity + (int) (currentCapacity * resizeFactor);
+            int newCapacity = currentCapacity + (int) (currentCapacity * RESIZE_FACTOR);
             T[] array = (T[])new Object[newCapacity];
             System.arraycopy(elements, 0, array, 0, currentCapacity);
             elements = array;
         }
     }
 
-    private void exceptionCalling(int index) {
+    private void exceptionChecking(int index) {
         if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Index: " + index + ", Size: " + size);
+        }
+    }
+
+    private void checkIndexForAdd(int index) {
+        if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException("Index: " + index + ", Size: " + size);
         }
     }
