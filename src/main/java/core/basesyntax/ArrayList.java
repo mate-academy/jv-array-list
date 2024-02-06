@@ -1,21 +1,16 @@
 package core.basesyntax;
 
-import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    private static final int DEFAULT_SIZE = 0;
     private static final double RESIZE_FACTOR = 1.5;
 
-    private int size;
-    private int capacity;
     private T[] array;
+    private int size;
 
     public ArrayList() {
         array = (T[]) new Object[DEFAULT_CAPACITY];
-        capacity = DEFAULT_CAPACITY;
-        size = DEFAULT_SIZE;
     }
 
     @Override
@@ -26,13 +21,12 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        checkBounds(index, true);
-
         if (index == size) {
             add(value);
             return;
         }
 
+        checkBounds(index);
         growIfArrayFull();
         int elementsToShift = ++size - index - 1;
         System.arraycopy(array, index, array, index + 1, elementsToShift);
@@ -50,38 +44,41 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void ensureCapacity(int listLength) {
-        while (!(capacity > size + listLength)) {
+        while (array.length < size + listLength) {
             grow();
         }
     }
 
     private void growIfArrayFull() {
-        if (size == capacity) {
+        if (size == array.length) {
             grow();
         }
     }
 
     private void grow() {
-        capacity = (int) (capacity * RESIZE_FACTOR);
-        array = Arrays.copyOf(array, capacity);
+        int resizedCapacity = (int) (array.length * RESIZE_FACTOR);
+        T[] tempCopyOfArray = (T[]) new Object[resizedCapacity];
+        System.arraycopy(array, 0, tempCopyOfArray, 0, array.length);
+        array = (T[]) new Object[resizedCapacity];
+        System.arraycopy(tempCopyOfArray, 0, array, 0, array.length);
     }
 
     @Override
     public T get(int index) {
-        checkBounds(index, false);
-        return (T) array[index];
+        checkBounds(index);
+        return array[index];
     }
 
     @Override
     public void set(T value, int index) {
-        checkBounds(index, false);
+        checkBounds(index);
         array[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        checkBounds(index, false);
-        T objectRemoved = (T) array[index];
+        checkBounds(index);
+        T objectRemoved = array[index];
         int elementsToShift = size - index - 1;
         System.arraycopy(array, index + 1, array, index, elementsToShift);
         array[--size] = null;
@@ -93,14 +90,13 @@ public class ArrayList<T> implements List<T> {
         for (int i = 0; i < size; i++) {
             T targetElement = array[i];
 
-            if ((targetElement == null && element == null)
-                    || (targetElement != null && targetElement.equals(element))) {
-                remove(i);
-                return targetElement;
+            if (targetElement == element
+                    || targetElement != null && targetElement.equals(element)) {
+                return remove(i);
             }
         }
 
-        throw new NoSuchElementException("Element " + element.toString() + " does not exist.");
+        throw new NoSuchElementException("Element " + element + " does not exist.");
     }
 
     @Override
@@ -113,11 +109,8 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    /* There is conflict during checking bounds when getting or adding
-       a value right after last index, hence the boolean in parameter.
-       When checking with 'true', it won't throw exception if index=size. */
-    private void checkBounds(int index, boolean allowEqualSize) {
-        if (index < 0 || (index > size - 1 && (!allowEqualSize || index != size))) {
+    private void checkBounds(int index) {
+        if (index < 0 || (index > size - 1)) {
             throw new ArrayListIndexOutOfBoundsException("Index out of bounds.");
         }
     }
