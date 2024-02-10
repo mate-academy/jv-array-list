@@ -60,7 +60,14 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        int index = indexOf(element);
+        int index = -OFFSET;
+        for (int i = 0; i < size; i++) {
+            if (element == null && elements[i] == null
+                    || element != null && element.equals(elements[i])) {
+                index = i;
+                break;
+            }
+        }
         if (index != -OFFSET) {
             return remove(index);
         }
@@ -75,16 +82,6 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
-    }
-
-    private int indexOf(T element) {
-        for (int i = 0; i < size; i++) {
-            if (element == null && elements[i] == null
-                    || element != null && element.equals(elements[i])) {
-                return i;
-            }
-        }
-        return -OFFSET;
     }
 
     private void checkIndexBounds(int index) {
