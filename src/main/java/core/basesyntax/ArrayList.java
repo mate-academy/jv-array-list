@@ -66,7 +66,7 @@ public class ArrayList<T> implements List<T> {
         if (index >= size() || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Index not found");
         }
-        T removedElement = (T) elements[index];
+        final T removedElement = (T) elements[index];
         for (int i = index; i < size - 1; i++) {
             elements[i] = elements[i + 1];
         }
