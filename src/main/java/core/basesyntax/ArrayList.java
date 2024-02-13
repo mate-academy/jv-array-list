@@ -4,35 +4,30 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    private Object[] elements;
+    private static final double GROW_FACTOR = 1.5;
+
+    private T[] elements;
     private int size;
 
     public ArrayList() {
-        elements = new Object[DEFAULT_CAPACITY];
-        size = 0;
+        elements = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
     @Override
     public void add(T value) {
-        if (isFool()) {
-            grow();
-        }
-        elements[size] = value;
-        size++;
+        growIfFool();
+        elements[size++] = value;
     }
 
     @Override
     public void add(T value, int index) {
         if (index > size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index must be < then " + size());
+            throw new ArrayListIndexOutOfBoundsException("Index " + index + " is not found. "
+                    + "Index must be less than " + size() + "!");
         }
-        if (isFool()) {
-            grow();
-        }
+        growIfFool();
         if (index < size) {
-            for (int i = size; i > index; i--) {
-                elements[i] = elements[i - 1];
-            }
+            System.arraycopy(elements, index, elements, index + 1, size() - index);
         }
         elements[index] = value;
         size++;
@@ -47,51 +42,33 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index not found");
-        }
+        checkIndex(index);
         return (T) elements[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index not found");
-        }
+        checkIndex(index);
         elements[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index >= size() || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index not found");
-        }
+        checkIndex(index);
         final T removedElement = (T) elements[index];
-        for (int i = index; i < size - 1; i++) {
-            elements[i] = elements[i + 1];
-        }
-        elements[size - 1] = null;
-        size--;
+        System.arraycopy(elements, index + 1, elements, index, size() - index - 1);
+        elements[--size] = null;
         return removedElement;
     }
 
     @Override
     public T remove(T element) {
-        if (element == null) {
-            for (int i = 0; i < size; i++) {
-                if (elements[i] == null) {
-                    return remove(i);
-                }
+        for (int i = 0; i < size(); i++) {
+            if (element == elements[i] || element != null && element.equals(elements[i])) {
+                return remove(i);
             }
         }
-        if (element != null) {
-            for (int i = 0; i < size; i++) {
-                if (element.equals(elements[i])) {
-                    return remove(i);
-                }
-            }
-        }
-        throw new NoSuchElementException("Element not found");
+        throw new NoSuchElementException("Element " + element + " is not found!");
     }
 
     @Override
@@ -104,16 +81,21 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void grow() {
-        int newCapacity = elements.length + elements.length / 2;
-        Object[] newElements = new Object[newCapacity];
-        for (int i = 0; i < elements.length; i++) {
-            newElements[i] = elements[i];
+    private void growIfFool() {
+        if (size() == elements.length) {
+            int newCapacity = (int) (elements.length * GROW_FACTOR);
+            T[] newElements = (T[]) new Object[newCapacity];
+            System.arraycopy(elements, 0, newElements, 0, size());
+            elements = newElements;
         }
-        elements = newElements;
     }
 
-    private boolean isFool() {
-        return size == elements.length;
+    private Exception checkIndex(int index) {
+        if (index >= size() || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Index " + index + " is not found. "
+                    + "Index must be less or equals than " + size() + "!");
+        }
+        return null;
     }
+
 }
