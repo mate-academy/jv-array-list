@@ -1,42 +1,20 @@
 package core.basesyntax;
 
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    private static final Object[] EMPTY_ELEMENTDATA = {};
-    private Object[] elementData;
+    private T[] elementData;
     private int size;
 
     public ArrayList() {
-        this.elementData = new Object[DEFAULT_CAPACITY];
-    }
-
-    public ArrayList(int initialCapacity) {
-        if (initialCapacity > 0) {
-            this.elementData = new Object[initialCapacity];
-        } else if (initialCapacity == 0) {
-            this.elementData = EMPTY_ELEMENTDATA;
-        } else {
-            throw new IllegalArgumentException("Illegal Capacity: " + initialCapacity);
-        }
-    }
-
-    public ArrayList(Collection<T> c) {
-        elementData = c.toArray();
-        if ((size = elementData.length) != 0) {
-            elementData = Arrays.copyOf(elementData, size, Object[].class);
-        } else {
-            this.elementData = EMPTY_ELEMENTDATA;
-        }
+        this.elementData = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
     @Override
     public void add(T value) {
-        if (size >= elementData.length) {
-            growIfFull();
+        if (!hasCapacity()) {
+            grow();
         }
         elementData[size++] = value;
     }
@@ -47,29 +25,24 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayListIndexOutOfBoundsException("Index out of bounds Exception: " + index);
         }
         if (size + 1 > elementData.length) {
-            growIfFull();
+            grow();
         }
-        Object[] temp = new Object[elementData.length];
-        System.arraycopy(elementData, 0, temp, 0, index);
-        temp[index] = value;
-        System.arraycopy(elementData, index, temp, index + 1, elementData.length - index - 1);
+        System.arraycopy(elementData, index, elementData,
+                index + 1, elementData.length - index - 1);
+        elementData[index] = value;
         size++;
-        elementData = temp;
     }
 
     @Override
     public void addAll(List<T> list) {
-        while (list.size() - (elementData.length - size) > 0) {
-            growIfFull();
-        }
         for (int i = 0; i < list.size(); i++) {
-            elementData[size++] = list.get(i);
+            add(list.get(i));
         }
     }
 
     @Override
     public T get(int index) {
-        if (index < 0 || index >= size) {
+        if (hasIndexInBounds(index)) {
             throw new ArrayListIndexOutOfBoundsException("Index out of bounds Exception: " + index);
         }
         return (T) elementData[index];
@@ -77,7 +50,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void set(T value, int index) {
-        if (index < 0 || index >= size) {
+        if (hasIndexInBounds(index)) {
             throw new ArrayListIndexOutOfBoundsException("Index out of bounds Exception: " + index);
         }
         elementData[index] = value;
@@ -85,7 +58,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(int index) {
-        if (index < 0 || index >= size) {
+        if (hasIndexInBounds(index)) {
             throw new ArrayListIndexOutOfBoundsException("Index out of bounds Exception: " + index);
         }
         T element = (T) elementData[index];
@@ -121,9 +94,17 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void growIfFull() {
+    private boolean hasCapacity() {
+        return size < elementData.length;
+    }
+
+    private boolean hasIndexInBounds(int index) {
+        return index < 0 || index >= size;
+    }
+
+    private void grow() {
         int newSize = elementData.length + (elementData.length >> 1);
-        Object[] temp = new Object[newSize];
+        T[] temp = (T[]) new Object[newSize];
         System.arraycopy(elementData, 0, temp, 0, elementData.length);
         this.elementData = temp;
     }
