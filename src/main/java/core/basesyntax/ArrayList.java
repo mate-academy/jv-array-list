@@ -15,7 +15,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        growIfFool();
+        growIfFull();
         elements[size++] = value;
     }
 
@@ -25,10 +25,8 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayListIndexOutOfBoundsException("Index " + index + " is not found. "
                     + "Index must be less than " + size() + "!");
         }
-        growIfFool();
-        if (index < size) {
-            System.arraycopy(elements, index, elements, index + 1, size() - index);
-        }
+        growIfFull();
+        System.arraycopy(elements, index, elements, index + 1, size() - index);
         elements[index] = value;
         size++;
     }
@@ -81,7 +79,7 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void growIfFool() {
+    private void growIfFull() {
         if (size() == elements.length) {
             int newCapacity = (int) (elements.length * GROW_FACTOR);
             T[] newElements = (T[]) new Object[newCapacity];
@@ -90,12 +88,10 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private Exception checkIndex(int index) {
+    private void checkIndex(int index) {
         if (index >= size() || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Index " + index + " is not found. "
                     + "Index must be less or equals than " + size() + "!");
         }
-        return null;
     }
-
 }
