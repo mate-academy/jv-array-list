@@ -4,39 +4,34 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     public static final int DEFAULT_CAPACITY = 10;
-    public static final double DEFAULT_CAPACITY_MULTIPLIER = 1.5;
+    public static final double RESIZE_FACTOR = 1.5;
 
     private T[] container;
     private int size;
 
     public ArrayList() {
-        container = (T[])new Object[DEFAULT_CAPACITY];
-        size = 0;
+        container = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
     @Override
     public void add(T value) {
-        growIfNecessary(1);
+        growArray(size + 1);
         container[size] = value;
         size++;
     }
 
     @Override
     public void add(T value, int index) {
-        if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index value while adding");
-        }
-        growIfNecessary(1);
+        validateIndexForAdd(index);
+        growArray(size + 1);
         insertElement(value, index);
     }
 
     @Override
     public void addAll(List<T> list) {
-        growIfNecessary(list.size());
         for (int i = 0; i < list.size(); i++) {
-            container[i + size] = list.get(i);
+            add(list.get(i));
         }
-        size += list.size();
     }
 
     @Override
@@ -84,8 +79,11 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void grow() {
-        T []copy = (T[])new Object[(int)(container.length * DEFAULT_CAPACITY_MULTIPLIER)];
+    private void growArray(int minCapacity) {
+        if (minCapacity <= container.length) {
+            return;
+        }
+        T []copy = (T[]) new Object[(int)(container.length * RESIZE_FACTOR)];
         for (int i = 0; i < container.length; i++) {
             copy[i] = container[i];
         }
@@ -98,9 +96,9 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private void growIfNecessary(int elementsToBeAdded) {
-        while (size + elementsToBeAdded > container.length) {
-            grow();
+    private void validateIndexForAdd(int index) {
+        if (index < 0 || index > size) {
+            throw new ArrayListIndexOutOfBoundsException("Invalid index value while adding");
         }
     }
 
