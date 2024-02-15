@@ -42,7 +42,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (hasIndexInBounds(index)) {
+        if (hasIndexOutOfBounds(index)) {
             throw new ArrayListIndexOutOfBoundsException("Index out of bounds Exception: " + index);
         }
         return (T) elementData[index];
@@ -50,7 +50,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void set(T value, int index) {
-        if (hasIndexInBounds(index)) {
+        if (hasIndexOutOfBounds(index)) {
             throw new ArrayListIndexOutOfBoundsException("Index out of bounds Exception: " + index);
         }
         elementData[index] = value;
@@ -58,7 +58,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(int index) {
-        if (hasIndexInBounds(index)) {
+        if (hasIndexOutOfBounds(index)) {
             throw new ArrayListIndexOutOfBoundsException("Index out of bounds Exception: " + index);
         }
         T element = (T) elementData[index];
@@ -98,7 +98,7 @@ public class ArrayList<T> implements List<T> {
         return size < elementData.length;
     }
 
-    private boolean hasIndexInBounds(int index) {
+    private boolean hasIndexOutOfBounds(int index) {
         return index < 0 || index >= size;
     }
 
