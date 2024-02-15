@@ -5,7 +5,7 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int INITIAL_CAPACITY = 10;
-    private static final int DEFAULT_MIN_INCREMENT = 1;
+    private static final double GROW_RATE = 1.5;
     private int size;
     private T[] elementData;
 
@@ -28,37 +28,34 @@ public class ArrayList<T> implements List<T> {
             return;
         }
         ensureCapacity();
-        System.arraycopy(elementData, index, elementData, index + 1, size);
+        System.arraycopy(elementData, index, elementData, index + 1, size - index);
         elementData[index] = value;
         size++;
     }
 
     @Override
     public void addAll(List<T> list) {
-        ensureCapacity(list.size());
         for (int i = 0; i < list.size(); i++) {
-            /*add() is not used to avoid calling ensureCapacity() in every iteration*/
-            elementData[size] = list.get(i);
-            size++;
+            add(list.get(i));
         }
     }
 
     @Override
     public T get(int index) {
-        validateGetRemoveSetIndex(index);
+        validateIndex(index);
         return elementData[index];
     }
 
     @Override
     public void set(T value, int index) {
-        validateGetRemoveSetIndex(index);
+        validateIndex(index);
         elementData[index] = value;
 
     }
 
     @Override
     public T remove(int index) {
-        validateGetRemoveSetIndex(index);
+        validateIndex(index);
         T removedElement = elementData[index];
 
         if (index == size - 1) {
@@ -66,7 +63,7 @@ public class ArrayList<T> implements List<T> {
             size--;
             return removedElement;
         }
-        System.arraycopy(elementData, index + 1, elementData, index, size);
+        System.arraycopy(elementData, index + 1, elementData, index, size - index);
         size--;
         return removedElement;
     }
@@ -92,24 +89,14 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void grow(int neededCapacity) {
-        neededCapacity += elementData.length;
-        int newCapacity = elementData.length;
-        do {
-            newCapacity *= 1.5;
-        } while (neededCapacity > newCapacity);
+    private void grow() {
+        int newCapacity = (int)(elementData.length * GROW_RATE);
         elementData = Arrays.copyOf(elementData, newCapacity);
     }
 
     private void ensureCapacity() {
         if (size == elementData.length) {
-            grow(DEFAULT_MIN_INCREMENT);
-        }
-    }
-
-    private void ensureCapacity(int size) {
-        if (this.size + size >= elementData.length) {
-            grow(size - (elementData.length - this.size));
+            grow();
         }
     }
 
@@ -119,7 +106,7 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private void validateGetRemoveSetIndex(int index) {
+    private void validateIndex(int index) {
         if (index >= size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Invalid index");
         }
