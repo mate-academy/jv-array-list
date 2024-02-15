@@ -24,14 +24,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (size == array.length) {
-            int updatedCapacity = (int) (array.length * 1.5);
-            T[] updatedArray = (T[]) new Object[updatedCapacity];
-            for (int i = 0; i < array.length; i++) {
-                updatedArray[i] = array[i];
-            }
-            array = updatedArray;
-        }
+        checkCapacity();
         array[size] = value;
         size++;
     }
@@ -42,23 +35,11 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayListIndexOutOfBoundsException(
                     "Index cannot be < 0 or > size");
         }
-        if (size == array.length) {
-            int updatedCapacity = (int) (array.length * 1.5);
-            T[] updatedArray = (T[]) new Object[updatedCapacity];
-            for (int i = 0; i < index; i++) {
-                updatedArray[i] = array[i];
-            }
-            updatedArray[index] = value;
-            for (int i = index + 1; i <= size; i++) {
-                updatedArray[i] = array[i - 1];
-            }
-            array = updatedArray;
-        } else {
-            for (int i = size; i > index; i--) {
-                array[i] = array[i - 1];
-            }
-            array[index] = value;
+        checkCapacity();
+        for (int i = size; i > index; i--) {
+            array[i] = array[i - 1];
         }
+        array[index] = value;
         size++;
     }
 
@@ -118,6 +99,17 @@ public class ArrayList<T> implements List<T> {
         }
         if (index >= size) {
             throw new ArrayListIndexOutOfBoundsException("Index cannot be >= size");
+        }
+    }
+
+    private void checkCapacity() {
+        if (size == array.length) {
+            int updatedCapacity = (int) (array.length * 1.5);
+            T[] updatedArray = (T[]) new Object[updatedCapacity];
+            for (int i = 0; i < array.length; i++) {
+                updatedArray[i] = array[i];
+            }
+            array = updatedArray;
         }
     }
 }
