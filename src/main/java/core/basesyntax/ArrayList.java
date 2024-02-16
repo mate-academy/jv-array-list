@@ -16,8 +16,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value) {
         growArray(size + 1);
-        container[size] = value;
-        size++;
+        container[size++] = value;
     }
 
     @Override
@@ -56,17 +55,12 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        int index = -1;
         for (int i = 0; i < size; i++) {
             if (elementsAreEqual(element, container[i])) {
-                index = i;
-                break;
+                return remove(i);
             }
         }
-        if (index == -1) {
-            throw new NoSuchElementException("Can't find element while removing");
-        }
-        return remove(index);
+        throw new NoSuchElementException("Can't find element while removing");
     }
 
     @Override
@@ -84,42 +78,35 @@ public class ArrayList<T> implements List<T> {
             return;
         }
         T []copy = (T[]) new Object[(int)(container.length * RESIZE_FACTOR)];
-        for (int i = 0; i < container.length; i++) {
-            copy[i] = container[i];
-        }
+        System.arraycopy(container, 0, copy, 0, size);
         container = copy;
     }
 
     private void validateIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index value");
+            throw new ArrayListIndexOutOfBoundsException("Invalid index value of " + index
+            + " for size " + size);
         }
     }
 
     private void validateIndexForAdd(int index) {
         if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index value while adding");
+            throw new ArrayListIndexOutOfBoundsException("Invalid index of " + index
+                    + " value while adding for size " + size);
         }
     }
 
     private void insertElement(T value, int index) {
-        T[] copy = (T[])new Object[container.length];
-
-        for (int i = 0; i < index; i++) {
-            copy[i] = container[i];
-        }
+        T[] copy = (T[]) new Object[container.length];
+        System.arraycopy(container, 0, copy, 0, index);
         copy[index] = value;
-        for (int i = index; i < size; i++) {
-            copy[i + 1] = container[i];
-        }
+        System.arraycopy(container, index, copy, index + 1, size - index);
         container = copy;
         size++;
     }
 
     private void removeElement(int index) {
-        for (int i = index; i < size - 1; i++) {
-            container[i] = container[i + 1];
-        }
+        System.arraycopy(container, index + 1, container, index, size - index - 1);
         size--;
     }
 
@@ -133,5 +120,3 @@ public class ArrayList<T> implements List<T> {
         return el1.equals(el2);
     }
 }
-
-
