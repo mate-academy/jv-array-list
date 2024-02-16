@@ -15,14 +15,14 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        growArray(size + 1);
+        growIfRequired();
         container[size++] = value;
     }
 
     @Override
     public void add(T value, int index) {
         validateIndexForAdd(index);
-        growArray(size + 1);
+        growIfRequired();
         insertElement(value, index);
     }
 
@@ -73,8 +73,8 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void growArray(int minCapacity) {
-        if (minCapacity <= container.length) {
+    private void growIfRequired() {
+        if (size + 1 <= container.length) {
             return;
         }
         T []copy = (T[]) new Object[(int)(container.length * RESIZE_FACTOR)];
