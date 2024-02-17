@@ -6,16 +6,16 @@ import java.util.NoSuchElementException;
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private static final double GROWTH_FACTOR = 1.5;
-    private Object[] elements;
+    private T[] elements;
     private int size;
 
     public ArrayList() {
-        this.elements = new Object[DEFAULT_CAPACITY];
+        this.elements = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
     @Override
     public void add(T value) {
-        ensureCapacity(size + 1);
+        ensureCapacity();
         elements[size++] = value;
     }
 
@@ -24,7 +24,7 @@ public class ArrayList<T> implements List<T> {
         if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException("Index out of bounds: " + index);
         }
-        ensureCapacity(size + 1);
+        ensureCapacity();
         System.arraycopy(elements, index, elements, index + 1, size - index);
         elements[index] = value;
         size++;
@@ -32,7 +32,6 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        ensureCapacity(size + list.size());
         for (int i = 0; i < list.size(); i++) {
             add(list.get(i));
         }
@@ -43,15 +42,19 @@ public class ArrayList<T> implements List<T> {
         if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException("Index out of bounds: " + index);
         }
-        return (T) elements[index];
+        return elements[index];
     }
 
     @Override
     public void set(T value, int index) {
+        checkIndex(index);
+        elements[index] = value;
+    }
+
+    private void checkIndex(int index) {
         if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException("Index out of bounds: " + index);
         }
-        elements[index] = value;
     }
 
     @Override
@@ -59,7 +62,7 @@ public class ArrayList<T> implements List<T> {
         if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException("Index out of bounds: " + index);
         }
-        T removedElement = (T) elements[index];
+        T removedElement = elements[index];
         System.arraycopy(elements, index + 1, elements, index, size - index - 1);
         size--;
         return removedElement;
@@ -67,11 +70,20 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        int index = indexOf(element);
-        if (index == -1) {
-            throw new NoSuchElementException("Element not found: " + element);
+        if (element == null) {
+            for (int i = 0; i < size; i++) {
+                if (elements[i] == null) {
+                    return remove(i);
+                }
+            }
+            throw new NoSuchElementException("Element not found: null");
+        } else {
+            int index = indexOf(element);
+            if (index == -1) {
+                throw new NoSuchElementException("Element not found: " + element);
+            }
+            return remove(index);
         }
-        return remove(index);
     }
 
     @Override
@@ -84,23 +96,21 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void ensureCapacity(int minCapacity) {
-        if (minCapacity > elements.length) {
+    private void ensureCapacity() {
+        if (size >= elements.length) {
             int newCapacity = (int) (elements.length * GROWTH_FACTOR);
             elements = Arrays.copyOf(elements, newCapacity);
         }
     }
 
     private int indexOf(T element) {
-        if (element == null) {
-            for (int i = 0; i < size; i++) {
-                if (elements[i] == null) {
+        for (int i = 0; i < size; i++) {
+            if (elements[i] == null) {
+                if (element == null) {
                     return i;
                 }
-            }
-        } else {
-            for (int i = 0; i < size; i++) {
-                if (element.equals(elements[i])) {
+            } else {
+                if (elements[i].equals(element)) {
                     return i;
                 }
             }
