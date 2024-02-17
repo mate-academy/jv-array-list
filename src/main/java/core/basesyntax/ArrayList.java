@@ -23,10 +23,6 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         validateAddIndex(index);
-        if (index == size) {
-            add(value);
-            return;
-        }
         ensureCapacity();
         System.arraycopy(elementData, index, elementData, index + 1, size - index);
         elementData[index] = value;
@@ -57,14 +53,8 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         validateIndex(index);
         T removedElement = elementData[index];
-
-        if (index == size - 1) {
-            elementData[index] = null;
-            size--;
-            return removedElement;
-        }
-        System.arraycopy(elementData, index + 1, elementData, index, size - index);
-        size--;
+        System.arraycopy(elementData, index + 1, elementData, index, size - index - 1);
+        elementData[--size] = null;
         return removedElement;
     }
 
