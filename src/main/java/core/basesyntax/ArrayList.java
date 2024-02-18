@@ -1,6 +1,5 @@
 package core.basesyntax;
 
-import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
@@ -16,8 +15,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value) {
         ensureCapacity();
-        elementData[size] = value;
-        size++;
+        elementData[size++] = value;
     }
 
     @Override
@@ -66,7 +64,7 @@ public class ArrayList<T> implements List<T> {
                 return remove(i);
             }
         }
-        throw new NoSuchElementException("Element not found in list");
+        throw new NoSuchElementException("Element: " + element.toString() + " not found in list");
     }
 
     @Override
@@ -80,8 +78,10 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void grow() {
-        int newCapacity = (int)(elementData.length * GROW_RATE);
-        elementData = Arrays.copyOf(elementData, newCapacity);
+        int newCapacity = (int) (elementData.length * GROW_RATE);
+        T[] copy = (T[]) new Object[newCapacity];
+        System.arraycopy(elementData, 0, copy, 0, size);
+        elementData = copy;
     }
 
     private void ensureCapacity() {
@@ -92,13 +92,19 @@ public class ArrayList<T> implements List<T> {
 
     private void validateAddIndex(int index) {
         if (index > size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index");
+            throw new ArrayListIndexOutOfBoundsException("Invalid index: "
+                    + index
+                    + ", current Array List size: "
+                    + size);
         }
     }
 
     private void validateIndex(int index) {
         if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index");
+            throw new ArrayListIndexOutOfBoundsException("Invalid index: "
+                    + index
+                    + ", current Array List size: "
+                    + size);
         }
     }
 }
