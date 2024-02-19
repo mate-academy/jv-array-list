@@ -5,6 +5,7 @@ import java.util.NoSuchElementException;
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private static final float CAPACITY_INCREASE_FACTOR = 1.5f;
+    private static final int NO_INDEX = -1;
     private int capacity;
     private int size;
     private Object[] elementData;
@@ -15,8 +16,8 @@ public class ArrayList<T> implements List<T> {
     }
 
     public ArrayList(int capacity) {
-        if (capacity < 0) {
-            throw new IllegalArgumentException("Capacity cannot be less than 0");
+        if (capacity < 1) {
+            throw new IllegalArgumentException("Capacity cannot be less than 1");
         }
         this.capacity = capacity;
         elementData = new Object[capacity];
@@ -31,7 +32,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        rangeCheckForAdd(index);
+        checkIndexForAdd(index);
         growIfFull();
         if (index == size) {
             add(value);
@@ -49,26 +50,26 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        rangeCheck(index);
+        checkIndex(index);
         return (T) elementData[index];
     }
 
     @Override
     public void set(T value, int index) {
-        rangeCheck(index);
+        checkIndex(index);
         elementData[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        rangeCheck(index);
+        checkIndex(index);
         return removeAndShift(index);
     }
 
     @Override
     public T remove(T element) {
         int index = findElementIndex(element);
-        if (index == -1) {
+        if (index == NO_INDEX) {
             throw new NoSuchElementException("Element not found");
         }
         return remove(index);
@@ -84,58 +85,66 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void rangeCheckForAdd(int index) {
+    private void checkIndexForAdd(int index) {
         if (index > size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException(index, size);
+            throw new ArrayListIndexOutOfBoundsException("Index: " + index + " Size: " + size);
         }
     }
 
-    private void rangeCheck(int index) {
+    private void checkIndex(int index) {
         if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException(index, size);
+            throw new ArrayListIndexOutOfBoundsException("Index: " + index + " Size: " + size);
         }
-    }
-
-    private boolean isFull() {
-        return capacity == size;
     }
 
     private void grow() {
-        if (capacity > 0) {
-            capacity = (int)(capacity * CAPACITY_INCREASE_FACTOR);
-        } else {
-            capacity = DEFAULT_CAPACITY;
-        }
+        capacity = calculateNewCapacity();
         Object[] newElementData = new Object[capacity];
         System.arraycopy(elementData, 0, newElementData, 0, size);
         elementData = newElementData;
     }
 
+    private int calculateNewCapacity() {
+        //this is an important method for the case of initial capacity = 1,
+        //rounding is similar to Math.ceil()
+        double newCapacity = capacity * CAPACITY_INCREASE_FACTOR;
+        return newCapacity % 1 == 0 ? (int)newCapacity : (int)newCapacity + 1;
+    }
+
     private void growIfFull() {
-        if (isFull()) {
+        if (capacity == size) {
             grow();
         }
     }
 
     private void insertAndShift(int index, T value) {
         for (int i = size; i >= 0; i--) {
-            if (i == index) {
+            int sourceIndex = i - 1;
+            int destinationIndex = i;
+            if (destinationIndex == index) {
                 elementData[index] = value;
                 size++;
                 break;
             }
-            elementData[i] = elementData[i - 1];
+            elementData[destinationIndex] = elementData[sourceIndex];
         }
     }
 
     private T removeAndShift(int index) {
         final Object removedElement = elementData[index];
         for (int i = index; i < size - 1; i++) {
-            elementData[i] = elementData[i + 1];
+            int sourceIndex = i + 1;
+            int destinationIndex = i;
+            elementData[destinationIndex] = elementData[sourceIndex];
         }
-        elementData[size - 1] = null;
-        size--;
+        removeLastElement();
         return (T) removedElement;
+    }
+
+    private void removeLastElement() {
+        int lastElementIndex = size - 1;
+        elementData[lastElementIndex] = null;
+        size--;
     }
 
     private int findElementIndex(T element) {
@@ -144,7 +153,7 @@ public class ArrayList<T> implements List<T> {
                 return i;
             }
         }
-        return -1;
+        return NO_INDEX;
     }
 
     private boolean isEqual(Object firstElement, Object secondElement) {
