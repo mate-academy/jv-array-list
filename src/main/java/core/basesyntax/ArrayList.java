@@ -6,31 +6,27 @@ public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_SIZE = 10;
     private static final double COEFFICIENT_OF_EXPANSION = 1.5;
     private int size;
-    T[] values;
+    private T[] values;
 
     public ArrayList() {
         values = (T[]) new Object[DEFAULT_SIZE];
-        this.size = 0;
-    }
-
-    public ArrayList(int size) {
-        values = (T[]) new Object[size];
-        this.size = 0;
+        size = 0;
     }
 
     @Override
     public void add(T value) {
-        if (this.size == values.length) {
+        if (size == values.length) {
             grow();
         }
-        values[size] = value;
-        size++;
+        values[size++] = value;
     }
 
     @Override
     public void add(T value, int index) {
-        indexValidation(index);
-        if (this.size == values.length) {
+        if (index < 0 || index > size) {
+            throw new ArrayListIndexOutOfBoundsException("Index out of bounds: " + index);
+        }
+        if (size == values.length) {
             grow();
         }
         System.arraycopy(values, index, values, index + 1, size - index);
@@ -40,18 +36,8 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        if (list == null) {
-            return;
-        }
-        if ((values.length - size) < list.size()) {
-            int temp = size;
-            size = values.length;
-            grow();
-            size = temp;
-        }
         for (int i = 0; i < list.size(); i++) {
-            values[size] = list.get(i);
-            size++;
+            add(list.get(i));
         }
     }
 
@@ -70,25 +56,20 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         indexValidation(index);
-        T temp = values[index];
+        T removedElement = values[index];
         System.arraycopy(values, index + 1, values, index, size - index - 1);
-        values[size - 1] = null;
-        size--;
-        return temp;
+        values[--size] = null;
+        return removedElement;
     }
 
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if (values[i].equals(element)) {
-                T temp = values[i];
-                System.arraycopy(values, i + 1, values, i, size - i - 1);
-                values[size - 1] = null;
-                size--;
-                return temp;
+            if (element == null ? values[i] == null : element.equals(values[i])) {
+                return remove(i);
             }
         }
-        throw new NoSuchElementException("No such element.");
+        throw new NoSuchElementException();
     }
 
     @Override
@@ -108,9 +89,9 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void grow() {
-        int newCapacity = (int) (this.size * COEFFICIENT_OF_EXPANSION + 1);
+        int newCapacity = (int) (size * COEFFICIENT_OF_EXPANSION + 1);
         T[] temp = values;
         values = (T[]) new Object[newCapacity];
-        System.arraycopy(temp, 0, values, 0, this.size);
+        System.arraycopy(temp, 0, values, 0, size);
     }
 }
