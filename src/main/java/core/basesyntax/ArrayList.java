@@ -1,9 +1,21 @@
 package core.basesyntax;
 
 public class ArrayList<T> implements List<T> {
+    private static final int DEFAULT_SIZE = 10;
+    private int size;
+    private int iterator;
+    T[] array;
+
+    public ArrayList() {
+        array = (T[]) new Object[DEFAULT_SIZE];
+        size = array.length;
+        iterator = 0;
+    }
     @Override
     public void add(T value) {
-
+        array[iterator] = value;
+        iterator++;
+        size++;
     }
 
     @Override
@@ -18,17 +30,20 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        return null;
+        return array[index];
     }
 
     @Override
     public void set(T value, int index) {
-
+        indexValidation(index);
+        array[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        return null;
+        indexValidation(index);
+        array[index] = null;
+        return array[index];
     }
 
     @Override
@@ -38,11 +53,17 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public int size() {
-        return 0;
+        return size;
     }
 
     @Override
     public boolean isEmpty() {
-        return false;
+        return size == 0;
+    }
+
+    private void indexValidation(int index) {
+        if (index <= 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Invalid index.");
+        }
     }
 }
