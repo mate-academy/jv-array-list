@@ -9,15 +9,14 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        array[size] = value;
-        size++;
-        growIfRequared();
+        growIfRequired();
+        array[size++] = value;
     }
 
     @Override
     public void add(T value, int index) {
         checkIndexData(index);
-        growIfRequared();
+        growIfRequired();
         System.arraycopy(array, index, array, index + 1, size - index);
         array[index] = value;
         size++;
@@ -25,7 +24,6 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        growIfRequared();
         for (int i = 0; i < list.size(); i++) {
             add(list.get(i));
         }
@@ -47,10 +45,8 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         checkIndexDataIfSizeEqualOrMore(index);
         T[] newArray = (T[]) new Object[array.length];
-        System.arraycopy(array, 0, newArray, 0, index);
-        System.arraycopy(array, index + 1, newArray, index,size - index - 1);
         T removedValue = (T) array[index];
-        array = newArray;
+        System.arraycopy(array, index + 1, array, index,size() - index - 1);
         size--;
         return removedValue;
     }
@@ -59,17 +55,15 @@ public class ArrayList<T> implements List<T> {
     public T remove(T element) {
         T removedValue;
         for (int i = 0; i <= size - 1; i++) {
-            if ((array[i] != null && array[i].equals(element))
-                    || (element == null && array[i] == null)) {
+            if (array[i] != null && array[i].equals(element)
+                    || element == array[i]) {
                 removedValue = (T) array[i];
                 System.arraycopy(array, i + 1, array, i, size - i - 1);
-                array[size - 1] = null;
-                size--;
+                array[--size] = null;
                 return removedValue;
             }
         }
-        throw new NoSuchElementException(
-        "Element not found. " + element);
+        throw new NoSuchElementException("Element not found. " + element);
     }
 
     @Override
@@ -86,12 +80,13 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void grow() {
-        T[] newArray = (T[]) new Object[size + size / 2];
+        int growFactor = size + size / 2;
+        T[] newArray = (T[]) new Object[growFactor];
         System.arraycopy(array, 0, newArray, 0, size);
         array = newArray;
     }
 
-    private void growIfRequared() {
+    private void growIfRequired() {
         if (size == array.length) {
             grow();
         }
@@ -100,14 +95,14 @@ public class ArrayList<T> implements List<T> {
     private void checkIndexData(int index) {
         if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException(
-                    "Array list index out of bounds. " + index);
+                    "Array list index out of bounds. " + index + ",size: " + size);
         }
     }
 
     private void checkIndexDataIfSizeEqualOrMore(int index) {
         if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException(
-                    "Array list index out of bounds. " + index);
+                    "Array list index out of bounds. " + index + ",size: " + size);
         }
     }
 }
