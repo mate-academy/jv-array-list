@@ -7,6 +7,8 @@ public class ArrayList<T> implements List<T> {
     private static final double INCREASING_SIZE = 1.5;
     private static final int START_POSITION = 0;
     private static final int STEP_SIZE = 1;
+    private static final String NO_SUCH_ELEMENT_MESSAGE =
+            "No such element %s in the list";
     private static final String INDEX_OUT_OF_BOUNDS_MESSAGE =
             "Index %d out of bounds for size: %d";
     private int size;
@@ -18,7 +20,7 @@ public class ArrayList<T> implements List<T> {
             array[size] = value;
             size++;
         } else {
-            increaseArray();
+            grow();
             add(value);
         }
     }
@@ -27,7 +29,7 @@ public class ArrayList<T> implements List<T> {
     public void add(T value, int index) {
         if (index >= 0 && index <= size) {
             if (size >= array.length) {
-                increaseArray();
+                grow();
             }
             shiftArrayWithAddingElement(value, index);
         }
@@ -73,7 +75,7 @@ public class ArrayList<T> implements List<T> {
             }
             indexOfRemovedElement++;
         }
-        throw new NoSuchElementException("No such element " + element + " in the list");
+        throw new NoSuchElementException(String.format(NO_SUCH_ELEMENT_MESSAGE, element));
     }
 
     @Override
@@ -86,7 +88,7 @@ public class ArrayList<T> implements List<T> {
         return size <= 0;
     }
 
-    private void increaseArray() {
+    private void grow() {
         Object[] increasedArray = new Object[(int) (array.length * INCREASING_SIZE)];
         copyArrayFromStartPosition(array.length, increasedArray);
         array = increasedArray;
