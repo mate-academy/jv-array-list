@@ -16,7 +16,7 @@ public class ArrayList<T> implements List<T> {
     public void add(T value) {
         if (size < array.length) {
             array[size] = value;
-            increaseSize();
+            size++;
         } else {
             increaseArray();
             add(value);
@@ -25,15 +25,13 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (size < array.length && index <= size && index >= 0) {
+        if (index >= 0 && index <= size) {
+            if (size >= array.length) {
+                increaseArray();
+            }
             shiftArrayWithAddingElement(value, index);
-        } else if (size == array.length) {
-            increaseArray();
-            shiftArrayWithAddingElement(value, index);
-        } else {
-            throw new ArrayListIndexOutOfBoundsException(
-                    String.format(INDEX_OUT_OF_BOUNDS_MESSAGE, index, size));
         }
+        checkIndex(index);
     }
 
     @Override
@@ -67,20 +65,15 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         int indexOfRemovedElement = 0;
-        T removedElement = null;
-        boolean isFound = false;
+        T removedElement;
         for (Object o : array) {
             if (element == o || (element != null && element.equals(o))) {
                 removedElement = remove(indexOfRemovedElement);
-                isFound = true;
-                break;
+                return removedElement;
             }
             indexOfRemovedElement++;
         }
-        if (!isFound) {
-            throw new NoSuchElementException("No such element " + element + " in the list");
-        }
-        return removedElement;
+        throw new NoSuchElementException("No such element " + element + " in the list");
     }
 
     @Override
@@ -106,28 +99,17 @@ public class ArrayList<T> implements List<T> {
         System.arraycopy(array, index, shiftedArray,
                 index + STEP_SIZE, (array.length - STEP_SIZE) - index);
         array = shiftedArray;
-        increaseSize();
+        size++;
     }
 
     private void shiftArray(int index) {
-        if (index == size) {
-            array[index] = null;
-        } else {
-            Object[] shiftedArray = new Object[array.length];
-            copyArrayFromStartPosition(index, shiftedArray);
-            System.arraycopy(array, index + STEP_SIZE, shiftedArray,
-                    index, (array.length - STEP_SIZE) - index);
-            array = shiftedArray;
-        }
+        System.arraycopy(array, index + STEP_SIZE, array,
+                index, (array.length - STEP_SIZE) - index);
     }
 
     private void copyArrayFromStartPosition(int index, Object[] shiftedArray) {
         System.arraycopy(array, START_POSITION, shiftedArray,
                 START_POSITION, index);
-    }
-
-    private void increaseSize() {
-        size++;
     }
 
     private void checkIndex(int index) {
