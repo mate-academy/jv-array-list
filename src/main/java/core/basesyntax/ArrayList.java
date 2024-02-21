@@ -4,6 +4,8 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
+    private static final double mug = 1.5;
+
     private T[] array;
     private int size;
 
@@ -19,9 +21,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
-        }
+        checkIndexForAdd(index);
         ensureCapacity(size + 1);
         System.arraycopy(array, index, array, index + 1, size - index);
         array[index] = value;
@@ -37,19 +37,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        methodWithProperName(index);
+        checkIndex(index);
         return (T) array[index];
     }
 
     @Override
     public void set(T value, int index) {
-        methodWithProperName(index);
+        checkIndex(index);
         array[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        methodWithProperName(index);
+        checkIndex(index);
         T removeElement = (T) array[index];
         System.arraycopy(array, index + 1, array, index, size - index - 1);
         array[--size] = null;
@@ -79,7 +79,7 @@ public class ArrayList<T> implements List<T> {
 
     private void ensureCapacity(int minCapacity) {
         if (minCapacity > array.length) {
-            int newCapacity = array.length + (array.length >> 1);
+            int newCapacity = (int) (array.length * mug);
             if (newCapacity < minCapacity) {
                 newCapacity = minCapacity;
             }
@@ -89,8 +89,14 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private void methodWithProperName(int index) {
+    private void checkIndex(int index) {
         if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
+        }
+    }
+
+    private void checkIndexForAdd(int index) {
+        if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
         }
     }
