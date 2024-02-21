@@ -15,20 +15,14 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-
         growIfArrayFull();
-
         values[size++] = value;
     }
 
     @Override
     public void add(T value, int index) {
-        if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("Index out of bounds: " + index);
-        }
-
+        indexValidation(index, size + 1);
         growIfArrayFull();
-
         System.arraycopy(values, index, values, index + 1, size - index);
         values[index] = value;
         size++;
@@ -43,19 +37,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        indexValidation(index);
+        indexValidation(index, size);
         return values[index];
     }
 
     @Override
     public void set(T value, int index) {
-        indexValidation(index);
+        indexValidation(index, size);
         values[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        indexValidation(index);
+        indexValidation(index, size);
         T removedElement = values[index];
         System.arraycopy(values, index + 1, values, index, size - index - 1);
         size--;
@@ -82,9 +76,9 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void indexValidation(int index) {
+    private void indexValidation(int index, int size) {
         if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index.");
+            throw new ArrayListIndexOutOfBoundsException("Index out of bounds: " + index);
         }
     }
 
