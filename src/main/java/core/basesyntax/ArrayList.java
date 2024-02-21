@@ -38,18 +38,9 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayListIndexOutOfBoundsException("This index don't exist");
         } else if (index == size && size != dataArray.length) {
             addOnNextFreeSell(value);
-        } else if (dataArray.length == size) {
-            grow(dataArray);
-            addByIndex(value, index);
         } else {
             addByIndex(value, index);
         }
-    }
-
-    private void addByIndex(T value, int index) {
-        System.arraycopy(dataArray, index, dataArray, index + 1, size - index);
-        dataArray[index] = value;
-        addSize();
     }
 
     @Override
@@ -123,6 +114,15 @@ public class ArrayList<T> implements List<T> {
     private void addOnNextFreeSell(T value) {
         addSize();
         dataArray[size - 1] = value;
+    }
+
+    private void addByIndex(T value, int index) {
+        if (dataArray.length == size) {
+            grow(dataArray);
+        }
+        System.arraycopy(dataArray, index, dataArray, index + 1, size - index);
+        dataArray[index] = value;
+        addSize();
     }
 
     private boolean isIndexExist(int index) {
