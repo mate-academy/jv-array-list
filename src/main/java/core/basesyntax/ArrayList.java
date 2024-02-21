@@ -35,26 +35,20 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (isIndexValid(index, false)) {
-            return arrayList[index];
-        }
-        return null;
+        isIndexValid(index, false);
+        return arrayList[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (isIndexValid(index, false)) {
-            arrayList[index] = value;
-        }
+        isIndexValid(index, false);
+        arrayList[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        T value = null;
-        if (isIndexValid(index, false)) {
-            value = arrayList[index];
-            fillEmptyIndex(index);
-        }
+        T value = get(index);
+        fillEmptyIndex(index);
         return value;
     }
 
@@ -97,9 +91,7 @@ public class ArrayList<T> implements List<T> {
         if (size == arrayList.length) {
             int newLength = (int) (arrayList.length * SIZE_MULTIPLIER);
             T[] newList = (T[]) new Object[newLength];
-            for (int i = 0; i < size; i++) {
-                newList[i] = arrayList[i];
-            }
+            System.arraycopy(arrayList, 0, newList, 0, size);
             arrayList = newList;
         }
     }
