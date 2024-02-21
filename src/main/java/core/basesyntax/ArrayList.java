@@ -73,11 +73,10 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private boolean isIndexValid(int index, boolean forAdd) {
-        if (index >= 0 && index < (forAdd ? size + 1 : size)) {
-            return true;
+    private void isIndexValid(int index, boolean forAdd) {
+        if (index < 0 || index >= (forAdd ? size + 1 : size)) {
+            throw new ArrayListIndexOutOfBoundsException("Invalid index");
         }
-        throw new ArrayListIndexOutOfBoundsException("Invalid index");
     }
 
     private void fillEmptyIndex(int index) {
