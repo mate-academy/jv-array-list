@@ -19,9 +19,7 @@ public class ArrayList<T> implements List<T> {
     public void add(T value, int index) {
         isIndexValid(index, true);
         growIfFull();
-        for (int i = size; i > index; i--) {
-            arrayList[i] = arrayList[i - 1];
-        }
+        System.arraycopy(arrayList, index, arrayList, index + 1, size - index);
         arrayList[index] = value;
         size++;
     }
@@ -60,7 +58,7 @@ public class ArrayList<T> implements List<T> {
                 return element;
             }
         }
-        throw new NoSuchElementException("Cannot remove element");
+        throw new NoSuchElementException("Cannot remove element: " + element);
     }
 
     @Override
@@ -80,10 +78,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void fillEmptyIndex(int index) {
-        for (int i = index; i < size - 1; i++) {
-            arrayList[i] = arrayList[i + 1];
-        }
-        size--;
+        System.arraycopy(arrayList, index + 1, arrayList, index, size-- - index - 1);
     }
 
     private void growIfFull() {
