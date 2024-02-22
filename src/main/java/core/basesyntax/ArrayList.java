@@ -48,10 +48,11 @@ public class ArrayList<T> implements List<T> {
         if (list.isEmpty()) {
             return;
         }
+        if (list.size() + size > dataArray.length) {
+            growTo(dataArray, list);
+        }
         for (int i = 0; i < list.size(); i++) {
-            if (list.size() + size > dataArray.length) {
-                grow(dataArray);
-            }
+
             this.add(list.get(i));
         }
     }
@@ -99,15 +100,24 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
+    private void isDataArrayFull() {
+        if (dataArray.length == size) {
+            grow(dataArray);
+        }
+    }
+
     private void grow(Object[] fullArray) {
         dataArray = new Object[fullArray.length + fullArray.length / 2];
         System.arraycopy(fullArray, 0, dataArray, 0, fullArray.length);
     }
 
+    private void growTo(Object[] fullArray, List<T> list) {
+        dataArray = new Object[size + list.size()];
+        System.arraycopy(fullArray, 0, dataArray, 0, fullArray.length);
+    }
+
     private void addSize() {
-        if (dataArray.length == size) {
-            grow(dataArray);
-        }
+        isDataArrayFull();
         size++;
     }
 
@@ -117,9 +127,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void addByIndex(T value, int index) {
-        if (dataArray.length == size) {
-            grow(dataArray);
-        }
+        isDataArrayFull();
         System.arraycopy(dataArray, index, dataArray, index + 1, size - index);
         dataArray[index] = value;
         addSize();
@@ -146,18 +154,16 @@ public class ArrayList<T> implements List<T> {
         if (isIndexValid(index)) {
             return null;
         }
-        Object[] newArray = new Object[dataArray.length];
         Object objectToDelete = dataArray[index];
         if (size - 1 == index) {
             size--;
-            System.arraycopy(dataArray, 0, newArray, 0, size);
-            dataArray = newArray;
+            dataArray[index] = null;
             return (T) objectToDelete;
         }
         size--;
-        System.arraycopy(dataArray, 0, newArray, 0, index);
-        System.arraycopy(dataArray, index + 1, newArray, index, size - index);
-        dataArray = newArray;
+        System.arraycopy(dataArray, 0, dataArray, 0, index);
+        System.arraycopy(dataArray, index + 1, dataArray, index, size - index);
+        dataArray[size] = null;
         return (T) objectToDelete;
     }
 }
