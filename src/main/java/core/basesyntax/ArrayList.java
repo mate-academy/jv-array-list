@@ -34,9 +34,8 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (isIndexValid(index)) {
-            throw new ArrayListIndexOutOfBoundsException("This index don't exist");
-        } else if (index == size && size != dataArray.length) {
+        isIndexValid(index);
+        if (index == size && size != dataArray.length) {
             addOnNextFreeSell(value);
         } else {
             addByIndex(value, index);
@@ -142,7 +141,10 @@ public class ArrayList<T> implements List<T> {
     }
 
     private boolean isIndexValid(int index) {
-        return index < 0 || index > size;
+        if (index >= 0 && index <= size) {
+            return true;
+        }
+        throw new ArrayListIndexOutOfBoundsException("This index don't exist");
     }
 
     private boolean areObjectsEquals(T element, Object listElement) {
@@ -151,9 +153,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     private T removeElement(int index) {
-        if (isIndexValid(index)) {
-            return null;
-        }
+        isIndexValid(index);
         Object objectToDelete = dataArray[index];
         if (size - 1 == index) {
             size--;
