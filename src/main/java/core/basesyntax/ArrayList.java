@@ -4,7 +4,7 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    private static final double mug = 1.5;
+    private static final double MULTIPLIER_1_5 = 1.5;
 
     private T[] array;
     private int size;
@@ -15,14 +15,14 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        ensureCapacity(size + 1);
+        ensureCapacity();
         array[size++] = value;
     }
 
     @Override
     public void add(T value, int index) {
         checkIndexForAdd(index);
-        ensureCapacity(size + 1);
+        ensureCapacity();
         System.arraycopy(array, index, array, index + 1, size - index);
         array[index] = value;
         size++;
@@ -59,8 +59,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if ((element == null && array[i] == null)
-                    || (element != null && element.equals(array[i]))) {
+            if (element == array[i]
+                    || element != null && element.equals(array[i])) {
                 return remove(i);
             }
         }
@@ -77,12 +77,9 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void ensureCapacity(int minCapacity) {
-        if (minCapacity > array.length) {
-            int newCapacity = (int) (array.length * mug);
-            if (newCapacity < minCapacity) {
-                newCapacity = minCapacity;
-            }
+    private void ensureCapacity() {
+        if (size == array.length) {
+            int newCapacity = (int) (array.length * MULTIPLIER_1_5);
             T[] newArray = (T[]) new Object[newCapacity];
             System.arraycopy(array, 0, newArray, 0, size);
             array = newArray;
