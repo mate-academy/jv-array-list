@@ -4,7 +4,7 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int START_SIZE = 10;
-    private static final int ADDITIONAL_SIZE = 5;
+    private static final double RESIZE_FACTOR = 1.5;
     private static final int NOT_FOUND = -1;
     private T[] array;
     private int size;
@@ -21,9 +21,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index > size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index out of bounds");
-        }
+        checkIndexToAdd(index);
         resizeArray();
         insertElementAtIndex(value, index);
     }
@@ -37,19 +35,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        isInvalidIndex(index);
+        checkIndex(index);
         return array[index];
     }
 
     @Override
     public void set(T value, int index) {
-        isInvalidIndex(index);
+        checkIndex(index);
         array[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        isInvalidIndex(index);
+        checkIndex(index);
         T removedElement = array[index];
         removeByIndex(index);
         return removedElement;
@@ -82,7 +80,7 @@ public class ArrayList<T> implements List<T> {
 
     private void resizeArray() {
         if (isFullArray()) {
-            int newSize = size + ADDITIONAL_SIZE;
+            int newSize = (int) (size * RESIZE_FACTOR);;
             T[] newArray = (T[]) new Object[newSize];
             System.arraycopy(array, 0, newArray, 0, array.length);
             array = newArray;
@@ -98,8 +96,14 @@ public class ArrayList<T> implements List<T> {
         size++;
     }
 
-    private void isInvalidIndex(int index) {
+    private void checkIndex(int index) {
         if (index >= size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Index out of bounds");
+        }
+    }
+
+    private void checkIndexToAdd(int index) {
+        if (index > size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Index out of bounds");
         }
     }
