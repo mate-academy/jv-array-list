@@ -51,25 +51,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (isIndexInvalid(index)) {
-            throw new ArrayListIndexOutOfBoundsException("Index is out of range");
-        }
+        isIndexInvalid(index);
         return (T) elementData[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (isIndexInvalid(index)) {
-            throw new ArrayListIndexOutOfBoundsException("Index is out of range");
-        }
+        isIndexInvalid(index);
         elementData[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (isIndexInvalid(index)) {
-            throw new ArrayListIndexOutOfBoundsException("Index is out of range");
-        }
+        isIndexInvalid(index);
         T removedElement = (T) elementData[index];
         System.arraycopy(elementData, index + 1, elementData, index, size - index - 1);
         elementData[--size] = null;
@@ -103,7 +97,9 @@ public class ArrayList<T> implements List<T> {
         elementData = newArr;
     }
 
-    private boolean isIndexInvalid(int index) {
-        return index >= size || index < 0;
+    private void isIndexInvalid(int index) {
+        if (index >= size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Index is out of range");
+        }
     }
 }
