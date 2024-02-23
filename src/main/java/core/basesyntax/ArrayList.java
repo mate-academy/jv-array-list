@@ -17,7 +17,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        isIndexValid(index, true);
+        checkIndex(index, true);
         growIfFull();
         System.arraycopy(arrayList, index, arrayList, index + 1, size - index);
         arrayList[index] = value;
@@ -33,13 +33,13 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        isIndexValid(index, false);
+        checkIndex(index, false);
         return arrayList[index];
     }
 
     @Override
     public void set(T value, int index) {
-        isIndexValid(index, false);
+        checkIndex(index, false);
         arrayList[index] = value;
     }
 
@@ -71,7 +71,7 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void isIndexValid(int index, boolean forAdd) {
+    private void checkIndex(int index, boolean forAdd) {
         if (index < 0 || index >= (forAdd ? size + 1 : size)) {
             throw new ArrayListIndexOutOfBoundsException("Invalid index");
         }
