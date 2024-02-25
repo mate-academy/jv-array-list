@@ -5,11 +5,10 @@ import java.util.NoSuchElementException;
 import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
-    private static final int DEFAULT_CAPACITY= 10;
+    private static final int DEFAULT_CAPACITY = 10;
 
     private Object[] array;
     private int size;
-
 
     public ArrayList() {
         this.array = new Object[DEFAULT_CAPACITY];
@@ -24,7 +23,6 @@ public class ArrayList<T> implements List<T> {
         array[size] = value;
         size++;
     }
-
 
     @Override
     public void add(T value, int index) {
@@ -72,10 +70,9 @@ public class ArrayList<T> implements List<T> {
         if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException("Index: " + index + " , Size: " + size);
         }
-        T removedElement = (T) array[index];
+        final T removedElement = (T) array[index];
         for (int i = index; i < size - 1; i++) {
             array[i] = array[i + 1];
-
         }
         array[size - 1] = null;
         size--;
@@ -89,7 +86,7 @@ public class ArrayList<T> implements List<T> {
                 return remove(i);
             }
         }
-       throw new NoSuchElementException();
+        throw new NoSuchElementException();
     }
 
     @Override
