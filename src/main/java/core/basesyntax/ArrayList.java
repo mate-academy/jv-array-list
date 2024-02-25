@@ -5,6 +5,7 @@ import java.util.NoSuchElementException;
 public class ArrayList<T> implements List<T> {
     private static final double ARRAY_INCREMENT_FACTOR = 1.5;
     private static final int DEFAULT_ARRAY_SIZE = 10;
+
     private Object[] elementArray;
     private int lastArrayIndex;
 
