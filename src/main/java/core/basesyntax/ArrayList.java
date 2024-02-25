@@ -1,48 +1,110 @@
 package core.basesyntax;
 
+import java.util.NoSuchElementException;
+
 public class ArrayList<T> implements List<T> {
+    private static final int MIN_CAPACITY = 10;
+    private static final int GROWS_COEFFICIENT = 2;
+    private T[] elements;
+    private int size;
+
+    public ArrayList() {
+        elements = (T[]) new Object[MIN_CAPACITY];
+    }
+
     @Override
     public void add(T value) {
-
+        if (isCapacityReached()) {
+            grow();
+        }
+        elements[size] = value;
+        size++;
     }
 
     @Override
     public void add(T value, int index) {
-
+        if (index < 0 || index > size) {
+            throw new ArrayListIndexOutOfBoundsException("Index " + index + " out of bounds!");
+        }
+        if (isCapacityReached()) {
+            grow();
+        }
+        System.arraycopy(elements, index, elements, index + 1, size - index);
+        elements[index] = value;
+        size++;
     }
 
     @Override
     public void addAll(List<T> list) {
-
+        for (int i = 0; i < list.size(); i++) {
+            if (isCapacityReached()) {
+                grow();
+            }
+            elements[size] = list.get(i);
+            size++;
+        }
     }
 
     @Override
     public T get(int index) {
-        return null;
+        checkIndex(index);
+        return elements[index];
     }
 
     @Override
     public void set(T value, int index) {
-
+        checkIndex(index);
+        elements[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        return null;
+        checkIndex(index);
+        T oldValue = elements[index];
+        System.arraycopy(elements, index + 1, elements, index, size - index - 1);
+        size--;
+        return oldValue;
     }
 
     @Override
     public T remove(T element) {
-        return null;
+        for (int i = 0; i < size; i++) {
+            if (areElementsEquals(element, elements[i])) {
+                return remove(i);
+            }
+        }
+        throw new NoSuchElementException("There is no " + element + " in this ArrayList!");
     }
 
     @Override
     public int size() {
-        return 0;
+        return size;
     }
 
     @Override
     public boolean isEmpty() {
-        return false;
+        return size == 0;
+    }
+
+    private void grow() {
+        int newCapacity = elements.length * GROWS_COEFFICIENT;
+        T[] biggerArray = (T[]) new Object[newCapacity];
+        System.arraycopy(elements, 0, biggerArray, 0, elements.length);
+        elements = biggerArray;
+    }
+
+    private boolean isCapacityReached() {
+        return size == elements.length;
+    }
+
+    private void checkIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Index " + index + " out of bounds!");
+        }
+    }
+
+    private boolean areElementsEquals(T element, T otherElement) {
+        return ((element == null && otherElement == null)
+                || (element != null && element.equals(otherElement)));
     }
 }
