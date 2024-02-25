@@ -92,10 +92,7 @@ public class ArrayList<T> implements List<T> {
 
         capacity *= INCREASE_FACTOR;
         list = new Object[capacity];
-
-        for (int i = 0; i < size; i++) {
-            list[i] = tempList[i];
-        }
+        System.arraycopy(tempList, 0, list, 0, size);
     }
 
     private void validateIndex(int index) {
@@ -115,15 +112,11 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void shiftAllLeftFromIndex(int index) {
-        for (int i = size; i > index; i--) {
-            list[i] = list[i - 1];
-        }
+        System.arraycopy(list, index, list, index + 1, size - index);
     }
 
     private void shiftAllRightFromIndex(int index) {
-        for (int i = index; i < size - 1; i++) {
-            list[i] = list[i + 1];
-        }
+        System.arraycopy(list, index + 1, list, index, size - index - 1);
         list[size - 1] = null;
     }
 }
