@@ -1,7 +1,6 @@
 package core.basesyntax;
 
 import java.util.NoSuchElementException;
-import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
     private static final String INDEX_OUT_OF_BOUNDS_MESSAGE
@@ -17,7 +16,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        grow();
+        growIfArrayFull();
         array[sizeOfArray] = value;
         sizeOfArray++;
 
@@ -28,7 +27,7 @@ public class ArrayList<T> implements List<T> {
         if (index > sizeOfArray || index < 0) {
             throw new ArrayListIndexOutOfBoundsException(INDEX_OUT_OF_BOUNDS_MESSAGE);
         }
-        grow();
+        growIfArrayFull();
         if (sizeOfArray == 0 || index == sizeOfArray) {
             array[index] = value;
             sizeOfArray++;
@@ -47,7 +46,7 @@ public class ArrayList<T> implements List<T> {
         int newSize = sizeOfArray + list.size();
         int indexOfArrayList = 0;
         for (int i = sizeOfArray; i < newSize; i++) {
-            grow();
+            growIfArrayFull();
             array[i] = list.get(indexOfArrayList);
             indexOfArrayList++;
             sizeOfArray++;
@@ -87,7 +86,9 @@ public class ArrayList<T> implements List<T> {
     public T remove(T element) {
         int indexOfElement = 0;
         for (int i = 0; i < sizeOfArray; i++) {
-            if (Objects.equals(element, array[i]) || indexOfElement == sizeOfArray) {
+            if ((element == array[i]
+                    || element != null && element.equals(array[i]))
+                    || indexOfElement == sizeOfArray) {
                 break;
             }
             indexOfElement++;
@@ -116,7 +117,7 @@ public class ArrayList<T> implements List<T> {
 
     }
 
-    private void grow() {
+    private void growIfArrayFull() {
         if (sizeOfArray == array.length) {
             T[] biggerArray = (T[]) (new Object[array.length + (array.length >> 1)]);
             System.arraycopy(array, 0, biggerArray, 0, array.length);
