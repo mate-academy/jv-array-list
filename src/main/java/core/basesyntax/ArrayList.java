@@ -63,7 +63,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         if (!isValidIndex(index)) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index " + index);
+            throw new ArrayListIndexOutOfBoundsException("Invalid index - " + index);
         }
         return (T) elementsArray[index];
     }
@@ -74,13 +74,13 @@ public class ArrayList<T> implements List<T> {
             elementsArray[index] = value;
             return;
         }
-        throw new ArrayListIndexOutOfBoundsException("Invalid index " + index);
+        throw new ArrayListIndexOutOfBoundsException("Invalid index - " + index);
     }
 
     @Override
     public T remove(int index) {
         if (!isValidIndex(index)) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index " + index);
+            throw new ArrayListIndexOutOfBoundsException("Invalid index - " + index);
         } else if (index == size - 1) {
             T temp = (T) elementsArray[index];
             elementsArray[index] = null;
@@ -102,7 +102,7 @@ public class ArrayList<T> implements List<T> {
                 return remove(i);
             }
         }
-        throw new NoSuchElementException("No such element " + element.toString());
+        throw new NoSuchElementException("No such element - " + element.toString());
     }
 
     @Override
