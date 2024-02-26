@@ -112,19 +112,20 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void addSize() {
-        growIfFull();
         size++;
     }
 
     private void addOnNextFreeSell(T value) {
+        growIfFull();
         addSize();
         dataArray[size - 1] = value;
     }
 
     private void addByIndex(T value, int index) {
-        addSize();
+        growIfFull();
         System.arraycopy(dataArray, index, dataArray, index + 1, size - index);
         dataArray[index] = value;
+        addSize();
     }
 
     private boolean isIndexExist(int index) {
