@@ -1,27 +1,26 @@
 package core.basesyntax;
 
 import java.util.NoSuchElementException;
-import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
     private static final int NOT_EXISTS = -1;
     private static final int UNIT = 1;
-    private T[] array;
+    private T[] internalArray;
     private int capacity;
     private int size;
 
     public ArrayList() {
         capacity = 10;
-        array = (T[]) new Object[capacity];
+        internalArray = (T[]) new Object[capacity];
     }
 
     @Override
     public void add(T value) {
         if (size < capacity) {
-            array[size] = value;
+            internalArray[size] = value;
             size++;
         } else {
-            reallocateArrayMemory();
+            growIfArrayFull();
             add(value);
         }
     }
@@ -30,61 +29,50 @@ public class ArrayList<T> implements List<T> {
     public void add(T value, int index) {
         if (size == index) {
             add(value);
-        } else if (index < size && index > NOT_EXISTS) {
+        } else if (isIndexAcceptable(index)) {
             size++;
-            if (size >= capacity) {
-                reallocateArrayMemory();
+            if (size == capacity) {
+                growIfArrayFull();
             }
-            for (int i = size; i != index; i--) {
-                array[i] = array[i - UNIT];
-            }
-            array[index] = value;
+            System.arraycopy(internalArray, index, internalArray,
+                    index + UNIT, size - index - UNIT);
+            internalArray[index] = value;
         } else {
-            throw new ArrayListIndexOutOfBoundsException("Unavailable index for adding element!!!");
+            throw new ArrayListIndexOutOfBoundsException("Unavailable index "
+                    + "for adding element!!!");
         }
     }
 
     @Override
     public void addAll(List<T> list) {
-        int listSize = list.size();
-
-        if (size + listSize > capacity) {
-            reallocateArrayMemory();
-            addAll(list);
-            return;
-        }
-
-        for (int i = 0; i < listSize; i++) {
+        for (int i = 0; i < list.size(); i++) {
             add(list.get(i));
         }
     }
 
     @Override
     public T get(int index) {
-        if (index < size && index > NOT_EXISTS) {
-            return array[index];
-        } else {
+        if (!isIndexAcceptable(index)) {
             throw new ArrayListIndexOutOfBoundsException("Can't get out of bound index!!!");
         }
+        return internalArray[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index < size && index > NOT_EXISTS) {
-            array[index] = value;
-        } else {
-            throw new ArrayListIndexOutOfBoundsException("Can't set value for "
-                    + "non-existent element!!!");
+        if (!isIndexAcceptable(index)) {
+            throw new ArrayListIndexOutOfBoundsException("Can't get out of bound index!!!");
         }
+        internalArray[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index < size && index > NOT_EXISTS) {
-            T temporary = array[index];
-            for (int i = index; i < size - UNIT; i++) {
-                array[i] = array[i + UNIT];
-            }
+        if (isIndexAcceptable(index)) {
+            T temporary = internalArray[index];
+
+            System.arraycopy(internalArray, index + UNIT, internalArray,
+                    index, size - index - UNIT);
             size--;
             return temporary;
         } else {
@@ -95,7 +83,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if (Objects.equals(array[i], element)) {
+            if (internalArray[i] == null ? element == null : internalArray[i].equals(element)) {
                 return remove(i);
             }
         }
@@ -112,14 +100,16 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void reallocateArrayMemory() {
-        T[] temporaryArray = array;
-
+    private void growIfArrayFull() {
+        T[] temporaryArray = internalArray;
         capacity += (capacity >> UNIT);
-        array = (T[]) new Object[capacity];
+        internalArray = (T[]) new Object[capacity];
 
-        for (int i = 0; i < temporaryArray.length; i++) {
-            array[i] = temporaryArray[i];
-        }
+        System.arraycopy(temporaryArray, 0, internalArray,
+                0, temporaryArray.length);
+    }
+
+    private boolean isIndexAcceptable(int index) {
+        return index < size && index > NOT_EXISTS;
     }
 }
