@@ -5,13 +5,14 @@ import java.util.NoSuchElementException;
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private static final int ARRAY_BEGINNING = 0;
+    private static final int EMPTY_SIZE = 0;
 
     private int size;
-    private Object[] elementStore;
+    private T[] elementStore;
 
     ArrayList() {
-        size = 0;
-        elementStore = new Object[DEFAULT_CAPACITY];
+        size = EMPTY_SIZE;
+        elementStore = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
     @Override
@@ -41,50 +42,27 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private int calculateElementsToCopy(int index) {
-        return size - index;
-    }
-
-    private ArrayListIndexOutOfBoundsException createErrorWithIndex(int index) {
-        return new ArrayListIndexOutOfBoundsException("Index: [" + index
-                + "] is out of bounds for list size [" + size + "]!");
-    }
-
     @Override
     public T get(int index) {
         if (indexIsLegal(index)) {
-            return (T) elementStore[index];
+            return elementStore[index];
         } else {
             throw createErrorWithIndex(index);
         }
-    }
-
-    private void growIfArrayFull() {
-        if (isFull()) {
-            int newCapacity = size + size / 2;
-            Object[] oldStore = new Object[size];
-            System.arraycopy(elementStore, ARRAY_BEGINNING, oldStore, ARRAY_BEGINNING, size);
-            elementStore = new Object[newCapacity];
-            System.arraycopy(oldStore, ARRAY_BEGINNING, elementStore, ARRAY_BEGINNING, size);
-        }
-    }
-
-    private int nextIndex(int index) {
-        return index + 1;
     }
 
     @Override
     public T remove(int index) {
         T oldValue;
         if (indexIsLegal(index)) {
-            oldValue = (T) elementStore[index];
+            oldValue = elementStore[index];
             if (isFull()) {
                 elementStore[index] = null;
                 size--;
                 return oldValue;
             }
-            System.arraycopy(elementStore, nextIndex(index),
-                    elementStore, index, calculateElementsToCopy(index));
+            System.arraycopy(elementStore, nextIndex(index), elementStore,
+                    index, calculateElementsToCopy(index));
             elementStore[size] = null;
             size--;
             return oldValue;
@@ -123,14 +101,6 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private boolean isFull() {
-        return size == elementStore.length;
-    }
-
-    private boolean indexIsLegal(int index) {
-        return index > -1 && index < size;
-    }
-
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("[");
@@ -142,5 +112,36 @@ public class ArrayList<T> implements List<T> {
         }
         sb.append("]");
         return sb.toString();
+    }
+
+    private int calculateElementsToCopy(int index) {
+        return size - index;
+    }
+
+    private ArrayListIndexOutOfBoundsException createErrorWithIndex(int index) {
+        return new ArrayListIndexOutOfBoundsException("Index: [" + index
+                + "] is out of bounds for list size [" + size + "]!");
+    }
+
+    private void growIfArrayFull() {
+        if (isFull()) {
+            int newCapacity = size + size / 2;
+            Object[] oldStore = new Object[size];
+            System.arraycopy(elementStore, ARRAY_BEGINNING, oldStore, ARRAY_BEGINNING, size);
+            elementStore = (T[]) new Object[newCapacity];
+            System.arraycopy(oldStore, ARRAY_BEGINNING, elementStore, ARRAY_BEGINNING, size);
+        }
+    }
+
+    private boolean indexIsLegal(int index) {
+        return index > -1 && index < size;
+    }
+
+    private boolean isFull() {
+        return size == elementStore.length;
+    }
+
+    private int nextIndex(int index) {
+        return index + 1;
     }
 }
