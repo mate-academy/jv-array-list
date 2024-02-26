@@ -24,17 +24,13 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (size == dataArray.length) {
-            grow(dataArray);
-            addOnNextFreeSell(value);
-        } else {
-            addOnNextFreeSell(value);
-        }
+        growIfFull();
+        addOnNextFreeSell(value);
     }
 
     @Override
     public void add(T value, int index) {
-        isIndexValid(index);
+        indexValidation(index);
         if (index == size && size != dataArray.length) {
             addOnNextFreeSell(value);
         } else {
@@ -99,7 +95,7 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void isDataArrayFull() {
+    private void growIfFull() {
         if (dataArray.length == size) {
             grow(dataArray);
         }
@@ -116,7 +112,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void addSize() {
-        isDataArrayFull();
+        growIfFull();
         size++;
     }
 
@@ -126,10 +122,9 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void addByIndex(T value, int index) {
-        isDataArrayFull();
+        addSize();
         System.arraycopy(dataArray, index, dataArray, index + 1, size - index);
         dataArray[index] = value;
-        addSize();
     }
 
     private boolean isIndexExist(int index) {
@@ -140,9 +135,9 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private boolean isIndexValid(int index) {
+    private void indexValidation(int index) {
         if (index >= 0 && index <= size) {
-            return true;
+            return;
         }
         throw new ArrayListIndexOutOfBoundsException("This index don't exist");
     }
@@ -153,7 +148,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     private T removeElement(int index) {
-        isIndexValid(index);
+        indexValidation(index);
         Object objectToDelete = dataArray[index];
         if (size - 1 == index) {
             size--;
