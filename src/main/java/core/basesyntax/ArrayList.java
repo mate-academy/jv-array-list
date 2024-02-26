@@ -5,28 +5,27 @@ import java.util.NoSuchElementException;
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private static final int ARRAY_BEGINNING = 0;
-    private static final int EMPTY_SIZE = 0;
+    private static final int GROWTH_FACTOR = 2;
 
     private int size;
     private T[] elementStore;
 
     ArrayList() {
-        size = EMPTY_SIZE;
         elementStore = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
     @Override
     public void add(T value) {
-        growIfArrayFull();
+        grow();
         elementStore[size] = value;
         size++;
     }
 
     @Override
     public void add(T value, int index) {
-        if (indexIsLegal(index) || index == size) {
+        if (isIndexLegal(index) || index == size) {
             size++;
-            growIfArrayFull();
+            grow();
             System.arraycopy(elementStore, index, elementStore,
                     nextIndex(index), calculateElementsToCopy(index));
             set(value, index);
@@ -37,6 +36,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
+        grow(list.size());
         for (int i = 0; i < list.size(); i++) {
             add(list.get(i));
         }
@@ -44,7 +44,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (indexIsLegal(index)) {
+        if (isIndexLegal(index)) {
             return elementStore[index];
         } else {
             throw createErrorWithIndex(index);
@@ -54,7 +54,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         T oldValue;
-        if (indexIsLegal(index)) {
+        if (isIndexLegal(index)) {
             oldValue = elementStore[index];
             if (isFull()) {
                 elementStore[index] = null;
@@ -79,12 +79,13 @@ public class ArrayList<T> implements List<T> {
                 return remove(i);
             }
         }
-        throw new NoSuchElementException();
+        throw new NoSuchElementException("There is no such element: "
+                + element.toString() + " in list.");
     }
 
     @Override
     public void set(T value, int index) {
-        if (indexIsLegal(index)) {
+        if (isIndexLegal(index)) {
             elementStore[index] = value;
         } else {
             throw createErrorWithIndex(index);
@@ -123,17 +124,25 @@ public class ArrayList<T> implements List<T> {
                 + "] is out of bounds for list size [" + size + "]!");
     }
 
-    private void growIfArrayFull() {
+    private void copyDataStore(int newCapacity) {
+        T[] newStore = (T[]) new Object[newCapacity];
+        System.arraycopy(elementStore, ARRAY_BEGINNING, newStore, ARRAY_BEGINNING, size);
+        elementStore = newStore;
+    }
+
+    private void grow() {
         if (isFull()) {
-            int newCapacity = size + size / 2;
-            Object[] oldStore = new Object[size];
-            System.arraycopy(elementStore, ARRAY_BEGINNING, oldStore, ARRAY_BEGINNING, size);
-            elementStore = (T[]) new Object[newCapacity];
-            System.arraycopy(oldStore, ARRAY_BEGINNING, elementStore, ARRAY_BEGINNING, size);
+            int newCapacity = size + size / GROWTH_FACTOR;
+            copyDataStore(newCapacity);
         }
     }
 
-    private boolean indexIsLegal(int index) {
+    private void grow(int requiredCapacity) {
+        int newCapacity = size + requiredCapacity;
+        copyDataStore(newCapacity);
+    }
+
+    private boolean isIndexLegal(int index) {
         return index > -1 && index < size;
     }
 
