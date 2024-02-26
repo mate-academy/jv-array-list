@@ -14,7 +14,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (isCapacityReached()) {
+        if (size == elements.length) {
             grow();
         }
         elements[size] = value;
@@ -24,9 +24,10 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("Index " + index + " is out of bounds!");
+            throw new ArrayListIndexOutOfBoundsException(
+                    "Index " + index + " is out of bounds for length " + size + "!");
         }
-        if (isCapacityReached()) {
+        if (size == elements.length) {
             grow();
         }
         System.arraycopy(elements, index, elements, index + 1, size - index);
@@ -89,13 +90,10 @@ public class ArrayList<T> implements List<T> {
         elements = biggerArray;
     }
 
-    private boolean isCapacityReached() {
-        return size == elements.length;
-    }
-
     private void checkIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index " + index + " is out of bounds!");
+            throw new ArrayListIndexOutOfBoundsException(
+                    "Index " + index + " is out of bounds " + size + "!");
         }
     }
 
