@@ -4,7 +4,7 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int MIN_CAPACITY = 10;
-    private static final int GROWS_COEFFICIENT = 2;
+    private static final double GROWS_COEFFICIENT = 1.5;
     private T[] elements;
     private int size;
 
@@ -24,7 +24,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("Index " + index + " out of bounds!");
+            throw new ArrayListIndexOutOfBoundsException("Index " + index + " is out of bounds!");
         }
         if (isCapacityReached()) {
             grow();
@@ -83,7 +83,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void grow() {
-        int newCapacity = elements.length * GROWS_COEFFICIENT;
+        int newCapacity = (int) (elements.length * GROWS_COEFFICIENT);
         T[] biggerArray = (T[]) new Object[newCapacity];
         System.arraycopy(elements, 0, biggerArray, 0, elements.length);
         elements = biggerArray;
@@ -95,7 +95,7 @@ public class ArrayList<T> implements List<T> {
 
     private void checkIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index " + index + " out of bounds!");
+            throw new ArrayListIndexOutOfBoundsException("Index " + index + " is out of bounds!");
         }
     }
 
