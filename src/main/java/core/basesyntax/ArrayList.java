@@ -13,12 +13,6 @@ public class ArrayList<T> implements List<T> {
         this.size = 0;
     }
 
-    private T[] grow() {
-        int oldCapacity = elementData.length;
-        int newCapacity = oldCapacity + (oldCapacity >> 1);
-        return elementData = Arrays.copyOf(elementData, newCapacity);
-    }
-
     @Override
     public void add(T value) {
         if (size == elementData.length) {
@@ -29,7 +23,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     @Override
-    public void add(T value, int index) throws ArrayListIndexOutOfBoundsException {
+    public void add(T value, int index) {
         if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException("Invalid index");
         }
@@ -49,7 +43,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     @Override
-    public T get(int index) throws ArrayListIndexOutOfBoundsException {
+    public T get(int index) {
         if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException("the index is invalid");
         }
@@ -57,7 +51,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     @Override
-    public void set(T value, int index) throws ArrayListIndexOutOfBoundsException {
+    public void set(T value, int index) {
         if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException("the index is invalid");
 
@@ -66,7 +60,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     @Override
-    public T remove(int index) throws ArrayListIndexOutOfBoundsException {
+    public T remove(int index) {
         if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException("the index is invalid");
         }
@@ -96,5 +90,11 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private T[] grow() {
+        int oldCapacity = elementData.length;
+        int newCapacity = oldCapacity + (oldCapacity >> 1);
+        return elementData = Arrays.copyOf(elementData, newCapacity);
     }
 }
