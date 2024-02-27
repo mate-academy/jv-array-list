@@ -3,13 +3,13 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    private static final Object[] EMPTY_DATAARRAY = {};
     private static final int DEFAULT_CAPACITY = 10;
-    private Object[] dataArray;
+    private static final double GROW_FACTOR = 1.5;
+    private T[] dataArray;
     private int size;
 
     public ArrayList() {
-        this.dataArray = new Object[DEFAULT_CAPACITY];
+        dataArray = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
     @Override
@@ -21,7 +21,6 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        indexValidation(index);
         if (index == size && size != dataArray.length) {
             add(value);
         } else {
@@ -31,33 +30,26 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        if (list.isEmpty()) {
-            return;
-        }
-        if (list.size() + size > dataArray.length) {
-            growTo(list);
-        }
         for (int i = 0; i < list.size(); i++) {
-
-            this.add(list.get(i));
+            add(list.get(i));
         }
     }
 
     @Override
     public T get(int index) {
-        isIndexExist(index);
+        indexValidation(index, true);
         return (T) dataArray[index];
     }
 
     @Override
     public void set(T value, int index) {
-        isIndexExist(index);
+        indexValidation(index, true);
         dataArray[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        isIndexExist(index);
+        indexValidation(index, true);
         return removeElement(index);
     }
 
@@ -89,36 +81,33 @@ public class ArrayList<T> implements List<T> {
 
     private void grow() {
         Object[] fullArray = dataArray;
-        dataArray = new Object[fullArray.length + fullArray.length / 2];
+        dataArray = (T[]) new Object[(int) (fullArray.length * GROW_FACTOR)];
         System.arraycopy(fullArray, 0, dataArray, 0, fullArray.length);
     }
 
     private void growTo(List<T> list) {
         Object[] fullArray = dataArray;
-        dataArray = new Object[size + list.size()];
+        dataArray = (T[]) new Object[size + list.size()];
         System.arraycopy(fullArray, 0, dataArray, 0, fullArray.length);
     }
 
     private void addByIndex(T value, int index) {
+        indexValidation(index, false);
         growIfFull();
         System.arraycopy(dataArray, index, dataArray, index + 1, size - index);
         dataArray[index] = value;
         size++;
     }
 
-    private void isIndexExist(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("This index don't exist");
+    private void indexValidation(int index, boolean checkExistance) {
+        if (checkExistance) {
+            if (index < 0 || index >= size) {
+                throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
+            }
         } else {
-            return;
-        }
-    }
-
-    private void indexValidation(int index) {
-        if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("This index don't exist");
-        } else {
-            return;
+            if (index < 0 || index > size) {
+                throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
+            }
         }
     }
 
@@ -128,9 +117,8 @@ public class ArrayList<T> implements List<T> {
     }
 
     private T removeElement(int index) {
-        indexValidation(index);
+        indexValidation(index, false);
         size--;
-        System.arraycopy(dataArray, 0, dataArray, 0, index);
         Object objectToDelete = dataArray[index];
         System.arraycopy(dataArray, index + 1, dataArray, index, size - index);
         dataArray[size] = null;
