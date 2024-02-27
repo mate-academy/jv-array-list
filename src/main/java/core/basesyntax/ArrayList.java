@@ -27,16 +27,15 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index > -1 && index <= size) {
-            size++;
-            growIfFull();
-            System.arraycopy(elementStore, index, elementStore,
-                    index + 1, calculateElementsToCopy(index));
-            set(value, index);
-        } else {
-            throw new ArrayListIndexOutOfBoundsException(INDEX_ERR_MSG_PREFIX + index
-                    + INDEX_ERR_MSG_MIDDLE + size + INDEX_ERR_MSG_SUFFIX);
+        if (!(index > -1 && index <= size)) {
+            throw new ArrayListIndexOutOfBoundsException(INDEX_ERR_MSG_PREFIX
+                    + index + INDEX_ERR_MSG_MIDDLE + size + INDEX_ERR_MSG_SUFFIX);
         }
+        size++;
+        growIfFull();
+        System.arraycopy(elementStore, index, elementStore,
+                index + 1, calculateElementsToCopy(index));
+        set(value, index);
     }
 
     @Override
