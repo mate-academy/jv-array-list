@@ -5,42 +5,41 @@ import java.util.NoSuchElementException;
 public class ArrayList<T> implements List<T> {
     private static final int NOT_EXISTS = -1;
     private static final int UNIT = 1;
+    private static final int DEFAULT_CAPACITY = 10;
     private T[] internalArray;
     private int capacity;
     private int size;
 
     public ArrayList() {
-        capacity = 10;
+        capacity = DEFAULT_CAPACITY;
         internalArray = (T[]) new Object[capacity];
     }
 
     @Override
     public void add(T value) {
-        if (size < capacity) {
-            internalArray[size] = value;
-            size++;
-        } else {
+        if (size >= capacity) {
             growIfArrayFull();
-            add(value);
         }
+        internalArray[size] = value;
+        size++;
     }
 
     @Override
     public void add(T value, int index) {
         if (size == index) {
             add(value);
-        } else if (isIndexAcceptable(index)) {
-            size++;
-            if (size == capacity) {
-                growIfArrayFull();
-            }
-            System.arraycopy(internalArray, index, internalArray,
-                    index + UNIT, size - index - UNIT);
-            internalArray[index] = value;
-        } else {
-            throw new ArrayListIndexOutOfBoundsException("Unavailable index "
+            return;
+        } else if (!isIndexAcceptable(index)) {
+            throw new ArrayListIndexOutOfBoundsException("Unavailable index: " + index
                     + "for adding element!!!");
         }
+        size++;
+        if (size == capacity) {
+            growIfArrayFull();
+        }
+        System.arraycopy(internalArray, index, internalArray,
+                index + UNIT, size - index - UNIT);
+        internalArray[index] = value;
     }
 
     @Override
@@ -53,7 +52,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         if (!isIndexAcceptable(index)) {
-            throw new ArrayListIndexOutOfBoundsException("Can't get out of bound index!!!");
+            throw new ArrayListIndexOutOfBoundsException("Can't get, out of "
+                    + "bound index: " + index);
         }
         return internalArray[index];
     }
@@ -61,7 +61,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void set(T value, int index) {
         if (!isIndexAcceptable(index)) {
-            throw new ArrayListIndexOutOfBoundsException("Can't get out of bound index!!!");
+            throw new ArrayListIndexOutOfBoundsException("Can't set, out of bound index: "
+                    + index);
         }
         internalArray[index] = value;
     }
@@ -76,7 +77,7 @@ public class ArrayList<T> implements List<T> {
             size--;
             return temporary;
         } else {
-            throw new ArrayListIndexOutOfBoundsException("Can't remove non-existent element!!!");
+            throw new ArrayListIndexOutOfBoundsException("Can't remove non-existent element");
         }
     }
 
@@ -87,7 +88,7 @@ public class ArrayList<T> implements List<T> {
                 return remove(i);
             }
         }
-        throw new NoSuchElementException("No such element in ArrayList!!!");
+        throw new NoSuchElementException("No such element in ArrayList: " + element);
     }
 
     @Override
