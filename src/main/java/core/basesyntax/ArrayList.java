@@ -4,6 +4,7 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int BASE_CAPACITY = 10;
+    private static final double GROW_FACTOR = 1.5;
     private static final String INDEX_EXCEPTION_MESSAGE = "Provided index "
             + "is < 0 or > list size. Please, provide valid index.";
     private Object[] objects;
@@ -84,7 +85,7 @@ public class ArrayList<T> implements List<T> {
 
     private void expandListIfNeeded(int neededSpace) {
         if (neededSpace > objects.length) {
-            int newLength = (int) (objects.length * 1.5);
+            int newLength = (int) (objects.length * GROW_FACTOR);
             if (newLength < neededSpace) {
                 newLength = neededSpace;
             }
