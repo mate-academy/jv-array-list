@@ -80,23 +80,20 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void resizeArray(int newCapacity) {
-        T[] newArray = (T[]) new Object[newCapacity];
-        System.arraycopy(elementData, DEFAULT_INDEX, newArray, DEFAULT_INDEX, size);
-        elementData = newArray;
+    private int checkIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException(
+                    INDEX_OUT_OF_BOUNDS_EXCEPTION_MESSAGE + index);
+        }
+        return index;
     }
 
     private void growIfArrayFull() {
         if (size == elementData.length) {
             int newCapacity = (int) (elementData.length * GROWTH_FACTOR);
-            resizeArray(newCapacity);
-        }
-    }
-
-    private void checkIndex(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException(
-                    INDEX_OUT_OF_BOUNDS_EXCEPTION_MESSAGE + index);
+            T[] newArray = (T[]) new Object[newCapacity];
+            System.arraycopy(elementData, DEFAULT_INDEX, newArray, DEFAULT_INDEX, size);
+            elementData = newArray;
         }
     }
 }
