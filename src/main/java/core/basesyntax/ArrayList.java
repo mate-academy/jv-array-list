@@ -4,9 +4,9 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_SIZE = 10;
-    transient Object[] defaultList;
-    private int size;
     private static final double CAPACITY_INCREASE_MODIFICATOR = 1.5;
+    private Object[] defaultList;
+    private int size;
 
     public ArrayList(int initialCapacity) {
         if (initialCapacity <= 0) {
@@ -31,7 +31,7 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayListIndexOutOfBoundsException("Index not found");
         }
         increaseCapacity();
-        System.arraycopy(defaultList, index, defaultList, index +1, size - index);
+        System.arraycopy(defaultList, index, defaultList, index + 1, size - index);
         defaultList[index] = value;
         size++;
     }
