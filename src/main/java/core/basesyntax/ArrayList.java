@@ -3,15 +3,14 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    private static final int DEFAULT_CAPACITY = 10;
     private static final float INCREASE_FACTOR = 1.5f;
 
     private int size;
-    private int capacity = DEFAULT_CAPACITY;
-    private Object[] list;
+    private int capacity = 10;
+    private T[] list;
 
     public ArrayList() {
-        this.list = new Object[DEFAULT_CAPACITY];
+        this.list = (T[]) new Object[capacity];
     }
 
     @Override
@@ -45,7 +44,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         validateIndex(index);
-        return (T) list[index];
+        return list[index];
     }
 
     @Override
@@ -57,21 +56,21 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         validateIndex(index);
-        T removedEl = (T) list[index];
+        T removedElement = list[index];
         shiftAllRightFromIndex(index);
         size--;
-        return removedEl;
+        return removedElement;
     }
 
     @Override
     public T remove(T element) {
-        T removedEl;
+        T removedElement;
         for (int i = 0; i < size; i++) {
             if (element == null && list[i] == null
                     || list[i] != null && list[i].equals(element)) {
-                removedEl = (T) list[i];
+                removedElement = list[i];
                 remove(i);
-                return removedEl;
+                return removedElement;
             }
         }
         throw new NoSuchElementException("No such element " + element);
@@ -91,7 +90,7 @@ public class ArrayList<T> implements List<T> {
         Object[] tempList = list;
 
         capacity *= INCREASE_FACTOR;
-        list = new Object[capacity];
+        list = (T[]) new Object[capacity];
         System.arraycopy(tempList, 0, list, 0, size);
     }
 
