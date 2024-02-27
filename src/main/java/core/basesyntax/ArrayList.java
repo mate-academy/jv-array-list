@@ -2,6 +2,7 @@ package core.basesyntax;
 
 import java.util.Arrays;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
@@ -12,7 +13,6 @@ public class ArrayList<T> implements List<T> {
 
     public ArrayList() {
         this.elements = new Object[DEFAULT_CAPACITY];
-        this.size = 0;
     }
 
     @Override
@@ -32,7 +32,6 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        ensureCapacity(size + list.size());
         for (int i = 0; i < list.size(); i++) {
             add(list.get(i));
         }
@@ -55,19 +54,18 @@ public class ArrayList<T> implements List<T> {
         validateIndex(index);
         T removedElement = (T) elements[index];
         System.arraycopy(elements, index + 1, elements, index, size - index - 1);
-        elements[--size] = null; // Clear the last element
+        elements[--size] = null;
         return removedElement;
     }
 
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if ((element == null && elements[i] == null) || (element != null
-                    && element.equals(elements[i]))) {
+            if (Objects.equals(element, elements[i])) {
                 return remove(i);
             }
         }
-        throw new NoSuchElementException("Element not found");
+        throw new NoSuchElementException("Element not found: " + element);
     }
 
     @Override
@@ -82,8 +80,8 @@ public class ArrayList<T> implements List<T> {
 
     private void ensureCapacity(int minCapacity) {
         if (minCapacity > elements.length) {
-            int newCapacity = (int) (elements.length * GROWTH_FACTOR);
-            elements = Arrays.copyOf(elements, Math.max(newCapacity, minCapacity));
+            int newCapacity = Math.max((int) (elements.length * GROWTH_FACTOR), minCapacity);
+            elements = Arrays.copyOf(elements, newCapacity);
         }
     }
 
@@ -95,8 +93,8 @@ public class ArrayList<T> implements List<T> {
 
     private void validateIndexForAdd(int index) {
         if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index for add operation: "
-                    + index);
+            throw new ArrayListIndexOutOfBoundsException("Invalid index for add operation: " + index
+                    + ", size: " + size);
         }
     }
 }
