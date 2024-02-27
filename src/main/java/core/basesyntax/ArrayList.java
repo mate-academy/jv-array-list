@@ -95,7 +95,8 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void generateArray() {
-        int newSize = size < DEFAULT_LENGTH ? DEFAULT_LENGTH : (int) ((int) size * GROWTH_INDEX);
+        int newSize = size < DEFAULT_LENGTH ? DEFAULT_LENGTH : (int)
+                ((int) defaultList.length * GROWTH_INDEX);
         T[] newList = (T[]) new Object[newSize];
         System.arraycopy(defaultList, 0, newList, 0, size);
         defaultList = newList;
