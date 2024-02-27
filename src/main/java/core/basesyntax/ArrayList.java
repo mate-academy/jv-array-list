@@ -24,20 +24,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index > sizeOfArray || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException(INDEX_OUT_OF_BOUNDS_MESSAGE);
-        }
         growIfArrayFull();
-        if (sizeOfArray == 0 || index == sizeOfArray) {
+        if (index == sizeOfArray) {
             array[index] = value;
             sizeOfArray++;
             return;
         }
-        T[] temporaryArray = createTemporaryArray();
-        System.arraycopy(array, 0, temporaryArray, 0, index);
-        temporaryArray[index] = value;
-        System.arraycopy(array, index, temporaryArray, index + 1, sizeOfArray);
-        array = temporaryArray;
+        if (index > sizeOfArray || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException(INDEX_OUT_OF_BOUNDS_MESSAGE);
+        }
+        for (int i = sizeOfArray - 1; i >= index; i--) {
+            array[i + 1] = array[i];
+        }
+        array[index] = value;
         sizeOfArray++;
     }
 
@@ -47,10 +46,8 @@ public class ArrayList<T> implements List<T> {
         int indexOfArrayList = 0;
         for (int i = sizeOfArray; i < newSize; i++) {
             growIfArrayFull();
-            array[i] = list.get(indexOfArrayList);
+            add(list.get(indexOfArrayList));
             indexOfArrayList++;
-            sizeOfArray++;
-
         }
     }
 
@@ -69,41 +66,23 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         assertIndex(index);
-        T[] temporaryArray = createTemporaryArray();
-        System.arraycopy(array, 0, temporaryArray, 0, index);
-        if (++index < sizeOfArray) {
-            System.arraycopy(array, index, temporaryArray, --index, sizeOfArray);
-        } else {
-            index--;
-        }
-        T removedValue = array[index];
-        array = temporaryArray;
-        sizeOfArray--;
-        return removedValue;
+        T removed = array[index];
+        System.arraycopy(array, index + 1, array, index, sizeOfArray - 1 - index);
+        array[--sizeOfArray] = null;
+        return removed;
     }
 
     @Override
     public T remove(T element) {
-        int indexOfElement = 0;
+
         for (int i = 0; i < sizeOfArray; i++) {
-            if ((element == array[i]
-                    || element != null && element.equals(array[i]))
-                    || indexOfElement == sizeOfArray) {
-                break;
+            if (element == array[i]
+                    || element != null && element.equals(array[i])) {
+                remove(i);
+                return element;
             }
-            indexOfElement++;
         }
-        if (indexOfElement == sizeOfArray) {
-            throw new NoSuchElementException(NO_SUCH_ELEMENT);
-        }
-        T[] temporaryArray = createTemporaryArray();
-        System.arraycopy(array, 0, temporaryArray, 0, indexOfElement);
-        if (++indexOfElement < sizeOfArray) {
-            System.arraycopy(array, indexOfElement, temporaryArray, --indexOfElement, sizeOfArray);
-        }
-        array = temporaryArray;
-        sizeOfArray--;
-        return element;
+        throw new NoSuchElementException(NO_SUCH_ELEMENT);
     }
 
     @Override
@@ -130,9 +109,4 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayListIndexOutOfBoundsException(INDEX_OUT_OF_BOUNDS_MESSAGE);
         }
     }
-
-    private T[] createTemporaryArray() {
-        return (T[])(new Object[array.length]);
-    }
-
 }
