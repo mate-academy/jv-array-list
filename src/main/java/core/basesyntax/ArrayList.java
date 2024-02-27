@@ -5,14 +5,15 @@ import java.util.NoSuchElementException;
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private static final double GROWTH_FACTOR = 1.5;
-    private Object[] elementData;
+    private T[] elementData;
     private int size;
 
+    @SuppressWarnings("unchecked")
     public ArrayList(int initCapacity) {
         if (initCapacity <= 0) {
             throw new IllegalArgumentException("initCapacity can`t be less than 1");
         }
-        elementData = new Object[initCapacity];
+        elementData = (T[]) new Object[initCapacity];
     }
 
     public ArrayList() {
@@ -21,7 +22,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        increaseDataArrayIfFull();
+        growIfFull();
         elementData[size++] = value;
     }
 
@@ -30,7 +31,7 @@ public class ArrayList<T> implements List<T> {
         if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
         }
-        increaseDataArrayIfFull();
+        growIfFull();
         System.arraycopy(elementData, index, elementData, index + 1, size - index);
         elementData[index] = value;
         size++;
@@ -43,11 +44,10 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public T get(int index) {
         checkIndex(index);
-        return (T) elementData[index];
+        return elementData[index];
     }
 
     @Override
@@ -56,11 +56,10 @@ public class ArrayList<T> implements List<T> {
         elementData[index] = value;
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public T remove(int index) {
         checkIndex(index);
-        T removedElement = (T) elementData[index];
+        T removedElement = elementData[index];
         System.arraycopy(elementData, index + 1, elementData, index, size - index - 1);
         elementData[--size] = null;
         return removedElement;
@@ -86,10 +85,11 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void increaseDataArrayIfFull() {
+    @SuppressWarnings("unchecked")
+    private void growIfFull() {
         if (size == elementData.length) {
             int newCapacity = (int) (elementData.length * GROWTH_FACTOR);
-            Object[] newArray = new Object[newCapacity];
+            T[] newArray = (T[]) new Object[newCapacity];
             System.arraycopy(elementData, 0, newArray, 0, size);
             elementData = newArray;
         }
