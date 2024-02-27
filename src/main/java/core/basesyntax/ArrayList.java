@@ -7,9 +7,7 @@ public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private static final int ARRAY_BEGINNING = 0;
     private static final int GROWTH_FACTOR = 2;
-    private static final String INDEX_ERR_MSG_PREFIX = "Index: [";
-    private static final String INDEX_ERR_MSG_MIDDLE = "] is out of bounds for list size [";
-    private static final String INDEX_ERR_MSG_SUFFIX = "]!";
+    private static final String INDEX_ERR_MSG = "Index: [%d] is out of bounds for list size [%d]!";
 
     private int size;
     private T[] elementStore;
@@ -28,8 +26,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         if (!(index > -1 && index <= size)) {
-            throw new ArrayListIndexOutOfBoundsException(INDEX_ERR_MSG_PREFIX
-                    + index + INDEX_ERR_MSG_MIDDLE + size + INDEX_ERR_MSG_SUFFIX);
+            throw new ArrayListIndexOutOfBoundsException(String.format(INDEX_ERR_MSG, index,size));
         }
         size++;
         growIfFull();
@@ -57,7 +54,7 @@ public class ArrayList<T> implements List<T> {
         T oldValue;
         isIndexLegal(index);
         oldValue = elementStore[index];
-        if (isFull()) {
+        if (dataArrayIsFull()) {
             elementStore[index] = null;
             size--;
             return oldValue;
@@ -120,7 +117,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void growIfFull() {
-        if (isFull()) {
+        if (dataArrayIsFull()) {
             int newCapacity = size + size / GROWTH_FACTOR;
             copyDataStore(newCapacity);
         }
@@ -133,12 +130,11 @@ public class ArrayList<T> implements List<T> {
 
     private void isIndexLegal(int index) {
         if (!(index > -1 && index < size)) {
-            throw new ArrayListIndexOutOfBoundsException(INDEX_ERR_MSG_PREFIX
-                    + index + INDEX_ERR_MSG_MIDDLE + size + INDEX_ERR_MSG_SUFFIX);
+            throw new ArrayListIndexOutOfBoundsException(String.format(INDEX_ERR_MSG, index,size));
         }
     }
 
-    private boolean isFull() {
+    private boolean dataArrayIsFull() {
         return size == elementStore.length;
     }
 }
