@@ -25,14 +25,15 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value) {
         growIfFull();
-        addOnNextFreeSell(value);
+        dataArray[size] = value;
+        size++;
     }
 
     @Override
     public void add(T value, int index) {
         indexValidation(index);
         if (index == size && size != dataArray.length) {
-            addOnNextFreeSell(value);
+            add(value);
         } else {
             addByIndex(value, index);
         }
@@ -44,7 +45,7 @@ public class ArrayList<T> implements List<T> {
             return;
         }
         if (list.size() + size > dataArray.length) {
-            growTo(dataArray, list);
+            growTo(list);
         }
         for (int i = 0; i < list.size(); i++) {
 
@@ -54,25 +55,20 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (isIndexExist(index)) {
-            return (T) dataArray[index];
-        }
-        return null;
+        isIndexExist(index);
+        return (T) dataArray[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (isIndexExist(index)) {
-            dataArray[index] = value;
-        }
+        isIndexExist(index);
+        dataArray[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (isIndexExist(index)) {
-            return removeElement(index);
-        }
-        return null;
+        isIndexExist(index);
+        return removeElement(index);
     }
 
     @Override
@@ -97,50 +93,43 @@ public class ArrayList<T> implements List<T> {
 
     private void growIfFull() {
         if (dataArray.length == size) {
-            grow(dataArray);
+            grow();
         }
     }
 
-    private void grow(Object[] fullArray) {
+    private void grow() {
+        Object[] fullArray = dataArray;
         dataArray = new Object[fullArray.length + fullArray.length / 2];
         System.arraycopy(fullArray, 0, dataArray, 0, fullArray.length);
     }
 
-    private void growTo(Object[] fullArray, List<T> list) {
+    private void growTo(List<T> list) {
+        Object[] fullArray = dataArray;
         dataArray = new Object[size + list.size()];
         System.arraycopy(fullArray, 0, dataArray, 0, fullArray.length);
-    }
-
-    private void addSize() {
-        size++;
-    }
-
-    private void addOnNextFreeSell(T value) {
-        growIfFull();
-        addSize();
-        dataArray[size - 1] = value;
     }
 
     private void addByIndex(T value, int index) {
         growIfFull();
         System.arraycopy(dataArray, index, dataArray, index + 1, size - index);
         dataArray[index] = value;
-        addSize();
+        size++;
     }
 
-    private boolean isIndexExist(int index) {
+    private void isIndexExist(int index) {
         if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException("This index don't exist");
         } else {
-            return true;
+            return;
         }
     }
 
     private void indexValidation(int index) {
-        if (index >= 0 && index <= size) {
+        if (index < 0 || index > size) {
+            throw new ArrayListIndexOutOfBoundsException("This index don't exist");
+        } else {
             return;
         }
-        throw new ArrayListIndexOutOfBoundsException("This index don't exist");
     }
 
     private boolean areObjectsEquals(T element, Object listElement) {
@@ -150,14 +139,9 @@ public class ArrayList<T> implements List<T> {
 
     private T removeElement(int index) {
         indexValidation(index);
-        Object objectToDelete = dataArray[index];
-        if (size - 1 == index) {
-            size--;
-            dataArray[index] = null;
-            return (T) objectToDelete;
-        }
         size--;
         System.arraycopy(dataArray, 0, dataArray, 0, index);
+        Object objectToDelete = dataArray[index];
         System.arraycopy(dataArray, index + 1, dataArray, index, size - index);
         dataArray[size] = null;
         return (T) objectToDelete;
