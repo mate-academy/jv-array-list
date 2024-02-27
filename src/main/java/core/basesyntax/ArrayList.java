@@ -23,7 +23,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index");
+            throw new ArrayListIndexOutOfBoundsException("the index " + index
+                    + "is invalid, current size of the list is " + size);
         }
         if (size == elementData.length) {
             grow();
@@ -69,7 +70,7 @@ public class ArrayList<T> implements List<T> {
                 return remove(i);
             }
         }
-        throw new NoSuchElementException("the index is invalid");
+        throw new NoSuchElementException("No such element " + element);
     }
 
     @Override
