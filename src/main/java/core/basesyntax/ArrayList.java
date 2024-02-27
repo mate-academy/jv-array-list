@@ -6,11 +6,10 @@ public class ArrayList<T> implements List<T> {
 
     private static final int DEFAULT_CAPACITY = 10;
     private int size;
-    private Object[] elementData;
+    private T[] elementData;
 
     public ArrayList() {
-        elementData = new Object[DEFAULT_CAPACITY];
-        size = 0;
+        elementData = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
     @Override
@@ -41,7 +40,7 @@ public class ArrayList<T> implements List<T> {
             int newSize = size + list.size() + (size >> 1);
             Object[] newArr = new Object[newSize];
             System.arraycopy(elementData, 0, newArr, 0, size);
-            elementData = newArr;
+            elementData = (T[]) newArr;
         }
         for (int i = 0; i < list.size(); ++i) {
             elementData[size] = list.get(i);
@@ -51,19 +50,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        isIndexInvalid(index);
+        checkIndex(index);
         return (T) elementData[index];
     }
 
     @Override
     public void set(T value, int index) {
-        isIndexInvalid(index);
+        checkIndex(index);
         elementData[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        isIndexInvalid(index);
+        checkIndex(index);
         T removedElement = (T) elementData[index];
         System.arraycopy(elementData, index + 1, elementData, index, size - index - 1);
         elementData[--size] = null;
@@ -94,10 +93,10 @@ public class ArrayList<T> implements List<T> {
         int newSize = size + (size >> 1);
         Object[] newArr = new Object[newSize];
         System.arraycopy(elementData, 0, newArr, 0, size);
-        elementData = newArr;
+        elementData = (T[]) newArr;
     }
 
-    private void isIndexInvalid(int index) {
+    private void checkIndex(int index) {
         if (index >= size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Index is out of range");
         }
