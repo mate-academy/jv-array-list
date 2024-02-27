@@ -12,16 +12,6 @@ public class ArrayList<T> implements List<T> {
         this.dataArray = new Object[DEFAULT_CAPACITY];
     }
 
-    public ArrayList(int capacity) {
-        if (capacity == 0) {
-            this.dataArray = EMPTY_DATAARRAY;
-        } else if (capacity < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Capacity can't be negative");
-        } else {
-            this.dataArray = new Object[capacity];
-        }
-    }
-
     @Override
     public void add(T value) {
         growIfFull();
