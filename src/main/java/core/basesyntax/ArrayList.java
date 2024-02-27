@@ -1,42 +1,47 @@
 package core.basesyntax;
 
 import java.util.NoSuchElementException;
+import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private static final int ARRAY_BEGINNING = 0;
     private static final int GROWTH_FACTOR = 2;
+    private static final String INDEX_ERR_MSG_PREFIX = "Index: [";
+    private static final String INDEX_ERR_MSG_MIDDLE = "] is out of bounds for list size [";
+    private static final String INDEX_ERR_MSG_SUFFIX = "]!";
 
     private int size;
     private T[] elementStore;
 
-    ArrayList() {
+    public ArrayList() {
         elementStore = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
     @Override
     public void add(T value) {
-        grow();
+        growIfFull();
         elementStore[size] = value;
         size++;
     }
 
     @Override
     public void add(T value, int index) {
-        if (isIndexLegal(index) || index == size) {
+        if (index > -1 && index <= size) {
             size++;
-            grow();
+            growIfFull();
             System.arraycopy(elementStore, index, elementStore,
-                    nextIndex(index), calculateElementsToCopy(index));
+                    index + 1, calculateElementsToCopy(index));
             set(value, index);
         } else {
-            throw createErrorWithIndex(index);
+            throw new ArrayListIndexOutOfBoundsException(INDEX_ERR_MSG_PREFIX + index
+                    + INDEX_ERR_MSG_MIDDLE + size + INDEX_ERR_MSG_SUFFIX);
         }
     }
 
     @Override
     public void addAll(List<T> list) {
-        grow(list.size());
+        growToCapacity(list.size());
         for (int i = 0; i < list.size(); i++) {
             add(list.get(i));
         }
@@ -44,38 +49,31 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (isIndexLegal(index)) {
-            return elementStore[index];
-        } else {
-            throw createErrorWithIndex(index);
-        }
+        isIndexLegal(index);
+        return elementStore[index];
     }
 
     @Override
     public T remove(int index) {
         T oldValue;
-        if (isIndexLegal(index)) {
-            oldValue = elementStore[index];
-            if (isFull()) {
-                elementStore[index] = null;
-                size--;
-                return oldValue;
-            }
-            System.arraycopy(elementStore, nextIndex(index), elementStore,
-                    index, calculateElementsToCopy(index));
-            elementStore[size] = null;
+        isIndexLegal(index);
+        oldValue = elementStore[index];
+        if (isFull()) {
+            elementStore[index] = null;
             size--;
             return oldValue;
-        } else {
-            throw createErrorWithIndex(index);
         }
+        System.arraycopy(elementStore, index
+                + 1, elementStore, index, calculateElementsToCopy(index));
+        elementStore[size] = null;
+        size--;
+        return oldValue;
     }
 
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if ((elementStore[i] == element)
-                    || (elementStore[i] != null && elementStore[i].equals(element))) {
+            if (Objects.equals(elementStore[i], element)) {
                 return remove(i);
             }
         }
@@ -85,11 +83,8 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void set(T value, int index) {
-        if (isIndexLegal(index)) {
-            elementStore[index] = value;
-        } else {
-            throw createErrorWithIndex(index);
-        }
+        isIndexLegal(index);
+        elementStore[index] = value;
     }
 
     @Override
@@ -119,38 +114,32 @@ public class ArrayList<T> implements List<T> {
         return size - index;
     }
 
-    private ArrayListIndexOutOfBoundsException createErrorWithIndex(int index) {
-        return new ArrayListIndexOutOfBoundsException("Index: [" + index
-                + "] is out of bounds for list size [" + size + "]!");
-    }
-
     private void copyDataStore(int newCapacity) {
         T[] newStore = (T[]) new Object[newCapacity];
         System.arraycopy(elementStore, ARRAY_BEGINNING, newStore, ARRAY_BEGINNING, size);
         elementStore = newStore;
     }
 
-    private void grow() {
+    private void growIfFull() {
         if (isFull()) {
             int newCapacity = size + size / GROWTH_FACTOR;
             copyDataStore(newCapacity);
         }
     }
 
-    private void grow(int requiredCapacity) {
+    private void growToCapacity(int requiredCapacity) {
         int newCapacity = size + requiredCapacity;
         copyDataStore(newCapacity);
     }
 
-    private boolean isIndexLegal(int index) {
-        return index > -1 && index < size;
+    private void isIndexLegal(int index) {
+        if (!(index > -1 && index < size)) {
+            throw new ArrayListIndexOutOfBoundsException(INDEX_ERR_MSG_PREFIX
+                    + index + INDEX_ERR_MSG_MIDDLE + size + INDEX_ERR_MSG_SUFFIX);
+        }
     }
 
     private boolean isFull() {
         return size == elementStore.length;
-    }
-
-    private int nextIndex(int index) {
-        return index + 1;
     }
 }
