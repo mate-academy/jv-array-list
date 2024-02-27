@@ -16,8 +16,8 @@ public class ArrayList<T> implements List<T> {
         if (size == elements.length) {
             int newCapacity = (int) (elements.length * GROW_FACTOR);
             T[] newArray = (T[]) new Object[newCapacity];
-                System.arraycopy(elements, 0, newArray, 0, size);
-                elements = newArray;
+            System.arraycopy(elements, 0, newArray, 0, size);
+            elements = newArray;
         }
     }
 
@@ -40,7 +40,7 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayListIndexOutOfBoundsException("Index out of bounds: " + index);
         }
         ensureCapacity();
-            System.arraycopy(elements, index, elements, index + 1, size - index);
+        System.arraycopy(elements, index, elements, index + 1, size - index);
         elements[index] = value;
         size++;
     }
@@ -77,7 +77,7 @@ public class ArrayList<T> implements List<T> {
         int numToMove = size - index - 1;
         if (numToMove > 0) {
             for (int i = index; i < size - 1; i++) {
-                 elements[i] = elements[i + 1];
+                  elements[i] = elements[i + 1];
             }
         }
         elements[--size] = null;
