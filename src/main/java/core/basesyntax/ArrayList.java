@@ -77,7 +77,7 @@ public class ArrayList<T> implements List<T> {
         int numToMove = size - index - 1;
         if (numToMove > 0) {
             for (int i = index; i < size - 1; i++) {
-                  elements[i] = elements[i + 1];
+                elements[i] = elements[i + 1];
             }
         }
         elements[--size] = null;
