@@ -3,8 +3,9 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    private static int listCapacity = 10;
-    private T[] data = (T[]) new Object[listCapacity];
+    private static final double COEFFICIENT = 1.5;
+    private static final int LIST_CAPACITY = 10;
+    private T[] data = (T[]) new Object[LIST_CAPACITY];
     private int size = 0;
 
     @Override
@@ -78,10 +79,10 @@ public class ArrayList<T> implements List<T> {
     }
 
     private Object[] grow(int minCapacity) {
-        int newCapacity = (int) Math.round(minCapacity * 1.5);
-        Object[] growed = new Object[newCapacity];
-        System.arraycopy(data, 0, growed, 0, data.length);
-        return growed;
+        int newCapacity = (int) Math.round(minCapacity * COEFFICIENT);
+        Object[] grown = new Object[newCapacity];
+        System.arraycopy(data, 0, grown, 0, data.length);
+        return grown;
     }
 
     private Object[] grow() {
