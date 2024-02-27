@@ -7,11 +7,11 @@ public class ArrayList<T> implements List<T> {
     private static final String ELEMENT_NOT_FOUND_MESSAGE = "Element not found: ";
     private static final int DEFAULT_CAPACITY = 10;
     private static final double CAPACITY_MULTIPLIER = 1.5;
-    private Object[] elementData;
+    private T[] elementData;
     private int size;
 
     public ArrayList() {
-        this.elementData = new Object[DEFAULT_CAPACITY];
+        this.elementData = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
     @Override
@@ -39,7 +39,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         validateIndex(index);
-        return (T) elementData[index];
+        return elementData[index];
     }
 
     @Override
@@ -60,7 +60,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if (areElementsEquals((T) elementData[i], element)) {
+            if (elementData[i] == element
+                    || (elementData[i] != null && elementData[i].equals(element))) {
                 return remove(i);
             }
         }
@@ -77,12 +78,12 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private Object[] grow() {
+    private void generateNewArray() {
         int newCapacity = (elementData.length == 0)
-                ? DEFAULT_CAPACITY : (int) Math.round(elementData.length * CAPACITY_MULTIPLIER);
-        Object[] newElementData = new Object[newCapacity];
+                ? DEFAULT_CAPACITY : (int) (elementData.length * CAPACITY_MULTIPLIER);
+        T[] newElementData = (T[]) new Object[newCapacity];
         System.arraycopy(elementData, 0, newElementData, 0, size);
-        return newElementData;
+        elementData = newElementData;
     }
 
     private void validateIndex(int index) {
@@ -97,13 +98,9 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private boolean areElementsEquals(T element1, T element2) {
-        return element1 == element2 || (element1 != null && element1.equals(element2));
-    }
-
     private void ensureCapacity() {
         if (size == elementData.length) {
-            elementData = grow();
+            generateNewArray();
         }
     }
 }
