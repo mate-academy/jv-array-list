@@ -6,19 +6,18 @@ public class ArrayList<T> implements List<T> {
     private static final int NOT_EXISTS = -1;
     private static final int UNIT = 1;
     private static final int DEFAULT_CAPACITY = 10;
+    private static final double RESIZE_CONSTANT = 1.5;
     private T[] internalArray;
-    private int capacity;
     private int size;
 
     public ArrayList() {
-        capacity = DEFAULT_CAPACITY;
-        internalArray = (T[]) new Object[capacity];
+        internalArray = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
     @Override
     public void add(T value) {
-        if (size >= capacity) {
-            growIfArrayFull();
+        if (size >= internalArray.length) {
+            grow();
         }
         internalArray[size] = value;
         size++;
@@ -34,8 +33,8 @@ public class ArrayList<T> implements List<T> {
                     + "for adding element!!!");
         }
         size++;
-        if (size == capacity) {
-            growIfArrayFull();
+        if (size == internalArray.length) {
+            grow();
         }
         System.arraycopy(internalArray, index, internalArray,
                 index + UNIT, size - index - UNIT);
@@ -76,9 +75,8 @@ public class ArrayList<T> implements List<T> {
                     index, size - index - UNIT);
             size--;
             return temporary;
-        } else {
-            throw new ArrayListIndexOutOfBoundsException("Can't remove non-existent element");
         }
+        throw new ArrayListIndexOutOfBoundsException("Can't remove non-existent element");
     }
 
     @Override
@@ -88,7 +86,7 @@ public class ArrayList<T> implements List<T> {
                 return remove(i);
             }
         }
-        throw new NoSuchElementException("No such element in ArrayList: " + element);
+        throw new NoSuchElementException("There is no such element: " + element);
     }
 
     @Override
@@ -101,10 +99,10 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void growIfArrayFull() {
+    private void grow() {
         T[] temporaryArray = internalArray;
-        capacity += (capacity >> UNIT);
-        internalArray = (T[]) new Object[capacity];
+        int newCapacity = (int) (internalArray.length * RESIZE_CONSTANT);
+        internalArray = (T[]) new Object[newCapacity];
 
         System.arraycopy(temporaryArray, 0, internalArray,
                 0, temporaryArray.length);
