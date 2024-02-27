@@ -66,7 +66,6 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void set(T value, int index) {
-
         indexExistence(index);
         elementsData[index] = value;
     }
