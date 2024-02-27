@@ -4,6 +4,7 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_SIZE = 10;
+    private static final double GROWTH_INDEX = 1.5;
     private int size = 0;
     private T[] myArrayList = (T[]) new Object[DEFAULT_SIZE];
 
@@ -40,9 +41,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void addAll(List<T> list) {
         for (int i = 0; i < list.size(); i++) {
-            T element = list.get(i);
-            validateMyArrayListLength();
-            add(element);
+            add(list.get(i));
         }
     }
 
@@ -96,7 +95,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     private T[] increaseMyArrayListLength() {
-        int newLength = (int) (myArrayList.length * 1.5);
+        int newLength = (int) (myArrayList.length * GROWTH_INDEX);
         T[] newArray = (T[]) new Object[newLength];
         System.arraycopy(myArrayList, 0, newArray, 0, myArrayList.length);
         return newArray;
@@ -104,13 +103,13 @@ public class ArrayList<T> implements List<T> {
 
     // Its happens to be hard for me to unite those index validations in one method
     private void validateAddIndex(int index) {
-        if (index < 0 || index > myArrayList.length || index > size) {
+        if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException("Validation falls at add method");
         }
     }
 
     private void validateIndex(int index) {
-        if (index < 0 || index > myArrayList.length || index >= size) {
+        if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException("Validation falls");
         }
     }
