@@ -3,8 +3,8 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    public static final int INITIAL_CAPACITY = 10;
-    public static final double GROW_FACTOR = 1.5;
+    private static final int INITIAL_CAPACITY = 10;
+    private static final double GROW_FACTOR = 1.5;
     private Object[] elementsArray;
     private int size;
 
@@ -15,7 +15,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value) {
         if (size == elementsArray.length) {
-            ensureCapacity();
+            grow();
         }
         elementsArray[size] = value;
         size++;
@@ -23,73 +23,48 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (isValidIndex(index)) {
-            insertInetInExisting(index, value);
-        } else if (index == size) {
-            growToCapacity(elementsArray.length * 2);
-            elementsArray[index] = value;
-            size = index + 1;
-        } else {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index " + index);
+        if (index == size) {
+            add(value);
+            return;
         }
-    }
-
-    private void insertInetInExisting(int index, T value) {
-        Object[] newElementsArray = new Object[elementsArray.length + 1];
-        System.arraycopy(elementsArray, 0, newElementsArray, 0, index);
-        newElementsArray[index] = value;
-        System.arraycopy(elementsArray, index, newElementsArray,
-                index + 1, elementsArray.length - index - 1);
-        elementsArray = newElementsArray;
+        validateIndex(index);
+        growIfFull();
+        System.arraycopy(elementsArray, index, elementsArray, index + 1, size - index);
+        elementsArray[index] = value;
         size++;
     }
 
     @Override
     public void addAll(List<T> list) {
-        int requiredCapacity = size + list.size();
-        if (requiredCapacity > elementsArray.length) {
-            growToCapacity(requiredCapacity);
-            for (int i = size, k = 0; i < requiredCapacity; i++, k++) {
-                elementsArray[i] = list.get(k);
-                size++;
-            }
-        } else {
-            for (int i = size, k = 0; i < requiredCapacity; i++, k++) {
-                elementsArray[i] = list.get(k);
-            }
+        for (int i = 0; i < list.size(); i++) {
+            add(list.get(i));
         }
     }
 
     @Override
     public T get(int index) {
-        if (!isValidIndex(index)) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index - " + index);
-        }
+        validateIndex(index);
         return (T) elementsArray[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (isValidIndex(index)) {
-            elementsArray[index] = value;
-            return;
-        }
-        throw new ArrayListIndexOutOfBoundsException("Invalid index - " + index);
+        validateIndex(index);
+        elementsArray[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (!isValidIndex(index)) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index - " + index);
-        } else if (index == size - 1) {
+        if (index == size - 1) {
             T temp = (T) elementsArray[index];
             elementsArray[index] = null;
             size--;
             return temp;
         } else {
-            T temp = get(index);
-            regroupArrayByRemove(index);
-            return temp;
+            validateIndex(index);
+            T elementToBeRemoved = get(index);
+            regroupOnRemove(index);
+            return elementToBeRemoved;
         }
     }
 
@@ -115,23 +90,25 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void ensureCapacity() {
+    private void validateIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Invalid index - " + index);
+        }
+    }
+
+    private void growIfFull() {
+        if (size == elementsArray.length) {
+            grow();
+        }
+    }
+
+    private void grow() {
         Object[] newElementsArray = new Object[(int) (elementsArray.length * GROW_FACTOR)];
         System.arraycopy(elementsArray, 0, newElementsArray, 0, elementsArray.length);
         elementsArray = newElementsArray;
     }
 
-    private void growToCapacity(int newCapacity) {
-        Object[] newElementsArray = new Object[newCapacity + 1];
-        System.arraycopy(elementsArray, 0, newElementsArray, 0, elementsArray.length);
-        elementsArray = newElementsArray;
-    }
-
-    private boolean isValidIndex(int index) {
-        return size > index && index >= 0;
-    }
-
-    private void regroupArrayByRemove(int index) {
+    private void regroupOnRemove(int index) {
         Object[] newElementsArray = new Object[elementsArray.length];
         System.arraycopy(elementsArray, 0, newElementsArray, 0, index);
         System.arraycopy(elementsArray, index + 1, newElementsArray, index, size - index);
