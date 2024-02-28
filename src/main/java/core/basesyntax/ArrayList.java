@@ -28,9 +28,8 @@ public class ArrayList<T> implements List<T> {
     }
 
     @Override
-    public boolean add(T value) {
+    public void add(T value) {
         add(value, elementData, size);
-        return true;
     }
 
     @Override
