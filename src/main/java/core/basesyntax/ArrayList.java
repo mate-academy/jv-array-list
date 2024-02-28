@@ -78,7 +78,7 @@ public class ArrayList<T> implements List<T> {
                 return remove(i);
             }
         }
-        throw new NoSuchElementException();
+        throw new NoSuchElementException("Element not found: " + element);
     }
 
     @Override
@@ -106,6 +106,6 @@ public class ArrayList<T> implements List<T> {
         if (index >= 0 && index < size) {
             return true;
         }
-        throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
+        throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index + ", for the size - " + size);
     }
 }
