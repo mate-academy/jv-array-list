@@ -29,7 +29,7 @@ public class ArrayList<T> implements List<T> {
             add(value);
             return;
         }
-        isIndexAcceptable(index);
+        checkIndex(index);
         size++;
         if (size == internalArray.length) {
             grow();
@@ -48,19 +48,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        isIndexAcceptable(index);
+        checkIndex(index);
         return internalArray[index];
     }
 
     @Override
     public void set(T value, int index) {
-        isIndexAcceptable(index);
+        checkIndex(index);
         internalArray[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        isIndexAcceptable(index);
+        checkIndex(index);
         T temporary = internalArray[index];
 
         System.arraycopy(internalArray, index + UNIT, internalArray,
@@ -98,11 +98,10 @@ public class ArrayList<T> implements List<T> {
                 0, temporaryArray.length);
     }
 
-    private boolean isIndexAcceptable(int index) {
-        if (index < size && index > NOT_EXISTS) {
-            return true;
+    private void checkIndex(int index) {
+        if (index >= size || index <= NOT_EXISTS) {
+            throw new ArrayListIndexOutOfBoundsException("Received unacceptable out of bound index: "
+                    + index);
         }
-        throw new ArrayListIndexOutOfBoundsException("Received unacceptable out of bound index: "
-                + index);
     }
 }
