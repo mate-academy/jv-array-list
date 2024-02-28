@@ -100,8 +100,8 @@ public class ArrayList<T> implements List<T> {
 
     private void checkIndex(int index) {
         if (index >= size || index <= NOT_EXISTS) {
-            throw new ArrayListIndexOutOfBoundsException("Received unacceptable out of bound index: "
-                    + index);
+            throw new ArrayListIndexOutOfBoundsException("Received unacceptable "
+                    + "out of bound index: " + index);
         }
     }
 }
