@@ -1,38 +1,16 @@
 package core.basesyntax;
 
-import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    private static final double CAPACITY_MULTIPLIER = 1.5;
     private static final int DEFAULT_CAPACITY = 10;
+    private static final double CAPACITY_MULTIPLIER = 1.5;
 
     private T[] elementsData;
     private int size;
 
     public ArrayList() {
-        this.elementsData = (T[]) new Object[DEFAULT_CAPACITY];
-        this.size = 0;
-    }
-
-    private void indexExistence(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index out of bounds: " + index);
-        }
-    }
-
-    private void resizeCheck(int index) {
-        if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index for add operation: "
-                    + index);
-        }
-    }
-
-    private void ensureCapacity(int minCapacity) {
-        if (minCapacity > elementsData.length) {
-            int newCapacity = (int) (elementsData.length * CAPACITY_MULTIPLIER);
-            elementsData = Arrays.copyOf(elementsData, Math.max(newCapacity, minCapacity));
-        }
+        elementsData = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
     @Override
@@ -52,7 +30,6 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        ensureCapacity(size + list.size());
         for (int i = 0; i < list.size(); i++) {
             add(list.get(i));
         }
@@ -98,5 +75,30 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private void indexExistence(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Index out of bounds: " + index);
+        }
+    }
+
+    private void resizeCheck(int index) {
+        if (index < 0 || index > size) {
+            throw new ArrayListIndexOutOfBoundsException("Invalid index for add operation: "
+                    + index);
+        }
+    }
+
+    private void ensureCapacity(int minCapacity) {
+        if (minCapacity > elementsData.length) {
+            int newCapacity = (int) (elementsData.length * CAPACITY_MULTIPLIER);
+            if (newCapacity < minCapacity) {
+                newCapacity = minCapacity;
+            }
+            T[] newArray = (T[]) new Object[newCapacity];
+            System.arraycopy(elementsData, 0, newArray, 0, elementsData.length);
+            elementsData = newArray;
+        }
     }
 }
