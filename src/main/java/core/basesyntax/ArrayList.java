@@ -6,7 +6,7 @@ public class ArrayList<T> implements List<T> {
     private static final double COEFFICIENT = 1.5;
     private static final int LIST_CAPACITY = 10;
     private T[] data = (T[]) new Object[LIST_CAPACITY];
-    private int size = 0;
+    private int size;
 
     @Override
     public void add(T value) {
