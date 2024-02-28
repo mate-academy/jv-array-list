@@ -28,12 +28,12 @@ public class ArrayList<T> implements List<T> {
     public void add(T value, int index) {
         if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException(
-                    String.format(INDEX_ERROR_MESSAGE,index,size));
+                    String.format(INDEX_ERROR_MESSAGE, index, size));
         }
         if (size == elementData.length || size > elementData.length) {
             grow();
         }
-        System.arraycopy(elementData,index, elementData,index + 1,size - index);
+        System.arraycopy(elementData, index, elementData, index + 1, size - index);
         elementData[index] = value;
         size++;
     }
@@ -62,7 +62,7 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         isLegalIndex(index);
         final T removedElement = elementData[index];
-        System.arraycopy(elementData,index + 1, elementData,index,size - index - 1);
+        System.arraycopy(elementData, index + 1, elementData, index, size - index - 1);
         elementData[--size] = null;
         return removedElement;
     }
@@ -75,7 +75,7 @@ public class ArrayList<T> implements List<T> {
                 return remove(i);
             }
         }
-        throw new NoSuchElementException(String.format(NO_SUCH_EL_ERR_MES,element));
+        throw new NoSuchElementException(String.format(NO_SUCH_EL_ERR_MES, element));
     }
 
     @Override
@@ -101,14 +101,14 @@ public class ArrayList<T> implements List<T> {
 
     private void copyArr(int newCapacity) {
         T[] newElementData = (T[]) new Object[newCapacity];
-        System.arraycopy(elementData,0,newElementData,0,size);
+        System.arraycopy(elementData, 0, newElementData, 0, size);
         elementData = newElementData;
     }
 
     private void isLegalIndex(int index) {
         if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException(
-                    String.format(INDEX_ERROR_MESSAGE,index,size));
+                    String.format(INDEX_ERROR_MESSAGE, index, size));
         }
     }
 }
