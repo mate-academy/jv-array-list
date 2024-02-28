@@ -93,9 +93,6 @@ public class ArrayList<T> implements List<T> {
     private void ensureCapacity(int minCapacity) {
         if (minCapacity > elementsData.length) {
             int newCapacity = (int) (elementsData.length * CAPACITY_MULTIPLIER);
-            if (newCapacity < minCapacity) {
-                newCapacity = minCapacity;
-            }
             T[] newArray = (T[]) new Object[newCapacity];
             System.arraycopy(elementsData, 0, newArray, 0, elementsData.length);
             elementsData = newArray;
