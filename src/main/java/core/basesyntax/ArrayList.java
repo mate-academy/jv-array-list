@@ -1,30 +1,28 @@
 package core.basesyntax;
 
-import java.util.Arrays;
 import java.util.NoSuchElementException;
-import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private static final double GROWTH_FACTOR = 1.5;
 
-    private Object[] elements;
+    private T[] elements;
     private int size;
 
     public ArrayList() {
-        this.elements = new Object[DEFAULT_CAPACITY];
+        elements = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
     @Override
     public void add(T value) {
-        ensureCapacity(size + 1);
+        growIfArrayFull(size + 1);
         elements[size++] = value;
     }
 
     @Override
     public void add(T value, int index) {
         validateIndexForAdd(index);
-        ensureCapacity(size + 1);
+        growIfArrayFull(size + 1);
         System.arraycopy(elements, index, elements, index + 1, size - index);
         elements[index] = value;
         size++;
@@ -40,7 +38,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         validateIndex(index);
-        return (T) elements[index];
+        return elements[index];
     }
 
     @Override
@@ -52,7 +50,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         validateIndex(index);
-        T removedElement = (T) elements[index];
+        T removedElement = elements[index];
         System.arraycopy(elements, index + 1, elements, index, size - index - 1);
         elements[--size] = null;
         return removedElement;
@@ -61,7 +59,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if (Objects.equals(element, elements[i])) {
+            if ((element == null && elements[i] == null)
+                    || (element != null && element.equals(elements[i]))) {
                 return remove(i);
             }
         }
@@ -78,10 +77,10 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void ensureCapacity(int minCapacity) {
+    private void growIfArrayFull(int minCapacity) {
         if (minCapacity > elements.length) {
             int newCapacity = Math.max((int) (elements.length * GROWTH_FACTOR), minCapacity);
-            elements = Arrays.copyOf(elements, newCapacity);
+            elements = java.util.Arrays.copyOf(elements, newCapacity);
         }
     }
 
