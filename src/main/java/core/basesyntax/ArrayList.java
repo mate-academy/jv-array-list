@@ -7,7 +7,7 @@ public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_ARRAY_SIZE = 10;
 
     private T[] elementArray;
-    private int lastArrayIndex;
+    private int size;
 
     public ArrayList() {
         this.elementArray = (T[]) new Object[DEFAULT_ARRAY_SIZE];
@@ -15,25 +15,23 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (lastArrayIndex == elementArray.length) {
+        if (size == elementArray.length) {
             elementArray = grow();
         }
-        elementArray[lastArrayIndex] = value;
-        lastArrayIndex++;
+        elementArray[size] = value;
+        size++;
     }
 
     @Override
     public void add(T value, int index) {
-        if (arrayIncludeIndex(index) || index == lastArrayIndex) {
-            if (lastArrayIndex < elementArray.length) {
+        if (index == size || arrayIncludeIndex(index)) {
+            if (size < elementArray.length) {
                 elementArray = addValueByIndex(index, value);
             } else {
                 elementArray = grow();
                 elementArray = addValueByIndex(index, value);
             }
-            lastArrayIndex++;
-        } else {
-            throwOutOfBoundsException(index);
+            size++;
         }
     }
 
@@ -41,13 +39,13 @@ public class ArrayList<T> implements List<T> {
     public void addAll(List<T> list) {
         int newArraySize;
         if (list != null && !list.isEmpty()) {
-            if (elementArray.length - lastArrayIndex < list.size()) {
-                newArraySize = elementArray.length + list.size() - lastArrayIndex;
+            if (elementArray.length - size < list.size()) {
+                newArraySize = elementArray.length + list.size() - size;
                 elementArray = grow(newArraySize);
             }
             for (int i = 0; i < list.size(); i++) {
-                elementArray[lastArrayIndex] = list.get(i);
-                lastArrayIndex++;
+                elementArray[size] = list.get(i);
+                size++;
             }
         }
     }
@@ -56,8 +54,6 @@ public class ArrayList<T> implements List<T> {
     public T get(int index) {
         if (arrayIncludeIndex(index)) {
             return elementArray[index];
-        } else {
-            throwOutOfBoundsException(index);
         }
         return null;
     }
@@ -66,8 +62,6 @@ public class ArrayList<T> implements List<T> {
     public void set(T value, int index) {
         if (arrayIncludeIndex(index)) {
             elementArray[index] = value;
-        } else {
-            throwOutOfBoundsException(index);
         }
     }
 
@@ -77,9 +71,7 @@ public class ArrayList<T> implements List<T> {
         if (arrayIncludeIndex(index)) {
             temp = elementArray[index];
             elementArray = removeIndex(index);
-            lastArrayIndex--;
-        } else {
-            throwOutOfBoundsException(index);
+            size--;
         }
         return temp;
     }
@@ -87,15 +79,15 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         T temp;
-        for (int i = 0; i < lastArrayIndex; i++) {
+        for (int i = 0; i < size; i++) {
             if (deepElementCheck(i, element)) {
                 temp = elementArray[i];
                 elementArray = removeIndex(i);
-                lastArrayIndex--;
+                size--;
                 return temp;
             } else if (elementArray[i] == null && element == null) {
                 elementArray = removeIndex(i);
-                lastArrayIndex--;
+                size--;
                 return null;
             }
         }
@@ -104,12 +96,12 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public int size() {
-        return lastArrayIndex;
+        return size;
     }
 
     @Override
     public boolean isEmpty() {
-        return lastArrayIndex == 0;
+        return size == 0;
     }
 
     private T[] addValueByIndex(int index, T value) {
@@ -125,14 +117,14 @@ public class ArrayList<T> implements List<T> {
     private T[] grow() {
         int arraySize = (int) (elementArray.length * ARRAY_INCREMENT_FACTOR);
         T[] newArray = (T[]) new Object[arraySize];
-        System.arraycopy(elementArray, 0, newArray, 0, lastArrayIndex);
+        System.arraycopy(elementArray, 0, newArray, 0, size);
         return newArray;
     }
 
     private T[] grow(int newArraySize) {
         int arraySize = (int) (newArraySize * ARRAY_INCREMENT_FACTOR);
         T[] newArray = (T[]) new Object[arraySize];
-        System.arraycopy(elementArray, 0, newArray, 0, lastArrayIndex);
+        System.arraycopy(elementArray, 0, newArray, 0, size);
         return newArray;
     }
 
@@ -145,20 +137,20 @@ public class ArrayList<T> implements List<T> {
     }
 
     private boolean arrayIncludeIndex(int index) {
-        return index >= 0 && index < lastArrayIndex;
+        if (index >= 0 && index < size) {
+            return true;
+        } else {
+            throw new ArrayListIndexOutOfBoundsException("Index "
+                    + index
+                    + " out of bounds for length "
+                    + (size - 1)
+            );
+        }
     }
 
     private boolean deepElementCheck(int i, T element) {
         return ((elementArray[i] != null
                 && element != null && element.equals(elementArray[i]))
                 && (element.hashCode() == elementArray[i].hashCode()));
-    }
-
-    private void throwOutOfBoundsException(int index) {
-        throw new ArrayListIndexOutOfBoundsException("Index "
-                + index
-                + " out of bounds for length "
-                + (lastArrayIndex - 1)
-        );
     }
 }
