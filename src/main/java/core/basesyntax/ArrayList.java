@@ -24,7 +24,11 @@ public class ArrayList<T> implements List<T> {
         if (index == size && size != dataArray.length) {
             add(value);
         } else {
-            addByIndex(value, index);
+            indexValidation(index);
+            growIfFull();
+            System.arraycopy(dataArray, index, dataArray, index + 1, size - index);
+            dataArray[index] = value;
+            size++;
         }
     }
 
@@ -37,27 +41,31 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        indexValidation(index, true);
+        checkIndexExistence(index);
         return (T) dataArray[index];
     }
 
     @Override
     public void set(T value, int index) {
-        indexValidation(index, true);
+        checkIndexExistence(index);
         dataArray[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        indexValidation(index, true);
-        return removeElement(index);
+        checkIndexExistence(index);
+        size--;
+        Object objectToDelete = dataArray[index];
+        System.arraycopy(dataArray, index + 1, dataArray, index, size - index);
+        dataArray[size] = null;
+        return (T) objectToDelete;
     }
 
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
             if (areObjectsEquals(element, dataArray[i])) {
-                return removeElement(i);
+                return remove(i);
             }
         }
         throw new NoSuchElementException("There aren't such elements in the list like " + element);
@@ -75,53 +83,26 @@ public class ArrayList<T> implements List<T> {
 
     private void growIfFull() {
         if (dataArray.length == size) {
-            grow();
+            Object[] fullArray = dataArray;
+            dataArray = (T[]) new Object[(int) (fullArray.length * GROW_FACTOR)];
+            System.arraycopy(fullArray, 0, dataArray, 0, fullArray.length);
         }
     }
 
-    private void grow() {
-        Object[] fullArray = dataArray;
-        dataArray = (T[]) new Object[(int) (fullArray.length * GROW_FACTOR)];
-        System.arraycopy(fullArray, 0, dataArray, 0, fullArray.length);
+    private void indexValidation(int index) {
+        if (index < 0 || index > size) {
+            throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
+        }
     }
 
-    private void growTo(List<T> list) {
-        Object[] fullArray = dataArray;
-        dataArray = (T[]) new Object[size + list.size()];
-        System.arraycopy(fullArray, 0, dataArray, 0, fullArray.length);
-    }
-
-    private void addByIndex(T value, int index) {
-        indexValidation(index, false);
-        growIfFull();
-        System.arraycopy(dataArray, index, dataArray, index + 1, size - index);
-        dataArray[index] = value;
-        size++;
-    }
-
-    private void indexValidation(int index, boolean checkExistance) {
-        if (checkExistance) {
-            if (index < 0 || index >= size) {
-                throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
-            }
-        } else {
-            if (index < 0 || index > size) {
-                throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
-            }
+    private void checkIndexExistence(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
         }
     }
 
     private boolean areObjectsEquals(T element, Object listElement) {
         return (element == null && listElement == null)
                 || (element != null && element.equals(listElement));
-    }
-
-    private T removeElement(int index) {
-        indexValidation(index, false);
-        size--;
-        Object objectToDelete = dataArray[index];
-        System.arraycopy(dataArray, index + 1, dataArray, index, size - index);
-        dataArray[size] = null;
-        return (T) objectToDelete;
     }
 }
