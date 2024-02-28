@@ -106,6 +106,7 @@ public class ArrayList<T> implements List<T> {
         if (index >= 0 && index < size) {
             return true;
         }
-        throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index + ", for the size - " + size);
+        throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index
+                + ", for the size - " + size);
     }
 }
