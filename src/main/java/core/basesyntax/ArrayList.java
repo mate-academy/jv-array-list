@@ -5,6 +5,7 @@ import java.util.NoSuchElementException;
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private static final double GROW_BY = 1.5;
+
     private int size;
     private T[] elementData;
 
@@ -80,13 +81,6 @@ public class ArrayList<T> implements List<T> {
         throw new NoSuchElementException();
     }
 
-    public void grow() {
-        int newCapacity = (int)(elementData.length * GROW_BY);
-        T[] newArray = (T[]) new Object[newCapacity];
-        System.arraycopy(elementData, 0, newArray, 0, size);
-        elementData = newArray;
-    }
-
     @Override
     public int size() {
         return size;
@@ -97,11 +91,18 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    public boolean isFull() {
+    private void grow() {
+        int newCapacity = (int)(elementData.length * GROW_BY);
+        T[] newArray = (T[]) new Object[newCapacity];
+        System.arraycopy(elementData, 0, newArray, 0, size);
+        elementData = newArray;
+    }
+
+    private boolean isFull() {
         return size == elementData.length;
     }
 
-    public boolean isCorrectIndex(int index) {
+    private boolean isCorrectIndex(int index) {
         if (index >= 0 && index < size) {
             return true;
         }
