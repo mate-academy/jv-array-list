@@ -1,11 +1,12 @@
 package core.basesyntax;
 
-import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private static final double GROWTH_FACTOR = 1.5;
+
+    private static final int DEFAULT_INDEX = 0;
     private T[] elements;
     private int size;
 
@@ -99,7 +100,9 @@ public class ArrayList<T> implements List<T> {
     private void ensureCapacity() {
         if (size >= elements.length) {
             int newCapacity = (int) (elements.length * GROWTH_FACTOR);
-            elements = Arrays.copyOf(elements, newCapacity);
+            T[] newArray = (T[]) new Object[newCapacity];
+            System.arraycopy(elements, DEFAULT_INDEX, newArray, DEFAULT_INDEX, size);
+            elements = newArray;
         }
     }
 
