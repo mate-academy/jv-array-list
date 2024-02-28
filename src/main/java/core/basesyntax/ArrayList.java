@@ -5,35 +5,37 @@ import java.util.NoSuchElementException;
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_SIZE = 10;
     private static final double GROWTH_INDEX = 1.5;
+    private static final int ONE = 1;
     private int size = 0;
-    private T[] myArrayList = (T[]) new Object[DEFAULT_SIZE];
+    private T[] elements;
+
+    public ArrayList() {
+        elements = (T[]) new Object[DEFAULT_SIZE];
+    }
 
     @Override
     public void add(T value) {
-        validateMyArrayListLength();
-        myArrayList[size] = value;
+        ensureCapacity();
+        elements[size] = value;
         size++;
     }
 
     @Override
     public void add(T value, int index) {
         validateAddIndex(index);
-        validateMyArrayListLength();
+        ensureCapacity();
 
-        //leave some comments because I think that code is hard to read & IDK how simplify
         if (index < size) {
-            // new arr to hold copy of myArrayList before index
-            T[] newArr = (T[]) new Object[myArrayList.length];
-            newArr = copyToIndex(index, newArr);
-            // add value to index
+            T[] newArr = (T[]) new Object[elements.length];
+            System.arraycopy(elements, 0, newArr, 0, index);
             newArr[index] = value;
-            // add second first & second part with added value
-            myArrayList = copyFromIndex(index, newArr);
+            System.arraycopy(elements, index, newArr, index + ONE, size - index);
+            elements = newArr;
             size++;
         }
 
         if (index == size) {
-            myArrayList[index] = value;
+            elements[index] = value;
             size++;
         }
     }
@@ -48,29 +50,30 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         validateIndex(index);
-        return myArrayList[index];
+        return elements[index];
     }
 
     @Override
     public void set(T value, int index) {
         validateIndex(index);
-        myArrayList[index] = value;
+        elements[index] = value;
     }
 
     @Override
     public T remove(int index) {
         validateIndex(index);
-        T[] newArr = (T[]) new Object[myArrayList.length];
-        copyToIndexForRemove(index, newArr);
-        T removedValue = myArrayList[index];
-        myArrayList = copyFromIndexForRemove(index, newArr);
+        T[] newArr = (T[]) new Object[elements.length];
+        System.arraycopy(elements, 0, newArr, 0, index);
+        final T removedValue = elements[index];
+        System.arraycopy(elements, index + 1, newArr, index, size - index - 1);
+        elements = newArr;
         size--;
         return removedValue;
     }
 
     @Override
     public T remove(T element) {
-        for (int i = 0; i < myArrayList.length; i++) {
+        for (int i = 0; i < elements.length; i++) {
             if (isElementPresent(element, i)) {
                 return remove(i);
             }
@@ -88,57 +91,40 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void validateMyArrayListLength() {
-        if (size == myArrayList.length) {
-            myArrayList = increaseMyArrayListLength();
+    private void ensureCapacity() {
+        if (size == elements.length) {
+            elements = grow();
         }
     }
 
-    private T[] increaseMyArrayListLength() {
-        int newLength = (int) (myArrayList.length * GROWTH_INDEX);
+    private T[] grow() {
+        int newLength = (int) (elements.length * GROWTH_INDEX);
         T[] newArray = (T[]) new Object[newLength];
-        System.arraycopy(myArrayList, 0, newArray, 0, myArrayList.length);
+        System.arraycopy(elements, 0, newArray, 0, elements.length);
         return newArray;
     }
 
-    // Its happens to be hard for me to unite those index validations in one method
     private void validateAddIndex(int index) {
         if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("Validation falls at add method");
+            throw new ArrayListIndexOutOfBoundsException(String
+                    .format("Validation falls with index: %d for size: %d", index, size));
+
         }
     }
 
     private void validateIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Validation falls");
+            throw new ArrayListIndexOutOfBoundsException(String
+                    .format("Validation falls with index: %d for size: %d", index, size));
+
         }
     }
 
     private boolean isElementPresent(T element, int i) {
-        if ((myArrayList[i] == null && element == null)
-                || (myArrayList[i] != null && element != null && myArrayList[i].equals(element))) {
+        if ((elements[i] == null && element == null)
+                || (elements[i] != null && element != null && elements[i].equals(element))) {
             return true;
         }
         return false;
-    }
-
-    private T[] copyToIndex(int index, T[] toArray) {
-        System.arraycopy(myArrayList, 0, toArray, 0, index);
-        return toArray;
-    }
-
-    private T[] copyFromIndex(int index, T[] toArray) {
-        System.arraycopy(myArrayList, index, toArray, index + 1, size);
-        return toArray;
-    }
-
-    private T[] copyToIndexForRemove(int index, T[] toArray) {
-        System.arraycopy(myArrayList, 0, toArray, 0, index);
-        return toArray;
-    }
-
-    private T[] copyFromIndexForRemove(int index, T[] toArray) {
-        System.arraycopy(myArrayList, index + 1, toArray, index, myArrayList.length - size);
-        return toArray;
     }
 }
