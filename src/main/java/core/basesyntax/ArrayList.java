@@ -28,10 +28,8 @@ public class ArrayList<T> implements List<T> {
         if (size == index) {
             add(value);
             return;
-        } else if (!isIndexAcceptable(index)) {
-            throw new ArrayListIndexOutOfBoundsException("Unavailable index: " + index
-                    + "for adding element!!!");
         }
+        isIndexAcceptable(index);
         size++;
         if (size == internalArray.length) {
             grow();
@@ -50,33 +48,25 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (!isIndexAcceptable(index)) {
-            throw new ArrayListIndexOutOfBoundsException("Can't get, out of "
-                    + "bound index: " + index);
-        }
+        isIndexAcceptable(index);
         return internalArray[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (!isIndexAcceptable(index)) {
-            throw new ArrayListIndexOutOfBoundsException("Can't set, out of bound index: "
-                    + index);
-        }
+        isIndexAcceptable(index);
         internalArray[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (isIndexAcceptable(index)) {
-            T temporary = internalArray[index];
+        isIndexAcceptable(index);
+        T temporary = internalArray[index];
 
-            System.arraycopy(internalArray, index + UNIT, internalArray,
-                    index, size - index - UNIT);
-            size--;
-            return temporary;
-        }
-        throw new ArrayListIndexOutOfBoundsException("Can't remove non-existent element");
+        System.arraycopy(internalArray, index + UNIT, internalArray,
+                index, size - index - UNIT);
+        size--;
+        return temporary;
     }
 
     @Override
@@ -109,6 +99,10 @@ public class ArrayList<T> implements List<T> {
     }
 
     private boolean isIndexAcceptable(int index) {
-        return index < size && index > NOT_EXISTS;
+        if (index < size && index > NOT_EXISTS) {
+            return true;
+        }
+        throw new ArrayListIndexOutOfBoundsException("Received unacceptable out of bound index: "
+                + index);
     }
 }
