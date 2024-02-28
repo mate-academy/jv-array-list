@@ -15,14 +15,14 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        ensureCapacity(size + 1);
+        ensureCapacity();
         elements[size++] = value;
     }
 
     @Override
     public void add(T value, int index) {
         checkIndexForAdd(index);
-        ensureCapacity(size + 1);
+        ensureCapacity();
         System.arraycopy(elements, index, elements, index + 1, size - index);
         elements[index] = value;
         size++;
@@ -58,11 +58,10 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        for (int i = 0; i < size; i++) {
-            if ((element == null && elements[i] == null)
-                    || (element != null && element.equals(elements[i]))) {
-                return remove(i);
-            }
+        int index = indexOf(element);
+        if (index != -1) {
+            return remove(index);
+
         }
         throw new NoSuchElementException("No such element present");
     }
@@ -79,19 +78,17 @@ public class ArrayList<T> implements List<T> {
 
     private int indexOf(T element) {
         for (int i = 0; i < size; i++) {
-            if (element.equals(elements[i])) {
+            if ((element == null && elements[i] == null)
+                    || (element != null && element.equals(elements[i]))) {
                 return i;
             }
         }
         return -1;
     }
 
-    private void ensureCapacity(int minCapacity) {
-        if (minCapacity > elements.length) {
+    private void ensureCapacity() {
+        if (size == elements.length) {
             int newCapacity = (int) (elements.length * ARRAYLIST_MULTIPLIER);
-            if (newCapacity < minCapacity) {
-                newCapacity = minCapacity;
-            }
             elements = Arrays.copyOf(elements, newCapacity);
         }
     }
