@@ -81,6 +81,7 @@ public class ArrayList<T> implements List<T> {
         if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException("Index out of bounds: " + index);
         }
+
     }
 
     private void resizeCheck(int index) {
