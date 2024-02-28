@@ -42,7 +42,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         checkIndexExistence(index);
-        return (T) dataArray[index];
+        return dataArray[index];
     }
 
     @Override
