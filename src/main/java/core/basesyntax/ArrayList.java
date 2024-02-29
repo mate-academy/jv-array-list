@@ -1,6 +1,5 @@
 package core.basesyntax;
 
-import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
@@ -9,33 +8,19 @@ public class ArrayList<T> implements List<T> {
     private int size;
     private Object[] elementData = new Object[size];
 
-    private Object[] grow(int minCapacity) {
-        int oldCapacity = elementData.length;
-        if (oldCapacity >= DEFAULT_CAPACITY) {
-            int newCapacity = (int) (oldCapacity * INCREASE_FACTOR);
-            return elementData = Arrays.copyOf(elementData, newCapacity);
-        } else {
-            return elementData = new Object[Math.max(DEFAULT_CAPACITY, minCapacity)];
-        }
-    }
-
-    private Object[] add(T e, Object[] elementData, int s) {
-        if (s == elementData.length) {
-            elementData = grow(size + 1);
-        }
-        elementData[size++] = e;
-        return elementData;
-    }
-
     @Override
     public void add(T value) {
-        add(value, elementData, size);
+        if (size == elementData.length) {
+            elementData = grow(size + 1);
+        }
+        elementData[size++] = value;
     }
 
     @Override
     public void add(T value, int index) {
         if (index > size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("there is no such index");
+            throw new ArrayListIndexOutOfBoundsException("index: " + index
+                    + " is out of bounds " + size);
         }
 
         Object[] elementData;
@@ -52,9 +37,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void addAll(List<T> list) {
         for (int i = 0; i < list.size(); i++) {
-            if (list.get(i) != null) {
-                add(list.get(i));
-            }
+            add(list.get(i));
         }
     }
 
@@ -73,19 +56,23 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         rangeCheckForAdd(index);
-        final Object[] es = elementData;
+        T oldValue = (T) elementData[index];
 
-        @SuppressWarnings("unchecked") T oldValue = (T) es[index];
-        fastRemove(es, index);
+        final int newSize;
+        if ((newSize = size - 1) > index) {
+            System.arraycopy(elementData, index + 1, elementData, index, newSize - index);
+        }
+        elementData[size = newSize] = null;
+
         return oldValue;
     }
 
     @Override
     public T remove(T element) {
-        final Object[] es = elementData;
         int index = -1;
-        for (int i = 0; i < es.length; i++) {
-            if ((es[i] == null && element == null) || (es[i] != null && es[i].equals(element))) {
+        for (int i = 0; i < elementData.length; i++) {
+            if ((elementData[i] == null && element == null)
+                    || (elementData[i] != null && elementData[i].equals(element))) {
                 index = i;
                 break;
             }
@@ -98,15 +85,6 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private void fastRemove(Object[] es, int i) {
-        rangeCheckForAdd(i);
-        final int newSize;
-        if ((newSize = size - 1) > i) {
-            System.arraycopy(es, i + 1, es, i, newSize - i);
-        }
-        es[size = newSize] = null;
-    }
-
     @Override
     public int size() {
         return size;
@@ -117,14 +95,24 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
+    private Object[] grow(int minCapacity) {
+        int oldCapacity = elementData.length;
+        if (oldCapacity >= DEFAULT_CAPACITY) {
+            int newCapacity = (int) (oldCapacity * INCREASE_FACTOR);
+            Object[] newArray = new Object[newCapacity];
+            if (Math.min(size, newCapacity) >= 0) {
+                System.arraycopy(elementData, 0, newArray, 0, Math.min(size, newCapacity));
+            }
+            elementData = newArray;
+            return elementData;
+        } else {
+            return elementData = new Object[Math.max(DEFAULT_CAPACITY, minCapacity)];
+        }
+    }
+
     private void rangeCheckForAdd(int index) {
         if (index > size - 1 || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Index: " + index + ", Size: " + size);
         }
-    }
-
-    @Override
-    public String toString() {
-        return Arrays.toString(Arrays.copyOf(elementData, size));
     }
 }
