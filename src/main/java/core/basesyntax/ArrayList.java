@@ -3,16 +3,14 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    private static final double COEFFICIENT = 1.5;
-    private static final int LIST_CAPACITY = 10;
-    private T[] data = (T[]) new Object[LIST_CAPACITY];
+    private static final double GROW_COEFFICIENT = 1.5;
+    private static final int DEFAULT_CAPACITY = 10;
+    private T[] data = (T[]) new Object[DEFAULT_CAPACITY];
     private int size;
 
     @Override
     public void add(T value) {
-        if (size == data.length) {
-            this.data = (T[]) grow();
-        }
+        growIfFullsSize();
         data[size] = value;
         size++;
     }
@@ -20,9 +18,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         isIndexInBoundAdd(index);
-        if (size == data.length) {
-            this.data = (T[]) grow();
-        }
+        growIfFullsSize();
         Object[] data = this.data;
         System.arraycopy(data, index, data, index + 1, size - index);
         data[index] = value;
@@ -31,9 +27,6 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        if (list == null) {
-            return;
-        }
         for (int i = 0; i < list.size(); i++) {
             add(list.get(i));
         }
@@ -56,21 +49,29 @@ public class ArrayList<T> implements List<T> {
         isIndexInBoundGet(index);
         final Object[] es = data;
         T oldValue = (T) es[index];
-        fastRemove(es, index);
+        remove(es, index);
         return oldValue;
     }
 
     @Override
     public T remove(T element) {
-        final Object[] es = data;
+        final Object[] returnedValues = data;
         for (int i = 0; i < size; i++) {
-            if (isFulfillCondition(element, i)) {
-                T oldValue = (T) es[i];
-                fastRemove(es, i);
+            if (isElementFound(element, i)) {
+                T oldValue = (T) returnedValues[i];
+                remove(returnedValues, i);
                 return oldValue;
             }
         }
         throw new NoSuchElementException();
+    }
+
+    private void remove(Object[] returnValues, int i) {
+        final int newSize;
+        if ((newSize = size - 1) > i) {
+            System.arraycopy(returnValues, i + 1, returnValues, i, newSize - i);
+        }
+        returnValues[size = newSize] = null;
     }
 
     @Override
@@ -78,43 +79,42 @@ public class ArrayList<T> implements List<T> {
         return size;
     }
 
-    private Object[] grow(int minCapacity) {
-        int newCapacity = (int) Math.round(minCapacity * COEFFICIENT);
-        Object[] grown = new Object[newCapacity];
-        System.arraycopy(data, 0, grown, 0, data.length);
-        return grown;
-    }
-
-    private Object[] grow() {
-        return grow(size + 1);
-    }
-
     @Override
     public boolean isEmpty() {
         return size == 0;
     }
 
+    private void growIfFullsSize() {
+        if (size == data.length) {
+            data = (T[]) growIfFull();
+        }
+    }
+
+    private Object[] grow(int minCapacity) {
+        int newCapacity = (int) Math.round((minCapacity + 1) * GROW_COEFFICIENT);
+        Object[] grown = new Object[newCapacity];
+        System.arraycopy(data, 0, grown, 0, data.length);
+        return grown;
+    }
+
+    private Object[] growIfFull() {
+        return grow(size + 1);
+    }
+
     private void isIndexInBoundGet(int index) {
         if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Nonexistent index");
+            throw new ArrayListIndexOutOfBoundsException("Invalid index" + index);
         }
     }
 
     private void isIndexInBoundAdd(int index) {
         if (index > size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Nonexistent index");
+            throw new ArrayListIndexOutOfBoundsException("Invalid index" + index);
         }
     }
 
-    private boolean isFulfillCondition(T element, int i) {
+    private boolean isElementFound(T element, int i) {
         return (data[i] == null && element == null) || (data[i] != null && data[i].equals(element));
     }
 
-    private void fastRemove(Object[] es, int i) {
-        final int newSize;
-        if ((newSize = size - 1) > i) {
-            System.arraycopy(es, i + 1, es, i, newSize - i);
-        }
-        es[size = newSize] = null;
-    }
 }
