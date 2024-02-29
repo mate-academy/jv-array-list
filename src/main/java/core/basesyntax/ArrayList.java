@@ -9,19 +9,19 @@ public class ArrayList<T> implements List<T> {
     private T[] defaultList;
 
     public ArrayList() {
-        this.defaultList = (T[]) new Object[DEFAULT_LENGTH];
+        defaultList = (T[]) new Object[DEFAULT_LENGTH];
     }
 
     @Override
     public void add(T value) {
-        validateGeneration();
+        growIfFull();
         defaultList[size++] = value;
     }
 
     @Override
     public void add(T value, int index) {
         validateAddingIndex(index);
-        validateGeneration();
+        growIfFull();
         System.arraycopy(defaultList, index, defaultList, index + 1, size - index);
         defaultList[index] = value;
         size++;
@@ -76,9 +76,9 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void validateGeneration() {
+    private void growIfFull() {
         if (size == defaultList.length) {
-            generateArray();
+            generateBiggerArray();
         }
     }
 
@@ -94,7 +94,7 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private void generateArray() {
+    private void generateBiggerArray() {
         int newSize = size < DEFAULT_LENGTH ? DEFAULT_LENGTH : (int)
                 ((int) defaultList.length * GROWTH_INDEX);
         T[] newList = (T[]) new Object[newSize];
