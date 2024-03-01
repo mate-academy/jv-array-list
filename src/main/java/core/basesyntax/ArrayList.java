@@ -7,10 +7,11 @@ public class ArrayList<T> implements List<T> {
     private static final double INCREASE_FACTOR = 1.5;
     private int size;
     private T[] elementData = (T[]) new Object[DEFAULT_CAPACITY];
+
     @Override
     public void add(T value) {
         if (size == elementData.length) {
-            elementData = (T[]) grow();
+            grow();
         }
         elementData[size++] = value;
     }
@@ -22,9 +23,8 @@ public class ArrayList<T> implements List<T> {
                     + " is out of bounds " + size);
         }
 
-        Object[] elementData;
-        if (size == (elementData = this.elementData).length) {
-            elementData = grow();
+        if (size == elementData.length) {
+            grow();
         }
 
         System.arraycopy(elementData, index, elementData, index + 1, size - index);
@@ -94,7 +94,7 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private Object[] grow() {
+    private void grow() {
         int oldCapacity = elementData.length;
         int newCapacity = (int) (oldCapacity * INCREASE_FACTOR);
         T[] newArray = (T[])new Object[newCapacity];
@@ -102,7 +102,6 @@ public class ArrayList<T> implements List<T> {
             System.arraycopy(elementData, 0, newArray, 0, Math.min(size, newCapacity));
         }
         elementData = newArray;
-        return elementData;
     }
 
     private void rangeCheckForAdd(int index) {
