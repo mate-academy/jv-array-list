@@ -6,12 +6,11 @@ public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private static final double INCREASE_FACTOR = 1.5;
     private int size;
-    private Object[] elementData = new Object[size];
-
+    private T[] elementData = (T[]) new Object[DEFAULT_CAPACITY];
     @Override
     public void add(T value) {
         if (size == elementData.length) {
-            elementData = grow(size + 1);
+            elementData = (T[]) grow();
         }
         elementData[size++] = value;
     }
@@ -25,7 +24,7 @@ public class ArrayList<T> implements List<T> {
 
         Object[] elementData;
         if (size == (elementData = this.elementData).length) {
-            elementData = grow(size + 1);
+            elementData = grow();
         }
 
         System.arraycopy(elementData, index, elementData, index + 1, size - index);
@@ -95,19 +94,15 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private Object[] grow(int minCapacity) {
+    private Object[] grow() {
         int oldCapacity = elementData.length;
-        if (oldCapacity >= DEFAULT_CAPACITY) {
-            int newCapacity = (int) (oldCapacity * INCREASE_FACTOR);
-            Object[] newArray = new Object[newCapacity];
-            if (Math.min(size, newCapacity) >= 0) {
-                System.arraycopy(elementData, 0, newArray, 0, Math.min(size, newCapacity));
-            }
-            elementData = newArray;
-            return elementData;
-        } else {
-            return elementData = new Object[Math.max(DEFAULT_CAPACITY, minCapacity)];
+        int newCapacity = (int) (oldCapacity * INCREASE_FACTOR);
+        T[] newArray = (T[])new Object[newCapacity];
+        if (Math.min(size, newCapacity) >= 0) {
+            System.arraycopy(elementData, 0, newArray, 0, Math.min(size, newCapacity));
         }
+        elementData = newArray;
+        return elementData;
     }
 
     private void rangeCheckForAdd(int index) {
