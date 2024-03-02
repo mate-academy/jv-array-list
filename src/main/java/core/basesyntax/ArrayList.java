@@ -6,11 +6,11 @@ public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private static final double GROWTH_FACTOR = 1.5;
 
-    private Object[] elements;
+    private T[] elements;
     private int size;
 
     public ArrayList() {
-        elements = new Object[DEFAULT_CAPACITY];;
+        elements = (T[]) new Object[DEFAULT_CAPACITY];;
     }
 
     @Override
@@ -38,7 +38,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         checkIndex(index);
-        return (T) elements[index];
+        return elements[index];
     }
 
     @Override
@@ -50,7 +50,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
-        T removedValue = (T) elements[index];
+        T removedValue = elements[index];
         System.arraycopy(elements, index + 1, elements, index, size - index - 1);
         elements[--size] = null;
         return removedValue;
@@ -91,7 +91,7 @@ public class ArrayList<T> implements List<T> {
     private void growIfArrayFull() {
         if (size == elements.length) {
             int newCapacity = (int) (elements.length * GROWTH_FACTOR);
-            Object[] newObjectArr = (T[]) new Object[newCapacity];
+            T[] newObjectArr = (T[]) new Object[newCapacity];
             System.arraycopy(elements, 0, newObjectArr, 0, size);
             elements = newObjectArr;
         }
