@@ -1,6 +1,5 @@
 package core.basesyntax;
 
-import java.util.Arrays;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 
@@ -9,10 +8,11 @@ public class ArrayList<T> implements List<T> {
     private static final double COEFFICIENT = 1.5;
     private static final int NOT_FOUND_ELEMENT = -1;
     private T[] data;
-    private int size = 0;
+    private int size;
 
     public ArrayList() {
         this.data = (T[]) new Object[INITIAL_CAPACITY];
+        this.size = 0;
     }
 
     @Override
@@ -22,9 +22,7 @@ public class ArrayList<T> implements List<T> {
         } else {
             int updatedDataLength = (int) (data.length * COEFFICIENT);
             T[] updatedData = (T[]) new Object[updatedDataLength];
-            for (int i = 0; i < data.length; i++) {
-                updatedData[i] = data[i];
-            }
+            resizeArray(data, 0, updatedData, 0, size);
             updatedData[size] = value;
             this.data = updatedData;
         }
@@ -44,32 +42,12 @@ public class ArrayList<T> implements List<T> {
             this.data[size] = value;
         } else {
             T[] updatedData = (T[]) new Object[data.length + 1];
-            for (int i = 0; i < updatedData.length; i++) {
-                if (i < index) {
-                    updatedData[i] = data[i];
-                }
-                if (i == index) {
-                    updatedData[i] = value;
-                    break;
-                }
-            }
-            T[] secondPart = (T[]) new Object[data.length - index];
-            int counter = index;
-            for (int i = 0; i < secondPart.length; i++) {
-                secondPart[i] = data[counter];
-                counter++;
-            }
+            resizeArray(data, 0, updatedData, 0, index);
+            updatedData[index] = value;
+            resizeArray(data, index, updatedData, index + 1, size - index);
             this.data = updatedData;
-            System.arraycopy(secondPart, 0, this.data, index + 1, secondPart.length);
         }
         size++;
-    }
-
-    @Override
-    public String toString() {
-        return "ArrayList{"
-                + "data=" + Arrays.toString(data)
-                + ", size=" + size + '}';
     }
 
     @Override
@@ -77,14 +55,12 @@ public class ArrayList<T> implements List<T> {
         int addingLength = list.size();
         T[] addingArrayList = (T[]) new Object[addingLength];
         T[] updatedData = (T[]) new Object[size + addingLength];
-        for (int i = 0; i < size; i++) {
-            updatedData[i] = data[i];
-        }
+        resizeArray(data, 0, updatedData, 0, size);
         for (int i = 0; i < addingLength; i++) {
             addingArrayList[i] = list.get(i);
         }
         this.data = updatedData;
-        System.arraycopy(addingArrayList, 0, data, size, addingLength);
+        resizeArray(addingArrayList, 0, data, size, addingLength);
         this.size += addingLength;
     }
 
@@ -117,7 +93,7 @@ public class ArrayList<T> implements List<T> {
             );
         } else {
             T removingElement = data[index];
-            removeElement(index);
+            removeElementByIndex(index);
             return removingElement;
         }
     }
@@ -136,21 +112,32 @@ public class ArrayList<T> implements List<T> {
             throw new NoSuchElementException("No element in the array list");
         }
         T removingElement = data[removingElementIndex];
-        removeElement(removingElementIndex);
+        removeElementByIndex(removingElementIndex);
         return removingElement;
     }
 
-    private void removeElement(int index) {
+    private void removeElementByIndex(int index) {
         T[] updatedData = (T[]) new Object[data.length - 1];
-        for (int i = 0; i < updatedData.length; i++) {
-            if (i < index) {
-                updatedData[i] = data[i];
-            } else {
-                updatedData[i] = data[i + 1];
-            }
-        }
+        resizeArray(data, 0, updatedData, 0, index);
+        resizeArray(data, index + 1, updatedData, index, data.length - index - 1);
         this.data = updatedData;
         size--;
+    }
+
+    private void resizeArray(
+            T[] arrayToAdd,
+            int arrayToAddStartIndex,
+            T[] takingArray,
+            int takingArrayStartIndex,
+            int elementsNumber
+    ) {
+        System.arraycopy(
+                arrayToAdd,
+                arrayToAddStartIndex,
+                takingArray,
+                takingArrayStartIndex,
+                elementsNumber
+        );
     }
 
     @Override
