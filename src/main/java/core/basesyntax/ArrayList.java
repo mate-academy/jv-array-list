@@ -33,39 +33,35 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index == 0 && size == 0) {
-            this.data[0] = value;
-            size++;
-            return;
-        }
-        if (index == size) {
-            this.data[size] = value;
-            size++;
-            return;
-        }
-        if (index > size - 1 || index < 0) {
+        if (index != 0 && size != 0 && index != size && (index > size - 1 || index < 0)) {
             throw new ArrayListIndexOutOfBoundsException(
                     "Impossible to assign a value to the index"
             );
         }
-        T[] updatedData = (T[]) new Object[data.length + 1];
-        for (int i = 0; i < updatedData.length; i++) {
-            if (i < index) {
-                updatedData[i] = data[i];
+        if (index == 0 && size == 0) {
+            this.data[0] = value;
+        } else if (index == size) {
+            this.data[size] = value;
+        } else {
+            T[] updatedData = (T[]) new Object[data.length + 1];
+            for (int i = 0; i < updatedData.length; i++) {
+                if (i < index) {
+                    updatedData[i] = data[i];
+                }
+                if (i == index) {
+                    updatedData[i] = value;
+                    break;
+                }
             }
-            if (i == index) {
-                updatedData[i] = value;
-                break;
+            T[] secondPart = (T[]) new Object[data.length - index];
+            int counter = index;
+            for (int i = 0; i < secondPart.length; i++) {
+                secondPart[i] = data[counter];
+                counter++;
             }
+            this.data = updatedData;
+            System.arraycopy(secondPart, 0, this.data, index + 1, secondPart.length);
         }
-        T[] secondPart = (T[]) new Object[data.length - index];
-        int counter = index;
-        for (int i = 0; i < secondPart.length; i++) {
-            secondPart[i] = data[counter];
-            counter++;
-        }
-        this.data = updatedData;
-        System.arraycopy(secondPart, 0, this.data, index + 1, secondPart.length);
         size++;
     }
 
