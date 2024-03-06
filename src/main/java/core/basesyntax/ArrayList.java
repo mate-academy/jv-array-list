@@ -9,7 +9,7 @@ public class ArrayList<T> implements List<T> {
     private T[] dataArray;
 
     public ArrayList() {
-        this.dataArray = (T[]) new Object[DEFAULT_CAPACITY];
+        dataArray = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
     @Override
@@ -93,19 +93,12 @@ public class ArrayList<T> implements List<T> {
 
     private void ensureCapacity() {
         if (size == dataArray.length) {
-            grow(size + 1);
+            int oldCapacity = dataArray.length;
+            int newCapacity = (int) (oldCapacity * GROW_FACTOR);
+            T[] newDataArray = (T[]) new Object[newCapacity];
+            System.arraycopy(dataArray, 0, newDataArray, 0, dataArray.length);
+            dataArray = newDataArray;
         }
-    }
-
-    private void grow(int minCapacity) {
-        int oldCapacity = dataArray.length;
-        int newCapacity = (int) (oldCapacity * GROW_FACTOR);
-        if (newCapacity - minCapacity < 0) {
-            newCapacity = minCapacity;
-        }
-        T[] newDataArray = (T[]) new Object[newCapacity];
-        System.arraycopy(dataArray, 0, newDataArray, 0, dataArray.length);
-        dataArray = newDataArray;
     }
 
     private String getOutOfBoundsMessage(int index) {
