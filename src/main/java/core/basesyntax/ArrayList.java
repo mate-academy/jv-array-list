@@ -5,14 +5,13 @@ import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
     private static final int INITIAL_CAPACITY = 10;
-    private static final double COEFFICIENT = 1.5;
+    private static final double INCREASING_LENGTH_COEFFICIENT = 1.5;
     private static final int NOT_FOUND_ELEMENT = -1;
     private T[] data;
     private int size;
 
     public ArrayList() {
         this.data = (T[]) new Object[INITIAL_CAPACITY];
-        this.size = 0;
     }
 
     @Override
@@ -20,9 +19,9 @@ public class ArrayList<T> implements List<T> {
         if (size < data.length) {
             data[size] = value;
         } else {
-            int updatedDataLength = (int) (data.length * COEFFICIENT);
+            int updatedDataLength = (int) (data.length * INCREASING_LENGTH_COEFFICIENT);
             T[] updatedData = (T[]) new Object[updatedDataLength];
-            resizeArray(data, 0, updatedData, 0, size);
+            System.arraycopy(data, 0, updatedData, 0, size);
             updatedData[size] = value;
             this.data = updatedData;
         }
@@ -42,9 +41,9 @@ public class ArrayList<T> implements List<T> {
             this.data[size] = value;
         } else {
             T[] updatedData = (T[]) new Object[data.length + 1];
-            resizeArray(data, 0, updatedData, 0, index);
+            System.arraycopy(data, 0, updatedData, 0, index);
             updatedData[index] = value;
-            resizeArray(data, index, updatedData, index + 1, size - index);
+            System.arraycopy(data, index, updatedData, index + 1, size - index);
             this.data = updatedData;
         }
         size++;
@@ -55,47 +54,34 @@ public class ArrayList<T> implements List<T> {
         int addingLength = list.size();
         T[] addingArrayList = (T[]) new Object[addingLength];
         T[] updatedData = (T[]) new Object[size + addingLength];
-        resizeArray(data, 0, updatedData, 0, size);
+        System.arraycopy(data, 0, updatedData, 0, size);
         for (int i = 0; i < addingLength; i++) {
             addingArrayList[i] = list.get(i);
         }
         this.data = updatedData;
-        resizeArray(addingArrayList, 0, data, size, addingLength);
+        System.arraycopy(addingArrayList, 0, data, size, addingLength);
         this.size += addingLength;
     }
 
     @Override
     public T get(int index) {
-        if (index > size - 1 || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException(
-                    "Impossible to get value to the pointed index"
-            );
-        }
+        checkIndexOutOfBounds(index, "Impossible to get value to the pointed index");
         return data[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index > size - 1 || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException(
-                    "Impossible to set value to the pointed index"
-            );
-        } else {
-            this.data[index] = value;
-        }
+        checkIndexOutOfBounds(index, "Impossible to set value to the pointed index");
+        this.data[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index > size - 1 || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException(
-                    "Impossible to remove value to the pointed index"
-            );
-        } else {
-            T removingElement = data[index];
-            removeElementByIndex(index);
-            return removingElement;
-        }
+        checkIndexOutOfBounds(index, "Impossible to remove value to the pointed index");
+        T removingElement = data[index];
+        removeElementByIndex(index);
+        return removingElement;
+
     }
 
     @Override
@@ -116,30 +102,6 @@ public class ArrayList<T> implements List<T> {
         return removingElement;
     }
 
-    private void removeElementByIndex(int index) {
-        T[] updatedData = (T[]) new Object[data.length - 1];
-        resizeArray(data, 0, updatedData, 0, index);
-        resizeArray(data, index + 1, updatedData, index, data.length - index - 1);
-        this.data = updatedData;
-        size--;
-    }
-
-    private void resizeArray(
-            T[] arrayToAdd,
-            int arrayToAddStartIndex,
-            T[] takingArray,
-            int takingArrayStartIndex,
-            int elementsNumber
-    ) {
-        System.arraycopy(
-                arrayToAdd,
-                arrayToAddStartIndex,
-                takingArray,
-                takingArrayStartIndex,
-                elementsNumber
-        );
-    }
-
     @Override
     public int size() {
         return size;
@@ -148,5 +110,19 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private void removeElementByIndex(int index) {
+        T[] updatedData = (T[]) new Object[data.length - 1];
+        System.arraycopy(data, 0, updatedData, 0, index);
+        System.arraycopy(data, index + 1, updatedData, index, data.length - index - 1);
+        this.data = updatedData;
+        size--;
+    }
+
+    private void checkIndexOutOfBounds(int index, String errorMessage) {
+        if (index > size - 1 || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException(errorMessage);
+        }
     }
 }
