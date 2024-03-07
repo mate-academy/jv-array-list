@@ -122,19 +122,19 @@ public class ArrayListTest {
         Assert.assertEquals(4, arrayList.size());
         String actualResult = arrayList.remove(2);
         Assert.assertEquals("Test failed! Returned value should be " + actualResult,
-                "Java", actualResult);
+                "Private", actualResult);
         Assert.assertEquals("Test failed! Size of array after removed element should be "
                 + 3 + "but it is " + arrayList.size(), 3, arrayList.size());
         Assert.assertEquals("Test failed! Can't remove element by index ",
                 "Private", arrayList.get(2));
         actualResult = arrayList.remove(0);
         Assert.assertEquals("Test failed! Returned value should be " + actualResult,
-                "String", actualResult);
+                null , actualResult);
         Assert.assertEquals(2, arrayList.size());
         Assert.assertNull("Test failed! Can't remove element by index ", arrayList.get(0));
         actualResult = arrayList.remove(1);
         Assert.assertEquals("Test failed! Returned value should be null",
-                "Private", actualResult);
+                null , actualResult);
         Assert.assertEquals(1, arrayList.size());
         Assert.assertNull("Test failed! Can't remove element by index ", arrayList.get(0));
     }
