@@ -14,6 +14,7 @@ public class ArrayList<T> implements List<T> {
         elements = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
+
     @Override
     public void add(T value) {
         ensureCapacity();
