@@ -51,7 +51,6 @@ public class ArrayList<T> implements List<T> {
         elements[index] = value;
     }
 
-
     @Override
     public T remove(int index) {
         checkIndex(index);
