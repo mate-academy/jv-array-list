@@ -18,19 +18,20 @@ public class ArrayList<T> implements List<T> {
         if (size == elements.length) {
             grow();
         }
-       elements[size++] = value;
+        elements[size++] = value;
     }
 
     @Override
     public void add(T value, int index) {
         if (index > size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("This index doesen't exist in arraylist: " + index);
+            throw new ArrayListIndexOutOfBoundsException(
+                    "This index doesen't exist in arraylist: " + index);
         }
         if(size == elements.length) {
             grow();
         }
         for (int i = size - 1; i >= index; i--) {
-            elements[i+1] = elements[i];
+            elements[i + 1] = elements[i];
         }
         elements[index] = value;
         size++;
@@ -49,7 +50,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("This index doesen't exist in arraylist: " + index);
+            throw new ArrayListIndexOutOfBoundsException(
+                    "This index doesen't exist in arraylist: " + index);
         }
         return elementData(index);
     }
@@ -61,7 +63,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void set(T value, int index) {
         if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("This index doesen't exist in arraylist: " + index);
+            throw new ArrayListIndexOutOfBoundsException(
+                    "This index doesen't exist in arraylist: " + index);
         }
         elements[index] = value;
     }
@@ -69,7 +72,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("This index doesen't exist in arraylist: " + index);
+            throw new ArrayListIndexOutOfBoundsException(
+                    "This index doesen't exist in arraylist: " + index);
         }
         T previosNumber = elementData(index);
         int numMove = size - index - 1;
@@ -85,7 +89,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if (Objects.equals(elements[i],element)){
+            if (Objects.equals(elements[i],element)) {
                return remove(i);
             }
         }
