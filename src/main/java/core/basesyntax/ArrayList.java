@@ -27,7 +27,7 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayListIndexOutOfBoundsException(
                     "This index doesen't exist in arraylist: " + index);
         }
-        if(size == elements.length) {
+        if (size == elements.length) {
             grow();
         }
         for (int i = size - 1; i >= index; i--) {
@@ -90,7 +90,7 @@ public class ArrayList<T> implements List<T> {
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
             if (Objects.equals(elements[i],element)) {
-               return remove(i);
+                return remove(i);
             }
         }
         throw new NoSuchElementException("Element does not exist.");
