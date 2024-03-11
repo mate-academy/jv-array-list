@@ -15,18 +15,18 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value) {
         growArray();
-        values[size] = value;
-        size++;
+        values[size++] = value;
     }
 
     @Override
     public void add(T value, int index) {
         if (index > size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("This index does not exist");
+            throw new ArrayListIndexOutOfBoundsException("Unable to add "
+                    + value + " at the " + index + " index");
         }
         growArray();
         for (int i = size; i > index; i--) {
-            values[i] = values[i - 1];
+            System.arraycopy(values, i - 1, values, i, 1);
         }
         values[index] = value;
         size++;
@@ -55,39 +55,24 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         checkIndex(index);
         T removeValue = values[index];
-        for (int i = index; i < size; i++) {
-            if (i == values.length - 1) {
-                break;
-            }
-            values[i] = values[i + 1];
-        }
+        System.arraycopy(values, index + 1, values, index, size - index - 1);
         size--;
-        return removeValue;
+        return removeValue; // Возвращаем удаленный элемент
     }
 
     @Override
     public T remove(T element) {
         int index = -1;
-        if (element == null) {
-            for (int i = 0; i < size - 1; i++) {
-                if (element == null) {
-                    index = i;
-                    remove(index);
-                    return null;
-                }
-            }
-        } else if (element != null) {
-            for (int i = 0; i < size - 1; i++) {
-                if (element.equals(values[i])) {
-                    index = i;
-                    return remove(index);
-                }
+        for (int i = 0; i < size; i++) {
+            if (element == null ? values[i] == null : element.equals(values[i])) {
+                index = i;
+                break;
             }
         }
         if (index == -1) {
-            throw new NoSuchElementException("This value does not exist");
+            throw new NoSuchElementException("This value does not exist " + element);
         }
-        return element;
+        return remove(index); // Возвращаем удаленный элемент
     }
 
     @Override
@@ -97,17 +82,16 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public boolean isEmpty() {
-        if (values == null || size == 0) {
-            return true;
-        }
-        return false;
+        return size == 0;
     }
 
     private boolean checkIndex(int index) throws ArrayListIndexOutOfBoundsException {
         if (index != 0
                 && index >= size
                 || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("This index does not exist");
+            throw new ArrayListIndexOutOfBoundsException("Index " + index
+                    + " does not exist, size of the ArrayList "
+                    + size);
         }
         return true;
     }
