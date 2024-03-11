@@ -1,8 +1,6 @@
 package core.basesyntax;
 
-import java.util.Arrays;
 import java.util.NoSuchElementException;
-import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
@@ -101,6 +99,7 @@ public class ArrayList<T> implements List<T> {
             elements = newArray;
         }
     }
+
     public void checkSize(int size,int index) {
         if (index >= size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException(
