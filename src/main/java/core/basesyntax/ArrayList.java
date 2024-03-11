@@ -4,11 +4,11 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    private Object[] elements;
+    private T[] elements;
     private int size;
 
     public ArrayList() {
-        elements = new Object[DEFAULT_CAPACITY];
+        elements = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
     @Override
@@ -21,7 +21,7 @@ public class ArrayList<T> implements List<T> {
     public void add(T value, int index) {
         if (index > size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException(
-                    "This index doesen't exist in arraylist: " + index);
+                    "This index doesn't exists in arraylist: " + index);
         }
         grow();
         for (int i = size - 1; i >= index; i--) {
@@ -42,11 +42,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         checkSize(size, index);
-        return elementData(index);
-    }
-
-    private T elementData(int index) {
-        return (T)elements[index];
+        return elements[index];
     }
 
     @Override
@@ -58,7 +54,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         checkSize(size, index);
-        T previosNumber = elementData(index);
+        T previosNumber = elements[index];
         int numMove = size - index - 1;
         if (numMove > 0) {
             for (int i = index; i < size - 1; i++) {
@@ -92,10 +88,8 @@ public class ArrayList<T> implements List<T> {
     private void grow() {
         if (size == elements.length) {
             int newCapacity = elements.length + (elements.length >> 1);
-            Object[] newArray = new Object[newCapacity];
-            for (int i = 0; i < size; i++) {
-                newArray[i] = elements[i];
-            }
+            T[] newArray =(T[]) new Object[newCapacity];
+            System.arraycopy(elements,0,newArray,0,size);
             elements = newArray;
         }
     }
@@ -103,7 +97,7 @@ public class ArrayList<T> implements List<T> {
     public void checkSize(int size,int index) {
         if (index >= size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException(
-                    "This index doesen't exist in arraylist: " + index);
+                    "This index doesn't exists in arraylist: " + index);
         }
     }
 }
