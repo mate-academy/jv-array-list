@@ -25,9 +25,7 @@ public class ArrayList<T> implements List<T> {
                     + value + " at the " + index + " index");
         }
         growArray();
-        for (int i = size; i > index; i--) {
-            System.arraycopy(values, i - 1, values, i, 1);
-        }
+        System.arraycopy(values, index, values, index + 1, size - index);
         values[index] = value;
         size++;
     }
@@ -57,7 +55,7 @@ public class ArrayList<T> implements List<T> {
         T removeValue = values[index];
         System.arraycopy(values, index + 1, values, index, size - index - 1);
         size--;
-        return removeValue; // Возвращаем удаленный элемент
+        return removeValue;
     }
 
     @Override
@@ -72,7 +70,7 @@ public class ArrayList<T> implements List<T> {
         if (index == -1) {
             throw new NoSuchElementException("This value does not exist " + element);
         }
-        return remove(index); // Возвращаем удаленный элемент
+        return remove(index);
     }
 
     @Override
