@@ -8,7 +8,7 @@ public class ArrayList<T> implements List<T> {
     private int size;
 
     public ArrayList() {
-        elements = (T[]) new Object[DEFAULT_CAPACITY];
+        elements = (T[])new Object[DEFAULT_CAPACITY];
     }
 
     @Override
@@ -88,7 +88,7 @@ public class ArrayList<T> implements List<T> {
     private void grow() {
         if (size == elements.length) {
             int newCapacity = elements.length + (elements.length >> 1);
-            T[] newArray =(T[]) new Object[newCapacity];
+            T[] newArray = (T[])new Object[newCapacity];
             System.arraycopy(elements,0,newArray,0,size);
             elements = newArray;
         }
