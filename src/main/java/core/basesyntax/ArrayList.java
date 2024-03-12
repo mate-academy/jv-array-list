@@ -24,9 +24,7 @@ public class ArrayList<T> implements List<T> {
                     "This index doesn't exists in arraylist: " + index);
         }
         grow();
-        for (int i = size - 1; i >= index; i--) {
-            elements[i + 1] = elements[i];
-        }
+        System.arraycopy(elements, index, elements, index + 1, size - index);
         elements[index] = value;
         size++;
     }
@@ -41,25 +39,23 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        checkSize(size, index);
+        checkIndex(size, index);
         return elements[index];
     }
 
     @Override
     public void set(T value, int index) {
-        checkSize(size, index);
+        checkIndex(size, index);
         elements[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        checkSize(size, index);
+        checkIndex(size, index);
         T previosNumber = elements[index];
         int numMove = size - index - 1;
         if (numMove > 0) {
-            for (int i = index; i < size - 1; i++) {
-                elements[i] = elements[i + 1];
-            }
+            System.arraycopy(elements, index + 1, elements, index, size - index);
         }
         size--;
         return previosNumber;
@@ -94,7 +90,7 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    public void checkSize(int size,int index) {
+    public void checkIndex(int size,int index) {
         if (index >= size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException(
                     "This index doesn't exists in arraylist: " + index);
