@@ -76,7 +76,7 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayListIndexOutOfBoundsException("Index: " + index
                     + " out of ArrayListSize");
         }
-        T removedElement = (T) arrayList[index];
+        final T removedElement = (T) arrayList[index];
         System.arraycopy(arrayList, index + 1, arrayList, index, numMoved);
         size--;
         arrayList[size] = null;
