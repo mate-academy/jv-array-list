@@ -14,9 +14,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (size == arrayList.length) {
-            resize(size);
-        }
+        resize(size);
         arrayList[size++] = value;
     }
 
@@ -27,9 +25,7 @@ public class ArrayList<T> implements List<T> {
                     + " out of ArrayListSize");
         }
 
-        if (size == arrayList.length) {
-            resize(arrayList.length * 2);
-        }
+        resize(arrayList.length * 2);
 
         for (int i = size; i > index; i--) {
             arrayList[i] = arrayList[i - 1];
@@ -111,11 +107,13 @@ public class ArrayList<T> implements List<T> {
     }
 
     public void resize(int size) {
-        Object[] newArray = new Object[size + (size / 2)];
+        if (size == arrayList.length) {
+            T[] newArray = (T[]) new Object[size + (size / 2)];
 
-        System.arraycopy(arrayList, 0, newArray, 0, arrayList.length);
+            System.arraycopy(arrayList, 0, newArray, 0, arrayList.length);
 
-        arrayList = newArray;
+            arrayList = newArray;
+        }
     }
 
     public static boolean equals(Object a, Object b) {
