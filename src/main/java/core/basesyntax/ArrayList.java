@@ -61,7 +61,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if (areElementsEqual(elements[i], element)) {
+            if (isEquals(elements[i], element)) {
                 return remove(i);
             }
         }
@@ -93,7 +93,7 @@ public class ArrayList<T> implements List<T> {
 
     private int indexOf(T element) {
         for (int i = 0; i < size; i++) {
-            if (areElementsEqual(elements[i], element)) {
+            if (isEquals(elements[i], element)) {
                 return i;
             }
         }
@@ -107,10 +107,7 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private boolean areElementsEqual(T elem1, T elem2) {
-        if (elem1 == null) {
-            return elem2 == null;
-        }
-        return elem1.equals(elem2);
+    private boolean isEquals(T elem1, T elem2) {
+        return elem1 == elem2 || (elem1 != null && elem1.equals(elem2));
     }
 }
