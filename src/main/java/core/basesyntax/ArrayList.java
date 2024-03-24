@@ -1,6 +1,5 @@
 package core.basesyntax;
 
-import java.util.Arrays;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 
@@ -75,7 +74,7 @@ public class ArrayList<T> implements List<T> {
                 return removedElement;
             }
         }
-        throw new NoSuchElementException("Element not found");
+        throw new NoSuchElementException("Element not found: " + element);
     }
 
     @Override
@@ -102,7 +101,9 @@ public class ArrayList<T> implements List<T> {
     private void grow() {
         int oldCapacity = elements.length;
         int newCapacity = calculateNewCapacity(oldCapacity);
-        elements = Arrays.copyOf(elements, newCapacity);
+        T[] newArray = (T[]) new Object[newCapacity];
+        System.arraycopy(elements, 0, newArray, 0, oldCapacity);
+        elements = newArray;
     }
 
     private void checkIndex(int index) {
