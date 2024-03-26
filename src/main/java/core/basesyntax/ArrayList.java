@@ -3,8 +3,8 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    public static final int DEFAULT_SIZE = 10;
-    public static final double ADD_SIE = 1.5;
+    private static final int DEFAULT_SIZE = 10;
+    private static final double RESIZE_FACTOR = 1.5;
     private T[] mainData;
     private int size;
 
@@ -14,7 +14,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        arrayCapacityControl();
+        controlCapacity();
         mainData[size] = value;
         size++;
     }
@@ -24,7 +24,7 @@ public class ArrayList<T> implements List<T> {
         if (index > size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Wrong index: " + index);
         }
-        arrayCapacityControl();
+        controlCapacity();
         System.arraycopy(mainData, index, mainData,index + 1,size - index);
         mainData[index] = value;
         size++;
@@ -86,9 +86,9 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private void arrayCapacityControl() {
+    private void controlCapacity() {
         if (mainData.length == size) {
-            T[] newMainData = (T[]) new Object[(int) (mainData.length * ADD_SIE)];
+            T[] newMainData = (T[]) new Object[(int) (mainData.length * RESIZE_FACTOR)];
             System.arraycopy(mainData, 0, newMainData, 0, mainData.length);
             mainData = newMainData;
         }
