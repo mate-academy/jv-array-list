@@ -57,8 +57,7 @@ public class ArrayList<T> implements List<T> {
         checkIndex(index);
         final T removedElement = array[index];
         System.arraycopy(array, index + 1, array, index, size - index - 1);
-        array[size - 1] = null;
-        size -= 1;
+        array[--size] = null;
         return removedElement;
     }
 
@@ -81,11 +80,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public boolean isEmpty() {
-        if (size == 0) {
-            return true;
-        } else {
-            return false;
-        }
+        return size == 0;
     }
 
     private T[] resizeArray(T[] array) {
