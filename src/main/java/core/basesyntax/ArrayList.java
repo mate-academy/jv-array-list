@@ -4,7 +4,7 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    private static final double GROW_CONSTANT = 1.5;
+    private static final double GROW_CONSTANT = 2.0;
     private T[] values;
     private int size;
 
@@ -25,7 +25,7 @@ public class ArrayList<T> implements List<T> {
                     + " out of ArrayListSize");
         }
         resize();
-        System.arraycopy(values, index, values, index + 1,  size - index);
+        System.arraycopy(values, index, values, index + 1, size - index);
         values[index] = value;
         size++;
     }
@@ -56,7 +56,7 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayListIndexOutOfBoundsException("Index: " + index
                     + " out of ArrayListSize");
         }
-        final T removedElement = (T) values[index];
+        final T removedElement = (T)values[index];
         System.arraycopy(values, index + 1, values, index, numMoved);
         size--;
         values[size] = null;
@@ -95,7 +95,7 @@ public class ArrayList<T> implements List<T> {
 
     private void resize() {
         if (size == values.length) {
-            T[] newArray = (T[]) new Object[(int) (values.length / GROW_CONSTANT)];
+            T[] newArray = (T[]) new Object[(int) (values.length * GROW_CONSTANT)];
             System.arraycopy(values, 0, newArray, 0, values.length);
             values = newArray;
         }
