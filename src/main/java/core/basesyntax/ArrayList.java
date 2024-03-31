@@ -1,29 +1,16 @@
 package core.basesyntax;
 
-import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    private Object[] entryArray;
+    private T[] entryArray = (T[]) new Object[DEFAULT_CAPACITY];
     private int size;
-
-    public ArrayList() {
-        entryArray = new Object[DEFAULT_CAPACITY];
-        size = 0;
-    }
-
-    private void extendArrayLength() {
-        int oldArrayLength = entryArray.length;
-        int newArrayLength = oldArrayLength + (oldArrayLength >> 1);
-        entryArray = Arrays.copyOf(entryArray, newArrayLength);
-    }
 
     @Override
     public void add(T value) {
-        if (entryArray.length <= size) {
-            extendArrayLength();
-        }
+        extendArrayLength();
+
         entryArray[size] = value;
         size++;
     }
@@ -31,11 +18,9 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         if (index > size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("index is too big");
+            throw new ArrayListIndexOutOfBoundsException("index is out of bounds");
         }
-        if (entryArray.length <= size) {
-            extendArrayLength();
-        }
+        extendArrayLength();
         System.arraycopy(entryArray, index, entryArray, index + 1, size - index);
         entryArray[index] = value;
         size++;
@@ -50,32 +35,23 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("index is too big");
-        }
+        arrayException(index);
         return (T) entryArray[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("index is out of bounds");
-        }
+        arrayException(index);
         entryArray[index] = value;
     }
 
     @Override
     public T remove(int index) {
         T element;
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("index is out of bounds");
-        } else {
-            element = (T) entryArray[index];
-        }
+        arrayException(index);
+        element = (T) entryArray[index];
 
-        System.arraycopy(entryArray, index + 1, entryArray, index, size - index - 1);
-        entryArray[size - 1] = null;
-        size--;
+        arrayCopyMethod(index);
         return element;
     }
 
@@ -83,13 +59,11 @@ public class ArrayList<T> implements List<T> {
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
             if (entryArray[i] == null || entryArray[i].equals(element)) {
-                System.arraycopy(entryArray, i + 1, entryArray, i, size - i - 1);
-                entryArray[size - 1] = null;
-                size--;
+                arrayCopyMethod(i);
                 return element;
             }
         }
-        throw new NoSuchElementException("No Such Element in array");
+        throw new NoSuchElementException("No Such Element in array: " + element);
     }
 
     @Override
@@ -100,5 +74,27 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private void extendArrayLength() {
+        if (entryArray.length <= size) {
+            int oldArrayLength = entryArray.length;
+            int growFactor = oldArrayLength + (oldArrayLength >> 1); // extend array length by x1.5
+            T[] newArray = (T[]) new Object[growFactor];
+            System.arraycopy(entryArray, 0, newArray, 0, size);
+            entryArray = newArray;
+        }
+    }
+
+    private void arrayException(int index) {
+        if (index >= size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("index is out of bounds: index-" + index);
+        }
+    }
+
+    private void arrayCopyMethod(int i) {
+        System.arraycopy(entryArray, i + 1, entryArray, i, size - i - 1);
+        entryArray[size - 1] = null;
+        size--;
     }
 }
