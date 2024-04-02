@@ -1,23 +1,19 @@
 package core.basesyntax;
 
 import core.basesyntax.exceptions.ArrayListIndexOutOfBoundsException;
-import core.basesyntax.exceptions.NoSuchElementException;
 import core.basesyntax.interfaces.List;
 import java.util.Arrays;
+import java.util.NoSuchElementException;
 import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
     private static final int INITIAL_CAPACITY = 10;
     private static final double SIZE_INCREASE_FACTOR = 1.5;
-    private static final int INITIAL_SIZE = 0;
-    private int currentCapacity;
     private int size;
     private T[] arrayList;
 
     public ArrayList() {
         this.arrayList = (T[]) new Object[INITIAL_CAPACITY];
-        this.size = INITIAL_SIZE;
-        this.currentCapacity = INITIAL_CAPACITY;
     }
 
     @Override
@@ -48,19 +44,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        throwExceptionIfIndexOutOfBounds(index);
+        validateIndex(index);
         return arrayList[index];
     }
 
     @Override
     public void set(T value, int index) {
-        throwExceptionIfIndexOutOfBounds(index);
+        validateIndex(index);
         arrayList[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        throwExceptionIfIndexOutOfBounds(index);
+        validateIndex(index);
         T deleteValue = get(index);
         for (int i = index; i < size - 1; i++) {
             arrayList[i] = arrayList[i + 1];
@@ -90,13 +86,12 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void growIfArrayFull() {
-        if (size == currentCapacity) {
-            currentCapacity = (int) (currentCapacity * SIZE_INCREASE_FACTOR);
-            arrayList = Arrays.copyOf(arrayList, currentCapacity);
+        if (size == arrayList.length) {
+            arrayList = Arrays.copyOf(arrayList, (int) (arrayList.length * SIZE_INCREASE_FACTOR));
         }
     }
 
-    private void throwExceptionIfIndexOutOfBounds(int index) {
+    private void validateIndex(int index) {
         if (index >= size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Index: " + index + " out of range");
         }
