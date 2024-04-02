@@ -4,6 +4,7 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
+    private static final double GROWTH_FACTOR = 1.5;
     private T[] entryArray = (T[]) new Object[DEFAULT_CAPACITY];
     private int size;
 
@@ -35,23 +36,23 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        arrayException(index);
+        checkIndexValidity(index);
         return (T) entryArray[index];
     }
 
     @Override
     public void set(T value, int index) {
-        arrayException(index);
+        checkIndexValidity(index);
         entryArray[index] = value;
     }
 
     @Override
     public T remove(int index) {
         T element;
-        arrayException(index);
+        checkIndexValidity(index);
         element = (T) entryArray[index];
 
-        arrayCopyMethod(index);
+        arrayCopy(index);
         return element;
     }
 
@@ -59,7 +60,7 @@ public class ArrayList<T> implements List<T> {
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
             if (entryArray[i] == null || entryArray[i].equals(element)) {
-                arrayCopyMethod(i);
+                arrayCopy(i);
                 return element;
             }
         }
@@ -79,20 +80,20 @@ public class ArrayList<T> implements List<T> {
     private void extendArrayLength() {
         if (entryArray.length <= size) {
             int oldArrayLength = entryArray.length;
-            int growFactor = oldArrayLength + (oldArrayLength >> 1); // extend array length by x1.5
+            int growFactor = (int) (oldArrayLength * GROWTH_FACTOR); // extend array length by x1.5
             T[] newArray = (T[]) new Object[growFactor];
             System.arraycopy(entryArray, 0, newArray, 0, size);
             entryArray = newArray;
         }
     }
 
-    private void arrayException(int index) {
+    private void checkIndexValidity(int index) {
         if (index >= size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("index is out of bounds: index-" + index);
         }
     }
 
-    private void arrayCopyMethod(int i) {
+    private void arrayCopy(int i) {
         System.arraycopy(entryArray, i + 1, entryArray, i, size - i - 1);
         entryArray[size - 1] = null;
         size--;
