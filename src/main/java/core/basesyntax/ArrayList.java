@@ -83,7 +83,8 @@ public class ArrayList<T> implements List<T> {
 
     private void ensureCapacity(int minCapacity) {
         if (minCapacity > elements.length) {
-            int newCapacity = Math.max(elements.length + 1, (int) (elements.length * GROWTH_FACTOR));
+            int newCapacity = Math.max(elements.length + 1,
+                    (int) (elements.length * GROWTH_FACTOR));
             T[] newElements = (T[]) new Object[newCapacity];
             System.arraycopy(elements, 0, newElements, 0, size);
             elements = newElements;
