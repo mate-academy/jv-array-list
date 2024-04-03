@@ -63,11 +63,11 @@ public class ArrayList<T> implements List<T> {
                     return remove(i);
                 }
             }
-            throw new NoSuchElementException("Element not found");
-        }
-        for (int i = 0; i < size; i++) {
-            if (element.equals(elements[i])) {
-                return remove(i);
+        } else {
+            for (int i = 0; i < size; i++) {
+                if (element.equals(elements[i])) {
+                    return remove(i);
+                }
             }
         }
         throw new NoSuchElementException("Element not found");
