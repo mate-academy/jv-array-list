@@ -5,7 +5,6 @@ import java.util.NoSuchElementException;
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private static final double GROWTH_FACTOR = 1.5;
-    private static final int INITIAL_CAPACITY = 10;
     private static final int EMPTY_INDEX = -1;
 
     private T[] elements;
@@ -61,14 +60,13 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        int i = 0;
-        while (i < size && (element == null ? elements[i] != null : !element.equals(elements[i]))) {
-            i++;
+        for (int i = 0; i < size; i++) {
+            T t = elements[i];
+            if (t == element || (t != null && t.equals(element))) {
+                return remove(i);
+            }
         }
-        if (i == size) {
-            throw new NoSuchElementException("Element not found: " + element);
-        }
-        return remove(i);
+        throw new NoSuchElementException("Element not found: " + element);
     }
 
     @Override
