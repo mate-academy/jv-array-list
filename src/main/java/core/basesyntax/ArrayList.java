@@ -14,9 +14,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (arraySize == elementData.length) {
-            increaseElementData();
-        }
+        increaseElementData();
         elementData[arraySize] = value;
         arraySize++;
     }
@@ -26,10 +24,7 @@ public class ArrayList<T> implements List<T> {
         if (index < 0 || index > arraySize) {
             throw new ArrayListIndexOutOfBoundsException("Not correct index: " + index);
         }
-        if (arraySize == elementData.length) {
-            increaseElementData();
-        }
-
+        increaseElementData();
         System.arraycopy(elementData, index, elementData, index + 1, arraySize - index);
         elementData[index] = value;
         arraySize++;
@@ -40,30 +35,23 @@ public class ArrayList<T> implements List<T> {
         for (int i = 0; i < list.size();i++) {
             add(list.get(i));
         }
-
     }
 
     @Override
     public T get(int index) {
-        if (index < 0 || index >= arraySize) {
-            throw new ArrayListIndexOutOfBoundsException("Not correct index: " + index);
-        }
+        correctIndex(index);
         return elementData[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index < 0 || index >= arraySize) {
-            throw new ArrayListIndexOutOfBoundsException("Not correct index: " + index);
-        }
+        correctIndex(index);
         elementData[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index < 0 || index >= arraySize) {
-            throw new ArrayListIndexOutOfBoundsException("Not correct index: " + index);
-        }
+        correctIndex(index);
         T removedElement = get(index);
         System.arraycopy(elementData, index + 1, elementData, index, arraySize - index - 1);
         arraySize--;
@@ -91,7 +79,15 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void increaseElementData() {
-        int newElementCapacity = elementData.length + (elementData.length >> 1);
-        elementData = Arrays.copyOf(elementData,newElementCapacity);
+        if (arraySize == elementData.length) {
+            int newElementCapacity = elementData.length + (elementData.length / 2);
+            elementData = Arrays.copyOf(elementData,newElementCapacity);
+        }
+    }
+
+    private void correctIndex(int index) {
+        if (index < 0 || index >= arraySize) {
+            throw new ArrayListIndexOutOfBoundsException("Not correct index: " + index);
+        }
     }
 }
