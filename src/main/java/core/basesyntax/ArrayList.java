@@ -9,19 +9,6 @@ public class ArrayList<T> implements List<T> {
 
     public ArrayList() {
         elements = (T[]) new Object[DEFAULT_SIZE];
-        size = 0;
-
-    }
-
-    private void ensureCapacity() {
-        if (size == elements.length) {
-            int newCapacity = (int) (elements.length * 1.5);
-            T[] newArray = (T[]) new Object[newCapacity];
-            for (int i = 0; i < size; i++) {
-                newArray[i] = elements[i];
-            }
-            elements = newArray;
-        }
     }
 
     @Override
@@ -33,8 +20,8 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
+        if (index != size) {
+            checkIndexValidity(index);
         }
         ensureCapacity();
         System.arraycopy(elements, index, elements, index + 1, size - index);
@@ -55,25 +42,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
-        }
+        checkIndexValidity(index);
         return elements[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
-        }
+        checkIndexValidity(index);
         elements[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
-        }
+        checkIndexValidity(index);
         T temp = elements[index];
         System.arraycopy(elements, index + 1, elements, index, size - index - 1);
         size--;
@@ -82,7 +63,6 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-
         for (int i = 0; i < size; i++) {
             if ((elements[i] == null && element == null)
                     || (elements[i] != null && elements[i].equals(element))) {
@@ -103,5 +83,20 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private void ensureCapacity() {
+        if (size == elements.length) {
+            int newCapacity = (int) (elements.length * 1.5);
+            T[] newArray = (T[]) new Object[newCapacity];
+            System.arraycopy(elements, 0, newArray, 0, size);
+            elements = newArray;
+        }
+    }
+
+    private void checkIndexValidity(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
+        }
     }
 }
