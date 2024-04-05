@@ -18,8 +18,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value) {
         growArrayIfRequired(1);
-        storage[size] = value;
-        size++;
+        storage[size++] = value;
     }
 
     @Override
@@ -60,8 +59,7 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         isIndexOutOfBoundsToGet(index);
         T element = storage[index];
-        System.arraycopy(storage, index + 1, storage, index, size - index - 1);
-        size--;
+        System.arraycopy(storage, index + 1, storage, index, --size - index);
         return element;
     }
 
