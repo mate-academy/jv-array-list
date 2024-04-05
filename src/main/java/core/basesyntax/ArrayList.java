@@ -16,14 +16,14 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        growArrayIfRequired(1);
+        growArrayIfRequired();
         storage[size++] = value;
     }
 
     @Override
     public void add(T value, int index) {
         checkIndexForAdd(index);
-        growArrayIfRequired(1);
+        growArrayIfRequired();
         System.arraycopy(storage, index,
                     storage, index + 1,
                     size - index);
@@ -33,7 +33,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        growArrayIfRequired(list.size());
+        growArrayIfRequired();
         for (int i = 0; i < list.size(); i++) {
             add(list.get(i));
         }
@@ -89,16 +89,16 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void growArrayIfRequired(int itemsToAddLength) {
-        boolean shouldGrow = storage.length < size + itemsToAddLength;
+    private void growArrayIfRequired() {
+        boolean shouldGrow = storage.length < size + 1;
         if (shouldGrow) {
-            grow(itemsToAddLength);
+            grow();
         }
     }
 
-    private void grow(int itemsToAddLength) {
+    private void grow() {
         int newStorageLength = storage.length;
-        while (newStorageLength < size + itemsToAddLength) {
+        while (newStorageLength < size + 1) {
             newStorageLength = (int) (newStorageLength * STORAGE_GROW_MULTIPLIER);
         }
         T[] newStorage = (T[]) new Object[newStorageLength];
