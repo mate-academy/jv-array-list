@@ -97,10 +97,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void grow() {
-        int newStorageLength = storage.length;
-        while (newStorageLength < size + 1) {
-            newStorageLength = (int) (newStorageLength * STORAGE_GROW_MULTIPLIER);
-        }
+        int newStorageLength = (int) (storage.length * STORAGE_GROW_MULTIPLIER);
         T[] newStorage = (T[]) new Object[newStorageLength];
         System.arraycopy(storage, 0, newStorage, 0, size);
         storage = newStorage;
