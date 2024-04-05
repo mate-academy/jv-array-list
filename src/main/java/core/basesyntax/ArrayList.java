@@ -62,6 +62,14 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
+        int elementIndex = findIndex(element);
+        if (elementIndex == -1) {
+            throw new NoSuchElementException(NO_SUCH_ELEMENT_MESSAGE);
+        }
+        return remove(elementIndex);
+    }
+
+    private int findIndex(T element) {
         int elementIndex = -1;
         for (int i = 0; i < size; i++) {
             if (Objects.equals(element, storage[i])) {
@@ -69,10 +77,7 @@ public class ArrayList<T> implements List<T> {
                 break;
             }
         }
-        if (elementIndex == -1) {
-            throw new NoSuchElementException(NO_SUCH_ELEMENT_MESSAGE);
-        }
-        return remove(elementIndex);
+        return elementIndex;
     }
 
     @Override
