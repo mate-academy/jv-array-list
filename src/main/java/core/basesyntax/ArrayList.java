@@ -1,7 +1,6 @@
 package core.basesyntax;
 
 import java.util.NoSuchElementException;
-import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
     private static final int INITIAL_STORAGE_CAPACITY = 10;
@@ -72,7 +71,7 @@ public class ArrayList<T> implements List<T> {
     private int findIndex(T element) {
         int elementIndex = -1;
         for (int i = 0; i < size; i++) {
-            if (Objects.equals(element, storage[i])) {
+            if (isElementsEquals(element, storage[i])) {
                 elementIndex = i;
                 break;
             }
@@ -117,5 +116,9 @@ public class ArrayList<T> implements List<T> {
         if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException(INDEX_OUT_OF_BOUNDS_MESSAGE);
         }
+    }
+
+    private boolean isElementsEquals(T a, T b) {
+        return (a == b) || (a != null && a.equals(b));
     }
 }
