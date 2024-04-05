@@ -23,7 +23,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        isIndexOutOfBoundsToAdd(index);
+        checkIndexForAdd(index);
         growArrayIfRequired(1);
         if (index != size) {
             System.arraycopy(storage, index,
@@ -45,19 +45,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        isIndexOutOfBoundsToGet(index);
+        checkIndexForGet(index);
         return storage[index];
     }
 
     @Override
     public void set(T value, int index) {
-        isIndexOutOfBoundsToGet(index);
+        checkIndexForGet(index);
         storage[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        isIndexOutOfBoundsToGet(index);
+        checkIndexForGet(index);
         T element = storage[index];
         System.arraycopy(storage, index + 1, storage, index, --size - index);
         return element;
@@ -105,13 +105,13 @@ public class ArrayList<T> implements List<T> {
         storage = newStorage;
     }
 
-    private void isIndexOutOfBoundsToGet(int index) {
+    private void checkIndexForGet(int index) {
         if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException(INDEX_OUT_OF_BOUNDS_MESSAGE);
         }
     }
 
-    private void isIndexOutOfBoundsToAdd(int index) {
+    private void checkIndexForAdd(int index) {
         if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException(INDEX_OUT_OF_BOUNDS_MESSAGE);
         }
