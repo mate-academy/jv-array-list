@@ -1,6 +1,5 @@
 package core.basesyntax;
 
-import java.util.Arrays;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 
@@ -18,7 +17,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        shouldStorageGrow(1);
+        growArrayIfRequired(1);
         storage[size] = value;
         size++;
     }
@@ -26,7 +25,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         isIndexOutOfBoundsToAdd(index);
-        shouldStorageGrow(1);
+        growArrayIfRequired(1);
         if (index != size) {
             System.arraycopy(storage, index,
                     storage, index + 1,
@@ -38,7 +37,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        shouldStorageGrow(list.size());
+        growArrayIfRequired(list.size());
         for (int i = 0; i < list.size(); i++) {
             storage[size + i] = list.get(i);
         }
@@ -91,7 +90,7 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void shouldStorageGrow(int itemsToAddLength) {
+    private void growArrayIfRequired(int itemsToAddLength) {
         boolean shouldGrow = storage.length < size + itemsToAddLength;
         if (shouldGrow) {
             grow(itemsToAddLength);
@@ -103,7 +102,9 @@ public class ArrayList<T> implements List<T> {
         while (newStorageLength < size + itemsToAddLength) {
             newStorageLength = (int) (newStorageLength * STORAGE_GROW_MULTIPLIER);
         }
-        storage = Arrays.copyOf(storage, newStorageLength);
+        T[] newStorage = (T[]) new Object[newStorageLength];
+        System.arraycopy(storage, 0, newStorage, 0, size);
+        storage = newStorage;
     }
 
     private void isIndexOutOfBoundsToGet(int index) {
