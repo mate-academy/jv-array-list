@@ -23,7 +23,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("Index is out of bounds");
+            throw new ArrayListIndexOutOfBoundsException("Index is out of bounds" + index);
         }
         growIfArrayFull();
         System.arraycopy(defaultArray, index, defaultArray, index + 1, size - index);
@@ -40,25 +40,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index is out of bounds");
-        }
+        checkIndexBounds(index);
         return defaultArray[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index is out of bounds");
-        }
+        checkIndexBounds(index);
         defaultArray[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index is out of bounds");
-        }
+        checkIndexBounds(index);
         T removedElement = defaultArray[index];
         for (int i = index; i < size - 1; i++) {
             defaultArray[i] = defaultArray[i + 1];
@@ -103,5 +97,11 @@ public class ArrayList<T> implements List<T> {
             }
         }
         return -1;
+    }
+
+    private void checkIndexBounds(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Index is out of bounds" + index);
+        }
     }
 }
