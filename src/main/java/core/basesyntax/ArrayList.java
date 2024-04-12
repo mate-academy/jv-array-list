@@ -5,11 +5,11 @@ import java.util.NoSuchElementException;
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private static final double INCREASE_ONE_AND_A_HALF_TIMES = 1.5;
-    private Object[] array;
+    private T[] array;
     private int size;
 
     public ArrayList() {
-        this.array = new Object[DEFAULT_CAPACITY];
+        array = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
     @Override
@@ -49,14 +49,14 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        throwIndexOutOfBonds(index);
+        checkIndex(index);
 
         return (T) array[index];
     }
 
     @Override
     public void set(T value, int index) {
-        throwIndexOutOfBonds(index);
+        checkIndex(index);
 
         if (index == array.length - 1 && array[size - 1] != null) {
             grow();
@@ -66,7 +66,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(int index) {
-        throwIndexOutOfBonds(index);
+        checkIndex(index);
 
         final T removedElement = (T) array[index];
         System.arraycopy(array, index + 1, array, index, size - index - 1);
@@ -103,7 +103,7 @@ public class ArrayList<T> implements List<T> {
         int newCapacity = (int) (array.length * INCREASE_ONE_AND_A_HALF_TIMES);
         Object[] newArray = new Object[newCapacity];
         System.arraycopy(array, 0, newArray, 0, size);
-        array = newArray;
+        array = (T[]) newArray;
     }
 
     private void growIfArrayIsFull() {
@@ -112,7 +112,7 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private void throwIndexOutOfBonds(int index) {
+    private void checkIndex(int index) {
         if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException("Index out of bounds");
         }
