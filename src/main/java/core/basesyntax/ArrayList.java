@@ -33,7 +33,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        for (int i = 0;i < list.size();i++) {
+        for (int i = 0; i < list.size(); i++) {
             add(list.get(i));
         }
     }
@@ -90,9 +90,8 @@ public class ArrayList<T> implements List<T> {
 
     private int indexOf(T element) {
         for (int i = 0; i < size; i++) {
-            if (element == null && defaultArray[i] == null) {
-                return i;
-            } else if (element != null && element.equals(defaultArray[i])) {
+            if (element == null && defaultArray[i] == null
+                    || (element != null && element.equals(defaultArray[i]))) {
                 return i;
             }
         }
