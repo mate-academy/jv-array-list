@@ -6,18 +6,18 @@ import java.util.NoSuchElementException;
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private static final double GROW_FACTOR = 1.5;
-    private T[] defaultArray;
+    private T[] elements;
     private int size;
 
     @SuppressWarnings("unchecked")
     public ArrayList() {
-        defaultArray = (T[]) new Object[DEFAULT_CAPACITY];
+        elements = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
     @Override
     public void add(T value) {
         growIfArrayFull();
-        defaultArray[size++] = value;
+        elements[size++] = value;
     }
 
     @Override
@@ -26,8 +26,8 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayListIndexOutOfBoundsException("Index is out of bounds" + index);
         }
         growIfArrayFull();
-        System.arraycopy(defaultArray, index, defaultArray, index + 1, size - index);
-        defaultArray[index] = value;
+        System.arraycopy(elements, index, elements, index + 1, size - index);
+        elements[index] = value;
         size++;
     }
 
@@ -41,22 +41,20 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         checkIndexBounds(index);
-        return defaultArray[index];
+        return elements[index];
     }
 
     @Override
     public void set(T value, int index) {
         checkIndexBounds(index);
-        defaultArray[index] = value;
+        elements[index] = value;
     }
 
     @Override
     public T remove(int index) {
         checkIndexBounds(index);
-        T removedElement = defaultArray[index];
-        for (int i = index; i < size - 1; i++) {
-            defaultArray[i] = defaultArray[i + 1];
-        }
+        T removedElement = elements[index];
+        System.arraycopy(elements, index + 1, elements,index, size - index - 1);
         size--;
         return removedElement;
     }
@@ -82,16 +80,16 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void growIfArrayFull() {
-        if (size == defaultArray.length) {
-            int newCapacity = (int) (defaultArray.length * GROW_FACTOR);
-            defaultArray = Arrays.copyOf(defaultArray, newCapacity);
+        if (size == elements.length) {
+            int newCapacity = (int) (elements.length * GROW_FACTOR);
+            elements = Arrays.copyOf(elements, newCapacity);
         }
     }
 
     private int indexOf(T element) {
         for (int i = 0; i < size; i++) {
-            if (element == null && defaultArray[i] == null
-                    || (element != null && element.equals(defaultArray[i]))) {
+            if (element == null && elements[i] == null
+                    || (element != null && element.equals(elements[i]))) {
                 return i;
             }
         }
