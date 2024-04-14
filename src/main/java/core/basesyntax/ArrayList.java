@@ -66,13 +66,7 @@ public class ArrayList<T> implements List<T> {
         if (element == null) {
             for (int i = 0; i < listSize; i++) {
                 if (data[i] == null) {
-                    final T removedElement = data[i];
-                    for (int j = i; j < listSize - 1; j++) {
-                        data[j] = data[j + 1];
-                    }
-                    data[listSize - 1] = null;
-                    listSize--;
-                    return removedElement;
+                    return remove(i);
                 }
             }
         } else {
