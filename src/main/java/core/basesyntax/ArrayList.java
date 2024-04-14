@@ -64,9 +64,8 @@ public class ArrayList<T> implements List<T> {
         int index = indexOf(element);
         if (index != -1) {
             return remove(index);
-        } else {
-            throw new NoSuchElementException("Unable to locate element");
         }
+        throw new NoSuchElementException("Unable to locate element");
     }
 
     @Override
