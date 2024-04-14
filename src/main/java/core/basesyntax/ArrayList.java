@@ -7,22 +7,6 @@ public class ArrayList<T> implements List<T> {
     private int listSize;
     private T[] data = (T[]) new Object[DEFAULT_CAPACITY];
 
-    private void indexExceptionCheck(int index) {
-        if (index < 0 || index >= listSize) {
-            throw new ArrayListIndexOutOfBoundsException("Index is not valid: " + index);
-        }
-    }
-
-    private T[] capacityGrow() {
-        int oldCapacity = data.length;
-        int newCapacity = oldCapacity + (oldCapacity / 2);
-        T[] temporaryArray = (T[]) new Object[newCapacity];
-        if (listSize >= 0) {
-            System.arraycopy(data, 0, temporaryArray, 0, listSize);
-        }
-        return temporaryArray;
-    }
-
     @Override
     public void add(T value) {
         if (listSize == data.length) {
@@ -39,9 +23,7 @@ public class ArrayList<T> implements List<T> {
         if (listSize == data.length) {
             data = capacityGrow();
         }
-        for (int i = listSize; i > index; i--) {
-            data[i] = data[i - 1];
-        }
+        System.arraycopy(data, index, data, index + 1, listSize - index);
         data[index] = value;
         listSize++;
     }
@@ -66,10 +48,6 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void set(T value, int index) {
-
-        if (listSize == data.length) {
-            data = capacityGrow();
-        }
         indexExceptionCheck(index);
         data[index] = value;
     }
@@ -78,9 +56,7 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         indexExceptionCheck(index);
         T removedElement = data[index];
-        for (int i = index + 1; i < listSize; i++) {
-            data[i - 1] = data[i];
-        }
+        System.arraycopy(data, index + 1, data, index, listSize - index - 1);
         listSize--;
         return removedElement;
     }
@@ -123,5 +99,21 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return listSize == 0;
+    }
+
+    private void indexExceptionCheck(int index) {
+        if (index < 0 || index >= listSize) {
+            throw new ArrayListIndexOutOfBoundsException("Index is not valid: " + index);
+        }
+    }
+
+    private T[] capacityGrow() {
+        int oldCapacity = data.length;
+        int newCapacity = oldCapacity + (oldCapacity / 2);
+        T[] temporaryArray = (T[]) new Object[newCapacity];
+        if (listSize >= 0) {
+            System.arraycopy(data, 0, temporaryArray, 0, listSize);
+        }
+        return temporaryArray;
     }
 }
