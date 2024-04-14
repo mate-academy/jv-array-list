@@ -14,14 +14,14 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        grow();
+        growIfArrayFull();
         items[size++] = value;
     }
 
     @Override
     public void add(T value, int index) {
         checkIndexForAdd(index);
-        grow();
+        growIfArrayFull();
         System.arraycopy(items, index, items, index + 1, size - index);
         items[index] = value;
         size++;
@@ -59,8 +59,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; ++i) {
-            if ((element == null && items[i] == null)
-                    || (element != null && element.equals(items[i]))) {
+            if (element == items[i]
+                    || element != null && element.equals(items[i])) {
                 return remove(i);
             }
         }
@@ -92,7 +92,7 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private void grow() {
+    private void growIfArrayFull() {
         if (size >= items.length) {
             int newLength = items.length + (int) (size * RESIZE_MULTIPLIER);
             T[] newItems = (T[])new Object[newLength];
