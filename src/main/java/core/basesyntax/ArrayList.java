@@ -9,22 +9,6 @@ public class ArrayList<T> implements List<T> {
 
     public ArrayList() {
         this.elements = new Object[DEFAULT_CAPACITY];
-        this.size = 0;
-    }
-
-    public void ensureCapacity(int minCapacity) {
-        if (minCapacity > elements.length) {
-            int newCapacity = (int) (elements.length * 1.5);
-            Object[] newArray = new Object[newCapacity];
-            System.arraycopy(elements,0, newArray, 0, size);
-            elements = newArray;
-        }
-    }
-
-    private void checkIndex(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
-        }
     }
 
     @Override
@@ -75,8 +59,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if ((element == null && elements[i] == null) || (element != null
-                    && element.equals(elements[i]))) {
+            if (element == elements[i] || (element != null && element.equals(elements[i]))) {
                 return remove(i);
             }
         }
@@ -91,5 +74,20 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private void ensureCapacity(int minCapacity) {
+        if (minCapacity > elements.length) {
+            int newCapacity = (int) (elements.length * 1.5);
+            Object[] newArray = new Object[newCapacity];
+            System.arraycopy(elements,0, newArray, 0, size);
+            elements = newArray;
+        }
+    }
+
+    private void checkIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
+        }
     }
 }
