@@ -1,7 +1,6 @@
 package core.basesyntax;
 
 import java.util.NoSuchElementException;
-import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
     public static final int DEFAULT_ARRAY_CAPACITY = 10;
@@ -22,17 +21,15 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index != size && !isIndexSuitable(index)) {
-            throw new ArrayListIndexOutOfBoundsException("Index is out of bounds");
+        if (index == size) {
+            add(value);
+            return;
         }
-
+        checkIndex(index);
         grow();
 
-        Object[] tempValues = new Object[values.length];
-        System.arraycopy(values, 0, tempValues, 0, index);
-        System.arraycopy(values, index, tempValues, index + 1, size - index);
-        tempValues[index] = value;
-        values = tempValues;
+        System.arraycopy(values, index, values, index + 1, size - index);
+        values[index] = value;
         size++;
     }
 
@@ -49,25 +46,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (!isIndexSuitable(index)) {
-            throw new ArrayListIndexOutOfBoundsException("Index is out of bounds");
-        }
+        checkIndex(index);
         return (T) values[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (!isIndexSuitable(index)) {
-            throw new ArrayListIndexOutOfBoundsException("Index is out of bounds");
-        }
+        checkIndex(index);
         values[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (!isIndexSuitable(index)) {
-            throw new ArrayListIndexOutOfBoundsException("Index is out of bounds");
-        }
+        checkIndex(index);
 
         T removedValue = (T) values[index];
         System.arraycopy(values, index + 1, values, index, size - index - 1);
@@ -78,7 +69,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if (Objects.equals(values[i],element)) {
+            if (values[i] == element || (values[i] != null && values[i].equals(element))) {
                 return remove(i);
             }
         }
@@ -104,7 +95,9 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private boolean isIndexSuitable(int index) {
-        return !(index < 0 || index >= size);
+    private void checkIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Index is out of bounds");
+        }
     }
 }
