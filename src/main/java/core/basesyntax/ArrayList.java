@@ -1,6 +1,5 @@
 package core.basesyntax;
 
-import java.util.Arrays;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 
@@ -12,16 +11,13 @@ public class ArrayList<T> implements List<T> {
 
     public ArrayList() {
         values = new Object[DEFAULT_ARRAY_CAPACITY];
-        size = 0;
     }
 
     @Override
     public void add(T value) {
-        if (size == values.length) {
-            grow();
-        }
+        grow();
         values[size] = value;
-        size = size + 1;
+        size++;
     }
 
     @Override
@@ -34,27 +30,20 @@ public class ArrayList<T> implements List<T> {
                     + index + " is bigger or equal the size ("
                     + size + ")");
         }
-
-        if (size == values.length) {
-            grow();
-        }
+        grow();
 
         Object[] tempValues = new Object[values.length];
         System.arraycopy(values, 0, tempValues, 0, index);
         System.arraycopy(values, index, tempValues, index + 1, size - index);
         tempValues[index] = value;
         values = tempValues;
-        size = size + 1;
+        size++;
     }
 
     @Override
     public void addAll(List<T> list) {
         if (list == null) {
             throw new NullPointerException("Input can`t be null");
-        }
-
-        if (list.size() > values.length) {
-            grow(size + list.size());
         }
 
         for (int i = 0; i < list.size(); i++) {
@@ -111,7 +100,7 @@ public class ArrayList<T> implements List<T> {
         T removedValue = (T) values[index];
         if (index == values.length - 1) {
             values[index] = null;
-            size = size - 1;
+            size--;
             return removedValue;
         }
 
@@ -120,7 +109,7 @@ public class ArrayList<T> implements List<T> {
         System.arraycopy(values, index + 1, tempValues, index, size - index);
 
         values = tempValues;
-        size = size - 1;
+        size--;
         return removedValue;
     }
 
@@ -145,12 +134,11 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void grow() {
-        grow((int) (values.length * INCREASING_STEP));
+        if (values.length == size) {
+            int newCapacity = (int) (values.length * INCREASING_STEP);
+            Object[] newArray = new Object[newCapacity];
+            System.arraycopy(values, 0, newArray, 0, size);
+            values = newArray;
+        }
     }
-
-    private void grow(int length) {
-        values = Arrays.copyOf(values,
-                Math.max(length, DEFAULT_ARRAY_CAPACITY));
-    }
-
 }
