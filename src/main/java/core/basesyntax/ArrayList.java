@@ -22,14 +22,10 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index can`t be lass than 0");
-        }
-        if (index > size) {
-            throw new ArrayListIndexOutOfBoundsException("Index "
-                    + index + " is bigger or equal the size ("
-                    + size + ")");
-        }
+       if (index != size && !isIndexSuitable(index)) {
+           throw new ArrayListIndexOutOfBoundsException("Index is out of bounds");
+       }
+
         grow();
 
         Object[] tempValues = new Object[values.length];
@@ -53,64 +49,43 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index can`t be lass than 0");
-        }
-
-        if (index >= size) {
-            throw new ArrayListIndexOutOfBoundsException(
-                    "Index " + index
-                    + "is bigger or equal than size("
-                    + size + ")"
-            );
+        if (!isIndexSuitable(index)) {
+            throw new ArrayListIndexOutOfBoundsException("Index is out of bounds");
         }
         return (T) values[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index can`t be lass than 0");
-        }
-
-        if (index >= size) {
-            throw new ArrayListIndexOutOfBoundsException(
-                    "Index " + index
-                            + "is bigger or equal than size("
-                            + size + ")"
-            );
+        if (!isIndexSuitable(index)) {
+            throw new ArrayListIndexOutOfBoundsException("Index is out of bounds");
         }
         values[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index can`t be lass than 0");
-        }
-
-        if (index >= size) {
-            throw new ArrayListIndexOutOfBoundsException(
-                    "Index " + index
-                            + "is bigger or equal than size("
-                            + size + ")"
-            );
+        if (!isIndexSuitable(index)) {
+            throw new ArrayListIndexOutOfBoundsException("Index is out of bounds");
         }
 
         T removedValue = (T) values[index];
-        if (index == values.length - 1) {
-            values[index] = null;
-            size--;
-            return removedValue;
-        }
-
-        Object[] tempValues = new Object[values.length];
-        System.arraycopy(values, 0, tempValues, 0, index);
-        System.arraycopy(values, index + 1, tempValues, index, size - index);
-
-        values = tempValues;
+        System.arraycopy(values, index + 1, values, index, size - index - 1);
         size--;
         return removedValue;
+//        if (index == values.length - 1) {
+//            values[index] = null;
+//            size--;
+//            return removedValue;
+//        }
+//
+//        Object[] tempValues = new Object[values.length];
+//        System.arraycopy(values, 0, tempValues, 0, index);
+//        System.arraycopy(values, index + 1, tempValues, index, size - index);
+//
+//        values = tempValues;
+//        size--;
+//        return removedValue;
     }
 
     @Override
@@ -140,5 +115,9 @@ public class ArrayList<T> implements List<T> {
             System.arraycopy(values, 0, newArray, 0, size);
             values = newArray;
         }
+    }
+
+    private boolean isIndexSuitable(int index) {
+        return !(index < 0 || index >= size);
     }
 }
