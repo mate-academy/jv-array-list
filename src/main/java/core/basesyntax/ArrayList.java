@@ -22,9 +22,9 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-       if (index != size && !isIndexSuitable(index)) {
-           throw new ArrayListIndexOutOfBoundsException("Index is out of bounds");
-       }
+        if (index != size && !isIndexSuitable(index)) {
+            throw new ArrayListIndexOutOfBoundsException("Index is out of bounds");
+        }
 
         grow();
 
@@ -73,19 +73,6 @@ public class ArrayList<T> implements List<T> {
         System.arraycopy(values, index + 1, values, index, size - index - 1);
         size--;
         return removedValue;
-//        if (index == values.length - 1) {
-//            values[index] = null;
-//            size--;
-//            return removedValue;
-//        }
-//
-//        Object[] tempValues = new Object[values.length];
-//        System.arraycopy(values, 0, tempValues, 0, index);
-//        System.arraycopy(values, index + 1, tempValues, index, size - index);
-//
-//        values = tempValues;
-//        size--;
-//        return removedValue;
     }
 
     @Override
