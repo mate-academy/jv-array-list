@@ -6,17 +6,17 @@ import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
+    private static final float RESIZE_VALUE = 1.5f;
     private T[] elements;
     private int size;
 
     public ArrayList() {
         this.elements = (T[]) new Object[DEFAULT_CAPACITY];
-        this.size = 0;
     }
 
     @Override
     public void add(T value) {
-        ensureCapacity(size + 1);
+        resize(size + 1);
         elements[size++] = value;
     }
 
@@ -25,7 +25,7 @@ public class ArrayList<T> implements List<T> {
         if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
         }
-        ensureCapacity(size + 1);
+        resize(size + 1);
         System.arraycopy(elements, index, elements, index + 1, size - index);
         elements[index] = value;
         size++;
@@ -33,7 +33,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        ensureCapacity(size + list.size());
+        resize(size + list.size());
 
         for (int i = 0; i < list.size(); i++) {
             add(list.get(i));
@@ -42,17 +42,13 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index out of bounds: " + index);
-        }
+        indexPresent(index);
         return (T) elements[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index out of bounds: " + index);
-        }
+        indexPresent(index);
         elements[index] = value;
     }
 
@@ -86,9 +82,9 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void ensureCapacity(int minCapacity) {
-        if (minCapacity > elements.length) {
-            int newCapacity = Math.max(elements.length * 2, minCapacity);
+    private void resize(int minCapacity) {
+        if (minCapacity == elements.length) {
+            int newCapacity = (int) Math.round(elements.length * RESIZE_VALUE);
             elements = Arrays.copyOf(elements, newCapacity);
         }
     }
@@ -100,6 +96,12 @@ public class ArrayList<T> implements List<T> {
             }
         }
         return -1;
+    }
+
+    private void indexPresent(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Index out of bounds: " + index);
+        }
     }
 }
 
