@@ -5,32 +5,26 @@ import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    private T[] arrayList;
+    private T[] elements;
     private int size;
     private int capacity;
 
-    @Override
-    protected Object clone() throws CloneNotSupportedException {
-        return super.clone();
+    public ArrayList() {
+        elements = (T[]) new Object[DEFAULT_CAPACITY];
+        capacity = DEFAULT_CAPACITY;
     }
 
-    public void growCapacity() {
-        if (isEmpty()) {
-            arrayList = (T[]) new Object[DEFAULT_CAPACITY];
-            capacity = DEFAULT_CAPACITY;
-        }
-        T[] initialArray = arrayList;
-        arrayList = (T[]) new Object[capacity + capacity / 2];
-        System.arraycopy(initialArray, 0, arrayList, 0, size);
-        capacity = arrayList.length;
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        T[] clonedArray = (T[]) super.clone();
+        System.arraycopy(elements, 0, clonedArray, 0, size);
+        return clonedArray;
     }
 
     @Override
     public void add(T value) {
-        if (size == capacity) {
-            growCapacity();
-        }
-        arrayList[size++] = value;
+        resize();
+        elements[size++] = value;
     }
 
     @Override
@@ -38,20 +32,15 @@ public class ArrayList<T> implements List<T> {
         if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException("Index out of range: " + index);
         }
-        if (size == capacity) {
-            growCapacity();
-        }
-        if (index == size) {
-            add(value);
-        } else {
-            System.arraycopy(arrayList, index, arrayList, index + 1, size - index);
-            arrayList[index] = value;
-            size++;
-        }
+        resize();
+        System.arraycopy(elements, index, elements, index + 1, size - index);
+        elements[index] = value;
+        size++;
     }
 
     @Override
     public void addAll(List<T> list) {
+        resize();
         for (int i = 0; i < list.size(); i++) {
             add(list.get(i));
         }
@@ -59,29 +48,29 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        indexCheck(index);
-        return arrayList[index];
+        checkIndex(index);
+        return elements[index];
     }
 
     @Override
     public void set(T value, int index) {
-        indexCheck(index);
-        arrayList[index] = value;
+        checkIndex(index);
+        elements[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        indexCheck(index);
-        T arrayElement = arrayList[index];
-        System.arraycopy(arrayList, index + 1, arrayList, index, size - index - 1);
-        arrayList[size--] = null;
+        checkIndex(index);
+        T arrayElement = elements[index];
+        System.arraycopy(elements, index + 1, elements, index, size - index - 1);
+        elements[--size] = null;
         return arrayElement;
     }
 
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if (Objects.equals(arrayList[i], element)) {
+            if (Objects.equals(elements[i], element)) {
                 return remove(i);
             }
         }
@@ -98,9 +87,18 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void indexCheck(int index) {
+    private void checkIndex(int index) {
         if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
+        }
+    }
+
+    private void resize() {
+        if (size == capacity) {
+            T[] initialArray = elements;
+            elements = (T[]) new Object[capacity + capacity / 2];
+            System.arraycopy(initialArray, 0, elements, 0, size);
+            capacity = elements.length;
         }
     }
 }
