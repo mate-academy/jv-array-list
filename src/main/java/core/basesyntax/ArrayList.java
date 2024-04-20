@@ -16,7 +16,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        resize(size + 1);
+        resize();
         elements[size++] = value;
     }
 
@@ -25,7 +25,8 @@ public class ArrayList<T> implements List<T> {
         if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
         }
-        resize(size + 1);
+
+        resize();
         System.arraycopy(elements, index, elements, index + 1, size - index);
         elements[index] = value;
         size++;
@@ -33,7 +34,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        resize(size + list.size());
+        resize();
 
         for (int i = 0; i < list.size(); i++) {
             add(list.get(i));
@@ -43,7 +44,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         indexPresent(index);
-        return (T) elements[index];
+        return elements[index];
     }
 
     @Override
@@ -54,9 +55,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index out of bounds: " + index);
-        }
+        indexPresent(index);
         T removedElement = get(index);
         System.arraycopy(elements, index + 1, elements, index, size - index - 1);
         elements[--size] = null;
@@ -66,9 +65,11 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         int index = indexOf(element);
+
         if (index >= 0) {
             return remove(index);
         }
+
         throw new NoSuchElementException("Element not found: " + element);
     }
 
@@ -82,9 +83,9 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void resize(int minCapacity) {
-        if (minCapacity == elements.length) {
-            int newCapacity = (int) Math.round(elements.length * RESIZE_VALUE);
+    private void resize() {
+        if (size == elements.length) {
+            int newCapacity = Math.round(elements.length * RESIZE_VALUE);
             elements = Arrays.copyOf(elements, newCapacity);
         }
     }
@@ -95,6 +96,7 @@ public class ArrayList<T> implements List<T> {
                 return i;
             }
         }
+
         return -1;
     }
 
