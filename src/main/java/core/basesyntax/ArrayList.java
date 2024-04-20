@@ -4,15 +4,12 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
+    private static final double ARRAY_MULTIPLIER = 1.5;
     private T[] elements;
     private int size;
 
     public ArrayList() {
         elements = (T[]) new Object[DEFAULT_CAPACITY];
-    }
-
-    public ArrayList(int capacity) {
-        elements = (T[]) new Object[capacity];
     }
 
     @Override
@@ -28,9 +25,7 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayListIndexOutOfBoundsException("There is no such index");
         }
         grow();
-        for (int i = size; i > index; i--) {
-            elements[i] = elements[i - 1];
-        }
+        System.arraycopy(elements, index, elements, index + 1, size - index);
         elements[index] = value;
         size++;
     }
@@ -38,38 +33,27 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void addAll(List<T> list) {
         for (int i = 0; i < list.size(); i++) {
-            grow();
-            elements[size] = list.get(i);
-            size++;
+            add(list.get(i));
         }
     }
 
     @Override
     public T get(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("There is no such index");
-        }
+        checkIndex(index);
         return elements[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("There is no such index");
-        }
+        checkIndex(index);
         elements[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("There is no such index");
-        }
+        checkIndex(index);
         T removedElement = elements[index];
-        for (int i = index; i < size; i++) {
-            grow();
-            elements[i] = elements[i + 1];
-        }
+        System.arraycopy(elements, index + 1, elements, index, size - index - 1);
         size--;
         return removedElement;
     }
@@ -77,26 +61,19 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         boolean isExecuted = false;
-        int index = 0;
+        T removedElement = (T) new Object();
         for (int i = 0; i < size; i++) {
-            if (elements[i] != null && elements[i].equals(element)) {
-                index = i;
+            if ((elements[i] != null && elements[i].equals(element))
+                    || elements[i] == null && element == null) {
                 isExecuted = true;
-            }
-            if (elements[i] == null && element == null) {
-                index = i;
-                isExecuted = true;
+                removedElement = elements[i];
+                remove(i);
+                break;
             }
         }
         if (!isExecuted) {
             throw new NoSuchElementException("There is no such element");
         }
-        T removedElement = elements[index];
-        for (int i = index; i < size; i++) {
-            grow();
-            elements[i] = elements[i + 1];
-        }
-        size--;
         return removedElement;
     }
 
@@ -112,10 +89,16 @@ public class ArrayList<T> implements List<T> {
 
     public void grow() {
         if (size >= elements.length) {
-            int newSize = (size * 3) / 2;
+            int newSize = (int) (size * ARRAY_MULTIPLIER);
             T[] copyElements = (T[]) new Object[newSize];
             System.arraycopy(elements, 0, copyElements, 0, elements.length);
             elements = copyElements;
+        }
+    }
+
+    public void checkIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("There is no such index");
         }
     }
 }

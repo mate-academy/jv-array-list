@@ -9,7 +9,7 @@ public class ArrayListTest {
 
     @Test
     public void addElementToArrayList() {
-        ArrayList<String> arrayList = new ArrayList<>(10);
+        ArrayList<String> arrayList = new ArrayList<>();
         arrayList.add("Test");
         arrayList.add(null);
         arrayList.add("for");
@@ -27,7 +27,7 @@ public class ArrayListTest {
 
     @Test
     public void addElementToArrayListByIndex() {
-        ArrayList<String> arrayList = new ArrayList<>(10);
+        ArrayList<String> arrayList = new ArrayList<>();
         arrayList.add("Test");
         arrayList.add("for");
         arrayList.add("Mate");
@@ -53,7 +53,7 @@ public class ArrayListTest {
 
     @Test(expected = ArrayListIndexOutOfBoundsException.class)
     public void addElementInTheNonExistentPosition() {
-        ArrayList<String> arrayList = new ArrayList<>(10);
+        ArrayList<String> arrayList = new ArrayList<>();
         arrayList.add("First");
         arrayList.add("Second");
         arrayList.add("Second", 5);
@@ -61,12 +61,12 @@ public class ArrayListTest {
 
     @Test
     public void addListToArrayList() {
-        ArrayList<String> arrayList = new ArrayList<>(10);
+        ArrayList<String> arrayList = new ArrayList<>();
         arrayList.add("Test");
         arrayList.add("for");
         arrayList.add("Mate");
         Assert.assertEquals(3, arrayList.size());
-        ArrayList<String> newArrayList = new ArrayList<>(10);
+        ArrayList<String> newArrayList = new ArrayList<>();
         for (int i = 0; i < 20; i++) {
             newArrayList.add("academy_" + i);
             newArrayList.add("Kyiv_" + i);
@@ -81,14 +81,14 @@ public class ArrayListTest {
 
     @Test(expected = ArrayListIndexOutOfBoundsException.class)
     public void addElementInTheNegativePosition() {
-        ArrayList<String> arrayList = new ArrayList<>(10);
+        ArrayList<String> arrayList = new ArrayList<>();
         arrayList.add("String");
         arrayList.add("Java", -6);
     }
 
     @Test
     public void checkingResize() {
-        ArrayList<String> arrayList = new ArrayList<>(10);
+        ArrayList<String> arrayList = new ArrayList<>();
         for (int i = 0; i < ELEMENTS_COUNT; i++) {
             arrayList.add("First + " + i);
         }
@@ -100,7 +100,7 @@ public class ArrayListTest {
 
     @Test
     public void checkingResizeInAddByIndex() {
-        ArrayList<String> arrayList = new ArrayList<>(10);
+        ArrayList<String> arrayList = new ArrayList<>();
         for (int i = 0; i < ELEMENTS_COUNT; i++) {
             arrayList.add("First + " + i, 0);
             Assert.assertEquals("Test failed! Size of array should be " + (i + 1) + "but it is "
@@ -114,7 +114,7 @@ public class ArrayListTest {
 
     @Test
     public void removeElementFromArrayListByIndex() {
-        ArrayList<String> arrayList = new ArrayList<>(10);
+        ArrayList<String> arrayList = new ArrayList<>();
         arrayList.add("String");
         arrayList.add(null);
         arrayList.add("Java");
@@ -141,7 +141,7 @@ public class ArrayListTest {
 
     @Test
     public void removeElementFromFullArrayListByIndex() {
-        ArrayList<Integer> arrayList = new ArrayList<>(10);
+        ArrayList<Integer> arrayList = new ArrayList<>();
         arrayList.add(0);
         arrayList.add(1);
         arrayList.add(2);
@@ -163,7 +163,7 @@ public class ArrayListTest {
 
     @Test(expected = ArrayListIndexOutOfBoundsException.class)
     public void removeElementFromArrayListByNonExistentIndex() {
-        ArrayList<String> arrayList = new ArrayList<>(10);
+        ArrayList<String> arrayList = new ArrayList<>();
         arrayList.add("String");
         arrayList.add("Java");
         arrayList.add("Private");
@@ -172,14 +172,14 @@ public class ArrayListTest {
 
     @Test(expected = ArrayListIndexOutOfBoundsException.class)
     public void removeElementFromArrayListByNegativeIndex() {
-        ArrayList<String> arrayList = new ArrayList<>(10);
+        ArrayList<String> arrayList = new ArrayList<>();
         arrayList.add("String");
         arrayList.remove(-5);
     }
 
     @Test
     public void removeElementFromArrayListByValue() {
-        ArrayList<String> arrayList = new ArrayList<>(10);
+        ArrayList<String> arrayList = new ArrayList<>();
         arrayList.add("String");
         arrayList.add("Another string");
         arrayList.add(null);
@@ -212,7 +212,7 @@ public class ArrayListTest {
 
     @Test(expected = NoSuchElementException.class)
     public void removeElementFromArrayListByNonExistentValue() {
-        ArrayList<String> arrayList = new ArrayList<>(10);
+        ArrayList<String> arrayList = new ArrayList<>();
         arrayList.add("String");
         arrayList.add("Java");
         arrayList.add("Private");
@@ -225,7 +225,7 @@ public class ArrayListTest {
         Cat secondCat = new Cat("Barsik", "black");
         Cat thirdCat = new Cat("Tom", "white");
         Cat fourthCat = new Cat("Barsik", "black");
-        ArrayList<Cat> cats = new ArrayList<>(10);
+        ArrayList<Cat> cats = new ArrayList<>();
         cats.add(firstCat);
         cats.add(secondCat);
         cats.add(thirdCat);
@@ -240,7 +240,7 @@ public class ArrayListTest {
 
     @Test
     public void setValueInIndex() {
-        ArrayList<String> arrayList = new ArrayList<>(10);
+        ArrayList<String> arrayList = new ArrayList<>();
         arrayList.add("5");
         arrayList.add("115");
         Assert.assertEquals("115", arrayList.get(1));
@@ -258,7 +258,7 @@ public class ArrayListTest {
 
     @Test(expected = ArrayListIndexOutOfBoundsException.class)
     public void setValueInTheNonExistentPosition() {
-        ArrayList<String> arrayList = new ArrayList<>(10);
+        ArrayList<String> arrayList = new ArrayList<>();
         arrayList.add("First");
         arrayList.add("Second");
         arrayList.set("Third", 2);
@@ -266,14 +266,14 @@ public class ArrayListTest {
 
     @Test(expected = ArrayListIndexOutOfBoundsException.class)
     public void setValueInTheNegativePosition() {
-        ArrayList<String> arrayList = new ArrayList<>(10);
+        ArrayList<String> arrayList = new ArrayList<>();
         arrayList.add("First");
         arrayList.set("Third", -2);
     }
 
     @Test
     public void getElementByIndex() {
-        ArrayList<String> arrayList = new ArrayList<>(10);
+        ArrayList<String> arrayList = new ArrayList<>();
         arrayList.add("First");
         arrayList.add("Second");
         arrayList.add("Third");
@@ -286,7 +286,7 @@ public class ArrayListTest {
 
     @Test(expected = ArrayListIndexOutOfBoundsException.class)
     public void getElementByNonExistedIndex() {
-        ArrayList<String> arrayList = new ArrayList<>(10);
+        ArrayList<String> arrayList = new ArrayList<>();
         arrayList.add("First");
         arrayList.add("Second");
         arrayList.add("Third");
@@ -295,14 +295,14 @@ public class ArrayListTest {
 
     @Test(expected = ArrayListIndexOutOfBoundsException.class)
     public void getElementByNegativeIndex() {
-        ArrayList<String> arrayList = new ArrayList<>(10);
+        ArrayList<String> arrayList = new ArrayList<>();
         arrayList.add("First");
         arrayList.get(-2);
     }
 
     @Test
     public void checkIsNotEmpty() {
-        ArrayList<String> arrayList = new ArrayList<>(10);
+        ArrayList<String> arrayList = new ArrayList<>();
         arrayList.add("First");
         arrayList.add("Second");
         arrayList.add("Third");
@@ -311,7 +311,7 @@ public class ArrayListTest {
 
     @Test
     public void checkIsEmpty() {
-        ArrayList<String> arrayList = new ArrayList<>(10);
+        ArrayList<String> arrayList = new ArrayList<>();
         Assert.assertTrue("Test failed! ArrayList should be empty", arrayList.isEmpty());
         arrayList.add("First");
         arrayList.remove(0);
