@@ -1,10 +1,10 @@
 package core.basesyntax;
 
 import java.util.NoSuchElementException;
-import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
+    private static final int GROW_FACTOR = 2;
     private T[] elements;
     private int size;
     private int capacity;
@@ -30,17 +30,18 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("Index out of range: " + index);
+            throw new ArrayListIndexOutOfBoundsException("Index out of range: " + index
+                    + "; array size: " + size);
         }
         resize();
         System.arraycopy(elements, index, elements, index + 1, size - index);
         elements[index] = value;
         size++;
+
     }
 
     @Override
     public void addAll(List<T> list) {
-        resize();
         for (int i = 0; i < list.size(); i++) {
             add(list.get(i));
         }
@@ -70,11 +71,17 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if (Objects.equals(elements[i], element)) {
-                return remove(i);
+            if (elements[i] == null) {
+                if (element == null) {
+                    return remove(i);
+                }
+            } else {
+                if (elements[i].equals(element)) {
+                    return remove(i);
+                }
             }
         }
-        throw new NoSuchElementException("The element not found");
+        throw new NoSuchElementException("The element not found: " + element);
     }
 
     @Override
@@ -89,14 +96,15 @@ public class ArrayList<T> implements List<T> {
 
     private void checkIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
+            throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index
+                    + "; array size: " + size);
         }
     }
 
     private void resize() {
         if (size == capacity) {
             T[] initialArray = elements;
-            elements = (T[]) new Object[capacity + capacity / 2];
+            elements = (T[]) new Object[capacity + capacity / GROW_FACTOR];
             System.arraycopy(initialArray, 0, elements, 0, size);
             capacity = elements.length;
         }
