@@ -12,7 +12,6 @@ public class ArrayList<T> implements List<T> {
 
     public ArrayList() {
         this.elements = (T[]) new Object[DEFAULT_CAPACITY];
-        this.size = 0;
     }
 
     @Override
@@ -48,25 +47,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index");
-        }
+        checkIndexBelowZeroOrSizeEquals(index);
         return elements[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index");
-        }
+        checkIndexBelowZeroOrSizeEquals(index);
         elements[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index");
-        }
+        checkIndexBelowZeroOrSizeEquals(index);
         final T removedElement = get(index); //final because of checkstyle
         int numMoved = size - index - 1;
         if (numMoved > 0) {
@@ -109,5 +102,11 @@ public class ArrayList<T> implements List<T> {
         T[] newElements = (T[]) new Object[newCapacity];
         System.arraycopy(elements, 0, newElements, 0, size);
         elements = newElements;
+    }
+
+    private void checkIndexBelowZeroOrSizeEquals(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Invalid index");
+        }
     }
 }
