@@ -26,14 +26,9 @@ public class ArrayList<T> implements List<T> {
             extendArray(size + (size >> 1));
         }
 
-        T[] rangeCopy = (T[]) new Object[size - index];
-        System.arraycopy(listContent, index, rangeCopy,0, size - index);
+        System.arraycopy(listContent, index, listContent, index + 1, size - index);
         listContent[index] = value;
         size++;
-
-        for (T element : rangeCopy) {
-            listContent[++index] = element;
-        }
     }
 
     @Override
@@ -43,32 +38,25 @@ public class ArrayList<T> implements List<T> {
         }
 
         for (int i = 0; i < list.size(); i++) {
-            listContent[size] = list.get(i);
-            size++;
+            listContent[size++] = list.get(i);
         }
     }
 
     @Override
     public T get(int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("ArrayList index out of bounds");
-        }
+        checkIndex(index);
         return listContent[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("ArrayList index out of bounds");
-        }
+        checkIndex(index);
         listContent[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("ArrayList index out of bounds");
-        }
+        checkIndex(index);
 
         T removed = listContent[index];
 
@@ -115,9 +103,15 @@ public class ArrayList<T> implements List<T> {
         return -1;
     }
 
-    private void extendArray(int size) {
-        T[] arrayCopy = (T[]) new Object[size];
+    private void extendArray(int newSize) {
+        T[] arrayCopy = (T[]) new Object[newSize];
         System.arraycopy(listContent, 0, arrayCopy, 0, listContent.length);
         listContent = arrayCopy;
+    }
+
+    private void checkIndex(int index) {
+        if (index >= size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("ArrayList index out of bounds");
+        }
     }
 }
