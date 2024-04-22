@@ -5,7 +5,6 @@ import java.util.NoSuchElementException;
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private static final double GROWTH_RATE = 1.5;
-    private static final int MAX_ARRAY_SIZE = Integer.MAX_VALUE;
 
     private T[] elements;
     private int size;
@@ -36,37 +35,26 @@ public class ArrayList<T> implements List<T> {
         for (int i = 0; i < list.size(); i++) {
             add(list.get(i));
         }
-        /*  exception 'Foreach not applicable to type 'core.basesyntax.List<T>'
-        how can we solve this?
-
-        for (T element : list) {
-            add(element);
-        }
-        */
     }
 
     @Override
     public T get(int index) {
-        checkIndexBelowZeroOrSizeEquals(index);
+        checkIndex(index);
         return elements[index];
     }
 
     @Override
     public void set(T value, int index) {
-        checkIndexBelowZeroOrSizeEquals(index);
+        checkIndex(index);
         elements[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        checkIndexBelowZeroOrSizeEquals(index);
-        final T removedElement = get(index); //final because of checkstyle
-        int numMoved = size - index - 1;
-        if (numMoved > 0) {
-            System.arraycopy(elements, index + 1, elements, index, numMoved);
-        }
-        elements[size - 1] = null; // can we use prefix decrement here? elements[--size] = null;
-        size--;
+        checkIndex(index);
+        T removedElement = elements[index];
+        System.arraycopy(elements, index + 1, elements, index, size - index - 1);
+        elements[--size] = null;
         return removedElement;
     }
 
@@ -93,7 +81,7 @@ public class ArrayList<T> implements List<T> {
 
     private void ensureCapacity(int minCapacity) {
         if (minCapacity > elements.length) {
-            int newCapacity = (int) Math.min(MAX_ARRAY_SIZE, elements.length * GROWTH_RATE);
+            int newCapacity = (int) Math.min(Integer.MAX_VALUE, elements.length * GROWTH_RATE);
             resizeArray(newCapacity);
         }
     }
@@ -104,7 +92,7 @@ public class ArrayList<T> implements List<T> {
         elements = newElements;
     }
 
-    private void checkIndexBelowZeroOrSizeEquals(int index) {
+    private void checkIndex(int index) {
         if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException("Invalid index");
         }
