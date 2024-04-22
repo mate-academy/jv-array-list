@@ -29,10 +29,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("Index out of range: " + index
-                    + "; array size: " + size);
-        }
+        checkIndexForAdd(index);
         resize();
         System.arraycopy(elements, index, elements, index + 1, size - index);
         elements[index] = value;
@@ -97,6 +94,13 @@ public class ArrayList<T> implements List<T> {
     private void checkIndex(int index) {
         if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index
+                    + "; array size: " + size);
+        }
+    }
+
+    private void checkIndexForAdd(int index) {
+        if (index < 0 || index > size) {
+            throw new ArrayListIndexOutOfBoundsException("Index out of range: " + index
                     + "; array size: " + size);
         }
     }
