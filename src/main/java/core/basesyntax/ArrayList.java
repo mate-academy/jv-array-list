@@ -53,7 +53,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void addAll(List<T> list) {
         int expectedLength = (list.size() + this.size());
-        if (expectedLength > array.length) {
+        while (expectedLength > array.length) {
             changeSize(enlargingSize);
         }
         for (int i = 0; i < list.size(); ++i) {
@@ -86,8 +86,8 @@ public class ArrayList<T> implements List<T> {
     public T remove(T element) {
         int index = -1;
         for (int i = 0; i <= size - 1; ++i) {
-            if (element == array[i] |
-                    (element != null && element.equals(array[i]))) {
+            if (element == array[i]
+                    | (element != null && element.equals(array[i]))) {
                 index = i;
                 break;
             }
