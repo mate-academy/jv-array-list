@@ -4,6 +4,7 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int MAX_ARRAY_CAPACITY = 10;
+    private static final double CAPACITY_INDEX = 1.5;
     private Object[] values;
     private int size;
 
@@ -13,8 +14,8 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        grow(size + 1);
         values[size++] = value;
+        grow();
     }
 
     @Override
@@ -22,7 +23,7 @@ public class ArrayList<T> implements List<T> {
         if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
         }
-        grow(size);
+        grow();
         System.arraycopy(values, index, values, index + 1, size - index);
         values[index] = value;
         size++;
@@ -76,9 +77,9 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void grow(int minCapacity) {
-        if (minCapacity >= values.length) {
-            int newCapacity = (int) (size + (size * 1.5));
+    private void grow() {
+        if (size == values.length) {
+            int newCapacity = (int) (size + (size * CAPACITY_INDEX));
             Object[] tempArray = new Object[newCapacity];
             System.arraycopy(values, 0, tempArray, 0, size);
             values = tempArray;
