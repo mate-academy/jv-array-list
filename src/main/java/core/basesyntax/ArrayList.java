@@ -60,21 +60,16 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        boolean isExecuted = false;
         T removedElement = (T) new Object();
         for (int i = 0; i < size; i++) {
             if ((elements[i] != null && elements[i].equals(element))
                     || elements[i] == null && element == null) {
-                isExecuted = true;
                 removedElement = elements[i];
                 remove(i);
-                break;
+                return removedElement;
             }
         }
-        if (!isExecuted) {
-            throw new NoSuchElementException("There is no such element");
-        }
-        return removedElement;
+        throw new NoSuchElementException("There is no such element");
     }
 
     @Override
