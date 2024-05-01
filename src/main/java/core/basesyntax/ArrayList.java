@@ -55,17 +55,17 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         verifyIndex(index);
         T oldElement = elementsArray[index];
-        System.arraycopy(elementsArray, index+1, elementsArray, index, size - index - 1);
-        size --;
+        System.arraycopy(elementsArray, index + 1, elementsArray, index, size - index - 1);
+        size--;
         return oldElement;
     }
 
     @Override
     public T remove(T element) {
         T oldElement;
-        for (int i = 0; i < size; i ++) {
+        for (int i = 0; i < size; i++) {
             if ((elementsArray[i] != null && elementsArray[i].equals(element))
-                || (elementsArray[i] == null && element == null)) {
+                    || (elementsArray[i] == null && element == null)) {
                 oldElement = elementsArray[i];
                 remove(i);
                 return oldElement;
