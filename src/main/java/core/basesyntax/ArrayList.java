@@ -4,24 +4,19 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int STARTING_SIZE = 10;
-    private Object[] objects;
-    private int size = 0;
+    private static final double MULTIPLIER = 1.5;
+    private T[] objects;
+    private int size;
 
     public ArrayList() {
-        objects = new Object[STARTING_SIZE];
+        objects = (T[]) new Object[STARTING_SIZE];
     }
 
     @Override
     public void add(T value) {
-        if (size >= objects.length) {
-            isFull();
-            objects[size] = value;
-            size++;
-            return;
-        }
+        isFull();
         objects[size] = value;
         size++;
-
     }
 
     @Override
@@ -34,28 +29,22 @@ public class ArrayList<T> implements List<T> {
         System.arraycopy(objects, 0, newArray, 0, index);
         newArray[index] = value;
         System.arraycopy(objects, index, newArray, index + 1, objects.length - index - 1);
-        objects = newArray;
+        objects = (T[]) newArray;
         size++;
     }
 
     @Override
     public void addAll(List<T> list) {
-        while (list.size() > objects.length) {
-            isFull();
-        }
-        try {
-            for (int i = 0; i < list.size(); i++) {
-                add(list.get(i));
-            }
-        } catch (ArrayListIndexOutOfBoundsException e) {
-            throw new ArrayListIndexOutOfBoundsException(e.getMessage());
+        isFull();
+        for (int i = 0; i < list.size(); i++) {
+            add(list.get(i));
         }
     }
 
     @Override
     public T get(int index) {
         indexCheck(index);
-        return (T) objects[index];
+        return objects[index];
     }
 
     @Override
@@ -72,40 +61,19 @@ public class ArrayList<T> implements List<T> {
         Object[] newArr = new Object[objects.length];
         System.arraycopy(objects, 0, newArr, 0, index);
         System.arraycopy(objects, index + 1, newArr, index, objects.length - index - 1);
-        objects = newArr;
+        objects = (T[]) newArr;
         size--;
         return (T) answer;
-
     }
 
     @Override
     public T remove(T element) {
-        try {
-            boolean objectFound = false;
-            for (int i = 0; i < size(); i++) {
-                if (objects[i] == null && element != null) {
-                    continue;
-                }
-
-                if (objects[i] == null && element == null) {
-                    objectFound = true;
-                    remove(i);
-                    break;
-                }
-
-                if (objects[i].equals(element)) {
-                    objectFound = true;
-                    remove(i);
-                    break;
-                }
-            }
-            if (!objectFound) {
-                throw new NoSuchElementException();
-            }
-            return element;
-        } catch (NoSuchElementException | NullPointerException e) {
-            throw new NoSuchElementException(e.getMessage());
+        int index = indexOf(element);
+        if (index == -1) {
+            throw new NoSuchElementException();
         }
+        remove(index);
+        return element;
     }
 
     @Override
@@ -115,18 +83,15 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public boolean isEmpty() {
-        for (Object o : objects) {
-            if (o != null) {
-                return false;
-            }
-        }
-        return true;
+        return size == 0;
     }
 
     private void isFull() {
-        Object[] newObject = new Object[(int) (objects.length * 1.5)];
-        System.arraycopy(objects, 0, newObject, 0, objects.length);
-        objects = newObject;
+        if (size >= objects.length) {
+            Object[] newObject = new Object[(int) (objects.length * MULTIPLIER)];
+            System.arraycopy(objects, 0, newObject, 0, objects.length);
+            objects = (T[]) newObject;
+        }
     }
 
     private void indexCheck(int index) {
@@ -141,5 +106,15 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayListIndexOutOfBoundsException("Index "
                     + index + " out of bounds for length " + size());
         }
+    }
+
+    private int indexOf(T value) {
+        for (int i = 0; i < size; i++) {
+            if (value == null && objects[i] == null
+                    || value != null && value.equals(objects[i])) {
+                return i;
+            }
+        }
+        return -1;
     }
 }
