@@ -16,8 +16,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value) {
         grow();
-        elements[size] = value;
-        size++;
+        elements[size++] = value;
     }
 
     @Override
@@ -55,6 +54,7 @@ public class ArrayList<T> implements List<T> {
         verifyIndex(index);
         T removedElement = elements[index];
         System.arraycopy(elements, index + 1, elements, index, size - index - 1);
+        elements[size - 1] = null;
         size--;
         return removedElement;
     }
@@ -64,7 +64,7 @@ public class ArrayList<T> implements List<T> {
         T removedElement = (T) new Object();
         for (int i = 0; i < size; i++) {
             if ((elements[i] != null && elements[i].equals(element))
-                    || elements[i] == null && element == null) {
+                || elements[i] == null && element == null) {
                 removedElement = elements[i];
                 remove(i);
                 return removedElement;
