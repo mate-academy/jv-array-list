@@ -54,8 +54,7 @@ public class ArrayList<T> implements List<T> {
         verifyIndex(index);
         final T removedElement = elements[index];
         System.arraycopy(elements, index + 1, elements, index, size - index - 1);
-        elements[size - 1] = null;
-        size--;
+        elements[--size] = null;
         return removedElement;
     }
 
@@ -63,8 +62,7 @@ public class ArrayList<T> implements List<T> {
     public T remove(T element) {
         T removedElement = (T) new Object();
         for (int i = 0; i < size; i++) {
-            if ((elements[i] != null && elements[i].equals(element))
-                    || elements[i] == null && element == null) {
+            if (elements[i] != null ? elements[i].equals(element) : element == null) {
                 removedElement = elements[i];
                 remove(i);
                 return removedElement;
