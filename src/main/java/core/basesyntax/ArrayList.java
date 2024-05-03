@@ -4,17 +4,20 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    private Object[] elements;
+    private static final double CAPACITY_INDEX = 1.5;
+    private T[] elements;
     private int size;
 
     public ArrayList() {
-        this.elements = new Object[DEFAULT_CAPACITY];
+        this.elements = (T[]) new Object[DEFAULT_CAPACITY];
         this.size = 0;
     }
 
     @Override
     public void add(T value) {
-        ensureCapacity();
+        if (size == elements.length) {
+            resizeIfNeeded();
+        }
         elements[size++] = value;
     }
 
@@ -23,8 +26,12 @@ public class ArrayList<T> implements List<T> {
         if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
         }
-        ensureCapacity();
-        System.arraycopy(elements, index, elements, index + 1, size - index);
+        if (size == elements.length) {
+            resizeIfNeeded();
+        }
+        for (int i = size; i > index; i--) {
+            elements[i] = elements[i - 1];
+        }
         elements[index] = value;
         size++;
     }
@@ -38,29 +45,23 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
-        }
+        checkValidateIndex(index);
         return (T) elements[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
-        }
+        checkValidateIndex(index);
         elements[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
-        }
+        checkValidateIndex(index);
         T removed = (T) elements[index];
         if (removed != null) {
             System.arraycopy(elements, index + 1, elements, index, size - index - 1);
-            elements[--size] = null; // Зменшуємо розмір масиву після видалення елемента
+            elements[--size] = null;
         }
         return removed;
     }
@@ -72,7 +73,7 @@ public class ArrayList<T> implements List<T> {
                     && element.equals(elements[i]))) {
                 T removed = (T) elements[i];
                 System.arraycopy(elements, i + 1, elements, i, size - i - 1);
-                elements[--size] = null; // Зменшуємо розмір масиву після видалення елемента
+                elements[--size] = null;
                 return removed;
             }
         }
@@ -89,10 +90,16 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void ensureCapacity() {
+    private void checkValidateIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
+        }
+    }
+
+    private void resizeIfNeeded() {
         if (size == elements.length) {
-            int newCapacity = elements.length * 3 / 2 + 1; // increase size by 1.5 times
-            Object[] newElements = new Object[newCapacity];
+            int newCapacity = (int) (elements.length * CAPACITY_INDEX) + 1;
+            T[] newElements = (T[]) new Object[newCapacity];
             System.arraycopy(elements, 0, newElements, 0, size);
             elements = newElements;
         }
