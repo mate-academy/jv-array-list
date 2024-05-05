@@ -22,7 +22,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("Wrong index.");
+            throw new ArrayListIndexOutOfBoundsException("Index "
+                    + index + "out of bounds for length " + size);
         }
         grow();
         System.arraycopy(elements, index, elements, index + 1, size - index);
@@ -68,7 +69,7 @@ public class ArrayList<T> implements List<T> {
                 return removedElement;
             }
         }
-        throw new NoSuchElementException("No such element");
+        throw new NoSuchElementException("Can`t remove. No such element: " + element);
     }
 
     @Override
@@ -92,7 +93,8 @@ public class ArrayList<T> implements List<T> {
 
     public void verifyIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Wrong index.");
+            throw new ArrayListIndexOutOfBoundsException("Index "
+                    + index + "out of bounds for length " + size);
         }
     }
 }
