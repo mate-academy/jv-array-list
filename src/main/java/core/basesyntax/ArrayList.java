@@ -15,9 +15,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (size == elements.length) {
-            resizeIfNeeded();
-        }
+        resizeIfNeeded();
         elements[size++] = value;
     }
 
@@ -26,12 +24,8 @@ public class ArrayList<T> implements List<T> {
         if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
         }
-        if (size == elements.length) {
-            resizeIfNeeded();
-        }
-        for (int i = size; i > index; i--) {
-            elements[i] = elements[i - 1];
-        }
+        resizeIfNeeded();
+        System.arraycopy(elements, index, elements, index + 1, size - index);
         elements[index] = value;
         size++;
     }
