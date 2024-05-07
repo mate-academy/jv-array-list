@@ -4,23 +4,24 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    private Object[] elements;
+    private static final double GROW_FACTOR = 1.5;
+    private T[] elements;
     private int size;
 
     public ArrayList() {
-        this.elements = new Object[DEFAULT_CAPACITY];
+        elements = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
     @Override
     public void add(T value) {
-        ensureCapacity(size + 1);
+        ensureCapacity();
         elements[size++] = value;
     }
 
     @Override
     public void add(T value, int index) {
         checkIndexForAdd(index);
-        ensureCapacity(size + 1);
+        ensureCapacity();
         for (int i = size; i > index; i--) {
             elements[i] = elements[i - 1];
         }
@@ -38,7 +39,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         checkIndex(index);
-        return (T) elements[index];
+        return elements[index];
     }
 
     @Override
@@ -50,9 +51,10 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
-        T removedElement = (T) elements[index];
-        for (int i = index; i < size - 1; i++) {
-            elements[i] = elements[i + 1];
+        T removedElement = elements[index];
+        int numMoved = size - index - 1;
+        if (numMoved > 0) {
+            System.arraycopy(elements, index + 1, elements, index, numMoved);
         }
         elements[--size] = null;
         return removedElement;
@@ -65,7 +67,7 @@ public class ArrayList<T> implements List<T> {
                 return remove(i);
             }
         }
-        throw new NoSuchElementException("Нет такого элемента");
+        throw new NoSuchElementException("No such element present");
     }
 
     @Override
@@ -78,27 +80,24 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void ensureCapacity(int minCapacity) {
-        int oldCapacity = elements.length;
-        if (minCapacity > oldCapacity) {
-            int newCapacity = oldCapacity * 3 / 2 + 1; // Grow by 1.5 times
-            Object[] newElements = new Object[newCapacity];
-            for (int i = 0; i < size; i++) {
-                newElements[i] = elements[i];
-            }
+    private void ensureCapacity() {
+        if (size == elements.length) {
+            int newCapacity = (int) (elements.length * GROW_FACTOR);
+            T[] newElements = (T[]) new Object[newCapacity];
+            System.arraycopy(elements, 0, newElements, 0, size);
             elements = newElements;
         }
     }
 
     private void checkIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException(index);
+            throw new ArrayListIndexOutOfBoundsException("Index out of bounds: " + index);
         }
     }
 
     private void checkIndexForAdd(int index) {
         if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException(index);
+            throw new ArrayListIndexOutOfBoundsException("Index out of bounds: " + index);
         }
     }
 }
