@@ -22,15 +22,13 @@ public class ArrayList<T> implements List<T> {
     public void add(T value, int index) {
         checkIndexForAdd(index);
         ensureCapacity();
-        for (int i = size; i > index; i--) {
-            elements[i] = elements[i - 1];
-        }
+        System.arraycopy(elements, index, elements, index + 1, size - index);
         elements[index] = value;
         size++;
     }
 
     @Override
-    public void addAll(core.basesyntax.List<T> list) {
+    public void addAll(List<T> list) {
         for (int i = 0; i < list.size(); i++) {
             add(list.get(i));
         }
