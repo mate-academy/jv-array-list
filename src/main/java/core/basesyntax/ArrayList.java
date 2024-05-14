@@ -19,7 +19,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        checkIndex(index, index > size);
+        checkIndexForAdd(index);
         ensureCapacity();
         System.arraycopy(elements, index, elements, index + 1, size - index);
         elements[index] = value;
@@ -35,19 +35,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        checkIndex(index, index >= size);
+        checkIndex(index);
         return (T) elements[index];
     }
 
     @Override
     public void set(T value, int index) {
-        checkIndex(index, index >= size);
+        checkIndex(index);
         elements[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        checkIndex(index, index >= size);
+        checkIndex(index);
         T removedElement = (T) elements[index];
         int numMoved = size - index - 1;
         if (numMoved > 0) {
@@ -80,15 +80,22 @@ public class ArrayList<T> implements List<T> {
 
     private void ensureCapacity() {
         if (elements.length == size) {
-            int newCapacity = elements.length + (elements.length >> 1);
+            int newCapacity = elements.length + (elements.length / 2);
             T[] newElements = (T[]) new Object[newCapacity];
             System.arraycopy(elements, 0, newElements,0, elements.length);
             elements = newElements;
         }
     }
 
-    private void checkIndex(int index, boolean index1) {
-        if (index < 0 || index1) {
+    private void checkIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index
+                    + ", size: " + size);
+        }
+    }
+
+    private void checkIndexForAdd(int index) {
+        if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index
                     + ", size: " + size);
         }
