@@ -102,7 +102,7 @@ public class ArrayListTest {
     public void checkingResizeInAddByIndex() {
         ArrayList<String> arrayList = new ArrayList<>();
         for (int i = 0; i < ELEMENTS_COUNT; i++) {
-            arrayList.add("First + " + i, 0);
+             arrayList.add("First + " + i, 0);
             Assert.assertEquals("Test failed! Size of array should be " + (i + 1) + "but it is "
                     + arrayList.size(), i + 1, arrayList.size());
         }
@@ -219,7 +219,7 @@ public class ArrayListTest {
         Assert.assertNull(arrayList.remove("Public"));
     }
 
-    @Test
+     @Test
     public void removeObjectValueByValue() {
         Cat firstCat = new Cat("Fantic", "grey");
         Cat secondCat = new Cat("Barsik", "black");

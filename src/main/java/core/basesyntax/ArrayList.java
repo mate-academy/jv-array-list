@@ -6,8 +6,6 @@ public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private static final double CAPACITY_MULTIPLY = 1.5;
     private T[] data;
-
-    private int newCapacity;
     private int size;
 
     public ArrayList() {
@@ -16,7 +14,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        grow(size + 1);
+        grow();
         data[size++] = value;
     }
 
@@ -26,10 +24,8 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayListIndexOutOfBoundsException("The invalid index" + index
                     + "size" + size);
         }
-        grow(size + 1);
-        if (index < size) {
-            System.arraycopy(data, index, data, index + 1, size - index);
-        }
+        grow();
+        System.arraycopy(data, index, data, index + 1, size - index);
         data[index] = value;
         size++;
     }
@@ -66,12 +62,11 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if ((element == null && data[i] == null)
-                    || (element != null && element.equals(data[i]))) {
+            if (element == data[i] || element != null && element.equals(data[i])) {
                 return remove(i);
             }
         }
-        throw new NoSuchElementException("No such element present");
+        throw new NoSuchElementException("No such element " + element + " present");
     }
 
     @Override
@@ -91,14 +86,12 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    public void grow(int currentCapacity) {
-        if (currentCapacity > data.length) {
-            newCapacity = (int) (data.length * CAPACITY_MULTIPLY);
+    public void grow() {
+        if (size >= data.length) {
+            int newCapacity = (int) (data.length * CAPACITY_MULTIPLY);
             T[] newData = (T[]) new Object[newCapacity];
             System.arraycopy(data, 0, newData, 0, data.length);
             data = newData;
-        } else {
-            newCapacity = currentCapacity;
         }
     }
 }
