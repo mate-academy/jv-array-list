@@ -32,12 +32,9 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        int newSize = size + list.size();
-        ensureCapacity(newSize);
         for (int i = 0; i < list.size(); i++) {
-            elements[size + i] = list.get(i);
+            add(list.get(i));
         }
-        size = newSize;
     }
 
     @Override
@@ -64,8 +61,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if ((elements[i] == null && element == null)
-                    || (elements[i] != null && elements[i].equals(element))) {
+            if (elements[i] == element || (elements[i] != null
+                    && elements[i].equals(element))) {
                 T removed = elements[i];
                 System.arraycopy(elements, i + 1, elements, i, size - i - 1);
                 size--;
@@ -89,9 +86,6 @@ public class ArrayList<T> implements List<T> {
     private void grow() {
         if (size >= elements.length) {
             int newSize = (int) (elements.length * SIZE_MULTIPLIER);
-            if (newSize < size + 1) {
-                newSize = size + 1;
-            }
             ensureCapacity(newSize);
         }
     }
