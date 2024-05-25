@@ -14,7 +14,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        checkEnoughArraySize(size);
+        increaseArraySizeIfNecessary(size);
         array[size] = value;
         size++;
     }
@@ -22,22 +22,21 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         checkIndexForAdd(index);
-        checkEnoughArraySize(size);
+        increaseArraySizeIfNecessary(size);
 
         T[] secondArrayPart = getArrayCopy(array, index, array.length);
         array[index] = value;
 
-        int startPointForIteration = index + NUMBER_ONE;
-        for (int i = startPointForIteration; i < secondArrayPart.length; i++) {
-            array[i] = secondArrayPart[i - startPointForIteration];
-        }
+        int startIndexForCopyArray = index + NUMBER_ONE;
+        System.arraycopy(secondArrayPart, 0, array, startIndexForCopyArray,
+                secondArrayPart.length - startIndexForCopyArray);
         size++;
     }
 
     @Override
     public void addAll(List<T> list) {
         size = size + list.size();
-        checkEnoughArraySize(size);
+        increaseArraySizeIfNecessary(size);
 
         int startIndexForListElements = size - list.size();
         for (int i = 0; i < list.size(); i++) {
@@ -60,13 +59,10 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         checkIndexForGet(index);
-        int startPointForCopySecondPart = index + 1;
-        T[] secondArrayPart = getArrayCopy(array, startPointForCopySecondPart, array.length);
+        int startIndexForCopy = index + NUMBER_ONE;
+        int lastIndexOfArray = size - NUMBER_ONE;
         T value = array[index];
-
-        for (int i = index; i < secondArrayPart.length; i++) {
-            array[i] = secondArrayPart[i - index];
-        }
+        System.arraycopy(array, startIndexForCopy, array, index, lastIndexOfArray - index);
         size--;
         return value;
     }
@@ -88,7 +84,7 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void checkEnoughArraySize(int inputSize) {
+    private void increaseArraySizeIfNecessary(int inputSize) {
         if (inputSize >= array.length) {
             int lagerSize = inputSize + (inputSize >> 1);
             T[] intermediateArray = (T[]) new Object[lagerSize];
@@ -101,9 +97,8 @@ public class ArrayList<T> implements List<T> {
     private T[] getArrayCopy(T[] inputArray, int startIndex, int endIndex) {
         T[] intermediateArray = (T[]) new Object[inputArray.length];
 
-        for (int i = startIndex; i < endIndex; i++) {
-            intermediateArray[i - startIndex] = inputArray[i];
-        }
+        System.arraycopy(inputArray, startIndex, intermediateArray, 0,
+                endIndex - startIndex);
         return intermediateArray;
     }
 
@@ -120,18 +115,11 @@ public class ArrayList<T> implements List<T> {
     }
 
     private int getIndexByValue(T value) {
-        boolean isValueExist = false;
-        int index = 0;
         for (int i = 0; i < size; i++) {
             if (array[i] == value || (array[i] != null && array[i].equals(value))) {
-                index = i;
-                isValueExist = true;
-                break;
+                return i;
             }
         }
-        if (!isValueExist) {
-            throw new NoSuchElementException("don't find such element");
-        }
-        return index;
+        throw new NoSuchElementException("don't find such element");
     }
 }
