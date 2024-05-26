@@ -10,13 +10,9 @@ public class ArrayList<T> implements List<T> {
     private int size;
     private T[] array;
 
-    public ArrayList(int capasity) {
-        this.capasity = capasity;
-        array = (T[]) new Object[capasity];
-    }
-
     public ArrayList() {
-        this(DEFAULT_CAPASITY);
+        capasity = DEFAULT_CAPASITY;
+        array = (T[]) new Object[DEFAULT_CAPASITY];
     }
 
     @Override
@@ -69,10 +65,10 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         T value = get(index);
-        size--;
-        for (int i = index; i < size; i++) {
+        for (int i = index; i < size - 1; i++) {
             array[i] = array[i + 1];
         }
+        size--;
         return value;
     }
 
@@ -97,7 +93,7 @@ public class ArrayList<T> implements List<T> {
 
     private void grow() {
         int oldCapasity = capasity;
-        capasity += capasity >> 1;
+        capasity += capasity / 2;
         T[] newArr = (T[]) new Object[capasity];
         if (oldCapasity >= 0) {
             System.arraycopy(array, 0, newArr, 0, oldCapasity);
@@ -107,7 +103,7 @@ public class ArrayList<T> implements List<T> {
 
     private int find(T element) {
         for (int i = 0; i < size; i++) {
-            if (Objects.equals(array[i], element)) {
+            if (array[i] == element || (array[i] != null && array[i].equals(element))) {
                 return i;
             }
         }
