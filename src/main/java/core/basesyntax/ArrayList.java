@@ -90,8 +90,8 @@ public class ArrayList<T> implements List<T> {
     }
 
     private T[] resize() {
-       int newLength = size + size / GROW_FACTOR;
-       return (T[]) new Object[newLength];
+        int newLength = size + size / GROW_FACTOR;
+        return (T[]) new Object[newLength];
     }
 
     private int find(T element) {
@@ -120,7 +120,7 @@ public class ArrayList<T> implements List<T> {
         return index < 0 || index >= size;
     }
 
-    private boolean needToGrow () {
+    private boolean needToGrow() {
         return size == array.length;
     }
 }
