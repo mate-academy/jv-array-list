@@ -4,36 +4,30 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPASITY = 10;
-    private static final int NOT_FOUND = -1;
-    private static final int GROW_FACTOR = 2;
+    private static final int NOT_INDEX = -1;
+    private static final double GROW_FACTOR = 1.5;
     private int size;
-    private T[] array;
+    private T[] elements;
 
     public ArrayList() {
-        array = (T[]) new Object[DEFAULT_CAPASITY];
+        elements = (T[]) new Object[DEFAULT_CAPASITY];
     }
 
     @Override
     public void add(T value) {
-        if (size == array.length) {
+        if (size == elements.length) {
             grow();
         }
-        array[size] = value;
+        elements[size] = value;
         size++;
     }
 
     @Override
     public void add(T value, int index) {
-        if (invalidIndexToAdd(index)) {
-            throw new ArrayListIndexOutOfBoundsException(index + " is out of range index");
-        }
-        if (needToGrow()) {
-            grow();
-        }
-        for (int i = size; i > index; i--) {
-            array[i] = array[i - 1];
-        }
-        array[index] = value;
+        checkIndexForAddMethod(index);
+        grow();
+        System.arraycopy(elements, index, elements, index + 1, size - index);
+        elements[index] = value;
         size++;
     }
 
@@ -46,28 +40,28 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        checkValidIndexToGetSet(index);
-        return array[index];
+        checkIndexForSetAndGetMethods(index);
+        return elements[index];
     }
 
     @Override
     public void set(T value, int index) {
-        checkValidIndexToGetSet(index);
-        array[index] = value;
+        checkIndexForSetAndGetMethods(index);
+        elements[index] = value;
     }
 
     @Override
     public T remove(int index) {
         T value = get(index);
-        System.arraycopy(array, index + 1, array, index, size - index - 1);
+        System.arraycopy(elements, index + 1, elements, index, size - index - 1);
         size--;
         return value;
     }
 
     @Override
     public T remove(T element) {
-        int index = find(element);
-        if (index == NOT_FOUND) {
+        int index = findIndex(element);
+        if (index == NOT_INDEX) {
             throw new NoSuchElementException("Element " + element + " was not found");
         }
         return remove(index);
@@ -84,43 +78,32 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void grow() {
-        T[] newArr = resize();
-        System.arraycopy(array, 0, newArr, 0, size);
-        array = newArr;
+        if (elements.length == size) {
+            int newCapacity = (int) (elements.length * GROW_FACTOR);
+            Object[] newArray = new Object[newCapacity];
+            System.arraycopy(elements, 0, newArray, 0, size);
+            elements = (T[]) newArray;
+        }
     }
 
-    private T[] resize() {
-        int newLength = size + size / GROW_FACTOR;
-        return (T[]) new Object[newLength];
-    }
-
-    private int find(T element) {
+    private int findIndex(T element) {
         for (int i = 0; i < size; i++) {
-            if (array[i] == element || (array[i] != null && array[i].equals(element))) {
+            if (elements[i] == element || (elements[i] != null && elements[i].equals(element))) {
                 return i;
             }
         }
-        return NOT_FOUND;
+        return NOT_INDEX;
     }
 
-    private void checkValidIndexToGetSet(int index) {
-        if (invalidIndexToSetGet(index)) {
-            throw new ArrayListIndexOutOfBoundsException(index + " is out of range index");
+    private void checkIndexForAddMethod(int index) {
+        if (index < 0 || index > size) {
+            throw new ArrayListIndexOutOfBoundsException("Invalid index, " + index);
         }
     }
-
-    private boolean invalidIndexToAdd(int index) {
-        if (index == size) {
-            return false;
+    
+    private void checkIndexForSetAndGetMethods(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Invalid index, " + index);
         }
-        return invalidIndexToSetGet(index);
-    }
-
-    private boolean invalidIndexToSetGet(int index) {
-        return index < 0 || index >= size;
-    }
-
-    private boolean needToGrow() {
-        return size == array.length;
     }
 }
