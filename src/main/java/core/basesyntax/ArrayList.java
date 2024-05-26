@@ -27,7 +27,9 @@ public class ArrayList<T> implements List<T> {
         if (invalidIndexToAdd(index)) {
             throw new ArrayListIndexOutOfBoundsException(index + " is out of range index");
         }
-        grow();
+        if (needToGrow()) {
+            grow();
+        }
         for (int i = size; i > index; i--) {
             array[i] = array[i - 1];
         }
@@ -82,14 +84,14 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void grow() {
-        if (size < array.length) {
-            return;
-        }
-        int oldLength = array.length;
-        int newLength = oldLength + oldLength / GROW_FACTOR;
-        T[] newArr = (T[]) new Object[newLength];
-        System.arraycopy(array, 0, newArr, 0, oldLength);
+        T[] newArr = resize();
+        System.arraycopy(array, 0, newArr, 0, size);
         array = newArr;
+    }
+
+    private T[] resize() {
+       int newLength = size + size / GROW_FACTOR;
+       return (T[]) new Object[newLength];
     }
 
     private int find(T element) {
@@ -116,5 +118,9 @@ public class ArrayList<T> implements List<T> {
 
     private boolean invalidIndexToSetGet(int index) {
         return index < 0 || index >= size;
+    }
+
+    private boolean needToGrow () {
+        return size == array.length;
     }
 }
