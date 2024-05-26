@@ -5,18 +5,17 @@ import java.util.NoSuchElementException;
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPASITY = 10;
     private static final int NOT_FOUND = -1;
-    private int capasity;
+    private static final int GROW_FACTOR = 2;
     private int size;
     private T[] array;
 
     public ArrayList() {
-        capasity = DEFAULT_CAPASITY;
         array = (T[]) new Object[DEFAULT_CAPASITY];
     }
 
     @Override
     public void add(T value) {
-        if (size == capasity) {
+        if (size == array.length) {
             grow();
         }
         array[size] = value;
@@ -28,9 +27,7 @@ public class ArrayList<T> implements List<T> {
         if (invalidIndexToAdd(index)) {
             throw new ArrayListIndexOutOfBoundsException(index + " is out of range index");
         }
-        if (size == capasity) {
-            grow();
-        }
+        grow();
         for (int i = size; i > index; i--) {
             array[i] = array[i - 1];
         }
@@ -47,26 +44,20 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (invalidIndexToSetGet(index)) {
-            throw new ArrayListIndexOutOfBoundsException(index + " is out of range index");
-        }
+        checkValidIndexToGetSet(index);
         return array[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (invalidIndexToSetGet(index)) {
-            throw new ArrayListIndexOutOfBoundsException(index + " is out of range index");
-        }
+        checkValidIndexToGetSet(index);
         array[index] = value;
     }
 
     @Override
     public T remove(int index) {
         T value = get(index);
-        for (int i = index; i < size - 1; i++) {
-            array[i] = array[i + 1];
-        }
+        System.arraycopy(array, index + 1, array, index, size - index - 1);
         size--;
         return value;
     }
@@ -91,12 +82,13 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void grow() {
-        int oldCapasity = capasity;
-        capasity += capasity / 2;
-        T[] newArr = (T[]) new Object[capasity];
-        if (oldCapasity >= 0) {
-            System.arraycopy(array, 0, newArr, 0, oldCapasity);
+        if (size < array.length) {
+            return;
         }
+        int oldLength = array.length;
+        int newLength = oldLength + oldLength / GROW_FACTOR;
+        T[] newArr = (T[]) new Object[newLength];
+        System.arraycopy(array, 0, newArr, 0, oldLength);
         array = newArr;
     }
 
@@ -107,6 +99,12 @@ public class ArrayList<T> implements List<T> {
             }
         }
         return NOT_FOUND;
+    }
+
+    private void checkValidIndexToGetSet(int index) {
+        if (invalidIndexToSetGet(index)) {
+            throw new ArrayListIndexOutOfBoundsException(index + " is out of range index");
+        }
     }
 
     private boolean invalidIndexToAdd(int index) {
