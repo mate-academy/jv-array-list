@@ -25,9 +25,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         checkIndexForAddMethod(index);
-        if (elements.length == size) {
-            grow();
-        }
+        grow();
         System.arraycopy(elements, index, elements, index + 1, size - index);
         elements[index] = value;
         size++;
@@ -80,10 +78,12 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void grow() {
-        int newCapacity = (int) (elements.length * GROW_FACTOR);
-        Object[] newArray = new Object[newCapacity];
-        System.arraycopy(elements, 0, newArray, 0, size);
-        elements = (T[]) newArray;
+        if (elements.length == size) {
+            int newCapacity = (int) (elements.length * GROW_FACTOR);
+            Object[] newArray = new Object[newCapacity];
+            System.arraycopy(elements, 0, newArray, 0, size);
+            elements = (T[]) newArray;
+        }
     }
 
     private int findIndex(T element) {
