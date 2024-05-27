@@ -4,7 +4,7 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPASITY = 10;
-    private static final int NOT_INDEX = -1;
+    private static final int NO_INDEX = -1;
     private static final double GROW_FACTOR = 1.5;
     private int size;
     private T[] elements;
@@ -25,7 +25,9 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         checkIndexForAddMethod(index);
-        grow();
+        if (elements.length == size) {
+            grow();
+        }
         System.arraycopy(elements, index, elements, index + 1, size - index);
         elements[index] = value;
         size++;
@@ -40,13 +42,13 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        checkIndexForSetAndGetMethods(index);
+        checkIndex(index);
         return elements[index];
     }
 
     @Override
     public void set(T value, int index) {
-        checkIndexForSetAndGetMethods(index);
+        checkIndex(index);
         elements[index] = value;
     }
 
@@ -61,7 +63,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         int index = findIndex(element);
-        if (index == NOT_INDEX) {
+        if (index == NO_INDEX) {
             throw new NoSuchElementException("Element " + element + " was not found");
         }
         return remove(index);
@@ -78,12 +80,10 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void grow() {
-        if (elements.length == size) {
-            int newCapacity = (int) (elements.length * GROW_FACTOR);
-            Object[] newArray = new Object[newCapacity];
-            System.arraycopy(elements, 0, newArray, 0, size);
-            elements = (T[]) newArray;
-        }
+        int newCapacity = (int) (elements.length * GROW_FACTOR);
+        Object[] newArray = new Object[newCapacity];
+        System.arraycopy(elements, 0, newArray, 0, size);
+        elements = (T[]) newArray;
     }
 
     private int findIndex(T element) {
@@ -92,7 +92,7 @@ public class ArrayList<T> implements List<T> {
                 return i;
             }
         }
-        return NOT_INDEX;
+        return NO_INDEX;
     }
 
     private void checkIndexForAddMethod(int index) {
@@ -101,7 +101,7 @@ public class ArrayList<T> implements List<T> {
         }
     }
     
-    private void checkIndexForSetAndGetMethods(int index) {
+    private void checkIndex(int index) {
         if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException("Invalid index, " + index);
         }
