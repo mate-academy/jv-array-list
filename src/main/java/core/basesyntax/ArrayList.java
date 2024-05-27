@@ -3,14 +3,14 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    private static final int DEFAULT_CAPASITY = 10;
+    private static final int DEFAULT_CAPACITY = 10;
     private static final int NO_INDEX = -1;
     private static final double GROW_FACTOR = 1.5;
     private int size;
     private T[] elements;
 
     public ArrayList() {
-        elements = (T[]) new Object[DEFAULT_CAPASITY];
+        elements = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
     @Override
@@ -25,7 +25,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         checkIndexForAddMethod(index);
-        grow();
+        growIfNeeded();
         System.arraycopy(elements, index, elements, index + 1, size - index);
         elements[index] = value;
         size++;
@@ -78,12 +78,10 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void grow() {
-        if (elements.length == size) {
-            int newCapacity = (int) (elements.length * GROW_FACTOR);
-            Object[] newArray = new Object[newCapacity];
-            System.arraycopy(elements, 0, newArray, 0, size);
-            elements = (T[]) newArray;
-        }
+        int newCapacity = (int) (elements.length * GROW_FACTOR);
+        Object[] newArray = new Object[newCapacity];
+        System.arraycopy(elements, 0, newArray, 0, size);
+        elements = (T[]) newArray;
     }
 
     private int findIndex(T element) {
@@ -104,6 +102,12 @@ public class ArrayList<T> implements List<T> {
     private void checkIndex(int index) {
         if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException("Invalid index, " + index);
+        }
+    }
+
+    private void growIfNeeded() {
+        if (elements.length == size) {
+            grow();
         }
     }
 }
