@@ -15,9 +15,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (size == elements.length) {
-            grow();
-        }
+        growIfNeeded();
         elements[size] = value;
         size++;
     }
