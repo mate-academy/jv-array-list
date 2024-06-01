@@ -79,7 +79,7 @@ public class ArrayList<T> implements List<T> {
 
     private void ensureCapacity() {
         if (size == elements.length) {
-            int newCapacity = elements.length + (elements.length >> 1); // 1.5 times capacity
+            int newCapacity = elements.length + (elements.length >> 1);
             Object[] newElements = new Object[newCapacity];
             System.arraycopy(elements, 0, newElements, 0, size);
             elements = newElements;
