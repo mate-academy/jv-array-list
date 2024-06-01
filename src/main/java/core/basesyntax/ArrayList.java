@@ -10,14 +10,6 @@ public class ArrayList<T> implements List<T> {
 
     public ArrayList() {
         elements = new Object[DEFAULT_CAPACITY];
-        size = 0;
-    }
-
-    private void ensureCapacity(int minCapacity) {
-        if (minCapacity > elements.length) {
-            int newCapacity = Math.max(DEFAULT_CAPACITY, elements.length + (elements.length >> 1));
-            elements = Arrays.copyOf(elements, newCapacity);
-        }
     }
 
     @Override
@@ -46,17 +38,14 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index: " + index + ", Size: " + size);
-        }
+        checkIndexBounds(index, size);
         return (T) elements[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index: " + index + ", Size: " + size);
-        }
+
+        checkIndexBounds(index, size);
         elements[index] = value;
     }
 
@@ -73,14 +62,11 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        for (int index = 0; index < size; index++) {
-            if (elements[index] == null && element == null) {
-                return remove(index);
-            } else if (element != null && element.equals(elements[index])) {
-                return remove(index);
-            }
+        int index = index(element);
+        if (index == -1) {
+            throw new NoSuchElementException("There is no such element in the list, " + element);
         }
-        throw new NoSuchElementException("Element not found: " + element);
+        return remove(index);
     }
 
     @Override
@@ -91,5 +77,35 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private void ensureCapacity(int minCapacity) {
+        if (minCapacity > elements.length) {
+            int newCapacity = Math.max(DEFAULT_CAPACITY, elements.length + (elements.length >> 1));
+
+            Object[] newElements = new Object[newCapacity];
+            for (int i = 0; i < elements.length; i++) {
+                newElements[i] = elements[i];
+            }
+
+            elements = newElements;
+        }
+    }
+
+    private void checkIndexBounds(int index, int size) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Index: " + index + ", Size: " + size);
+        }
+    }
+
+    private int index(T element) {
+        int index = -1;
+        for (int i = 0; i < size; i++) {
+            if (elements[i] == element
+                    || elements[i] != null && elements[i].equals(element)) {
+                index = i;
+            }
+        }
+        return index;
     }
 }
