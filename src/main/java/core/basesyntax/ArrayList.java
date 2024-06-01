@@ -9,19 +9,18 @@ public class ArrayList<T> implements List<T> {
 
     public ArrayList() {
         this.elements = new Object[DEFAULT_CAPACITY];
-        this.size = 0;
     }
 
     @Override
     public void add(T value) {
-        ensureCapacity();
+        resize();
         elements[size++] = value;
     }
 
     @Override
     public void add(T value, int index) {
         checkIndexForAdd(index);
-        ensureCapacity();
+        resize();
         System.arraycopy(elements, index, elements, index + 1, size - index);
         elements[index] = value;
         size++;
@@ -49,13 +48,13 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
-        T oldElement = (T) elements[index];
+        T removedElement = (T) elements[index];
         int numMoved = size - index - 1;
         if (numMoved > 0) {
             System.arraycopy(elements, index + 1, elements, index, numMoved);
         }
         elements[--size] = null;
-        return oldElement;
+        return removedElement;
     }
 
     @Override
@@ -77,7 +76,7 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void ensureCapacity() {
+    private void resize() {
         if (size == elements.length) {
             int newCapacity = elements.length + (elements.length >> 1);
             Object[] newElements = new Object[newCapacity];
@@ -86,21 +85,15 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private int indexOf(Object o) {
-        if (o == null) {
-            for (int i = 0; i < size; i++) {
-                if (elements[i] == null) {
-                    return i;
-                }
-            }
-        } else {
-            for (int i = 0; i < size; i++) {
-                if (o.equals(elements[i])) {
-                    return i;
-                }
+    private int indexOf(T element) {
+        int index = -1;
+        for (int i = 0; i < size; i++) {
+            if (elements[i] == element
+                    || elements[i] != null && elements[i].equals(element)) {
+                index = i;
             }
         }
-        return -1;
+        return index;
     }
 
     private void checkIndex(int index) {
