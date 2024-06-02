@@ -5,11 +5,11 @@ import java.util.NoSuchElementException;
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private static final double CAPACITY_INDEX = 1.5;
-    private Object[] elements;
+    private T[] elements;
     private int size;
 
     public ArrayList() {
-        elements = new Object[DEFAULT_CAPACITY];
+        elements = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
     @Override
@@ -39,7 +39,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         checkIndexBounds(index, size);
-        return (T) elements[index];
+        return elements[index];
     }
 
     @Override
@@ -62,7 +62,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        int index = index(element);
+        int index = indexOf(element);
         if (index == -1) {
             throw new NoSuchElementException("There is no such element in the list, " + element);
         }
@@ -84,7 +84,7 @@ public class ArrayList<T> implements List<T> {
             int newCapacity = (int) (elements.length * CAPACITY_INDEX);
             Object[] newArray = new Object[newCapacity];
             System.arraycopy(elements, 0, newArray, 0, size);
-            elements = newArray;
+            elements = (T[]) newArray;
         }
     }
 
@@ -94,7 +94,7 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private int index(T element) {
+    private int indexOf(T element) {
         int index = -1;
         for (int i = 0; i < size; i++) {
             if (elements[i] == element
