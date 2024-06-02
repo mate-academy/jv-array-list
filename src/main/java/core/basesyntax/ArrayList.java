@@ -4,6 +4,7 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
+    private static final double CAPACITY_INDEX = 1.5;
     private Object[] elements;
     private int size;
 
@@ -13,7 +14,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        ensureCapacity(size + 1);
+        resize();
         elements[size++] = value;
     }
 
@@ -22,7 +23,7 @@ public class ArrayList<T> implements List<T> {
         if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException("Index: " + index + ", Size: " + size);
         }
-        ensureCapacity(size + 1);
+        resize();
         System.arraycopy(elements, index, elements, index + 1, size - index);
         elements[index] = value;
         size++;
@@ -50,13 +51,13 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(int index) {
-        T oldValue = get(index);
-        int numMoved = size - index - 1;
-        if (numMoved > 0) {
-            System.arraycopy(elements, index + 1, elements, index, numMoved);
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Index: " + index + ", Size: " + size);
         }
-        elements[--size] = null;
-        return oldValue;
+        T removedElement = (T) elements[index];
+        System.arraycopy(elements, index + 1, elements, index, size - index - 1);
+        size--;
+        return removedElement;
     }
 
     @Override
@@ -78,16 +79,12 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void ensureCapacity(int minCapacity) {
-        if (minCapacity > elements.length) {
-            int newCapacity = Math.max(DEFAULT_CAPACITY, elements.length + (elements.length >> 1));
-
-            Object[] newElements = new Object[newCapacity];
-            for (int i = 0; i < elements.length; i++) {
-                newElements[i] = elements[i];
-            }
-
-            elements = newElements;
+    private void resize() {
+        if (elements.length == size) {
+            int newCapacity = (int) (elements.length * CAPACITY_INDEX);
+            Object[] newArray = new Object[newCapacity];
+            System.arraycopy(elements, 0, newArray, 0, size);
+            elements = newArray;
         }
     }
 
