@@ -1,32 +1,16 @@
 package core.basesyntax;
 
-import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    private Object[] elements;
+    private static final int GROW_FACTOR = 2;
+    private T[] elements;
     private int size;
 
+    @SuppressWarnings("unchecked")
     public ArrayList() {
-        this.elements = new Object[DEFAULT_CAPACITY];
-    }
-
-    private void ensureCapacity() {
-        if (size == elements.length) {
-            int newCapacity = elements.length
-                    + (elements.length >> 1);
-            elements = Arrays.copyOf(elements, newCapacity);
-        }
-    }
-
-    private void checkIndexBounds(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException(
-                    "Index " + index
-                            + " out of bounds for length " + size
-            );
-        }
+        this.elements = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
     @Override
@@ -37,16 +21,9 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException(
-                    "Index " + index
-                            + " out of bounds for length "
-                            + size
-            );
-        }
+        checkIndexForAdd(index);
         ensureCapacity();
-        System.arraycopy(elements, index, elements, index
-                + 1, size - index);
+        System.arraycopy(elements, index, elements, index + 1, size - index);
         elements[index] = value;
         size++;
     }
@@ -60,24 +37,21 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        checkIndexBounds(index);
-        return (T) elements[index];
+        checkIndex(index);
+        return elements[index];
     }
 
     @Override
     public void set(T value, int index) {
-        checkIndexBounds(index);
+        checkIndex(index);
         elements[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        checkIndexBounds(index);
-        T removedElement = (T) elements[index];
-        int numToMove = size - index - 1;
-        if (numToMove > 0) {
-            System.arraycopy(elements, index + 1, elements, index, numToMove);
-        }
+        checkIndex(index);
+        T removedElement = elements[index];
+        System.arraycopy(elements, index + 1, elements, index, size - index - 1);
         elements[--size] = null;
         return removedElement;
     }
@@ -85,15 +59,11 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if (element == null ? elements[i] == null
-                    : element.equals(elements[i])) {
+            if (element == null ? elements[i] == null : element.equals(elements[i])) {
                 return remove(i);
             }
         }
-        throw new NoSuchElementException(
-                "Element '" + element
-                        + "' not found in the list"
-        );
+        throw new NoSuchElementException("Element '" + element + "' not found in the list");
     }
 
     @Override
@@ -104,5 +74,26 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private void ensureCapacity() {
+        if (size == elements.length) {
+            int newCapacity = elements.length * GROW_FACTOR;
+            T[] newArray = (T[]) new Object[newCapacity];
+            System.arraycopy(elements, 0, newArray, 0, elements.length);
+            elements = newArray;
+        }
+    }
+
+    private void checkIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Index out of bounds: " + index);
+        }
+    }
+
+    private void checkIndexForAdd(int index) {
+        if (index < 0 || index > size) {
+            throw new ArrayListIndexOutOfBoundsException("Index out of bounds: " + index);
+        }
     }
 }
