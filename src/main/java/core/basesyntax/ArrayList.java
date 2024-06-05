@@ -1,6 +1,14 @@
 package core.basesyntax;
 
 public class ArrayList<T> implements List<T> {
+    private static final int DEFAULT_CAPACITY = 10;
+    private int arraySize;
+    private T[] elementData;
+
+    public ArrayList() {
+        elementData = (T[]) new Object[DEFAULT_CAPACITY];
+    }
+
     @Override
     public void add(T value) {
 
@@ -38,11 +46,11 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public int size() {
-        return 0;
+        return arraySize;
     }
 
     @Override
     public boolean isEmpty() {
-        return false;
+        return arraySize == 0 ? true : false;
     }
 }
