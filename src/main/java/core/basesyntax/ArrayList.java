@@ -59,14 +59,11 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if (element == null) {
-                if (elements[i] == null) {
-                    return remove(i);
-                }
-            } else {
-                if (element.equals(elements[i])) {
-                    return remove(i);
-                }
+            if (element == null && elements[i] == null) {
+                return remove(i);
+            }
+            if (element != null && element.equals(elements[i])) {
+                return remove(i);
             }
         }
         throw new NoSuchElementException("Element not found in list: " + element);
