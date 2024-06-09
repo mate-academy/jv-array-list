@@ -4,90 +4,73 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int INITIAL_SIZE = 10;
-    private int currentSize = INITIAL_SIZE;
     private int size = 0;
-    private T[] dataArray = (T[]) new Object[currentSize];
+
+    private T[] data;
+
+    {
+        data = (T[]) new Object[INITIAL_SIZE];
+    }
 
     private T[] grow() {
-        double newLength = dataArray.length * 1.5;
-        currentSize = (int) newLength;
-        T[] newArray = (T[]) new Object[currentSize];
-        for (int i = 0; i < dataArray.length; i++) {
-            newArray[i] = dataArray[i];
-        }
+        double newLength = data.length * 1.5;
+        T[] newArray = (T[]) new Object[(int) newLength];
+        System.arraycopy(data, 0, newArray, 0, data.length);
         return newArray;
     }
 
     @Override
     public void add(T value) {
-        if (size >= currentSize) {
-            dataArray = grow();
+        if (isDataFull()) {
+            data = grow();
         }
-        dataArray[size] = value;
+        data[size] = value;
         size++;
     }
 
     @Override
     public void add(T value, int index) {
-        if (size >= currentSize) {
-            dataArray = grow();
+        if (isDataFull()) {
+            data = grow();
         }
-
-        if (index > size || index >= dataArray.length || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index większy niż romizar tablicy");
-        } else if (index <= size) {
-            size++;
-            for (int i = dataArray.length - 1; i > index; i--) {
-                dataArray[i] = dataArray[i - 1];
-            }
+        if (index > size || index >= data.length || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Given index is out of bounds of array");
         }
-        dataArray[index] = value;
+        System.arraycopy(data, index, data, index + 1, size - index);
+        data[index] = value;
+        size++;
+        data[index] = value;
     }
 
     @Override
     public void addAll(List<T> list) {
-        int newLenght = size + list.size();
-        T[] result = (T[]) new Object[newLenght];
-
-        for (int i = 0; i < size; i++) {
-            result[i] = dataArray[i];
+        for (int index = 0; index < list.size(); index++) {
+            add(list.get(index));
         }
-
-        for (int i = size; i < newLenght; i++) {
-            result[i] = list.get(i - size);
-        }
-        dataArray = result;
-        size = newLenght;
     }
 
     @Override
     public T get(int index) {
-        if (index >= size || index > dataArray.length || index < 0) {
+        if (!isIndexCorrect(index)) {
             throw new ArrayListIndexOutOfBoundsException("Given index is out of bounds of array");
         }
-        return dataArray[index];
+        return data[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index >= size || index > dataArray.length || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Given index is out of bounds of array");
+        if (isIndexCorrect(index)) {
+            data[index] = value;
         }
-        dataArray[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index < size && index >= 0) {
-            final T oldvalue = dataArray[index];
-            if (index != size - 1) {
-                for (int i = index; i < dataArray.length - 1; i++) {
-                    dataArray[i] = dataArray[i + 1];
-                }
-            }
+        if (isIndexCorrect(index)) {
+            T elementToRemove = (T) data[index];
+            System.arraycopy(data, index + 1, data, index, size - index - 1);
             size--;
-            dataArray[size] = null;
-            return oldvalue;
+            return elementToRemove;
         }
         throw new ArrayListIndexOutOfBoundsException("Given index is out of bounds of array");
     }
@@ -95,16 +78,10 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
 
-        for (int i = 0; i < dataArray.length; i++) {
-            if (element != null && dataArray[i] != null && element.equals(dataArray[i])
-                    || (element == null && dataArray[i] == null)) {
-                dataArray[i] = null;
-                for (int j = i; j < dataArray.length - 1; j++) {
-                    dataArray[j] = dataArray[j + 1];
-                }
-                size--;
-                dataArray[size] = null;
-                return element;
+        for (int i = 0; i < data.length; i++) {
+            if ((element == null && data[i] == element)
+                    || (data[i] != null && data[i].equals(element))) {
+                return remove(i);
             }
         }
         throw new NoSuchElementException();
@@ -118,5 +95,19 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private boolean isIndexCorrect(int index) {
+        if (index >= size || index > data.length || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Given index is out of bounds of array");
+        }
+        return true;
+    }
+
+    private boolean isDataFull() {
+        if (size == data.length) {
+            return true;
+        }
+        return false;
     }
 }
