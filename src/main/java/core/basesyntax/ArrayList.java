@@ -3,84 +3,65 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    private final double capacityIndex = 1.5;
+    private final int DEFAULT_CAPACITY = 10;
+    private final double CAPACITY_INDEX = 1.5;
     private int size = 0;
-    private int capacity = 10;
-    private Object[] array;
+    private T[] values;
 
     public ArrayList() {
-        array = new Object[capacity];
+        values = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
     @Override
     public void add(T value) {
         resize();
-        array[size++] = value;
+        values[size++] = value;
     }
 
     @Override
     public void add(T value, int index) {
         if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("index < 0, change index!!!");
+            throw new ArrayListIndexOutOfBoundsException("Index: " + index + ", size: " + size);
         }
         resize();
-        for (int i = size - 1; i >= index; i--) {
-            array[i + 1] = array[i];
-        }
-        array[index] = value;
+        System.arraycopy(values,0, values, 1,size);
+        values[index] = value;
         size++;
     }
 
     @Override
     public void addAll(List<T> list) {
         if (list == null) {
-            throw new ArrayListIndexOutOfBoundsException("");
+            throw new ArrayListIndexOutOfBoundsException("no list");
         }
         if (list.isEmpty()) {
-            throw new ArrayListIndexOutOfBoundsException("");
+            throw new ArrayListIndexOutOfBoundsException("the entered list is empty");
         }
         for (int i = 0; i < list.size(); i++) {
             resize();
-            array[size++] = list.get(i);
+            values[size++] = list.get(i);
         }
     }
 
     @Override
     public T get(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("wrong index");
-        }
-        return (T) array[index];
+        checkIndex(index);
+        return (T) values[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("index < 0, change index!!!");
-        }
-        array[index] = value;
-    }
-
-    private void shiftToLeft(int start) {
-        size--;
-        if (size <= 0) {
-            return;
-        }
-        if (size != start) {
-            System.arraycopy(array, start + 1, array, start, size - start);
-        }
-        array[size] = null;
+        checkIndex(index);
+        values[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("index < 0, change index!!!");
-        }
-        Object removed;
-        removed = get(index);
+        checkIndex(index);
+        Object element;
+        element = get(index);
         shiftToLeft(index);
-        return (T) removed;
+        return (T) element;
     }
 
     @Override
@@ -90,13 +71,14 @@ public class ArrayList<T> implements List<T> {
         }
         int i;
         for (i = 0; i < size; i++) {
-            if (array[i] == null && element == null) {
+            if (values[i] == null && element == null) {
                 break;
             }
-            if ((array[i] != null) && (array[i].equals(element))) {
+            if ((values[i] != null) && (values[i].equals(element))) {
                 break;
             }
         }
+        // when using the delete method with index here the exception is constantly thrown at line 85
         if (i < size) {
             shiftToLeft(i);
             return element;
@@ -118,11 +100,28 @@ public class ArrayList<T> implements List<T> {
     }
 
     public void resize() {
-        if (array.length == size) {
-            int newCapacity = (int) (array.length * capacityIndex);
-            Object[] newArray = new Object[newCapacity];
-            System.arraycopy(array, 0, newArray, 0, size);
-            array = newArray;
+        if (values.length == size) {
+            int newCapacity = (int) (values.length * CAPACITY_INDEX);
+            T[] newArray = (T[]) new Object[newCapacity];
+            System.arraycopy(values, 0, newArray, 0, size);
+            values = newArray;
         }
+    }
+
+    private void checkIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Index: " + index + ", size: " + size);
+        }
+    }
+
+    private void shiftToLeft(int start) {
+        size--;
+        if (size < 0) {
+            return;
+        }
+        if (size != start) {
+            System.arraycopy(values, start + 1, values, start, size - start);
+        }
+        values[size] = null;
     }
 }
