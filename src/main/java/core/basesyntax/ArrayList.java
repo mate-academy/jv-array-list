@@ -14,7 +14,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        growIfArrayFull();
+        resize();
         elementData[size] = value;
         size++;
     }
@@ -25,7 +25,7 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayListIndexOutOfBoundsException("invalid index entered, index"
                     + " cannot be less than zero or greater than the size of the array");
         }
-        growIfArrayFull();
+        resize();
         System.arraycopy(elementData, index, elementData, index + 1, size - index);
         elementData[index] = value;
         size++;
@@ -34,27 +34,27 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void addAll(List<T> list) {
         for (int i = 0; i < list.size(); i++) {
-            growIfArrayFull();
+            resize();
             elementData[size++] = list.get(i);
         }
     }
 
     @Override
     public T get(int index) {
-        checkingIndexIsValid(index);
+        checkingIndex(index);
         return elementData[index];
     }
 
     @Override
     public void set(T value, int index) {
-        checkingIndexIsValid(index);
+        checkingIndex(index);
         elementData[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        checkingIndexIsValid(index);
-        growIfArrayFull();
+        checkingIndex(index);
+        resize();
         T result = elementData[index];
         System.arraycopy(elementData, index + 1, elementData, index, size - index);
         size--;
@@ -78,10 +78,10 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public boolean isEmpty() {
-        return (size == 0) ? true : false;
+        return size == 0;
     }
 
-    private void growIfArrayFull() {
+    private void resize() {
         if (size == elementData.length) {
             int newCapacity = (int) (elementData.length * CAPACITY_MULTIPLIER);
             T[] newElementData = (T[]) new Object[newCapacity];
@@ -90,7 +90,7 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private void checkingIndexIsValid(int index) {
+    private void checkingIndex(int index) {
         if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException("invalid index entered, index"
                     + " cannot be less than zero or greater than the size of the array");
