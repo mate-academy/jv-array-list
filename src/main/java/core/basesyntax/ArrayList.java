@@ -1,48 +1,116 @@
 package core.basesyntax;
 
+import java.util.NoSuchElementException;
+
 public class ArrayList<T> implements List<T> {
+    private static final int DEFAULT_CAPACITY = 10;
+    private static final double GROWTH_FACTOR = 1.5;
+    private T[] elements;
+    private int size;
+
+    @SuppressWarnings("unchecked")
+    public ArrayList() {
+        elements = (T[]) new Object[DEFAULT_CAPACITY];
+        size = 0;
+    }
+
     @Override
     public void add(T value) {
-
+        ensureCapacity();
+        elements[size++] = value;
     }
 
     @Override
     public void add(T value, int index) {
-
+        checkIndexForAdd(index);
+        ensureCapacity();
+        shiftRight(index);
+        elements[index] = value;
+        size++;
     }
 
     @Override
     public void addAll(List<T> list) {
-
+        for (int i = 0; i < list.size(); i++) {
+            add(list.get(i));
+        }
     }
 
     @Override
     public T get(int index) {
-        return null;
+        checkIndex(index);
+        return elements[index];
     }
 
     @Override
     public void set(T value, int index) {
-
+        checkIndex(index);
+        elements[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        return null;
+        checkIndex(index);
+        T removedElement = elements[index];
+        shiftLeft(index);
+        elements[--size] = null;
+        return removedElement;
+
     }
 
     @Override
     public T remove(T element) {
-        return null;
+        for (int index = 0; index < size; index++) {
+            if (elements[index] == null && element == null) {
+                return remove(index);
+            } else if (elements[index] != null && elements[index].equals(element)) {
+                return remove(index);
+            }
+        }
+        throw new NoSuchElementException("Element not found: " + element);
     }
 
     @Override
     public int size() {
-        return 0;
+        return size;
     }
 
     @Override
     public boolean isEmpty() {
-        return false;
+        return size == 0;
+    }
+
+    private void ensureCapacity() {
+        if (size == elements.length) {
+            resizeArray();
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private void resizeArray() {
+        int newCapacity = (int) (elements.length * GROWTH_FACTOR);
+        T[] newArray = (T[]) new Object[newCapacity];
+        System.arraycopy(elements, 0, newArray, 0, size);
+        elements = newArray;
+    }
+
+    private void checkIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Index: " + index + ", Size: " + size);
+        }
+    }
+
+    private void checkIndexForAdd(int index) {
+        if (index < 0 || index > size) {
+            throw new ArrayListIndexOutOfBoundsException("Index: " + index + ", Size: " + size);
+        }
+    }
+
+    private void shiftRight(int index) {
+        System.arraycopy(elements, index, elements, index + 1, size - index);
+    }
+
+    private void shiftLeft(int index) {
+        System.arraycopy(elements, index + 1, elements, index, size - index - 1);
     }
 }
