@@ -1,7 +1,5 @@
 package core.basesyntax;
 
-import java.util.Arrays;
-
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private Object[] elements;
@@ -21,7 +19,7 @@ public class ArrayList<T> implements List<T> {
     public void add(T value, int index) {
         checkIndexRangeInAdd(index);
         checkCapacity();
-        checkElementByIndex(index);
+        System.arraycopy(elements, index, elements, index + 1, size - index);
         elements[index] = value;
         size++;
     }
@@ -51,10 +49,7 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         checkIndex(index);
         final Object removedElement = elements[index];
-        Object[] copyElements = new Object[elements.length - 1];
-        System.arraycopy(elements, 0, copyElements, 0, index);
-        System.arraycopy(elements, index + 1, copyElements, index, elements.length - index - 1);
-        elements = copyElements;
+        System.arraycopy(elements, index + 1, elements, index, elements.length - index - 1);
         size--;
         return (T) removedElement;
     }
@@ -101,7 +96,9 @@ public class ArrayList<T> implements List<T> {
 
     private void ensureCapacity() {
         int newCapacity = elements.length * 2;
-        elements = Arrays.copyOf(elements, newCapacity);
+        Object[] copyElements = new Object[newCapacity];
+        System.arraycopy(elements, 0, copyElements, 0, elements.length);
+        elements = copyElements;
     }
 
     private void checkIndex(int index) {
@@ -113,12 +110,6 @@ public class ArrayList<T> implements List<T> {
     private void checkIndexRangeInAdd(int index) {
         if (index > size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Index out of bound list");
-        }
-    }
-
-    private void checkElementByIndex(int index) {
-        if (elements[index] != null) {
-            System.arraycopy(elements, index, elements, index + 1, size);
         }
     }
 
