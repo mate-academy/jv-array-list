@@ -23,7 +23,7 @@ public class ArrayList<T> implements List<T> {
     public void add(T value, int index) {
         checkIndexForAdd(index);
         ensureCapacity();
-        shiftRight(index);
+        System.arraycopy(elements, index, elements, index + 1, size - index);
         elements[index] = value;
         size++;
     }
@@ -51,7 +51,7 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         checkIndex(index);
         T removedElement = elements[index];
-        shiftLeft(index);
+        System.arraycopy(elements, index + 1, elements, index, size - index - 1);
         elements[--size] = null;
         return removedElement;
 
@@ -102,13 +102,5 @@ public class ArrayList<T> implements List<T> {
         if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException("Index: " + index + ", Size: " + size);
         }
-    }
-
-    private void shiftRight(int index) {
-        System.arraycopy(elements, index, elements, index + 1, size - index);
-    }
-
-    private void shiftLeft(int index) {
-        System.arraycopy(elements, index + 1, elements, index, size - index - 1);
     }
 }
