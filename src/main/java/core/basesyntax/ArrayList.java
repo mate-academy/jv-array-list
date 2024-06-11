@@ -19,8 +19,9 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        checkIndex(index);
+        checkIndexRangeInAdd(index);
         checkCapacity();
+        checkElementByIndex(index);
         elements[index] = value;
         size++;
     }
@@ -49,7 +50,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
-        Object removedElement = elements[index];
+        final Object removedElement = elements[index];
         Object[] copyElements = new Object[elements.length - 1];
         System.arraycopy(elements, 0, copyElements, 0, index);
         System.arraycopy(elements, index + 1, copyElements, index, elements.length - index - 1);
@@ -76,6 +77,9 @@ public class ArrayList<T> implements List<T> {
                 }
             }
         }
+        if (removedElement == null) {
+            throw new NoSuchElementException("No such element in list");
+        }
         return removedElement;
     }
 
@@ -86,11 +90,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public boolean isEmpty() {
-        if (size < 0) {
-            return true;
-        } else {
-            return false;
-        }
+        return size == 0;
     }
 
     private void checkCapacity() {
@@ -105,15 +105,20 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void checkIndex(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Array list index out " +
-                                                                 "of bound exception");
+        if (index >= size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Index out of bound list");
+        }
+    }
+
+    private void checkIndexRangeInAdd(int index) {
+        if (index > size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Index out of bound list");
         }
     }
 
     private void checkElementByIndex(int index) {
         if (elements[index] != null) {
-            System.arraycopy(elements, 0, elements, );
+            System.arraycopy(elements, index, elements, index + 1, size);
         }
     }
 
