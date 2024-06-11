@@ -3,8 +3,8 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    private final int DEFAULT_CAPACITY = 10;
-    private final double CAPACITY_INDEX = 1.5;
+    private static final int DEFAULT_CAPACITY = 10;
+    private static final double CAPACITY_INDEX = 1.5;
     private int size = 0;
     private T[] values;
 
@@ -80,8 +80,7 @@ public class ArrayList<T> implements List<T> {
         }
 
         if (i < size) {
-            shiftToLeft(i);
-            return element;
+            return remove(i);
         }
         throw new NoSuchElementException("the entered element is missing");
     }
