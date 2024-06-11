@@ -78,7 +78,7 @@ public class ArrayList<T> implements List<T> {
                 break;
             }
         }
-        // when using the delete method with index here the exception is constantly thrown at line 85
+
         if (i < size) {
             shiftToLeft(i);
             return element;
