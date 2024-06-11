@@ -11,7 +11,6 @@ public class ArrayList<T> implements List<T> {
     @SuppressWarnings("unchecked")
     public ArrayList() {
         elements = (T[]) new Object[DEFAULT_CAPACITY];
-        size = 0;
     }
 
     @Override
@@ -61,9 +60,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int index = 0; index < size; index++) {
-            if (elements[index] == null && element == null) {
-                return remove(index);
-            } else if (elements[index] != null && elements[index].equals(element)) {
+            if ((elements[index] == null && element == null)
+                    || (elements[index] != null && elements[index].equals(element))) {
                 return remove(index);
             }
         }
