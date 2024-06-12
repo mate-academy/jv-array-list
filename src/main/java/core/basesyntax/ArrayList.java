@@ -2,11 +2,12 @@ package core.basesyntax;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    private Object[] elements;
+    private static final int ENSURE_CAPACITY_DIVIDER = 2;
+    private T[] elements;
     private int size;
 
     public ArrayList() {
-        elements = new Object[DEFAULT_CAPACITY];
+        elements = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
     @Override
@@ -28,15 +29,14 @@ public class ArrayList<T> implements List<T> {
     public void addAll(List<T> list) {
         for (int i = 0; i < list.size(); i++) {
             checkCapacity();
-            elements[size] = list.get(i);
-            size++;
+            add(list.get(i));
         }
     }
 
     @Override
     public T get(int index) {
         checkIndex(index);
-        return (T) elements[index];
+        return elements[index];
     }
 
     @Override
@@ -48,10 +48,10 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
-        final Object removedElement = elements[index];
+        final T removedElement = elements[index];
         System.arraycopy(elements, index + 1, elements, index, elements.length - index - 1);
         size--;
-        return (T) removedElement;
+        return removedElement;
     }
 
     @Override
@@ -68,12 +68,11 @@ public class ArrayList<T> implements List<T> {
             for (int i = 0; i < this.size; i++) {
                 if (element.equals(this.elements[i])) {
                     removedElement = remove(i);
-                    return removedElement;
                 }
             }
-        }
-        if (removedElement == null) {
-            throw new NoSuchElementException("No such element in list");
+            if (removedElement == null) {
+                throw new NoSuchElementException("No such element: " + element + "in list");
+            }
         }
         return removedElement;
     }
@@ -95,22 +94,29 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void ensureCapacity() {
-        int newCapacity = elements.length * 2;
-        Object[] copyElements = new Object[newCapacity];
+        int newCapacity = (elements.length / ENSURE_CAPACITY_DIVIDER) + elements.length;
+        T[] copyElements = (T[]) new Object[newCapacity];
         System.arraycopy(elements, 0, copyElements, 0, elements.length);
         elements = copyElements;
     }
 
     private void checkIndex(int index) {
         if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index out of bound list");
+            throw new ArrayListIndexOutOfBoundsException("Index: "
+                                                                 + index
+                                                                 + "out of bounds "
+                                                                 + "for length: "
+                                                                 + elements.length);
         }
     }
 
     private void checkIndexRangeInAdd(int index) {
         if (index > size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index out of bound list");
+            throw new ArrayListIndexOutOfBoundsException("Index: "
+                                                                 + index
+                                                                 + "out of bounds "
+                                                                 + "for length: "
+                                                                 + elements.length);
         }
     }
-
 }
