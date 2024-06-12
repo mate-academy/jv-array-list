@@ -4,8 +4,8 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    private static final double CAPACITY_INDEX = 1.5;
-    private int size = 0;
+    private static final int CAPACITY_INDEX = 2;
+    private int size;
     private T[] values;
 
     public ArrayList() {
@@ -63,7 +63,7 @@ public class ArrayList<T> implements List<T> {
                 return remove(i);
             }
         }
-        throw new NoSuchElementException("the entered element is missing");
+        throw new NoSuchElementException("the entered element is missing" + element);
     }
 
     @Override
@@ -76,7 +76,7 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    public void resize() {
+    private void resize() {
         if (values.length == size) {
             int newCapacity = (int) (values.length * CAPACITY_INDEX);
             T[] newArray = (T[]) new Object[newCapacity];
