@@ -20,9 +20,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("Index: " + index + ", size: " + size);
-        }
+        checkIndexForAdd(index);
         resize();
         System.arraycopy(values,0, values, 1,size);
         values[index] = value;
@@ -31,12 +29,6 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        if (list == null) {
-            throw new ArrayListIndexOutOfBoundsException("no list");
-        }
-        if (list.isEmpty()) {
-            throw new ArrayListIndexOutOfBoundsException("the entered list is empty");
-        }
         for (int i = 0; i < list.size(); i++) {
             resize();
             values[size++] = list.get(i);
@@ -58,7 +50,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
-        Object element;
+        T element;
         element = get(index);
         shiftToLeft(index);
         return (T) element;
@@ -66,21 +58,10 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        if (size == 0) {
-            throw new NoSuchElementException("the entered element is missing");
-        }
-        int i;
-        for (i = 0; i < size; i++) {
-            if (values[i] == null && element == null) {
-                break;
+        for (int i = 0; i < size; i++) {
+            if ((values[i] == element) || (values[i] != null && values[i].equals(element))) {
+                return remove(i);
             }
-            if ((values[i] != null) && (values[i].equals(element))) {
-                break;
-            }
-        }
-
-        if (i < size) {
-            return remove(i);
         }
         throw new NoSuchElementException("the entered element is missing");
     }
@@ -92,10 +73,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public boolean isEmpty() {
-        if (size == 0) {
-            return true;
-        }
-        return false;
+        return size == 0;
     }
 
     public void resize() {
@@ -109,6 +87,12 @@ public class ArrayList<T> implements List<T> {
 
     private void checkIndex(int index) {
         if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Index: " + index + ", size: " + size);
+        }
+    }
+
+    private void checkIndexForAdd(int index) {
+        if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException("Index: " + index + ", size: " + size);
         }
     }
