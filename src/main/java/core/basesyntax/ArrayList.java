@@ -2,7 +2,7 @@ package core.basesyntax;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    private static final int ENSURE_CAPACITY_DIVIDER = 2;
+    private static final double CAPACITY_INDEX = 1.5;
     private T[] elements;
     private int size;
 
@@ -12,14 +12,14 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        ensureCapacity();
+        resize();
         elements[size++] = value;
     }
 
     @Override
     public void add(T value, int index) {
         checkIndexRangeInAdd(index);
-        ensureCapacity();
+        resize();
         System.arraycopy(elements, index, elements, index + 1, size - index);
         elements[index] = value;
         size++;
@@ -28,7 +28,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void addAll(List<T> list) {
         for (int i = 0; i < list.size(); i++) {
-            ensureCapacity();
+            resize();
             add(list.get(i));
         }
     }
@@ -57,7 +57,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if (elements[i] == element || (element != null && element.equals(elements[i]))) {
+            if (elements[i] == element || element != null && element.equals(elements[i])) {
                 return remove(i);
             }
         }
@@ -74,9 +74,9 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void ensureCapacity() {
+    private void resize() {
         if (size == elements.length) {
-            int newCapacity = (elements.length / ENSURE_CAPACITY_DIVIDER) + elements.length;
+            int newCapacity = (int) (elements.length * CAPACITY_INDEX);
             T[] copyElements = (T[]) new Object[newCapacity];
             System.arraycopy(elements, 0, copyElements, 0, elements.length);
             elements = copyElements;
