@@ -84,7 +84,6 @@ public class ArrayList<T> implements List<T> {
         return -1;
     }
 
-
     @Override
     public int size() {
         return size;
@@ -110,7 +109,8 @@ public class ArrayList<T> implements List<T> {
 
     private void checkIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index " + index + " out of bounds for length " + size);
+            throw new ArrayListIndexOutOfBoundsException(
+                    "Index " + index + " out of bounds for length " + size);
         }
     }
 
