@@ -2,7 +2,6 @@ package core.basesyntax;
 
 import java.util.Arrays;
 import java.util.NoSuchElementException;
-import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
@@ -17,21 +16,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        ensureCapacity();
+        ensureCapacityIfFull();
         elements[size++] = value;
     }
 
     @Override
     public void add(T value, int index) {
         checkIndexForAdd(index);
-        ensureCapacity();
-
+        ensureCapacityIfFull();
         if (index < size) {
             System.arraycopy(elements, index, elements, index + 1, size - index);
         }
         elements[index] = value;
         size++;
-
     }
 
     @Override
@@ -47,15 +44,6 @@ public class ArrayList<T> implements List<T> {
         return elements[index];
     }
 
-    private int getIndex(T value) {
-        for (int i = 0; i < size; i++) {
-            if (Objects.equals(value, elements[i])) {
-                return i;
-            }
-        }
-        return -1;
-    }
-
     @Override
     public void set(T value, int index) {
         checkIndex(index);
@@ -66,7 +54,7 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         checkIndex(index);
         T currentElement = get(index);
-        System.arraycopy(elements, index + 1, elements, index, elements.length - (index + 1));
+        System.arraycopy(elements, index + 1, elements, index, size - index);
         size--;
         return currentElement;
     }
@@ -81,19 +69,35 @@ public class ArrayList<T> implements List<T> {
         return remove(index);
     }
 
+    private int getIndex(T value) {
+        for (int i = 0; i < size; i++) {
+            if (value == null) {
+                if (elements[i] == null) {
+                    return i;
+                }
+            } else {
+                if (value.equals(elements[i])) {
+                    return i;
+                }
+            }
+        }
+        return -1;
+    }
+
+
     @Override
     public int size() {
         return size;
     }
 
-    private void ensureCapacity() {
+    private void ensureCapacityIfFull() {
         if (size == elements.length) {
             grow();
         }
     }
 
     private void grow() {
-        int newCapacity = (int) (size * GROWTH_FACTOR);
+        int newCapacity = (int) (elements.length * GROWTH_FACTOR);
         T[] newArray = (T[]) new Object[newCapacity];
         System.arraycopy(elements, 0, newArray, 0, size);
         elements = newArray;
@@ -119,7 +123,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public String toString() {
         return "ArrayList{"
-                + ", elements=" + Arrays.toString(elements)
+                + "elements="
+                + Arrays.toString(elements)
                 + ", size="
                 + size + '}';
     }
