@@ -88,13 +88,15 @@ public class ArrayList<T> implements List<T> {
 
     private void checkIndexForAdd(int index) {
         if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("Index: " + index + ", Size: " + size);
+            throw new ArrayListIndexOutOfBoundsException("Index: " + index
+                    + " is out of bounds, Size: " + size);
         }
     }
 
     private void checkIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index: " + index + ", Size: " + size);
+            throw new ArrayListIndexOutOfBoundsException("Index: " + index
+                    + " is out of bounds, Size: " + size);
         }
     }
 }
