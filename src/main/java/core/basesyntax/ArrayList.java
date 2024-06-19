@@ -1,6 +1,7 @@
 package core.basesyntax;
 
 import java.util.NoSuchElementException;
+import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
@@ -21,11 +22,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index " + index
-                    + " out of bounds for length " + listLength);
-        }
-        if (index < array.length && index < listLength) {
+        if (index < listLength && index >= 0) {
             if (listLength == array.length) {
                 array = grow(array);
             }
@@ -53,7 +50,7 @@ public class ArrayList<T> implements List<T> {
                 listLength++;
             }
         } else {
-            int shift = indexOf(null);
+            int shift = this.listLength;
             for (int i = 0; i < list.size(); i++) {
                 array[i + shift] = list.get(i);
             }
@@ -63,57 +60,45 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        T value = null;
-        int selectedIndex = -1;
         for (int i = 0; i < this.size(); i++) {
             if (i == index) {
-                value = array[i];
-                selectedIndex = i;
+                return array[i];
             }
         }
-        if (selectedIndex == -1) {
-            throw new ArrayListIndexOutOfBoundsException("Index " + index
-                    + " out of bounds for length " + listLength);
-        }
-        return value;
+        throw new ArrayListIndexOutOfBoundsException("Index " + index
+                + " out of bounds for length " + listLength);
     }
 
     @Override
     public void set(T value, int index) {
-        int updatedIndex = -1;
         for (int i = 0; i < listLength; i++) {
             if (i == index) {
                 array[i] = value;
-                updatedIndex = i;
+                return;
             }
         }
-        if (updatedIndex == -1) {
-            throw new ArrayListIndexOutOfBoundsException("Index " + index
-                    + " out of bounds for length " + listLength);
-        }
+        throw new ArrayListIndexOutOfBoundsException("Index " + index
+                + " out of bounds for length " + listLength);
     }
 
     @Override
     public T remove(int index) {
-        int removedIndex = -1;
         T value = null;
         for (int i = 0; i < listLength; i++) {
             if (i == index) {
                 value = array[i];
                 array[i] = null;
-                removedIndex = i;
+                for (int j = i + 1; j < listLength; j++) {
+                    array[j - 1] = array[j];
+                }
+                array[listLength - 1] = null;
+                listLength--;
+                return value;
+
             }
         }
-        if (removedIndex == -1) {
-            throw new ArrayListIndexOutOfBoundsException("Index " + index
-                    + " out of bounds for length " + listLength);
-        }
-        for (int i = removedIndex + 1; i < listLength; i++) {
-            array[i - 1] = array[i];
-        }
-        array[listLength - 1] = null;
-        listLength--;
-        return value;
+        throw new ArrayListIndexOutOfBoundsException("Index " + index
+                + " out of bounds for length " + listLength);
     }
 
     @Override
@@ -121,15 +106,15 @@ public class ArrayList<T> implements List<T> {
         int removedIndex = -1;
         T value = null;
         for (int i = 0; i < listLength; i++) {
-            if (array[i] != null && array[i].equals(element)
-                    || (array[i] == element)) {
+            if (Objects.equals(array[i],element)) {
                 value = array[i];
                 array[i] = null;
                 removedIndex = i;
+                break;
             }
         }
         if (removedIndex == -1) {
-            throw new NoSuchElementException();
+            throw new NoSuchElementException("There is no such element in the list");
         }
         for (int i = removedIndex + 1; i < listLength; i++) {
             array[i - 1] = array[i];
@@ -154,14 +139,5 @@ public class ArrayList<T> implements List<T> {
         T[] newArray = (T[]) new Object[newSize];
         System.arraycopy(originalArray, 0, newArray, 0, originalArray.length);
         return newArray;
-    }
-
-    private int indexOf(Object o) {
-        for (int i = 0; i < array.length; i++) {
-            if (array[i] == o || (array[i] != null && array[i].equals(o))) {
-                return i;
-            }
-        }
-        return -1;
     }
 }
