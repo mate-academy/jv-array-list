@@ -6,132 +6,110 @@ import java.util.Objects;
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private T[] array = (T[]) new Object[DEFAULT_CAPACITY];
-    private int listLength;
+    private int size;
 
     @Override
     public void add(T value) {
-        if (listLength < array.length) {
-            array[listLength] = value;
-            listLength++;
+        if (size < array.length) {
+            array[size] = value;
+            size++;
         } else {
             array = grow(array);
-            array[listLength] = value;
-            listLength++;
+            array[size] = value;
+            size++;
         }
     }
 
     @Override
     public void add(T value, int index) {
-        if (index < listLength && index >= 0) {
-            if (listLength == array.length) {
+        if (index < size && index >= 0) {
+            if (size == array.length) {
                 array = grow(array);
             }
-            for (int i = array.length - 1; i > index; i--) {
-                array[i] = array[i - 1];
-            }
+            System.arraycopy(array, index, array, index + 1, array.length - index - 1);
             array[index] = value;
-            listLength++;
-        } else if (index == listLength) {
+            size++;
+        } else if (index == size) {
             this.add(value);
         } else {
             throw new ArrayListIndexOutOfBoundsException("Index " + index
-                    + " out of bounds for length " + listLength);
+                    + " out of bounds for length " + size);
         }
     }
 
     @Override
     public void addAll(List<T> list) {
-        while (list.size() + listLength > array.length) {
+        while (list.size() + size > array.length) {
             array = grow(array);
         }
-        if (listLength == 0) {
-            for (int i = 0; i < list.size(); i++) {
-                array[i] = list.get(i);
-                listLength++;
-            }
-        } else {
-            int shift = this.listLength;
-            for (int i = 0; i < list.size(); i++) {
-                array[i + shift] = list.get(i);
-            }
-            listLength += list.size();
+        for (int i = 0; i < list.size(); i++) {
+            this.add(list.get(i));
         }
     }
 
     @Override
     public T get(int index) {
-        for (int i = 0; i < this.size(); i++) {
-            if (i == index) {
-                return array[i];
-            }
+        if (index >= size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Index " + index
+                    + " out of bounds for length " + size);
         }
-        throw new ArrayListIndexOutOfBoundsException("Index " + index
-                + " out of bounds for length " + listLength);
+        return array[index];
     }
 
     @Override
     public void set(T value, int index) {
-        for (int i = 0; i < listLength; i++) {
+        for (int i = 0; i < size; i++) {
             if (i == index) {
                 array[i] = value;
                 return;
             }
         }
         throw new ArrayListIndexOutOfBoundsException("Index " + index
-                + " out of bounds for length " + listLength);
+                + " out of bounds for length " + size);
     }
 
     @Override
     public T remove(int index) {
         T value = null;
-        for (int i = 0; i < listLength; i++) {
+        for (int i = 0; i < size; i++) {
             if (i == index) {
                 value = array[i];
                 array[i] = null;
-                for (int j = i + 1; j < listLength; j++) {
+                for (int j = i + 1; j < size; j++) {
                     array[j - 1] = array[j];
                 }
-                array[listLength - 1] = null;
-                listLength--;
+                array[size - 1] = null;
+                size--;
                 return value;
 
             }
         }
         throw new ArrayListIndexOutOfBoundsException("Index " + index
-                + " out of bounds for length " + listLength);
+                + " out of bounds for length " + size);
     }
 
     @Override
     public T remove(T element) {
         int removedIndex = -1;
         T value = null;
-        for (int i = 0; i < listLength; i++) {
-            if (Objects.equals(array[i],element)) {
+        for (int i = 0; i < size; i++) {
+            if (Objects.equals(array[i], element)) {
                 value = array[i];
-                array[i] = null;
-                removedIndex = i;
-                break;
+                this.remove(i);
+                return value;
             }
         }
-        if (removedIndex == -1) {
-            throw new NoSuchElementException("There is no such element in the list");
-        }
-        for (int i = removedIndex + 1; i < listLength; i++) {
-            array[i - 1] = array[i];
-        }
-        array[listLength - 1] = null;
-        listLength--;
-        return value;
+        throw new NoSuchElementException("There is no such element in the list");
     }
 
     @Override
     public int size() {
-        return listLength;
+        return size;
     }
 
     @Override
     public boolean isEmpty() {
-        return listLength == 0;
+        return size == 0;
     }
 
     private T[] grow(T[] originalArray) {
