@@ -5,7 +5,7 @@ import java.util.NoSuchElementException;
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private static final double CAPACITY_INDEX = 1.5;
-    private int arraySize;
+    private int size;
     private T[] items;
 
     public ArrayList() {
@@ -14,19 +14,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (arraySize == items.length) {
+        if (size == items.length) {
             resize();
         }
-        items[arraySize++] = value;
+        items[size++] = value;
     }
 
     @Override
     public void add(T value, int index) {
         checkIndexForAdd(index);
-        if (arraySize == items.length) {
+        if (size == items.length) {
             resize();
         }
-        System.arraycopy(items, index, items, index + 1, arraySize++ - index);
+        System.arraycopy(items, index, items, index + 1, size++ - index);
         items[index] = value;
     }
 
@@ -53,21 +53,15 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         checkIndex(index);
         T deletedObject = items[index];
-        System.arraycopy(items, index + 1, items, index, --arraySize - index);
+        System.arraycopy(items, index + 1, items, index, --size - index);
         return deletedObject;
     }
 
     @Override
     public T remove(T element) {
-        for (int i = 0; i < arraySize; i++) {
-            if (element == null) {
-                if (items[i] == null) {
-                    return remove(i);
-                }
-            } else {
-                if (element.equals(items[i])) {
-                    return remove(i);
-                }
+        for (int i = 0; i < size; i++) {
+            if (items[i] == element || (items[i] != null && items[i].equals(element))) {
+                return remove(i);
             }
         }
         throw new NoSuchElementException("Element " + element + " non-existent");
@@ -75,30 +69,30 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public int size() {
-        return arraySize;
+        return size;
     }
 
     @Override
     public boolean isEmpty() {
-        return arraySize == 0;
+        return size == 0;
     }
 
     private T[] resize() {
         int newCapacity = (int) (items.length * CAPACITY_INDEX);
         Object[] newArray = new Object[newCapacity];
-        System.arraycopy(items, 0, newArray, 0, arraySize);
+        System.arraycopy(items, 0, newArray, 0, size);
         items = (T[]) newArray;
         return items;
     }
 
     private void checkIndexForAdd(int index) {
-        if (index > arraySize || index < 0) {
+        if (index > size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("index " + index + " non-existent");
         }
     }
 
     private void checkIndex(int index) {
-        if (index >= arraySize || index < 0) {
+        if (index >= size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("index " + index + " non-existent");
         }
     }
