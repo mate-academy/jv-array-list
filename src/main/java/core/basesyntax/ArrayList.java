@@ -15,7 +15,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value) {
         if (size == elements.length) {
-            ensureCapacity();
+            resize();
         }
         elements[size++] = value;
     }
@@ -24,7 +24,7 @@ public class ArrayList<T> implements List<T> {
     public void add(T value, int index) {
         checkIndexForAdd(index);
         if (size == elements.length) {
-            ensureCapacity();
+            resize();
         }
         System.arraycopy(elements, index, elements, index + 1, size - index);
         elements[index] = value;
@@ -34,8 +34,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void addAll(List<T> list) {
         for (int i = 0; i < list.size(); i++) {
-            if (elements.length <= list.size()) {
-                ensureCapacity();
+            if (size == elements.length) {
+                resize();
             }
             elements[size++] = list.get(i);
         }
@@ -64,7 +64,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if (elements[i] == element || (elements[i] != null && elements[i].equals(element))) {
+            if (elements[i] == element || elements[i] != null && elements[i].equals(element)) {
                 return remove(i);
             }
         }
@@ -81,7 +81,7 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void ensureCapacity() {
+    private void resize() {
         int currentCapacity = elements.length;
         int newCapacity = (int) (currentCapacity * CAPACITY_INDEX);
         T[] newArray = (T[]) new Object[newCapacity];
