@@ -31,11 +31,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        if (list.size() + size > array.length) {
-            while (list.size() + size > array.length) {
-                resize();
-            }
-        }
+        ensureCapacity(size + list.size());
         for (int i = 0; i < list.size(); i++) {
             array[size + i] = list.get(i);
         }
@@ -97,8 +93,11 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private void resize() {
-        int newCapacity = (int) (array.length * RESIZE_FACTOR);
+    private void resize(int minCapacity) {
+        int newCapacity = array.length;
+        while (newCapacity < minCapacity) {
+            newCapacity = (int) (newCapacity * RESIZE_FACTOR);
+        }
         Object[] newArray = new Object[newCapacity];
         System.arraycopy(array, 0, newArray, 0, size);
         array = newArray;
@@ -106,7 +105,13 @@ public class ArrayList<T> implements List<T> {
 
     private void growIfArrayFull() {
         if (size == array.length) {
-            resize();
+            resize(size + 1);
+        }
+    }
+
+    private void ensureCapacity(int minCapacity) {
+        if (minCapacity > array.length) {
+            resize(minCapacity);
         }
     }
 
