@@ -3,15 +3,16 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    private static final int CAPACITY = 10;
-    private static final double RESIZE_FACTOR = 1.5;
-    private static final int ELEMENT_NOT_FOUND = -1;
+    private static final int INITIAL_CAPACITY = 10;
+    private static final double CAPACITY_INDEX = 1.5;
     private int size;
-    private Object[] array = new Object[CAPACITY];
+    private Object[] array = new Object[INITIAL_CAPACITY];
 
     @Override
     public void add(T value) {
-        growIfArrayFull();
+        if (size == array.length) {
+            resize();
+        }
         array[size] = value;
         size++;
     }
@@ -22,8 +23,9 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayListIndexOutOfBoundsException("Index " + index
                     + " out of bounds for size " + size);
         }
-        growIfArrayFull();
-
+        if (size == array.length) {
+            resize();
+        }
         System.arraycopy(array, index, array, index + 1, size - index);
         array[index] = value;
         size++;
@@ -31,49 +33,43 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        ensureCapacity(size + list.size());
         for (int i = 0; i < list.size(); i++) {
-            array[size + i] = list.get(i);
+            if (size == array.length) {
+                resize();
+            }
+            array[size] = list.get(i);
+            size++;
         }
-        size += list.size();
     }
 
     @Override
     public T get(int index) {
-        checkIndexOutOfBounds(index);
+        checkIndex(index);
         return (T) array[index];
     }
 
     @Override
     public void set(T value, int index) {
-        checkIndexOutOfBounds(index);
+        checkIndex(index);
         array[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        checkIndexOutOfBounds(index);
+        checkIndex(index);
         T removedElement = (T) array[index];
-        shiftLeftFromIndex(index);
+        System.arraycopy(array, index + 1, array, index, size - index - 1);
+        size--;
         return removedElement;
     }
 
     @Override
     public T remove(T element) {
-        int index = ELEMENT_NOT_FOUND;
-        for (int i = 0; i < size; i++) {
-            if (array[i] == element || (element != null && element.equals(array[i]))) {
-                index = i;
-                break;
-            }
-        }
-        if (index == ELEMENT_NOT_FOUND) {
+        int index = index(element);
+        if (index == -1) {
             throw new NoSuchElementException("Element not found");
         }
-
-        T removedElement = (T) array[index];
-        shiftLeftFromIndex(index);
-        return removedElement;
+        return remove(index);
     }
 
     @Override
@@ -86,41 +82,28 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void checkIndexOutOfBounds(int index) {
+    private void checkIndex(int index) {
         if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException("Index " + index
                     + " out of bounds for size " + size);
         }
     }
 
-    private void resize(int minCapacity) {
-        int newCapacity = array.length;
-        while (newCapacity < minCapacity) {
-            newCapacity = (int) (newCapacity * RESIZE_FACTOR);
-        }
-        Object[] newArray = new Object[newCapacity];
-        System.arraycopy(array, 0, newArray, 0, size);
-        array = newArray;
-    }
-
-    private void growIfArrayFull() {
-        if (size == array.length) {
-            resize(size + 1);
+    private void resize() {
+        if (array.length == size) {
+            int newCapacity = (int) (array.length * CAPACITY_INDEX);
+            Object[] newArray = new Object[newCapacity];
+            System.arraycopy(array, 0, newArray, 0, size);
+            array = newArray;
         }
     }
 
-    private void ensureCapacity(int minCapacity) {
-        if (minCapacity > array.length) {
-            resize(minCapacity);
+    private int index(T element) {
+        for (int i = 0; i < size; i++) {
+            if (array[i] == element || (element != null && element.equals(array[i]))) {
+                return i;
+            }
         }
-    }
-
-    private void shiftLeftFromIndex(int index) {
-        checkIndexOutOfBounds(index);
-        int numMoved = size - index - 1;
-        if (numMoved > 0) {
-            System.arraycopy(array, index + 1, array, index, numMoved);
-        }
-        array[--size] = null;
+        return -1;
     }
 }
