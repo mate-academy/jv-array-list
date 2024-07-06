@@ -10,9 +10,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (size == array.length) {
-            resize();
-        }
+        resize();
         array[size] = value;
         size++;
     }
@@ -23,9 +21,7 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayListIndexOutOfBoundsException("Index " + index
                     + " out of bounds for size " + size);
         }
-        if (size == array.length) {
-            resize();
-        }
+        resize();
         System.arraycopy(array, index, array, index + 1, size - index);
         array[index] = value;
         size++;
@@ -34,9 +30,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void addAll(List<T> list) {
         for (int i = 0; i < list.size(); i++) {
-            if (size == array.length) {
-                resize();
-            }
+            resize();
             array[size] = list.get(i);
             size++;
         }
@@ -100,7 +94,7 @@ public class ArrayList<T> implements List<T> {
 
     private int index(T element) {
         for (int i = 0; i < size; i++) {
-            if (array[i] == element || (element != null && element.equals(array[i]))) {
+            if (array[i] == element || element != null && element.equals(array[i])) {
                 return i;
             }
         }
