@@ -20,7 +20,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value) {
         if (size == dataArray.length) {
-            dataArray = grow();
+            ensureCapacity(size);
         }
         dataArray[size++] = value;
     }
@@ -31,7 +31,7 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayListIndexOutOfBoundsException("index is invalid");
         }
         if (size == dataArray.length) {
-            dataArray = grow();
+            ensureCapacity(size);
         }
         if (index == size) {
             dataArray[size++] = value;
@@ -46,8 +46,8 @@ public class ArrayList<T> implements List<T> {
     public void addAll(List<T> list) {
         int neededSize = size + list.size();
         int indexOfValueFromList = START_INDEX_VALUE;
-        if (size == dataArray.length || dataArray.length < neededSize) {
-            dataArray = growToNeededSize(neededSize);
+        if (dataArray.length < neededSize) {
+            ensureCapacity(neededSize);
         }
         for (int i = size; i < neededSize; i++) {
             dataArray[i] = list.get(indexOfValueFromList++);
@@ -58,7 +58,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         checkIndex(index);
-        return (T) dataArray[index];
+        return dataArray[index];
     }
 
     @Override
@@ -70,22 +70,24 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
-        return remove(dataArray[index]);
+        final T returnedElement = dataArray[index];
+        if (index < size - 1) {
+            System.arraycopy(dataArray, index + 1, dataArray, index, size - index);
+        }
+        dataArray[size - 1] = null;
+        size--;
+        return returnedElement;
     }
 
     @Override
     public T remove(T element) {
-        T[] temp = (T[]) new Object[Math.max(DEFAULT_CAPACITY, dataArray.length - 1)];
         for (int i = 0; i < dataArray.length; i++) {
             if (element == null && dataArray[i] == null
                     || element != null && element.equals(dataArray[i])) {
-                for (int index = 0; index < i; index++) {
-                    temp[index] = dataArray[index];
+                if (i < dataArray.length - 1) {
+                    System.arraycopy(dataArray, i + 1, dataArray, i, size - i);
                 }
-                for (int j = i; j < dataArray.length - 1; j++) {
-                    temp[j] = dataArray[j + 1];
-                }
-                System.arraycopy(temp, 0, dataArray, 0, temp.length);
+                dataArray[size - 1] = null;
                 size--;
                 return element;
             }
@@ -103,18 +105,11 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private T[] grow() {
-        double newCapacity = dataArray.length * GROW_INDEX;
+    private void ensureCapacity(int expandableSize) {
+        double newCapacity = expandableSize * GROW_INDEX;
         T[] newArray = (T[]) new Object[(int) newCapacity];
         System.arraycopy(dataArray, 0, newArray, 0, dataArray.length);
-        return newArray;
-    }
-
-    private T[] growToNeededSize(int neededSize) {
-        while (neededSize > dataArray.length) {
-            dataArray = grow();
-        }
-        return dataArray;
+        dataArray = newArray;
     }
 
     private void checkIndex(int index) {
