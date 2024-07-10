@@ -36,20 +36,20 @@ public class ArrayList<T> implements List<T> {
         if (index == size) {
             dataArray[size++] = value;
         } else {
-            System.arraycopy(dataArray, index, dataArray, index + 1, size++);
+            System.arraycopy(dataArray, index, dataArray, index + 1, size - index);
             dataArray[index] = value;
+            size++;
         }
     }
 
     @Override
     public void addAll(List<T> list) {
-        int oldSize = size;
         int neededSize = size + list.size();
         int indexOfValueFromList = START_INDEX_VALUE;
         if (size == dataArray.length || dataArray.length < neededSize) {
             dataArray = growToNeededSize(neededSize);
         }
-        for (int i = oldSize; i < neededSize; i++) {
+        for (int i = size; i < neededSize; i++) {
             dataArray[i] = list.get(indexOfValueFromList++);
             size++;
         }
