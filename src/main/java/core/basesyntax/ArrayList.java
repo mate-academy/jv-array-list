@@ -5,12 +5,13 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int INITIAL_MAX_ARRAY_LIST_SIZE = 10;
+    private static final double MAGNIFICATION_FACTOR_ARRAY_LIST = 1.5;
     private T[] array;
     private int size;
 
+    @SuppressWarnings("unchecked")
     public ArrayList() {
         this.array = (T[]) new Object[INITIAL_MAX_ARRAY_LIST_SIZE];
-        this.size = 0;
     }
 
     @Override
@@ -29,9 +30,11 @@ public class ArrayList<T> implements List<T> {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public void addAll(List<T> list) {
-        ensureCapacity(list.size());
-        for (int i = 0; i < list.size(); i++) {
+        int newElementsCount = list.size();
+        ensureCapacity(size + newElementsCount);
+        for (int i = 0; i < newElementsCount; i++) {
             array[size++] = list.get(i);
         }
     }
@@ -53,8 +56,10 @@ public class ArrayList<T> implements List<T> {
         checkIndex(index);
         T oldValue = array[index];
         int numMoved = size - index - 1;
-        System.arraycopy(array, index + 1, array, index, numMoved);
-        size--;
+        if (numMoved > 0) {
+            System.arraycopy(array, index + 1, array, index, numMoved);
+        }
+        array[--size] = null; // clear to let GC do its work
         return oldValue;
     }
 
@@ -79,13 +84,17 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void ensureCapacity() {
-        ensureCapacity(1);
+        if (size >= array.length) {
+            int newCapacity = (int) (array.length * MAGNIFICATION_FACTOR_ARRAY_LIST);
+            array = Arrays.copyOf(array, newCapacity);
+        }
     }
 
     private void ensureCapacity(int minCapacity) {
-        if (size + minCapacity > array.length) {
-            int newCapacity = (int) (array.length * 1.5);
-            array = Arrays.copyOf(array, Math.max(newCapacity, size + minCapacity));
+        if (minCapacity > array.length) {
+            int newCapacity = Math.max((int)
+                    (array.length * MAGNIFICATION_FACTOR_ARRAY_LIST), minCapacity);
+            array = Arrays.copyOf(array, newCapacity);
         }
     }
 
