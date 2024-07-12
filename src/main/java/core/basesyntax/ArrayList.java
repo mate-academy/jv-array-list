@@ -5,16 +5,11 @@ import java.util.NoSuchElementException;
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private static final double GROW_INDEX = 1.5;
-    private static final int START_INDEX_VALUE = 0;
     private T[] dataArray;
     private int size;
 
     public ArrayList() {
         dataArray = (T[]) new Object[DEFAULT_CAPACITY];
-    }
-
-    public ArrayList(int capacity) {
-        dataArray = (T[]) new Object[capacity];
     }
 
     @Override
@@ -27,31 +22,25 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("index is invalid");
-        }
+        checkIndexForAdd(index);
         if (size == dataArray.length) {
             ensureCapacity(size);
         }
-        if (index == size) {
-            dataArray[size++] = value;
-        } else {
+        if (index < size) {
             System.arraycopy(dataArray, index, dataArray, index + 1, size - index);
-            dataArray[index] = value;
-            size++;
         }
+        dataArray[index] = value;
+        size++;
     }
 
     @Override
     public void addAll(List<T> list) {
         int neededSize = size + list.size();
-        int indexOfValueFromList = START_INDEX_VALUE;
         if (dataArray.length < neededSize) {
             ensureCapacity(neededSize);
         }
-        for (int i = size; i < neededSize; i++) {
-            dataArray[i] = list.get(indexOfValueFromList++);
-            size++;
+        for (int i = 0; i < list.size(); i++) {
+            dataArray[size++] = list.get(i);
         }
     }
 
@@ -84,12 +73,7 @@ public class ArrayList<T> implements List<T> {
         for (int i = 0; i < dataArray.length; i++) {
             if (element == null && dataArray[i] == null
                     || element != null && element.equals(dataArray[i])) {
-                if (i < dataArray.length - 1) {
-                    System.arraycopy(dataArray, i + 1, dataArray, i, size - i);
-                }
-                dataArray[size - 1] = null;
-                size--;
-                return element;
+                return remove(i);
             }
         }
         throw new NoSuchElementException("This element does not belong to this list");
@@ -117,4 +101,11 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayListIndexOutOfBoundsException("index is invalid");
         }
     }
+
+    private void checkIndexForAdd(int index) {
+        if (index < 0 || index > size) {
+            throw new ArrayListIndexOutOfBoundsException("index is invalid");
+        }
+    }
+
 }
