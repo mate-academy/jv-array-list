@@ -4,8 +4,8 @@ import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    private static int CAPACITY = 10;
-    private static double SIZE_OF_INCREASE = 1.5;
+    private static final int CAPACITY = 10;
+    private static final double SIZE_OF_INCREASE = 1.5;
     private T[] values;
     private int size;
 
@@ -13,14 +13,14 @@ public class ArrayList<T> implements List<T> {
         values = (T[]) new Object[CAPACITY];
     }
 
-    private void increaseCapacity() {
+    private void ensureCapacity() {
         if (values.length == size) {
             int newCapacity = (int)(values.length * SIZE_OF_INCREASE);
             values = Arrays.copyOf(values, newCapacity);
         }
     }
 
-    private void correctIndex(int index) {
+    private void validateIndex(int index) {
         if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException("Index: " + index + ", Size: " + size);
         }
@@ -28,7 +28,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        increaseCapacity();
+        ensureCapacity();
         values[size++] = value;
     }
 
@@ -37,7 +37,7 @@ public class ArrayList<T> implements List<T> {
         if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException("Index: " + index + ", Size: " + size);
         }
-        increaseCapacity();
+        ensureCapacity();
         for (int i = size; i > index; i--) {
             values[i] = values[i - 1];
         }
@@ -54,23 +54,23 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        correctIndex(index);
+        validateIndex(index);
         return values[index];
     }
 
     @Override
     public void set(T value, int index) {
-        correctIndex(index);
+        validateIndex(index);
         values[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        increaseCapacity();
-        correctIndex(index);
+        ensureCapacity();
+        validateIndex(index);
         T value = values[index];
-        for (int i = index; i < size; i++) {
-            values[i] = values[i + 1];
+        if (index < size - 1) {
+            System.arraycopy(values, index + 1, values, index, size - index - 1);
         }
         values[--size] = null;
         return value;
@@ -79,7 +79,6 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         int index = indexOf(element);
-        increaseCapacity();
         if (index == -1) {
             throw new NoSuchElementException("Element not found");
         }
