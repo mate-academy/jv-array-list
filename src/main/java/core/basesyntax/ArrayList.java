@@ -11,7 +11,7 @@ public class ArrayList<T> implements List<T> {
 
     @SuppressWarnings("unchecked")
     public ArrayList() {
-        this.array = (T[]) new Object[INITIAL_MAX_ARRAY_LIST_SIZE];
+        array = (T[]) new Object[INITIAL_MAX_ARRAY_LIST_SIZE];
     }
 
     @Override
@@ -59,7 +59,7 @@ public class ArrayList<T> implements List<T> {
         if (numMoved > 0) {
             System.arraycopy(array, index + 1, array, index, numMoved);
         }
-        array[--size] = null; // clear to let GC do its work
+        array[--size] = null;
         return oldValue;
     }
 
@@ -70,7 +70,7 @@ public class ArrayList<T> implements List<T> {
                 return remove(i);
             }
         }
-        throw new NoSuchElementException("No such element.");
+        throw new NoSuchElementException("No such element." + element);
     }
 
     @Override
@@ -106,7 +106,7 @@ public class ArrayList<T> implements List<T> {
 
     private void checkIndexForAdd(int index) {
         if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("Index out of bound.");
+            throw new ArrayListIndexOutOfBoundsException("Index out of bound. Index: " + index);
         }
     }
 }
