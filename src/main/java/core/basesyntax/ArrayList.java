@@ -10,7 +10,6 @@ public class ArrayList<T> implements List<T> {
     private int size;
 
     public ArrayList() {
-
         values = (T[]) new Object[CAPACITY];
     }
 
