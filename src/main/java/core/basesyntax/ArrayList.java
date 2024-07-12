@@ -97,15 +97,15 @@ public class ArrayList<T> implements List<T> {
 
     private void checkIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("index " + index + " is invalid, " +
-                    "size of this list is " + size);
+            throw new ArrayListIndexOutOfBoundsException("index " + index + " is invalid, "
+                    + "size of this list is " + size);
         }
     }
 
     private void checkIndexForAdd(int index) {
         if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("index " + index + " is invalid, " +
-                    "size of this list is " + size);
+            throw new ArrayListIndexOutOfBoundsException("index " + index + " is invalid, "
+                    + "size of this list is " + size);
         }
     }
 }
