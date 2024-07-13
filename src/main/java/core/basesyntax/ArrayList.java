@@ -14,18 +14,14 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (size == data.length) {
-            ensureCapacity(size);
-        }
+        resize();
         data[size++] = value;
     }
 
     @Override
     public void add(T value, int index) {
         checkIndexForAdd(index);
-        if (size == data.length) {
-            ensureCapacity(size);
-        }
+        resize();
         if (index < size) {
             System.arraycopy(data, index, data, index + 1, size - index);
         }
@@ -35,10 +31,6 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        int neededSize = size + list.size();
-        if (data.length < neededSize) {
-            ensureCapacity(neededSize);
-        }
         for (int i = 0; i < list.size(); i++) {
             add(list.get(i));
         }
@@ -66,16 +58,24 @@ public class ArrayList<T> implements List<T> {
         return returnedElement;
     }
 
+    /* @Override
+     public T remove(T element) {
+         for (int i = 0; i < data.length; i++) {
+             if (element == null && data[i] == null
+                     || element != null && element.equals(data[i])) {
+                 return remove(i);
+             }
+         }
+         throw new NoSuchElementException("This element: " + element
+                 + " does not belong to this list");
+     }*/
     @Override
     public T remove(T element) {
-        for (int i = 0; i < data.length; i++) {
-            if (element == null && data[i] == null
-                    || element != null && element.equals(data[i])) {
-                return remove(i);
-            }
+        int index = indexOf(element);
+        if (index == -1) {
+            throw new NoSuchElementException("There is no such element in the list, " + element);
         }
-        throw new NoSuchElementException("This element: " + element
-                + " does not belong to this list");
+        return remove(index);
     }
 
     @Override
@@ -88,11 +88,13 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void ensureCapacity(int expandableSize) {
-        double newCapacity = expandableSize * GROW_INDEX;
-        T[] newArray = (T[]) new Object[(int) newCapacity];
-        System.arraycopy(data, 0, newArray, 0, data.length);
-        data = newArray;
+    private void resize() {
+        if (data.length == size) {
+            int newCapacity = (int) (data.length * GROW_INDEX);
+            Object[] newArray = new Object[newCapacity];
+            System.arraycopy(data, 0, newArray, 0, size);
+            data = (T[]) newArray;
+        }
     }
 
     private void checkIndex(int index) {
@@ -107,5 +109,16 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayListIndexOutOfBoundsException("index " + index + " is invalid, "
                     + "size of this list is " + size);
         }
+    }
+
+    private int indexOf(T element) {
+        int index = -1;
+        for (int i = 0; i < data.length; i++) {
+            if (element == null && data[i] == null
+                    || data[i] != null && data[i].equals(element)) {
+                return i;
+            }
+        }
+        return index;
     }
 }
