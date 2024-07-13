@@ -12,34 +12,6 @@ public class ArrayList<T> implements List<T> {
     @SuppressWarnings("unchecked")
     public ArrayList() {
         array = (T[]) new Object[INITIAL_CAPACITY];
-        size = 0;
-    }
-
-    @SuppressWarnings("unchecked")
-    private void growIfArrayFull() {
-        if (size == array.length) {
-            int newCapacity = (int) Math.min(array.length * GROWTH_FACTOR, MAX_ARRAY_SIZE);
-            if (newCapacity <= array.length) {
-                throw new OutOfMemoryError("Required array size too large");
-            }
-            T[] newArray = (T[]) new Object[newCapacity];
-            System.arraycopy(array, 0, newArray, 0, size);
-            array = newArray;
-        }
-    }
-
-    private void checkIndex(int index, boolean forAddOperation) {
-        if (forAddOperation) {
-            if (index < 0 || index > size) {
-                throw new ArrayListIndexOutOfBoundsException("Index " + index
-                        + " out of bounds for add operation of size " + size);
-            }
-        } else {
-            if (index < 0 || index >= size) {
-                throw new ArrayListIndexOutOfBoundsException("Index " + index
-                        + " out of bounds for size " + size);
-            }
-        }
     }
 
     @Override
@@ -91,7 +63,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int index = 0; index < size; index++) {
-            if ((element == null && array[index] == null)
+            if (element == array[index]
                     || (element != null && element.equals(array[index]))) {
                 return remove(index);
             }
@@ -107,5 +79,32 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    @SuppressWarnings("unchecked")
+    private void growIfArrayFull() {
+        if (size == array.length) {
+            int newCapacity = (int) Math.min(array.length * GROWTH_FACTOR, MAX_ARRAY_SIZE);
+            if (newCapacity <= array.length) {
+                throw new OutOfMemoryError("Required array size too large");
+            }
+            T[] newArray = (T[]) new Object[newCapacity];
+            System.arraycopy(array, 0, newArray, 0, size);
+            array = newArray;
+        }
+    }
+
+    private void checkIndex(int index, boolean forAddOperation) {
+        if (forAddOperation) {
+            if (index < 0 || index > size) {
+                throw new ArrayListIndexOutOfBoundsException("Index " + index
+                        + " out of bounds for add operation of size " + size);
+            }
+        } else {
+            if (index < 0 || index >= size) {
+                throw new ArrayListIndexOutOfBoundsException("Index " + index
+                        + " out of bounds for size " + size);
+            }
+        }
     }
 }
