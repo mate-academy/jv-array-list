@@ -5,7 +5,6 @@ import java.util.NoSuchElementException;
 public class ArrayList<T> implements List<T> {
     private static final int INITIAL_CAPACITY = 10;
     private static final double GROWTH_FACTOR = 1.5;
-    private static final int MAX_ARRAY_SIZE = Integer.MAX_VALUE - 8;
     private T[] array;
     private int size;
 
@@ -16,14 +15,14 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        growIfArrayFull();
+        resize();
         array[size++] = value;
     }
 
     @Override
     public void add(T value, int index) {
         checkIndex(index, true);
-        growIfArrayFull();
+        resize();
         System.arraycopy(array, index, array, index + 1, size - index);
         array[index] = value;
         size++;
@@ -82,15 +81,12 @@ public class ArrayList<T> implements List<T> {
     }
 
     @SuppressWarnings("unchecked")
-    private void growIfArrayFull() {
-        if (size == array.length) {
-            int newCapacity = (int) Math.min(array.length * GROWTH_FACTOR, MAX_ARRAY_SIZE);
-            if (newCapacity <= array.length) {
-                throw new OutOfMemoryError("Required array size too large");
-            }
-            T[] newArray = (T[]) new Object[newCapacity];
+    private void resize() {
+        if (array.length == size) {
+            int newCapacity = (int) (array.length * GROWTH_FACTOR);
+            Object[] newArray = new Object[newCapacity];
             System.arraycopy(array, 0, newArray, 0, size);
-            array = newArray;
+            array = (T[]) newArray;
         }
     }
 
