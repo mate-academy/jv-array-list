@@ -30,12 +30,9 @@ public class ArrayList<T> implements List<T> {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public void addAll(List<T> list) {
-        int newElementsCount = list.size();
-        ensureCapacity(size + newElementsCount);
-        for (int i = 0; i < newElementsCount; i++) {
-            array[size++] = list.get(i);
+        for (int i = 0; i < list.size(); i++) {
+            add(list.get(i));
         }
     }
 
@@ -86,14 +83,6 @@ public class ArrayList<T> implements List<T> {
     private void ensureCapacity() {
         if (size >= array.length) {
             int newCapacity = (int) (array.length * MAGNIFICATION_FACTOR_ARRAY_LIST);
-            array = Arrays.copyOf(array, newCapacity);
-        }
-    }
-
-    private void ensureCapacity(int minCapacity) {
-        if (minCapacity > array.length) {
-            int newCapacity = Math.max((int)
-                    (array.length * MAGNIFICATION_FACTOR_ARRAY_LIST), minCapacity);
             array = Arrays.copyOf(array, newCapacity);
         }
     }
