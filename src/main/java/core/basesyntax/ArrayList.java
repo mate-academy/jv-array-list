@@ -1,17 +1,16 @@
 package core.basesyntax;
 
-import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    private static final int INITIAL_MAX_ARRAY_LIST_SIZE = 10;
-    private static final double MAGNIFICATION_FACTOR_ARRAY_LIST = 1.5;
+    private static final int DEFAULT_CAPACITY = 10;
+    private static final double CAPACITY_INDEX = 1.5;
     private T[] array;
     private int size;
 
     @SuppressWarnings("unchecked")
     public ArrayList() {
-        array = (T[]) new Object[INITIAL_MAX_ARRAY_LIST_SIZE];
+        array = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
     @Override
@@ -82,8 +81,10 @@ public class ArrayList<T> implements List<T> {
 
     private void ensureCapacity() {
         if (size >= array.length) {
-            int newCapacity = (int) (array.length * MAGNIFICATION_FACTOR_ARRAY_LIST);
-            array = Arrays.copyOf(array, newCapacity);
+            int newCapacity = (int) (array.length * CAPACITY_INDEX);
+            T[] newArray = (T[]) new Object[newCapacity];
+            System.arraycopy(array, 0, newArray, 0, array.length);
+            array = newArray;
         }
     }
 
