@@ -16,9 +16,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
-        }
+        checkIfIndexOutOfBoundsForAdd(index);
         ensureCapacity(size + 1);
         System.arraycopy(elementData, index, elementData, index + 1, size - index);
         elementData[index] = value;
@@ -34,25 +32,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
-        }
+        checkIfIndexOutOfBounds(index);
         return elementData[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
-        }
+        checkIfIndexOutOfBounds(index);
         elementData[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
-        }
+        checkIfIndexOutOfBounds(index);
         T removedElement = elementData[index];
         int numMoved = size - index - 1;
         if (numMoved > 0) {
@@ -84,14 +76,34 @@ public class ArrayList<T> implements List<T> {
 
     private void ensureCapacity(int minCapacity) {
         if (minCapacity > elementData.length) {
-            int oldCapacity = elementData.length;
-            int newCapacity = (int)(oldCapacity * GROWTH_FACTOR);
-            if (newCapacity < minCapacity) {
-                newCapacity = minCapacity;
-            }
-            T[] newElementData = (T[]) new Object[newCapacity];
-            System.arraycopy(elementData, 0, newElementData, 0, size);
-            elementData = newElementData;
+            grow(minCapacity);
+        }
+    }
+
+    private void grow(int minCapacity) {
+        int oldCapacity = elementData.length;
+        int newCapacity = (int) (oldCapacity * GROWTH_FACTOR);
+        if (newCapacity < minCapacity) {
+            newCapacity = minCapacity;
+        }
+        T[] newElementData = (T[]) new Object[newCapacity];
+        System.arraycopy(elementData, 0, newElementData, 0, size);
+        elementData = newElementData;
+    }
+
+    private void checkIfIndexOutOfBounds(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Invalid index: "
+                    + index + ". Valid range: 0 to " + (size - 1));
+        }
+    }
+
+    private void checkIfIndexOutOfBoundsForAdd(int index) {
+        if (index < 0 || index > size) {
+            throw new ArrayListIndexOutOfBoundsException("Invalid index: "
+                    + index
+                    + ". Valid range: 0 to "
+                    + size);
         }
     }
 }
