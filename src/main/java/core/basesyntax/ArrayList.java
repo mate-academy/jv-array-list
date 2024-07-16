@@ -5,19 +5,24 @@ import java.util.NoSuchElementException;
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private static final double GROWTH_FACTOR = 1.5;
-    private T[] elementData = (T[]) new Object[DEFAULT_CAPACITY];
+    private T[] elementData;
     private int size;
+
+    public ArrayList() {
+        this.size = 0;
+        this.elementData = (T[]) new Object[DEFAULT_CAPACITY];
+    }
 
     @Override
     public void add(T value) {
-        ensureCapacity(size + 1);
+        resize();
         elementData[size++] = value;
     }
 
     @Override
     public void add(T value, int index) {
         checkIfIndexOutOfBoundsForAdd(index);
-        ensureCapacity(size + 1);
+        resize();
         System.arraycopy(elementData, index, elementData, index + 1, size - index);
         elementData[index] = value;
         size++;
@@ -50,7 +55,7 @@ public class ArrayList<T> implements List<T> {
         if (numMoved > 0) {
             System.arraycopy(elementData, index + 1, elementData, index, numMoved);
         }
-        elementData[--size] = null; // clear to let GC do its work
+        elementData[--size] = null;
         return removedElement;
     }
 
@@ -74,21 +79,13 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void ensureCapacity(int minCapacity) {
-        if (minCapacity > elementData.length) {
-            grow(minCapacity);
+    private void resize() {
+        if (elementData.length == size) {
+            int newCapacity = (int) (elementData.length * GROWTH_FACTOR);
+            Object[] newArray = new Object[newCapacity];
+            System.arraycopy(elementData, 0, newArray, 0, size);
+            elementData = (T[]) newArray;
         }
-    }
-
-    private void grow(int minCapacity) {
-        int oldCapacity = elementData.length;
-        int newCapacity = (int) (oldCapacity * GROWTH_FACTOR);
-        if (newCapacity < minCapacity) {
-            newCapacity = minCapacity;
-        }
-        T[] newElementData = (T[]) new Object[newCapacity];
-        System.arraycopy(elementData, 0, newElementData, 0, size);
-        elementData = newElementData;
     }
 
     private void checkIfIndexOutOfBounds(int index) {
