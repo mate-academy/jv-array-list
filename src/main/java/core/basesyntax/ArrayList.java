@@ -13,8 +13,7 @@ public class ArrayList<T> implements List<T> {
         size = 0;
     }
 
-
-    public void ensureCapacity () {
+    public void ensureCapacity() {
         if (elementData.length <= size) {
             int newCapacity = (int) (elementData.length * GROWTH_FACTOR);
             elementData = Arrays.copyOf(elementData, newCapacity);
