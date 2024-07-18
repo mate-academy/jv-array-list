@@ -38,7 +38,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void checkIndexForAdd(int index) {
-        if (index < 0 || index > size) { // note: "index > size" allows adding at the end (size)
+        if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException("Index: " + index + ", Size: " + size);
         }
     }
