@@ -13,31 +13,42 @@ public class ArrayList<T> implements List<T> {
         size = 0;
     }
 
-    public void checkCapacity() {
+
+    public void ensureCapacity () {
         if (elementData.length <= size) {
             int newCapacity = (int) (elementData.length * GROWTH_FACTOR);
             elementData = Arrays.copyOf(elementData, newCapacity);
         }
     }
 
+    public void ensureCapacity(int requiredCapacity) {
+        if (elementData.length < requiredCapacity) {
+            int newCapacity = (int) (elementData.length * GROWTH_FACTOR);
+            while (newCapacity < requiredCapacity) {
+                newCapacity = (int) (newCapacity * GROWTH_FACTOR);
+            }
+            elementData = Arrays.copyOf(elementData, newCapacity);
+        }
+    }
+
     public void checkIndex(int index) {
-        if (index < 0 || index > size) {
+        if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException("Index: " + index + ", Size: " + size);
         }
     }
 
     @Override
     public void add(T value) {
-        checkCapacity();
+        ensureCapacity();
         elementData [size++] = value;
     }
 
     @Override
     public void add(T value, int index) {
         checkIndex(index);
-        checkCapacity();
-        for (int i = size - 1; i >= index; i--) {
-            elementData[i++] = elementData[i];
+        ensureCapacity();
+        for (int i = size; i > index; i--) {
+            elementData[i] = elementData[i--];
         }
         elementData[index] = value;
         size++;
@@ -45,8 +56,9 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        while (size + list.size() > elementData.length) {
-            checkCapacity();
+        int requiredCapacity = size + list.size();
+        if (requiredCapacity > elementData.length) {
+            ensureCapacity(requiredCapacity);
         }
         for (int i = 0; i < list.size(); i++) {
             elementData [size + i] = list.get(i);
