@@ -7,10 +7,12 @@ public class ArrayList<T> implements List<T> {
     private static final double GROWTH_FACTOR = 1.5;
     private T[] elements;
     private int size;
+    private int type;
 
     public ArrayList() {
         elements = (T[]) new Object[DEFAULT_CAPACITY];
         size = 0;
+        type = 0;
     }
 
     @Override
@@ -23,9 +25,7 @@ public class ArrayList<T> implements List<T> {
     public void add(T value, int index) {
         checkIndexForAdd(index);
         ensureCapacity();
-        for (int i = size; i > index; i--) {
-            elements[i] = elements[i - 1];
-        }
+        System.arraycopy(elements, index, elements, index + 1, size - index);
         elements[index] = value;
         size++;
     }
@@ -53,8 +53,9 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         checkIndex(index);
         T removedElement = elements[index];
-        for (int i = index; i < size - 1; i++) {
-            elements[i] = elements[i + 1];
+        int numMoved = size - index - 1;
+        if (numMoved > 0) {
+            System.arraycopy(elements, index + 1, elements, index, numMoved);
         }
         elements[--size] = null;
         return removedElement;
@@ -85,9 +86,7 @@ public class ArrayList<T> implements List<T> {
         if (size == elements.length) {
             int newCapacity = (int) (elements.length * GROWTH_FACTOR);
             T[] newElements = (T[]) new Object[newCapacity];
-            for (int i = 0; i < size; i++) {
-                newElements[i] = elements[i];
-            }
+            System.arraycopy(elements, 0, newElements, 0, size);
             elements = newElements;
         }
     }
