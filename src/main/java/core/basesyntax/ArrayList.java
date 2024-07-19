@@ -7,27 +7,25 @@ public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private static final double GROWTH_FACTOR = 1.5;
     private int size;
-    private Object[] elementData;
+    private T[] elements;
 
     public ArrayList() {
-        elementData = new Object[DEFAULT_CAPACITY];
-        size = 0;
+        elements = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
     private void ensureCapacity() {
-        if (elementData.length <= size) {
-            int newCapacity = (int) (elementData.length * GROWTH_FACTOR);
-            elementData = Arrays.copyOf(elementData, newCapacity);
+        if (elements.length <= size) {
+            int newCapacity = (int) (elements.length * GROWTH_FACTOR);
+            elements = Arrays.copyOf(elements, newCapacity);
         }
     }
 
-    private void ensureCapacity(int requiredCapacity) {
-        if (elementData.length < requiredCapacity) {
-            int newCapacity = (int) (elementData.length * GROWTH_FACTOR);
-            while (newCapacity < requiredCapacity) {
-                newCapacity = (int) (newCapacity * GROWTH_FACTOR);
-            }
-            elementData = Arrays.copyOf(elementData, newCapacity);
+    private void resize() {
+        if (elements.length == size) {
+            int newCapacity = (int) (elements.length * GROWTH_FACTOR);
+            Object[] newArray = new Object[newCapacity];
+            System.arraycopy(elements, 0, newArray, 0, size);
+            elements = (T[]) newArray;
         }
     }
 
@@ -46,52 +44,45 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value) {
         ensureCapacity();
-        elementData[size++] = value;
+        elements[size++] = value;
     }
 
     @Override
     public void add(T value, int index) {
-        checkIndexForAdd(index); // using the new method here
+        checkIndexForAdd(index);
         ensureCapacity();
-        if (index != size) {
-            System.arraycopy(elementData, index, elementData, index + 1, size - index);
-        }
-        elementData[index] = value;
+        System.arraycopy(elements, index, elements, index + 1, size - index);
+        elements[index] = value;
         size++;
     }
 
     @Override
     public void addAll(List<T> list) {
-        int requiredCapacity = size + list.size();
-        if (requiredCapacity > elementData.length) {
-            ensureCapacity(requiredCapacity);
-        }
         for (int i = 0; i < list.size(); i++) {
-            elementData[size + i] = list.get(i);
+            resize();
+            elements[size] = list.get(i);
+            size++;
         }
-        size += list.size();
     }
 
     @Override
     public T get(int index) {
         checkIndex(index);
-        return (T) elementData[index];
+        return (T) elements[index];
     }
 
     @Override
     public void set(T value, int index) {
         checkIndex(index);
-        elementData[index] = value;
+        elements[index] = value;
     }
 
     @Override
     public T remove(int index) {
         checkIndex(index);
-        final T removedElement = (T) elementData[index];
-        for (int i = index; i < size - 1; i++) {
-            elementData[i] = elementData[i + 1];
-        }
-        elementData[size - 1] = null;
+        final T removedElement = (T) elements[index];
+        System.arraycopy(elements, index + 1, elements, index, size - index - 1);
+        elements[size - 1] = null;
         size--;
         return removedElement;
     }
@@ -100,13 +91,13 @@ public class ArrayList<T> implements List<T> {
     public T remove(T element) {
         if (element == null) {
             for (int i = 0; i < size; i++) {
-                if (elementData[i] == null) {
+                if (elements[i] == null) {
                     return remove(i);
                 }
             }
         } else {
             for (int i = 0; i < size; i++) {
-                if (element.equals(elementData[i])) {
+                if (element.equals(elements[i])) {
                     return remove(i);
                 }
             }
