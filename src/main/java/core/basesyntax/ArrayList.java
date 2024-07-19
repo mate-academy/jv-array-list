@@ -13,34 +13,6 @@ public class ArrayList<T> implements List<T> {
         elements = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
-    private void ensureCapacity() {
-        if (elements.length <= size) {
-            int newCapacity = (int) (elements.length * GROWTH_FACTOR);
-            elements = Arrays.copyOf(elements, newCapacity);
-        }
-    }
-
-    private void resize() {
-        if (elements.length == size) {
-            int newCapacity = (int) (elements.length * GROWTH_FACTOR);
-            Object[] newArray = new Object[newCapacity];
-            System.arraycopy(elements, 0, newArray, 0, size);
-            elements = (T[]) newArray;
-        }
-    }
-
-    private void checkIndex(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index: " + index + ", Size: " + size);
-        }
-    }
-
-    private void checkIndexForAdd(int index) {
-        if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("Index: " + index + ", Size: " + size);
-        }
-    }
-
     @Override
     public void add(T value) {
         ensureCapacity();
@@ -113,5 +85,33 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+    
+    private void ensureCapacity() {
+        if (elements.length <= size) {
+            int newCapacity = (int) (elements.length * GROWTH_FACTOR);
+            elements = Arrays.copyOf(elements, newCapacity);
+        }
+    }
+
+    private void resize() {
+        if (elements.length == size) {
+            int newCapacity = (int) (elements.length * GROWTH_FACTOR);
+            Object[] newArray = new Object[newCapacity];
+            System.arraycopy(elements, 0, newArray, 0, size);
+            elements = (T[]) newArray;
+        }
+    }
+
+    private void checkIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Index: " + index + ", Size: " + size);
+        }
+    }
+
+    private void checkIndexForAdd(int index) {
+        if (index < 0 || index > size) {
+            throw new ArrayListIndexOutOfBoundsException("Index: " + index + ", Size: " + size);
+        }
     }
 }
