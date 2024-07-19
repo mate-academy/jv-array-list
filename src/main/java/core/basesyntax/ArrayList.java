@@ -5,21 +5,19 @@ import java.util.NoSuchElementException;
 @SuppressWarnings("unchecked")
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
+    private static final int GROW_FACTOR = 2;
     private static final Object[] EMPTY_ELEMENT_DATA = {};
     private Object[] elementList;
     private int size;
 
     public ArrayList() {
-        this.elementList = EMPTY_ELEMENT_DATA;
+        elementList = EMPTY_ELEMENT_DATA;
     }
 
     @Override
     public void add(T value) {
-        if (size == elementList.length) {
-            elementList = grow();
-        }
-        elementList[size] = value;
-        size++;
+        growIfNeeded();
+        elementList[size++] = value;
     }
 
     @Override
@@ -28,9 +26,7 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayListIndexOutOfBoundsException("Can not add element, "
                     + "index is out of bounds.");
         }
-        if (size == elementList.length) {
-            elementList = grow();
-        }
+        growIfNeeded();
         System.arraycopy(elementList, index, elementList, index + 1, size - index);
         elementList[index] = value;
         size++;
@@ -48,33 +44,22 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index > size - 1 || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Can not get element, "
-                    + "index is out of bounds.");
-        }
+        checkIndex(index);
         return (T) elementList[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index > size - 1 || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Can not set element, "
-                    + "index is out of bounds.");
-        }
+        checkIndex(index);
         elementList[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index > size - 1 || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Can not remove element, "
-                    + "index is out of bounds.");
-        }
+        checkIndex(index);
         int newSize = size - 1;
         final Object oldValue = elementList[index];
-        if (newSize > index) {
-            System.arraycopy(elementList, index + 1, elementList, index, newSize - index);
-        }
+        System.arraycopy(elementList, index + 1, elementList, index, newSize - index);
         size = newSize;
         elementList[size] = null;
         return (T) oldValue;
@@ -82,20 +67,15 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        int index = -1;
         for (int i = 0; i < size; i++) {
             if ((element == elementList[i])
                     || (element != null && element.equals(elementList[i]))) {
-                index = i;
-                break;
+                Object oldValue = elementList[i];
+                remove(i);
+                return (T) oldValue;
             }
         }
-        if (index == -1) {
-            throw new NoSuchElementException("Element not found");
-        }
-        Object oldValue = elementList[index];
-        remove(index);
-        return (T) oldValue;
+        throw new NoSuchElementException("Element not found");
     }
 
     @Override
@@ -119,7 +99,7 @@ public class ArrayList<T> implements List<T> {
         int oldCapacity = elementList.length;
         if (elementList != EMPTY_ELEMENT_DATA) {
             int minGrowth = minCapacity - oldCapacity;
-            int defaultGrowth = oldCapacity >> 1;
+            int defaultGrowth = oldCapacity / GROW_FACTOR;
             int newCapacity = oldCapacity + Math.max(minGrowth, defaultGrowth);
             Object[] elementData = new Object[newCapacity];
             System.arraycopy(elementList,0,elementData,0, elementList.length);
@@ -129,7 +109,17 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private Object[] grow() {
-        return grow(size + 1);
+    private Object[] growIfNeeded() {
+        if (size == elementList.length) {
+            return grow(size + 1);
+        }
+        return elementList;
+    }
+
+    private void checkIndex(int index) {
+        if (index >= size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Can not remove element, "
+                    + "index is out of bounds.");
+        }
     }
 }
