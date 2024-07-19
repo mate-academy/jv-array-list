@@ -21,10 +21,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("Index: " + index
-                    + " is larger than size: " + size);
-        }
+        checkIndex(index, true);
         checkCapacity(size + 1);
         for (int i = size; i > index; i--) {
             elements[i] = elements[i - 1];
@@ -44,19 +41,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        checkIndex(index);
+        checkIndex(index, false);
         return elements[index];
     }
 
     @Override
     public void set(T value, int index) {
-        checkIndex(index);
+        checkIndex(index, false);
         elements[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        checkIndex(index);
+        checkIndex(index, false);
         T oldElement = elements[index];
         for (int i = index; i < size - 1; i++) {
             elements[i] = elements[i + 1];
@@ -68,8 +65,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if ((element == null && elements[i] == null)
-                    || (element != null && element.equals(elements[i]))) {
+            if (elementsAreEqual(element, elements[i])) {
                 remove(i);
                 return element;
             }
@@ -87,13 +83,13 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void checkIndex(int index) {
-        if (index < 0 || index >= size) {
+    private void checkIndex(int index, boolean inclusive) {
+        if (index < 0 || (inclusive ? index > size : index >= size)) {
             throw new ArrayListIndexOutOfBoundsException("Index is " + index
                     + ", Size is " + size + ".");
         }
     }
-
+    
     private void checkCapacity(int capacity) {
         if (capacity > elements.length) {
             int newCapacity = (int) (elements.length * GROWTH_FACTOR);
@@ -110,5 +106,10 @@ public class ArrayList<T> implements List<T> {
             newElements[i] = elements[i];
         }
         elements = newElements;
+    }
+
+    private boolean elementsAreEqual(T element1, T element2) {
+        return (element1 == null && element2 == null)
+                || (element1 != null && element1.equals(element2));
     }
 }
