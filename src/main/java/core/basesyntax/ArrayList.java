@@ -13,7 +13,7 @@ public class ArrayList<T> implements List<T> {
         elements = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
-    public void ensureCapacity() {
+    private void ensureCapacity() {
         if (size == elements.length) {
             int newCapacity = (int) (size * CAPACITY_INCREASE);
             T[] newElements = (T[]) new Object[newCapacity];
@@ -22,15 +22,16 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    public void indexAddAvailable(int index) {
+    private void checkIndexForAdd(int index) {
         if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException("Can't add value by " + index + " index");
         }
     }
 
-    public void indexAvailable(int index) {
+    private void checkIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("element with index " + index + " is not exist");
+            throw new ArrayListIndexOutOfBoundsException("Index out of bounds: " + index
+                    + " , valid range is [0, " + (size - 1) + "]");
         }
     }
 
@@ -43,7 +44,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        indexAddAvailable(index);
+        checkIndexForAdd(index);
         ensureCapacity();
         System.arraycopy(elements, index, elements, index + 1, size - index);
         elements[index] = value;
@@ -59,26 +60,25 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        indexAvailable(index);
+        checkIndex(index);
         return elements[index];
     }
 
     @Override
     public void set(T value, int index) {
-        indexAvailable(index);
+        checkIndex(index);
         elements[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        indexAvailable(index);
+        checkIndex(index);
         T oldValue = elements[index];
-        int numbMove = size - index - 1;
-        if (numbMove > 0) {
-            System.arraycopy(elements, index + 1, elements, index, numbMove);
+        int numElementsToMove = size - index - 1;
+        if (numElementsToMove > 0) {
+            System.arraycopy(elements, index + 1, elements, index, numElementsToMove);
         }
-        size--;
-        elements[size] = null;
+        elements[--size] = null;
         return oldValue;
     }
 
@@ -90,7 +90,7 @@ public class ArrayList<T> implements List<T> {
                 return remove(i);
             }
         }
-        throw new NoSuchElementException("element " + element + " not found");
+        throw new NoSuchElementException("Element " + element + " not found in the list");
     }
 
     @Override
