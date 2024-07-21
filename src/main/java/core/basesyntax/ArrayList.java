@@ -8,7 +8,7 @@ public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private static final double ADD_CAPACITY = 1.5;
     private static final int POSITION_ZERO = 0;
-    private T [] elements;
+    private T[] elements;
     private int size;
 
     public ArrayList() {
