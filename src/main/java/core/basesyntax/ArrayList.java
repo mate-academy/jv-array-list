@@ -15,56 +15,6 @@ public class ArrayList<T> implements List<T> {
         elements = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
-    private void checkIndexForExistingElements(int index) {
-        if (!(index >= 0 && index < size)) {
-            throw new ArrayListIndexOutOfBoundsException("Index: "
-                    + index
-                    + " is out of bounds. "
-                    + "Size: "
-                    + size);
-        }
-    }
-
-    private void checkIndexForAddition(int index) {
-        if (!(index >= 0 && index <= size)) {
-            throw new ArrayListIndexOutOfBoundsException("Index: "
-                    + index
-                    + " is out of bounds. "
-                    + "Size: "
-                    + size);
-        }
-    }
-
-    private void growList() {
-        if (size == elements.length) {
-            Object [] extendedArray = new Object[(int) (elements.length * ADD_CAPACITY)];
-            System.arraycopy(elements,
-                    POSITION_ZERO,
-                    extendedArray,
-                    POSITION_ZERO,
-                    elements.length);
-            elements = (T[]) extendedArray;
-        }
-    }
-
-    private void insertElement(T value, int index) {
-        checkIndexForAddition(index);
-        System.arraycopy(elements,
-                index, elements,
-                index + 1,
-                elements.length - index - 1);
-        elements[index] = value;
-        size++;
-    }
-
-    private void removeElement(int index) {
-        System.arraycopy(elements,
-                index + 1,
-                elements, index,
-                elements.length - index - 1);
-        size--;
-    }
-
     @Override
     public void add(T value) {
         growList();
@@ -128,6 +78,56 @@ public class ArrayList<T> implements List<T> {
     @Override
     public String toString() {
         return Arrays.toString(Arrays.copyOf(elements, size));
+    }
+
+    private void checkIndexForExistingElements(int index) {
+        if (!(index >= 0 && index < size)) {
+            throw new ArrayListIndexOutOfBoundsException("Index: "
+                    + index
+                    + " is out of bounds. "
+                    + "Size: "
+                    + size);
+        }
+    }
+
+    private void checkIndexForAddition(int index) {
+        if (!(index >= 0 && index <= size)) {
+            throw new ArrayListIndexOutOfBoundsException("Index: "
+                    + index
+                    + " is out of bounds. "
+                    + "Size: "
+                    + size);
+        }
+    }
+
+    private void growList() {
+        if (size == elements.length) {
+            Object [] extendedArray = new Object[(int) (elements.length * ADD_CAPACITY)];
+            System.arraycopy(elements,
+                    POSITION_ZERO,
+                    extendedArray,
+                    POSITION_ZERO,
+                    elements.length);
+            elements = (T[]) extendedArray;
+        }
+    }
+
+    private void insertElement(T value, int index) {
+        checkIndexForAddition(index);
+        System.arraycopy(elements,
+                index, elements,
+                index + 1,
+                elements.length - index - 1);
+        elements[index] = value;
+        size++;
+    }
+
+    private void removeElement(int index) {
+        System.arraycopy(elements,
+                index + 1,
+                elements, index,
+                elements.length - index - 1);
+        size--;
     }
 }
 
