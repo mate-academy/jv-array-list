@@ -13,28 +13,6 @@ public class ArrayList<T> implements List<T> {
         elements = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
-    private void ensureCapacity() {
-        if (size == elements.length) {
-            int newCapacity = (int) (size * CAPACITY_INCREASE);
-            T[] newElements = (T[]) new Object[newCapacity];
-            System.arraycopy(elements, START_POSITION, newElements, START_POSITION, size);
-            elements = newElements;
-        }
-    }
-
-    private void checkIndexForAdd(int index) {
-        if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("Can't add value by " + index + " index");
-        }
-    }
-
-    private void checkIndex(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index out of bounds: " + index
-                    + " , valid range is [0, " + (size - 1) + "]");
-        }
-    }
-
     @Override
     public void add(T value) {
         ensureCapacity();
@@ -101,5 +79,27 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private void ensureCapacity() {
+        if (size == elements.length) {
+            int newCapacity = (int) (size * CAPACITY_INCREASE);
+            T[] newElements = (T[]) new Object[newCapacity];
+            System.arraycopy(elements, START_POSITION, newElements, START_POSITION, size);
+            elements = newElements;
+        }
+    }
+
+    private void checkIndexForAdd(int index) {
+        if (index < 0 || index > size) {
+            throw new ArrayListIndexOutOfBoundsException("Can't add value by " + index + " index");
+        }
+    }
+
+    private void checkIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Index out of bounds: " + index
+                    + " , valid range is [0, " + (size - 1) + "]");
+        }
     }
 }
