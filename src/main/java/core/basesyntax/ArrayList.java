@@ -36,20 +36,20 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        checkIndexForExistingElements(index);
+        checkIndex(index);
         final T returnedElement = elements[index];
         return returnedElement;
     }
 
     @Override
     public void set(T value, int index) {
-        checkIndexForExistingElements(index);
+        checkIndex(index);
         elements[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        checkIndexForExistingElements(index);
+        checkIndex(index);
         final T removedElement = elements[index];
         removeElement(index);
         return removedElement;
@@ -80,7 +80,7 @@ public class ArrayList<T> implements List<T> {
         return Arrays.toString(Arrays.copyOf(elements, size));
     }
 
-    private void checkIndexForExistingElements(int index) {
+    private void checkIndex(int index) {
         if (!(index >= 0 && index < size)) {
             throw new ArrayListIndexOutOfBoundsException("Index: "
                     + index
