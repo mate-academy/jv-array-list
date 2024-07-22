@@ -1,6 +1,5 @@
 package core.basesyntax;
 
-import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
@@ -11,19 +10,18 @@ public class ArrayList<T> implements List<T> {
 
     public ArrayList() {
         this.elements = new Object[DEFAULT_CAPACITY];
-        this.size = 0;
     }
 
     @Override
     public void add(T value) {
-        ensureCapacity(size + 1);
+        resize();;
         elements[size++] = value;
     }
 
     @Override
     public void add(T value, int index) {
         checkIndexForAdd(index);
-        ensureCapacity(size + 1);
+        resize();
         System.arraycopy(elements, index, elements, index + 1, size - index);
         elements[index] = value;
         size++;
@@ -31,10 +29,10 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        int newSize = size + list.size();
-        ensureCapacity(newSize);
         for (int i = 0; i < list.size(); i++) {
-            elements[size++] = list.get(i);
+            resize();
+            elements[size] = list.get(i);
+            size++;
         }
     }
 
@@ -81,14 +79,12 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void ensureCapacity(int minCapacity) {
-        int oldCapacity = elements.length;
-        if (minCapacity > oldCapacity) {
-            int newCapacity = (int) (oldCapacity * GROWTH_FACTOR);
-            if (newCapacity < minCapacity) {
-                newCapacity = minCapacity;
-            }
-            elements = Arrays.copyOf(elements, newCapacity);
+    private void resize() {
+        if (elements.length == size) {
+            int newCapacity = (int) (elements.length * GROWTH_FACTOR);
+            Object[] newArray = new Object[newCapacity];
+            System.arraycopy(elements, 0, newArray, 0, size);
+            elements = newArray;
         }
     }
 
@@ -104,9 +100,9 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private int indexOf(Object o) {
+    private int indexOf(Object obj) {
         for (int i = 0; i < size; i++) {
-            if (o == null ? elements[i] == null : o.equals(elements[i])) {
+            if (obj == null ? elements[i] == null : obj.equals(elements[i])) {
                 return i;
             }
         }
