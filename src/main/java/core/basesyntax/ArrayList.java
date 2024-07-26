@@ -15,13 +15,13 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        ensureCapacity();
+        resize();
         elements[size++] = value;
     }
 
     @Override
     public void add(T value, int index) {
-        ensureCapacity();
+        resize();
         checkIndexForAddition(index);
         System.arraycopy(elements, index, elements, index + 1, size - index);
         elements[index] = value;
@@ -76,16 +76,13 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void resize() {
-        int newCapacity = (int) (elements.length * INCREASE_CAPACITY);
-        T[] newElements = (T[]) new Object[newCapacity];
-        System.arraycopy(elements, 0, newElements, 0, size);
-        elements = newElements;
-    }
-
-    private void ensureCapacity() {
         if (size == elements.length) {
-            resize();
+            int newCapacity = (int) (elements.length * INCREASE_CAPACITY);
+            T[] newElements = (T[]) new Object[newCapacity];
+            System.arraycopy(elements, 0, newElements, 0, size);
+            elements = newElements;
         }
+
     }
 
     private void checkIndexForAccess(int index) {
@@ -104,8 +101,8 @@ public class ArrayList<T> implements List<T> {
 
     private int indexOf(T element) {
         for (int i = 0; i < size; i++) {
-            if (elements[i] == element || elements[i] != null
-                    && elements[i].equals(element)) {
+            if (elements[i] == element
+                    || elements[i] != null && elements[i].equals(element)) {
                 return i;
             }
         }
