@@ -13,47 +13,6 @@ public class ArrayList<T> implements List<T> {
         elements = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
-    private T[] growIfArrayFull() {
-        int newCapacity = (int) (elements.length * INCREASE_CAPACITY);
-        T[] newElements = (T[]) new Object[newCapacity];
-        System.arraycopy(elements, 0, newElements, 0, size);
-        return newElements;
-    }
-
-    private void ensureCapacity() {
-        if (size == elements.length) {
-            elements = growIfArrayFull();
-        }
-    }
-
-    private void checkIndexForAccess(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index: " + index
-                    + " is out of bounds " + size);
-        }
-    }
-
-    private void checkIndexForAddition(int index) {
-        if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("Index: " + index
-                    + " is out of bounds " + size);
-        }
-    }
-
-    private int indexOf(T element) {
-        for (int i = 0; i < size; i++) {
-            if (elements[i] == element || elements[i] != null
-                    && elements[i].equals(element)) {
-                return i;
-            }
-        }
-        return ELEMENT_NOT_FOUND;
-    }
-
-    private void reduceSize() {
-        elements[--size] = null;
-    }
-
     @Override
     public void add(T value) {
         ensureCapacity();
@@ -93,7 +52,7 @@ public class ArrayList<T> implements List<T> {
         checkIndexForAccess(index);
         T removedElement = elements[index];
         System.arraycopy(elements, index + 1, elements, index, size - index - 1);
-        reduceSize();
+        elements[--size] = null;
         return removedElement;
     }
 
@@ -114,5 +73,42 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private void resize() {
+        int newCapacity = (int) (elements.length * INCREASE_CAPACITY);
+        T[] newElements = (T[]) new Object[newCapacity];
+        System.arraycopy(elements, 0, newElements, 0, size);
+        elements = newElements;
+    }
+
+    private void ensureCapacity() {
+        if (size == elements.length) {
+            resize();
+        }
+    }
+
+    private void checkIndexForAccess(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Index: " + index
+                    + " is out of bounds " + size);
+        }
+    }
+
+    private void checkIndexForAddition(int index) {
+        if (index < 0 || index > size) {
+            throw new ArrayListIndexOutOfBoundsException("Index: " + index
+                    + " is out of bounds " + size);
+        }
+    }
+
+    private int indexOf(T element) {
+        for (int i = 0; i < size; i++) {
+            if (elements[i] == element || elements[i] != null
+                    && elements[i].equals(element)) {
+                return i;
+            }
+        }
+        return ELEMENT_NOT_FOUND;
     }
 }
