@@ -6,12 +6,12 @@ import java.util.NoSuchElementException;
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private static final int GROW_FACTOR = 2;
-    private final T[] EMPTY_ELEMENT_DATA = (T[]) new Object [0];
+    private final T[] emptyElementData = (T[]) new Object [0];
     private T[] elementList;
     private int size;
 
     public ArrayList() {
-        elementList = EMPTY_ELEMENT_DATA;
+        elementList = emptyElementData;
     }
 
     @Override
@@ -97,7 +97,7 @@ public class ArrayList<T> implements List<T> {
 
     private T[] grow(int minCapacity) {
         int oldCapacity = elementList.length;
-        if (elementList != EMPTY_ELEMENT_DATA) {
+        if (elementList != emptyElementData) {
             int minGrowth = minCapacity - oldCapacity;
             int defaultGrowth = oldCapacity / GROW_FACTOR;
             int newCapacity = oldCapacity + Math.max(minGrowth, defaultGrowth);
