@@ -13,7 +13,6 @@ public class ArrayList<T> implements List<T> {
         size = 0;
     }
 
-    @Override
     public void add(T value) {
         if (size == elements.length) {
             resize();
@@ -45,14 +44,12 @@ public class ArrayList<T> implements List<T> {
         size++;
     }
 
-    @Override
     public void addAll(List<T> list) {
         for (int i = 0; i < list.size(); i++) {
             add(list.get(i));
         }
     }
 
-    @Override
     public T get(int index) {
         checkIndex(index);
         return elements[index];
@@ -65,13 +62,11 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    @Override
     public void set(T value, int index) {
         checkIndex(index);
         elements[index] = value;
     }
 
-    @Override
     public T remove(int index) {
         checkIndex(index);
         T oldValue = elements[index];
@@ -82,7 +77,6 @@ public class ArrayList<T> implements List<T> {
         return oldValue;
     }
 
-    @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
             if ((element == null && elements[i] == null)
@@ -93,12 +87,10 @@ public class ArrayList<T> implements List<T> {
         throw new NoSuchElementException("Element: " + element + " not found");
     }
 
-    @Override
     public int size() {
         return size;
     }
 
-    @Override
     public boolean isEmpty() {
         return size == 0;
     }
