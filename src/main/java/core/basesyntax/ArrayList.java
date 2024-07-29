@@ -5,14 +5,15 @@ import java.util.NoSuchElementException;
 public class ArrayList<T> implements List<T> {
 
     private static final int DEFAULT_CAPACITY = 10;
-    private T[] elements;
+    private Object[] elements;
     private int size;
 
     public ArrayList() {
-        elements = (T[]) new Object[DEFAULT_CAPACITY];
+        elements = new Object[DEFAULT_CAPACITY];
         size = 0;
     }
 
+    @Override
     public void add(T value) {
         if (size == elements.length) {
             resize();
@@ -20,15 +21,15 @@ public class ArrayList<T> implements List<T> {
         elements[size++] = value;
     }
 
+    @SuppressWarnings("unchecked")
     private void resize() {
         int newCapacity = (int) (elements.length * 1.5);
-        T[] newArray = (T[]) new Object[newCapacity];
-        for (int i = 0; i < size; i++) {
-            newArray[i] = elements[i];
-        }
+        Object[] newArray = new Object[newCapacity];
+        System.arraycopy(elements, 0, newArray, 0, size);
         elements = newArray;
     }
 
+    @Override
     public void add(T value, int index) {
         if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException("Index: "
@@ -37,22 +38,23 @@ public class ArrayList<T> implements List<T> {
         if (size == elements.length) {
             resize();
         }
-        for (int i = size; i > index; i--) {
-            elements[i] = elements[i - 1];
-        }
+        System.arraycopy(elements, index, elements, index + 1, size - index);
         elements[index] = value;
         size++;
     }
 
+    @Override
     public void addAll(List<T> list) {
         for (int i = 0; i < list.size(); i++) {
             add(list.get(i));
         }
     }
 
+    @SuppressWarnings("unchecked")
+    @Override
     public T get(int index) {
         checkIndex(index);
-        return elements[index];
+        return (T) elements[index];
     }
 
     private void checkIndex(int index) {
@@ -62,21 +64,23 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
+    @Override
     public void set(T value, int index) {
         checkIndex(index);
         elements[index] = value;
     }
 
+    @SuppressWarnings("unchecked")
+    @Override
     public T remove(int index) {
         checkIndex(index);
-        T oldValue = elements[index];
-        for (int i = index; i < size - 1; i++) {
-            elements[i] = elements[i + 1];
-        }
+        T oldValue = (T) elements[index];
+        System.arraycopy(elements, index + 1, elements, index, size - index - 1);
         elements[--size] = null;
         return oldValue;
     }
 
+    @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
             if ((element == null && elements[i] == null)
@@ -87,10 +91,12 @@ public class ArrayList<T> implements List<T> {
         throw new NoSuchElementException("Element: " + element + " not found");
     }
 
+    @Override
     public int size() {
         return size;
     }
 
+    @Override
     public boolean isEmpty() {
         return size == 0;
     }
