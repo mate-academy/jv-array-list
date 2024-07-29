@@ -21,14 +21,6 @@ public class ArrayList<T> implements List<T> {
         elements[size++] = value;
     }
 
-    @SuppressWarnings("unchecked")
-    private void resize() {
-        int newCapacity = (int) (elements.length * 1.5);
-        Object[] newArray = new Object[newCapacity];
-        System.arraycopy(elements, 0, newArray, 0, size);
-        elements = newArray;
-    }
-
     @Override
     public void add(T value, int index) {
         if (index < 0 || index > size) {
@@ -50,18 +42,10 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public T get(int index) {
         checkIndex(index);
         return (T) elements[index];
-    }
-
-    private void checkIndex(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index " + index
-                    + " out of bounds for length " + size);
-        }
     }
 
     @Override
@@ -70,7 +54,6 @@ public class ArrayList<T> implements List<T> {
         elements[index] = value;
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public T remove(int index) {
         checkIndex(index);
@@ -99,5 +82,19 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private void resize() {
+        int newCapacity = (int) (elements.length * 1.5);
+        Object[] newArray = new Object[newCapacity];
+        System.arraycopy(elements, 0, newArray, 0, size);
+        elements = newArray;
+    }
+
+    private void checkIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Index " + index
+                    + " out of bounds for length " + size);
+        }
     }
 }
