@@ -9,7 +9,6 @@ public class ArrayList<T> implements List<T> {
     private Object[] array;
     private int size;
 
-
     public ArrayList() {
         this.array = new Object[DEFAULT_CAPACITY];
     }
