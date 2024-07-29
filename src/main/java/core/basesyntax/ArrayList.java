@@ -1,6 +1,5 @@
 package core.basesyntax;
 
-import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
@@ -21,8 +20,8 @@ public class ArrayList<T> implements List<T> {
     }
 
     @Override
-    public void add(T value, int index) throws ArrayListIndexOutOfBoundsException {
-        checkIfIndexNegativeAndIndexPresent(index);
+    public void add(T value, int index) {
+        checkIndex(index);
         grow();
         addElement(value, index);
         size++;
@@ -38,47 +37,34 @@ public class ArrayList<T> implements List<T> {
     }
 
     @Override
-    public T get(int index) throws ArrayListIndexOutOfBoundsException {
-        checkIfIndexNegativeAndIndexPresent(index + 1);
+    public T get(int index) {
+        checkIndex(index + 1);
         T result = (T) array[index];
         return result;
     }
 
     @Override
-    public void set(T value, int index) throws ArrayListIndexOutOfBoundsException {
-        checkIfIndexNegativeAndIndexPresent(index + 1);
+    public void set(T value, int index) {
+        checkIndex(index + 1);
         array[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        checkIfIndexNegativeAndIndexPresent(index + 1);
-        Object[] result = Arrays.copyOf(array, array.length - 1);
-        T removedItem = null;
-        removedItem = (T) array[index];
-        System.arraycopy(array, index + 1, result, index, array.length - index - 1);
-        array = result;
+        checkIndex(index + 1);
+        T removedItem = (T) array[index];
+        System.arraycopy(array, index + 1, array, index, size - index - 1);
         size--;
         return removedItem;
     }
 
     @Override
-    public T remove(T element) throws NoSuchElementException {
-        for (int i = 0; i < size; i++) {
-            if (array[i] == null) {
-                if (element == null) {
-                    remove(getIndex(element));
-                    return element;
-                }
-                continue;
-            }
-            if (array[i] == element || array[i].equals(element)) {
-                remove(getIndex(element));
-                return element;
-            }
+    public T remove(T element) {
+        int index = getIndex(element);
+        if (index == -1) {
+            throw new NoSuchElementException("The element is not present in the list");
         }
-
-        throw new NoSuchElementException("The element is not present in the list");
+        return remove(index);
     }
 
     @Override
@@ -111,25 +97,18 @@ public class ArrayList<T> implements List<T> {
         array = result;
     }
 
-    public void checkIfIndexNegativeAndIndexPresent(int index) {
+    public void checkIndex(int index) {
         if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException("The index is invalid");
         }
     }
 
     public int getIndex(T element) {
-        int index = 0;
+        int index = -1;
         for (int i = 0; i < size; i++) {
-            if (array[i] == null) {
-                if (element == null) {
-                    index = i;
-                }
-                continue;
-            }
-            if (array[i] == element || array[i].equals(element)) {
+            if (array[i] == element || array[i] != null && array[i].equals(element)) {
                 index = i;
             }
-
         }
         return index;
     }
