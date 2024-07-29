@@ -42,6 +42,7 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public T get(int index) {
         checkIndex(index);
@@ -54,6 +55,7 @@ public class ArrayList<T> implements List<T> {
         elements[index] = value;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public T remove(int index) {
         checkIndex(index);
