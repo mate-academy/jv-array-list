@@ -7,12 +7,11 @@ public class ArrayList<T> implements List<T> {
     private static final double GROWTH_FACTOR = 1.5;
     private T[] elements;
     private int size;
-    private int type;
 
+    @SuppressWarnings("unchecked")
     public ArrayList() {
         elements = (T[]) new Object[DEFAULT_CAPACITY];
         size = 0;
-        type = 0;
     }
 
     @Override
@@ -82,6 +81,7 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
+    @SuppressWarnings("unchecked")
     private void ensureCapacity() {
         if (size == elements.length) {
             int newCapacity = (int) (elements.length * GROWTH_FACTOR);
