@@ -15,7 +15,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value) {
         grow();
-        addElement(value);
+        array[size] = value;
         size++;
     }
 
@@ -23,7 +23,8 @@ public class ArrayList<T> implements List<T> {
     public void add(T value, int index) {
         checkIndex(index);
         grow();
-        addElement(value, index);
+        System.arraycopy(array, index, array, index + 1, size - index);
+        array[index] = value;
         size++;
     }
 
@@ -31,7 +32,7 @@ public class ArrayList<T> implements List<T> {
     public void addAll(List<T> list) {
         for (int i = 0; i < list.size(); i++) {
             grow();
-            addElement(list.get(i));
+            array[size] = list.get(i);
             size++;
         }
     }
@@ -77,7 +78,7 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    public void grow() {
+    private void grow() {
         if (array.length < size + 1) {
             T[] result = (T[]) new Object[(int) (array.length * GROW_TO) + 1];
             System.arraycopy(array, 0, result, 0, array.length);
@@ -85,25 +86,13 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    public void addElement(T value) {
-        array[size] = value;
-    }
-
-    public void addElement(T value, int position) {
-        T[] result = (T[]) new Object[array.length];
-        System.arraycopy(array, 0, result, 0, position);
-        result[position] = value;
-        System.arraycopy(array, position, result, position + 1, size - position);
-        array = result;
-    }
-
-    public void checkIndex(int index) {
+    private void checkIndex(int index) {
         if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException("The index is invalid");
         }
     }
 
-    public int getIndex(T element) {
+    private int getIndex(T element) {
         int index = -1;
         for (int i = 0; i < size; i++) {
             if (array[i] == element || array[i] != null && array[i].equals(element)) {
