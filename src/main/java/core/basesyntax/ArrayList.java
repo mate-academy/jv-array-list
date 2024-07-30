@@ -5,11 +5,11 @@ import java.util.NoSuchElementException;
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private static final double GROW_TO = 1.5;
-    private Object[] array;
+    private T[] array;
     private int size;
 
     public ArrayList() {
-        this.array = new Object[DEFAULT_CAPACITY];
+        this.array = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
     @Override
@@ -39,7 +39,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         checkIndex(index + 1);
-        T result = (T) array[index];
+        T result = array[index];
         return result;
     }
 
@@ -79,7 +79,7 @@ public class ArrayList<T> implements List<T> {
 
     public void grow() {
         if (array.length < size + 1) {
-            Object[] result = new Object[(int) (array.length * GROW_TO) + 1];
+            T[] result = (T[]) new Object[(int) (array.length * GROW_TO) + 1];
             System.arraycopy(array, 0, result, 0, array.length);
             array = result;
         }
@@ -90,7 +90,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     public void addElement(T value, int position) {
-        Object[] result = new Object[array.length];
+        T[] result = (T[]) new Object[array.length];
         System.arraycopy(array, 0, result, 0, position);
         result[position] = value;
         System.arraycopy(array, position, result, position + 1, size - position);
