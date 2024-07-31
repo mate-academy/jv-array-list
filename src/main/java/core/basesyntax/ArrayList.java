@@ -3,25 +3,35 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
+    private static final int MIN_SIZE = 10;
     private int arraySize;
     private Object[] elementData;
     private int size;
 
     public ArrayList() {
-        arraySize = 10;
+        arraySize = MIN_SIZE;
         elementData = new Object[arraySize];
         size = 0;
+    }
+
+    private void grow() {
+        Object[] oldArray = elementData;
+        elementData = new Object[(int) (oldArray.length + (oldArray.length * 0.5))];
+        System.arraycopy(oldArray, 0, elementData, 0, oldArray.length);
+        arraySize = elementData.length;
+    }
+
+    private void grow(int number) {
+        Object[] oldArray = elementData;
+        elementData = new Object[(int) (oldArray.length + number)];
+        System.arraycopy(oldArray, 0, elementData, 0, oldArray.length);
+        arraySize = elementData.length;
     }
 
     @Override
     public void add(T value) {
         if (size >= arraySize) {
-            Object[] obj = elementData;
-            elementData = new Object[(int) (elementData.length + (elementData.length * 0.5))];
-            for (int i = 0; i < obj.length; i++) {
-                elementData[i] = obj[i];
-            }
-            arraySize = elementData.length;
+            grow();
         }
         elementData[size] = value;
         size++;
@@ -33,12 +43,7 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayListIndexOutOfBoundsException("The index is greater than the "
                     + "size of the array or uncorect");
         } else if (size == elementData.length) {
-            Object[] obj = elementData;
-            elementData = new Object[(int) (elementData.length + (elementData.length * 0.5))];
-            for (int i = 0; i < obj.length; i++) {
-                elementData[i] = obj[i];
-            }
-            arraySize = elementData.length;
+            grow();
         }
         for (int i = size; i > index; i--) {
             elementData[i] = elementData[i - 1];
@@ -50,12 +55,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void addAll(List<T> list) {
         if (list.size() >= arraySize) {
-            Object[] obj = elementData;
-            elementData = new Object[(int) (elementData.length + list.size())];
-            for (int i = 0; i < obj.length; i++) {
-                elementData[i] = obj[i];
-            }
-            arraySize = elementData.length;
+            grow(list.size());
         }
         for (int i = size, k = 0; k < list.size(); i++, k++) {
             elementData[i] = list.get(k);
@@ -138,9 +138,6 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public boolean isEmpty() {
-        if (size == 0) {
-            return true;
-        }
-        return false;
+        return size == 0;
     }
 }
