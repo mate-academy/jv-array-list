@@ -9,7 +9,7 @@ public class ArrayList<T> implements List<T> {
     private int size;
 
     public ArrayList() {
-        this.array = (T[]) new Object[DEFAULT_CAPACITY];
+        array = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
     @Override
@@ -63,7 +63,8 @@ public class ArrayList<T> implements List<T> {
     public T remove(T element) {
         int index = getIndex(element);
         if (index == -1) {
-            throw new NoSuchElementException("The element is not present in the list");
+            throw new NoSuchElementException("The element " + element
+                   + " is not present in the list");
         }
         return remove(index);
     }
@@ -88,7 +89,8 @@ public class ArrayList<T> implements List<T> {
 
     private void checkIndex(int index) {
         if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("The index is invalid");
+            throw new ArrayListIndexOutOfBoundsException("The index " + index + " is invalid "
+                    + "the actual size of array is " + size);
         }
     }
 
