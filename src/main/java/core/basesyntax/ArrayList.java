@@ -60,6 +60,7 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayListIndexOutOfBoundsException("Index out of size list");
         }
         T oldValue = (T) elementData[index];
+
         int numMove = size - index - 1;
         if (numMove > 0) {
             System.arraycopy(elementData, index + 1, elementData, index, numMove);
