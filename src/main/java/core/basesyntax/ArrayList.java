@@ -1,6 +1,7 @@
 package core.basesyntax;
 
 import java.util.NoSuchElementException;
+import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
@@ -29,11 +30,12 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        ensureCapacity(size + list.size());
-        for (int i = size; i < list.size(); i++) {
-            elementData[i] = list.get(i);
-            size++;
+        int numNew = list.size();
+        ensureCapacity(size + numNew);
+        for (int i = 0; i < numNew; i++) {
+            elementData[size + i] = list.get(i);
         }
+        size += numNew;
     }
 
     @Override
@@ -57,14 +59,14 @@ public class ArrayList<T> implements List<T> {
         if (numMove > 0) {
             System.arraycopy(elementData, index + 1, elementData, index, numMove);
         }
-        elementData[size - 1] = null;
+        elementData[--size] = null;
         return oldValue;
     }
 
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if (elementData != null && elementData[i].equals(element)) {
+            if (Objects.equals(elementData[i], element)) {
                 return remove(i);
             }
         }
@@ -82,13 +84,13 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void checkIndex(int index) {
-        if (index < 0 || index > size) {
+        if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException("Index out of size list");
         }
     }
 
     private void checkIndexForAdd(int index) {
-        if (index < 0 || index >= size) {
+        if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException("Index out of size list");
         }
     }
@@ -102,9 +104,10 @@ public class ArrayList<T> implements List<T> {
     private void grow(int minCapacity) {
         int oldCapacity = elementData.length;
         int newCapacity = oldCapacity + (oldCapacity >> 1);
-        Object[] newElementData = newCapacity > minCapacity
-                ? new Object[newCapacity]
-                : new Object[minCapacity];
+        if (newCapacity < minCapacity) {
+            newCapacity = minCapacity;
+        }
+        Object[] newElementData = new Object[newCapacity];
         System.arraycopy(elementData, 0, newElementData, 0, size);
         elementData = newElementData;
     }
