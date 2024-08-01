@@ -102,9 +102,9 @@ public class ArrayList<T> implements List<T> {
     private void grow(int minCapacity) {
         int oldCapacity = elementData.length;
         int newCapacity = oldCapacity + (oldCapacity >> 1);
-        Object[] newElementData = newCapacity < minCapacity ?
-                new Object[newCapacity] :
-                new Object[minCapacity];
+        Object[] newElementData = newCapacity < minCapacity
+                ? new Object[newCapacity]
+                : new Object[minCapacity];
         System.arraycopy(elementData, 0, newElementData, 0, size);
         elementData = newElementData;
     }
