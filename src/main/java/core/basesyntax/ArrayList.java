@@ -5,11 +5,11 @@ import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    private Object[] elementData;
+    private T[] elementData;
     private int size;
 
     public ArrayList() {
-        elementData = new Object[DEFAULT_CAPACITY];
+        elementData = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
     @Override
@@ -30,18 +30,18 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        int numNew = list.size();
-        ensureCapacity(size + numNew);
-        for (int i = 0; i < numNew; i++) {
+        int listSize = list.size();
+        ensureCapacity(size + listSize);
+        for (int i = 0; i < listSize; i++) {
             elementData[size + i] = list.get(i);
         }
-        size += numNew;
+        size += listSize;
     }
 
     @Override
     public T get(int index) {
         checkIndex(index);
-        return (T) elementData[index];
+        return elementData[index];
     }
 
     @Override
@@ -50,16 +50,20 @@ public class ArrayList<T> implements List<T> {
         elementData[index] = value;
     }
 
+    private void removeElement(int indexToRemove) {
+        int numMove = size - indexToRemove - 1;
+        if (numMove > 0) {
+            System.arraycopy(elementData, indexToRemove + 1, elementData, indexToRemove, numMove);
+        }
+        elementData[--size] = null;
+    }
+
     @Override
     public T remove(int index) {
         checkIndex(index);
-        T oldValue = (T) elementData[index];
+        T oldValue = elementData[index];
 
-        int numMove = size - index - 1;
-        if (numMove > 0) {
-            System.arraycopy(elementData, index + 1, elementData, index, numMove);
-        }
-        elementData[--size] = null;
+        removeElement(index);
         return oldValue;
     }
 
@@ -107,8 +111,8 @@ public class ArrayList<T> implements List<T> {
         if (newCapacity < minCapacity) {
             newCapacity = minCapacity;
         }
-        Object[] newElementData = new Object[newCapacity];
+        T[] newElementData = (T[]) new Object[newCapacity];
         System.arraycopy(elementData, 0, newElementData, 0, size);
-        elementData = newElementData;
+        elementData = (T[]) newElementData;
     }
 }
