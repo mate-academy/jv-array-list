@@ -1,6 +1,5 @@
 package core.basesyntax;
 
-import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
@@ -32,7 +31,7 @@ public class ArrayList<T> implements List<T> {
         }
         validateIndex(index);
         growIfArrayFull();
-        System.arraycopy(dataArray, index, dataArray, index + 1, size - index);
+        arrayCopy(dataArray, index, dataArray, index + 1, size - index);
         dataArray[index] = value;
         ++size;
     }
@@ -61,7 +60,7 @@ public class ArrayList<T> implements List<T> {
         validateIndex(index);
         T removedObject = (T) dataArray[index];
         if (index < size - 1) {
-            System.arraycopy(dataArray, index + 1, dataArray, index, size - index);
+            arrayCopy(dataArray, index + 1, dataArray, index, size - index);
         } else {
             dataArray[index] = null;
         }
@@ -76,7 +75,7 @@ public class ArrayList<T> implements List<T> {
                 return remove(i);
             }
         }
-        throw new NoSuchElementException();
+        throw new NoSuchElementException(element.toString());
     }
 
     @Override
@@ -98,9 +97,28 @@ public class ArrayList<T> implements List<T> {
     private Object[] grow() {
         if (dataArray != DEFAULT_EMPTY_DATA_ARRAY) {
             int newLength = (size << 1) - (size >> 1);
-            return Arrays.copyOf(dataArray, newLength);
+            return copyOf(dataArray, newLength);
         }
-        return Arrays.copyOf(dataArray, DEFAULT_CAPACITY);
+        return copyOf(dataArray, DEFAULT_CAPACITY);
+    }
+
+    private Object[] copyOf(Object[] dataArray, int newLength) {
+        Object[] newArray = new Object[newLength];
+
+        for (int i = 0; i < dataArray.length; i++) {
+            newArray[i] = dataArray[i];
+        }
+        dataArray = newArray;
+        return dataArray;
+    }
+
+    private void arrayCopy(Object[] sourceArray, int srcPos, Object[] dataArray,
+                           int destPos, int length) {
+        Object[] cloneArray = sourceArray.clone();
+        while (length != 0) {
+            dataArray[destPos++] = cloneArray[srcPos++];
+            --length;
+        }
     }
 
     private void validateIndex(int index) {
