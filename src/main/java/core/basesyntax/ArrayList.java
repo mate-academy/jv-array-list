@@ -8,7 +8,7 @@ public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_SIZE = 0;
     private static final Object[] DEFAULT_EMPTY_DATA_ARRAY = {};
     private static final String INVALID_INDEX_ERROR_MESSAGE = 
-            "Index should be bigger then 0 and less then ArrayList size";
+            "Index should be bigger or equal then 0 and less then ArrayList size";
 
     private Object[] dataArray;
     private int size;
