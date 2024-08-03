@@ -7,6 +7,7 @@ public class ArrayList<T> implements List<T> {
     private static final int EMPTY_ARRAYLIST_SIZE = 0;
     private static final String INVALID_INDEX_ERROR_MESSAGE = 
             "Index should be bigger or equal then 0 and less then ArrayList size";
+
     private T[] dataArray;
     private int size;
 
