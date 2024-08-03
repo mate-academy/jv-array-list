@@ -3,17 +3,15 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    private static final int DEFAULT_CAPACITY = 10;
-    private static final int DEFAULT_SIZE = 0;
-    private static final Object[] DEFAULT_EMPTY_DATA_ARRAY = {};
+    private static final int DEFAULT_SIZE = 10;
+    private static final int EMPTY_ARRAYLIST_SIZE = 0;
     private static final String INVALID_INDEX_ERROR_MESSAGE = 
             "Index should be bigger or equal then 0 and less then ArrayList size";
-
-    private Object[] dataArray;
+    private T[] dataArray;
     private int size;
 
-    ArrayList() {
-        dataArray = DEFAULT_EMPTY_DATA_ARRAY;
+    public ArrayList() {
+        dataArray = (T[]) new Object[DEFAULT_SIZE];
     }
 
     @Override
@@ -31,7 +29,7 @@ public class ArrayList<T> implements List<T> {
         }
         validateIndex(index);
         growIfArrayFull();
-        arrayCopy(dataArray, index, dataArray, index + 1, size - index);
+        System.arraycopy(dataArray, index, dataArray, index + 1, size - index);
         dataArray[index] = value;
         ++size;
     }
@@ -46,7 +44,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         validateIndex(index);
-        return (T) dataArray[index];
+        return dataArray[index];
     }
 
     @Override
@@ -58,9 +56,9 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         validateIndex(index);
-        T removedObject = (T) dataArray[index];
+        T removedObject = dataArray[index];
         if (index < size - 1) {
-            arrayCopy(dataArray, index + 1, dataArray, index, size - index);
+            System.arraycopy(dataArray, index + 1, dataArray, index, size - index);
         } else {
             dataArray[index] = null;
         }
@@ -85,7 +83,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public boolean isEmpty() {
-        return size == DEFAULT_SIZE;
+        return size == EMPTY_ARRAYLIST_SIZE;
     }
 
     private void growIfArrayFull() {
@@ -94,35 +92,19 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private Object[] grow() {
-        if (dataArray != DEFAULT_EMPTY_DATA_ARRAY) {
-            int newLength = (size << 1) - (size >> 1);
-            return copyOf(dataArray, newLength);
-        }
-        return copyOf(dataArray, DEFAULT_CAPACITY);
+    private T[] grow() {
+        int newLength = (size << 1) - (size >> 1);
+        return createNewArray(dataArray, newLength);
     }
 
-    private Object[] copyOf(Object[] dataArray, int newLength) {
-        Object[] newArray = new Object[newLength];
-
-        for (int i = 0; i < dataArray.length; i++) {
-            newArray[i] = dataArray[i];
-        }
-        dataArray = newArray;
-        return dataArray;
-    }
-
-    private void arrayCopy(Object[] sourceArray, int srcPos, Object[] dataArray,
-                           int destPos, int length) {
-        Object[] cloneArray = sourceArray.clone();
-        while (length != 0) {
-            dataArray[destPos++] = cloneArray[srcPos++];
-            --length;
-        }
+    private T[] createNewArray(T[] dataArray, int newLength) {
+        T[] newArray = (T[]) new Object[newLength];
+        System.arraycopy(dataArray, 0, newArray, 0, dataArray.length);
+        return newArray;
     }
 
     private void validateIndex(int index) {
-        if ((index >= size && index != DEFAULT_SIZE) || index < DEFAULT_SIZE) {
+        if ((index >= size && index != EMPTY_ARRAYLIST_SIZE) || index < EMPTY_ARRAYLIST_SIZE) {
             throw new ArrayListIndexOutOfBoundsException(INVALID_INDEX_ERROR_MESSAGE);
         }
     }
