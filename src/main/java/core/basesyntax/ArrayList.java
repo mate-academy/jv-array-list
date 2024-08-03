@@ -14,26 +14,24 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (size < elements.length) {
-            elements[size] = value;
-            size++;
-        } else {
+        if (size >= elements.length) {
             resize();
-            add(value);
         }
+        elements[size] = value;
+        size++;
     }
 
     @Override
     public void add(T value, int index) {
-        checkIfAddIndexFits(index);
+        checkAddIndex(index);
         if (index == 0 && size == 0) {
             add(value);
             return;
         }
-        ++size;
-        if (size == elements.length) {
+        if (size >= elements.length) {
             resize();
         }
+        size++;
         T[] temp = (T[]) (new Object[elements.length]);
         System.arraycopy(elements, 0, temp, 0, index);
         temp[index] = value;
@@ -54,19 +52,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        checkIfIndexFits(index);
+        checkIndex(index);
         return elements[index];
     }
 
     @Override
     public void set(T value, int index) {
-        checkIfIndexFits(index);
+        checkIndex(index);
         elements[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        checkIfIndexFits(index);
+        checkIndex(index);
         T removedElement = elements[index];
         System.arraycopy(elements, index + 1, elements, index, size - index - 1);
         size--;
@@ -101,21 +99,20 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private T[] resize() {
+    private void resize() {
         int newLength = (int) (elements.length * CAPACITY_INDEX);
         Object[] newArray = new Object[(int) newLength];
         System.arraycopy(elements, 0, newArray, 0, elements.length);
         elements = (T[]) newArray;
-        return elements;
     }
 
-    private void checkIfIndexFits(int index) {
+    private void checkIndex(int index) {
         if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException("There is no such element in the list.");
         }
     }
 
-    private void checkIfAddIndexFits(int index) {
+    private void checkAddIndex(int index) {
         if (index < 0 || index > size + 1) {
             throw new ArrayListIndexOutOfBoundsException("Invalid index, can't add element to"
                     + " non-existing position.");
