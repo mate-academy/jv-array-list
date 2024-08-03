@@ -5,27 +5,12 @@ import java.util.NoSuchElementException;
 public class ArrayList<T> implements List<T> {
     private static final int MIN_SIZE = 10;
     private int arraySize;
-    private Object[] elementData;
+    private T[] elementData;
     private int size;
 
     public ArrayList() {
         arraySize = MIN_SIZE;
-        elementData = new Object[arraySize];
-        size = 0;
-    }
-
-    private void grow() {
-        Object[] oldArray = elementData;
-        elementData = new Object[(int) (oldArray.length + (oldArray.length * 0.5))];
-        System.arraycopy(oldArray, 0, elementData, 0, oldArray.length);
-        arraySize = elementData.length;
-    }
-
-    private void grow(int number) {
-        Object[] oldArray = elementData;
-        elementData = new Object[(int) (oldArray.length + number)];
-        System.arraycopy(oldArray, 0, elementData, 0, oldArray.length);
-        arraySize = elementData.length;
+        elementData = (T[]) new Object[arraySize];
     }
 
     @Override
@@ -88,13 +73,7 @@ public class ArrayList<T> implements List<T> {
                     + "the size of the array or uncorrect");
         }
         T element = (T) elementData[index];
-        for (int i = index; i < size; i++) {
-            if (index == size - 1) {
-                elementData[i] = null;
-            } else {
-                elementData[i] = elementData[i + 1];
-            }
-        }
+        System.arraycopy(elementData, index + 1, elementData, index, size - index - 1);
         size--;
         return element;
     }
@@ -121,13 +100,10 @@ public class ArrayList<T> implements List<T> {
         if (!foundElement) {
             throw new NoSuchElementException();
         }
-
         for (int i = position; i < size - 1; i++) {
             elementData[i] = elementData[i + 1];
         }
-        elementData[size - 1] = null;
-        size--;
-
+        elementData[--size] = null;
         return removedElement;
     }
 
@@ -139,5 +115,19 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private void grow() {
+        Object[] oldArray = elementData;
+        elementData = (T[]) new Object[(int) (oldArray.length + (oldArray.length * 0.5))];
+        System.arraycopy(oldArray, 0, elementData, 0, oldArray.length);
+        arraySize = elementData.length;
+    }
+
+    private void grow(int number) {
+        Object[] oldArray = elementData;
+        elementData = (T[]) new Object[(int) (oldArray.length + number)];
+        System.arraycopy(oldArray, 0, elementData, 0, oldArray.length);
+        arraySize = elementData.length;
     }
 }
