@@ -76,14 +76,14 @@ public class ArrayList<T> implements List<T> {
         int index = -1;
         for (int i = 0; i < size; ++i) {
             if (element == elements[i]
-                    | (element != null && element.equals(elements[i]))) {
+                    || (element != null && element.equals(elements[i]))) {
                 index = i;
                 break;
             }
         }
         if (index == -1) {
-            throw new NoSuchElementException("You're trying to remove element,"
-                    + " that is not present in the list");
+            throw new NoSuchElementException("You're trying to remove element \""
+                    + element + "\", that is not present in the list");
         }
         remove(index);
         return element;
@@ -114,8 +114,8 @@ public class ArrayList<T> implements List<T> {
 
     private void checkAddIndex(int index) {
         if (index < 0 || index > size + 1) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index, can't add element to"
-                    + " non-existing position.");
+            throw new ArrayListIndexOutOfBoundsException("Can't add element to position "
+                    + index + " in a list with size of " + size + " .");
         }
     }
 }
