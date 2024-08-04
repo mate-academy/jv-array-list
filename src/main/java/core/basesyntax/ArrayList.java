@@ -1,6 +1,7 @@
 package core.basesyntax;
 
 import java.util.NoSuchElementException;
+import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
     private static final int BASE_SIZE = 10;
@@ -14,9 +15,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (size >= elements.length) {
-            resize();
-        }
+        resize();
         elements[size] = value;
         size++;
     }
@@ -24,27 +23,14 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         checkAddIndex(index);
-        if (index == 0 && size == 0) {
-            add(value);
-            return;
-        }
-        if (size >= elements.length) {
-            resize();
-        }
+        resize();
+        System.arraycopy(elements, index, elements, index + 1, size - index);
+        elements[index] = value;
         size++;
-        T[] temp = (T[]) (new Object[elements.length]);
-        System.arraycopy(elements, 0, temp, 0, index);
-        temp[index] = value;
-        System.arraycopy(elements, index, temp, index + 1, elements.length - index - 1);
-        elements = (T[]) temp; //without this array does not resize properly.
     }
 
     @Override
     public void addAll(List<T> list) {
-        int expectedLength = (list.size() + this.size());
-        while (expectedLength > elements.length) {
-            resize();
-        }
         for (int i = 0; i < list.size(); ++i) {
             add(list.get(i));
         }
@@ -73,18 +59,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        int index = -1;
-        for (int i = 0; i < size; ++i) {
-            if (element == elements[i]
-                    || (element != null && element.equals(elements[i]))) {
-                index = i;
-                break;
-            }
-        }
-        if (index == -1) {
-            throw new NoSuchElementException("You're trying to remove element \""
-                    + element + "\", that is not present in the list");
-        }
+        int index = findElement(element);
         remove(index);
         return element;
     }
@@ -100,10 +75,24 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void resize() {
-        int newLength = (int) (elements.length * CAPACITY_INDEX);
-        Object[] newArray = new Object[(int) newLength];
-        System.arraycopy(elements, 0, newArray, 0, elements.length);
-        elements = (T[]) newArray;
+        if (size == elements.length) {
+            int newLength = (int) (elements.length * CAPACITY_INDEX);
+            Object[] newArray = new Object[(int) newLength];
+            System.arraycopy(elements, 0, newArray, 0, elements.length);
+            elements = (T[]) newArray;
+        }
+    }
+
+    private int findElement(T element) {
+        int index;
+        for (int i = 0; i < size; ++i) {
+            if (Objects.equals(element, elements[i])) {
+                index = i;
+                return index;
+            }
+        }
+        throw new NoSuchElementException("You're trying to remove element \""
+                + element + "\", that is not present in the list");
     }
 
     private void checkIndex(int index) {
