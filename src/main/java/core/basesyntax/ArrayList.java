@@ -50,8 +50,7 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         rangeCheck(index);
         T oldValue = elementData(index);
-        System.arraycopy(elementData, index + 1, elementData, index, size
-                - index - 1);
+        System.arraycopy(elementData, index + 1, elementData, index, size - index - 1);
         elementData[--size] = null;
         return oldValue;
     }
@@ -76,7 +75,7 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    public void ensureCapacity(int minCapacity) {
+    private void ensureCapacity(int minCapacity) {
         if (minCapacity > elementData.length) {
             int newCapacity = elementData.length + (elementData.length >> 1);
             Object[] newElementData = new Object[newCapacity];
@@ -87,15 +86,13 @@ public class ArrayList<T> implements List<T> {
 
     private void rangeCheck(int index) {
         if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index: " + index + ", Size"
-                + size);
+            throw new ArrayListIndexOutOfBoundsException("Index: " + index + ", Size: " + size);
         }
     }
 
     private void rangeCheckForAdd(int index) {
         if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("Index: " + index + ", Size"
-                + size);
+            throw new ArrayListIndexOutOfBoundsException("Index: " + index + ", Size: " + size);
         }
     }
 
