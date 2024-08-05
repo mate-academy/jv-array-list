@@ -23,29 +23,20 @@ public class ArrayList<T> implements List<T> {
         if (index > size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("The index is greater than the "
                     + "size of the array or uncorect");
-        } else if (size == elementData.length) {
-            grow();
         }
-        for (int i = size; i > index; i--) {
-            elementData[i] = elementData[i - 1];
-        }
+        grow();
+        System.arraycopy(elementData, index, elementData, index + 1, size - index);
         elementData[index] = value;
         size++;
     }
 
     @Override
     public void addAll(List<T> list) {
-        int requiredCapacity = size + list.size();
-        int actualNumberOfItems = size;
-        while (elementData.length < requiredCapacity) {
-            size = elementData.length;
-            grow();
-        }
-        size = actualNumberOfItems;
         for (int i = 0; i < list.size(); i++) {
-            elementData[size + i] = list.get(i);
+            grow();
+            elementData[size] = list.get(i);
+            size++;
         }
-        size += list.size(); // Оновити розмір
     }
 
     @Override
@@ -105,13 +96,13 @@ public class ArrayList<T> implements List<T> {
     }
 
     private int index(T element) {
+        int index = -1;
         for (int i = 0; i < size; i++) {
-            if (elementData[i] == null && element == null) {
-                return i;
-            } else if (elementData[i] != null && elementData[i].equals(element)) {
-                return i;
+            if (elementData[i] == element
+                    || elementData[i] != null && elementData[i].equals(element)) {
+                index = i;
             }
         }
-        return -1;
+        return index;
     }
 }
