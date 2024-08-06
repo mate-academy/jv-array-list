@@ -84,11 +84,9 @@ public class ArrayList<T> implements List<T> {
     }
 
     private int findElement(T element) {
-        int index;
         for (int i = 0; i < size; ++i) {
             if (Objects.equals(element, elements[i])) {
-                index = i;
-                return index;
+                return i;
             }
         }
         throw new NoSuchElementException("You're trying to remove element \""
