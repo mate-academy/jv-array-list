@@ -95,7 +95,8 @@ public class ArrayList<T> implements List<T> {
 
     private void checkIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("There is no such element in the list.");
+            throw new ArrayListIndexOutOfBoundsException("Can't reach element on position "
+                    + index + " in a list with size of " + size + " .");
         }
     }
 
