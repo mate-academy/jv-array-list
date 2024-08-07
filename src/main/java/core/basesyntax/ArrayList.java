@@ -17,14 +17,9 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (size != internalArray.length) {
-            for (int i = 0; i < internalArray.length; i++) {
-                if (i == size) {
-                    internalArray[i] = value;
-                    size++;
-                    break;
-                }
-            }
+        if (size < internalArray.length) {
+            internalArray[size] = value;
+            size++;
         } else {
             grow();
             internalArray[size] = value;
@@ -35,11 +30,12 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         if (index >= 0 && index <= size) {
-            growByCell(index);
+            shiftToRight(index);
             internalArray[index] = value;
             size++;
         } else {
-            throw new ArrayListIndexOutOfBoundsException("Wrong index!!!");
+            throw new ArrayListIndexOutOfBoundsException("Wrong index. The index "
+                    + "'" + index + "' doesn't exist");
         }
     }
 
@@ -72,19 +68,15 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         T oldelement = null;
         if (index < this.size && index >= 0) {
-            int subsiquentIndex = 0;
             oldelement = get(index);
             Object[] newFormedArray = new Object[internalArray.length];
-            for (int i = 0; i < size; i++) {
-                if (i != index) {
-                    newFormedArray[subsiquentIndex] = internalArray[i];
-                    subsiquentIndex++;
-                }
-            }
+            System.arraycopy(internalArray, 0, newFormedArray, 0, index);
+            System.arraycopy(internalArray, index + 1, newFormedArray, index, (size - index) - 1);
             internalArray = newFormedArray;
             size--;
         } else {
-            throw new ArrayListIndexOutOfBoundsException("Wrong index");
+            throw new ArrayListIndexOutOfBoundsException("Wrong index! Index '"
+                    + index + "' doesn't exist");
         }
         return oldelement;
     }
@@ -103,7 +95,7 @@ public class ArrayList<T> implements List<T> {
             }
         }
         if (oldElement == null && element != null) {
-            throw new NoSuchElementException("This element hasn't found");
+            throw new NoSuchElementException("This " + element + " wasn't found");
         }
         return oldElement;
     }
@@ -124,18 +116,17 @@ public class ArrayList<T> implements List<T> {
         internalArray = bufferArray;
     }
 
-    private void growByCell(int index) {
-        Object[] arrayBeforeIndex = new Object[index];
-        Object[] arrayAfterIndex = new Object[size - index];
-        System.arraycopy(internalArray, 0, arrayBeforeIndex, 0, index);
-        System.arraycopy(internalArray, index, arrayAfterIndex, 0, size - index);
-        if (index < size && (size + 1) <= internalArray.length) {
-            System.arraycopy(arrayBeforeIndex, 0, internalArray, 0, arrayBeforeIndex.length);
-            System.arraycopy(arrayAfterIndex, 0, internalArray, index + 1, arrayAfterIndex.length);
-        } else if (index < size && (size + 1) > internalArray.length) {
+    private void shiftToRight(int index) {
+        Object[] newBufferedArray = new Object[size + 1];
+        if ((size + 1) <= internalArray.length) {
+            System.arraycopy(internalArray, 0, newBufferedArray, 0, index + 1);
+            System.arraycopy(internalArray, index, newBufferedArray, index + 1, size - index);
+            internalArray = newBufferedArray;
+        } else if ((size + 1) > internalArray.length) {
             grow();
-            System.arraycopy(arrayBeforeIndex, 0, internalArray, 0, arrayBeforeIndex.length);
-            System.arraycopy(arrayAfterIndex, 0, internalArray, index + 1, arrayAfterIndex.length);
+            System.arraycopy(internalArray, 0, newBufferedArray, 0, index + 1);
+            System.arraycopy(internalArray, index, newBufferedArray, index + 1, size - index);
+            internalArray = newBufferedArray;
         }
     }
 }
