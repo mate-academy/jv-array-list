@@ -85,7 +85,8 @@ public class ArrayList<T> implements List<T> {
 
     private int findElement(T element) {
         for (int i = 0; i < size; ++i) {
-            if (Objects.equals(element, elements[i])) {
+            if (element == elements[i]
+                    || (element != null && element.equals(elements[i]))) {
                 return i;
             }
         }
@@ -101,7 +102,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void checkAddIndex(int index) {
-        if (index < 0 || index > size + 1) {
+        if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException("Can't add element to position "
                     + index + " in a list with size of " + size + " .");
         }
