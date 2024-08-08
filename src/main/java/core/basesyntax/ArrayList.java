@@ -37,7 +37,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         checkIndex(index);
-        return elementData(index);
+        return (T) elements[index];
     }
 
     @Override
@@ -49,7 +49,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
-        T oldValue = elementData(index);
+        T oldValue = (T) elements[index];
         System.arraycopy(elements, index + 1, elements, index, size - index - 1);
         elements[--size] = null;
         return oldValue;
@@ -94,9 +94,5 @@ public class ArrayList<T> implements List<T> {
         if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException("Index: " + index + ", Size: " + size);
         }
-    }
-
-    private T elementData(int index) {
-        return (T) elements[index];
     }
 }
