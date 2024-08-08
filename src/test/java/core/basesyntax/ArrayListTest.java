@@ -67,13 +67,16 @@ public class ArrayListTest {
         arrayList.add("Mate");
         Assert.assertEquals(3, arrayList.size());
         ArrayList<String> newArrayList = new ArrayList<>();
-        newArrayList.add("Academy");
-        newArrayList.add("Kiev");
+        for (int i = 0; i < 20; i++) {
+            newArrayList.add("academy_" + i);
+            newArrayList.add("Kyiv_" + i);
+        }
         arrayList.addAll(newArrayList);
-        Assert.assertEquals("Test failed! Size of array should be " + 5 + "but it is "
-                + arrayList.size(), 5, arrayList.size());
-        Assert.assertEquals("Academy", arrayList.get(3));
-        Assert.assertEquals("Kiev", arrayList.get(4));
+        Assert.assertEquals("Test failed! Size of array should be " + 43 + "but it is "
+                + arrayList.size(), 43, arrayList.size());
+        Assert.assertEquals("academy_0", arrayList.get(3));
+        Assert.assertEquals("Kyiv_0", arrayList.get(4));
+        Assert.assertEquals("Kyiv_19", arrayList.get(42));
     }
 
     @Test(expected = ArrayListIndexOutOfBoundsException.class)
