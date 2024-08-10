@@ -1,7 +1,6 @@
 package core.basesyntax;
 
 import java.util.NoSuchElementException;
-import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
@@ -9,34 +8,26 @@ public class ArrayList<T> implements List<T> {
     private static final double CAPACITY_MULTIPLIER = 1.5;
 
     private int size;
-    private T[] innerArray;
+    private T[] array;
 
     @SuppressWarnings("unchecked")
     public ArrayList() {
-        this.size = 0;
-        this.innerArray = (T[]) new Object[DEFAULT_CAPACITY];
+        this.array = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
     @Override
     public void add(T value) {
-        if (size + 1 >= innerArray.length) {
-            addCapacity();
-        }
-
-        innerArray[size] = value;
+        resize();
+        array[size] = value;
         size++;
     }
 
     @Override
     public void add(T value, int index) {
-        checkIndexValidity(index, true);
-
-        if (size + 1 >= innerArray.length) {
-            addCapacity();
-        }
-
-        moveElementsForward(index, innerArray);
-        innerArray[index] = value;
+        checkIndexForAddMethod(index);
+        resize();
+        System.arraycopy(array, index, array, index + 1, size - index);
+        array[index] = value;
         size++;
     }
 
@@ -49,34 +40,31 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        checkIndexValidity(index);
+        checkIndex(index);
 
-        return innerArray[index];
+        return array[index];
     }
 
     @Override
     public void set(T value, int index) {
-        checkIndexValidity(index);
+        checkIndex(index);
 
-        innerArray[index] = value;
+        array[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        checkIndexValidity(index);
-
-        T elementToRemove = innerArray[index];
-        moveElementsBackwards(index, innerArray);
-
+        checkIndex(index);
+        T removedElement = (T) array[index];
+        System.arraycopy(array, index + 1, array, index, size - index - 1);
         size--;
 
-        return elementToRemove;
+        return removedElement;
     }
 
     @Override
     public T remove(T element) {
-        int elementIndex = findElementIndex(element, innerArray);
-
+        int elementIndex = findElementIndex(element, array);
         if (elementIndex == -1) {
             throw new NoSuchElementException("Invalid element");
         }
@@ -95,24 +83,19 @@ public class ArrayList<T> implements List<T> {
     }
 
     @SuppressWarnings("unchecked")
-    private void addCapacity() {
-        int newCapacity = (int) (innerArray.length * CAPACITY_MULTIPLIER);
-        T[] newArray = (T[]) new Object[newCapacity];
-        System.arraycopy(innerArray, 0, newArray, 0, innerArray.length);
-        innerArray = newArray;
-    }
-
-    private void moveElementsBackwards(int index, T[] innerArray) {
-        System.arraycopy(innerArray, index + 1, innerArray, index, size - index - 1);
-    }
-
-    private void moveElementsForward(int index, T[] innerArray) {
-        System.arraycopy(innerArray, index, innerArray, index + 1, size - index);
+    private void resize() {
+        if (size + 1 >= array.length) {
+            int newCapacity = (int) (array.length * CAPACITY_MULTIPLIER);
+            T[] newArray = (T[]) new Object[newCapacity];
+            System.arraycopy(array, 0, newArray, 0, array.length);
+            array = newArray;
+        }
     }
 
     private int findElementIndex(T element, T[] innerArray) {
         for (int i = 0; i < innerArray.length; i++) {
-            if (Objects.equals(innerArray[i], element)) {
+            if ((innerArray[i] == null && element == null)
+                    || (innerArray[i] != null && innerArray[i].equals(element))) {
                 return i;
             }
         }
@@ -120,14 +103,14 @@ public class ArrayList<T> implements List<T> {
         return ELEMENT_NOT_FOUND;
     }
 
-    private void checkIndexValidity(int index) {
+    private void checkIndex(int index) {
         if (index >= size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Invalid index");
         }
     }
 
-    private void checkIndexValidity(int index, boolean isAddOperation) {
-        if (isAddOperation && (index > size || index < 0)) {
+    private void checkIndexForAddMethod(int index) {
+        if (index > size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Invalid index");
         }
     }
