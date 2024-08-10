@@ -103,15 +103,11 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void moveElementsBackwards(int index, T[] innerArray) {
-        for (int i = index + 1; i < innerArray.length; i++) {
-            innerArray[i - 1] = innerArray[i];
-        }
+        System.arraycopy(innerArray, index + 1, innerArray, index, size - index - 1);
     }
 
     private void moveElementsForward(int index, T[] innerArray) {
-        for (int i = innerArray.length - 1; i > index; i--) {
-            innerArray[i] = innerArray[i - 1];
-        }
+        System.arraycopy(innerArray, index, innerArray, index + 1, size - index);
     }
 
     private int findElementIndex(T element, T[] innerArray) {
