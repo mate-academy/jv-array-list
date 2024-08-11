@@ -4,15 +4,15 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    private Object[] internalArray;
+    private T[] internalArray;
     private int size;
 
     public ArrayList() {
-        this.internalArray = new Object[DEFAULT_CAPACITY];
+        internalArray = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
     public ArrayList(int capacity) {
-        this.internalArray = new Object[capacity];
+        internalArray = (T[]) new Object[capacity];
     }
 
     @Override
@@ -29,14 +29,13 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index >= 0 && index <= size) {
-            shiftToRight(index);
-            internalArray[index] = value;
-            size++;
-        } else {
-            throw new ArrayListIndexOutOfBoundsException("Wrong index. The index "
-                    + "'" + index + "' doesn't exist");
+        if (index < 0 || index > size) {
+            throw new ArrayListIndexOutOfBoundsException("Wrong index! Index '"
+                    + index + "' doesn't exist");
         }
+        shiftToRight(index);
+        internalArray[index] = value;
+        size++;
     }
 
     @Override
@@ -48,36 +47,22 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index < size && index >= 0) {
-            return (T) this.internalArray[index];
-        } else {
-            throw new ArrayListIndexOutOfBoundsException("The such index doesn't exist");
-        }
+        checkIndex(index);
+        return (T) this.internalArray[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index < size && index >= 0) {
-            internalArray[index] = value;
-        } else {
-            throw new ArrayListIndexOutOfBoundsException("Wrong array index!");
-        }
+        checkIndex(index);
+        internalArray[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        T oldelement = null;
-        if (index < this.size && index >= 0) {
-            oldelement = get(index);
-            Object[] newFormedArray = new Object[internalArray.length];
-            System.arraycopy(internalArray, 0, newFormedArray, 0, index);
-            System.arraycopy(internalArray, index + 1, newFormedArray, index, (size - index) - 1);
-            internalArray = newFormedArray;
-            size--;
-        } else {
-            throw new ArrayListIndexOutOfBoundsException("Wrong index! Index '"
-                    + index + "' doesn't exist");
-        }
+        checkIndex(index);
+        T oldelement = get(index);
+        System.arraycopy(internalArray, index + 1, internalArray, index, size - (index + 1));
+        size--;
         return oldelement;
     }
 
@@ -85,16 +70,13 @@ public class ArrayList<T> implements List<T> {
     public T remove(T element) {
         T oldElement = null;
         for (int i = 0; i < size; i++) {
-            if (internalArray[i] != null && internalArray[i].equals(element)) {
+            if (internalArray[i] != null && internalArray[i].equals(element)
+                    || internalArray[i] == null && internalArray[i] == element) {
                 oldElement = element;
-                remove(i);
-                break;
-            } else if (internalArray[i] == null && internalArray[i] == element) {
-                remove(i);
-                break;
+                return remove(i);
             }
         }
-        if (oldElement == null && element != null) {
+        if (oldElement != element) {
             throw new NoSuchElementException("This " + element + " wasn't found");
         }
         return oldElement;
@@ -102,7 +84,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public int size() {
-        return this.size;
+        return size;
     }
 
     @Override
@@ -110,23 +92,30 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
+    private boolean checkIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Wrong index! Index '"
+                    + index + "' doesn't exist");
+        }
+        return true;
+    }
+
     private void grow() {
-        Object[] bufferArray = new Object[size + (size >> 1)];
-        System.arraycopy(internalArray, 0, bufferArray, 0, size);
-        internalArray = bufferArray;
+        Object[] bufferedArray = new Object[size + (size >> 1)];
+        copyArrayMethod(bufferedArray);
+    }
+
+    private void copyArrayMethod(Object[] bufferedArray) {
+        System.arraycopy(internalArray, 0, bufferedArray, 0, size);
+        internalArray = (T[]) bufferedArray;
     }
 
     private void shiftToRight(int index) {
-        Object[] newBufferedArray = new Object[size + 1];
         if ((size + 1) <= internalArray.length) {
-            System.arraycopy(internalArray, 0, newBufferedArray, 0, index + 1);
-            System.arraycopy(internalArray, index, newBufferedArray, index + 1, size - index);
-            internalArray = newBufferedArray;
+            System.arraycopy(internalArray, index, internalArray, index + 1, size - index);
         } else if ((size + 1) > internalArray.length) {
             grow();
-            System.arraycopy(internalArray, 0, newBufferedArray, 0, index + 1);
-            System.arraycopy(internalArray, index, newBufferedArray, index + 1, size - index);
-            internalArray = newBufferedArray;
+            System.arraycopy(internalArray, index, internalArray, index + 1, size - index);
         }
     }
 }
