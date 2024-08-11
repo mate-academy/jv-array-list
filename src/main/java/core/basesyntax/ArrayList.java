@@ -39,7 +39,6 @@ public class ArrayList<T> implements List<T> {
     public T get(int index) {
         checkIndex(index);
         return array[index];
-
     }
 
     @Override
@@ -63,7 +62,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int index = 0; index < size; index++) {
-            if (array[index] == null && element == null
+            if (array[index] == element
                     || array[index] != null && array[index].equals(element)) {
                 return remove(index);
             }
