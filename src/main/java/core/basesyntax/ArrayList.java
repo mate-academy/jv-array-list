@@ -11,7 +11,6 @@ public class ArrayList<T> implements List<T> {
     @SuppressWarnings("unchecked")
     public ArrayList() {
         array = (T[]) new Object[INITIAL_CAPACITY];
-        size = 0;
     }
 
     @Override
@@ -22,7 +21,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        checkIndexFor(index);
+        checkIndexForAddMethod(index);
         ensureCapacity();
         System.arraycopy(array, index, array, index + 1, size - index);
         array[index] = value;
@@ -57,7 +56,7 @@ public class ArrayList<T> implements List<T> {
         if (numMoved > 0) {
             System.arraycopy(array, index + 1, array, index, numMoved);
         }
-        array[--size] = null; // clear to let GC do its work
+        array[--size] = null;
         return oldValue;
     }
 
@@ -98,7 +97,7 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private void checkIndexFor(int index) {
+    private void checkIndexForAddMethod(int index) {
         if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException("Index: " + index + ", Size: " + size);
         }
