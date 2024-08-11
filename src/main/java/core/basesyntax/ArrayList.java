@@ -3,28 +3,19 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    private static final int DEFAULT_CAPACITY = 10;
-    private T[] internalArray;
+    private static final int CAPACITY_INDEX = 10;
+    private T[] elements;
     private int size;
 
     public ArrayList() {
-        internalArray = (T[]) new Object[DEFAULT_CAPACITY];
-    }
-
-    public ArrayList(int capacity) {
-        internalArray = (T[]) new Object[capacity];
+        elements = (T[]) new Object[CAPACITY_INDEX];
     }
 
     @Override
     public void add(T value) {
-        if (size < internalArray.length) {
-            internalArray[size] = value;
-            size++;
-        } else {
-            grow();
-            internalArray[size] = value;
-            size++;
-        }
+        resize();
+        elements[size] = value;
+        size++;
     }
 
     @Override
@@ -33,8 +24,9 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayListIndexOutOfBoundsException("Wrong index! Index '"
                     + index + "' doesn't exist");
         }
-        shiftToRight(index);
-        internalArray[index] = value;
+        resize();
+        System.arraycopy(elements, index, elements, index + 1, size - index);
+        elements[index] = value;
         size++;
     }
 
@@ -48,30 +40,30 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         checkIndex(index);
-        return (T) this.internalArray[index];
+        return (T) elements[index];
     }
 
     @Override
     public void set(T value, int index) {
         checkIndex(index);
-        internalArray[index] = value;
+        elements[index] = value;
     }
 
     @Override
     public T remove(int index) {
         checkIndex(index);
-        T oldelement = get(index);
-        System.arraycopy(internalArray, index + 1, internalArray, index, size - (index + 1));
+        T removedElement = (T) elements[index];
+        System.arraycopy(elements, index + 1, elements, index, size - index - 1);
         size--;
-        return oldelement;
+        return removedElement;
     }
 
     @Override
     public T remove(T element) {
         T oldElement = null;
         for (int i = 0; i < size; i++) {
-            if (internalArray[i] != null && internalArray[i].equals(element)
-                    || internalArray[i] == null && internalArray[i] == element) {
+            if (elements[i] != null && elements[i].equals(element)
+                    || elements[i] == null && elements[i] == element) {
                 oldElement = element;
                 return remove(i);
             }
@@ -92,30 +84,19 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private boolean checkIndex(int index) {
+    private void checkIndex(int index) {
         if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException("Wrong index! Index '"
                     + index + "' doesn't exist");
         }
-        return true;
     }
 
-    private void grow() {
-        Object[] bufferedArray = new Object[size + (size >> 1)];
-        copyArrayMethod(bufferedArray);
-    }
-
-    private void copyArrayMethod(Object[] bufferedArray) {
-        System.arraycopy(internalArray, 0, bufferedArray, 0, size);
-        internalArray = (T[]) bufferedArray;
-    }
-
-    private void shiftToRight(int index) {
-        if ((size + 1) <= internalArray.length) {
-            System.arraycopy(internalArray, index, internalArray, index + 1, size - index);
-        } else if ((size + 1) > internalArray.length) {
-            grow();
-            System.arraycopy(internalArray, index, internalArray, index + 1, size - index);
+    private void resize() {
+        if (elements.length == size) {
+            int newCapacity = (int) (elements.length * CAPACITY_INDEX);
+            Object[] newArray = new Object[newCapacity];
+            System.arraycopy(elements, 0, newArray, 0, size);
+            elements = (T[]) newArray;
         }
     }
 }
