@@ -84,7 +84,7 @@ public class ArrayList<T> implements List<T> {
 
     @SuppressWarnings("unchecked")
     private void resize() {
-        if (size > array.length) {
+        if (size + 1 >= array.length) {
             int newCapacity = (int) (array.length * CAPACITY_MULTIPLIER);
             T[] newArray = (T[]) new Object[newCapacity];
             System.arraycopy(array, 0, newArray, 0, array.length);
@@ -105,13 +105,19 @@ public class ArrayList<T> implements List<T> {
 
     private void checkIndex(int index) {
         if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index at " + index + " where the size of the array is " + size);
+            throw new ArrayListIndexOutOfBoundsException("Invalid index at "
+                    + index
+                    + " where the size of the array is "
+                    + size);
         }
     }
 
     private void checkIndexForAddMethod(int index) {
         if (index > size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index at " + index + " where the size of the array is " + size);
+            throw new ArrayListIndexOutOfBoundsException("Invalid index at "
+                    + index
+                    + " where the size of the array is "
+                    + size);
         }
     }
 }
