@@ -41,14 +41,12 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         checkIndex(index);
-
         return array[index];
     }
 
     @Override
     public void set(T value, int index) {
         checkIndex(index);
-
         array[index] = value;
     }
 
@@ -58,7 +56,6 @@ public class ArrayList<T> implements List<T> {
         T removedElement = (T) array[index];
         System.arraycopy(array, index + 1, array, index, size - index - 1);
         size--;
-
         return removedElement;
     }
 
@@ -68,7 +65,6 @@ public class ArrayList<T> implements List<T> {
         if (elementIndex == -1) {
             throw new NoSuchElementException("Invalid element");
         }
-
         return remove(elementIndex);
     }
 
@@ -94,12 +90,11 @@ public class ArrayList<T> implements List<T> {
 
     private int findElementIndex(T element, T[] innerArray) {
         for (int i = 0; i < innerArray.length; i++) {
-            if ((innerArray[i] == null && element == null)
+            if ((innerArray[i] == element)
                     || (innerArray[i] != null && innerArray[i].equals(element))) {
                 return i;
             }
         }
-
         return ELEMENT_NOT_FOUND;
     }
 
@@ -121,3 +116,5 @@ public class ArrayList<T> implements List<T> {
         }
     }
 }
+
+
