@@ -10,6 +10,8 @@ public class ArrayList<T> implements List<T> {
     private static final int INDEX_SHIFT = 1;
     private static final String ARRAY_INDEX_EXCEPTION_FORMAT =
             "Index = [%d] is out of range for ArrayList with size = [%d]";
+    private static final String ELEMENT_NOT_FOUND_FORMAT =
+            "Element = [%s] can't be found in the ArrayList";
     private Object[] array;
     private int size;
 
@@ -70,7 +72,7 @@ public class ArrayList<T> implements List<T> {
                 return remove(i);
             }
         }
-        throw new NoSuchElementException();
+        throw new NoSuchElementException(String.format(ELEMENT_NOT_FOUND_FORMAT, element));
     }
 
     @Override
