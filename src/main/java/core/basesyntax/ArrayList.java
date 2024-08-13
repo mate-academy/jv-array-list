@@ -1,12 +1,12 @@
 package core.basesyntax;
 
-import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    private static final int VALUE_FOR_MOVE = 1;
+    private static final int ELEMENT_SHIFT_STEP = 1;
     private static final int HALF_CAPACITY = 2;
+    private static final int ZERO_POSITION = 0;
     private T[] elements;
     private int size;
 
@@ -25,9 +25,12 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         checkIndexForAdd(index);
-        ensureCapacity();
-        System.arraycopy(elements, index, elements,
-                index + VALUE_FOR_MOVE, size - index);
+        if (size == elements.length) {
+            growSize();
+        }
+        for (int i = size; i > index; i--) {
+            elements[i] = elements[i - 1];
+        }
         elements[index] = value;
         size++;
     }
@@ -55,8 +58,8 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         checkIndex(index);
         T value = elements[index];
-        System.arraycopy(elements, index + VALUE_FOR_MOVE,
-                elements, index, size - index - VALUE_FOR_MOVE);
+        manualArrayCopy(elements, index + ELEMENT_SHIFT_STEP, elements,
+                index, size - index - ELEMENT_SHIFT_STEP);
         elements[--size] = null;
         return value;
     }
@@ -82,10 +85,23 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
+    private void growSize() {
+        int newCapacity = elements.length + elements.length / HALF_CAPACITY;
+        T[] newElements = (T[]) new Object[newCapacity];
+        manualArrayCopy(elements, ZERO_POSITION,
+                newElements, ZERO_POSITION, size);
+        elements = newElements;
+    }
+
     private void ensureCapacity() {
-        if (size == elements.length) {
-            int newCapacity = elements.length + elements.length / HALF_CAPACITY;
-            elements = Arrays.copyOf(elements, newCapacity);
+        if (size >= elements.length) {
+            growSize();
+        }
+    }
+
+    private void manualArrayCopy(T[] source, int sourcePos, T[] dest, int destPos, int length) {
+        for (int i = 0; i < length; i++) {
+            dest[destPos + i] = source[sourcePos + i];
         }
     }
 
