@@ -6,6 +6,8 @@ public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_ARRAY_SIZE = 10;
     private static final float RESIZE_THRESHOLD = 1.0f;
     private static final float RESIZE_MULTIPLIER = 1.5f;
+    private static final int INITIAL_POSITION = 0;
+    private static final int INDEX_SHIFT = 1;
     private static final String ARRAY_INDEX_EXCEPTION_FORMAT =
             "Index = [%d] is out of range for ArrayList with size = [%d]";
     private Object[] array;
@@ -25,7 +27,7 @@ public class ArrayList<T> implements List<T> {
     public void add(T value, int index) {
         validateInsertionIndex(index);
         resizeIfRequired();
-        System.arraycopy(array, index, array, index + 1, size - index);
+        System.arraycopy(array, index, array, index + INDEX_SHIFT, size - index);
         array[index] = value;
         size++;
     }
@@ -53,7 +55,7 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         validateIndex(index);
         T value = (T) array[index];
-        System.arraycopy(array, index + 1, array, index, size - index - 1);
+        System.arraycopy(array, index + INDEX_SHIFT, array, index, size - index - INDEX_SHIFT);
         size--;
         return value;
     }
@@ -101,7 +103,7 @@ public class ArrayList<T> implements List<T> {
     private void resizeIfRequired() {
         if (size / (float) array.length >= RESIZE_THRESHOLD) {
             Object[] newArray = new Object[(int) (size * RESIZE_MULTIPLIER)];
-            System.arraycopy(array, 0, newArray, 0, size);
+            System.arraycopy(array, INITIAL_POSITION, newArray, INITIAL_POSITION, size);
             array = newArray;
         }
     }
