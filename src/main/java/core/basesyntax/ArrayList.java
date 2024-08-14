@@ -13,7 +13,6 @@ public class ArrayList<T> implements List<T> {
     @SuppressWarnings("unchecked")
     public ArrayList() {
         elements = (T[]) new Object[DEFAULT_CAPACITY];
-        size = 0;
     }
 
     @Override
@@ -24,7 +23,10 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        checkIndexForAdd(index);
+        if (index < 0 || index > size) {
+            throw new ArrayListIndexOutOfBoundsException("Index " + index
+                    + " is out of bounds for add operation");
+        }
         if (size == elements.length) {
             growSize();
         }
@@ -72,7 +74,7 @@ public class ArrayList<T> implements List<T> {
                 return remove(i);
             }
         }
-        throw new NoSuchElementException("Element not found");
+        throw new NoSuchElementException("Element" + element + " not found");
     }
 
     @Override
@@ -100,22 +102,13 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void manualArrayCopy(T[] source, int sourcePos, T[] dest, int destPos, int length) {
-        for (int i = 0; i < length; i++) {
-            dest[destPos + i] = source[sourcePos + i];
-        }
+        System.arraycopy(source, sourcePos, dest, destPos, length);
     }
 
     private void checkIndex(int index) {
         if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException("Index: " + index
-                    + " is out of bounds");
-        }
-    }
-
-    private void checkIndexForAdd(int index) {
-        if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("Index " + index
-                    + " is out of bounds for add operation");
+                    + " is out of bounds, size: " + size);
         }
     }
 }
