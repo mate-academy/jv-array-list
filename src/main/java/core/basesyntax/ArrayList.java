@@ -12,11 +12,11 @@ public class ArrayList<T> implements List<T> {
             "Index = [%d] is out of range for ArrayList with size = [%d]";
     private static final String ELEMENT_NOT_FOUND_FORMAT =
             "Element = [%s] can't be found in the ArrayList";
-    private Object[] array;
+    private T[] array;
     private int size;
 
     public ArrayList() {
-        this.array = new Object[DEFAULT_ARRAY_SIZE];
+        array = (T[]) new Object[DEFAULT_ARRAY_SIZE];
     }
 
     @Override
@@ -106,7 +106,7 @@ public class ArrayList<T> implements List<T> {
         if (size / (float) array.length >= RESIZE_THRESHOLD) {
             Object[] newArray = new Object[(int) (size * RESIZE_MULTIPLIER)];
             System.arraycopy(array, INITIAL_POSITION, newArray, INITIAL_POSITION, size);
-            array = newArray;
+            array = (T[]) newArray;
         }
     }
 }
