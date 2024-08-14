@@ -4,7 +4,6 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_ARRAY_SIZE = 10;
-    private static final float RESIZE_THRESHOLD = 1.0f;
     private static final float RESIZE_MULTIPLIER = 1.5f;
     private static final int INITIAL_POSITION = 0;
     private static final int INDEX_SHIFT = 1;
@@ -21,14 +20,14 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        resizeIfRequired();
+        resize();
         array[size++] = value;
     }
 
     @Override
     public void add(T value, int index) {
         validateInsertionIndex(index);
-        resizeIfRequired();
+        resize();
         System.arraycopy(array, index, array, index + INDEX_SHIFT, size - index);
         array[index] = value;
         size++;
@@ -102,8 +101,8 @@ public class ArrayList<T> implements List<T> {
         throw new ArrayListIndexOutOfBoundsException(message);
     }
 
-    private void resizeIfRequired() {
-        if (size / (float) array.length >= RESIZE_THRESHOLD) {
+    private void resize() {
+        if (array.length == size) {
             Object[] newArray = new Object[(int) (size * RESIZE_MULTIPLIER)];
             System.arraycopy(array, INITIAL_POSITION, newArray, INITIAL_POSITION, size);
             array = (T[]) newArray;
