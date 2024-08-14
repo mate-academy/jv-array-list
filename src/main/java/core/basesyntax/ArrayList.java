@@ -27,12 +27,9 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayListIndexOutOfBoundsException("Index " + index
                     + " is out of bounds for add operation");
         }
-        if (size == elements.length) {
-            growSize();
-        }
-        for (int i = size; i > index; i--) {
-            elements[i] = elements[i - 1];
-        }
+        resize();
+        System.arraycopy(elements, index, elements,
+                index + 1, size - index);
         elements[index] = value;
         size++;
     }
@@ -60,8 +57,8 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         checkIndex(index);
         T value = elements[index];
-        manualArrayCopy(elements, index + ELEMENT_SHIFT_STEP, elements,
-                index, size - index - ELEMENT_SHIFT_STEP);
+        System.arraycopy(elements, index + ELEMENT_SHIFT_STEP,
+                elements, index, size - index - ELEMENT_SHIFT_STEP);
         elements[--size] = null;
         return value;
     }
@@ -69,7 +66,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if ((element == null && elements[i] == null)
+            if (element == elements[i]
                     || (element != null && element.equals(elements[i]))) {
                 return remove(i);
             }
@@ -87,22 +84,20 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void growSize() {
-        int newCapacity = elements.length + elements.length / HALF_CAPACITY;
-        T[] newElements = (T[]) new Object[newCapacity];
-        manualArrayCopy(elements, ZERO_POSITION,
-                newElements, ZERO_POSITION, size);
-        elements = newElements;
+    private void resize() {
+        if (elements.length == size) {
+            int newCapacity = (int) (elements.length * HALF_CAPACITY);
+            T[] newElements = (T[]) new Object[newCapacity];
+            System.arraycopy(elements, ZERO_POSITION,
+                    newElements, ZERO_POSITION, size);
+            elements = newElements;
+        }
     }
 
     private void ensureCapacity() {
         if (size >= elements.length) {
-            growSize();
+            resize();
         }
-    }
-
-    private void manualArrayCopy(T[] source, int sourcePos, T[] dest, int destPos, int length) {
-        System.arraycopy(source, sourcePos, dest, destPos, length);
     }
 
     private void checkIndex(int index) {
