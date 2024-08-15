@@ -21,6 +21,7 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayListIndexOutOfBoundsException("Index: " + index + ", Size: " + size);
         }
     }
+
     @Override
     public void add(T value) {
         ensureCapacity();
@@ -81,7 +82,8 @@ public class ArrayList<T> implements List<T> {
             throw new NoSuchElementInArrayListException("Element not found: " + element);
         }
 
-        T removedElement = (T) elements[index];
+        T removedElement;
+        removedElement = (T) elements[index];
 
         for (int i = index; i < size - 1; i++) {
             elements[i] = elements[i + 1];
