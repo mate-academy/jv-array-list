@@ -37,12 +37,11 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void addAll(List<T> list) {
         Object[] buffer = toArray(list);
-        Object[] elementData;
         int requiredCapacity = list.size() + size;
         if (requiredCapacity >= currentCapacity) {
             grow(requiredCapacity);
         }
-        System.arraycopy(buffer, 0, elementData = this.elementData, size, list.size());
+        System.arraycopy(buffer, 0, elementData, size, list.size());
         size += list.size();
     }
 
@@ -124,9 +123,7 @@ public class ArrayList<T> implements List<T> {
 
     private void increaseCapacity() {
         Object[] newData = new Object[currentCapacity];
-        for (int i = 0; i < elementData.length; i++) {
-            newData[i] = elementData[i];
-        }
+        System.arraycopy(elementData, 0, newData, 0, size);
         elementData = (T[]) newData;
     }
 
