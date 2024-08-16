@@ -4,20 +4,12 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
+    private static final double EXPANDER = 1.5;
     private T[] elements;
-    private int size;
+    private int size = 0;
 
     public ArrayList() {
         elements = (T[]) new Object[DEFAULT_CAPACITY];
-        size = 0;
-    }
-
-    private void ensureCapacity() {
-        if (size == elements.length) {
-            T[] newArray = (T[]) new Object[(int) (elements.length * 1.5)];
-            System.arraycopy(elements, 0, newArray, 0, elements.length);
-            elements = newArray;
-        }
     }
 
     @Override
@@ -74,8 +66,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if ((elements[i] == null && element == null)
-                    || (elements[i] != null && elements[i].equals(element))) {
+            if (elements[i] == element || elements[i] != null && elements[i].equals(element)) {
                 return remove(i);
             }
         }
@@ -90,5 +81,13 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private void ensureCapacity() {
+        if (size == elements.length) {
+            T[] newArray = (T[]) new Object[(int) (elements.length * EXPANDER)];
+            System.arraycopy(elements, 0, newArray, 0, elements.length);
+            elements = newArray;
+        }
     }
 }
