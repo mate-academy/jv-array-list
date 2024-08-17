@@ -35,32 +35,31 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        Object[] buffer = toArray(list);
-        for (Object element : buffer) {
-            add((T) element);
+        for (int i = 0; i < list.size(); i++) {
+            add(list.get(i));
         }
     }
 
     @Override
     public T get(int index) {
-        isIndexOutOfSize(index);
+        checkIndex(index);
         return elementData[index];
     }
 
     @Override
     public void set(T value, int index) {
-        isIndexOutOfSize(index);
+        checkIndex(index);
         elementData[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        isIndexOutOfSize(index);
+        checkIndex(index);
         T oldValue = elementData[index];
         final int newSize = size - 1;
         System.arraycopy(elementData, index + 1, elementData,
                 index, newSize - index);
-        elementData[size = newSize] = null;
+        elementData[--size] = null;
         return oldValue;
     }
 
@@ -87,14 +86,10 @@ public class ArrayList<T> implements List<T> {
     private void growIfArrayIsFull() {
         if (size == elementData.length) {
             int requiredCapacity = (int) (elementData.length * DEFAULT_LOAD_FACTOR);
-            increaseCapacity(requiredCapacity);
+            T[] newData = (T[])new Object[requiredCapacity];
+            System.arraycopy(elementData, 0, newData, 0, size);
+            elementData = newData;
         }
-    }
-
-    private void increaseCapacity(int capacity) {
-        Object[] newData = new Object[capacity];
-        System.arraycopy(elementData, 0, newData, 0, size);
-        elementData = (T[]) newData;
     }
 
     private int indexOf(T value) {
@@ -106,18 +101,10 @@ public class ArrayList<T> implements List<T> {
         return NO_INDEX;
     }
 
-    private void isIndexOutOfSize(int index) throws ArrayListIndexOutOfBoundsException {
+    private void checkIndex(int index) throws ArrayListIndexOutOfBoundsException {
         if (index >= size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException(
                     "Requested index " + index + " is out of bounds");
         }
-    }
-
-    private Object[] toArray(List<T> list) {
-        Object[] array = new Object[list.size()];
-        for (int i = 0; i < list.size(); i++) {
-            array[i] = list.get(i);
-        }
-        return array;
     }
 }
