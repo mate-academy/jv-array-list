@@ -6,7 +6,7 @@ public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private static final double EXPANDER = 1.5;
     private T[] elements;
-    private int size = 0;
+    private int size;
 
     public ArrayList() {
         elements = (T[]) new Object[DEFAULT_CAPACITY];
@@ -20,9 +20,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("Index " + index + " is out of bounds");
-        }
+        checkIndex(index, true);
         ensureCapacity();
         System.arraycopy(elements, index, elements, index + 1, size - index);
         elements[index] = value;
@@ -38,25 +36,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index " + index + " is out of bounds");
-        }
+        checkIndex(index, false);
         return elements[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index " + index + " is out of bounds");
-        }
+        checkIndex(index, false);
         elements[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index " + index + " is out of bounds");
-        }
+        checkIndex(index, false);
         T removedElement = elements[index];
         System.arraycopy(elements, index + 1, elements, index, size - index - 1);
         elements[--size] = null;
@@ -88,6 +80,12 @@ public class ArrayList<T> implements List<T> {
             T[] newArray = (T[]) new Object[(int) (elements.length * EXPANDER)];
             System.arraycopy(elements, 0, newArray, 0, elements.length);
             elements = newArray;
+        }
+    }
+
+    private void checkIndex(int index, boolean allowSize) {
+        if (index < 0 || index > size || (!allowSize && index == size)) {
+            throw new ArrayListIndexOutOfBoundsException("Index " + index + " is out of bounds");
         }
     }
 }
