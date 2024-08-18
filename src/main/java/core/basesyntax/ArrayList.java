@@ -75,7 +75,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public boolean isEmpty() {
-        return false;
+        return size == 0;
     }
 
     private void ensureCapacity() {
@@ -110,12 +110,6 @@ public class ArrayList<T> implements List<T> {
     private void checkIndexForAdd(int index) {
         if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException("Index " + index + " out of bounds");
-        }
-    }
-
-    public static class ArrayListIndexOutOfBoundsException extends RuntimeException {
-        public ArrayListIndexOutOfBoundsException(String message) {
-            super(message);
         }
     }
 }
