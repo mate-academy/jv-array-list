@@ -5,6 +5,7 @@ import java.util.NoSuchElementException;
 public class ArrayList<T> implements List<T> {
 
     private static final int DEFAULT_CAPACITY = 10;
+    private static final double CONSTANT = 1.5;
     private int size;
     private T[] elements;
 
@@ -86,7 +87,7 @@ public class ArrayList<T> implements List<T> {
 
     @SuppressWarnings("unchecked")
     private void grow() {
-        int newCapacity = (int) (elements.length * 1.5);
+        int newCapacity = (int) (elements.length * CONSTANT);
         T[] newArray = (T[]) new Object[newCapacity];
         System.arraycopy(elements, 0, newArray, 0, elements.length);
         elements = newArray;
@@ -103,13 +104,17 @@ public class ArrayList<T> implements List<T> {
 
     private void checkIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index " + index + " out of bounds");
+            throw new ArrayListIndexOutOfBoundsException("Index " + index
+                    + " out of bounds for access. "
+                    + "Allowed range: 0 to " + (size - 1) + ". Current list size: " + size + ".");
         }
     }
 
     private void checkIndexForAdd(int index) {
         if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("Index " + index + " out of bounds");
+            throw new ArrayListIndexOutOfBoundsException("Index " + index
+                    + " out of bounds for add operation. "
+                    + "Allowed range: 0 to " + size + ". Current list size: " + size + ".");
         }
     }
 }
