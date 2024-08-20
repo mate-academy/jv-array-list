@@ -1,10 +1,10 @@
 package core.basesyntax;
 
-import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_ARRAYLIST_CAPACITY = 10;
+    private static final int HALF_DIVIDER_INDEX = 2;
     private int size;
     private Object[] elements;
 
@@ -21,10 +21,11 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        checkBoundExclusive(index);
-        if (index == size || size >= elements.length) {
-            ensureCapacity(size + 1);
+        if (index < 0 || index > size) {
+            throw new ArrayListIndexOutOfBoundsException("Index " + index
+                    + " is out of range: Size is: " + size);
         }
+        ensureCapacity(size + 1);
         for (int i = size; i > index; i--) {
             elements[i] = elements[i - 1];
         }
@@ -41,9 +42,7 @@ public class ArrayList<T> implements List<T> {
         ensureCapacity(newSize);
 
         for (int i = 0; i < list.size(); i++) {
-            if (list.get(i) != null) {
-                elements[size + i] = list.get(i);
-            }
+            elements[size + i] = list.get(i);
         }
         size = newSize;
     }
@@ -113,18 +112,20 @@ public class ArrayList<T> implements List<T> {
     }
 
     public void ensureCapacity(int minCapacity) {
-        int currentCapacity = elements.length;
-        while (currentCapacity - minCapacity < 0) {
-            currentCapacity = (currentCapacity / 2) + currentCapacity;
+        if (minCapacity > elements.length) {
+            grow(minCapacity);
         }
-        elements = Arrays.copyOf(elements, currentCapacity);
     }
 
-    public void checkBoundExclusive(int index) {
-        if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("Index " + index
-                    + " is out of range: Size is: " + size);
+    public void grow(int minCapacity) {
+        int oldCapacity = elements.length;
+        int currentCapacity = oldCapacity;
+        while (currentCapacity - minCapacity < 0) {
+            currentCapacity = (currentCapacity / HALF_DIVIDER_INDEX) + currentCapacity;
         }
+        Object[] copyOfElements = new Object[currentCapacity];
+        System.arraycopy(elements, 0, copyOfElements, 0, oldCapacity);
+        elements = copyOfElements;
     }
 
     private void checkBoundInclusive(int index) {
