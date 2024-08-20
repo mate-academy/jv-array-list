@@ -4,13 +4,12 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int INITIAL_CAPACITY = 10;
+    private static final double MULTIPLICATION_CONSTANT = 1.5;
     private T[] elements;
     private int size;
 
-    @SuppressWarnings("unchecked")
     public ArrayList() {
         elements = (T[]) new Object[INITIAL_CAPACITY];
-        size = 0;
     }
 
     @Override
@@ -59,9 +58,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if (elements[i] == null && element == null) {
-                return remove(i);
-            } else if (elements[i] != null && elements[i].equals(element)) {
+            if (elements[i] == element || elements[i] != null && elements[i].equals(element)) {
                 return remove(i);
             }
         }
@@ -81,7 +78,7 @@ public class ArrayList<T> implements List<T> {
     private void ensureCapacity() {
         if (size == elements.length) {
             @SuppressWarnings("unchecked")
-            T[] newElements = (T[]) new Object[elements.length * 2];
+            T[] newElements = (T[]) new Object[(int)(elements.length * MULTIPLICATION_CONSTANT)];
             System.arraycopy(elements, 0, newElements, 0, size);
             elements = newElements;
         }
