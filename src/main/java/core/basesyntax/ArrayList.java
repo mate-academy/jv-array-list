@@ -6,10 +6,10 @@ public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_ARRAYLIST_CAPACITY = 10;
     private static final int HALF_DIVIDER_INDEX = 2;
     private int size;
-    private Object[] elements;
+    private T[] elements;
 
     public ArrayList() {
-        elements = new Object[DEFAULT_ARRAYLIST_CAPACITY];
+        elements = (T[]) new Object[DEFAULT_ARRAYLIST_CAPACITY];
     }
 
     @Override
@@ -26,9 +26,7 @@ public class ArrayList<T> implements List<T> {
                     + " is out of range: Size is: " + size);
         }
         ensureCapacity(size + 1);
-        for (int i = size; i > index; i--) {
-            elements[i] = elements[i - 1];
-        }
+        System.arraycopy(elements, index, elements, index + 1, size - index);
         elements[index] = value;
         size++;
     }
@@ -50,7 +48,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         checkBoundInclusive(index);
-        return (T) elements[index];
+        return elements[index];
     }
 
     @Override
@@ -62,40 +60,21 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         checkBoundInclusive(index);
-        final T removedElement = (T) elements[index];
-        for (int i = index; i < size - 1; i++) {
-            elements[i] = elements[i + 1];
-        }
-        elements[size - 1] = null;
-        size--;
+        final T removedElement = elements[index];
+        System.arraycopy(elements,index + 1, elements, index, size - index - 1);
+        elements[--size] = null;
         return removedElement;
     }
 
     @Override
     public T remove(T element) {
-        if (element == null) {
-            for (int i = 0; i < size; i++) {
-                if (elements[i] == null) {
-                    final T removedElement = (T) elements[i];
-                    for (int j = i; j < size - 1; j++) {
-                        elements[j] = elements[j + 1];
-                    }
-                    elements[size - 1] = null;
-                    size--;
-                    return removedElement;
-                }
-            }
-        } else {
-            for (int i = 0; i < size; i++) {
-                if (elements[i] != null && elements[i].equals(element)) {
-                    final T removedElement = (T) elements[i];
-                    for (int j = i; j < size - 1; j++) {
-                        elements[j] = elements[j + 1];
-                    }
-                    elements[size - 1] = null;
-                    size--;
-                    return removedElement;
-                }
+        for (int i = 0; i < size; i++) {
+            if (elements[i] == element
+                    || elements[i] != null && elements[i].equals(element)) {
+                final T removedElement = elements[i];
+                System.arraycopy(elements,i + 1, elements, i, size - i - 1);
+                elements[--size] = null;
+                return removedElement;
             }
         }
         throw new NoSuchElementException("No such element found " + element);
@@ -125,7 +104,7 @@ public class ArrayList<T> implements List<T> {
         }
         Object[] copyOfElements = new Object[currentCapacity];
         System.arraycopy(elements, 0, copyOfElements, 0, oldCapacity);
-        elements = copyOfElements;
+        elements = (T[]) copyOfElements;
     }
 
     private void checkBoundInclusive(int index) {
@@ -134,5 +113,4 @@ public class ArrayList<T> implements List<T> {
                     + " is out of range: Size is: " + size);
         }
     }
-
 }
