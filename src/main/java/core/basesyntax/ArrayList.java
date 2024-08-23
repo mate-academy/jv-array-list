@@ -12,15 +12,6 @@ public class ArrayList<T> implements List<T> {
         this.elementData = new Object[DEFAULT_CAPACITY];
     }
 
-    public ArrayList(int customCapacity) {
-        if (customCapacity >= 0) {
-            this.elementData = new Object[customCapacity];
-        } else {
-            throw new RuntimeException("Invalid capacity: "
-                    + customCapacity);
-        }
-    }
-
     @Override
     public void add(T value) {
         checkLength();
