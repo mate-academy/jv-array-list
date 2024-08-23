@@ -13,12 +13,10 @@ public class ArrayList<T> implements List<T> {
     }
 
     public ArrayList(int customCapacity) {
-        if (customCapacity > 0) {
+        if (customCapacity >= 0) {
             this.elementData = new Object[customCapacity];
-        } else if (customCapacity == 0) {
-            this.elementData = new Object[]{};
         } else {
-            throw new RuntimeException("Impossible capacity: "
+            throw new RuntimeException("Invalid capacity: "
                     + customCapacity);
         }
     }
@@ -102,7 +100,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     private Object[] grow(int minCapacity) {
-        return elementData = Arrays.copyOf(elementData, newCapacity(minCapacity));
+        return Arrays.copyOf(elementData, newCapacity(minCapacity));
     }
 
     private int newCapacity(int minCapacity) {
