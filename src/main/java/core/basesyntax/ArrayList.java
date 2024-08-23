@@ -60,14 +60,17 @@ public class ArrayList<T> implements List<T> {
         size = s + addLength;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public T get(int index) {
-        return null;
+        rangeCheckForGet(index);
+        return (T) elementData[index];
     }
 
     @Override
     public void set(T value, int index) {
-
+        rangeCheckForGet(index);
+        elementData[index] = value;
     }
 
     @Override
