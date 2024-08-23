@@ -150,7 +150,7 @@ public class ArrayList<T> implements List<T> {
                 return i;
             }
         }
-        throw new NoSuchElementException("Can't find element: " + object);
+        throw new NoSuchElementException("Element: " + object + " is not found");
     }
 
     private void checkLength() {
