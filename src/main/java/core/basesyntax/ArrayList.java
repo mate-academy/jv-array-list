@@ -25,12 +25,24 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-
+        if (size == elementData.length) {
+            elementData = grow(size + 1);
+        }
+        elementData[size] = value;
+        size++;
     }
 
     @Override
     public void add(T value, int index) {
-
+        rangeCheckForAdd(index);
+        if (size == elementData.length) {
+            elementData = grow(size + 1);
+        }
+        System.arraycopy(elementData, index,
+                elementData, index + 1,
+                size - index);
+        elementData[index] = value;
+        size++;
     }
 
     @Override
@@ -66,5 +78,11 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return false;
+    }
+    private void rangeCheckForAdd(int index) {
+        if (index > size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Can't add inappropriate index: "
+                    + index);
+        }
     }
 }
