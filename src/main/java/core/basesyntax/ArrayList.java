@@ -73,14 +73,22 @@ public class ArrayList<T> implements List<T> {
         elementData[index] = value;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public T remove(int index) {
-        return null;
+        rangeCheckForGet(index);
+        T oldValue = (T) elementData[index];
+        fastRemove(index);
+        return oldValue;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public T remove(T element) {
-        return null;
+        final int index = findElement(element);
+        T oldValue = (T) elementData[index];
+        fastRemove(index);
+        return oldValue;
     }
 
     @Override
@@ -92,6 +100,17 @@ public class ArrayList<T> implements List<T> {
     public boolean isEmpty() {
         return false;
     }
+
+    @Override
+    public String toString() {
+        return Arrays.toString(elementData);
+    }
+
+    @Override
+    public Object[] toArray() {
+        return Arrays.copyOf(elementData, size);
+    }
+
     private Object[] grow(int minCapacity) {
         return elementData = Arrays.copyOf(elementData, newCapacity(minCapacity));
     }
@@ -117,5 +136,30 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayListIndexOutOfBoundsException("Can't add inappropriate index: "
                     + index);
         }
+    }
+
+    private void rangeCheckForGet(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Can't get inappropriate index: "
+                    + index);
+        }
+    }
+
+    private void fastRemove(int index) {
+        final int newSize = size - 1;
+        if (newSize > index) {
+            System.arraycopy(elementData, index + 1,
+                    elementData, index, newSize - index);
+        }
+        elementData[size = newSize] = null;
+    }
+
+    private int findElement(T o) {
+        for (int i = 0; i < elementData.length; i++) {
+            if (o == elementData[i] || o != null && o.equals(elementData[i])) {
+                return i;
+            }
+        }
+        throw new NoSuchElementException("Can't find element: " + o);
     }
 }
