@@ -12,7 +12,6 @@ public class ArrayList<T> implements List<T> {
 
     public ArrayList() {
         this.elementData = new Object[]{};
-
     }
 
     public ArrayList(int customCapacity) {
