@@ -46,15 +46,9 @@ public class ArrayList<T> implements List<T> {
     public void addAll(List<T> list) {
         Object[] a = list.toArray();
         int addLength = a.length;
-        if (addLength == 0) {
-            return;
-        }
-        final int s = size;
-        if (addLength > (this.elementData.length - s)) {
-            this.elementData = grow(s + addLength);
-        }
-        System.arraycopy(a, 0, this.elementData, s, addLength);
-        size = s + addLength;
+        checkLengthForAddAll(addLength);
+        System.arraycopy(a, 0, this.elementData, size, addLength);
+        size = size + addLength;
     }
 
     @SuppressWarnings("unchecked")
@@ -163,6 +157,15 @@ public class ArrayList<T> implements List<T> {
     private void checkLength() {
         if (size == elementData.length) {
             elementData = grow(size + 1);
+        }
+    }
+
+    private void checkLengthForAddAll(int length) {
+        if (length == 0) {
+            return;
+        }
+        if (length > (this.elementData.length - size)) {
+            this.elementData = grow(size + length);
         }
     }
 }
