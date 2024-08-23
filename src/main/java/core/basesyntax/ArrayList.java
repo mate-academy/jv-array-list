@@ -5,7 +5,6 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    private static final Object[] DEFAULTCAPACITY_EMPTY_ELEMENTDATA = {};
     private Object[] elementData;
     private int size = 0;
 
@@ -110,7 +109,7 @@ public class ArrayList<T> implements List<T> {
         int oldCapacity = elementData.length;
         int newCapacity = oldCapacity + (oldCapacity >> 1);
         if (newCapacity - minCapacity <= 0) {
-            if (Arrays.equals(elementData, DEFAULTCAPACITY_EMPTY_ELEMENTDATA)) {
+            if (Arrays.equals(elementData, new Object[]{})) {
                 return Math.max(DEFAULT_CAPACITY, minCapacity);
             }
             if (minCapacity < 0) {
@@ -145,13 +144,13 @@ public class ArrayList<T> implements List<T> {
         elementData[size = newSize] = null;
     }
 
-    private int findElement(T o) {
+    private int findElement(T object) {
         for (int i = 0; i < elementData.length; i++) {
-            if (o == elementData[i] || o != null && o.equals(elementData[i])) {
+            if (object == elementData[i] || object != null && object.equals(elementData[i])) {
                 return i;
             }
         }
-        throw new NoSuchElementException("Can't find element: " + o);
+        throw new NoSuchElementException("Can't find element: " + object);
     }
 
     private void checkLength() {
