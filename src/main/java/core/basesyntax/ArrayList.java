@@ -26,9 +26,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (size == elementData.length) {
-            elementData = grow(size + 1);
-        }
+        checkLength();
         elementData[size] = value;
         size++;
     }
@@ -36,9 +34,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         rangeCheckForAdd(index);
-        if (size == elementData.length) {
-            elementData = grow(size + 1);
-        }
+        checkLength();
         System.arraycopy(elementData, index,
                 elementData, index + 1,
                 size - index);
@@ -162,5 +158,11 @@ public class ArrayList<T> implements List<T> {
             }
         }
         throw new NoSuchElementException("Can't find element: " + o);
+    }
+
+    private void checkLength() {
+        if (size == elementData.length) {
+            elementData = grow(size + 1);
+        }
     }
 }
