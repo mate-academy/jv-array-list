@@ -54,20 +54,20 @@ public class ArrayList<T> implements List<T> {
     @SuppressWarnings("unchecked")
     @Override
     public T get(int index) {
-        rangeCheckForGet(index);
+        checkIndex(index);
         return (T) elementData[index];
     }
 
     @Override
     public void set(T value, int index) {
-        rangeCheckForGet(index);
+        checkIndex(index);
         elementData[index] = value;
     }
 
     @SuppressWarnings("unchecked")
     @Override
     public T remove(int index) {
-        rangeCheckForGet(index);
+        checkIndex(index);
         T oldValue = (T) elementData[index];
         fastRemove(index);
         return oldValue;
@@ -124,15 +124,15 @@ public class ArrayList<T> implements List<T> {
 
     private void rangeCheckForAdd(int index) {
         if (index > size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Can't add inappropriate index: "
-                    + index);
+            throw new ArrayListIndexOutOfBoundsException("Index: "
+                    + index + ", Size: " + size);
         }
     }
 
-    private void rangeCheckForGet(int index) {
+    private void checkIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Can't get inappropriate index: "
-                    + index);
+            throw new ArrayListIndexOutOfBoundsException("Index: "
+                    + index + " is invalid");
         }
     }
 
