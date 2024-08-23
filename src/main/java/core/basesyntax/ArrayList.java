@@ -9,7 +9,7 @@ public class ArrayList<T> implements List<T> {
     private int size = 0;
 
     public ArrayList() {
-        this.elementData = new Object[]{};
+        this.elementData = new Object[DEFAULT_CAPACITY];
     }
 
     public ArrayList(int customCapacity) {
