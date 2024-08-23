@@ -5,7 +5,6 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    private static final Object[] EMPTY_ELEMENTDATA = {};
     private static final Object[] DEFAULTCAPACITY_EMPTY_ELEMENTDATA = {};
     private Object[] elementData;
     private int size = 0;
@@ -18,7 +17,7 @@ public class ArrayList<T> implements List<T> {
         if (customCapacity > 0) {
             this.elementData = new Object[customCapacity];
         } else if (customCapacity == 0) {
-            this.elementData = EMPTY_ELEMENTDATA;
+            this.elementData = new Object[]{};
         } else {
             throw new RuntimeException("Impossible capacity: "
                     + customCapacity);
