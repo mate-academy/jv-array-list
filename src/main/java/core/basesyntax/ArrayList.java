@@ -100,9 +100,11 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         if (element == null) {
+            // W przypadku `null` szukamy `null` w tablicy
             for (int i = 0; i < arraySize; i++) {
                 if (array[i] == null) {
                     T removedElement = array[i];
+                    // Przesuwanie pozostałych elementów
                     for (int j = i; j < arraySize - 1; j++) {
                         array[j] = array[j + 1];
                     }
@@ -112,9 +114,11 @@ public class ArrayList<T> implements List<T> {
                 }
             }
         } else {
+            // Szukamy elementu, który nie jest `null`
             for (int i = 0; i < arraySize; i++) {
                 if (array[i] != null && array[i].equals(element)) {
                     T removedElement = array[i];
+                    // Przesuwanie pozostałych elementów
                     for (int j = i; j < arraySize - 1; j++) {
                         array[j] = array[j + 1];
                     }
@@ -124,9 +128,10 @@ public class ArrayList<T> implements List<T> {
                 }
             }
         }
+
+        // Jeśli element nie został znaleziony
         throw new NoSuchElementException("Element not found");
     }
-
 
     @Override
     public int size() {
