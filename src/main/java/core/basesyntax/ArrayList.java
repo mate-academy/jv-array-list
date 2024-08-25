@@ -18,7 +18,7 @@ public class ArrayList<T> implements List<T> {
         System.arraycopy(array, 0, newArray, 0, array.length);
         array = newArray;
     }
-//
+
     @Override
     public void add(T value) {
         if (arraySize == array.length) {
@@ -85,7 +85,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         if (index >= 0 && index < arraySize) {
-            T removedElement = array[index];
+            final T removedElement = array[index];
             for (int i = index; i < arraySize - 1; i++) {
                 array[i] = array[i + 1];
             }
@@ -102,7 +102,7 @@ public class ArrayList<T> implements List<T> {
         if (element == null) {
             for (int i = 0; i < arraySize; i++) {
                 if (array[i] == null) {
-                    T removedElement = array[i];
+                    final T removedElement = array[i];
                     for (int j = i; j < arraySize - 1; j++) {
                         array[j] = array[j + 1];
                     }
@@ -114,7 +114,7 @@ public class ArrayList<T> implements List<T> {
         } else {
             for (int i = 0; i < arraySize; i++) {
                 if (array[i] != null && array[i].equals(element)) {
-                    T removedElement = array[i];
+                    final T removedElement = array[i];
                     for (int j = i; j < arraySize - 1; j++) {
                         array[j] = array[j + 1];
                     }
