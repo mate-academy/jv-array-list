@@ -4,12 +4,12 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
 
+    private static final int DEFAULT_ARRAY_SIZE = 10;
     private T[] array;
     private int arraySize = 0;
-    private static final int DEAFULT_ARRAY_SIZE = 10;
 
     public ArrayList() {
-        array = (T[]) new Object[DEAFULT_ARRAY_SIZE];
+        array = (T[]) new Object[DEFAULT_ARRAY_SIZE];
     }
 
     private void resize() {
@@ -30,24 +30,26 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index >= 0 && index <= arraySize) {
-            if(arraySize == array.length) {
-                resize();
-            }
-            for(int i = arraySize - 1; i > index; i--) {
-                array[i] = array[i - 1];
-            }
-            array[index] = value;
-            arraySize++;
-        } else {
+        if (index < 0 || index > arraySize) {
             throw new ArrayListIndexOutOfBoundsException("Invalid index");
         }
+
+        if (arraySize == array.length) {
+            resize();
+        }
+
+        for (int i = arraySize; i > index; i--) {
+            array[i] = array[i - 1];
+        }
+
+        array[index] = value;
+        arraySize++;
     }
 
     @Override
     public void addAll(List<T> list) {
         System.out.println("public void addAll");
-        if(list.isEmpty()) {
+        if (list.isEmpty()) {
             return;
         }
 
@@ -64,7 +66,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if(index >= 0 && index < arraySize) {
+        if (index >= 0 && index < arraySize) {
             return array[index];
         } else {
             throw new ArrayListIndexOutOfBoundsException("Can't find this index in this array");
@@ -73,7 +75,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void set(T value, int index) {
-        if(index >= 0 && index < arraySize) {
+        if (index >= 0 && index < arraySize) {
             array[index] = value;
         } else {
             throw new ArrayListIndexOutOfBoundsException("Invalid index");
@@ -82,8 +84,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(int index) {
-        if(index >= 0 && index < arraySize) {
-
+        if (index >= 0 && index < arraySize) {
             T removedElement = array[index];
             for (int i = index; i < arraySize - 1; i++) {
                 array[i] = array[i + 1];
@@ -98,13 +99,24 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        System.out.println("public T remove(T element)");
-        if(element != null) {
+        if (element == null) {
             for (int i = 0; i < arraySize; i++) {
-                if(array[i].equals(element)) {
+                if (array[i] == null) {
                     T removedElement = array[i];
-                    for(int a = i; a < arraySize - 1; a++) {
-                        array[a] = array[a + 1];
+                    for (int j = i; j < arraySize - 1; j++) {
+                        array[j] = array[j + 1];
+                    }
+                    arraySize--;
+                    array[arraySize] = null;
+                    return removedElement;
+                }
+            }
+        } else {
+            for (int i = 0; i < arraySize; i++) {
+                if (array[i] != null && array[i].equals(element)) {
+                    T removedElement = array[i];
+                    for (int j = i; j < arraySize - 1; j++) {
+                        array[j] = array[j + 1];
                     }
                     arraySize--;
                     array[arraySize] = null;
@@ -112,8 +124,9 @@ public class ArrayList<T> implements List<T> {
                 }
             }
         }
-        throw new NoSuchElementException("Element cannot be null");
+        throw new NoSuchElementException("Element not found");
     }
+
 
     @Override
     public int size() {
