@@ -18,7 +18,7 @@ public class ArrayList<T> implements List<T> {
         System.arraycopy(array, 0, newArray, 0, array.length);
         array = newArray;
     }
-
+//
     @Override
     public void add(T value) {
         if (arraySize == array.length) {
