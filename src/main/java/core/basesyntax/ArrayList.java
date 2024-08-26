@@ -12,7 +12,7 @@ public class ArrayList<T> implements List<T> {
         array = (T[]) new Object[DEFAULT_ARRAY_SIZE];
     }
 
-    private void resize() {
+    private void resizeAndCopy() {
         int newSize = array.length + (array.length / 2);
         T[] newArray = (T[]) new Object[newSize];
         System.arraycopy(array, 0, newArray, 0, array.length);
@@ -22,7 +22,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value) {
         if (arraySize == array.length) {
-            resize();
+            resizeAndCopy();
         }
         array[arraySize] = value;
         arraySize++;
@@ -35,7 +35,7 @@ public class ArrayList<T> implements List<T> {
         }
 
         if (arraySize == array.length) {
-            resize();
+            resizeAndCopy();
         }
 
         for (int i = arraySize; i > index; i--) {
@@ -78,7 +78,7 @@ public class ArrayList<T> implements List<T> {
         if (index >= 0 && index < arraySize) {
             array[index] = value;
         } else {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index");
+            throw new ArrayListIndexOutOfBoundsException("Invalid index. Recived: " + index + " and the index should be beetwen 0 and arraySize");
         }
     }
 
@@ -93,7 +93,7 @@ public class ArrayList<T> implements List<T> {
             array[arraySize] = null;
             return removedElement;
         } else {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index");
+            throw new ArrayListIndexOutOfBoundsException("Invalid index. Recived: " + index + " and the index should be beetwen 0 and arraySize");
         }
     }
 
@@ -125,18 +125,16 @@ public class ArrayList<T> implements List<T> {
             }
         }//
 
-        throw new NoSuchElementException("Element not found");
+        throw new NoSuchElementException("Can't find element : " + element);
     }
 
     @Override
     public int size() {
-        System.out.println("public int size()");
         return arraySize;
     }
 
     @Override
     public boolean isEmpty() {
-        System.out.println("public boolean isEmpty()");
         return arraySize == 0;
     }
 }
