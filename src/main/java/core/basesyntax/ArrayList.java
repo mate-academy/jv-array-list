@@ -48,7 +48,6 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        System.out.println("public void addAll");
         if (list.isEmpty()) {
             return;
         }
