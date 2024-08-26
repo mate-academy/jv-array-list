@@ -5,14 +5,11 @@ import java.util.NoSuchElementException;
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private static final double CAPACITY_MULTIPLIER = 1.5;
-    private int capacity;
     private int size;
     private T[] values;
 
     public ArrayList() {
-        size = 0;
-        capacity = DEFAULT_CAPACITY;
-        values = (T[]) new Object[capacity];
+        values = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
     @Override
@@ -23,7 +20,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        checkIndex(index, size + 1);
+        checkNewElementIndex(index);
         growIfArrayFull();
         System.arraycopy(values, index, values, index + 1, size - index);
         values[index] = value;
@@ -39,19 +36,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        checkIndex(index, size);
+        checkExistingElementIndex(index);
         return values[index];
     }
 
     @Override
     public void set(T value, int index) {
-        checkIndex(index, size);
+        checkExistingElementIndex(index);
         values[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        checkIndex(index, size);
+        checkExistingElementIndex(index);
         T value = values[index];
         System.arraycopy(values, index + 1, values, index, size - index - 1);
         size--;
@@ -65,7 +62,7 @@ public class ArrayList<T> implements List<T> {
                 return remove(i);
             }
         }
-        throw new NoSuchElementException();
+        throw new NoSuchElementException("Couldn't find such element: " + element);
     }
 
     @Override
@@ -78,23 +75,30 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void checkIndex(int index, int upperBound) {
-        if (index < 0 || index >= upperBound) {
+    private void checkNewElementIndex(int index) {
+        if (index < 0 || index > size) {
+            throw new ArrayListIndexOutOfBoundsException("Trying to operate"
+                    + " with invalid index: " + index);
+        }
+    }
+
+    private void checkExistingElementIndex(int index) {
+        if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException("Trying to operate"
                     + " with invalid index: " + index);
         }
     }
 
     private void growIfArrayFull() {
-        if (size == capacity) {
-            capacity *= CAPACITY_MULTIPLIER;
-            T[] newValues = (T[]) new Object[capacity];
+        if (size == values.length) {
+            int newLength = (int)(values.length * CAPACITY_MULTIPLIER);
+            T[] newValues = (T[]) new Object[newLength];
             System.arraycopy(values, 0, newValues, 0, size);
             values = newValues;
         }
     }
 
-    private Boolean compareElements(T element1, T element2) {
-        return element1 == null ? element2 == null : element1.equals(element2);
+    private Boolean compareElements(T firstElement, T secondElement) {
+        return firstElement == null ? secondElement == null : firstElement.equals(secondElement);
     }
 }
