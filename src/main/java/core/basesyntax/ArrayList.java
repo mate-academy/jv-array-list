@@ -77,7 +77,8 @@ public class ArrayList<T> implements List<T> {
         if (index >= 0 && index < arraySize) {
             array[index] = value;
         } else {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index. Recived: " + index + " and the index should be beetwen 0 and arraySize");
+            throw new ArrayListIndexOutOfBoundsException("Invalid index. Recived: " + index
+                    + " and the index should be beetwen 0 and arraySize");
         }
     }
 
@@ -92,7 +93,8 @@ public class ArrayList<T> implements List<T> {
             array[arraySize] = null;
             return removedElement;
         } else {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index. Recived: " + index + " and the index should be beetwen 0 and arraySize");
+            throw new ArrayListIndexOutOfBoundsException("Invalid index. Recived: " + index
+                    + " and the index should be beetwen 0 and arraySize");
         }
     }
 
@@ -122,7 +124,7 @@ public class ArrayList<T> implements List<T> {
                     return removedElement;
                 }
             }
-        }//
+        }
 
         throw new NoSuchElementException("Can't find element : " + element);
     }
