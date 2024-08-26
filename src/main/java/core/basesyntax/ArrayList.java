@@ -123,7 +123,7 @@ public class ArrayList<T> implements List<T> {
                     return removedElement;
                 }
             }
-        }
+        }//
 
         throw new NoSuchElementException("Element not found");
     }
