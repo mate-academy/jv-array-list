@@ -7,7 +7,7 @@ public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private static final int DIVIDER = 1;
     private Object[] elementData;
-    private int size = 0;
+    private int size;
 
     public ArrayList() {
         this.elementData = new Object[DEFAULT_CAPACITY];
