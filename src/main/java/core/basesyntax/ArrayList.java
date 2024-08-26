@@ -33,13 +33,12 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        Object[] a = list.toArray();
-        int addLength = a.length;
+        Object[] newArray = list.toArray();
+        int addLength = newArray.length;
         checkLengthForAddAll(addLength);
-        System.arraycopy(a, 0, this.elementData, size, addLength);
+        System.arraycopy(newArray, 0, this.elementData, size, addLength);
         size = size + addLength;
     }
-
     @SuppressWarnings("unchecked")
     @Override
     public T get(int index) {
