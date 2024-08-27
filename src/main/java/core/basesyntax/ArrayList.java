@@ -12,7 +12,7 @@ public class ArrayList<T> implements List<T> {
         this.elementData = EMPTY_ELEMENT_DATA;
     }
 
-    private void quickRemove(Object[] elements, int index) {
+    private void removeElementAtIndex(Object[] elements, int index) {
         if ((size - 1) >= index) {
             System.arraycopy(elements, index + 1, elements, index, (size - 1) - index);
         }
@@ -20,19 +20,15 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void checkIndex(int index) {
-        if (index > size - 1 || index < 0) {
+        if ((index > size - 1 || index < 0) || index == size) {
             throw new ArrayListIndexOutOfBoundsException("index is out of bound of array");
         }
     }
 
-    private Object[] grow() {
-        return grow(size + 1);
-    }
-
     private Object[] grow(int minCapacity) {
         int oldCapacity = elementData.length;
-        if (oldCapacity > 0 || elementData != EMPTY_ELEMENT_DATA) {
-            int newCapacity = oldCapacity >> 1;
+        if (oldCapacity > 0) {
+            int newCapacity = oldCapacity + (oldCapacity >> 1);
             Object[] copyOfElementData = elementData;
             elementData = new Object[Math.max(newCapacity,minCapacity)];
             System.arraycopy(copyOfElementData,0, elementData, 0, oldCapacity);
@@ -41,28 +37,30 @@ public class ArrayList<T> implements List<T> {
         return elementData = new Object[Math.max(DEFAULT_CAPACITY, minCapacity)];
     }
 
-    private void add(T e,Object[] element,int size) {
-        if (size == element.length) {
-            element = grow();
+    private void sizeCheck() {
+        if (size == elementData.length) {
+            elementData = grow(size + 1);
         }
-        element[size] = e;
-        this.size = size + 1;
     }
 
     @Override
     public void add(T value) {
-        add(value, elementData, size);
+        sizeCheck();
+        elementData[size] = value;
+        this.size = size + 1;
     }
 
     @Override
     public void add(T value, int index) {
-        add(value, elementData, size);
-        checkIndex(index);
-        if (size == elementData.length) {
-            elementData = grow();
+        sizeCheck();
+        if (index == size) {
+            add(value);
+        } else {
+            checkIndex(index);
+            System.arraycopy(elementData, index, elementData, index + 1, size - index);
+            elementData[index] = value;
+            this.size = size + 1;
         }
-        System.arraycopy(elementData, index, elementData, index + 1, size - index);
-        elementData[index] = value;
     }
 
     @Override
@@ -95,7 +93,7 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         checkIndex(index);
         T oldValue = (T) elementData[index];
-        quickRemove(elementData, index);
+        removeElementAtIndex(elementData, index);
         return oldValue;
     }
 
@@ -116,9 +114,9 @@ public class ArrayList<T> implements List<T> {
                     }
                 }
             }
-            throw new NoSuchElementException("element not found");
+            throw new NoSuchElementException(element + " not found");
         }
-        quickRemove(elementData, index);
+        removeElementAtIndex(elementData, index);
         return element;
     }
 
