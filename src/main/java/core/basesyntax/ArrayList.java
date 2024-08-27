@@ -13,10 +13,6 @@ public class ArrayList<T> implements List<T> {
         elementData = ((T[]) (new Object[DEFAULT_CAPACITY_ELEMENT_DATA]));
     }
 
-    private boolean indexCheck(int index) {
-        return index < 0 || index >= size;
-    }
-
     @Override
     public void add(T value) {
         if (size >= elementData.length) {
@@ -46,15 +42,6 @@ public class ArrayList<T> implements List<T> {
         for (int i = 0; i < list.size(); i++) {
             add(list.get(i));
         }
-    }
-
-    private T[] grow(T[] elementData) {
-        int newCapacity = (int) (elementData.length * CAPACITY_GROW_FACTOR);
-        T[] newCapacityElementData = (T[]) new Object[newCapacity];
-        System.arraycopy(elementData,
-                0, newCapacityElementData,
-                0, elementData.length);
-        return newCapacityElementData;
     }
 
     @Override
@@ -107,4 +94,18 @@ public class ArrayList<T> implements List<T> {
     public boolean isEmpty() {
         return size == 0;
     }
+
+    private boolean indexCheck(int index) {
+        return index < 0 || index >= size;
+    }
+
+    private T[] grow(T[] elementData) {
+        int newCapacity = (int) (elementData.length * CAPACITY_GROW_FACTOR);
+        T[] newCapacityElementData = (T[]) new Object[newCapacity];
+        System.arraycopy(elementData,
+                0, newCapacityElementData,
+                0, elementData.length);
+        return newCapacityElementData;
+    }
+
 }
