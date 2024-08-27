@@ -3,10 +3,9 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-
     private static final int DEFAULT_ARRAY_SIZE = 10;
     private T[] array;
-    private int arraySize = 0;
+    private int arraySize;
 
     public ArrayList() {
         array = (T[]) new Object[DEFAULT_ARRAY_SIZE];
@@ -31,7 +30,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         if (index < 0 || index > arraySize) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index");
+            throw new ArrayListIndexOutOfBoundsException("Invalid index. Recived: " + index
+                    + " and the index should be beetwen 0 and arraySize");
         }
 
         if (arraySize == array.length) {
@@ -41,7 +41,6 @@ public class ArrayList<T> implements List<T> {
         for (int i = arraySize; i > index; i--) {
             array[i] = array[i - 1];
         }
-
         array[index] = value;
         arraySize++;
     }
@@ -51,7 +50,6 @@ public class ArrayList<T> implements List<T> {
         if (list.isEmpty()) {
             return;
         }
-
         int newSize = arraySize + list.size();
 
         T[] newArray = (T[]) new Object[newSize];
@@ -82,15 +80,19 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
+    public void moveElementAndResizeArray(int index) {
+        for (int i = index; i < arraySize - 1; i++) {
+            array[i] = array[i + 1];
+        }
+        arraySize--;
+        array[arraySize] = null;
+    }
+
     @Override
     public T remove(int index) {
         if (index >= 0 && index < arraySize) {
             final T removedElement = array[index];
-            for (int i = index; i < arraySize - 1; i++) {
-                array[i] = array[i + 1];
-            }
-            arraySize--;
-            array[arraySize] = null;
+            moveElementAndResizeArray(index);
             return removedElement;
         } else {
             throw new ArrayListIndexOutOfBoundsException("Invalid index. Recived: " + index
@@ -104,11 +106,7 @@ public class ArrayList<T> implements List<T> {
             for (int i = 0; i < arraySize; i++) {
                 if (array[i] == null) {
                     final T removedElement = array[i];
-                    for (int j = i; j < arraySize - 1; j++) {
-                        array[j] = array[j + 1];
-                    }
-                    arraySize--;
-                    array[arraySize] = null;
+                    moveElementAndResizeArray(i);
                     return removedElement;
                 }
             }
@@ -116,16 +114,11 @@ public class ArrayList<T> implements List<T> {
             for (int i = 0; i < arraySize; i++) {
                 if (array[i] != null && array[i].equals(element)) {
                     final T removedElement = array[i];
-                    for (int j = i; j < arraySize - 1; j++) {
-                        array[j] = array[j + 1];
-                    }
-                    arraySize--;
-                    array[arraySize] = null;
+                    moveElementAndResizeArray(i);
                     return removedElement;
                 }
             }
         }
-
         throw new NoSuchElementException("Can't find element : " + element);
     }
 
