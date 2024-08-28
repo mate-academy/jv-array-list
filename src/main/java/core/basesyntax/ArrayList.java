@@ -9,7 +9,7 @@ public class ArrayList<T> implements List<T> {
     private T[] elementData;
     private int size;
 
-//    @SuppressWarnings("unchecked")
+    @SuppressWarnings("unchecked")
     public ArrayList() {
         this.elementData = (T[]) new Object[DEFAULT_CAPACITY];
     }
@@ -55,7 +55,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
-        T oldValue = (T) elementData[index];
+        T oldValue = elementData[index];
         fastRemove(index);
         return oldValue;
     }
@@ -63,7 +63,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         final int index = findElement(element);
-        T oldValue = (T) elementData[index];
+        T oldValue = elementData[index];
         fastRemove(index);
         return oldValue;
     }
