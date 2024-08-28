@@ -3,13 +3,13 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    private static final Object[] EMPTY_ELEMENT_DATA = {};
+    private static final double GROWTH_MULTIPLIER = 1.5;
     private static final int DEFAULT_CAPACITY = 10;
-    private Object[] elementData;
+    private T[] elementData;
     private int size = 0;
 
     public ArrayList() {
-        this.elementData = EMPTY_ELEMENT_DATA;
+        this.elementData = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
     private void removeElementAtIndex(Object[] elements, int index) {
@@ -19,27 +19,24 @@ public class ArrayList<T> implements List<T> {
         elements[size -= 1] = null;
     }
 
-    private void checkIndex(int index) {
-        if ((index > size - 1 || index < 0) || index == size) {
-            throw new ArrayListIndexOutOfBoundsException("index is out of bound of array");
+    private void validIndexIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
         }
     }
 
-    private Object[] grow(int minCapacity) {
-        int oldCapacity = elementData.length;
-        if (oldCapacity > 0) {
-            int newCapacity = oldCapacity + (oldCapacity >> 1);
-            Object[] copyOfElementData = elementData;
-            elementData = new Object[Math.max(newCapacity,minCapacity)];
-            System.arraycopy(copyOfElementData,0, elementData, 0, oldCapacity);
-            return elementData;
+    private void growIfArrayFull(int minCapacity) {
+        if (minCapacity >= elementData.length) {
+            int newArraySize = (int) Math.round(elementData.length * GROWTH_MULTIPLIER);
+            T[] newArray = (T[]) new Object[Math.max(newArraySize,minCapacity)];
+            System.arraycopy(elementData, 0, newArray, 0, elementData.length);
+            elementData = newArray;
         }
-        return elementData = new Object[Math.max(DEFAULT_CAPACITY, minCapacity)];
     }
 
     private void sizeCheck() {
         if (size == elementData.length) {
-            elementData = grow(size + 1);
+            growIfArrayFull(size);
         }
     }
 
@@ -56,7 +53,7 @@ public class ArrayList<T> implements List<T> {
         if (index == size) {
             add(value);
         } else {
-            checkIndex(index);
+            validIndexIndex(index);
             System.arraycopy(elementData, index, elementData, index + 1, size - index);
             elementData[index] = value;
             this.size = size + 1;
@@ -65,12 +62,12 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        Object[] inputListToArray = new Object[list.size()];
+        T[] inputListToArray = (T[]) new Object[list.size()];
         for (int i = 0; i < list.size(); i++) {
             inputListToArray[i] = list.get(i);
         }
         if (inputListToArray.length > elementData.length - size) {
-            elementData = grow(size + inputListToArray.length);
+            growIfArrayFull(inputListToArray.length + size);
         }
         System.arraycopy(inputListToArray, 0, elementData, size, inputListToArray.length);
         size = size + inputListToArray.length;
@@ -78,21 +75,21 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        checkIndex(index);
-        return (T) elementData[index];
+        validIndexIndex(index);
+        return elementData[index];
     }
 
     @Override
     public void set(T value, int index) {
-        checkIndex(index);
+        validIndexIndex(index);
         elementData[index] = value;
 
     }
 
     @Override
     public T remove(int index) {
-        checkIndex(index);
-        T oldValue = (T) elementData[index];
+        validIndexIndex(index);
+        T oldValue = elementData[index];
         removeElementAtIndex(elementData, index);
         return oldValue;
     }
