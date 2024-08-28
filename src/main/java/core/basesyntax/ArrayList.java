@@ -6,11 +6,12 @@ import java.util.NoSuchElementException;
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private static final int DIVIDER = 1;
-    private Object[] elementData;
+    private T[] elementData;
     private int size;
 
+//    @SuppressWarnings("unchecked")
     public ArrayList() {
-        this.elementData = new Object[DEFAULT_CAPACITY];
+        this.elementData = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
     @Override
@@ -33,17 +34,16 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        Object[] newArray = list.toArray();
+        T[] newArray = (T[]) list.toArray();
         int addLength = newArray.length;
         checkLengthForAddAll(addLength);
         System.arraycopy(newArray, 0, this.elementData, size, addLength);
         size = size + addLength;
     }
-    @SuppressWarnings("unchecked")
     @Override
     public T get(int index) {
         checkIndex(index);
-        return (T) elementData[index];
+        return elementData[index];
     }
 
     @Override
@@ -52,7 +52,6 @@ public class ArrayList<T> implements List<T> {
         elementData[index] = value;
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public T remove(int index) {
         checkIndex(index);
@@ -61,7 +60,6 @@ public class ArrayList<T> implements List<T> {
         return oldValue;
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public T remove(T element) {
         final int index = findElement(element);
@@ -90,7 +88,7 @@ public class ArrayList<T> implements List<T> {
         return Arrays.copyOf(elementData, size);
     }
 
-    private Object[] grow(int minCapacity) {
+    private T[] grow(int minCapacity) {
         return Arrays.copyOf(elementData, newCapacity(minCapacity));
     }
 
