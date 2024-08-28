@@ -1,6 +1,5 @@
 package core.basesyntax;
 
-import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
@@ -77,11 +76,6 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    @Override
-    public String toString() {
-        return Arrays.toString(elementData);
-    }
-
     @SuppressWarnings("unchecked")
     private void increaseElementDataLength() {
         int newCapacity = (int) (elementData.length * CAPACITY_MULTIPLIER);
@@ -105,7 +99,7 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private void indexValidation(int index){
+    private void indexValidation(int index) {
         if (index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
         }
@@ -120,14 +114,13 @@ public class ArrayList<T> implements List<T> {
         elementData[size = newSize] = null;
     }
 
-    private int findElement(T object) {
+    private int findElement(T obj) {
         for (int i = 0; i < elementData.length; i++) {
-            if (object == elementData[i] || object != null
-                    && object.equals(elementData[i])) {
+            if (obj == elementData[i] || obj != null && obj.equals(elementData[i])) {
                 return i;
             }
         }
-        throw new NoSuchElementException("Element: " + object + " is not found");
+        throw new NoSuchElementException("Element: " + obj + " is not found");
     }
 
     private void checkElementDataLength() {
