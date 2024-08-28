@@ -34,12 +34,11 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        T[] newArray = (T[]) list.toArray();
-        int addLength = newArray.length;
-        checkLengthForAddAll(addLength);
-        System.arraycopy(newArray, 0, this.elementData, size, addLength);
-        size = size + addLength;
+        for (int i = 0; i < list.size(); i++) {
+            add(list.get(i));
+        }
     }
+
     @Override
     public T get(int index) {
         checkIndex(index);
@@ -81,11 +80,6 @@ public class ArrayList<T> implements List<T> {
     @Override
     public String toString() {
         return Arrays.toString(elementData);
-    }
-
-    @Override
-    public Object[] toArray() {
-        return Arrays.copyOf(elementData, size);
     }
 
     private T[] grow(int minCapacity) {
@@ -143,15 +137,6 @@ public class ArrayList<T> implements List<T> {
     private void checkLength() {
         if (size == elementData.length) {
             elementData = grow(size + 1);
-        }
-    }
-
-    private void checkLengthForAddAll(int length) {
-        if (length == 0) {
-            return;
-        }
-        if (length > (this.elementData.length - size)) {
-            this.elementData = grow(size + length);
         }
     }
 }
