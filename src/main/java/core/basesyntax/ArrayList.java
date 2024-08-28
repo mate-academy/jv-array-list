@@ -5,7 +5,7 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    private static final int DIVIDER = 1;
+    private static final double CAPACITY_MULTIPLIER = 1.5;
     private T[] elementData;
     private int size;
 
@@ -16,15 +16,15 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        checkLength();
+        checkElementDataLength();
         elementData[size] = value;
         size++;
     }
 
     @Override
     public void add(T value, int index) {
-        rangeCheckForAdd(index);
-        checkLength();
+        checkIndexForAdd(index);
+        checkElementDataLength();
         System.arraycopy(elementData, index,
                 elementData, index + 1,
                 size - index);
@@ -82,37 +82,32 @@ public class ArrayList<T> implements List<T> {
         return Arrays.toString(elementData);
     }
 
-    private T[] grow(int minCapacity) {
-        return Arrays.copyOf(elementData, newCapacity(minCapacity));
+    @SuppressWarnings("unchecked")
+    private void increaseElementDataLength() {
+        int newCapacity = (int) (elementData.length * CAPACITY_MULTIPLIER);
+        T[] newArray = (T[]) new Object[newCapacity];
+        System.arraycopy(elementData, 0, newArray, 0, size);
+        elementData = newArray;
     }
 
-    private int newCapacity(int minCapacity) {
-        int oldCapacity = elementData.length;
-        int newCapacity = oldCapacity + (oldCapacity >> DIVIDER);
-        if (newCapacity - minCapacity <= 0) {
-            if (Arrays.equals(elementData, new Object[]{})) {
-                return Math.max(DEFAULT_CAPACITY, minCapacity);
-            }
-            if (minCapacity < 0) {
-                throw new OutOfMemoryError();
-            }
-            return minCapacity;
-        }
-        return (newCapacity - Integer.MAX_VALUE <= 0)
-                ? newCapacity : Integer.MAX_VALUE;
-    }
-
-    private void rangeCheckForAdd(int index) {
-        if (index > size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index: "
-                    + index + ", Size: " + size);
+    private void checkIndexForAdd(int index) {
+        indexValidation(index);
+        if (index > size) {
+            throw new ArrayListIndexOutOfBoundsException("Index is out of size range");
         }
     }
 
     private void checkIndex(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index: "
-                    + index + " is invalid");
+        indexValidation(index);
+        if (index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("There is no value on index: "
+                    + index);
+        }
+    }
+
+    private void indexValidation(int index){
+        if (index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
         }
     }
 
@@ -127,16 +122,17 @@ public class ArrayList<T> implements List<T> {
 
     private int findElement(T object) {
         for (int i = 0; i < elementData.length; i++) {
-            if (object == elementData[i] || object != null && object.equals(elementData[i])) {
+            if (object == elementData[i] || object != null
+                    && object.equals(elementData[i])) {
                 return i;
             }
         }
         throw new NoSuchElementException("Element: " + object + " is not found");
     }
 
-    private void checkLength() {
+    private void checkElementDataLength() {
         if (size == elementData.length) {
-            elementData = grow(size + 1);
+            increaseElementDataLength();
         }
     }
 }
