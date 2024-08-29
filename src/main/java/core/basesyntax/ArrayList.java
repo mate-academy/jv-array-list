@@ -1,7 +1,6 @@
 package core.basesyntax;
 
 import java.util.NoSuchElementException;
-import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
     public static final int DEFAULT_CAPACITY_ELEMENT_DATA = 10;
@@ -24,7 +23,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        indexCheck(index, true);
+        indexCheckForAddMethod(index);
         if (size >= elementData.length) {
             elementData = grow(elementData);
         }
@@ -44,19 +43,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        indexCheck(index, false);
+        indexCheck(index);
         return elementData[index];
     }
 
     @Override
     public void set(T value, int index) {
-        indexCheck(index, false);
+        indexCheck(index);
         elementData[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        indexCheck(index, false);
+        indexCheck(index);
         final T removedElement = elementData[index];
         int numberElementToCopy = size - index - 1;
         if (numberElementToCopy > 0) {
@@ -70,7 +69,11 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if (Objects.equals(elementData[i], element)) {
+            if (elementData[i] == null) {
+                if (element == null) {
+                    return remove(i);
+                }
+            } else if (elementData[i].equals(element)) {
                 return remove(i);
             }
         }
@@ -87,15 +90,15 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void indexCheck(int index, boolean isAdd) {
-        if (isAdd) {
-            if (index < 0 || index > size) {
-                throw new ArrayListIndexOutOfBoundsException("Index out of bounds: " + index);
-            }
-        } else {
-            if (index < 0 || index >= size) {
-                throw new ArrayListIndexOutOfBoundsException("Index out of bounds: " + index);
-            }
+    private void indexCheck(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Index out of bounds: " + index);
+        }
+    }
+
+    private void indexCheckForAddMethod(int index) {
+        if (index < 0 || index > size) {
+            throw new ArrayListIndexOutOfBoundsException("Index out of bounds: " + index);
         }
     }
 
