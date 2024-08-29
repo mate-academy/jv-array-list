@@ -24,9 +24,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("Index out of bounds: " + index);
-        }
+        indexCheck(index, true);
         if (size >= elementData.length) {
             elementData = grow(elementData);
         }
@@ -46,25 +44,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (indexCheck(index)) {
-            throw new ArrayListIndexOutOfBoundsException("Index out of bounds: " + index);
-        }
+        indexCheck(index, false);
         return elementData[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (indexCheck(index)) {
-            throw new ArrayListIndexOutOfBoundsException("Index out of bounds: " + index);
-        }
+        indexCheck(index, false);
         elementData[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (indexCheck(index)) {
-            throw new ArrayListIndexOutOfBoundsException("Index out of bounds: " + index);
-        }
+        indexCheck(index, false);
         final T removedElement = elementData[index];
         int numberElementToCopy = size - index - 1;
         if (numberElementToCopy > 0) {
@@ -95,8 +87,16 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private boolean indexCheck(int index) {
-        return index < 0 || index >= size;
+    private void indexCheck(int index, boolean isAdd) {
+        if (isAdd) {
+            if (index < 0 || index > size) {
+                throw new ArrayListIndexOutOfBoundsException("Index out of bounds: " + index);
+            }
+        } else {
+            if (index < 0 || index >= size) {
+                throw new ArrayListIndexOutOfBoundsException("Index out of bounds: " + index);
+            }
+        }
     }
 
     private T[] grow(T[] elementData) {
