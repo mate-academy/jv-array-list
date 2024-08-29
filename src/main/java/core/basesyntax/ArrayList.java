@@ -9,7 +9,7 @@ public class ArrayList<T> implements List<T> {
     private T[] elementData;
 
     public ArrayList() {
-        elementData = ((T[]) (new Object[DEFAULT_CAPACITY_ELEMENT_DATA]));
+        elementData = (T[]) (new Object[DEFAULT_CAPACITY_ELEMENT_DATA]);
     }
 
     @Override
