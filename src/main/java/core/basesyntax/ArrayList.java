@@ -27,8 +27,9 @@ public class ArrayList<T> implements List<T> {
         if (size >= elementData.length) {
             elementData = grow(elementData);
         }
-        for (int i = size; i > index; i--) {
-            elementData[i] = elementData[i - 1];
+        int numberElementToCopy = size - index;
+        if (numberElementToCopy > 0) {
+            System.arraycopy(elementData, index, elementData, index + 1, numberElementToCopy);
         }
         elementData[index] = value;
         size++;
