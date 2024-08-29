@@ -104,11 +104,11 @@ public class ArrayList<T> implements List<T> {
 
     private T[] grow(T[] elementData) {
         int newCapacity = (int) (elementData.length * CAPACITY_GROW_FACTOR);
-        T[] newCapacityElementData = (T[]) new Object[newCapacity];
+        T[] newArray = (T[]) new Object[newCapacity];
         System.arraycopy(elementData,
-                0, newCapacityElementData,
+                0, newArray,
                 0, elementData.length);
-        return newCapacityElementData;
+        return newArray;
     }
 
 }
