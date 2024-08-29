@@ -15,7 +15,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        checkElementDataLength();
+        increaseElementDataLength();
         elementData[size] = value;
         size++;
     }
@@ -23,7 +23,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         checkIndexForAdd(index);
-        checkElementDataLength();
+        increaseElementDataLength();
         System.arraycopy(elementData, index,
                 elementData, index + 1,
                 size - index);
@@ -78,10 +78,12 @@ public class ArrayList<T> implements List<T> {
 
     @SuppressWarnings("unchecked")
     private void increaseElementDataLength() {
-        int newCapacity = (int) (elementData.length * CAPACITY_MULTIPLIER);
-        T[] newArray = (T[]) new Object[newCapacity];
-        System.arraycopy(elementData, 0, newArray, 0, size);
-        elementData = newArray;
+        if (size == elementData.length) {
+            int newCapacity = (int) (elementData.length * CAPACITY_MULTIPLIER);
+            T[] newArray = (T[]) new Object[newCapacity];
+            System.arraycopy(elementData, 0, newArray, 0, size);
+            elementData = newArray;
+        }
     }
 
     private void checkIndexForAdd(int index) {
@@ -121,11 +123,5 @@ public class ArrayList<T> implements List<T> {
             }
         }
         throw new NoSuchElementException("Element: " + obj + " is not found");
-    }
-
-    private void checkElementDataLength() {
-        if (size == elementData.length) {
-            increaseElementDataLength();
-        }
     }
 }
