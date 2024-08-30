@@ -87,23 +87,15 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void checkIndexForAdd(int index) {
-        indexValidation(index);
-        if (index > size) {
+        if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException("Index is out of size range");
         }
     }
 
     private void checkIndex(int index) {
-        indexValidation(index);
-        if (index >= size) {
+        if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException("There is no value on index: "
                     + index);
-        }
-    }
-
-    private void indexValidation(int index) {
-        if (index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
         }
     }
 
