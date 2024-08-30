@@ -14,23 +14,16 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (size >= elementData.length) {
-            elementData = grow(elementData);
-        }
-        elementData[size] = value;
-        size++;
+        elementData = grow(elementData);
+        elementData[size++] = value;
     }
 
     @Override
     public void add(T value, int index) {
         indexCheckForAddMethod(index);
-        if (size >= elementData.length) {
-            elementData = grow(elementData);
-        }
+        elementData = grow(elementData);
         int numberElementToCopy = size - index;
-        if (numberElementToCopy > 0) {
-            System.arraycopy(elementData, index, elementData, index + 1, numberElementToCopy);
-        }
+        System.arraycopy(elementData, index, elementData, index + 1, numberElementToCopy);
         elementData[index] = value;
         size++;
     }
@@ -70,11 +63,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if (elementData[i] == null) {
-                if (element == null) {
-                    return remove(i);
-                }
-            } else if (elementData[i].equals(element)) {
+            if (areEqual(element, elementData[i])) {
                 return remove(i);
             }
         }
@@ -104,12 +93,22 @@ public class ArrayList<T> implements List<T> {
     }
 
     private T[] grow(T[] elementData) {
-        int newCapacity = (int) (elementData.length * CAPACITY_GROW_FACTOR);
-        T[] newArray = (T[]) new Object[newCapacity];
-        System.arraycopy(elementData,
-                0, newArray,
-                0, elementData.length);
-        return newArray;
+        if (size >= elementData.length) {
+            int newCapacity = (int) (elementData.length * CAPACITY_GROW_FACTOR);
+            T[] newArray = (T[]) new Object[newCapacity];
+            System.arraycopy(elementData,
+                    0, newArray,
+                    0, elementData.length);
+            return newArray;
+        } else {
+            return elementData;
+        }
     }
 
+    private boolean areEqual(T a, T b) {
+        if (a == null) {
+            return b == null;
+        }
+        return a.equals(b);
+    }
 }
