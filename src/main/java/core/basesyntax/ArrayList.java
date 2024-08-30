@@ -60,7 +60,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        final int index = findElement(element);
+        final int index = findIndex(element);
         T oldValue = elementData[index];
         fastRemove(index);
         return oldValue;
@@ -108,7 +108,7 @@ public class ArrayList<T> implements List<T> {
         elementData[size = newSize] = null;
     }
 
-    private int findElement(T obj) {
+    private int findIndex(T obj) {
         for (int i = 0; i < elementData.length; i++) {
             if (obj == elementData[i] || obj != null && obj.equals(elementData[i])) {
                 return i;
