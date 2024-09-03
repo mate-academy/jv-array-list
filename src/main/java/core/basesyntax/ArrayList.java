@@ -3,6 +3,7 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
+    private static final double INCREASING_ARRAY = 1.5;
     private static final int DEFAULT_CAPACITY = 10;
     private T[] array;
     private int size;
@@ -38,21 +39,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        checkIndex(index, size);
+        checkIndex(index);
         return array[index];
     }
 
     @Override
     public void set(T value, int index) {
-        checkIndex(index, size);
+        checkIndex(index);
         array[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if ((index < 0) || (index >= size)) {
-            throw new ArrayListIndexOutOfBoundsException("The index extends beyond the array.");
-        }
+        checkIndex(index);
         final T removedElement = array[index];
         System.arraycopy(array, index + 1, array, index, size - index - 1);
         array[size - 1] = null;
@@ -90,13 +89,13 @@ public class ArrayList<T> implements List<T> {
 
     private void ensureCapacity() {
         if (size == array.length) {
-            T[] newArray = (T[]) new Object[(int) (array.length * 1.5)];
+            T[] newArray = (T[]) new Object[(int) (array.length * INCREASING_ARRAY)];
             System.arraycopy(array, 0, newArray, 0, array.length);
             array = newArray;
         }
     }
 
-    private void checkIndex(int index, int size) {
+    private void checkIndex(int index) {
         if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException("Index out of bounds: " + index);
         }
