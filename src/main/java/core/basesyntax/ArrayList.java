@@ -1,18 +1,18 @@
 package core.basesyntax;
 
-import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int OFFSET = 1;
-    private static final int SIZE_ADJUSTMENT = 1;
     private static final int START_INDEX = 0;
+    private static final int INITIAL_CAPACITY = 10;
     private static final double ELEMENT_DATA_MULTIPLIER = 1.5;
-    private int listCapacity = 10;
+    private int listCapacity;
     private T[] elementData;
     private int size;
 
     public ArrayList() {
+        listCapacity = INITIAL_CAPACITY;
         elementData = (T[]) new Object[listCapacity];
     }
 
@@ -33,10 +33,9 @@ public class ArrayList<T> implements List<T> {
         if (size == listCapacity) {
             grow();
         }
-        final int s = size;
-        System.arraycopy(elementData, index, elementData, index + OFFSET, s - index);
+        System.arraycopy(elementData, index, elementData, index + OFFSET, size - index);
         elementData[index] = value;
-        size = s + SIZE_ADJUSTMENT;
+        size++;
     }
 
     @Override
@@ -46,7 +45,7 @@ public class ArrayList<T> implements List<T> {
         }
         for (int i = 0; i < list.size(); i++) {
             elementData[size] = list.get(i);
-            size += SIZE_ADJUSTMENT;
+            size++;
         }
     }
 
@@ -65,22 +64,22 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
-        final int temporaryValue = size;
         final T oldValue = elementData[index];
         index += 1;
-        System.arraycopy(elementData, index, elementData, index - OFFSET, temporaryValue - index);
-        size = temporaryValue - SIZE_ADJUSTMENT;
+        System.arraycopy(elementData, index, elementData, index - OFFSET, size - index);
+        size--;
         return oldValue;
     }
 
     @Override
     public T remove(T element) {
-        final int temporaryValue = size;
         for (int i = 0; i < size; i++) {
-            if (elementData[i] == null || elementData[i].equals(element)) {
-                System.arraycopy(elementData, i + OFFSET, elementData, i, temporaryValue - i);
-                size = temporaryValue - SIZE_ADJUSTMENT;
-                return element;
+            if (element == null && elementData[i] == null) {
+                return removeAt(i);
+            }
+
+            if (elementData[i] != null && elementData[i].equals(element)) {
+                return removeAt(i);
             }
         }
         throw new NoSuchElementException("No such element in list: " + element);
@@ -96,22 +95,24 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    @Override
-    public String toString() {
-        return Arrays.toString(Arrays.copyOf(elementData, size));
-    }
-
     private void grow() {
-        int size = (int) (elementData.length * ELEMENT_DATA_MULTIPLIER);
-        T[] expandedElementData = (T[]) new Object[size];
-        System.arraycopy(elementData, START_INDEX, expandedElementData, START_INDEX, this.size);
+        int newCapacity = (int) (elementData.length * ELEMENT_DATA_MULTIPLIER);
+        T[] expandedElementData = (T[]) new Object[newCapacity];
+        System.arraycopy(elementData, START_INDEX, expandedElementData, START_INDEX, size);
         elementData = expandedElementData;
-        listCapacity = size;
+        listCapacity = newCapacity;
     }
 
     private void checkIndex(int index) {
         if (index >= size || index < START_INDEX) {
             throw new ArrayListIndexOutOfBoundsException("Index " + index + " is out of bounds");
         }
+    }
+
+    private T removeAt(int index) {
+        T removedElement = elementData[index];
+        System.arraycopy(elementData, index + 1, elementData, index, size - index - 1);
+        size--;
+        return removedElement;
     }
 }
