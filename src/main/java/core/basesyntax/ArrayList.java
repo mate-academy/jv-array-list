@@ -11,7 +11,6 @@ public class ArrayList<T> implements List<T> {
     @SuppressWarnings("unchecked")
     public ArrayList() {
         elements = (T[]) new Object[DEFAULT_CAPACITY];
-        size = 0;
     }
 
     @Override
@@ -56,17 +55,14 @@ public class ArrayList<T> implements List<T> {
         if (numMoved > 0) {
             System.arraycopy(elements, index + 1, elements, index, numMoved);
         }
-        elements[--size] = null; // Clear to let GC do its work
+        elements[--size] = null;
         return removedElement;
     }
 
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if (elements[i] == null && element == null) {
-                return remove(i);
-            }
-            if (elements[i] != null && elements[i].equals(element)) {
+            if (elements[i] == element || elements[i] != null && elements[i].equals(element)) {
                 return remove(i);
             }
         }
@@ -86,7 +82,12 @@ public class ArrayList<T> implements List<T> {
     private void ensureCapacity() {
         if (size == elements.length) {
             int newCapacity = (int) (elements.length * GROWTH_FACTOR);
-            elements = java.util.Arrays.copyOf(elements, newCapacity);
+
+            Object[] newArray = new Object[newCapacity];
+
+            System.arraycopy(elements, 0, newArray, 0, size);
+
+            elements = (T[]) newArray;
         }
     }
 
