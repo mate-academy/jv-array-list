@@ -7,18 +7,16 @@ public class ArrayList<T> implements List<T> {
     private static final int START_INDEX = 0;
     private static final int INITIAL_CAPACITY = 10;
     private static final double ELEMENT_DATA_MULTIPLIER = 1.5;
-    private int listCapacity;
     private T[] elementData;
     private int size;
 
     public ArrayList() {
-        listCapacity = INITIAL_CAPACITY;
-        elementData = (T[]) new Object[listCapacity];
+        elementData = (T[]) new Object[INITIAL_CAPACITY];
     }
 
     @Override
     public void add(T value) {
-        if (size == listCapacity) {
+        if (size == elementData.length) {
             grow();
         }
         elementData[size] = value;
@@ -30,7 +28,7 @@ public class ArrayList<T> implements List<T> {
         if (index > size || index < START_INDEX) {
             checkIndex(index);
         }
-        if (size == listCapacity) {
+        if (size == elementData.length) {
             grow();
         }
         System.arraycopy(elementData, index, elementData, index + OFFSET, size - index);
@@ -40,7 +38,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        while (size + list.size() >= listCapacity) {
+        while (size + list.size() >= elementData.length) {
             grow();
         }
         for (int i = 0; i < list.size(); i++) {
@@ -74,11 +72,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if (element == null && elementData[i] == null) {
-                return removeAt(i);
-            }
-
-            if (elementData[i] != null && elementData[i].equals(element)) {
+            if ((element == null && elementData[i] == null)
+                    || (element != null && element.equals(elementData[i]))) {
                 return removeAt(i);
             }
         }
@@ -100,7 +95,6 @@ public class ArrayList<T> implements List<T> {
         T[] expandedElementData = (T[]) new Object[newCapacity];
         System.arraycopy(elementData, START_INDEX, expandedElementData, START_INDEX, size);
         elementData = expandedElementData;
-        listCapacity = newCapacity;
     }
 
     private void checkIndex(int index) {
