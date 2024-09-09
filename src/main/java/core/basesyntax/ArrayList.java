@@ -1,7 +1,6 @@
 package core.basesyntax;
 
 import java.util.NoSuchElementException;
-import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
@@ -11,7 +10,6 @@ public class ArrayList<T> implements List<T> {
 
     public ArrayList() {
         array = (T[]) new Object[DEFAULT_CAPACITY];
-        size = 0;
     }
 
     @Override
@@ -62,11 +60,12 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if (Objects.equals(array[i],element)) {
-                return remove(i);
+            if (array[i] != null && array[i].equals(element)) {
+                T removedElement = array[i];
+                return removedElement;
             }
         }
-        throw new NoSuchElementException("Елемент '" + element + "' не знайдено у списку");
+        throw new NoSuchElementException("Element '" + element + "' is not found");
     }
 
     @Override
@@ -90,13 +89,13 @@ public class ArrayList<T> implements List<T> {
 
     private void checkIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Невірний індекс: " + index);
+            throw new ArrayListIndexOutOfBoundsException("Wrong index: " + index);
         }
     }
 
     private void checkIndexForAdd(int index) {
         if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("Невірний індекс: " + index);
+            throw new ArrayListIndexOutOfBoundsException("Wrong index: " + index);
         }
     }
 }
