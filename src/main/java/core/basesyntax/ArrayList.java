@@ -1,7 +1,6 @@
 package core.basesyntax;
 
 import java.util.NoSuchElementException;
-import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
@@ -25,7 +24,7 @@ public class ArrayList<T> implements List<T> {
     public void add(T value, int index) {
         checkIndexForAdd(index);
         ensureCapacity();
-        System.arraycopy(elements, index, elements, index + 1, size - index);
+        shiftElementsRight(index);
         elements[index] = value;
         size++;
     }
@@ -53,7 +52,7 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         checkIndex(index);
         T removedElement = elements[index];
-        System.arraycopy(elements, index + 1, elements, index, size - index - 1);
+        shiftElementsLeft(index);
         elements[--size] = null;
         return removedElement;
     }
@@ -61,7 +60,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if (Objects.equals(elements[i], element)) {
+            if (element == null ? elements[i] == null : element.equals(elements[i])) {
                 return remove(i);
             }
         }
@@ -78,10 +77,31 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
+    @SuppressWarnings("unchecked")
+    private void resize() {
+        int newCapacity = (int) (elements.length * GROWTH_FACTOR);
+        T[] newArray = (T[]) new Object[newCapacity];
+        for (int i = 0; i < size; i++) {
+            newArray[i] = elements[i];
+        }
+        elements = newArray;
+    }
+
     private void ensureCapacity() {
         if (size == elements.length) {
-            int newCapacity = (int) (elements.length * GROWTH_FACTOR);
-            elements = java.util.Arrays.copyOf(elements, newCapacity);
+            resize();
+        }
+    }
+
+    private void shiftElementsRight(int index) {
+        for (int i = size; i > index; i--) {
+            elements[i] = elements[i - 1];
+        }
+    }
+
+    private void shiftElementsLeft(int index) {
+        for (int i = index; i < size - 1; i++) {
+            elements[i] = elements[i + 1];
         }
     }
 
