@@ -59,12 +59,23 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        for (int i = 0; i < size; i++) {
-            if (array[i] != null && array[i].equals(element)) {
-                T removedElement = array[i];
-                System.arraycopy(array, i + 1, array, i, size - i - 1);
-                array[--size] = null;
-                return removedElement;
+        if (element == null) {
+            for (int i = 0; i < size; i++) {
+                if (array[i] == null) {
+                    T removedElement = array[i];
+                    System.arraycopy(array, i + 1, array, i, size - i - 1);
+                    array[--size] = null;
+                    return removedElement;
+                }
+            }
+        } else {
+            for (int i = 0; i < size; i++) {
+                if (array[i] != null && array[i].equals(element)) {
+                    T removedElement = array[i];
+                    System.arraycopy(array, i + 1, array, i, size - i - 1);
+                    array[--size] = null;
+                    return removedElement;
+                }
             }
         }
         throw new NoSuchElementException("Element '" + element + "' is not found");
