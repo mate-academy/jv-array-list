@@ -63,8 +63,7 @@ public class ArrayList<T> implements List<T> {
             if (array[i] != null && array[i].equals(element)) {
                 T removedElement = array[i];
                 System.arraycopy(array, i + 1, array, i, size - i - 1);
-                size--;
-                array[size] = null;
+                array[--size] = null;
                 return removedElement;
             }
         }
