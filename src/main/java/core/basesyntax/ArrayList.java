@@ -1,5 +1,7 @@
 package core.basesyntax;
 
+import java.util.NoSuchElementException;
+
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private static final double GROWTH_FACTOR = 1.5;
@@ -61,7 +63,7 @@ public class ArrayList<T> implements List<T> {
                 return remove(i);
             }
         }
-        throw new ArrayListIndexOutOfBoundsException("Element not found: " + element);
+        throw new NoSuchElementException("Element not found: " + element);
     }
 
     @Override
