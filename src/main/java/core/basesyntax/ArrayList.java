@@ -3,13 +3,15 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    private T [] array = (T[]) new  Object [10];
+    private final int CAPACITY = 10;
+    private final float GROWS_INDEX = 1.5f;
+    private T [] array = (T[]) new  Object [CAPACITY];
     private int pointer;
 
     @Override
     public void add(T value) {
         if (pointer == array.length) {
-            grow(array);
+            grow();
         }
         array[pointer++] = value;
     }
@@ -18,33 +20,27 @@ public class ArrayList<T> implements List<T> {
     public void add(T value, int index) {
         if (index < 0 || index > pointer) {
             throw new ArrayListIndexOutOfBoundsException(
-                    "Test failed! Can't correctly add element by index ");
+                    "Test failed! Can't correctly add element by index - "
+                            + index + "Index can be from 0 to " + pointer);
+        }
+        if (pointer == array.length) {
+            grow();
         }
         if (index <= pointer) {
-            T[] tmp = (T[]) new Object[array.length - index];
-            for (int i = 0; i < tmp.length; i++) {
-                tmp[i] = array[index + i];
-            }
+            System.arraycopy(array, index, array, index + 1, pointer - index);
             array[index] = value;
             pointer++;
-            if (pointer == array.length) {
-                grow(array);
-            }
-            for (int i = 0; i < tmp.length - 1; i++) {
-                array[index + i + 1] = tmp[i];
-            }
         }
-
     }
 
     @Override
     public void addAll(List<T> list) {
-        while (list.size() < array.length - pointer) {
-            grow(array);
+        while (pointer + list.size() > array.length) {
+            grow();
         }
         for (int i = 0; i < list.size(); i++) {
             if (pointer == array.length) {
-                grow(array);
+                grow();
             }
             array[pointer++] = list.get(i);
         }
@@ -68,33 +64,27 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(int index) {
-        T tmp = null;
         if (index < 0 || index >= pointer) {
             throw new ArrayListIndexOutOfBoundsException("Index does not exist");
         }
-        tmp = array[index];
+        T tmp = array[index];
         pointer--;
-        for (int i = index; i < pointer; i++) {
-            array[i] = array[i + 1];
-        }
-
+        System.arraycopy(array,index + 1, array, index, pointer - index);
         return tmp;
     }
 
     @Override
     public T remove(T element) {
-        T tmp = null;
         for (int i = 0; i <= pointer; i++) {
             if (array[i] == element || (array[i] != null && array[i].equals(element))) {
-                tmp = array[i];
-                for (int j = i; j <= pointer; j++) {
-                    array[j] = array[j + 1];
-                }
+                T tmp = array[i];
+                System.arraycopy(array, i + 1, array, i, pointer - i);
                 pointer--;
                 return tmp;
             }
         }
-        throw new NoSuchElementException();
+        throw new NoSuchElementException("The element - "
+                + element + "  was not found in the list");
     }
 
     @Override
@@ -107,10 +97,10 @@ public class ArrayList<T> implements List<T> {
         return pointer == 0;
     }
 
-    public void grow(T[] currentArray) {
-        int size = (int)Math.round(currentArray.length * 1.5);
-        T[] newArray = (T[]) new  Object[size]; //checkstyle
-        System.arraycopy(currentArray, 0, newArray, 0, currentArray.length);
+    public void grow() {
+        int size = Math.round(array.length * GROWS_INDEX);
+        T[] newArray = (T[]) new  Object[size];
+        System.arraycopy(array, 0, newArray, 0, array.length);
         array = newArray;
     }
 }
