@@ -1,38 +1,19 @@
 package core.basesyntax;
 
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    private static final Object[] EMPTY_LIST = {};
+    private static final int BIT_SHIFT = 1;
+    private static final int LIST_ELEMENTS_FIRST_INDEX = 0;
 
-    private Object[] listElements;
+    private T[] listElements;
     private int size = 0;
 
-    public ArrayList(int initialCapacity) {
-        if (initialCapacity > 0) {
-            this.listElements = new Object[initialCapacity];
-        } else if (initialCapacity == 0) {
-            this.listElements = EMPTY_LIST;
-        } else {
-            throw new IllegalArgumentException("Illegal Capacity: " + initialCapacity);
-        }
-    }
-
     public ArrayList() {
-        this(DEFAULT_CAPACITY);
+        listElements = (T[]) new Object[DEFAULT_CAPACITY];
     }
-
-    public ArrayList(Collection<? extends T> collection) {
-        this(collection.size());
-
-        for (T collectionElement : collection) {
-            add(collectionElement);
-        }
-    }
-
+ 
     @Override
     public void add(T value) {
         ensureCapacity(size + 1);
@@ -44,17 +25,13 @@ public class ArrayList<T> implements List<T> {
     public void add(T value, int index) {
         ensureCapacity(size + 1);
 
-        size++;
+        checkIndexAccordingToSize(index, size + 1);
 
-        checkIndex(index);
-
-        T[] afterPart = (T[]) Arrays.copyOfRange(listElements, index, size - 1);
+        System.arraycopy(listElements, index, listElements, index + 1, size - index);
 
         this.listElements[index] = value;
 
-        for (int i = 0; i < afterPart.length; i++) {
-            this.listElements[index + 1 + i] = afterPart[i];
-        }
+        size++;
     }
 
     @Override
@@ -66,29 +43,27 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        checkIndex(index);
+        checkIndexAccordingToSize(index, size);
 
-        return (T) listElements[index];
+        return listElements[index];
     }
 
     @Override
     public void set(T value, int index) {
-        checkIndex(index);
+        checkIndexAccordingToSize(index, size);
 
         this.listElements[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        checkIndex(index);
+        checkIndexAccordingToSize(index, size);
 
-        T removedElement = (T) listElements[index];
+        T removedElement = listElements[index];
 
-        size--;
+        System.arraycopy(listElements, index + 1, listElements, index, size - index - 1);
 
-        for (int i = index; i < size; i++) {
-            this.listElements[i] = this.listElements[i + 1];
-        }
+        this.listElements[--size] = null;
 
         return removedElement;
     }
@@ -104,7 +79,7 @@ public class ArrayList<T> implements List<T> {
         }
 
         if (findedIndex == -1) {
-            throw new NoSuchElementException();
+            throw new NoSuchElementException("No such element: " + element.toString());
         }
 
         return remove(findedIndex);
@@ -128,12 +103,22 @@ public class ArrayList<T> implements List<T> {
 
     private T[] grow() {
         int oldCapacity = listElements.length;
-        int newCapacity = oldCapacity + (oldCapacity >> 1);
+        int newCapacity = oldCapacity + (oldCapacity >> BIT_SHIFT);
 
-        return (T[]) Arrays.copyOf(listElements, newCapacity);
+        T[] increasedListElements = (T[]) new Object[newCapacity];
+
+        System.arraycopy(
+                listElements,
+                LIST_ELEMENTS_FIRST_INDEX, 
+                increasedListElements, 
+                LIST_ELEMENTS_FIRST_INDEX, 
+                oldCapacity
+        );
+
+        return increasedListElements;
     }
 
-    private void checkIndex(int index) {
+    private void checkIndexAccordingToSize(int index, int size) {
         if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException("Index: " + index + ", Size: " + size);
         }
