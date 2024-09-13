@@ -4,11 +4,13 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    private Object[] elements;
-    private int size = 0;
+    private static final double GROW_FACTOR = 1.5;
+    private T[] elements;
+    private int size;
 
+    @SuppressWarnings("unchecked")
     public ArrayList() {
-        elements = new Object[DEFAULT_CAPACITY];
+        elements = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
     @Override
@@ -33,11 +35,10 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public T get(int index) {
         validateIndex(index, false);
-        return (T) elements[index];
+        return elements[index];
     }
 
     @Override
@@ -46,11 +47,10 @@ public class ArrayList<T> implements List<T> {
         elements[index] = value;
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public T remove(int index) {
         validateIndex(index, false);
-        T oldValue = (T) elements[index];
+        T oldValue = elements[index];
         System.arraycopy(elements, index + 1, elements, index, size - index - 1);
         elements[--size] = null;
         return oldValue;
@@ -82,9 +82,10 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
+    @SuppressWarnings("unchecked")
     private void resize() {
-        int newCapacity = elements.length + elements.length / 2;
-        Object[] newArray = new Object[newCapacity];
+        int newCapacity = (int) (elements.length * GROW_FACTOR);
+        T[] newArray = (T[]) new Object[newCapacity];
         System.arraycopy(elements, 0, newArray, 0, elements.length);
         elements = newArray;
     }
@@ -96,7 +97,7 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private boolean equals(Object a, Object b) {
+    private boolean equals(T a, T b) {
         return (a == b) || (a != null && a.equals(b));
     }
 }
