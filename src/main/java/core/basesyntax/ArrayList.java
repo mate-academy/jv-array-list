@@ -22,19 +22,13 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException(
-                    "Test failed! Can't correctly add element by index - "
-                            + index + "Index can be from 0 to " + size);
-        }
+        checkIndexForAddMethod(index);
         if (size == array.length) {
             grow();
         }
-        if (index <= size) {
-            System.arraycopy(array, index, array, index + 1, size - index);
-            array[index] = value;
-            size++;
-        }
+        System.arraycopy(array, index, array, index + 1, size - index);
+        array[index] = value;
+        size++;
     }
 
     @Override
@@ -52,39 +46,33 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index does not exist");
-        }
+        checkIndex(index);
         return array[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index does not exist");
-        }
+        checkIndex(index);
         array[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index does not exist");
-        }
-        T tmp = array[index];
+        checkIndex(index);
+        T removedItem = array[index];
         size--;
         System.arraycopy(array, index + 1, array, index, size - index);
-        return tmp;
+        return removedItem;
     }
 
     @Override
     public T remove(T element) {
         for (int i = 0; i <= size; i++) {
-            if (array[i] == element || (array[i] != null && array[i].equals(element))) {
-                T tmp = array[i];
+            if (array[i] == element || array[i] != null && array[i].equals(element)) {
+                T removedItem = array[i];
                 System.arraycopy(array, i + 1, array, i, size - i);
                 size--;
-                return tmp;
+                return removedItem;
             }
         }
         throw new NoSuchElementException("The element - "
@@ -106,5 +94,21 @@ public class ArrayList<T> implements List<T> {
         T[] newArray = (T[]) new Object[size];
         System.arraycopy(array, 0, newArray, 0, array.length);
         array = newArray;
+    }
+
+    private void checkIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException(
+                    "Test failed! Can't correctly add element by index - "
+                            + index + " Index can be from 0 to " + --size);
+        }
+    }
+
+    private void checkIndexForAddMethod(int index) {
+        if (index < 0 || index > size) {
+            throw new ArrayListIndexOutOfBoundsException(
+                    "Test failed! Can't correctly add element by index - "
+                            + index + " Index can be from 0 to " + size);
+        }
     }
 }
