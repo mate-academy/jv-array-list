@@ -136,7 +136,9 @@ public class ArrayList<T> implements List<T> {
 
     private void checkIndex(int index, boolean isSizeIndexForbidden) {
         if (index < 0 || index > this.size || (isSizeIndexForbidden && index == this.size)) {
-            throw new ArrayListIndexOutOfBoundsException("Index must be between 0 and " + (this.size));
+            throw new ArrayListIndexOutOfBoundsException(
+                    "Index must be between 0 and " + (this.size)
+            );
         }
     }
 }
