@@ -26,12 +26,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException(
-                    "The index is out of bounds. Size of the ArrayList is "
-                            + size + ". Your index is " + index
-            );
-        }
+        checkIndexNotInBounds(index, size);
 
         if (size == array.length) {
             grow();
@@ -54,36 +49,21 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index < 0 || index > size - 1) {
-            throw new ArrayListIndexOutOfBoundsException(
-                    "The index is out of bounds. Size of the ArrayList is "
-                            + size + ". Your index is " + index
-            );
-        }
+        checkIndexNotInBounds(index, size - 1);
 
         return array[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index < 0 || index > size - 1) {
-            throw new ArrayListIndexOutOfBoundsException(
-                    "The index is out of bounds. Size of the ArrayList is "
-                            + size + ". Your index is " + index
-            );
-        }
+        checkIndexNotInBounds(index, size - 1);
 
         array[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index < 0 || index > size - 1) {
-            throw new ArrayListIndexOutOfBoundsException(
-                    "The index is out of bounds. Size of the ArrayList is "
-                            + size + ". Your index is " + index
-            );
-        }
+        checkIndexNotInBounds(index, size - 1);
 
         final T removedElement = array[index];
 
@@ -106,7 +86,7 @@ public class ArrayList<T> implements List<T> {
             }
         }
 
-        throw new NoSuchElementException();
+        throw new NoSuchElementException("This element was not found!");
     }
 
     @Override
@@ -137,5 +117,14 @@ public class ArrayList<T> implements List<T> {
         System.arraycopy(array, 0, increasedArray, 0, size);
 
         array = increasedArray;
+    }
+
+    private void checkIndexNotInBounds(int index, int range) {
+        if (index < 0 || index > range) {
+            throw new ArrayListIndexOutOfBoundsException(
+                    "The index is out of bounds. Size of the ArrayList is "
+                            + size + ". Your index is " + index
+            );
+        }
     }
 }
