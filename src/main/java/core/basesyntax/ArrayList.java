@@ -32,10 +32,7 @@ public class ArrayList<T> implements List<T> {
             grow();
         }
 
-        for (int i = size; i > index; i--) {
-            array[i] = array[i - 1];
-        }
-
+        System.arraycopy(array, index, array, index + 1, size - index);
         array[index] = value;
         size++;
     }
@@ -66,21 +63,15 @@ public class ArrayList<T> implements List<T> {
         checkIndexNotInBounds(index, size - 1);
 
         final T removedElement = array[index];
-
-        for (int i = index; i < size - 1; i++) {
-            array[i] = array[i + 1];
-        }
-
-        array[size - 1] = null;
+        System.arraycopy(array, index + 1, array, index, size - index - 1);
         size--;
-
         return removedElement;
     }
 
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if (element == null && array[i] == null
+            if (element == array[i]
                     || element != null && element.equals(array[i])) {
                 return remove(i);
             }
@@ -96,7 +87,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public boolean isEmpty() {
-        return size() == 0;
+        return size == 0;
     }
 
     @Override
