@@ -97,7 +97,8 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private boolean equals(T a, T b) {
-        return (a == b) || (a != null && a.equals(b));
+    private boolean equals(T firstElement, T secondElement) {
+        return (firstElement == secondElement)
+                || (firstElement != null && firstElement.equals(secondElement));
     }
 }
