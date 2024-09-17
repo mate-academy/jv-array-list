@@ -1,7 +1,6 @@
 package core.basesyntax;
 
 import java.util.NoSuchElementException;
-import java.util.Arrays;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
@@ -76,23 +75,33 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-
     private void ensureCapacity() {
         if (size == elements.length) {
             int newCapacity = (int) (elements.length * 1.5);
-            elements = Arrays.copyOf(elements, newCapacity);
+            T[] newElements = createArray(newCapacity);
+            copyArray(elements, newElements);
+            elements = newElements;
         }
+    }
+
+    @SuppressWarnings("unchecked")
+    private T[] createArray(int capacity) {
+        return (T[]) new Object[capacity];
     }
 
     private void checkIndexForAdd(int index) {
         if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("Index " + index + " is out of bounds for adding");
+            throw new ArrayListIndexOutOfBoundsException(
+                    "Index " + index + " is out of bounds for adding"
+            );
         }
     }
 
     private void checkIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index " + index + " is out of bounds");
+            throw new ArrayListIndexOutOfBoundsException(
+                    "Index " + index + " is out of bounds"
+            );
         }
     }
 
@@ -104,4 +113,11 @@ public class ArrayList<T> implements List<T> {
         }
         return -1;
     }
+
+    private void copyArray(T[] src, T[] dest) {
+        for (int i = 0; i < src.length; i++) {
+            dest[i] = src[i];
+        }
+    }
 }
+
