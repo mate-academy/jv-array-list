@@ -78,15 +78,10 @@ public class ArrayList<T> implements List<T> {
     private void ensureCapacity() {
         if (size == elements.length) {
             int newCapacity = (int) (elements.length * GROWTH_FACTOR);
-            T[] newElements = createArray(newCapacity);
+            T[] newElements = (T[]) new Object[newCapacity];
             System.arraycopy(elements, 0, newElements, 0, size);
             elements = newElements;
         }
-    }
-
-    @SuppressWarnings("unchecked")
-    private T[] createArray(int capacity) {
-        return (T[]) new Object[capacity];
     }
 
     private void checkIndexForAdd(int index) {
@@ -107,8 +102,7 @@ public class ArrayList<T> implements List<T> {
 
     private int indexOf(T element) {
         for (int i = 0; i < size; i++) {
-            if ((element == null && elements[i] == null)
-                    || (element != null && element.equals(elements[i]))) {
+            if (element == elements[i] || element != null && element.equals(elements[i])) {
                 return i;
             }
         }
