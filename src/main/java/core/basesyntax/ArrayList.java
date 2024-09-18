@@ -3,6 +3,7 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
+    private static final double GROWTH_FACTOR = 1.5;
     private static final int DEFAULT_CAPACITY = 10;
     private T[] elements;
     private int size;
@@ -10,7 +11,6 @@ public class ArrayList<T> implements List<T> {
     @SuppressWarnings("unchecked")
     public ArrayList() {
         elements = (T[]) new Object[DEFAULT_CAPACITY];
-        size = 0;
     }
 
     @Override
@@ -77,9 +77,9 @@ public class ArrayList<T> implements List<T> {
 
     private void ensureCapacity() {
         if (size == elements.length) {
-            int newCapacity = (int) (elements.length * 1.5);
+            int newCapacity = (int) (elements.length * GROWTH_FACTOR);
             T[] newElements = createArray(newCapacity);
-            copyArray(elements, newElements);
+            System.arraycopy(elements, 0, newElements, 0, size);
             elements = newElements;
         }
     }
@@ -113,12 +113,6 @@ public class ArrayList<T> implements List<T> {
             }
         }
         return -1;
-    }
-
-    private void copyArray(T[] src, T[] dest) {
-        for (int i = 0; i < src.length; i++) {
-            dest[i] = src[i];
-        }
     }
 }
 
