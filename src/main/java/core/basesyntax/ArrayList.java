@@ -27,8 +27,8 @@ public class ArrayList<T> implements List<T> {
         validateIndex(index, true);
         growArray();
         System.arraycopy(elements, index, elements, index + 1, size - index);
-        elements[index] = value;
         size++;
+        elements[index] = value;
     }
 
     @Override
