@@ -19,41 +19,32 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (this.size == this.currentCapacity) {
-            this.resizeStorage();
+        if (size == currentCapacity) {
+            resizeStorage();
         }
 
-        this.storage[this.size] = value;
-        this.size += 1;
+        storage[size] = value;
+        size++;
     }
 
     @Override
     public void add(T value, int index) {
         checkIndex(index, false);
 
-        if (this.size == this.currentCapacity) {
-            this.resizeStorage();
+        if (size == currentCapacity) {
+            resizeStorage();
         }
 
-        int idx = this.currentCapacity - 1;
+        System.arraycopy(storage, index, storage, index + 1, size - index);
 
-        while (idx > index) {
-            this.storage[idx] = this.storage[idx - 1];
-            idx -= 1;
-        }
-
-        this.storage[index] = value;
-        this.size += 1;
+        storage[index] = value;
+        size++;
     }
 
     @Override
     public void addAll(List<T> list) {
-        while (this.size + list.size() > this.currentCapacity) {
-            this.resizeStorage();
-        }
-
-        for (int i = 0; i < list.size(); i += 1) {
-            this.add(list.get(i));
+        for (int i = 0; i < list.size(); i++) {
+            add(list.get(i));
         }
     }
 
@@ -61,49 +52,39 @@ public class ArrayList<T> implements List<T> {
     public T get(int index) {
         checkIndex(index, true);
 
-        return this.storage[index];
+        return storage[index];
     }
 
     @Override
     public void set(T value, int index) {
         checkIndex(index, true);
 
-        this.storage[index] = value;
+        storage[index] = value;
     }
 
     @Override
     public T remove(int index) {
         checkIndex(index, true);
 
-        T removedValue = null;
+        T removedValue = storage[index];
 
-        for (int i = 0; i < this.size; i += 1) {
-            if (i == index) {
-                removedValue = this.storage[i];
-            }
+        System.arraycopy(storage, index + 1, storage, index, size - index - 1);
 
-            if (i > index) {
-                this.storage[i - 1] = this.storage[i];
-            }
+        storage[size - 1] = null;
 
-            if (i == this.size - 1) {
-                this.storage[i] = null;
-            }
-        }
-
-        this.size -= 1;
+        size--;
 
         return removedValue;
     }
 
     @Override
     public T remove(T element) {
-        for (int i = 0; i < this.size; i += 1) {
-            if (this.storage[i] == element
-                    || (element != null
-                    && element.equals(this.storage[i]))
+        for (int i = 0; i < size; i++) {
+            if (storage[i] == element
+                    || element != null
+                    && element.equals(storage[i])
             ) {
-                return this.remove(i);
+                return remove(i);
             }
         }
 
@@ -112,32 +93,30 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public int size() {
-        return this.size;
+        return size;
     }
 
     @Override
     public boolean isEmpty() {
-        return this.size == 0;
+        return size == 0;
     }
 
     @SuppressWarnings("unchecked")
     private void resizeStorage() {
-        int newCapacity = (int) (this.currentCapacity * CAPACITY_MULTIPLIER);
+        int newCapacity = (int) (currentCapacity * CAPACITY_MULTIPLIER);
 
         T[] newStorage = (T[]) new Object[newCapacity];
 
-        for (int i = 0; i < currentCapacity; i += 1) {
-            newStorage[i] = this.storage[i];
-        }
+        System.arraycopy(storage, 0, newStorage, 0, currentCapacity);
 
-        this.storage = newStorage;
-        this.currentCapacity = newCapacity;
+        storage = newStorage;
+        currentCapacity = newCapacity;
     }
 
     private void checkIndex(int index, boolean isSizeIndexForbidden) {
-        if (index < 0 || index > this.size || (isSizeIndexForbidden && index == this.size)) {
+        if (index < 0 || index > size || (isSizeIndexForbidden && index == size)) {
             throw new ArrayListIndexOutOfBoundsException(
-                    "Index must be between 0 and " + (this.size)
+                    "Index must be between 0 and " + (size)
             );
         }
     }
