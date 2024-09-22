@@ -29,7 +29,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (size == elements.length){
+        if (size == elements.length) {
             growArray();
         }
         elements[size++] = value;
@@ -38,7 +38,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         validateIndex(index, true);
-        if (size == elements.length){
+        if (size == elements.length) {
             growArray();
         }
         System.arraycopy(elements, index, elements, index + 1, size - index);
@@ -87,7 +87,6 @@ public class ArrayList<T> implements List<T> {
         }
         throw new NoSuchElementException("Element not found " + element);
     }
-
 
     @Override
     public int size() {
