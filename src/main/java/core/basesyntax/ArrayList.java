@@ -4,6 +4,7 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
+    private static final double COEFFICIENT = 1.5;
     private int size;
     private T[] array;
 
@@ -22,9 +23,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("Index: " + index + ", Size: " + size);
-        }
+        sizeErrorForAdd(index);
         if (size == array.length) {
             grow();
         }
@@ -40,33 +39,20 @@ public class ArrayList<T> implements List<T> {
         if (list == null) {
             throw new NullPointerException("The provided list is null");
         }
-        int newElementsCount = list.size();
-        if (size + newElementsCount > array.length) {
-            int newCapacity = Math.max(array.length * 2, size + newElementsCount);
-            T[] newArray = (T[]) new Object[newCapacity];
-            System.arraycopy(array, 0, newArray, 0, size);
-            array = newArray;
+        for (int i = 0; i < list.size(); i++) {
+            add(list.get(i));
         }
-        for (int i = 0; i < newElementsCount; i++) {
-            array[size + i] = list.get(i);
-        }
-        size += newElementsCount;
-
     }
 
     @Override
     public T get(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index: " + index + ", Size: " + size);
-        }
+        sizeError(index);
         return array[index];
     }
 
     @Override
     public T set(T value, int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index: " + index + ", Size: " + size);
-        }
+        sizeError(index);
         T oldValue = array[index];
         array[index] = value;
         return oldValue;
@@ -74,9 +60,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index: " + index + ", Size: " + size);
-        }
+        sizeError(index);
         return removeAt(index);
     }
 
@@ -100,16 +84,14 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void grow() {
-        int newCapacity = (int) (array.length * 1.5);
+        int newCapacity = (int) (array.length * COEFFICIENT);
         T[] newArray = (T[]) new Object[newCapacity];
         System.arraycopy(array, 0, newArray, 0, array.length);
         array = newArray;
     }
 
     private T removeAt(int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
-        }
+        sizeError(index);
         T removedElement = array[index];
         System.arraycopy(array, index + 1, array, index, size - index - 1);
         size--;
@@ -123,5 +105,17 @@ public class ArrayList<T> implements List<T> {
             }
         }
         return -1;
+    }
+
+    private void sizeError(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Index: " + index + ", Size: " + size);
+        }
+    }
+
+    private void sizeErrorForAdd(int index) {
+        if (index < 0 || index > size) {
+            throw new ArrayListIndexOutOfBoundsException("Index: " + index + ", Size: " + size);
+        }
     }
 }
