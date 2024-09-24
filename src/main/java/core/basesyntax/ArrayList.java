@@ -10,7 +10,6 @@ public class ArrayList<T> implements List<T> {
     private int capacity;
     private int size;
 
-    @SuppressWarnings("unchecked")
     public ArrayList() {
         this.elementsData = (T[]) new Object[DEFAULT_CAPACITY];
         this.capacity = DEFAULT_CAPACITY;
@@ -20,11 +19,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value) {
         if (size() == capacity) {
-            double newCapacity = capacity * DEFAULT_MULTIPLICATION_NUMBER;
-            this.capacity = (int) newCapacity;
-            T[] newElementsData = (T[]) new Object[capacity];
-            System.arraycopy(elementsData, 0, newElementsData, 0, size);
-            elementsData = newElementsData;
+            resizeArray();
         }
         elementsData[size] = value;
         size++;
@@ -33,23 +28,22 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         if (size() == capacity) {
-            double newCapacity = capacity * DEFAULT_MULTIPLICATION_NUMBER;
-            this.capacity = (int) newCapacity;
-            T[] newElementsData = (T[]) new Object[capacity];
-            System.arraycopy(elementsData, 0, newElementsData, 0, size);
-            elementsData = newElementsData;
+            resizeArray();
         }
         if (index >= 0 && index <= size) {
-            for (int i = elementsData.length; i > 0; i--) {
-                elementsData[i] = elementsData[i - 1];
-                if (i == index) {
-                    elementsData[i] = value;
-                    size++;
-                    break;
-                }
+            T[] newElementsData = (T[]) new Object[capacity];
+            for (int i = 0; i < index; i++) {
+                newElementsData[i] = elementsData[i];
             }
+            newElementsData[index] = value;
+            for (int i = index; i < size(); i++) {
+                newElementsData[i + 1] = elementsData[i];
+            }
+            size++;
+            elementsData = newElementsData;
+        } else {
+            throw new ArrayListIndexOutOfBoundsException("Index doesn't found");
         }
-        throw new ArrayListIndexOutOfBoundsException("Index doesn't found");
     }
 
     @Override
@@ -62,51 +56,49 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         if (index < size && index >= 0) {
-            for (int i = 0; i < elementsData.length; i++) {
-                if (i == index) {
-                    return elementsData[i];
-                }
-            }
+            return elementsData[index];
         }
-        throw new ArrayListIndexOutOfBoundsException("Index doesn't found");
+        throw new ArrayListIndexOutOfBoundsException("Index out of bounds for index: " + index);
     }
 
     @Override
     public void set(T value, int index) {
         if (index < size && index >= 0) {
             elementsData[index] = value;
+        } else {
+            throw new ArrayListIndexOutOfBoundsException("Index doesn't found");
         }
-        throw new ArrayListIndexOutOfBoundsException("Index doesn't found");
     }
 
     @Override
     public T remove(int index) {
+        T remove;
         if (index < size && index >= 0) {
-            for (int i = 0; i < elementsData.length; i++) {
-                if (i == index) {
-                    for (int j = i; j < elementsData.length; j++) {
-                        elementsData[j] = elementsData[j + 1];
-                    }
-                    size--;
-                    break;
-                }
+            T[] newElementsData = (T[]) new Object[capacity];
+            for (int i = 0; i < index; i++) {
+                newElementsData[i] = elementsData[i];
             }
+            remove = elementsData[index];
+            for (int i = index; i < size(); i++) {
+                newElementsData[i] = elementsData[i + 1];
+            }
+            size--;
+            elementsData = newElementsData;
+        } else {
+            throw new ArrayListIndexOutOfBoundsException("Index doesn't found");
         }
-        throw new ArrayListIndexOutOfBoundsException("Index doesn't found");
+        return remove;
     }
 
     @Override
     public T remove(T element) {
-        for (int i = 0; i < elementsData.length; i++) {
-            if (elementsData[i] == element) {
-                for (int j = i; j < elementsData.length; j++) {
-                    elementsData[j] = elementsData[j + 1];
-                }
-                size--;
-                break;
-            }
+        int ourIndex = getIndexOfElement(element);
+        if (element == null && elementsData[ourIndex] == null
+                || element != null && elementsData[ourIndex].equals(element)) {
+            return remove(ourIndex);
+        } else {
+            throw new NoSuchElementException("No such element: " + element);
         }
-        throw new NoSuchElementException("No such element");
     }
 
     @Override
@@ -117,5 +109,23 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private void resizeArray() {
+        double newCapacity = capacity * DEFAULT_MULTIPLICATION_NUMBER;
+        this.capacity = (int) newCapacity;
+        T[] newElementsData = (T[]) new Object[capacity];
+        System.arraycopy(elementsData, 0, newElementsData, 0, size);
+        elementsData = newElementsData;
+    }
+
+    private int getIndexOfElement(T element) {
+        for (int i = 0; i < size(); i++) {
+            if (elementsData[i] == element || elementsData[i] != null
+                    && elementsData[i].equals(element)) {
+                return i;
+            }
+        }
+        return 0;
     }
 }
