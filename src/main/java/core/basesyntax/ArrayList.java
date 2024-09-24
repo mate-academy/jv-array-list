@@ -73,9 +73,9 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         T remove;
-        if (index < size && index >= 0) {
+        if (index < size() && index >= 0) {
             remove = elementsData[index];
-            System.arraycopy(elementsData, index + 1, elementsData, index, size - index);
+            System.arraycopy(elementsData, index + 1, elementsData, index, size - index - 1);
             size--;
         } else {
             throw new ArrayListIndexOutOfBoundsException("Index " + index + " doesn't found");
