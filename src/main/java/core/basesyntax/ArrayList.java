@@ -42,7 +42,7 @@ public class ArrayList<T> implements List<T> {
             size++;
             elementsData = newElementsData;
         } else {
-            throw new ArrayListIndexOutOfBoundsException("Index doesn't found");
+            throw new ArrayListIndexOutOfBoundsException("Index " + index + " doesn't found");
         }
     }
 
@@ -66,7 +66,7 @@ public class ArrayList<T> implements List<T> {
         if (index < size && index >= 0) {
             elementsData[index] = value;
         } else {
-            throw new ArrayListIndexOutOfBoundsException("Index doesn't found");
+            throw new ArrayListIndexOutOfBoundsException("Index " + index + " doesn't found");
         }
     }
 
@@ -74,18 +74,11 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         T remove;
         if (index < size && index >= 0) {
-            T[] newElementsData = (T[]) new Object[capacity];
-            for (int i = 0; i < index; i++) {
-                newElementsData[i] = elementsData[i];
-            }
             remove = elementsData[index];
-            for (int i = index; i < size(); i++) {
-                newElementsData[i] = elementsData[i + 1];
-            }
+            System.arraycopy(elementsData, index + 1, elementsData, index, size - index);
             size--;
-            elementsData = newElementsData;
         } else {
-            throw new ArrayListIndexOutOfBoundsException("Index doesn't found");
+            throw new ArrayListIndexOutOfBoundsException("Index " + index + " doesn't found");
         }
         return remove;
     }
@@ -93,12 +86,15 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         int ourIndex = getIndexOfElement(element);
-        if (element == null && elementsData[ourIndex] == null
-                || element != null && elementsData[ourIndex].equals(element)) {
-            return remove(ourIndex);
+        if (ourIndex != -1) {
+            if (element == null && elementsData[ourIndex] == null
+                    || element != null && elementsData[ourIndex].equals(element)) {
+                return remove(ourIndex);
+            }
         } else {
             throw new NoSuchElementException("No such element: " + element);
         }
+        return element;
     }
 
     @Override
@@ -126,6 +122,6 @@ public class ArrayList<T> implements List<T> {
                 return i;
             }
         }
-        return 0;
+        return -1;
     }
 }
