@@ -4,7 +4,7 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    private static final double COEFFICIENT = 1.5;
+    private static final double GROW_COEFFICIENT = 1.5;
     private int size;
     private T[] array;
 
@@ -23,22 +23,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        sizeErrorForAdd(index);
+        if (index < 0 || index > size) {
+            throw new ArrayListIndexOutOfBoundsException("Index: " + index + ", Size: " + size);
+        }
         if (size == array.length) {
             grow();
         }
-        for (int i = size; i > index; i--) {
-            array[i] = array[i - 1];
-        }
+        System.arraycopy(array, index, array, index + 1, size - index);
         array[index] = value;
         size++;
     }
 
     @Override
     public void addAll(List<T> list) {
-        if (list == null) {
-            throw new NullPointerException("The provided list is null");
-        }
         for (int i = 0; i < list.size(); i++) {
             add(list.get(i));
         }
@@ -84,7 +81,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void grow() {
-        int newCapacity = (int) (array.length * COEFFICIENT);
+        int newCapacity = (int) (array.length * GROW_COEFFICIENT);
         T[] newArray = (T[]) new Object[newCapacity];
         System.arraycopy(array, 0, newArray, 0, array.length);
         array = newArray;
@@ -109,12 +106,6 @@ public class ArrayList<T> implements List<T> {
 
     private void sizeError(int index) {
         if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index: " + index + ", Size: " + size);
-        }
-    }
-
-    private void sizeErrorForAdd(int index) {
-        if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException("Index: " + index + ", Size: " + size);
         }
     }
