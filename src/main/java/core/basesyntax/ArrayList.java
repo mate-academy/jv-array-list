@@ -29,16 +29,9 @@ public class ArrayList<T> implements List<T> {
             resizeArray();
         }
         if (index >= 0 && index <= size) {
-            T[] newElementsData = (T[]) new Object[capacity];
-            for (int i = 0; i < index; i++) {
-                newElementsData[i] = elementsData[i];
-            }
-            newElementsData[index] = value;
-            for (int i = index; i < size(); i++) {
-                newElementsData[i + 1] = elementsData[i];
-            }
+            System.arraycopy(elementsData, index, elementsData, index + 1, size - index);
+            elementsData[index] = value;
             size++;
-            elementsData = newElementsData;
         } else {
             throw new ArrayListIndexOutOfBoundsException("Index " + index + " doesn't found");
         }
