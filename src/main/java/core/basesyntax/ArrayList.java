@@ -10,13 +10,14 @@ public class ArrayList<T> implements List<T> {
     private int size;
 
     public ArrayList() {
+        //noinspection unchecked
         this.elementsData = (T[]) new Object[DEFAULT_CAPACITY];
         this.capacity = DEFAULT_CAPACITY;
     }
 
     @Override
     public void add(T value) {
-        if (size() == capacity) {
+        if (size == capacity) {
             resizeArray();
         }
         elementsData[size] = value;
@@ -25,16 +26,13 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (size() == capacity) {
+        if (size == capacity) {
             resizeArray();
         }
-        if (index >= 0 && index <= size) {
-            System.arraycopy(elementsData, index, elementsData, index + 1, size - index);
-            elementsData[index] = value;
-            size++;
-        } else {
-            throw new ArrayListIndexOutOfBoundsException("Index " + index + " doesn't found");
-        }
+        checkIndexForAdd(index);
+        System.arraycopy(elementsData, index, elementsData, index + 1, size - index);
+        elementsData[index] = value;
+        size++;
     }
 
     @Override
@@ -58,12 +56,11 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(int index) {
-        T remove;
         checkIndex(index);
-        remove = elementsData[index];
+        T removedElement = (T) elementsData[index];
         System.arraycopy(elementsData, index + 1, elementsData, index, size - index - 1);
         size--;
-        return remove;
+        return removedElement;
     }
 
     @Override
@@ -88,6 +85,7 @@ public class ArrayList<T> implements List<T> {
     private void resizeArray() {
         double newCapacity = capacity * DEFAULT_MULTIPLICATION_NUMBER;
         this.capacity = (int) newCapacity;
+        //noinspection unchecked
         T[] newElementsData = (T[]) new Object[capacity];
         System.arraycopy(elementsData, 0, newElementsData, 0, size);
         elementsData = newElementsData;
@@ -95,6 +93,12 @@ public class ArrayList<T> implements List<T> {
 
     private void checkIndex(int index) {
         if (index >= size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Index " + index + " doesn't found");
+        }
+    }
+
+    private void checkIndexForAdd(int index) {
+        if (index > size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Index " + index + " doesn't found");
         }
     }
