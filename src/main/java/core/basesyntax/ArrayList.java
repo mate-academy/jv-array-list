@@ -48,11 +48,9 @@ public class ArrayList<T> implements List<T> {
     }
 
     @Override
-    public T set(T value, int index) {
+    public void set(T value, int index) {
         sizeError(index);
-        T oldValue = array[index];
         array[index] = value;
-        return oldValue;
     }
 
     @Override
