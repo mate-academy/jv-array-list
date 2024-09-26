@@ -14,8 +14,9 @@ public class ArrayList<T> implements List<T> {
 
     public void growIfArrayIsFull() {
         if (size == elements.length) {
-            int multiplalier = Math.round(elements.length * 1.5f);
-            System.arraycopy(elements, 0, elements = new Object[multiplalier], 0, size);
+            float multipler = 1.5f;
+            int newCapacity = Math.round(elements.length * multipler);
+            System.arraycopy(elements, 0, elements = new Object[newCapacity], 0, size);
         }
     }
 
@@ -84,9 +85,7 @@ public class ArrayList<T> implements List<T> {
         if (element == null) {
             for (int i = 0; i < size; i++) {
                 if (elements[i] == null) {
-                    for (int j = i; j < size; j++) {
-                        elements[j] = elements[j + 1];
-                    }
+                    System.arraycopy(elements, i + 1, elements, i, size - i - 1);
                     size--;
                     return element;
                 }
