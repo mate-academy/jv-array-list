@@ -8,6 +8,7 @@ public class ArrayList<T> implements List<T> {
     private static final Object[] EMPTY_ELEMENTDATA = {};
     private static final int NEGATIVE_INDEX_MARKER = -1;
     private static final double CAPACITY_GROWTH_RATIO = 1.5;
+    private static final String NO_SUCH_ELEMENT_MESSAGE = "No such element";
     private Object[] elementData;
     private int size;
 
@@ -61,7 +62,7 @@ public class ArrayList<T> implements List<T> {
 
     private Object[] growIfArrayFull(int minCapacity) {
         int oldCapacity = elementData.length;
-        if (oldCapacity > 0 || elementData != DEFAULTCAPACITY_EMPTY_ELEMENTDATA) {
+        if (elementData != DEFAULTCAPACITY_EMPTY_ELEMENTDATA) {
             int newCapacity = (int)(oldCapacity * CAPACITY_GROWTH_RATIO);
             Object[] elementDataNew = new Object[newCapacity];
             System.arraycopy(elementData,0, elementDataNew, 0, elementData.length);
@@ -76,8 +77,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        Object[] elementDataNew = new Object[list.size()];
-        for (int i = 0; i < elementDataNew.length; i++) {
+        for (int i = 0; i < list.size(); i++) {
             add(list.get(i));
         }
     }
@@ -106,7 +106,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(int index) {
-        if (index < 0 || index >= size) {
+        if (!isIndexInBounds(index)) {
             throw new ArrayListIndexOutOfBoundsException(outOfBoundsMsg(index));
         }
         T element = (T) elementData[index];
@@ -132,7 +132,7 @@ public class ArrayList<T> implements List<T> {
         }
 
         if (index == NEGATIVE_INDEX_MARKER) {
-            throw new NoSuchElementException();
+            throw new NoSuchElementException(NO_SUCH_ELEMENT_MESSAGE);
         }
         removeElementByIndex(index);
         return removedElement;
