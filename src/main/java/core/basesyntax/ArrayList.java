@@ -24,13 +24,11 @@ public class ArrayList<T> implements List<T> {
         if (index > size + 1 || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("The index passed is invalid");
         }
-        if (index == capacity || size == capacity - 1) {
-            elementData = grow();
+        if (size == capacity - 1) {
+            growElementData();
         }
         if (index < size) {
-            for (int i = size; i >= index; i--) {
-                elementData[i + 1] = elementData[i];
-            }
+            System.arraycopy(elementData, index, elementData, index + 1, size - index);
         }
         elementData[index] = value;
         size++;
@@ -66,7 +64,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        for (int i = 0; i <= size; i++) {
+        for (int i = 0; i < size; i++) {
             if (elementData[i] == element || elementData[i] != null
                     && elementData[i].equals(element)) {
                 remove(i);
@@ -83,28 +81,21 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public boolean isEmpty() {
-        for (int i = 0; i <= size; i++) {
-            if (elementData[i] != null) {
-                return false;
-            }
-        }
-        return true;
+        return size == 0;
     }
 
-    private int increaseSize() {
+    private void growElementData() {
         capacity = capacity + (DEFAULT_CAPACITY >> 1);
-        return capacity;
-    }
-
-    private T[] grow() {
-        T[] newArray = (T[]) new Object[increaseSize()];
+        T[] newArray = (T[]) new Object[capacity];
         System.arraycopy(elementData, 0, newArray, 0, size);
-        return newArray;
+        elementData = newArray;
     }
 
     private void verifyIndex(int index) {
         if (index > size - 1 || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("The index passed is invalid");
+            throw new ArrayListIndexOutOfBoundsException("The index " + index + " is invalid.\n"
+                    + "Appropriate index values must be less or equal " + (size - 1)
+                    + " and more than 0");
         }
     }
 }
