@@ -59,7 +59,7 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         verifyIndex(index);
         T removedElement = elementData[index];
-        System.arraycopy(elementData,index + 1,elementData, index,size - index);
+        System.arraycopy(elementData, index + 1, elementData, index, size - index);
         size--;
         return removedElement;
     }
@@ -67,7 +67,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i <= size; i++) {
-            if (elementData[i] == element || elementData[i] != null && elementData[i].equals(element)) {
+            if (elementData[i] == element || elementData[i] != null
+                    && elementData[i].equals(element)) {
                 remove(i);
                 return element;
             }
@@ -97,7 +98,7 @@ public class ArrayList<T> implements List<T> {
 
     private T[] grow() {
         T[] newArray = (T[]) new Object[increaseSize()];
-        System.arraycopy(elementData,0,newArray, 0,size);
+        System.arraycopy(elementData, 0, newArray, 0, size);
         return newArray;
     }
 
