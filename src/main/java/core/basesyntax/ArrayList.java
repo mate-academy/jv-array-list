@@ -21,11 +21,11 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index > size + 1 || index < 0) {
+        if (index > size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("The index passed is invalid");
         }
         if (size == capacity - 1) {
-            growElementData();
+            growIfNecessary();
         }
         if (index < size) {
             System.arraycopy(elementData, index, elementData, index + 1, size - index);
@@ -56,16 +56,17 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         verifyIndex(index);
-        T removedElement = elementData[index];
-        System.arraycopy(elementData, index + 1, elementData, index, size - index);
         size--;
+        T removedElement = elementData[index];
+        System.arraycopy(elementData, index + 1, elementData, index, size + 1 - index);
+        elementData[size] = null;
         return removedElement;
     }
 
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if (elementData[i] == element || elementData[i] != null
+            if (element == null || elementData[i] != null
                     && elementData[i].equals(element)) {
                 remove(i);
                 return element;
@@ -84,7 +85,7 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void growElementData() {
+    private void growIfNecessary() {
         capacity = capacity + (DEFAULT_CAPACITY >> 1);
         T[] newArray = (T[]) new Object[capacity];
         System.arraycopy(elementData, 0, newArray, 0, size);
@@ -94,8 +95,8 @@ public class ArrayList<T> implements List<T> {
     private void verifyIndex(int index) {
         if (index > size - 1 || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("The index " + index + " is invalid.\n"
-                    + "Appropriate index values must be less or equal " + (size - 1)
-                    + " and more than 0");
+                    + "Appropriate index values must be less or equal to" + (size - 1)
+                    + " and greater than or equal to 0");
         }
     }
 }
