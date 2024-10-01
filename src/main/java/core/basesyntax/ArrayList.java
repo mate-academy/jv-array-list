@@ -92,10 +92,10 @@ public class ArrayList<T> implements List<T> {
         T[] newArr;
         try {
             for (int i = 0; i < arr.length; i++) {
-                if (arr[i] == element || arr[i].equals(element)) {
+                if (arr[i] == element && arr[i] == null || arr[i].equals(element)) {
                     newArr = (T[]) new Object[arr.length];
                     System.arraycopy(arr, 0, newArr, 0, i);
-                    System.arraycopy(arr, i + 1, newArr, i, arr.length - i);
+                    System.arraycopy(arr, i + 1, newArr, i, arr.length - i - 1);
                     System.arraycopy(newArr, 0, arr, 0, arr.length);
                     size--;
                 }
