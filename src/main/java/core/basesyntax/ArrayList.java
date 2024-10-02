@@ -34,7 +34,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(int index, T element) {
         if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("Індекс " + index + " виходить за межі списку.");
+            throw new ArrayListIndexOutOfBoundsException(
+                    "Index " + index + " to go beyond the list");
         }
         ensureCapacity();
         System.arraycopy(elements, index, elements, index + 1, size - index);
