@@ -48,60 +48,53 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index >= 0 && index <= size) {
-            return arr[index];
-        } else {
-            throw new ArrayListIndexOutOfBoundsException("There is no a such index");
+        if (index < 0 || index > size) {
+            throw new ArrayListIndexOutOfBoundsException("Invalid index");
         }
+        return arr[index];
     }
 
     @Override
     public void set(T value, int index) {
-        try {
-            if (index >= 0 && index < size) {
-                arr[index] = value;
-            }
-        } catch (Exception e) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index" + e);
+        if (index < 0 || index > size) {
+            throw new ArrayListIndexOutOfBoundsException("Invalid index");
         }
-
+        arr[index] = value;
     }
 
     @Override
     public T remove(int index) {
         T[] newArr;
         T result = null;
-        try {
-            if (index >= 0 && index < size) {
-                result = arr[index];
-                newArr = (T[]) new Object[arr.length];
-                System.arraycopy(arr, 0, newArr, 0, index);
-                System.arraycopy(arr, index + 1, newArr, index, arr.length - index - 1);
-                System.arraycopy(newArr, 0, arr, 0, arr.length);
-                size--;
-                return result;
-            }
-        } catch (Exception e) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index" + e);
+        if (index < 0 || index > size) {
+            throw new ArrayListIndexOutOfBoundsException("Invalid index");
         }
+        result = arr[index];
+        newArr = (T[]) new Object[arr.length];
+        System.arraycopy(arr, 0, newArr, 0, index);
+        System.arraycopy(arr, index + 1, newArr, index, arr.length - index - 1);
+        System.arraycopy(newArr, 0, arr, 0, arr.length);
+        size--;
         return result;
     }
 
     @Override
     public T remove(T element) {
         T[] newArr;
-        try {
-            for (int i = 0; i < arr.length; i++) {
-                if (arr[i] == element && arr[i] == null || arr[i].equals(element)) {
-                    newArr = (T[]) new Object[arr.length];
-                    System.arraycopy(arr, 0, newArr, 0, i);
-                    System.arraycopy(arr, i + 1, newArr, i, arr.length - i - 1);
-                    System.arraycopy(newArr, 0, arr, 0, arr.length);
-                    size--;
-                }
+        for (int i = 0; i < arr.length; i++) {
+            if (arr[i] != element || arr[i] != null && !arr[i].equals(element)) {
+                throw new ArrayListIndexOutOfBoundsException("Element " + element
+                        + " was not found");
             }
-        } catch (Exception e) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index" + e);
+        }
+        for (int i = 0; i < arr.length; i++) {
+            if (arr[i] == element || arr[i] != null && arr[i].equals(element)) {
+                newArr = (T[]) new Object[arr.length];
+                System.arraycopy(arr, 0, newArr, 0, i);
+                System.arraycopy(arr, i + 1, newArr, i, arr.length - i - 1);
+                System.arraycopy(newArr, 0, arr, 0, arr.length);
+                size--;
+            }
         }
         return element;
     }
@@ -113,9 +106,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public boolean isEmpty() {
-        if (size != 0 && arr[size - 1] == null) {
-            return true;
-        } else if (size == 0 && arr[size] == null) {
+        if (size == 0) {
             return true;
         }
         return false;
@@ -123,7 +114,7 @@ public class ArrayList<T> implements List<T> {
 
     public void resize() {
         int size = this.size + (this.size / 2); // or indexOfLastCharacter >> 1
-        T [] newArr = (T[]) new Object[size];
+        T[] newArr = (T[]) new Object[size];
         System.arraycopy(arr, 0, newArr, 0, this.size);
         arr = (T[]) new Object[size];
         System.arraycopy(newArr, 0, arr, 0, size);
