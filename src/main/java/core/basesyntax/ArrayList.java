@@ -1,10 +1,11 @@
 package core.basesyntax;
 
+import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.NoSuchElementException;
-import java.util.Objects;
 
-public abstract class ArrayList<T> implements List<T> {
+public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private Object[] elements;
     private int size;
@@ -33,7 +34,8 @@ public abstract class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Індекс " + index + " виходить за межі списку.");
+            throw new ArrayListIndexOutOfBoundsException(
+                    "Index " + index + " to go beyond the list");
         }
         return (T) elements[index];
     }
@@ -41,22 +43,26 @@ public abstract class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Індекс " + index + " виходить за межі списку.");
+            throw new ArrayListIndexOutOfBoundsException(
+                    "Index " + index + " to go beyond the list");
         }
         T removedElement = (T) elements[index];
-        System.arraycopy(elements, index + 1, elements, index, size - index - 1);
-        elements[--size] = null; // Звільняємо пам'ять
+        System.arraycopy(elements, index + 1,
+                elements, index, size - index - 1);
+        elements[--size] = null;
         return removedElement;
     }
 
     public boolean remove(Object element) {
         for (int i = 0; i < size; i++) {
-            if (Objects.equals(elements[i], element)) {
+            // Якщо обидва значення null або якщо елементи рівні
+            if (element == null ? elements[i] == null : element.equals(elements[i])) {
                 remove(i);
                 return true;
             }
         }
-        throw new NoSuchElementException("Елемент не знайдено.");
+        throw new NoSuchElementException(
+                "Element not found.");
     }
 
     @Override
@@ -71,11 +77,16 @@ public abstract class ArrayList<T> implements List<T> {
 
     public boolean contains(Object o) {
         for (int i = 0; i < size; i++) {
-            if (elements[i].equals(o)) {
+            if (o == null ? elements[i] == null : o.equals(elements[i])) {
                 return true;
             }
         }
         return false;
+    }
+
+    @Override
+    public Iterator<T> iterator() {
+        return null;
     }
 
     public void clear() {
@@ -88,7 +99,8 @@ public abstract class ArrayList<T> implements List<T> {
     @Override
     public T set(int index, T element) {
         if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Індекс " + index + " виходить за межі списку.");
+            throw new ArrayListIndexOutOfBoundsException(
+                    "Index " + index + " to go beyond the list");
         }
         T oldValue = (T) elements[index];
         elements[index] = element;
@@ -98,7 +110,8 @@ public abstract class ArrayList<T> implements List<T> {
     @Override
     public void add(int index, T element) {
         if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("Індекс " + index + " виходить за межі списку.");
+            throw new ArrayListIndexOutOfBoundsException(
+                    "Index " + index + " to go beyond the list");
         }
         ensureCapacity();
         System.arraycopy(elements, index, elements, index + 1, size - index);
@@ -108,7 +121,7 @@ public abstract class ArrayList<T> implements List<T> {
 
     public int indexOf(Object o) {
         for (int i = 0; i < size; i++) {
-            if (elements[i].equals(o)) {
+            if (o == null ? elements[i] == null : o.equals(elements[i])) {
                 return i;
             }
         }
@@ -117,11 +130,26 @@ public abstract class ArrayList<T> implements List<T> {
 
     public int lastIndexOf(Object o) {
         for (int i = size - 1; i >= 0; i--) {
-            if (elements[i].equals(o)) {
+            if (o == null ? elements[i] == null : o.equals(elements[i])) {
                 return i;
             }
         }
         return -1;
+    }
+
+    @Override
+    public ListIterator<T> listIterator() {
+        return null;
+    }
+
+    @Override
+    public ListIterator<T> listIterator(int index) {
+        return null;
+    }
+
+    @Override
+    public List<T> subList(int fromIndex, int toIndex) {
+        return List.of();
     }
 
     public Object[] toArray() {
@@ -132,12 +160,12 @@ public abstract class ArrayList<T> implements List<T> {
 
     @Override
     public <T1> T1[] toArray(T1[] a) {
-        throw new UnsupportedOperationException("Method not supported");
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public boolean containsAll(java.util.Collection<?> c) {
-        throw new UnsupportedOperationException("Method not supported");
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -150,16 +178,16 @@ public abstract class ArrayList<T> implements List<T> {
 
     @Override
     public boolean addAll(int index, java.util.Collection<? extends T> c) {
-        throw new UnsupportedOperationException("Method not supported");
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public boolean removeAll(java.util.Collection<?> c) {
-        throw new UnsupportedOperationException("Method not supported");
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public boolean retainAll(java.util.Collection<?> c) {
-        throw new UnsupportedOperationException("Method not supported");
+        throw new UnsupportedOperationException();
     }
 }
