@@ -23,7 +23,7 @@ public class ArrayList<T> implements List<T> {
     public void add(T value, int index) {
         if (index > size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Choose index less or equal than " + size
-                    + "of ArrayList<T>. This index incorrect " + index);
+                    + " of ArrayList<T>. This index incorrect " + index);
         }
         checkSize();
         System.arraycopy(elements, index, elements, index + 1, size - index);
@@ -63,11 +63,11 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if (element == elements[i] || element != null && element.equals(elements[i])) {
+            if (element == elements[i] || (element != null && element.equals(elements[i]))) {
                 return remove(i);
             }
         }
-        throw new NoSuchElementException("ArrayList don`t consist the element " + element);
+        throw new NoSuchElementException("ArrayList doesn't consist of the element " + element);
     }
 
     @Override
@@ -80,25 +80,26 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private boolean checkSize() {
+    // Updated checkSize method to resize the array
+    private void checkSize() {
         if (size == elements.length) {
-            insureDefaultInternalCapacity();
+            grow(); // Call to grow method to increase the capacity
         }
-        return false;
+    }
+
+    // Updated grow method to handle resizing
+    private void grow() {
+        int newCapacity = (int) (elements.length * INCREASE_MULTIPLIER);
+        T[] newArray = (T[]) new Object[newCapacity];
+        System.arraycopy(elements, 0, newArray, 0, size); // Copy existing elements to the new array
+        elements = newArray; // Replace the old array with the new array
     }
 
     private void checkTheIndex(int index) {
         if (index >= size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Choose index less or equal than " + size
-                    + "of ArrayList<T>. This index incorrect "
+                    + " of ArrayList<T>. This index incorrect "
                     + index);
         }
-    }
-
-    private void insureDefaultInternalCapacity() {
-        T[] newArray = (T[]) new Object[elements.length
-                + (int)(elements.length * INCREASE_MULTIPLIER)];
-        System.arraycopy(elements, 0, newArray, 0, elements.length);
-        elements = newArray;
     }
 }
