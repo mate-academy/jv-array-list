@@ -26,17 +26,18 @@ public class ArrayList<T> implements List<T> {
         if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException("Invalid index");
         }
-        if (index == arr.length && size >= arr.length) {
+        if (index == arr.length || size >= arr.length) {
             resize();
         }
-        if (index >= 0 && index <= size) {
-            size++;
-        }
+
         T[] newArr = (T[]) new Object[arr.length];
         System.arraycopy(arr, 0, newArr, 0, size);
         newArr[index] = value;
         System.arraycopy(arr, index, newArr, index + 1, size - index);
         System.arraycopy(newArr, 0, arr, 0, newArr.length);
+        if (index >= 0 && index <= size) {
+            size++;
+        }
     }
 
     @Override
