@@ -1,6 +1,5 @@
 package core.basesyntax;
 
-import java.lang.reflect.Array;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
@@ -10,7 +9,7 @@ public class ArrayList<T> implements List<T> {
 
     @SuppressWarnings("unchecked")
     public ArrayList() {
-        this.elementData = (T[]) Array.newInstance(Object.class, DEFAULT_CAPACITY);
+        this.elementData = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
     @Override
@@ -47,27 +46,27 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("index doesn't exist");
-        } else {
-            return elementData[index];
-        }
+        findIndex(index);
+        return elementData[index];
+
     }
 
     @Override
     public void set(T value, int index) {
-        if (index < 0 || index >= size) {
+        findIndex(index);
+        elementData[index] = value;
+
+    }
+
+    private void findIndex(int index) {
+        if (index < 0 || index > size || index >= size) {
             throw new ArrayListIndexOutOfBoundsException("index doesn't exist");
-        } else {
-            elementData[index] = value;
         }
     }
 
     @Override
     public T remove(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("index doesn't exist");
-        }
+        findIndex(index);
         final T value = elementData[index];
         //shift of positions to the left side
         for (int i = index; i < size - 1; i++) {
@@ -115,14 +114,10 @@ public class ArrayList<T> implements List<T> {
 
     @SuppressWarnings("unchecked")
     private T[] growIfArrayFull() {
-        if (size >= elementData.length) {
-            int newSize = (int) (elementData.length * 1.5);
-            T[] newArray = (T[]) Array.newInstance(elementData
-                    .getClass()
-                    .getComponentType(), newSize);
-            System.arraycopy(elementData, 0, newArray, 0, elementData.length);
-            this.elementData = newArray;
-        }
+        int newSize = (int) (elementData.length * 1.5);
+        T[] newArray = (T[]) new Object[newSize];
+        System.arraycopy(elementData, 0, newArray, 0, elementData.length);
+        this.elementData = newArray;
         return elementData;
     }
 }
