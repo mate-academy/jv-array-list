@@ -84,6 +84,7 @@ public class ArrayList<T> implements List<T> {
         for (int i = 0; i < arr.length; i++) {
             if (arr[i] == element || arr[i] != null && arr[i].equals(element)) {
                 remove(i);
+                break;
             }
         }
         return element;
