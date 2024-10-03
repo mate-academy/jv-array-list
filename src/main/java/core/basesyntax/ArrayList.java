@@ -82,18 +82,21 @@ public class ArrayList<T> implements List<T> {
     }
 
     @Override
-    public T remove(T element) {
-        try {
-            for (int i = 0; i < arr.length; i++) {
-                if (arr[i] == element || arr[i] != null && arr[i].equals(element)) {
-                    remove(i);
-                    break;
-                }
-            }
+    public T remove(T element) throws NoSuchElementException {
+        boolean found = false;
 
-        } catch (Exception e) {
-            throw new NoSuchElementException("Element was not found ", e);
+        for (int i = 0; i < size; i++) {
+            if (arr[i] == element || (arr[i] != null && arr[i].equals(element))) {
+                remove(i);
+                found = true;
+                break;
+            }
         }
+
+        if (!found) {
+            throw new NoSuchElementException("Element " + element + " was not found");
+        }
+
         return element;
     }
 
