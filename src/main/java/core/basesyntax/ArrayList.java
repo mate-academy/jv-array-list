@@ -82,6 +82,9 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < arr.length; i++) {
+            if (i >= size) {
+                throw new ArrayListIndexOutOfBoundsException("Invalid index");
+            }
             if (arr[i] == element || arr[i] != null && arr[i].equals(element)) {
                 remove(i);
                 break;
