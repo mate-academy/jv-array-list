@@ -49,7 +49,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index < 0 || index > size) {
+        if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException("Invalid index");
         }
         return arr[index];
@@ -57,7 +57,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void set(T value, int index) {
-        if (index < 0 || index > size) {
+        if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException("Invalid index");
         }
         arr[index] = value;
@@ -67,7 +67,7 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         T[] newArr;
         T result = null;
-        if (index < 0 || index > size) {
+        if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException("Invalid index");
         }
         result = arr[index];
@@ -81,20 +81,9 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        T[] newArr;
-        for (int i = 0; i < arr.length; i++) {
-            if (arr[i] != element || arr[i] != null && !arr[i].equals(element)) {
-                throw new ArrayListIndexOutOfBoundsException("Element " + element
-                        + " was not found");
-            }
-        }
         for (int i = 0; i < arr.length; i++) {
             if (arr[i] == element || arr[i] != null && arr[i].equals(element)) {
-                newArr = (T[]) new Object[arr.length];
-                System.arraycopy(arr, 0, newArr, 0, i);
-                System.arraycopy(arr, i + 1, newArr, i, arr.length - i - 1);
-                System.arraycopy(newArr, 0, arr, 0, arr.length);
-                size--;
+                remove(i);
             }
         }
         return element;
