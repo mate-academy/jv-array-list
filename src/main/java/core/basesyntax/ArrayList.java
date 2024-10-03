@@ -88,16 +88,10 @@ public class ArrayList<T> implements List<T> {
         for (int i = 0; i < size; i++) {
             if (arr[i] == element || (arr[i] != null && arr[i].equals(element))) {
                 remove(i);
-                found = true;
-                break;
+                return element;
             }
         }
-
-        if (!found) {
-            throw new NoSuchElementException("Element " + element + " was not found");
-        }
-
-        return element;
+        throw new NoSuchElementException("Element " + element + " was not found");
     }
 
     @Override
