@@ -4,6 +4,7 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
+    private static final double INCREASE_ARRAY = 1.5;
     private int size;
     private T[] elementData;
 
@@ -15,7 +16,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value) {
         if (size >= elementData.length) {
-            elementData = growIfArrayFull();
+            growIfArrayFull();
         }
         elementData[size] = value;
         size++;
@@ -24,10 +25,13 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("index doesn't exist");
+            throw new
+                    ArrayListIndexOutOfBoundsException("the given index"
+                    + index
+                    + " does not exist");
         }
         if (size >= elementData.length) {
-            elementData = growIfArrayFull();
+            growIfArrayFull();
         }
         //shift of positions to the right side
         for (int i = size; i > index; i--) {
@@ -48,19 +52,19 @@ public class ArrayList<T> implements List<T> {
     public T get(int index) {
         findIndex(index);
         return elementData[index];
-
     }
 
     @Override
     public void set(T value, int index) {
         findIndex(index);
         elementData[index] = value;
-
     }
 
     private void findIndex(int index) {
-        if (index < 0 || index > size || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("index doesn't exist");
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("the given index "
+                    + index
+                    + " does not exist");
         }
     }
 
@@ -91,7 +95,8 @@ public class ArrayList<T> implements List<T> {
             }
         }
         if (indexOfElement == -1) {
-            throw new NoSuchElementException("No such element");
+            throw new
+                    NoSuchElementException("the specified element is not present");
         }
         //shift of positions to the left side
         for (int i = indexOfElement; i < size - 1; i++) {
@@ -113,11 +118,10 @@ public class ArrayList<T> implements List<T> {
     }
 
     @SuppressWarnings("unchecked")
-    private T[] growIfArrayFull() {
-        int newSize = (int) (elementData.length * 1.5);
+    private void growIfArrayFull() {
+        int newSize = (int) (elementData.length * INCREASE_ARRAY);
         T[] newArray = (T[]) new Object[newSize];
         System.arraycopy(elementData, 0, newArray, 0, elementData.length);
         this.elementData = newArray;
-        return elementData;
     }
 }
