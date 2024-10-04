@@ -4,26 +4,27 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
 
-    public static final int INITIAL_SIZE = 10;
+    private static final int INITIAL_CAPACITY = 10;
+    private static final double COEFFICIENT = 1.5;
 
-    private T[] array = (T[]) new Object[INITIAL_SIZE];
+    private T[] array = (T[]) new Object[INITIAL_CAPACITY];
     private int size = 0;
 
     @Override
     public void add(T value) {
-        checking();
+        ensureCapacity();
         array[size++] = value;
     }
 
     @Override
     public void add(T value, int index) {
-        generateIndexException(index < 0);
-        checking();
+        checkIndexBounds(index < 0);
+        ensureCapacity();
         if (index == size) {
             add(value);
         } else {
             T t = array[index];
-            generateIndexException(t == null);
+            checkIndexBounds(t == null);
             System.arraycopy(array, index, array, index + 1, size - index);
             array[index] = value;
             size++;
@@ -39,19 +40,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        generateIndexException(index >= size || index < 0);
+        checkIndexBounds(index >= size || index < 0);
         return array[index];
     }
 
     @Override
     public void set(T value, int index) {
-        generateIndexException(index >= size || index < 0);
+        checkIndexBounds(index >= size || index < 0);
         array[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        generateIndexException(index >= size || index < 0);
+        checkIndexBounds(index >= size || index < 0);
         if (index == size - 1) {
             T t = array[index];
             array[index] = null;
@@ -96,19 +97,19 @@ public class ArrayList<T> implements List<T> {
         return size == array.length - 1;
     }
 
-    private T[] createNewArray() {
-        T[] newArray = (T[]) new Object[(int) (array.length * 1.5)];
+    private T[] grow() {
+        T[] newArray = (T[]) new Object[(int) (array.length * COEFFICIENT)];
         System.arraycopy(array, 0, newArray, 0, array.length);
         return newArray;
     }
 
-    private void checking() {
+    private void ensureCapacity() {
         if (isFull()) {
-            array = createNewArray();
+            array = grow();
         }
     }
 
-    private void generateIndexException(boolean index) {
+    private void checkIndexBounds(boolean index) {
         if (index) {
             throw new ArrayListIndexOutOfBoundsException("Wrong index!");
         }
