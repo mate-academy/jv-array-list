@@ -40,25 +40,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        checkIndexBounds(index >= size || index < 0);
+        checkIndexBounds(isCorrectIndex(index));
         return array[index];
     }
 
     @Override
     public void set(T value, int index) {
-        checkIndexBounds(index >= size || index < 0);
+        checkIndexBounds(isCorrectIndex(index));
         array[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        checkIndexBounds(index >= size || index < 0);
-        if (index == size - 1) {
-            T t = array[index];
-            array[index] = null;
-            size--;
-            return t;
-        }
+        checkIndexBounds(isCorrectIndex(index));
         T t = array[index];
         System.arraycopy(array, index + 1, array, index, size - index - 1);
         size--;
@@ -113,5 +107,9 @@ public class ArrayList<T> implements List<T> {
         if (index) {
             throw new ArrayListIndexOutOfBoundsException("Wrong index!");
         }
+    }
+
+    private boolean isCorrectIndex(int index) {
+        return index >= size || index < 0;
     }
 }
