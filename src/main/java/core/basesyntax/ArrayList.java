@@ -22,7 +22,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        checkIndexForIndex(index);
+        checkIndexForIndexAdd(index);
         ensureCapacity();
         for (int i = size; i > index; i--) {
             elementData[i] = elementData[i - 1];
@@ -34,8 +34,11 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        if (list == null || list.isEmpty()) {
-            throw new IllegalArgumentException("List is null! Please make a list with objects.");
+        if (list == null) {
+            throw new NullPointerException("The list cannot be null!");
+        }
+        if (list.isEmpty()) {
+            throw new IllegalArgumentException("The list cannot be empty!");
         }
         for (int i = 0; i < list.size(); i++) {
             add(list.get(i));
@@ -68,7 +71,7 @@ public class ArrayList<T> implements List<T> {
     public T remove(T element) {
         if (element == null) {
             size--;
-            return null;
+            return element;
         }
 
         for (int i = 0; i < size; i++) {
@@ -76,7 +79,7 @@ public class ArrayList<T> implements List<T> {
                 return remove(i);
             }
         }
-        throw new NoSuchElementException("Element not found:  " + element);
+        throw new NoSuchElementException("Failed to remove element because it was not found: " + element);
     }
 
     @Override
@@ -108,7 +111,7 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private void checkIndexForIndex(int index) {
+    private void checkIndexForIndexAdd(int index) {
         if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException("Index out of bound: " + index);
         }
