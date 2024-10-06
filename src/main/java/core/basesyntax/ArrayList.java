@@ -37,7 +37,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         if (index > size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("given index does not exist (add by index)");
+            throw new ArrayListIndexOutOfBoundsException("given index does not exist");
         } else {
             if (index == size) {
                 add(value);
@@ -89,7 +89,7 @@ public class ArrayList<T> implements List<T> {
         if (index > size - 1 || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("given index does not exist");
         } else {
-            T removedElement = arrayList[index];
+            final T removedElement = arrayList[index];
 
             if (index != (size - 1)) {
                 T[] temporaryArrayList = (T[]) new Object[size - index - 1];
@@ -112,13 +112,14 @@ public class ArrayList<T> implements List<T> {
     public T remove(T element) {
         int index = -1;
         T removedElementByEquals = null;
-        for (int i = 0; i < size; i++)
+        for (int i = 0; i < size; i++) {
             if ((element != null && arrayList[i] != null && arrayList[i].equals(element))
                     || element == arrayList[i]) {
                 index = i;
                 removedElementByEquals = arrayList[i];
                 break;
             }
+        }
         if (index == -1) {
             throw new NoSuchElementException("element does not exist");
         } else {
