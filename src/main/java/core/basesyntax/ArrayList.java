@@ -21,7 +21,6 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void ensureCapacity() {
-
         if (size == elementData.length) {
             grow();
         }
@@ -55,7 +54,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void addAll(List<T> list) {
         if (list == null || list.isEmpty()) {
-            throw new ArrayListIndexOutOfBoundsException("List is null!");
+            throw new IllegalArgumentException("List is null! Please make a list with objects." );
         }
         for (int i = 0; i < list.size(); i++) {
             add(list.get(i));
@@ -92,11 +91,12 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
+        if (element == null) {
+            size--;
+            return null;
+        }
+
         for (int i = 0; i < size; i++) {
-            if (element == null) {
-                size--;
-                return null;
-            }
             if (element.equals(elementData[i])) {
                 return remove(i);
             }
