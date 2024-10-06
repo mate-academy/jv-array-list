@@ -4,15 +4,16 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private T[] arrayList;
-    int size = 0;
-    int emptyPlaces = 10;
+    private int size = 0;
+    private int emptyPlaces = 10;
+    private final double ARRAY_ENLARGEMENT_PERCENTAGE = 0.5;
 
     public ArrayList() {
         arrayList = (T[]) new Object[emptyPlaces];
     }
 
     public void enlarge() {
-        emptyPlaces = (int) (size * 0.5);
+        emptyPlaces = (int) (size * ARRAY_ENLARGEMENT_PERCENTAGE);
         T[] temporaryEnlargedArrayList = (T[]) new Object[size + emptyPlaces];
         for (int i = 0; i < size; i++) {
             temporaryEnlargedArrayList[i] = arrayList[i];
@@ -35,21 +36,24 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index > size - 1 || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("given index does not exist");
-        } else if (index == size - 1) {
-            set(value, size -1);
+        if (index > size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("given index does not exist (add by index)");
         } else {
-            T[] temporaryArrayList = (T[]) new Object[size - index];
-            for (int i = index; i < size; i++) {
-                temporaryArrayList[i - index] = arrayList[i];
-            }
-            set(value, index);
-            for (int i = size - 1; i > index; i--) {
-                remove(i);
-            }
-            for (T element : temporaryArrayList) {
-                add(element);
+            if (index == size) {
+                add(value);
+            } else {
+                T[] temporaryArrayList = (T[]) new Object[size - index];
+                for (int i = index; i < size; i++) {
+                    temporaryArrayList[i - index] = arrayList[i];
+                }
+
+                set(value, index);
+
+                for (int i = 0; i < temporaryArrayList.length - 1; i++) {
+                    set(temporaryArrayList[i], index + i + 1);
+                }
+
+                add(temporaryArrayList[temporaryArrayList.length - 1]);
             }
         }
     }
@@ -109,9 +113,11 @@ public class ArrayList<T> implements List<T> {
         int index = -1;
         T removedElementByEquals = null;
         for (int i = 0; i < size; i++)
-            if (element != null && arrayList[i].equals(element)) {
+            if ((element != null && arrayList[i] != null && arrayList[i].equals(element))
+                    || element == arrayList[i]) {
                 index = i;
                 removedElementByEquals = arrayList[i];
+                break;
             }
         if (index == -1) {
             throw new NoSuchElementException("element does not exist");
