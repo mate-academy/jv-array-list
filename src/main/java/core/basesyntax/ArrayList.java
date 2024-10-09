@@ -8,7 +8,6 @@ public class ArrayList<T> implements List<T> {
     private T[] elements;
     private int size;
 
-    @SuppressWarnings("unchecked")
     public ArrayList() {
         elements = (T[]) new Object[DEFAULT_CAPACITY];
     }
@@ -96,10 +95,12 @@ public class ArrayList<T> implements List<T> {
 
     @SuppressWarnings("unchecked")
     private void increaseArrayIfFull() {
-        int newSizeOfArray = (int) (elements.length * MULTIPLIER);
-        T[] newArray = (T[]) new Object[newSizeOfArray];
-        System.arraycopy(elements, 0, newArray, 0, size);
-        elements = newArray;
+        if (size > 9) {
+            int newSizeOfArray = (int) (elements.length * MULTIPLIER);
+            T[] newArray = (T[]) new Object[newSizeOfArray];
+            System.arraycopy(elements, 0, newArray, 0, size);
+            elements = newArray;
+        }
     }
 
     private void throwIfIndexOutOfBoundsForAdd(int index) {
