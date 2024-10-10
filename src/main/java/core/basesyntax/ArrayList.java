@@ -10,7 +10,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        growIfArrayFull();
+        growArrayIfFull();
         elements[quantity] = value;
         quantity += 1;
     }
@@ -18,7 +18,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         checkInRangeForAddition(index);
-        growIfArrayFull();
+        growArrayIfFull();
         System.arraycopy(elements, index, elements, index + 1, quantity - index);
         elements[index] = value;
         quantity += 1;
@@ -49,7 +49,7 @@ public class ArrayList<T> implements List<T> {
         Object temp = elements[index];
 
         if (index != quantity - 1) {
-            System.arraycopy(elements, index + 1, elements, index, quantity - index + 1);
+            System.arraycopy(elements, index + 1, elements, index, quantity - index);
         }
         quantity -= 1;
         return (T) (temp);
@@ -78,10 +78,10 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public boolean isEmpty() {
-        return size() == 0;
+        return quantity == 0;
     }
 
-    private void growIfArrayFull() {
+    private void growArrayIfFull() {
         if (size() == elements.length) {
             Object[] temp = new Object[elements.length + elements.length / 2];
             System.arraycopy(elements, 0, temp, 0, elements.length);
