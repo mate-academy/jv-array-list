@@ -19,15 +19,8 @@ public class ArrayList<T> implements List<T> {
     public void add(T value, int index) {
         checkInRangeForAddition(index);
         growIfArrayFull();
-        Object [] temp = new Object[elements.length];
-        System.arraycopy(elements, 0, temp, 0, temp.length);
-        for (int i = 0, j = 0; i <= quantity; i++, j++) {
-            if (i == index) {
-                elements[i] = value;
-                i++;
-            }
-            elements[i] = temp[j];
-        }
+        System.arraycopy(elements, index, elements, index + 1, quantity - index);
+        elements[index] = value;
         quantity += 1;
     }
 
@@ -53,19 +46,13 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         checkInRangeForGet(index);
-        Object [] temp = new Object[elements.length];
-        System.arraycopy(elements, 0, temp, 0, elements.length);
-        for (int i = 0, j = 0; i < quantity; i++, j++) {
-            if (i == index) {
-                j++;
-            }
-            if (j != quantity) {
-                elements[i] = temp[j];
-            }
+        Object temp = elements[index];
+
+        if (index != quantity - 1) {
+            System.arraycopy(elements, index + 1, elements, index, quantity - index + 1);
         }
         quantity -= 1;
-        elements[quantity] = null;
-        return (T) (temp[index]);
+        return (T) (temp);
     }
 
     @Override
@@ -96,29 +83,23 @@ public class ArrayList<T> implements List<T> {
 
     private void growIfArrayFull() {
         if (size() == elements.length) {
-            int index = 0;
-            if (elements.length % 2 == 0) {
-                index = elements.length + elements.length / 2;
-            } else {
-                index = elements.length + elements.length / 2 + 1;
-            }
-            Object[] temp = new Object[index];
-            for (int i = 0; i < elements.length; i++) {
-                temp[i] = elements[i];
-            }
+            Object[] temp = new Object[elements.length + elements.length / 2];
+            System.arraycopy(elements, 0, temp, 0, elements.length);
             elements = temp;
         }
     }
 
     private void checkInRangeForGet(int index) {
         if (index >= quantity || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("This index goes beyond of size list");
+            throw new ArrayListIndexOutOfBoundsException("Invalid index: "
+                    + index + ", for Size: " + quantity);
         }
     }
 
     private void checkInRangeForAddition(int index) {
         if (index > quantity || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("This index goes beyond of size list");
+            throw new ArrayListIndexOutOfBoundsException("Invalid index: "
+                    + index + ", for Size: " + quantity + 1);
         }
     }
 }
