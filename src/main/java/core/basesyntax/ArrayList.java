@@ -5,8 +5,8 @@ import java.util.NoSuchElementException;
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private static final int DEFAULT_SIZE = 0;
-    int quantity = DEFAULT_SIZE;
-    public Object[] elements = new Object[DEFAULT_CAPACITY];
+    private int quantity = DEFAULT_SIZE;
+    private Object[] elements = new Object[DEFAULT_CAPACITY];
 
     @Override
     public void add(T value) {
@@ -21,7 +21,7 @@ public class ArrayList<T> implements List<T> {
         growIfArrayFull();
         Object [] temp = new Object[elements.length];
         System.arraycopy(elements, 0, temp, 0, temp.length);
-        for (int i = 0, j = 0; i <= quantity ; i++, j++) {
+        for (int i = 0, j = 0; i <= quantity; i++, j++) {
             if (i == index) {
                 elements[i] = value;
                 i++;
@@ -40,13 +40,13 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-      checkInRangeForGet(index);
+        checkInRangeForGet(index);
         return (T) (elements[index]);
     }
 
     @Override
     public void set(T value, int index) {
-      checkInRangeForGet(index);
+        checkInRangeForGet(index);
         elements[index] = value;
     }
 
@@ -71,8 +71,6 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < quantity; i++) {
-
-
             if (elements[i] == null && element == null) {
                 return remove(i);
             }
