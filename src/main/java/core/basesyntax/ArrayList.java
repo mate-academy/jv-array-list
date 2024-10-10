@@ -1,27 +1,29 @@
 package core.basesyntax;
 
 import java.util.NoSuchElementException;
+import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
+    private static final int GROWTH_FACTOR = 2;
     private static final int DEFAULT_CAPACITY = 10;
     private static final int DEFAULT_SIZE = 0;
-    private int quantity = DEFAULT_SIZE;
+    private int currentSize = DEFAULT_SIZE;
     private Object[] elements = new Object[DEFAULT_CAPACITY];
 
     @Override
     public void add(T value) {
         growArrayIfFull();
-        elements[quantity] = value;
-        quantity += 1;
+        elements[currentSize] = value;
+        currentSize += 1;
     }
 
     @Override
     public void add(T value, int index) {
         checkInRangeForAddition(index);
         growArrayIfFull();
-        System.arraycopy(elements, index, elements, index + 1, quantity - index);
+        System.arraycopy(elements, index, elements, index + 1, currentSize - index);
         elements[index] = value;
-        quantity += 1;
+        currentSize += 1;
     }
 
     @Override
@@ -48,23 +50,17 @@ public class ArrayList<T> implements List<T> {
         checkInRangeForGet(index);
         Object temp = elements[index];
 
-        if (index != quantity - 1) {
-            System.arraycopy(elements, index + 1, elements, index, quantity - index);
+        if (index != currentSize - 1) {
+            System.arraycopy(elements, index + 1, elements, index, currentSize - index);
         }
-        quantity -= 1;
+        currentSize -= 1;
         return (T) (temp);
     }
 
     @Override
     public T remove(T element) {
-        for (int i = 0; i < quantity; i++) {
-            if (elements[i] == null && element == null) {
-                return remove(i);
-            }
-            if (element != null && elements[i] == null) {
-                continue;
-            }
-            if (elements[i].equals(element)) {
+        for (int i = 0; i < currentSize; i++) {
+            if (Objects.equals(elements[i], element)) {
                 return remove(i);
             }
         }
@@ -73,33 +69,33 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public int size() {
-        return quantity;
+        return currentSize;
     }
 
     @Override
     public boolean isEmpty() {
-        return quantity == 0;
+        return currentSize == 0;
     }
 
     private void growArrayIfFull() {
         if (size() == elements.length) {
-            Object[] temp = new Object[elements.length + elements.length / 2 + 1];
+            Object[] temp = new Object[elements.length + elements.length / GROWTH_FACTOR + 1];
             System.arraycopy(elements, 0, temp, 0, elements.length);
             elements = temp;
         }
     }
 
     private void checkInRangeForGet(int index) {
-        if (index >= quantity || index < 0) {
+        if (index >= currentSize || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Invalid index: "
-                    + index + ", for Size: " + quantity);
+                    + index + ", for Size: " + currentSize);
         }
     }
 
     private void checkInRangeForAddition(int index) {
-        if (index > quantity || index < 0) {
+        if (index > currentSize || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Invalid index: "
-                    + index + ", for Size: " + quantity + 1);
+                    + index + ", for Size: " + currentSize + 1);
         }
     }
 }
