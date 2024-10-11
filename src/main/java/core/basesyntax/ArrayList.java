@@ -15,8 +15,18 @@ public class ArrayList<T> implements List<T> {
 
     private void ensureCapacity() {
         T[] newElements = (T[]) new Object[elements.length * 2];
-        System.arraycopy(elements, 0, newElements, 0, size);
+        copyArray(elements, 0, newElements, 0, size);
         elements = newElements;
+    }
+
+    private void copyArray(T[] arrayFrom,
+                           int arrayFromPos,
+                           T[] arrayTo,
+                           int arrayToPos,
+                           int amount) {
+        for (int i = 0; i < amount; i++) {
+            arrayTo[arrayToPos + i] = arrayFrom[arrayFromPos + i];
+        }
     }
 
     private boolean isFull() {
@@ -33,11 +43,11 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
+        elements[size] = value;
+        size++;
         if (isFull()) {
             ensureCapacity();
         }
-        elements[size] = value;
-        size++;
     }
 
     @Override
@@ -47,22 +57,26 @@ public class ArrayList<T> implements List<T> {
                     "You tried to add element to non exist index"
             );
         }
+
+        for (int i = size; i > index; i--) {
+            elements[i] = elements[i - 1];
+        }
+        elements[index] = value;
+        size++;
+
         if (isFull()) {
             ensureCapacity();
         }
-        T[] newElements = (T[]) new Object[elements.length];
-
-        System.arraycopy(elements, 0, newElements, 0, index);
-        newElements[index] = value;
-        System.arraycopy(elements, index, newElements, index + 1, size - index);
-        size++;
-        elements = newElements;
     }
 
     @Override
     public void addAll(List<T> list) {
         for (int i = 0; i < list.size(); i++) {
-            add(list.get(i));
+            elements[size] = list.get(i);
+            size++;
+            if (isFull()) {
+                ensureCapacity();
+            }
         }
     }
 
@@ -95,32 +109,24 @@ public class ArrayList<T> implements List<T> {
         final T elementToRemove = elements[index];
         T[] newElements = (T[]) new Object[elements.length];
         size--;
-        System.arraycopy(elements, 0, newElements, 0, index);
-        System.arraycopy(elements, index + 1, newElements, index, size - index);
+        copyArray(elements, 0, newElements, 0, index);
+        copyArray(elements, index + 1, newElements, index, size - index);
         elements = newElements;
         return elementToRemove;
     }
 
     @Override
     public T remove(T element) {
-        T[] newElements = (T[]) new Object[elements.length];
-        T elementToRemove = null;
         boolean isElementFound = false;
+        int indexOfFoundElement = 0;
         for (int i = 0; i < size; i++) {
             if (Objects.equals(element, elements[i])) {
                 isElementFound = true;
-                elementToRemove = elements[i];
-            }
-            if (isElementFound) {
-                newElements[i] = elements[i + 1];
-            } else {
-                newElements[i] = elements[i];
+                indexOfFoundElement = i;
             }
         }
-        elements = newElements;
         if (isElementFound) {
-            size--;
-            return elementToRemove;
+            return remove(indexOfFoundElement);
         } else {
             throw new NoSuchElementException();
         }
