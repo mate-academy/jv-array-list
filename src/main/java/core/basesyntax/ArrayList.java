@@ -15,9 +15,7 @@ public class ArrayList<T> implements List<T> {
 
     private void ensureCapacity() {
         T[] newElements = (T[]) new Object[elements.length * 2];
-        for (int i = 0; i < size; i++) {
-            newElements[i] = elements[i];
-        }
+        System.arraycopy(elements, 0, newElements, 0, size);
         elements = newElements;
     }
 
@@ -27,6 +25,10 @@ public class ArrayList<T> implements List<T> {
 
     private boolean isIndexValid(int index) {
         return index < size && index >= 0;
+    }
+
+    private boolean isIndexValidForAdd(int index) {
+        return index <= size && index >= 0;
     }
 
     @Override
@@ -40,7 +42,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index >= size + 1 || index < 0) {
+        if (!isIndexValidForAdd(index)) {
             throw new ArrayListIndexOutOfBoundsException(
                     "You tried to add element to non exist index"
             );
@@ -50,14 +52,9 @@ public class ArrayList<T> implements List<T> {
         }
         T[] newElements = (T[]) new Object[elements.length];
 
-        for (int i = 0; i <= size; i++) {
-            if (i > index) {
-                newElements[i] = elements[i - 1];
-            } else {
-                newElements[i] = elements[i];
-            }
-        }
+        System.arraycopy(elements, 0, newElements, 0, index);
         newElements[index] = value;
+        System.arraycopy(elements, index, newElements, index + 1, size - index);
         size++;
         elements = newElements;
     }
@@ -97,15 +94,10 @@ public class ArrayList<T> implements List<T> {
         }
         final T elementToRemove = elements[index];
         T[] newElements = (T[]) new Object[elements.length];
-        for (int i = 0; i < size; i++) {
-            if (i > index) {
-                newElements[i - 1] = elements[i];
-            } else {
-                newElements[i] = elements[i];
-            }
-        }
-        elements = newElements;
         size--;
+        System.arraycopy(elements, 0, newElements, 0, index);
+        System.arraycopy(elements, index + 1, newElements, index, size - index);
+        elements = newElements;
         return elementToRemove;
     }
 
