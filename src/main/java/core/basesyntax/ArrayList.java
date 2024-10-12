@@ -1,6 +1,5 @@
 package core.basesyntax;
 
-import java.util.Arrays;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 
@@ -36,7 +35,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        if (list == null || list.size() == 0) {
+        if (list == null || list.isEmpty()) {
             return;
         }
 
@@ -77,7 +76,7 @@ public class ArrayList<T> implements List<T> {
                 return remove(i);
             }
         }
-        throw new NoSuchElementException("No such element");
+        throw new NoSuchElementException("No such element: " + element);
     }
 
     @Override
@@ -88,11 +87,6 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
-    }
-
-    private void grow() {
-        int newCapacity = dataElement.length + (dataElement.length >> 1);
-        dataElement = Arrays.copyOf(dataElement, newCapacity);
     }
 
     private void checkIndex(int index) {
@@ -107,8 +101,23 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
+    private void grow() {
+        int newCapacity = dataElement.length + (dataElement.length >> 1);
+        resize(newCapacity);
+    }
+
     private void ensureCapacity(int minCapacity) {
-        int newCapacity = minCapacity + size;
-        dataElement = Arrays.copyOf(dataElement, newCapacity);
+        int newCapacity = dataElement.length + minCapacity;
+        resize(newCapacity);
+    }
+
+    private void resize(int newCapacity) {
+        T[] newArray = (T[]) new Object[newCapacity];
+
+        for (int i = 0; i < dataElement.length; i++) {
+            newArray[i] = dataElement[i];
+        }
+
+        dataElement = newArray;
     }
 }
