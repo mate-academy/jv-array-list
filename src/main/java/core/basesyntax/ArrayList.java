@@ -71,12 +71,23 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if (element == null ? elements[i] == null : element.equals(elements[i])) {
+            if (elementsEqual(element, elements[i])) {
                 return remove(i);
             }
         }
         throw new NoSuchElementException("Element not found: " + element);
     }
+
+    private boolean elementsEqual(T element1, Object element2) {
+        if (element1 == null && element2 == null) {
+            return true;
+        }
+        if (element1 == null || element2 == null) {
+            return false;
+        }
+        return element1.equals(element2);
+    }
+
 
     @Override
     public int size() {
