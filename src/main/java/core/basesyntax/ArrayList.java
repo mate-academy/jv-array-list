@@ -64,7 +64,7 @@ public class ArrayList<T> implements List<T> {
         }
         T removedElement = (T) elements[index];
         System.arraycopy(elements, index + 1, elements, index, size - index - 1);
-        elements[--size] = null;
+        elements[--size] = null; // Clear the reference to the removed element.
         return removedElement;
     }
 
@@ -77,17 +77,6 @@ public class ArrayList<T> implements List<T> {
         }
         throw new NoSuchElementException("Element not found: " + element);
     }
-
-    private boolean elementsEqual(T element1, Object element2) {
-        if (element1 == null && element2 == null) {
-            return true;
-        }
-        if (element1 == null || element2 == null) {
-            return false;
-        }
-        return element1.equals(element2);
-    }
-
 
     @Override
     public int size() {
@@ -109,5 +98,15 @@ public class ArrayList<T> implements List<T> {
             System.arraycopy(elements, 0, newArray, 0, size);
             elements = newArray;
         }
+    }
+
+    private boolean elementsEqual(T element1, Object element2) {
+        if (element1 == null && element2 == null) {
+            return true;
+        }
+        if (element1 == null || element2 == null) {
+            return false;
+        }
+        return element1.equals(element2);
     }
 }
