@@ -33,9 +33,14 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
+        if (list == null || list.size() == 0) {
+            return; // No need to add elements if the list is null or empty
+        }
         int additionalLength = list.size();
+        checkSizeForAdditional(additionalLength); // Ensure enough space for all elements
+
         for (int i = 0; i < additionalLength; i++) {
-            add(list.get(i));
+            elements[size++] = list.get(i); // Add elements directly and increment size
         }
     }
 
@@ -80,26 +85,32 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    // Updated checkSize method to resize the array
+    // Check if there is enough space for new elements, and grow if needed
     private void checkSize() {
         if (size == elements.length) {
-            grow(); // Call to grow method to increase the capacity
+            grow();
         }
     }
 
-    // Updated grow method to handle resizing
+    // Ensure enough space for additional elements
+    private void checkSizeForAdditional(int additionalLength) {
+        while (size + additionalLength > elements.length) {
+            grow();
+        }
+    }
+
+    // Resize the internal array when the capacity is exceeded
     private void grow() {
         int newCapacity = (int) (elements.length * INCREASE_MULTIPLIER);
         T[] newArray = (T[]) new Object[newCapacity];
-        System.arraycopy(elements, 0, newArray, 0, size); // Copy existing elements to the new array
-        elements = newArray; // Replace the old array with the new array
+        System.arraycopy(elements, 0, newArray, 0, size);
+        elements = newArray;
     }
 
     private void checkTheIndex(int index) {
         if (index >= size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Choose index less or equal than " + size
-                    + " of ArrayList<T>. This index incorrect "
-                    + index);
+                    + " of ArrayList<T>. This index incorrect " + index);
         }
     }
 }
