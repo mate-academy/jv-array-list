@@ -57,7 +57,7 @@ public class ArrayList<T> {
         return removedElement;
     }
 
-        public T remove(T element) {
+    public T remove(T element) {
         if (element == null) {
             for (int i = 0; i < size; i++) {
                 if (elements[i] == null) {
