@@ -48,16 +48,16 @@ public class ArrayList<T> {
         if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
         }
-        final T removedElement = elements[index];  // Сделаем переменную final
+        final T removedElement = elements[index];
         for (int i = index; i < size - 1; i++) {
             elements[i] = elements[i + 1];
         }
         size--;
-        elements[size] = null;  // Очистим ссылку на последний элемент
-        return removedElement;  // Возвращаем удалённый элемент
+        elements[size] = null;
+        return removedElement;
     }
 
-    public T remove(T element) {
+        public T remove(T element) {
         if (element == null) {
             for (int i = 0; i < size; i++) {
                 if (elements[i] == null) {
@@ -74,13 +74,11 @@ public class ArrayList<T> {
         throw new NoSuchElementException("Element not found: " + element);
     }
 
-
     private void ensureCapacity() {
         if (size == elements.length) {
             grow();
         }
     }
-
 
     private void grow() {
         int newCapacity = (int) (elements.length * 1.5);
