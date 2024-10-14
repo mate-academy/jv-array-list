@@ -48,13 +48,10 @@ public class ArrayList<T> {
         if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
         }
-
         final T removedElement = elements[index];  // Сделаем переменную final
-
         for (int i = index; i < size - 1; i++) {
             elements[i] = elements[i + 1];
         }
-
         size--;
         elements[size] = null;  // Очистим ссылку на последний элемент
         return removedElement;  // Возвращаем удалённый элемент
