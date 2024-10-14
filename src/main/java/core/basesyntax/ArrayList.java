@@ -2,54 +2,41 @@ package core.basesyntax;
 
 import java.util.NoSuchElementException;
 
-public class ArrayList<T> implements List<T> {
+public class ArrayList<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    private static final double GROWTH_FACTOR = 1.5;
-    private Object[] elements;
-    private int size;
+    private T[] elements;
+    private int size = 0;
 
     public ArrayList() {
-        elements = new Object[DEFAULT_CAPACITY];
-        size = 0;
+
+        elements = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
-    @Override
     public void add(T value) {
-        ensureCapacity(size + 1);
-        elements[size++] = value;
+        ensureCapacity();
+        elements[size] = value;
+        size++;
     }
 
-    @Override
     public void add(T value, int index) {
         if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
         }
-        ensureCapacity(size + 1);
-        System.arraycopy(elements, index, elements, index + 1, size - index);
+        ensureCapacity();
+        for (int i = size; i > index; i--) {
+            elements[i] = elements[i - 1];
+        }
         elements[index] = value;
         size++;
     }
 
-    @Override
-    public void addAll(List<T> list) {
-        if (list == null || list.size() == 0) {
-            return;
-        }
-        ensureCapacity(size + list.size());
-        for (int i = 0; i < list.size(); i++) {
-            elements[size++] = list.get(i);
-        }
-    }
-
-    @Override
     public T get(int index) {
         if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
         }
-        return (T) elements[index];
+        return elements[index];
     }
 
-    @Override
     public void set(T value, int index) {
         if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
@@ -57,56 +44,66 @@ public class ArrayList<T> implements List<T> {
         elements[index] = value;
     }
 
-    @Override
     public T remove(int index) {
         if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
         }
-        T removedElement = (T) elements[index];
-        System.arraycopy(elements, index + 1, elements, index, size - index - 1);
-        elements[--size] = null; // Clear the reference to the removed element.
+        T removedElement = elements[index];
+        for (int i = index; i < size - 1; i++) {
+            elements[i] = elements[i + 1];
+        }
+        size--;
+        elements[size] = null;
         return removedElement;
     }
 
-    @Override
     public T remove(T element) {
-        for (int i = 0; i < size; i++) {
-            if (elementsEqual(element, elements[i])) {
-                return remove(i);
+        if (element == null) {
+            for (int i = 0; i < size; i++) {
+                if (elements[i] == null) {
+                    return remove(i);
+                }
+            }
+        } else {
+            for (int i = 0; i < size; i++) {
+                if (elements[i] != null && elements[i].equals(element)) {
+                    return remove(i);
+                }
             }
         }
         throw new NoSuchElementException("Element not found: " + element);
     }
 
-    @Override
+
+    private void ensureCapacity() {
+        if (size == elements.length) {
+            grow();
+        }
+    }
+
+
+    private void grow() {
+        int newCapacity = (int) (elements.length * 1.5);
+        T[] newArray = (T[]) new Object[newCapacity];
+        for (int i = 0; i < size; i++) {
+            newArray[i] = elements[i];
+        }
+        elements = newArray;
+    }
+
     public int size() {
+
         return size;
     }
 
-    @Override
     public boolean isEmpty() {
+
         return size == 0;
     }
 
-    private void ensureCapacity(int requiredCapacity) {
-        if (requiredCapacity > elements.length) {
-            int newCapacity = (int) (elements.length * GROWTH_FACTOR);
-            if (newCapacity < requiredCapacity) {
-                newCapacity = requiredCapacity;
-            }
-            Object[] newArray = new Object[newCapacity];
-            System.arraycopy(elements, 0, newArray, 0, size);
-            elements = newArray;
+    public void addAll(ArrayList<T> otherList) {
+        for (int i = 0; i < otherList.size(); i++) {
+            add(otherList.get(i)); // Reuse the existing add method to add elements
         }
-    }
-
-    private boolean elementsEqual(T element1, Object element2) {
-        if (element1 == null && element2 == null) {
-            return true;
-        }
-        if (element1 == null || element2 == null) {
-            return false;
-        }
-        return element1.equals(element2);
     }
 }
