@@ -1,16 +1,16 @@
 package core.basesyntax;
 
-import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    private Object[] elementData;
+    private static final double INCREASE_COEFFICIENT = 1.5;
+    private T[] elementData;
     private int size;
 
     public ArrayList() {
         this.size = 0;
-        this.elementData = new Object[DEFAULT_CAPACITY];
+        this.elementData = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
     @Override
@@ -40,15 +40,20 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
+    private int calculateNewCapacity() {
+        return (int) (elementData.length * INCREASE_COEFFICIENT);
+    }
+
     private void grow() {
-        int newCapacity = (int) (elementData.length * 1.5);
-        elementData = Arrays.copyOf(elementData, newCapacity);
+        T[] newElementData = (T[]) new Object[calculateNewCapacity()];
+        System.arraycopy(elementData, 0, newElementData, 0, elementData.length);
+        elementData = newElementData;
     }
 
     @Override
     public T get(int index) {
         checkRange(index);
-        return (T) elementData[index];
+        return elementData[index];
     }
 
     @Override
@@ -74,7 +79,7 @@ public class ArrayList<T> implements List<T> {
                 return remove(i);
             }
         }
-        throw new NoSuchElementException();
+        throw new NoSuchElementException("Element not found in list");
     }
 
     @Override
