@@ -1,44 +1,39 @@
 package core.basesyntax;
 
 import java.util.NoSuchElementException;
+import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
-    private static final int DEFAULT_CAPACITY = 10;
-    private static final double INCREASE_ARRAY = 1.5;
+    private int initialCapacity = 16;
+    private T[] table;
     private int size;
-    private T[] elementData;
 
     @SuppressWarnings("unchecked")
     public ArrayList() {
-        this.elementData = (T[]) new Object[DEFAULT_CAPACITY];
+        this.table = (T[]) new Object[initialCapacity];
     }
 
     @Override
     public void add(T value) {
-        if (size >= elementData.length) {
-            growIfArrayFull();
+        if (size == initialCapacity) {
+            increaseArray();
         }
-        elementData[size] = value;
-        size++;
+        table[size++] = value;
     }
 
     @Override
     public void add(T value, int index) {
-        if (index < 0 || index > size) {
-            throw new
-                    ArrayListIndexOutOfBoundsException("the given index"
-                    + index
-                    + " does not exist");
+        if (index > size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("index " + index + "non exist");
+        } else if (size == initialCapacity) {
+            increaseArray();
         }
-        if (size >= elementData.length) {
-            growIfArrayFull();
-        }
-        //shift of positions to the right side
-        for (int i = size; i > index; i--) {
-            elementData[i] = elementData[i - 1];
-        }
-        elementData[index] = value;
-        size++;
+        T[] table;
+        int subSize = size;
+        table = this.table;
+        System.arraycopy(table, index, table, index + 1, subSize - index);
+        size = subSize + 1;
+        table[index] = value;
     }
 
     @Override
@@ -50,61 +45,52 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        findIndex(index);
-        return elementData[index];
+        if (index <= size - 1 && index >= 0) {
+            return table[index];
+        } else {
+            throw new ArrayListIndexOutOfBoundsException("index " + index + "non exist");
+        }
     }
 
     @Override
     public void set(T value, int index) {
-        findIndex(index);
-        elementData[index] = value;
-    }
-
-    private void findIndex(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("the given index "
-                    + index
-                    + " does not exist");
+        if (index < 0 || index > size - 1) {
+            throw new ArrayListIndexOutOfBoundsException("index " + index + "non exist");
         }
+        table[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        findIndex(index);
-        final T value = elementData[index];
-        //shift of positions to the left side
-        for (int i = index; i < size - 1; i++) {
-            elementData[i] = elementData[i + 1];
+        if (index < 0 || index > size - 1) {
+            throw new ArrayListIndexOutOfBoundsException("index " + index + "non exist");
+        } else {
+            T[] table;
+            table = this.table;
+            final T removeValue = table[index];
+            int subSize = size;
+            System.arraycopy(table, index + 1, table, index, subSize - index - 1);
+            size = subSize - 1;
+            table[size] = null;
+            return removeValue;
         }
-        elementData[size - 1] = null;
-        size--;
-        return value;
     }
 
     @Override
     public T remove(T element) {
-        int indexOfElement = -1;
+        T[] table;
+        table = this.table;
+        int subSize = size;
 
         for (int i = 0; i < size; i++) {
-            if (elementData[i] != null && elementData[i].equals(element)) {
-                indexOfElement = i;
-                break;
-            } else if (elementData[i] == null) {
-                indexOfElement = i;
-                break;
+            if (Objects.equals(element, table[i])) {
+                System.arraycopy(table, i + 1, table, i, subSize - i - 1);
+                size = subSize - 1;
+                table[size] = null;
+                return element;
             }
         }
-        if (indexOfElement == -1) {
-            throw new
-                    NoSuchElementException("the specified element is not present");
-        }
-        //shift of positions to the left side
-        for (int i = indexOfElement; i < size - 1; i++) {
-            elementData[i] = elementData[i + 1];
-        }
-        elementData[size - 1] = null;
-        size--;
-        return element;
+        throw new NoSuchElementException("element " + element + "non exist");
     }
 
     @Override
@@ -118,10 +104,12 @@ public class ArrayList<T> implements List<T> {
     }
 
     @SuppressWarnings("unchecked")
-    private void growIfArrayFull() {
-        int newSize = (int) (elementData.length * INCREASE_ARRAY);
-        T[] newArray = (T[]) new Object[newSize];
-        System.arraycopy(elementData, 0, newArray, 0, elementData.length);
-        this.elementData = newArray;
+    private void increaseArray() {
+        int capacity = (int) (initialCapacity * 1.5);
+        T[] currentArray = (T[]) new Object[capacity];
+        System.arraycopy(table, 0, currentArray, 0, size);
+        table = currentArray;
+        initialCapacity = capacity;
     }
 }
+
