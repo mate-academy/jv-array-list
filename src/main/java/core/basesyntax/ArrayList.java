@@ -4,9 +4,8 @@ import java.util.NoSuchElementException;
 import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
-    private static final int INITIAL_CAPACITY = 16;
-    private static final double LOAD_FACTOR = 1.5;
-    private int increaseCapacity = 16;
+    private static final int INITIAL_CAPACITY = 10;
+    private static final double CAPACITY_INDEX = 1.5;
     private T[] table;
     private int size;
 
@@ -17,7 +16,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (size == increaseCapacity) {
+        if (size == table.length) {
             increaseArray();
         }
         table[size++] = value;
@@ -28,7 +27,7 @@ public class ArrayList<T> implements List<T> {
         if (index > size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("index " + index + "non exist");
         }
-        if (size == increaseCapacity) {
+        if (size == table.length) {
             increaseArray();
         }
         System.arraycopy(table, index, table, index + 1, size - index);
@@ -82,16 +81,15 @@ public class ArrayList<T> implements List<T> {
 
     @SuppressWarnings("unchecked")
     private void increaseArray() {
-        int capacity = (int) (increaseCapacity * LOAD_FACTOR);
+        int capacity = (int) (table.length * CAPACITY_INDEX);
         T[] currentArray = (T[]) new Object[capacity];
         System.arraycopy(table, 0, currentArray, 0, size);
         table = currentArray;
-        increaseCapacity = capacity;
     }
 
     private int findIndex(T element) {
         for (int i = 0; i < size; i++) {
-            if (Objects.equals(element, table[i])) {
+            if ((element == table[i] || (element != null && element.equals(table[i])))) {
                 return i;
             }
         }
