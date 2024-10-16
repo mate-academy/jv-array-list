@@ -49,12 +49,6 @@ public class ArrayList<T> implements List<T> {
         return table[index];
     }
 
-    private void checkIndex(int index) {
-        if (index < 0 || index > size - 1) {
-            throw new ArrayListIndexOutOfBoundsException("index " + index + "non exist");
-        }
-    }
-
     @Override
     public void set(T value, int index) {
         checkIndex(index);
@@ -76,15 +70,6 @@ public class ArrayList<T> implements List<T> {
         return remove(index);
     }
 
-    private int findIndex(T element) {
-        for (int i = 0; i < size; i++) {
-            if (Objects.equals(element, table[i])) {
-                return i;
-            }
-        }
-        throw new NoSuchElementException("There is no such element in the list, " + element);
-    }
-
     @Override
     public int size() {
         return size;
@@ -102,6 +87,21 @@ public class ArrayList<T> implements List<T> {
         System.arraycopy(table, 0, currentArray, 0, size);
         table = currentArray;
         increaseCapacity = capacity;
+    }
+
+    private int findIndex(T element) {
+        for (int i = 0; i < size; i++) {
+            if (Objects.equals(element, table[i])) {
+                return i;
+            }
+        }
+        throw new NoSuchElementException("There is no such element in the list, " + element);
+    }
+
+    private void checkIndex(int index) {
+        if (index < 0 || index > size - 1) {
+            throw new ArrayListIndexOutOfBoundsException("index " + index + "non exist");
+        }
     }
 }
 
