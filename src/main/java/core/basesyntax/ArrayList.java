@@ -1,29 +1,27 @@
 package core.basesyntax;
 
 import java.util.NoSuchElementException;
-import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
     private static final int GROWTH_FACTOR = 2;
     private static final int DEFAULT_CAPACITY = 10;
-    private static final int DEFAULT_SIZE = 0;
-    private int currentSize = DEFAULT_SIZE;
-    private Object[] elements = new Object[DEFAULT_CAPACITY];
+    private int size = 0;
+    private T[] elements = (T[]) new Object[DEFAULT_CAPACITY];
 
     @Override
     public void add(T value) {
         growArrayIfFull();
-        elements[currentSize] = value;
-        currentSize += 1;
+        elements[size] = value;
+        size ++;
     }
 
     @Override
     public void add(T value, int index) {
-        checkInRangeForAddition(index);
+        checkIndexForAddition(index);
         growArrayIfFull();
-        System.arraycopy(elements, index, elements, index + 1, currentSize - index);
+        System.arraycopy(elements, index, elements, index + 1, size - index);
         elements[index] = value;
-        currentSize += 1;
+        size ++;
     }
 
     @Override
@@ -35,32 +33,33 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        checkInRangeForGet(index);
-        return (T) (elements[index]);
+        checkIndex(index);
+        return elements[index];
     }
 
     @Override
     public void set(T value, int index) {
-        checkInRangeForGet(index);
+        checkIndex(index);
         elements[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        checkInRangeForGet(index);
-        Object temp = elements[index];
+        checkIndex(index);
+        T temp = elements[index];
 
-        if (index != currentSize - 1) {
-            System.arraycopy(elements, index + 1, elements, index, currentSize - index);
+        if (index != size - 1) {
+            System.arraycopy(elements, index + 1, elements, index, size - index);
         }
-        currentSize -= 1;
-        return (T) (temp);
+        size -= 1;
+        return temp;
     }
 
     @Override
     public T remove(T element) {
-        for (int i = 0; i < currentSize; i++) {
-            if (Objects.equals(elements[i], element)) {
+        for (int i = 0; i < size; i++) {
+            if (elements[i] == element || elements[i] != null
+                    && elements[i].equals(element)) {
                 return remove(i);
             }
         }
@@ -69,33 +68,33 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public int size() {
-        return currentSize;
+        return size;
     }
 
     @Override
     public boolean isEmpty() {
-        return currentSize == 0;
+        return size == 0;
     }
 
     private void growArrayIfFull() {
-        if (size() == elements.length) {
-            Object[] temp = new Object[elements.length + elements.length / GROWTH_FACTOR + 1];
+        if (size == elements.length) {
+            T[] temp = (T[]) new Object[elements.length + elements.length / GROWTH_FACTOR + 1];
             System.arraycopy(elements, 0, temp, 0, elements.length);
             elements = temp;
         }
     }
 
-    private void checkInRangeForGet(int index) {
-        if (index >= currentSize || index < 0) {
+    private void checkIndex(int index) {
+        if (index >= size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Invalid index: "
-                    + index + ", for Size: " + currentSize);
+                    + index + ", for Size: " + size);
         }
     }
 
-    private void checkInRangeForAddition(int index) {
-        if (index > currentSize || index < 0) {
+    private void checkIndexForAddition(int index) {
+        if (index > size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Invalid index: "
-                    + index + ", for Size: " + currentSize + 1);
+                    + index + ", for Size: " + size + 1);
         }
     }
 }
