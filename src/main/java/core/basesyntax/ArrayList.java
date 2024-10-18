@@ -12,7 +12,7 @@ public class ArrayList<T> implements List<T> {
     public void add(T value) {
         growArrayIfFull();
         elements[size] = value;
-        size ++;
+        size++;
     }
 
     @Override
@@ -21,7 +21,7 @@ public class ArrayList<T> implements List<T> {
         growArrayIfFull();
         System.arraycopy(elements, index, elements, index + 1, size - index);
         elements[index] = value;
-        size ++;
+        size++;
     }
 
     @Override
