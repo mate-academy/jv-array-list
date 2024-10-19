@@ -5,7 +5,7 @@ import java.util.NoSuchElementException;
 public class ArrayList<T> implements List<T> {
     private static final int GROWTH_FACTOR = 2;
     private static final int DEFAULT_CAPACITY = 10;
-    private int size = 0;
+    private int size;
     private T[] elements = (T[]) new Object[DEFAULT_CAPACITY];
 
     @Override
@@ -47,7 +47,6 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         checkIndex(index);
         T temp = elements[index];
-
         if (index != size - 1) {
             System.arraycopy(elements, index + 1, elements, index, size - index);
         }
@@ -63,7 +62,7 @@ public class ArrayList<T> implements List<T> {
                 return remove(i);
             }
         }
-        throw new NoSuchElementException("No such element present");
+        throw new NoSuchElementException("No such element present" + element);
     }
 
     @Override
