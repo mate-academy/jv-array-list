@@ -3,10 +3,14 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    private static final int GROWTH_FACTOR = 2;
+    private static final double GROWTH_FACTOR = 1.5;
     private static final int DEFAULT_CAPACITY = 10;
     private int size;
-    private T[] elements = (T[]) new Object[DEFAULT_CAPACITY];
+    private T[] elements;
+
+    public ArrayList() {
+        elements = (T[]) new Object[DEFAULT_CAPACITY];
+    }
 
     @Override
     public void add(T value) {
@@ -77,7 +81,8 @@ public class ArrayList<T> implements List<T> {
 
     private void growArrayIfFull() {
         if (size == elements.length) {
-            T[] temp = (T[]) new Object[elements.length + elements.length / GROWTH_FACTOR + 1];
+            int newCapacity = (int) (elements.length * GROWTH_FACTOR);
+            T[] temp = (T[]) new Object[newCapacity];
             System.arraycopy(elements, 0, temp, 0, elements.length);
             elements = temp;
         }
