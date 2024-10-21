@@ -4,15 +4,16 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
+    private static final double ARRAY_SCALE_FACTOR = 1.5;
     private int size;
-    private T[] elements;
+    private Object[] elements;
 
     public ArrayList(int capacity) {
-        this.elements = (T[])new Object[capacity];
+        this.elements = new Object[capacity];
     }
 
     public ArrayList() {
-        this.elements = (T[])new Object[DEFAULT_CAPACITY];
+        this.elements = new Object[DEFAULT_CAPACITY];
     }
 
     @Override
@@ -41,7 +42,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         ifIndexNotOutOfBonds(index, size() - 1);
-        return elements[index];
+        return (T) elements[index];
     }
 
     @Override
@@ -53,9 +54,10 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         ifIndexNotOutOfBonds(index, size() - 1);
-        increaseArraySizeIfFilled();
-        T removedElement = elements[index];
-        System.arraycopy(elements, index + 1, elements, index, size() - index);
+        T removedElement = (T) elements[index];
+        if (index < size() - 1) {
+            System.arraycopy(elements, index + 1, elements, index, size() - index);
+        }
         size--;
         return removedElement;
     }
@@ -67,7 +69,7 @@ public class ArrayList<T> implements List<T> {
                 return remove(i);
             }
         }
-        throw new NoSuchElementException();
+        throw new NoSuchElementException("No element " + element.toString() + " in the list");
     }
 
     @Override
@@ -82,7 +84,7 @@ public class ArrayList<T> implements List<T> {
 
     private void increaseArraySizeIfFilled() {
         if (size() == elements.length) {
-            T[] increasedArray = (T[])new Object[(int) (size * 1.5 + 1)];
+            Object[] increasedArray = new Object[(int) (size * ARRAY_SCALE_FACTOR + 1)];
             System.arraycopy(elements, 0, increasedArray, 0, size);
             elements = increasedArray;
         }
