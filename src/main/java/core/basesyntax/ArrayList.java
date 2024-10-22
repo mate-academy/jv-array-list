@@ -9,7 +9,6 @@ public class ArrayList<T> implements List<T> {
     private int size;
 
     public ArrayList() {
-        this.size = 0;
         elements = (T[]) new Object[CAPACITY];
     }
 
@@ -86,12 +85,8 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private int calculateNewCapacity() {
-        return (int) (elements.length * COEFFICIENT);
-    }
-
     private void grow() {
-        T[] newCapacityArray = (T[]) new Object[calculateNewCapacity()];
+        T[] newCapacityArray = (T[]) new Object[(int)(elements.length * COEFFICIENT)];
         System.arraycopy(elements, 0, newCapacityArray,
                 0, elements.length);
         elements = newCapacityArray;
