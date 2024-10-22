@@ -1,16 +1,15 @@
 package core.basesyntax;
 
 import java.util.NoSuchElementException;
-import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
     public static final int INITIAL_CAPACITY = 10;
 
-    private Object[] values;
+    private T[] values;
     private int size;
 
     public ArrayList() {
-        values = new Object[INITIAL_CAPACITY];
+        values = (T[]) new Object[INITIAL_CAPACITY];
     }
 
     @Override
@@ -30,9 +29,7 @@ public class ArrayList<T> implements List<T> {
         if (size == values.length) {
             grow();
         }
-        for (int i = size; i > index; i--) {
-            values[i] = values[i - 1];
-        }
+        System.arraycopy(values, index, values, index + 1, size - index);
         size++;
         values[index] = value;
     }
@@ -46,31 +43,28 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        checkOutOfBounds(index);
+        checkIndex(index);
         return (T) values[index];
     }
 
     @Override
     public void set(T value, int index) {
-        checkOutOfBounds(index);
+        checkIndex(index);
         values[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        checkOutOfBounds(index);
-        T el = (T) values[index];
-        for (int i = index; i < size - 1; i++) {
-            values[i] = values[i + 1];
-        }
-        size--;
-        return el;
+        checkIndex(index);
+        T element = (T) values[index];
+        System.arraycopy(values, index + 1, values, index, --size - index);
+        return element;
     }
 
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if (Objects.equals(element, values[i])) {
+            if (checkEquals(element, values[i])) {
                 return remove(i);
             }
         }
@@ -88,17 +82,20 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void grow() {
-        Object[] newValues = new Object[size + size / 2];
-        for (int i = 0; i < size; i++) {
-            newValues[i] = values[i];
-        }
+        T[] newValues = (T[]) new Object[size + size / 2];
+        System.arraycopy(values, 0, newValues, 0, size);
         values = newValues;
     }
 
-    private void checkOutOfBounds(int index) {
+    private void checkIndex(int index) {
         if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException("Index " + index
                     + " is out of bounds for list with size " + size);
         }
+    }
+
+    private boolean checkEquals(Object obj1, Object obj2) {
+        return obj1 == obj2
+                || (obj1 != null && obj1.equals(obj2));
     }
 }
