@@ -25,7 +25,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        ifIndexNotOutOfBonds(index, size());
+        checkIfIndexOutOfBonds(index, size);
         increaseArraySizeIfFilled();
         System.arraycopy(elements, index, elements, index + 1, size - index);
         elements[index] = value;
@@ -41,22 +41,24 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        ifIndexNotOutOfBonds(index, size() - 1);
+        checkIfIndexOutOfBonds(index, size - 1);
         return (T) elements[index];
     }
 
     @Override
     public void set(T value, int index) {
-        ifIndexNotOutOfBonds(index, size() - 1);
+        checkIfIndexOutOfBonds(index, size - 1);
         elements[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        ifIndexNotOutOfBonds(index, size() - 1);
+        checkIfIndexOutOfBonds(index, size - 1);
         T removedElement = (T) elements[index];
-        if (index < size() - 1) {
-            System.arraycopy(elements, index + 1, elements, index, size() - index);
+        if (index < size - 1) {
+            System.arraycopy(elements, index + 1, elements, index, size - index);
+        } else {
+            elements[index] = null;
         }
         size--;
         return removedElement;
@@ -64,9 +66,10 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        for (int i = 0; i < size; i++) {
-            if (elements[i] != null && elements[i].equals(element) || elements[i] == element) {
-                return remove(i);
+        for (int index = 0; index < size; index++) {
+            if (elements[index] != null && elements[index].equals(element)
+                    || elements[index] == element) {
+                return remove(index);
             }
         }
         throw new NoSuchElementException("No element " + element.toString() + " in the list");
@@ -83,14 +86,14 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void increaseArraySizeIfFilled() {
-        if (size() == elements.length) {
+        if (size == elements.length) {
             Object[] increasedArray = new Object[(int) (size * ARRAY_SCALE_FACTOR + 1)];
             System.arraycopy(elements, 0, increasedArray, 0, size);
             elements = increasedArray;
         }
     }
 
-    private void ifIndexNotOutOfBonds(int index, int size) {
+    private void checkIfIndexOutOfBonds(int index, int size) {
         if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException("Index is out of acceptable range");
         }
