@@ -1,5 +1,7 @@
 package core.basesyntax;
 
+import java.util.NoSuchElementException;
+
 public class ArrayList<T> implements MyList<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private static final double MULTIPLIER = 1.5;
@@ -17,8 +19,6 @@ public class ArrayList<T> implements MyList<T> {
 
     @Override
     public boolean add(T value) {
-        int indexOfValue = indexOf(value);
-        validateIndexForAdd(indexOfValue);
         increaseCapacityIfFull();
         elements[size++] = (T) value;
         return true;
@@ -38,8 +38,8 @@ public class ArrayList<T> implements MyList<T> {
         while (size + list.size() > elements.length) {
             grow();
         }
-        for (int i = 0; i < size; i++) {
-            add(get(i));
+        for (int i = 0; i < list.size(); i++) {
+            add(list.get(i)); // Додаємо елементи з переданого списку
         }
     }
 
@@ -60,7 +60,7 @@ public class ArrayList<T> implements MyList<T> {
         validateIndex(index);
         T oldValue = (T) elements[index];
         System.arraycopy(elements,index + 1, elements, index, size - index - 1);
-        elements[size--] = null;
+        elements[--size] = null;
         return oldValue;
     }
 
@@ -72,7 +72,7 @@ public class ArrayList<T> implements MyList<T> {
         } else {
             System.arraycopy(elements, indexOfElement + 1, elements, indexOfElement,
                     size - indexOfElement - 1);
-            elements[size--] = null;
+            elements[--size] = null;
             return (T) element;
         }
     }
@@ -106,9 +106,9 @@ public class ArrayList<T> implements MyList<T> {
     }
 
     public void grow() {
-        int newCapasity = (int) (elements.length * MULTIPLIER);
+        int newCapacity = (int) (elements.length * MULTIPLIER);
         @SuppressWarnings("unchecked")
-        T[] newArray = (T[]) new Object[newCapasity];
+        T[] newArray = (T[]) new Object[newCapacity];
         System.arraycopy(elements, 0, newArray, 0, size());
         elements = newArray;
     }
@@ -116,7 +116,9 @@ public class ArrayList<T> implements MyList<T> {
     public int indexOf(Object o) {
         if (o == null) {
             for (int i = 0; i < size; i++) {
-                return i;
+                if (elements[i] == null) {
+                    return i;
+                }
             }
         } else {
             for (int i = 0; i < size; i++) {
@@ -125,6 +127,6 @@ public class ArrayList<T> implements MyList<T> {
                 }
             }
         }
-        throw new ArrayListIndexOutOfBoundsException(MESSAGE_OUT_OF_BOUNDS);
+        return -1;
     }
 }
