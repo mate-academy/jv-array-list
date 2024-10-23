@@ -18,6 +18,12 @@ public class ArrayList<T> implements List<T> {
         elements = Arrays.copyOf(elements, newCapacity);
     }
 
+    public void checkIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Invalid index");
+        }
+    }
+
     private void growTo(int minCapacity) {
         int newCapacity = elements.length;
         while (newCapacity < minCapacity) {
@@ -67,9 +73,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index");
-        }
+        checkIndex(index);
         if (elements[index] != null) {
             return elements[index];
         }
@@ -78,17 +82,13 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void set(T value, int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index");
-        }
+        checkIndex(index);
         elements[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index");
-        }
+        checkIndex(index);
         T removedElement = elements[index];
         for (int i = index; i < size - 1; i++) {
             elements[i] = elements[i + 1];
