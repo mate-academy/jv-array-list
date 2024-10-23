@@ -1,11 +1,11 @@
 package core.basesyntax;
 
-public interface List<T> {
-    void add(T value);
+public interface MyList<T> {
+    boolean add(T value);
 
     void add(T value, int index);
 
-    void addAll(List<T> list);
+    void addAll(MyList<T> list);
 
     T get(int index);
 
@@ -13,7 +13,7 @@ public interface List<T> {
 
     T remove(int index);
 
-    T remove(T element);
+    T remove(Object element);
 
     int size();
 
