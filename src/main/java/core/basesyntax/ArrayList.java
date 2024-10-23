@@ -84,10 +84,7 @@ public class ArrayList<T> implements MyList<T> {
 
     @Override
     public boolean isEmpty() {
-        if (size == 0) {
-            return false;
-        }
-        return true;
+        return size == 0;
     }
 
     public void validateIndex(int index) {
