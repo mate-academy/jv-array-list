@@ -4,6 +4,7 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     public static final int INITIAL_CAPACITY = 10;
+    public static final double CAPACITY_INDEX = 1.5;
 
     private T[] values;
     private int size;
@@ -64,7 +65,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if (checkEquals(element, values[i])) {
+            if (element == values[i] || (element != null && element.equals(values[i]))) {
                 return remove(i);
             }
         }
@@ -82,7 +83,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void grow() {
-        T[] newValues = (T[]) new Object[size + size / 2];
+        T[] newValues = (T[]) new Object[(int) (size * CAPACITY_INDEX)];
         System.arraycopy(values, 0, newValues, 0, size);
         values = newValues;
     }
@@ -92,10 +93,5 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayListIndexOutOfBoundsException("Index " + index
                     + " is out of bounds for list with size " + size);
         }
-    }
-
-    private boolean checkEquals(Object obj1, Object obj2) {
-        return obj1 == obj2
-                || (obj1 != null && obj1.equals(obj2));
     }
 }
