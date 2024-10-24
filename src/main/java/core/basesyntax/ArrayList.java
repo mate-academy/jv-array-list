@@ -18,14 +18,14 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         if (index >= 0 && index <= size) {
+            if (size + 1 > innerArray.length) {
+                grow();
+            }
             T[] arr = (T[]) new Object[size - index];
             if (size > index) {
                 System.arraycopy(innerArray, index, arr, 0, size - index);
             }
             innerArray[index] = value;
-            if (size + 1 > innerArray.length) {
-                grow();
-            }
             System.arraycopy(arr, 0, innerArray, index + 1, size - index);
             size++;
         } else {
@@ -75,7 +75,7 @@ public class ArrayList<T> implements List<T> {
         if (index >= 0) {
             return remove(index);
         } else {
-            throw new NoSuchElementException("Index: " + size + ", Size: " + size);
+            throw new NoSuchElementException("Element: " + element + " not found");
         }
     }
 
@@ -90,7 +90,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void grow() {
-        T[] arr = (T[]) new Object[(int) (innerArray.length * 1.5)];
+        T[] arr = (T[]) new Object[innerArray.length * 2];
         System.arraycopy(innerArray, 0, arr, 0, innerArray.length);
         innerArray = arr;
     }
