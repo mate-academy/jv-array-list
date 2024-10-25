@@ -18,15 +18,14 @@ public class ArrayList<T> implements List<T> {
     }
 
     @Override
-    public boolean add(T value) {
+    public void add(T value) {
         increaseCapacityIfFull();
         elements[size++] = (T) value;
-        return true;
     }
 
     @Override
     public void add(T value, int index) {
-        validateIndexForAdd(index);
+        validateIndex(index, size + 1);
         increaseCapacityIfFull();
         System.arraycopy(elements, index, elements, index + 1, size - index);
         elements[index] = value;
@@ -45,19 +44,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        validateIndex(index);
+        validateIndex(index, size);
         return (T) elements[index];
     }
 
     @Override
     public void set(T value, int index) {
-        validateIndex(index);
+        validateIndex(index, size);
         elements[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        validateIndex(index);
+        validateIndex(index, size);
         T oldValue = (T) elements[index];
         System.arraycopy(elements,index + 1, elements, index, size - index - 1);
         elements[--size] = null;
@@ -66,14 +65,13 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        int indexOfElement = indexOf(element);
-        if (indexOfElement == -1) {
-            throw new NoSuchElementException(MESSAGE_NO_ELEMENT);
+        for (int i = 0; i < size; i++) {
+            if (element == null && elements[i] == element
+                    || elements[i] != null && elements[i].equals(element)) {
+                return remove(i);
+            }
         }
-        System.arraycopy(elements, indexOfElement + 1, elements, indexOfElement,
-                    size - indexOfElement - 1);
-        elements[--size] = null;
-        return (T) element;
+        throw new NoSuchElementException(MESSAGE_NO_ELEMENT);
     }
 
     @Override
@@ -86,14 +84,8 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    public void validateIndex(int index) {
+    public void validateIndex(int index, int size) {
         if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException(MESSAGE_OUT_OF_BOUNDS + index);
-        }
-    }
-
-    public void validateIndexForAdd(int index) {
-        if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException(MESSAGE_OUT_OF_BOUNDS + index);
         }
     }
@@ -110,16 +102,5 @@ public class ArrayList<T> implements List<T> {
         T[] newArray = (T[]) new Object[newCapacity];
         System.arraycopy(elements, 0, newArray, 0, size());
         elements = newArray;
-    }
-
-    public int indexOf(Object o) {
-        for (int i = 0; i < size; i++) {
-            if (o == null && elements[i] == null) {
-                return i;
-            } else if (o != null && o.equals(elements[i])) {
-                return i;
-            }
-        }
-        return -1;
     }
 }

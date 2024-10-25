@@ -1,7 +1,7 @@
 package core.basesyntax;
 
 public interface List<T> {
-    boolean add(T value);
+    void add(T value);
 
     void add(T value, int index);
 
