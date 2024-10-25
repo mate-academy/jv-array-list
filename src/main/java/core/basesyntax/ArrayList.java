@@ -2,7 +2,7 @@ package core.basesyntax;
 
 import java.util.NoSuchElementException;
 
-public class ArrayList<T> implements MyList<T> {
+public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private static final double MULTIPLIER = 1.5;
     private static final String MESSAGE_OUT_OF_BOUNDS = "The index passed to any of "
@@ -10,7 +10,7 @@ public class ArrayList<T> implements MyList<T> {
     private static final String MESSAGE_NO_ELEMENT = "There is no such element";
 
     private T[] elements;
-    private int size = 0;
+    private int size;
 
     @SuppressWarnings("unchecked")
     public ArrayList() {
@@ -34,12 +34,12 @@ public class ArrayList<T> implements MyList<T> {
     }
 
     @Override
-    public void addAll(MyList<T> list) {
-        while (size + list.size() > elements.length) {
+    public void addAll(List<T> list) {
+        if (size + list.size() > elements.length) {
             grow();
         }
         for (int i = 0; i < list.size(); i++) {
-            add(list.get(i)); // Додаємо елементи з переданого списку
+            add(list.get(i));
         }
     }
 
@@ -65,16 +65,15 @@ public class ArrayList<T> implements MyList<T> {
     }
 
     @Override
-    public T remove(Object element) {
+    public T remove(T element) {
         int indexOfElement = indexOf(element);
         if (indexOfElement == -1) {
             throw new NoSuchElementException(MESSAGE_NO_ELEMENT);
-        } else {
-            System.arraycopy(elements, indexOfElement + 1, elements, indexOfElement,
-                    size - indexOfElement - 1);
-            elements[--size] = null;
-            return (T) element;
         }
+        System.arraycopy(elements, indexOfElement + 1, elements, indexOfElement,
+                    size - indexOfElement - 1);
+        elements[--size] = null;
+        return (T) element;
     }
 
     @Override
@@ -114,17 +113,11 @@ public class ArrayList<T> implements MyList<T> {
     }
 
     public int indexOf(Object o) {
-        if (o == null) {
-            for (int i = 0; i < size; i++) {
-                if (elements[i] == null) {
-                    return i;
-                }
-            }
-        } else {
-            for (int i = 0; i < size; i++) {
-                if (o.equals(elements[i])) {
-                    return i;
-                }
+        for (int i = 0; i < size; i++) {
+            if (o == null && elements[i] == null) {
+                return i;
+            } else if (o != null && o.equals(elements[i])) {
+                return i;
             }
         }
         return -1;
