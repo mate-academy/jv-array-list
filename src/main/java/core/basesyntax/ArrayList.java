@@ -7,7 +7,7 @@ public class ArrayList<T> implements List<T> {
     private static final double MULTIPLIER = 1.5;
     private static final String MESSAGE_OUT_OF_BOUNDS = "The index passed to any of "
             + "the methods is invalid";
-    private static final String MESSAGE_NO_ELEMENT = "There is no such element";
+    private static final String MESSAGE_NO_ELEMENT = "There is no such element.";
 
     private T[] elements;
     private int size;
