@@ -15,7 +15,7 @@ public class ArrayList<T> implements List<T> {
             elementData[size] = value;
             size++;
         } else {
-            elementData = Arrays.copyOf(elementData, grow(elementData.length));
+            elementData = Arrays.copyOf(elementData, newSize(elementData.length));
             elementData[size] = value;
             size++;
         }
@@ -23,12 +23,12 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index < 0 || index > size) {
+        if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException("Index is out of ArrayList length");
         }
 
         if (size == elementData.length) {
-            elementData = Arrays.copyOf(elementData, grow(elementData.length));
+            elementData = Arrays.copyOf(elementData, newSize(elementData.length));
         }
 
         if (index == size) {
@@ -110,7 +110,8 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    public int grow(int size) {
-        return (int) (size * 1.5);
+    public int newSize(int size) {
+        int newSize = (int) (size * 1.5);
+        return newSize > size ? newSize : size + 1;
     }
 }
