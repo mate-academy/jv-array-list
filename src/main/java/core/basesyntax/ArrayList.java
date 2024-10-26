@@ -31,6 +31,9 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
+        if (list == null) {
+            throw new NullPointerException("The list to be added cannot be null.");
+        }
         for (int i = 0; i < list.size(); i++) {
             add(list.get(i));
         }
