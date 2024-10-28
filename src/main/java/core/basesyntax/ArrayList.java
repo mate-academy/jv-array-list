@@ -26,11 +26,7 @@ public class ArrayList<T> implements List<T> {
         if (size == elementData.length) {
             growIfArrayFull();
         }
-        if (elementData[index] != null) {
-            divideAndSetNewValue(value, index);
-        } else if (elementData[index] == null) {
-            elementData[index] = value;
-        }
+        divideAndSetNewValue(value, index);
         size++;
     }
 
@@ -130,14 +126,9 @@ public class ArrayList<T> implements List<T> {
 
     private T divideAndRemoveValue(int index) {
         T oldValue = (T) elementData[index];
-        if (index == size) {
-            System.arraycopy(elementData, 0, elementData, 0, size);
-        } else {
-            System.arraycopy(elementData, index + 1,
-                    elementData, index,
-                    size - index - 1);
-        }
+        System.arraycopy(elementData, index + 1,
+                elementData, index,
+                size - index - 1);
         return oldValue;
-
     }
 }
