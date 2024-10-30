@@ -70,19 +70,14 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         int elementIndex;
-        for (int i = 0; i < elementData.length; i++) {
+        for (int i = 0; i < size; i++) {
             if ((elementData[i] != null && elementData[i].equals(element))
                     || elementData[i] == element) {
                 elementIndex = i;
-                size--;
-                T oldValue = elementData[elementIndex];
-                System.arraycopy(elementData, elementIndex + 1,
-                        elementData, elementIndex,
-                        size - elementIndex - 1);
-                return oldValue;
+                return remove(elementIndex);
             }
         }
-        throw new NoSuchElementException();
+        throw new NoSuchElementException("Element " + element + " does not exist");
     }
 
     @Override
@@ -95,13 +90,13 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void checkIndexToAdd(int index) throws ArrayListIndexOutOfBoundsException {
+    private void checkIndexToAdd(int index) {
         if (index > size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Index " + index + " is not valid");
         }
     }
 
-    private void checkIndex(int index) throws ArrayListIndexOutOfBoundsException {
+    private void checkIndex(int index) {
         if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException("Index " + index + " is not valid");
         }
