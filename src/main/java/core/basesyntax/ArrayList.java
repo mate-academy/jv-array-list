@@ -120,4 +120,5 @@ public class ArrayList<T> implements List<T> {
         System.arraycopy(elementData, 0, newArray, 0, size);
         elementData = newArray;
     }
+    // p
 }
