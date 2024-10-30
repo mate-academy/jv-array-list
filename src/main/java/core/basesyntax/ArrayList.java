@@ -98,9 +98,7 @@ public class ArrayList<T> implements List<T> {
         int oldCapacity = items.length;
         int newCapacity = oldCapacity + (oldCapacity >> 1);
         T[] newItems = (T[]) new Object[newCapacity];
-        for (int i = 0; i < items.length; i++) {
-            newItems[i] = items[i];
-        }
+        System.arraycopy(items, 0, newItems, 0, size);
         return newItems;
     }
 }
