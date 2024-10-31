@@ -14,14 +14,14 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        resize(size + 1);
+        resizeIfNeeded(size + 1);
         elementData[size++] = value;
     }
 
     @Override
     public void add(T value, int index) {
-        checkIndexForAdd(index);
-        resize(size + 1);
+        checkIndex(index, size + 1);
+        resizeIfNeeded(size + 1);
         System.arraycopy(elementData, index, elementData, index + 1, size - index);
         elementData[index] = value;
         size++;
@@ -31,7 +31,7 @@ public class ArrayList<T> implements List<T> {
     public void addAll(List<T> list) {
         int requiredCapacity = size + list.size();
 
-        resize(requiredCapacity);
+        resizeIfNeeded(requiredCapacity);
         for (int i = 0; i < list.size(); i++) {
             elementData[size++] = list.get(i);
         }
@@ -39,19 +39,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        checkIndex(index);
+        checkIndex(index, size);
         return elementData[index];
     }
 
     @Override
     public void set(T value, int index) {
-        checkIndex(index);
+        checkIndex(index, size);
         elementData[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        checkIndex(index);
+        checkIndex(index, size);
         T removedElement = elementData[index];
         System.arraycopy(elementData, index + 1, elementData, index, size - index - 1);
         elementData[--size] = null;
@@ -63,7 +63,6 @@ public class ArrayList<T> implements List<T> {
         for (int i = 0; i < size; i++) {
             if (elementData[i] == element
                     || elementData[i] != null && elementData[i].equals(element)) {
-                int index = i;
                 T removedElement = elementData[i];
                 remove(i);
                 return removedElement;
@@ -82,19 +81,13 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void checkIndex(int index) {
+    private void checkIndex(int index, int size) {
         if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException(INDEX_OUT_OF_BOUND + index);
         }
     }
 
-    private void checkIndexForAdd(int index) {
-        if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException(INDEX_OUT_OF_BOUND + index);
-        }
-    }
-
-    private void resize(int requiredCapacity) {
+    private void resizeIfNeeded(int requiredCapacity) {
         if (elementData.length < requiredCapacity) {
             int newCapacity = elementData.length + (elementData.length >> 1);
             newCapacity = Math.max(newCapacity, requiredCapacity);
