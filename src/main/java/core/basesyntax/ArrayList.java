@@ -1,6 +1,6 @@
 package core.basesyntax;
 
-import java.util.Arrays;
+import java.util.NoSuchElementException;
 import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
@@ -25,16 +25,18 @@ public class ArrayList<T> implements List<T> {
         if (size == capacity) {
             resize();
         }
-        System.arraycopy(arr, index, arr, index + 1, size - index);
+        // Вставка сдвигом элементов вправо
+        for (int i = size; i > index; i--) {
+            arr[i] = arr[i - 1];
+        }
         arr[index] = value;
         size++;
     }
 
     @Override
     public void addAll(List<T> list) {
-        if (list.size() + size > capacity) {
-            capacity = Math.max(capacity * 3 / 2 + 1, size + list.size());
-            arr = Arrays.copyOf(arr, capacity);
+        while (size + list.size() > capacity) {
+            resize();
         }
         for (int i = 0; i < list.size(); i++) {
             arr[size++] = list.get(i);
@@ -63,7 +65,10 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayListIndexOutOfBoundsException("Incorrect index");
         }
         T removedElement = (T) arr[index];
-        System.arraycopy(arr, index + 1, arr, index, size - index - 1);
+        // Сдвиг элементов влево для удаления
+        for (int i = index; i < size - 1; i++) {
+            arr[i] = arr[i + 1];
+        }
         arr[--size] = null;
         return removedElement;
     }
@@ -75,7 +80,7 @@ public class ArrayList<T> implements List<T> {
                 return remove(i);
             }
         }
-        return null;
+        throw new NoSuchElementException("Element not found");
     }
 
     @Override
@@ -98,6 +103,11 @@ public class ArrayList<T> implements List<T> {
 
     private void resize() {
         capacity = capacity * 3 / 2 + 1;
-        arr = Arrays.copyOf(arr, capacity);
+        Object[] newArr = new Object[capacity];
+        // Копируем элементы вручную
+        for (int i = 0; i < size; i++) {
+            newArr[i] = arr[i];
+        }
+        arr = newArr;
     }
 }
