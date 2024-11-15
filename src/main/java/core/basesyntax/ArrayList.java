@@ -11,6 +11,7 @@ public class ArrayList<T> implements List<T> {
     public ArrayList() {
         array = (T[]) new Object[DEFAULT_SIZE];
     }
+
     @Override
     public void add(T value) {
         increaseSize();
