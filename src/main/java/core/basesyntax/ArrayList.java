@@ -1,8 +1,6 @@
 package core.basesyntax;
 
-import java.util.Arrays;
 import java.util.NoSuchElementException;
-import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_SIZE = 10;
@@ -58,14 +56,9 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        for (int i = 0; i < array.length; i++) {
-            if (Objects.equals(array[i], element)) {
-                T removedElement = array[i];
-                for (int j = i + 1; j < size; j++) {
-                    array[j - 1] = array[j];
-                }
-                array[size--] = null;
-                return removedElement;
+        for (int i = 0; i < size; i++) {
+            if (equal(element, array[i])) {
+                return remove(i);
             }
         }
         throw new NoSuchElementException();
@@ -83,8 +76,9 @@ public class ArrayList<T> implements List<T> {
 
     private void increaseSize() {
         if (array.length == size) {
-            int newCapacity = (int) (array.length * SIZE_MULTIPLIER);
-            array = Arrays.copyOf(array, newCapacity);
+            T[] temp = array;
+            array = (T[]) new Object[(int)(size * SIZE_MULTIPLIER)];
+            System.arraycopy(temp, 0, array, 0, size);
         }
     }
 
@@ -100,5 +94,9 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayListIndexOutOfBoundsException("Invalid index value: "
                 + index + ", list size: " + size);
         }
+    }
+
+    private boolean equal(T a, T b) {
+        return a == b || a != null && a.equals(b);
     }
 }
