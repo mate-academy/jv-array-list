@@ -84,7 +84,7 @@ public class ArrayList<T> implements List<T> {
     private void increaseSize() {
         if (array.length == size) {
             int newCapacity = (int) (array.length * SIZE_MULTIPLIER);
-            array = Arrays.copyOf(array, newCapacity)
+            array = Arrays.copyOf(array, newCapacity);
         }
     }
 
