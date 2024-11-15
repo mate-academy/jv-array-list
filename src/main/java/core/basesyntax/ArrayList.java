@@ -14,7 +14,7 @@ public class ArrayList<T> implements List<T> {
 
     public void checkCapacity() {
         if (size == elementData.length) {
-            int newSize = (Integer) elementData.length * 3 / 2;
+            int newSize =  elementData.length * 3 / 2;
             Object[] newArray = new Object[newSize];
             System.arraycopy(elementData, 0, newArray, 0, size);
             elementData = newArray;
