@@ -1,6 +1,5 @@
 package core.basesyntax;
 
-import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
@@ -18,7 +17,15 @@ public class ArrayList<T> implements List<T> {
 
     private void resize() {
         capacity = (int) (capacity * 1.5);
-        elements = Arrays.copyOf(elements, capacity);
+        Object[] elementsResized = new Object[capacity];
+        System.arraycopy(elements, 0, elementsResized, 0, elements.length);
+        elements = elementsResized;
+    }
+
+    private void checkIfIndexMoreOrEqualSize(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("The index " + index + " is unavailable");
+        }
     }
 
     @Override
@@ -63,25 +70,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("The index " + index + " is unavailable");
-        }
+        checkIfIndexMoreOrEqualSize(index);
         return (T) elements[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("The index " + index + " is unavailable");
-        }
+        checkIfIndexMoreOrEqualSize(index);
         elements[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("The index " + index + " is unavailable");
-        }
+        checkIfIndexMoreOrEqualSize(index);
         final T removedElement = (T) elements[index];
         for (int i = index; i < size - 1; i++) {
             elements[i] = elements[i + 1];
