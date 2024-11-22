@@ -167,7 +167,6 @@ public class ArrayList<T> implements List<T> {
         }
         return -1;
     }
-
     @Override
     public int lastIndexOf(Object o) {
         return 0;
