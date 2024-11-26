@@ -36,10 +36,6 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        int newSize = size + list.size();
-        if (newSize > elementData.length) {
-            grow();
-        }
         for (int i = 0; i < list.size(); i++) {
             add(list.get(i));
         }
@@ -47,19 +43,14 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index >= 0 && index < size) {
-            return elementData[index];
-        }
-        throw new ArrayListIndexOutOfBoundsException("Index: " + index + ", is invalid ");
+        checkIndex(index);
+        return elementData[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index >= 0 && index < size) {
-            elementData[index] = value;
-        } else {
-            throw new ArrayListIndexOutOfBoundsException("Index: " + index + ", is invalid ");
-        }
+        checkIndex(index);
+        elementData[index] = value;
     }
 
     @Override
@@ -76,10 +67,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < elementData.length; i++) {
-            if (elementData[i] == null && element == null) {
-                return remove(i);
-            }
-            if (elementData[i] != null && elementData[i].equals(element)) {
+            if ((elementData[i] == null && element == null)
+                    || (elementData[i] != null && elementData[i].equals(element))) {
                 return remove(i);
             }
         }
@@ -101,5 +90,11 @@ public class ArrayList<T> implements List<T> {
         T[] newElementData = (T[]) new Object[newCapacity];
         System.arraycopy(elementData, 0, newElementData, 0, size);
         elementData = newElementData;
+    }
+
+    private void checkIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Index: " + index + ", is invalid ");
+        }
     }
 }
