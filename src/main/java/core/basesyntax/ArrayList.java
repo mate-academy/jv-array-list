@@ -35,7 +35,7 @@ public class ArrayList<T> implements List<T> {
         return elementData;
     }
 
-    public void checkIfElementExsist(T element) {
+    public void checkIfElementExists(T element) {
         boolean found = false;
 
         // Перебираємо елементи масиву
@@ -103,7 +103,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        checkIfElementExsist(element);
+        checkIfElementExists(element);
         for (int i = 0; i < size; i++) {
             if ((element == null && elementData[i] == null)
                     || (element != null && element.equals(elementData[i]))) {
@@ -129,7 +129,7 @@ public class ArrayList<T> implements List<T> {
         StringBuilder sb = new StringBuilder();
         sb.append("[");
 
-        for (int i = 0; i < elementData.length; i++) {
+        for (int i = 0; i < size; i++) {
             if (elementData[i] == null) {
                 return sb.append("]").toString();
             }
