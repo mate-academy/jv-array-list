@@ -21,7 +21,7 @@ public class ArrayList<T> implements List<T> {
     public void add(T value, int index) {
         checkIndexforAdd(index);
         count++;
-        Object[] newArray = new Object[MAX_CAPACITY];
+        Object[] newArray = new Object[elements.length + 1];
         if (count > MAX_CAPACITY) {
              newArray = grow();
 
@@ -37,13 +37,14 @@ public class ArrayList<T> implements List<T> {
             newArray[i] = elements[i - 1];
         }
         elements = newArray;
-        elements[index] = value;
-
 
     }
 
     @Override
     public void addAll(List<T> list) {
+        if (count > elements.length) {
+            elements = grow();
+        }
         for (int i = 0; i < elements.length; i++) {
             elements[i] = list.get(i);
         }
@@ -87,9 +88,9 @@ public class ArrayList<T> implements List<T> {
         Object[] newArray1 = new Object[elements.length - 1];
         int a = 0;
         int thisExist = 0;
-        for (int i = 0; i < newArray1.length; i++) {
-            if (newArray1[i] == element || (element != null
-            && element.equals(newArray1[i]))) {
+        for (int i = 0; i < elements.length; i++) {
+            if (elements[i] == element || (element != null
+            && element.equals(elements[i]))) {
                 a = i;
                 result = element;
                 thisExist++;
@@ -124,14 +125,14 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void checkIndexforAdd(int index) {
-        if (index < 0 || index >= count) {
+        if (index < 0 || index > count) {
             throw new ArrayListIndexOutOfBoundsException("Incorrect index: " + index);
         }
 
     }
 
     private void checkIndex(int index) {
-        if (index < 0 || index > count) {
+        if (index < 0 || index >= count) {
             throw new ArrayListIndexOutOfBoundsException("Incorrect index: " + index);
         }
     }
