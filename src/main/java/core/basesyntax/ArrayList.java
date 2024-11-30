@@ -14,7 +14,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value) {
         if (size == array.length) {
-            T[] newArray = (T[]) new Object[array.length + (array.length / 2)]; // Збільшуємо розмір на 50%
+            T[] newArray = (T[]) new Object[array.length + (array.length / 2)];
             for (int i = 0; i < size; i++) {
                 newArray[i] = array[i]; // Копіюємо елементи в новий масив
             }
@@ -50,8 +50,8 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        if (size + list.size() > array.length) { // Якщо розмір нового списку більший за поточний масив
-            T[] newArray = (T[]) new Object[size + list.size() + (array.length / 2)];  // Збільшуємо розмір масиву
+        if (size + list.size() > array.length) {
+            T[] newArray = (T[]) new Object[size + list.size() + (array.length / 2)];
             for (int i = 0; i < size; i++) {
                 newArray[i] = array[i]; // Копіюємо елементи в новий масив
             }
@@ -84,10 +84,10 @@ public class ArrayList<T> implements List<T> {
         if (index < 0 || index >= size) { // Перевірка на валідність індексу
             throw new ArrayListIndexOutOfBoundsException("Index " + index + " out of bounds");
         }
-        T removedValue = array[index];
         for (int i = index; i < size - 1; i++) {
             array[i] = array[i + 1];
         }
+        T removedValue = array[index];
         array[size - 1] = null; // Очищаємо останній елемент
         size--; // Зменшуємо розмір списку
         return removedValue; // Повертаємо видалений елемент
