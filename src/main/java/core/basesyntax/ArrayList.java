@@ -105,7 +105,7 @@ public class ArrayList<T> implements List<T> {
 
     private int indexOf(T element) {
         for (int i = 0; i < size; i++) {
-            if (array[i] != null && array[i].equals(element)) {
+            if (element == null && array[i] == null || element != null && element.equals(array[i])) {
                 return i;
             }
         }
