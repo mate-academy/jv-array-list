@@ -102,6 +102,7 @@ public class ArrayList<T> implements List<T> {
         return removedValue;
     }
 
+
     private int indexOf(T element) {
         for (int i = 0; i < size; i++) {
             if (array[i] != null && array[i].equals(element)) {
@@ -110,8 +111,6 @@ public class ArrayList<T> implements List<T> {
         }
         return -1;
     }
-
-
 
     @Override
     public int size() {
