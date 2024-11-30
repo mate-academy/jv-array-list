@@ -4,8 +4,8 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int INITIAL_CAPACITY = 10;
-    private T[] array;
-    private int size = 0;
+    public T[] array;
+    public int size = 0;
 
     public ArrayList() {
         array = (T[]) new Object[INITIAL_CAPACITY];
@@ -80,9 +80,10 @@ public class ArrayList<T> implements List<T> {
     }
 
     @Override
-    public T remove(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index " + index + " out of bounds");
+    public T remove(T element) {
+        int index = indexOf(element);
+        if (index == -1) {
+            throw new NoSuchElementException("Element not found: " + element);
         }
         for (int i = index; i < size - 1; i++) {
             array[i] = array[i + 1];
@@ -94,12 +95,17 @@ public class ArrayList<T> implements List<T> {
     }
 
     @Override
-    public T remove(T element) {
-        int index = indexOf(element);
-        if (index == -1) {
-            throw new NoSuchElementException("Element not found: " + element);
+    public T remove(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Index " + index + " out of bounds");
         }
-        return remove(index);
+        for (int i = index; i < size - 1; i++) {
+            array[i] = array[i + 1];
+        }
+        T removedValue = array[index];
+        array[size - 1] = null;
+        size--;
+        return removedValue;
     }
 
     private int indexOf(T element) {
