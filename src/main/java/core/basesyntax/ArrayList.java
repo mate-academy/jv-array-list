@@ -14,9 +14,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value) {
         if (size == array.length) {
-            // Створюємо новий масив з більшою ємністю
             T[] newArray = (T[]) new Object[array.length + (array.length / 2)];
-            // Копіюємо елементи в новий масив
             for (int i = 0; i < size; i++) {
                 newArray[i] = array[i];
             }
@@ -29,7 +27,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException("Index " + index + " out of bounds");
+            throw new ArrayListIndexOutOfBoundsException("Index " + index + " out of bounds");
         }
         if (size == array.length) {
             T[] newArray = (T[]) new Object[array.length + (array.length / 2)];
@@ -68,7 +66,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Index " + index + " out of bounds");
+            throw new ArrayListIndexOutOfBoundsException("Index " + index + " out of bounds");
         }
         return array[index];
     }
@@ -76,7 +74,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void set(T value, int index) {
         if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Index " + index + " out of bounds");
+            throw new ArrayListIndexOutOfBoundsException("Index " + index + " out of bounds");
         }
         array[index] = value;
     }
@@ -84,7 +82,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Index " + index + " out of bounds");
+            throw new ArrayListIndexOutOfBoundsException("Index " + index + " out of bounds");
         }
         for (int i = index; i < size - 1; i++) {
             array[i] = array[i + 1];
