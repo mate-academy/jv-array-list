@@ -93,12 +93,17 @@ public class ArrayList<T> implements List<T> {
         if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException("Index " + index + " out of bounds");
         }
+
         T removedValue = array[index];
+
         for (int i = index; i < size - 1; i++) {
             array[i] = array[i + 1];
         }
+
         array[size - 1] = null;
+
         size--;
+
         return removedValue;
     }
 
