@@ -6,6 +6,8 @@ public class ArrayList<T> implements List<T> {
     private static final int INITIAL_CAPACITY = 10;
     private T[] array;
     private int size = 0;
+    private int index;
+    private final T removedValue = array[index];
 
     public ArrayList() {
         array = (T[]) new Object[INITIAL_CAPACITY];
@@ -94,13 +96,13 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayListIndexOutOfBoundsException("Index " + index + " out of bounds");
         }
 
-        T removedValue = array[index];
-
         for (int i = index; i < size - 1; i++) {
             array[i] = array[i + 1];
         }
 
-        array[--size] = null;
+        array[size - 1] = null;
+
+        size--;
 
         return removedValue;
     }
