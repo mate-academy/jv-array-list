@@ -86,10 +86,10 @@ public class ArrayList<T> implements List<T> {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Index " + index + " out of bounds");
         }
-        T removedValue = array[index];
         for (int i = index; i < size - 1; i++) {
             array[i] = array[i + 1];
         }
+        T removedValue = array[index];
         array[size - 1] = null;
         size--;
         return removedValue;
