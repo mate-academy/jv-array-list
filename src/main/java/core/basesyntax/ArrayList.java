@@ -8,7 +8,7 @@ public class ArrayList<T> implements List<T> {
     private int size = 0;
 
     public ArrayList() {
-        array = (T[]) new Object[INITIAL_CAPACITY]; // Створюємо масив з початковою ємністю
+        array = (T[]) new Object[INITIAL_CAPACITY];
     }
 
     @Override
@@ -16,9 +16,9 @@ public class ArrayList<T> implements List<T> {
         if (size == array.length) {
             T[] newArray = (T[]) new Object[array.length + (array.length / 2)];
             for (int i = 0; i < size; i++) {
-                newArray[i] = array[i]; // Копіюємо елементи в новий масив
+                newArray[i] = array[i];
             }
-            array = newArray; // Оновлюємо посилання на масив
+            array = newArray;
         }
         array[size] = value;
         size++;
@@ -32,20 +32,20 @@ public class ArrayList<T> implements List<T> {
         if (size == array.length) {
             T[] newArray = (T[]) new Object[array.length + (array.length / 2)];
             for (int i = 0; i < index; i++) {
-                newArray[i] = array[i]; // Копіюємо елементи до індексу
+                newArray[i] = array[i];
             }
-            newArray[index] = value; // Вставляємо новий елемент
+            newArray[index] = value;
             for (int i = index; i < size; i++) {
-                newArray[i + 1] = array[i]; // Переміщаємо всі елементи після індексу
+                newArray[i + 1] = array[i];
             }
-            array = newArray; // Оновлюємо посилання на масив
+            array = newArray;
         } else {
-            for (int i = size; i > index; i--) { // Переміщаємо елементи праворуч
+            for (int i = size; i > index; i--) {
                 array[i] = array[i - 1];
             }
-            array[index] = value; // Вставляємо новий елемент на вказаний індекс
+            array[index] = value;
         }
-        size++; // Збільшуємо розмір списку
+        size++;
     }
 
     @Override
@@ -53,71 +53,71 @@ public class ArrayList<T> implements List<T> {
         if (size + list.size() > array.length) {
             T[] newArray = (T[]) new Object[size + list.size() + (array.length / 2)];
             for (int i = 0; i < size; i++) {
-                newArray[i] = array[i]; // Копіюємо елементи в новий масив
+                newArray[i] = array[i];
             }
-            array = newArray; // Оновлюємо посилання на масив
+            array = newArray;
         }
-        for (int i = 0; i < list.size(); i++) { // Додаємо всі елементи з іншого списку
+        for (int i = 0; i < list.size(); i++) {
             array[size] = list.get(i);
-            size++; // Збільшуємо розмір списку
+            size++;
         }
     }
 
     @Override
     public T get(int index) {
-        if (index < 0 || index >= size) { // Перевірка на валідність індексу
+        if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException("Index " + index + " out of bounds");
         }
-        return array[index]; // Повертаємо елемент за індексом
+        return array[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index < 0 || index >= size) { // Перевірка на валідність індексу
+        if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException("Index " + index + " out of bounds");
         }
-        array[index] = value; // Замінюємо елемент на новий
+        array[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index < 0 || index >= size) { // Перевірка на валідність індексу
+        if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException("Index " + index + " out of bounds");
         }
         for (int i = index; i < size - 1; i++) {
             array[i] = array[i + 1];
         }
         T removedValue = array[index];
-        array[size - 1] = null; // Очищаємо останній елемент
-        size--; // Зменшуємо розмір списку
-        return removedValue; // Повертаємо видалений елемент
+        array[size - 1] = null;
+        size--;
+        return removedValue;
     }
 
     @Override
     public T remove(T element) {
-        int index = indexOf(element); // Знаходимо індекс елемента
-        if (index == -1) { // Якщо елемент не знайдений
+        int index = indexOf(element);
+        if (index == -1) {
             throw new NoSuchElementException("Element not found: " + element);
         }
-        return remove(index); // Викликаємо метод remove по індексу
+        return remove(index);
     }
 
     private int indexOf(T element) {
         for (int i = 0; i < size; i++) {
-            if (array[i] != null && array[i].equals(element)) { // Перевірка на рівність елементів
-                return i; // Повертаємо індекс знайденого елемента
+            if (array[i] != null && array[i].equals(element)) {
+                return i;
             }
         }
-        return -1; // Якщо елемент не знайдений
+        return -1;
     }
 
     @Override
     public int size() {
-        return size; // Повертаємо поточний розмір списку
+        return size;
     }
 
     @Override
     public boolean isEmpty() {
-        return size == 0; // Повертаємо true, якщо список порожній
+        return size == 0;
     }
 }
