@@ -94,7 +94,7 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayListIndexOutOfBoundsException("Index " + index + " out of bounds");
         }
 
-        T removedValue = array[index];
+        final T removedValue = array[index];
         for (int i = index; i < size - 1; i++) {
             array[i] = array[i + 1];
         }
