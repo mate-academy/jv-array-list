@@ -32,9 +32,15 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private void arrayListIndexOutOfBounds(int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Element not found in the list");
+    private void arrayListIndexOutOfBounds(int index, boolean mode) {
+        if (mode) {
+            if (index > size || index < 0) {
+                throw new ArrayListIndexOutOfBoundsException("Element not found in the list");
+            }
+        } else {
+            if (index >= size || index < 0) {
+                throw new ArrayListIndexOutOfBoundsException("Element not found in the list");
+            }
         }
     }
 
@@ -78,7 +84,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        arrayListIndexOutOfBounds(index);
+        arrayListIndexOutOfBounds(index, true);
         ensureCapacityInternal(size + 1);
         System.arraycopy(elementData, index, elementData, index + 1,
                 size - index);
@@ -100,19 +106,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        arrayListIndexOutOfBounds(index);
+        arrayListIndexOutOfBounds(index, false);
         return (T) elementData[index];
     }
 
     @Override
     public void set(T value, int index) {
-        arrayListIndexOutOfBounds(index);
+        arrayListIndexOutOfBounds(index, false);
         elementData[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        arrayListIndexOutOfBounds(index);
+        arrayListIndexOutOfBounds(index, false);
         Object oldValue = elementData[index];
         int numMoved = size - index - 1;
         if (numMoved > 0) {
