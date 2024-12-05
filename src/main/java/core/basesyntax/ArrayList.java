@@ -93,7 +93,7 @@ public class ArrayList<T> implements List<T> {
             a[i] = list.get(i);
         }
         int numNew = a.length;
-        ensureCapacityInternal(size + numNew);  // Increments modCount
+        ensureCapacityInternal(size + numNew);
         System.arraycopy(a, 0, elementData, size, numNew);
         size += numNew;
     }
