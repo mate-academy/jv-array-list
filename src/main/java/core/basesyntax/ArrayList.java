@@ -1,6 +1,5 @@
 package core.basesyntax;
 
-import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
@@ -8,10 +7,11 @@ public class ArrayList<T> implements List<T> {
     private static final Object[] DEFAULTCAPACITY_EMPTY_ELEMENTDATA = {};
     private static final int MAX_ARRAY_SIZE = Integer.MAX_VALUE - 8;
     private Object[] elementData;
+    private static final int startSize = 0;
     private int size;
 
     public ArrayList() {
-        size = 0;
+        size = startSize;
         this.elementData = DEFAULTCAPACITY_EMPTY_ELEMENTDATA;
     }
 
@@ -41,7 +41,10 @@ public class ArrayList<T> implements List<T> {
         if (newCapacity - MAX_ARRAY_SIZE > 0) {
             newCapacity = hugeCapacity(minCapacity);
         }
-        elementData = Arrays.copyOf(elementData, newCapacity);
+        Object[] copy = new Object[newCapacity];
+        System.arraycopy(elementData, 0, copy, 0,
+                Math.min(elementData.length, newCapacity));
+        elementData = copy;
     }
     private static int hugeCapacity(int minCapacity) {
         if (minCapacity < 0) {// overflow}
@@ -57,11 +60,15 @@ public class ArrayList<T> implements List<T> {
         elementData[size++] = value;
     }
 
+    private void ArrayListIndexOutOfBounds(int index) {
+        if (index >= size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Element not found in the list");
+        }
+    }
+
     @Override
     public void add(T value, int index) {
-        if (index > size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("illegal index!");
-        }
+        ArrayListIndexOutOfBounds(index);
         ensureCapacityInternal(size + 1);
         System.arraycopy(elementData, index, elementData, index + 1,
                 size - index);
@@ -83,25 +90,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("illegal index!");
-        }
+        ArrayListIndexOutOfBounds(index);
         return (T) elementData[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("illegal index!");
-        }
+        ArrayListIndexOutOfBounds(index);
         elementData[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("illegal index!");
-        }
+        ArrayListIndexOutOfBounds(index);
         Object oldValue = elementData[index];
         int numMoved = size - index - 1;
         if (numMoved > 0) {
