@@ -6,8 +6,8 @@ public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private static final Object[] DEFAULTCAPACITY_EMPTY_ELEMENTDATA = {};
     private static final int MAX_ARRAY_SIZE = Integer.MAX_VALUE - 8;
-    private Object[] elementData;
     private static final int startSize = 0;
+    private Object[] elementData;
     private int size;
 
     public ArrayList() {
@@ -32,6 +32,12 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
+    private void arrayListIndexOutOfBounds(int index) {
+        if (index >= size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Element not found in the list");
+        }
+    }
+
     private void grow(int minCapacity) {
         int oldCapacity = elementData.length;
         int newCapacity = oldCapacity + (oldCapacity >> 1);
@@ -46,29 +52,33 @@ public class ArrayList<T> implements List<T> {
                 Math.min(elementData.length, newCapacity));
         elementData = copy;
     }
+
     private static int hugeCapacity(int minCapacity) {
-        if (minCapacity < 0) {// overflow}
+        if (minCapacity < 0) {
             throw new OutOfMemoryError();
         }
         return (minCapacity > MAX_ARRAY_SIZE) ? Integer.MAX_VALUE
                 : MAX_ARRAY_SIZE;
     }
 
-    @Override
-    public void add(T value) {
-        ensureCapacityInternal(size + 1);  // Increments modCount!!
-        elementData[size++] = value;
+    private void fastRemove(int index) {
+        int numMoved = size - index - 1;
+        if (numMoved > 0) {
+            System.arraycopy(elementData, index + 1, elementData, index,
+                    numMoved);
+        }
+        elementData[--size] = null;
     }
 
-    private void ArrayListIndexOutOfBounds(int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Element not found in the list");
-        }
+    @Override
+    public void add(T value) {
+        ensureCapacityInternal(size + 1);
+        elementData[size++] = value;
     }
 
     @Override
     public void add(T value, int index) {
-        ArrayListIndexOutOfBounds(index);
+        arrayListIndexOutOfBounds(index);
         ensureCapacityInternal(size + 1);
         System.arraycopy(elementData, index, elementData, index + 1,
                 size - index);
@@ -90,19 +100,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        ArrayListIndexOutOfBounds(index);
+        arrayListIndexOutOfBounds(index);
         return (T) elementData[index];
     }
 
     @Override
     public void set(T value, int index) {
-        ArrayListIndexOutOfBounds(index);
+        arrayListIndexOutOfBounds(index);
         elementData[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        ArrayListIndexOutOfBounds(index);
+        arrayListIndexOutOfBounds(index);
         Object oldValue = elementData[index];
         int numMoved = size - index - 1;
         if (numMoved > 0) {
@@ -131,15 +141,6 @@ public class ArrayList<T> implements List<T> {
             }
         }
         throw new NoSuchElementException("Illegal value");
-    }
-
-    private void fastRemove(int index) {
-        int numMoved = size - index - 1;
-        if (numMoved > 0) {
-            System.arraycopy(elementData, index + 1, elementData, index,
-                    numMoved);
-        }
-        elementData[--size] = null;
     }
 
     @Override
