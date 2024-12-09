@@ -15,16 +15,12 @@ public class ArrayList<T> implements List<T> {
 
     public void ensureCapacity() {
         if (size == arrayList.length) {
-            //arrayList = Arrays.copyOf(arrayList, (int) Math.ceil(arrayList.length * 1.5));
             arrayList = Arrays.copyOf(arrayList, arrayList.length + (arrayList.length >> 1));
         }
     }
 
     public void ensureCapacity(int requiredCapacity) {
         if (requiredCapacity > arrayList.length) {
-            //arrayList = Arrays.copyOf(arrayList, arrayList.length + sizeOfList);
-            //arrayList = Arrays.copyOf(arrayList, arrayList.length + (arrayList.length >> 1));
-
             int newCapacity = Math.max((int) (arrayList.length * 1.5), requiredCapacity);
             arrayList = Arrays.copyOf(arrayList, newCapacity);
         }
@@ -55,12 +51,12 @@ public class ArrayList<T> implements List<T> {
         ensureIndexForAdd(index);
         ensureCapacity();
 
-        Object[] newArray = new Object[arrayList.length + 1];
-        System.arraycopy(arrayList, 0, newArray, 0, index);
-        newArray[index] = value;
-        System.arraycopy(arrayList, index, newArray, index + 1, arrayList.length - index);
+        for (int i = size - 1; i >= index; i--) {
+            arrayList[i + 1] = arrayList[i];
+        }
 
-        arrayList = newArray;
+        arrayList[index] = value;
+
         size++;
     }
 
@@ -94,11 +90,11 @@ public class ArrayList<T> implements List<T> {
         ensureIndex(index);
         final T removedElement = (T) arrayList[index];
 
-        Object[] newArray = new Object[arrayList.length - 1];
-        System.arraycopy(arrayList, 0, newArray, 0, index);
-        System.arraycopy(arrayList, index + 1, newArray, index, newArray.length - index);
+        for (int i = index; i < size - 1; i++) {
+            arrayList[i] = arrayList[i + 1];
+        }
 
-        arrayList = newArray;
+        arrayList[size - 1] = null;
         size--;
         return removedElement;
     }
@@ -119,15 +115,13 @@ public class ArrayList<T> implements List<T> {
         }
 
         final T removedElement = (T) arrayList[indexOfElement];
-        Object[] newArray = new Object[arrayList.length - 1];
 
-        for (int i = 0; i < arrayList.length; i++) {
-            if (i != indexOfElement) {
-                int newIndex = i < indexOfElement ? i : i - 1;
-                newArray[newIndex] = arrayList[i];
-            }
+        for (int i = indexOfElement; i < size - 1; i++) {
+            arrayList[i] = arrayList[i + 1];
         }
-        arrayList = newArray;
+
+        arrayList[size - 1] = null;
+
         size--;
         return removedElement;
     }
