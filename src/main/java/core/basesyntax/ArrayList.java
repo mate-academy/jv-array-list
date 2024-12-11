@@ -1,11 +1,9 @@
 package core.basesyntax;
 
-import java.util.NoSuchElementException;
-
 public class ArrayList<T> implements List<T> {
     private int size;
     private  int capacity = 10;
-    private T[] data = (T[]) new Object[capacity];
+    private T[] data = (T[])new Object[capacity];
 
     @Override
     public void add(T value) {
@@ -50,7 +48,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException("Index " + index + " out of bounds for length " + size);
+            throw new IndexOutOfBoundsException("Index " + index
+                    + " out of bounds for length " + size);
         }
         return data[index];
     }
@@ -58,7 +57,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void set(T value, int index) {
         if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Index " + index + " out of bounds for length " + size);
+            throw new IndexOutOfBoundsException("Index " + index
+                    + " out of bounds for length " + size);
         }
         data[index] = value;
     }
@@ -66,9 +66,10 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Index " + index + " out of bounds for length " + size);
+            throw new IndexOutOfBoundsException("Index " + index
+                    + " out of bounds for length " + size);
         }
-        T oldValue = data[index];
+        final T oldValue = data[index];
         for (int i = index;i < size - 1;i++) {
             data[i] = data[i + 1];
         }
