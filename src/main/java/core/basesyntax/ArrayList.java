@@ -1,5 +1,7 @@
 package core.basesyntax;
 
+import java.util.NoSuchElementException;
+
 public class ArrayList<T> implements List<T> {
     private int size;
     private int capacity = 10;
@@ -51,7 +53,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index < 0 || index > size) {
+        if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException("Index " + index
                     + " out of bounds for length " + size);
         }
@@ -96,6 +98,9 @@ public class ArrayList<T> implements List<T> {
                 break;
             }
         }
+        if (oldElement == null) {
+            throw new NoSuchElementException("Element " + element + " not found");
+        }
         return oldElement;
     }
 
@@ -106,6 +111,6 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public boolean isEmpty() {
-        return size != 0;
+        return size == 0;
     }
 }
