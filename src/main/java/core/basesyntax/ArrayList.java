@@ -110,7 +110,6 @@ public class ArrayList<T> implements List<T> {
         return oldElement;
     }
 
-
     @Override
     public int size() {
         return size;
