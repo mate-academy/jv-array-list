@@ -89,8 +89,8 @@ public class ArrayList<T> implements List<T> {
         if (element == null) {
             // Видалення null елементів
             for (int i = 0; i < size; i++) {
-                if (data[i] == null) {  // Знаходимо null елемент
-                    T oldElement = data[i];
+                if (data[i] == null) { // Знаходимо null елемент
+                    final T oldElement = data[i];
                     // Зсуваємо елементи ліворуч
                     for (int j = i; j < size - 1; j++) {
                         data[j] = data[j + 1];
@@ -122,7 +122,6 @@ public class ArrayList<T> implements List<T> {
         }
         throw new NoSuchElementException("Element " + element + " not found");
     }
-
 
     @Override
     public int size() {
