@@ -91,7 +91,7 @@ public class ArrayList<T> implements List<T> {
         }
         T oldElement = null;
         for (int i = 0; i < size; i++) {
-                oldElement = data[i];
+            oldElement = data[i];
             for (int j = i; j < size - 1; j++) {
                 data[j] = data[j + 1];
             }
