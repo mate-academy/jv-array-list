@@ -21,6 +21,10 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
+        if (index < 0 || index > size) {
+            throw new ArrayListIndexOutOfBoundsException("Index " + index
+                    + " out of bounds for length " + size);
+        }
         if (size >= data.length) {
             T[] newData = (T[]) new Object[(capacity * 2)];
             capacity = (capacity * 2);
@@ -48,7 +52,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException("Index " + index
+            throw new ArrayListIndexOutOfBoundsException("Index " + index
                     + " out of bounds for length " + size);
         }
         return data[index];
@@ -57,7 +61,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void set(T value, int index) {
         if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Index " + index
+            throw new ArrayListIndexOutOfBoundsException("Index " + index
                     + " out of bounds for length " + size);
         }
         data[index] = value;
@@ -66,7 +70,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Index " + index
+            throw new ArrayListIndexOutOfBoundsException("Index " + index
                     + " out of bounds for length " + size);
         }
         final T oldValue = data[index];
@@ -82,7 +86,7 @@ public class ArrayList<T> implements List<T> {
     public T remove(T element) {
         T oldElement = null;
         for (int i = 0; i < size; i++) {
-            if (data[i].equals(element)) {
+            if (data[i] != null && data[i].equals(element)) {
                 oldElement = data[i];
                 for (int j = i; j < size - 1; j++) {
                     data[j] = data[j + 1];
@@ -102,9 +106,6 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public boolean isEmpty() {
-        if (size != 0) {
-            return true;
-        }
-        return false;
+        return size != 0;
     }
 }
