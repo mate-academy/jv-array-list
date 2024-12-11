@@ -86,10 +86,12 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
+        if (element == null) {
+            throw new NoSuchElementException("Cannnot remove null number");
+        }
         T oldElement = null;
         for (int i = 0; i < size; i++) {
             // Якщо елемент знайдений
-            if (data[i] != null && data[i].equals(element)) {
                 oldElement = data[i];
                 // Зсув елементів
                 for (int j = i; j < size - 1; j++) {
@@ -98,7 +100,6 @@ public class ArrayList<T> implements List<T> {
                 data[size - 1] = null; // Очищуємо останній елемент
                 size--; // Зменшуємо розмір
                 break;
-            }
         }
         // Якщо елемент не знайдений
         if (oldElement == null) {
