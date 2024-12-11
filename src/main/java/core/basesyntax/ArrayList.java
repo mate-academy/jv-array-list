@@ -91,15 +91,13 @@ public class ArrayList<T> implements List<T> {
         }
         T oldElement = null;
         for (int i = 0; i < size; i++) {
-            // Якщо елемент знайдений
                 oldElement = data[i];
-                // Зсув елементів
-                for (int j = i; j < size - 1; j++) {
-                    data[j] = data[j + 1];
-                }
-                data[size - 1] = null; // Очищуємо останній елемент
-                size--; // Зменшуємо розмір
-                break;
+            for (int j = i; j < size - 1; j++) {
+                data[j] = data[j + 1];
+            }
+            data[size - 1] = null; // Очищуємо останній елемент
+            size--; // Зменшуємо розмір
+            break;
         }
         // Якщо елемент не знайдений
         if (oldElement == null) {
