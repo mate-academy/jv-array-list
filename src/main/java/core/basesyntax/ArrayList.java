@@ -5,14 +5,14 @@ import java.util.NoSuchElementException;
 public class ArrayList<T> implements List<T> {
     private int size;
     private int capacity = 10;
-    private T[] data = (T[])new Object[capacity];
+    private T[] data = (T[]) new Object[capacity];
 
     @Override
     public void add(T value) {
         if (size >= data.length) {
             T[] newData = (T[]) new Object[(capacity * 2)];
             capacity = (capacity * 2);
-            for (int i = 0;i < data.length;i++) {
+            for (int i = 0; i < data.length; i++) {
                 newData[i] = data[i];
             }
             data = newData;
@@ -30,7 +30,7 @@ public class ArrayList<T> implements List<T> {
         if (size >= data.length) {
             T[] newData = (T[]) new Object[(capacity * 2)];
             capacity = (capacity * 2);
-            for (int i = 0;i < data.length;i++) {
+            for (int i = 0; i < data.length; i++) {
                 newData[i] = data[i];
             }
             data = newData;
@@ -46,7 +46,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        for (int i = 0; i < list.size();i++) {
+        for (int i = 0; i < list.size(); i++) {
             add(list.get(i));
         }
     }
@@ -76,7 +76,7 @@ public class ArrayList<T> implements List<T> {
                     + " out of bounds for length " + size);
         }
         final T oldValue = data[index];
-        for (int i = index;i < size - 1;i++) {
+        for (int i = index; i < size - 1; i++) {
             data[i] = data[i + 1];
         }
         data[size - 1] = null;
@@ -88,18 +88,21 @@ public class ArrayList<T> implements List<T> {
     public T remove(T element) {
         T oldElement = null;
         for (int i = 0; i < size; i++) {
+            // Якщо елемент знайдений
+            if (data[i] != null && data[i].equals(element)) {
                 oldElement = data[i];
                 // Зсув елементів
-            for (int j = i; j < size - 1; j++) {
+                for (int j = i; j < size - 1; j++) {
                     data[j] = data[j + 1];
-            }
+                }
                 data[size - 1] = null;  // Очищуємо останній елемент
                 size--;  // Зменшуємо розмір
                 break;
+            }
         }
+        // Якщо елемент не знайдений
         if (oldElement == null) {
-            throw new NoSuchElementException("Element "
-                    + element + " not found");
+            throw new NoSuchElementException("Element " + element + " not found");
         }
         return oldElement;
     }
