@@ -33,7 +33,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     public Object[] toArray(List<T> list) {
-        if (list != null && list instanceof List<T>) {
+        if (list != null) {
             Object[] array = new Object[list.size()];
             for (int i = 0; i < array.length; i++) {
                 array[i] = list.get(i);
