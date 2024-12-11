@@ -95,8 +95,8 @@ public class ArrayList<T> implements List<T> {
                 for (int j = i; j < size - 1; j++) {
                     data[j] = data[j + 1];
                 }
-                data[size - 1] = null;  // Очищуємо останній елемент
-                size--;  // Зменшуємо розмір
+                data[size - 1] = null; // Очищуємо останній елемент
+                size--; // Зменшуємо розмір
                 break;
             }
         }
