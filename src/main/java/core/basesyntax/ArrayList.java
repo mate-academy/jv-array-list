@@ -1,25 +1,25 @@
 package core.basesyntax;
 
-import java.util.Arrays;
 import java.util.NoSuchElementException;
-import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
-
     private static final int DEFAULT_CAPACITY = 10;
     private static final double INCREMENT_VALUE = 1.5;
-    private int currentCapacity = DEFAULT_CAPACITY;
+
     private transient Object[] elementData = new Object[DEFAULT_CAPACITY];
     private int size;
 
     private Object[] grow(int minCapacity) {
         int oldCapacity = elementData.length;
+        int newCapacity;
         if (oldCapacity * INCREMENT_VALUE > minCapacity) {
-            currentCapacity = (int) (oldCapacity * INCREMENT_VALUE);
-            return elementData = Arrays.copyOf(elementData, currentCapacity);
+            newCapacity = (int) (oldCapacity * INCREMENT_VALUE);
         } else {
-            return elementData = Arrays.copyOf(elementData, (int) (minCapacity * INCREMENT_VALUE));
+            newCapacity = (int) (minCapacity * INCREMENT_VALUE);
         }
+        Object[] newArray = new Object[newCapacity];
+        System.arraycopy(elementData, 0, newArray, 0, elementData.length);
+        return elementData = newArray;
     }
 
     private Object[] grow() {
@@ -49,6 +49,12 @@ public class ArrayList<T> implements List<T> {
             System.arraycopy(es, i + 1, es, i, newSize - i);
         }
         es[size = newSize] = null;
+    }
+
+    private void checkIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Index is incorrect " + index);
+        }
     }
 
     @Override
@@ -94,27 +100,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index is incorrect " + index);
-        }
+        checkIndex(index);
         return (T) elementData[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index is incorrect " + index);
-        }
-        Objects.checkIndex(index, size);
+        checkIndex(index);
         elementData[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index is incorrect " + index);
-        }
-        Objects.checkIndex(index, size);
+        checkIndex(index);
         final Object[] es = elementData;
 
         T oldValue = (T) es[index];
