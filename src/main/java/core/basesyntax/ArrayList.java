@@ -87,28 +87,42 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         if (element == null) {
-            throw new NoSuchElementException("Cannot remove null element");
-        }
-
-        T oldElement = null;
-        for (int i = 0; i < size; i++) {
-            if (data[i] != null && data[i].equals(element)) {
-                oldElement = data[i];
-                // Зсуваємо елементи ліворуч
-                for (int j = i; j < size - 1; j++) {
-                    data[j] = data[j + 1];
+            // Видалення null елементів
+            for (int i = 0; i < size; i++) {
+                if (data[i] == null) {  // Знаходимо null елемент
+                    T oldElement = data[i];
+                    // Зсуваємо елементи ліворуч
+                    for (int j = i; j < size - 1; j++) {
+                        data[j] = data[j + 1];
+                    }
+                    data[size - 1] = null; // Очищаємо останній елемент
+                    size--; // Зменшуємо розмір
+                    return oldElement;
                 }
-                data[size - 1] = null; // Очищаємо останній елемент
-                size--; // Зменшуємо розмір
-                break; // Виходимо з циклу після видалення
             }
-        }
+        } else {
+            T oldElement = null;
+            for (int i = 0; i < size; i++) {
+                if (data[i] != null && data[i].equals(element)) {
+                    oldElement = data[i];
+                    // Зсуваємо елементи ліворуч
+                    for (int j = i; j < size - 1; j++) {
+                        data[j] = data[j + 1];
+                    }
+                    data[size - 1] = null; // Очищаємо останній елемент
+                    size--; // Зменшуємо розмір
+                    break;
+                }
+            }
 
-        if (oldElement == null) {
-            throw new NoSuchElementException("Element " + element + " not found");
+            if (oldElement == null) {
+                throw new NoSuchElementException("Element " + element + " not found");
+            }
+            return oldElement;
         }
-        return oldElement;
+        throw new NoSuchElementException("Element " + element + " not found");
     }
+
 
     @Override
     public int size() {
