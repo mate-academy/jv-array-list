@@ -88,21 +88,24 @@ public class ArrayList<T> implements List<T> {
     public T remove(T element) {
         T oldElement = null;
         for (int i = 0; i < size; i++) {
-            if (data[i] != null && data[i].equals(element)) {
+            // Перевірка, чи є елемент та чи є він null
                 oldElement = data[i];
+                // Зсув елементів
                 for (int j = i; j < size - 1; j++) {
                     data[j] = data[j + 1];
                 }
-                data[size - 1] = null;
-                size--;
+                data[size - 1] = null;  // Очищуємо останній елемент
+                size--;  // Зменшуємо розмір
                 break;
             }
-        }
+        // Якщо елемент не знайдений, викидаємо виключення
         if (oldElement == null) {
-            throw new NoSuchElementException("Element " + element + " not found");
+            throw new NoSuchElementException("Element "
+                    + element + " not found");
         }
         return oldElement;
     }
+
 
     @Override
     public int size() {
