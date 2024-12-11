@@ -2,7 +2,7 @@ package core.basesyntax;
 
 public class ArrayList<T> implements List<T> {
     private int size;
-    private  int capacity = 10;
+    private int capacity = 10;
     private T[] data = (T[])new Object[capacity];
 
     @Override
