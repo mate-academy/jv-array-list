@@ -4,8 +4,8 @@ import java.util.NoSuchElementException;
 import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
-    private Object[] array = new Object[10];
     private int size = 0;
+    private Object[] array = new Object[10];
 
     @Override
     public void add(T value) {
