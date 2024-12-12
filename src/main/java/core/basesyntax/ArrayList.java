@@ -5,16 +5,16 @@ import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
     private Object[] array = new Object[10];
-    private int size = 1;
+    private int size = 0;
 
     @Override
     public void add(T value) {
-        if (size == array.length) {
+        if (size + 1 == array.length) {
             Object[] newArray = new Object[array.length + array.length / 2];
             System.arraycopy(array, 0, newArray, 0, array.length);
             array = newArray;
         }
-        array[size - 1] = value;
+        array[size] = value;
         size++;
     }
 
@@ -23,7 +23,7 @@ public class ArrayList<T> implements List<T> {
         if (index > size() || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Index out of bounds");
         }
-        if (size >= array.length) {
+        if (size + 1 >= array.length) {
             Object[] newArray = new Object[array.length + array.length / 2];
             System.arraycopy(array, 0, newArray, 0, array.length);
             array = newArray;
@@ -42,14 +42,14 @@ public class ArrayList<T> implements List<T> {
         System.arraycopy(array, 0, newArray, 0, array.length);
         array = newArray;
         for (int i = 0; i < list.size(); i++) {
-            array[i + size - 1] = list.get(i);
+            array[i + size] = list.get(i);
         }
-        size = tempSize + 1;
+        size = tempSize;
     }
 
     @Override
     public T get(int index) throws ArrayListIndexOutOfBoundsException {
-        if (index >= size - 1 || index < 0) {
+        if (index >= size() || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Index out of bounds");
         }
         return (T) array[index];
@@ -57,7 +57,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void set(T value, int index) throws ArrayListIndexOutOfBoundsException {
-        if (index >= size - 1 || index < 0) {
+        if (index >= size() || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Index out of bounds");
         }
         array[index] = value;
@@ -86,7 +86,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public int size() {
-        return size - 1;
+        return size;
     }
 
     @Override
