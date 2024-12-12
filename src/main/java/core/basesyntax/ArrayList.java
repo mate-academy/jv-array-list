@@ -9,7 +9,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (size + 1 == array.length) {
+        if (size == array.length) {
             Object[] newArray = new Object[array.length + array.length / 2];
             System.arraycopy(array, 0, newArray, 0, array.length);
             array = newArray;
@@ -23,7 +23,7 @@ public class ArrayList<T> implements List<T> {
         if (index > size() || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Index out of bounds");
         }
-        if (size + 1 >= array.length) {
+        if (size == array.length) {
             Object[] newArray = new Object[array.length + array.length / 2];
             System.arraycopy(array, 0, newArray, 0, array.length);
             array = newArray;
@@ -37,10 +37,12 @@ public class ArrayList<T> implements List<T> {
     public void addAll(List<T> list) {
         int summarySize = list.size() + size();
         final int tempSize = summarySize;
-        summarySize = summarySize + summarySize / 2;
-        Object[] newArray = new Object[summarySize];
-        System.arraycopy(array, 0, newArray, 0, array.length);
-        array = newArray;
+        if (summarySize > array.length) {
+            summarySize = summarySize + summarySize / 2;
+            Object[] newArray = new Object[summarySize];
+            System.arraycopy(array, 0, newArray, 0, array.length);
+            array = newArray;
+        }
         for (int i = 0; i < list.size(); i++) {
             array[i + size] = list.get(i);
         }
