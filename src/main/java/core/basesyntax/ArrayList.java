@@ -38,8 +38,7 @@ public class ArrayList<T> implements List<T> {
 
     private void growIfArrayIsFull() {
         if (size == elementData.length) {
-            Object[] grownElementData = new Object[(int) (elementData.length
-                                + (elementData.length * 1.5))];
+            Object[] grownElementData = new Object[(int) (elementData.length * ARRAY_GROWTH_VALUE)];
             System.arraycopy(elementData, 0, grownElementData, 0, size);
             elementData = grownElementData;
         }
