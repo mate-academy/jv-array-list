@@ -20,7 +20,28 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-
+        if (index > size) {
+            throw new ArrayListIndexOutOfBoundsException("Index "
+                    + index
+                    + " is out of bounds for the size "
+                    + (size));
+        }
+        if (size >= data.length) {
+            data = grow();
+        }
+        Object[] tempData = new Object[data.length];
+        size++;
+        for (int i = index + 1; i <= size; i++) {
+            tempData[i] = data[i - 1];
+        }
+        for (int i = 0; i <= index; i++) {
+            if (index != i) {
+                tempData[i] = data[i];
+                continue;
+            }
+            tempData[i] = value;
+        }
+        data = tempData;
     }
 
     @Override
