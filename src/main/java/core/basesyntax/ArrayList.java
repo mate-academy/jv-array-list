@@ -3,6 +3,7 @@ package core.basesyntax;
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private Object[] data;
+    private int size;
 
     public ArrayList() {
         this.data = new Object[DEFAULT_CAPACITY];
@@ -10,7 +11,11 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-
+        if (size >= data.length) {
+            data = grow();
+        }
+        data[size] = value;
+        size += 1;
     }
 
     @Override
