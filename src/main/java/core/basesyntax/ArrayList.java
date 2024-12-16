@@ -46,7 +46,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-
+        int newSize = size + list.size();
+        Object[] tempData = new Object[newSize];
+        if (size < newSize && newSize > data.length) {
+            tempData = grow(newSize);
+        }
+        for (int i = 0; i < size; i++) {
+            tempData[i] = data[i];
+        }
+        for (int i = size, j = 0; i < newSize; i++, j++) {
+            tempData[i] = list.get(j);
+            size++;
+        }
+        data = tempData;
     }
 
     @Override
@@ -96,6 +108,14 @@ public class ArrayList<T> implements List<T> {
         int newSize = (int) (oldSize * 1.5);
         Object[] newData = new Object[newSize];
         for (int i = 0; i < oldSize; i++) {
+            newData[i] = data[i];
+        }
+        return newData;
+    }
+
+    private Object[] grow(int newSize) {
+        Object[] newData = new Object[newSize];
+        for (int i = 0; i < data.length; i++) {
             newData[i] = data[i];
         }
         return newData;
