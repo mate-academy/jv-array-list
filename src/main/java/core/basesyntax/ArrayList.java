@@ -29,8 +29,20 @@ public class ArrayList<T> implements List<T> {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public T get(int index) {
-        return null;
+        if (index > size - 1) {
+            throw new ArrayListIndexOutOfBoundsException("Index "
+                    + index
+                    + " is out of bounds for the size "
+                    + (size - 1));
+        }
+        if (index < 0) {
+            throw new ArrayListIndexOutOfBoundsException(
+                    "Index must be positive number"
+            );
+        }
+        return (T) data[index];
     }
 
     @Override
