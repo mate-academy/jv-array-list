@@ -30,22 +30,12 @@ public class ArrayList<T> implements List<T> {
                     + (size));
         }
         isIndexPositiveNumber(index);
-        if (size >= data.length) {
+        if (data.length < size + 1) {
             data = grow();
         }
-        Object[] tempData = new Object[data.length];
-        for (int i = index + 1; i <= size; i++) {
-            tempData[i] = data[i - 1];
-        }
-        for (int i = 0; i <= index; i++) {
-            if (index != i) {
-                tempData[i] = data[i];
-                continue;
-            }
-            tempData[i] = value;
-        }
+        System.arraycopy(data, index, data, index + 1, size - index);
+        data[index] = value;
         size++;
-        data = tempData;
     }
 
     @Override
