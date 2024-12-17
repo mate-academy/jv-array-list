@@ -24,7 +24,7 @@ public class ArrayList<T> implements List<T> {
     public void add(T value, int index) {
         checkIndexForAdd(index);
         growIfNeeded();
-        shiftRight(index);
+        System.arraycopy(elements, index, elements, index + 1, size - index);
         elements[index] = value;
         size++;
     }
@@ -56,7 +56,7 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         checkIndex(index);
         T removedElement = elements[index];
-        shiftLeft(index);
+        System.arraycopy(elements, index + 1, elements, index, size - index - 1);
         size--;
         return removedElement;
     }
@@ -101,14 +101,6 @@ public class ArrayList<T> implements List<T> {
             System.arraycopy(elements, 0, newElements, 0, size);
             elements = newElements;
         }
-    }
-
-    private void shiftRight(int index) {
-        System.arraycopy(elements, index, elements, index + 1, size - index);
-    }
-
-    private void shiftLeft(int index) {
-        System.arraycopy(elements, index + 1, elements, index, size - index - 1);
     }
 
     private void checkIndex(int index) {
