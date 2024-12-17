@@ -29,11 +29,7 @@ public class ArrayList<T> implements List<T> {
                     + " is out of bounds for the size "
                     + (size));
         }
-        if (index < 0) {
-            throw new ArrayListIndexOutOfBoundsException(
-                    "Index must be positive number"
-            );
-        }
+        isIndexPositiveNumber(index);
         if (size >= data.length) {
             data = grow();
         }
@@ -72,50 +68,23 @@ public class ArrayList<T> implements List<T> {
     @Override
     @SuppressWarnings("unchecked")
     public T get(int index) {
-        if (index > size - 1) {
-            throw new ArrayListIndexOutOfBoundsException("Index "
-                    + index
-                    + " is out of bounds for the size "
-                    + (size - 1));
-        }
-        if (index < 0) {
-            throw new ArrayListIndexOutOfBoundsException(
-                    "Index must be positive number"
-            );
-        }
+        isIndexInBounds(index);
+        isIndexPositiveNumber(index);
         return (T) data[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index > size - 1) {
-            throw new ArrayListIndexOutOfBoundsException("Index "
-                    + index
-                    + " is out of bounds for the size "
-                    + (size - 1));
-        }
-        if (index < 0) {
-            throw new ArrayListIndexOutOfBoundsException(
-                    "Index must be positive number"
-            );
-        }
+        isIndexInBounds(index);
+        isIndexPositiveNumber(index);
         data[index] = value;
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public T remove(int index) {
-        if (index > size - 1) {
-            throw new ArrayListIndexOutOfBoundsException("Index "
-                    + index
-                    + " is out of bounds for the size "
-                    + (size - 1));
-        }
-        if (index < 0) {
-            throw new ArrayListIndexOutOfBoundsException(
-                    "Index must be positive number"
-            );
-        }
+        isIndexInBounds(index);
+        isIndexPositiveNumber(index);
         T elementToRemove = (T) data[index];
         for (int i = 0; i < size - 1; i++) {
             if (i >= index) {
@@ -150,6 +119,23 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size <= 0;
+    }
+
+    private void isIndexInBounds(int index) {
+        if (index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Index "
+                    + index
+                    + " is out of bounds for the size "
+                    + (size));
+        }
+    }
+
+    private void isIndexPositiveNumber(int index) {
+        if (index < 0) {
+            throw new ArrayListIndexOutOfBoundsException(
+                    "Index must be positive number"
+            );
+        }
     }
 
     private Object[] grow() {
