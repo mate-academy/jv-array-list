@@ -100,8 +100,27 @@ public class ArrayList<T> implements List<T> {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public T remove(int index) {
-        return null;
+        if (index > size - 1) {
+            throw new ArrayListIndexOutOfBoundsException("Index "
+                    + index
+                    + " is out of bounds for the size "
+                    + (size - 1));
+        }
+        if (index < 0) {
+            throw new ArrayListIndexOutOfBoundsException(
+                    "Index must be positive number"
+            );
+        }
+        T elementToRemove = (T) data[index];
+        for (int i = 0; i < size - 1; i++) {
+            if (i >= index) {
+                data[i] = data[i + 1];
+            }
+        }
+        size--;
+        return elementToRemove;
     }
 
     @Override
