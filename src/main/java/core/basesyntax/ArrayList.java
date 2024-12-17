@@ -124,20 +124,17 @@ public class ArrayList<T> implements List<T> {
     }
 
     private Object[] grow() {
-        int oldSize = data.length;
-        int newSize = (int) (oldSize * GROW_CAPACITY_COEFFICIENT);
-        Object[] newData = new Object[newSize];
-        for (int i = 0; i < oldSize; i++) {
-            newData[i] = data[i];
-        }
-        return newData;
+        int newSize = (int) (data.length * GROW_CAPACITY_COEFFICIENT);
+        return copyDataToExtendedArray(newSize);
     }
 
     private Object[] grow(int newSize) {
+        return copyDataToExtendedArray(newSize);
+    }
+
+    private Object[] copyDataToExtendedArray(int newSize) {
         Object[] newData = new Object[newSize];
-        for (int i = 0; i < data.length; i++) {
-            newData[i] = data[i];
-        }
+        System.arraycopy(data, 0, newData, 0, size);
         return newData;
     }
 }
