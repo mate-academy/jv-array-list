@@ -26,11 +26,15 @@ public class ArrayList<T> implements List<T> {
                     + " is out of bounds for the size "
                     + (size));
         }
+        if (index < 0) {
+            throw new ArrayListIndexOutOfBoundsException(
+                    "Index must be positive number"
+            );
+        }
         if (size >= data.length) {
             data = grow();
         }
         Object[] tempData = new Object[data.length];
-        size++;
         for (int i = index + 1; i <= size; i++) {
             tempData[i] = data[i - 1];
         }
@@ -41,6 +45,7 @@ public class ArrayList<T> implements List<T> {
             }
             tempData[i] = value;
         }
+        size++;
         data = tempData;
     }
 
