@@ -46,8 +46,8 @@ public class ArrayList<T> implements List<T> {
         }
         for (int i = size, j = 0; i < newSize; i++, j++) {
             data[i] = list.get(j);
-            size++;
         }
+        size += list.size();
     }
 
     @Override
