@@ -85,7 +85,18 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void set(T value, int index) {
-
+        if (index > size - 1) {
+            throw new ArrayListIndexOutOfBoundsException("Index "
+                    + index
+                    + " is out of bounds for the size "
+                    + (size - 1));
+        }
+        if (index < 0) {
+            throw new ArrayListIndexOutOfBoundsException(
+                    "Index must be positive number"
+            );
+        }
+        data[index] = value;
     }
 
     @Override
