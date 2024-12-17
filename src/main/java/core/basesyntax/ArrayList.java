@@ -84,6 +84,7 @@ public class ArrayList<T> implements List<T> {
             if (data[i] == element || data[i] != null && data[i].equals(element)) {
                 indexToRemove = i;
                 isElementFound = true;
+                break;
             }
         }
         if (!isElementFound) {
