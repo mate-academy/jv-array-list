@@ -4,12 +4,12 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
+    private static final double DEFAULT_MAGNIFICATION = 1.5;
     private T[] elements;
     private int size;
 
     public ArrayList() {
         elements = (T[]) new Object[DEFAULT_CAPACITY];
-        size = 0;
     }
 
     @Override
@@ -17,6 +17,7 @@ public class ArrayList<T> implements List<T> {
         growIfNeeded();
         elements[size] = value;
         size++;
+
     }
 
     @Override
@@ -63,8 +64,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if ((elements[i] == null && element == null) || (elements[i]
-                    != null && elements[i].equals(element))) {
+            if (elements[i] == null && element == null || elements[i]
+                    != null && elements[i].equals(element)) {
                 return remove(i);
             }
         }
@@ -83,7 +84,7 @@ public class ArrayList<T> implements List<T> {
 
     private void growIfNeeded() {
         if (size == elements.length) {
-            int newCapacity = (int) (elements.length * 1.5);
+            int newCapacity = (int) (elements.length * DEFAULT_MAGNIFICATION);
             T[] newElements = (T[]) new Object[newCapacity];
             System.arraycopy(elements, 0, newElements, 0, elements.length);
             elements = newElements;
@@ -94,7 +95,7 @@ public class ArrayList<T> implements List<T> {
         if (minCapacity > elements.length) {
             int newCapacity = elements.length;
             while (newCapacity < minCapacity) {
-                newCapacity = (int) (newCapacity * 1.5);
+                newCapacity = (int) (newCapacity * DEFAULT_MAGNIFICATION);
             }
             T[] newElements = (T[]) new Object[newCapacity];
             System.arraycopy(elements, 0, newElements, 0, size);
@@ -103,16 +104,11 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void shiftRight(int index) {
-        for (int i = size; i > index; i--) {
-            elements[i] = elements[i - 1];
-        }
+        System.arraycopy(elements, index, elements, index + 1, size - index);
     }
 
     private void shiftLeft(int index) {
-        for (int i = index; i < size - 1; i++) {
-            elements[i] = elements[i + 1];
-        }
-        elements[size - 1] = null;
+        System.arraycopy(elements, index + 1, elements, index, size - index - 1);
     }
 
     private void checkIndex(int index) {
