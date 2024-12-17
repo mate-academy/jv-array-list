@@ -1,6 +1,5 @@
 package core.basesyntax;
 
-import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
@@ -28,7 +27,9 @@ public class ArrayList<T> implements List<T> {
         if (size == elements.length) {
             grow();
         }
-        System.arraycopy(elements, index, elements, index + 1, size - index);
+        for (int i = size; i > index; i--) {
+            elements[i] = elements[i - 1];
+        }
         elements[index] = value;
         size++;
     }
@@ -56,7 +57,9 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         validateIndex(index);
         T removedElement = elements[index];
-        System.arraycopy(elements, index + 1, elements, index, size - index - 1);
+        for (int i = index; i < size - 1; i++) {
+            elements[i] = elements[i + 1];
+        }
         elements[--size] = null;
         return removedElement;
     }
@@ -84,6 +87,26 @@ public class ArrayList<T> implements List<T> {
 
     private void grow() {
         int newCapacity = elements.length + (elements.length >> 1);
-        elements = Arrays.copyOf(elements, newCapacity);
+        T[] newElements = (T[]) new Object[newCapacity];
+        for (int i = 0; i < size; i++) {
+            newElements[i] = elements[i];
+        }
+        elements = newElements;
+    }
+
+    private void validateIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException(
+                    "Index: " + index + ", Size: " + size
+            );
+        }
+    }
+
+    private void validateIndexForAdd(int index) {
+        if (index < 0 || index > size) {
+            throw new ArrayListIndexOutOfBoundsException(
+                    "Index: " + index + ", Size: " + size
+            );
+        }
     }
 }
