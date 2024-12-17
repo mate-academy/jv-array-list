@@ -71,11 +71,7 @@ public class ArrayList<T> implements List<T> {
         isIndexInBounds(index);
         isIndexPositiveNumber(index);
         T elementToRemove = (T) data[index];
-        for (int i = 0; i < size - 1; i++) {
-            if (i >= index) {
-                data[i] = data[i + 1];
-            }
-        }
+        System.arraycopy(data, index + 1, data, index, size - index - 1);
         size--;
         return elementToRemove;
     }
