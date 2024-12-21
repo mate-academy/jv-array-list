@@ -1,4 +1,5 @@
 package core.basesyntax;
+
 import java.util.Arrays;
 import java.util.NoSuchElementException;
 
@@ -36,6 +37,7 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayListIndexOutOfBoundsException("Index " + index + " out of bounds");
         }
     }
+
     @Override
     public void add(T value) {
         ensureCapacity();
