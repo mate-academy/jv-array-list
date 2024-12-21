@@ -3,113 +3,109 @@ package core.basesyntax;
 import java.util.Arrays;
 import java.util.NoSuchElementException;
 
+@SuppressWarnings("unchecked")
 public class ArrayList<T> implements List<T> {
-    private Object[] arrayList;
+    private static final int DEFAULT_CAPACITY = 10;
     private int size;
-    private final int defaultSize = 10;
+    private Object[] elementData;
 
     public ArrayList() {
-        arrayList = new Object[defaultSize];
-        size = 0;
+        elementData = new Object[DEFAULT_CAPACITY];
     }
 
-    public void ensureCapacity() {
-        if (size == arrayList.length) {
-            arrayList = Arrays.copyOf(arrayList, arrayList.length + (arrayList.length >> 1));
+    public void rangeCheck() {
+        if (size == elementData.length) {
+            grow();
         }
     }
 
-    public void ensureCapacity(int requiredCapacity) {
-        if (requiredCapacity > arrayList.length) {
-            int newCapacity = Math.max((int) (arrayList.length * 1.5), requiredCapacity);
-            arrayList = Arrays.copyOf(arrayList, newCapacity);
+    public void indexCheck(int index) {
+        if (index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Invalid index");
+        }
+        if (index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Invalid index");
         }
     }
 
-    public void ensureIndexForAdd(int index) {
-        if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("Index " + index + " out of bounds");
-        }
+    private Object[] grow() {
+        int newCapacity = elementData.length * 3 / 2 + 1;
+        elementData = Arrays.copyOf(elementData, newCapacity);
+        return elementData;
     }
 
-    public void ensureIndex(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index " + index + " out of bounds");
+    public void checkIfElementExists(T element) {
+        boolean found = false;
+        for (int i = 0; i < size; i++) {
+            if ((element == null && elementData[i] == null)
+                    || (element != null && element.equals(elementData[i]))) {
+                found = true;
+                break;
+            }
+        }
+        if (!found) {
+            throw new NoSuchElementException("Element not found in the array.");
         }
     }
 
     @Override
     public void add(T value) {
-        ensureCapacity();
-        arrayList[size] = value;
+        rangeCheck();
+        elementData[size] = value;
         size++;
     }
 
     @Override
     public void add(T value, int index) {
-        ensureIndexForAdd(index);
-        ensureCapacity();
-        for (int i = size - 1; i >= index; i--) {
-            arrayList[i + 1] = arrayList[i];
+        if (index > size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Index out of bound");
         }
-        arrayList[index] = value;
+        rangeCheck();
+        System.arraycopy(elementData, index, elementData, index + 1, size - index);
+        elementData[index] = value;
         size++;
     }
 
     @Override
-    public void addAll(List<T> list) {
-        ensureCapacity(size + list.size());
-        for (int i = 0; i < list.size(); i++) {
-            arrayList[size + i] = list.get(i);
+    public void addAll(List<T> o) {
+        for (int i = 0; i < o.size(); i++) {
+            this.add(o.get(i));
         }
-        size += list.size();
     }
 
     @Override
     public T get(int index) {
-        ensureIndex(index);
-        return (T) arrayList[index];
+        indexCheck(index);
+        return (T) elementData[index];
     }
 
     @Override
     public void set(T value, int index) {
-        ensureIndex(index);
-        arrayList[index] = value;
+        indexCheck(index);
+        elementData[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        ensureIndex(index);
-        final T removedElement = (T) arrayList[index];
-        for (int i = index; i < size - 1; i++) {
-            arrayList[i] = arrayList[i + 1];
-        }
-        arrayList[size - 1] = null;
+        indexCheck(index);
+        final T removedElement = (T) elementData[index];
+        System.arraycopy(elementData, index + 1, elementData, index, size - index - 1);
+        elementData[size - 1] = null;
         size--;
         return removedElement;
     }
 
     @Override
     public T remove(T element) {
-        boolean isExist = false;
-        int indexOfElement = 0;
-        for (int i = 0; i < arrayList.length; i++) {
-            if (arrayList[i] == null ? element == null : arrayList[i].equals(element)) {
-                isExist = true;
-                indexOfElement = i;
-                break;
+        checkIfElementExists(element);
+        for (int i = 0; i < size; i++) {
+            if ((element == null && elementData[i] == null)
+                    || (element != null && element.equals(elementData[i]))) {
+                T removedElement = remove(i);
+                return removedElement;
             }
         }
-        if (!isExist) {
-            throw new NoSuchElementException("There is no such element");
-        }
-        final T removedElement = (T) arrayList[indexOfElement];
-        for (int i = indexOfElement; i < size - 1; i++) {
-            arrayList[i] = arrayList[i + 1];
-        }
-        arrayList[size - 1] = null;
-        size--;
-        return removedElement;
+        return null;
     }
 
     @Override
@@ -120,5 +116,23 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("[");
+
+        for (int i = 0; i < size; i++) {
+            if (elementData[i] == null) {
+                return sb.append("]").toString();
+            }
+            if (elementData[i + 1] == null) {
+                return sb.append(elementData[i]).append("]").toString();
+            }
+            sb.append(elementData[i])
+                    .append(", ");
+        }
+        return sb.toString();
     }
 }
