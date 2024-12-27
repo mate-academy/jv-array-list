@@ -14,7 +14,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        ensureCapacityInternal(size + 1);
+        ensureCapacityInternal();
         elementData[size++] = value;
     }
 
@@ -23,7 +23,7 @@ public class ArrayList<T> implements List<T> {
         if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
         }
-        ensureCapacityInternal(size + 1);
+        ensureCapacityInternal();
         System.arraycopy(elementData,index, elementData, index + 1, size - index);
         elementData[index] = value;
         size++;
@@ -31,7 +31,6 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        ensureCapacityInternal(size + list.size());
         for (int i = 0; i < list.size(); i++) {
             add(list.get(i));
         }
