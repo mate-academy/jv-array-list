@@ -38,9 +38,9 @@ public class ArrayList<T> implements List<T> {
             grow();
         }
         Object[] result = new Object[++size];
-        System.arraycopy(array, 0, result, 0, index);
+        copy(array, 0, result, 0, index);
         result[index] = value;
-        System.arraycopy(array, index, result, index + 1, size - index - 1);
+        copy(array, index, result, index + 1, size - index - 1);
         array = result;
     }
 
@@ -53,7 +53,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (isValidIndex(index)) {
+        if (isNotValidIndex(index)) {
             throw new ArrayListIndexOutOfBoundsException("Not found "
                     + "element at position: ");
         } else {
@@ -63,7 +63,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void set(T value, int index) {
-        if (isValidIndex(index)) {
+        if (isNotValidIndex(index)) {
             throw new ArrayListIndexOutOfBoundsException("Not found "
                     + "element at position: " + index);
         }
@@ -72,7 +72,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(int index) {
-        if (isValidIndex(index)) {
+        if (isNotValidIndex(index)) {
             throw new ArrayListIndexOutOfBoundsException("Not found "
                     + "element at position: " + index);
         }
@@ -112,20 +112,26 @@ public class ArrayList<T> implements List<T> {
 
     public void grow() {
         Object[] newArray = new Object[array.length + array.length / 2];
-        System.arraycopy(array, 0, newArray, 0, size);
+        copy(array, 0, newArray, 0, size);
         array = newArray;
     }
 
-    boolean isValidIndex(int index) {
+    boolean isNotValidIndex(int index) {
         return index < 0 || index >= size;
     }
 
     void removeAndTrim(int index) {
+        Object[] newArray = new Object[size--];
+        copy(array, 0, newArray, 0, index);
+        copy(array, index + 1, newArray, index, size - index);
+        array = newArray;
+    }
+
+    void copy(Object[] source, int srcIndex, Object[] destination, int destIndex, int length) {
         try {
-            Object[] newArray = new Object[size--];
-            System.arraycopy(array, 0, newArray, 0, index);
-            System.arraycopy(array, index + 1, newArray, index, size - index);
-            array = newArray;
+            for (int i = srcIndex, j = 0; i < srcIndex + length && j < length; i++, j++) {
+                destination[destIndex + j] = source[i];
+            }
         } catch (RuntimeException e) {
             throw new IndexOutOfBoundsException("Index is out the array bond");
         }
