@@ -4,6 +4,7 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
+    private static final double GROW_CONSTANT = 1.5;
     private T[] elementData;
     private int size;
 
@@ -32,7 +33,7 @@ public class ArrayList<T> implements List<T> {
     public void addAll(List<T> list) {
         ensureCapacityInternal(size + list.size());
         for (int i = 0; i < list.size(); i++) {
-            elementData[size++] = list.get(i);
+            add(list.get(i));
         }
     }
 
@@ -53,9 +54,6 @@ public class ArrayList<T> implements List<T> {
         rangeCheck(index);
         T removedElement = (T) elementData[index];
         int numMoved = size - index - 1;
-        //if (numMoved > 0) {
-        //   System.arraycopy(elementData, index + 1, elementData, index, numMoved);
-        // }
         System.arraycopy(elementData, index + 1, elementData, index, numMoved);
         elementData[--size] = null;
         return removedElement;
@@ -63,17 +61,10 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(Object element) {
-        if (element == null) {
-            for (int i = 0; i < size; i++) {
-                if (elementData[i] == null) {
-                    return remove(i);
-                }
-            }
-        } else {
-            for (int i = 0; i < size; i++) {
-                if (element.equals(elementData[i])) {
-                    return remove(i);
-                }
+        for (int i = 0; i < size; i++) {
+            if ((element == null && elementData[i] == null) ||
+                    (element != null && element.equals(elementData[i]))) {
+                return remove(i);
             }
         }
         throw new NoSuchElementException("Element not found: " + element);
@@ -95,9 +86,9 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private void ensureCapacityInternal(int minCapacity) {
-        if (minCapacity > elementData.length) {
-            int newCapacity = Math.max(elementData.length * 3 / 2 - 1, minCapacity);
+    private void ensureCapacityInternal() {
+        if (size + 1 > elementData.length) {
+            int newCapacity = Math.max((int)(elementData.length * GROW_CONSTANT), size + 1);
             Object[] newArray = new Object[newCapacity];
             if (size >= 0) {
                 System.arraycopy(elementData,0, newArray, 0, size);
