@@ -22,8 +22,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         if (isNotValidToAdd(index)) {
-            throw new ArrayListIndexOutOfBoundsException("Non existent "
-                    + "position: " + index);
+            throwOutOfBound(index);
         }
         grow();
         System.arraycopy(array, index, array, index + 1, size - index);
@@ -41,18 +40,15 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         if (isNotValidToFind(index)) {
-            throw new ArrayListIndexOutOfBoundsException("Not found "
-                    + "element at position: ");
-        } else {
-            return array[index];
+            throwOutOfBound(index);
         }
+        return array[index];
     }
 
     @Override
     public void set(T value, int index) {
         if (isNotValidToFind(index)) {
-            throw new ArrayListIndexOutOfBoundsException("Not found "
-                    + "element at position: " + index);
+            throwOutOfBound(index);
         }
         array[index] = value;
     }
@@ -60,8 +56,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         if (isNotValidToFind(index)) {
-            throw new ArrayListIndexOutOfBoundsException("Not found "
-                    + "element at position: " + index);
+            throwOutOfBound(index);
         }
         T toDelete = array[index];
         removeAndTrim(index);
@@ -70,21 +65,16 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        int index = -1;
         for (int i = 0; i < array.length; i++) {
             if (array[i] == null ? array[i] == element
                     : array[i].equals(element)) {
-                index = i;
-                break;
+                T toRemove = array[i];
+                removeAndTrim(i);
+                return toRemove;
             }
         }
-        if (index == -1) {
-            throw new NoSuchElementException("Not found "
-                    + "element at position: " + index);
-        }
-        T toDelete = array[index];
-        removeAndTrim(index);
-        return toDelete;
+        throw new NoSuchElementException("No such an element found: "
+                + element.toString());
     }
 
     @Override
@@ -97,7 +87,7 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    public void grow() {
+    private void grow() {
         if (size >= array.length) {
             T[] newArray = (T[]) new Object[array.length + array.length << GROWTH_AFFIX];
             System.arraycopy(array, 0, newArray, 0, size);
@@ -105,19 +95,24 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    boolean isNotValidToFind(int index) {
+    private boolean isNotValidToFind(int index) {
         return index < 0 || index >= size;
     }
 
-    boolean isNotValidToAdd(int index) {
+    private boolean isNotValidToAdd(int index) {
         return index < 0 || index > size;
     }
 
-    boolean isLastIndex(int index) {
+    private boolean isLastIndex(int index) {
         return index + 1 == size;
     }
 
-    void removeAndTrim(int index) {
+    private void throwOutOfBound(int index) {
+        throw new ArrayListIndexOutOfBoundsException("The position: " + index
+                + "does not exist in this list");
+    }
+
+    private void removeAndTrim(int index) {
         if (isLastIndex(index)) {
             array[index] = null;
         } else {
