@@ -89,9 +89,7 @@ public class ArrayList<T> implements List<T> {
         if (size + 1 > elementData.length) {
             int newCapacity = Math.max((int)(elementData.length * GROW_CONSTANT), size + 1);
             Object[] newArray = new Object[newCapacity];
-            if (size >= 0) {
-                System.arraycopy(elementData,0, newArray, 0, size);
-            }
+            System.arraycopy(elementData, 0, newArray, 0, size);
             elementData = (T[]) newArray;
         }
     }
