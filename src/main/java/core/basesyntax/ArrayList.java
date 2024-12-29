@@ -5,9 +5,10 @@ import java.util.NoSuchElementException;
 public class ArrayList<T> implements List<T> {
     private Object[] elements;
     private int size;
+    private int start = 10;
 
     public ArrayList() {
-        elements = new Object[10]; // Ініціалізація масиву з початковим розміром
+        elements = new Object[start]; // Ініціалізація масиву з початковим розміром
         size = 0;
     }
 
@@ -47,10 +48,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index
-                    + ". Valid range: 0 to " + (size - 1));
-        }
+        validateIndex(index); // Викликаємо метод для перевірки індексу
         return (T) elements[index];
     }
 
@@ -67,18 +65,16 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index
-                    + ". Valid range: 0 to " + (size - 1));
-        }
+        // Перевірка індексу
+        validateIndex(index);
 
+        // Копіюємо елемент перед тим, як змінювати масив
         T element = (T) elements[index];
-
-        // Зсуваємо елементи, щоб заповнити видалений елемент
         System.arraycopy(elements, index + 1, elements, index, size - index - 1);
-        size--; // Зменшуємо розмір
+        elements[size - 1] = null; // очищаємо останній елемент
+        size--;
 
-        return element;
+        return element; // Повертаємо елемент після його видалення
     }
 
     @Override
@@ -125,9 +121,22 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void resize() {
-        int newSize = elements.length * 2;
-        Object[] newArray = new Object[newSize];
-        System.arraycopy(elements, 0, newArray, 0, elements.length);
-        elements = newArray;
+        // Обчислюємо новий розмір масиву, збільшуючи його в 1.5 рази
+        int newSize = (int) (elements.length * 1.5);
+
+        // Створюємо новий масив з новим розміром
+        T[] newElements = (T[]) new Object[newSize];
+
+        // Копіюємо елементи з поточного масиву в новий
+        System.arraycopy(elements, 0, newElements, 0, size);
+
+        // Оновлюємо посилання на масив
+        elements = newElements;
+    }
+
+    private void validateIndex(int index) {
+        if (index < 0 || index >= size) { // Перевірка на коректність індексу
+            throw new ArrayListIndexOutOfBoundsException("Index: " + index + ", Size: " + size);
+        }
     }
 }
