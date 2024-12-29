@@ -3,12 +3,12 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
+    private static final int capacity = 10;
     private Object[] elements;
     private int size;
-    private int start = 10;
 
     public ArrayList() {
-        elements = new Object[start]; // Ініціалізація масиву з початковим розміром
+        elements = new Object[capacity]; // Ініціалізація масиву з початковим розміром
         size = 0;
     }
 
@@ -55,9 +55,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void set(T value, int index) {
         // Перевірка, чи індекс знаходиться в межах
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index " + index + " out of bounds");
-        }
+        validateIndex(index);
 
         // Заміняємо елемент на новий
         elements[index] = value;
@@ -65,16 +63,14 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(int index) {
-        // Перевірка індексу
         validateIndex(index);
-
-        // Копіюємо елемент перед тим, як змінювати масив
-        T element = (T) elements[index];
-        System.arraycopy(elements, index + 1, elements, index, size - index - 1);
-        elements[size - 1] = null; // очищаємо останній елемент
+        final T element = (T) elements[index];
+        if (index < size - 1) {
+            System.arraycopy(elements, index + 1, elements, index, size - index - 1);
+        }
+        elements[size - 1] = null;
         size--;
-
-        return element; // Повертаємо елемент після його видалення
+        return element;
     }
 
     @Override
