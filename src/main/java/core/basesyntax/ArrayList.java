@@ -61,8 +61,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(Object element) {
         for (int i = 0; i < size; i++) {
-            if ((element == null && elementData[i] == null)
-                    || (element != null && element.equals(elementData[i]))) {
+            if (element == elementData[i] || (element != null && element.equals(elementData[i]))) {
                 return remove(i);
             }
         }
@@ -86,8 +85,8 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void ensureCapacityInternal() {
-        if (size + 1 > elementData.length) {
-            int newCapacity = Math.max((int)(elementData.length * GROW_CONSTANT), size + 1);
+        if (size >= elementData.length) {
+            int newCapacity = (int)(elementData.length * GROW_CONSTANT);
             Object[] newArray = new Object[newCapacity];
             System.arraycopy(elementData, 0, newArray, 0, size);
             elementData = (T[]) newArray;
