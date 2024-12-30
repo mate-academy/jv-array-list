@@ -24,17 +24,17 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("Out of bound");
-        }
+
         if (size == array.length) {
             capacity();
         }
         if (index == size) {
             array[size] = value;
-        } else {
+        } else if (index >= 0 && index < size) {
             System.arraycopy(array, index, array, index + 1, size - index);
             array[index] = value;
+        } else {
+            throw new ArrayListIndexOutOfBoundsException(index + " is out of bounds.");
         }
         size++;
     }
@@ -42,36 +42,27 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void addAll(List<T> list) {
 
-        T[] newArray = (T[]) new Object[list.size()];
         for (int i = 0; i < list.size(); i++) {
-            newArray[i] = list.get(i);
-            add(newArray[i]);
+            add(list.get(i));
         }
     }
 
     @Override
     public T get(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException(" Out of bounds");
-        }
+        validation(index);
         return array[index];
 
     }
 
     @Override
     public void set(T value, int index) {
-        if (!(index < 0 || index >= size)) {
-            array[index] = value;
-        } else {
-            throw new ArrayListIndexOutOfBoundsException("No such index");
-        }
+        validation(index);
+        array[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Out of bounds");
-        }
+        validation(index);
         T res = array[index];
         if (index < size - 1) {
             System.arraycopy(array, index + 1, array, index, size - index - 1);
@@ -107,7 +98,13 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void capacity() {
-        array = Arrays.copyOf(array, array.length + DEFAULT_CAPACITY / 2);
+        array = Arrays.copyOf(array, array.length + array.length / 2);
+    }
+
+    private void validation(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException(index + "Out of bounds");
+        }
     }
 }
 
