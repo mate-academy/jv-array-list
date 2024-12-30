@@ -40,9 +40,6 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        if (objects == null) {
-            throw new NullPointerException("No elements to add");
-        }
         for (int i = 0; i < list.size(); i++) {
             add(list.get(i));
         }
@@ -72,7 +69,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        for (int i = 0; i <= size; i++) {
+        for (int i = 0; i < size; i++) {
             if (Objects.equals(element, objects[i])) {
                 return remove(i);
             }
