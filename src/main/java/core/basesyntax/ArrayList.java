@@ -10,7 +10,7 @@ public class ArrayList<T> implements List<T> {
     private int size;
 
     public ArrayList() {
-        objects = new Objects[DEFAULT_CAPACITY];
+        objects = new Object[DEFAULT_CAPACITY];
     }
 
     @Override
@@ -27,6 +27,7 @@ public class ArrayList<T> implements List<T> {
         }
         if (index == size()) {
             add(value);
+            return;
         }
         expandArray();
         Object[] arrExpanded = new Object[objects.length];
