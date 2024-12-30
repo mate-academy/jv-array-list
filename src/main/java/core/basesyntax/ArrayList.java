@@ -26,6 +26,25 @@ public class ArrayList<T> implements List<T> {
         this.elements = elements;
     }
 
+    private void indexAssert(int index, String context) {
+        switch (context) {
+            case "index":
+                if (index < 0 || index >= size) {
+                    throw new ArrayListIndexOutOfBoundsException("Index out of bounds.",
+                            new IndexOutOfBoundsException(index));
+                }
+                break;
+            case "size":
+                if (index < 0 || index > size) {
+                    throw new ArrayListIndexOutOfBoundsException("Size out of bounds.",
+                            new IndexOutOfBoundsException(index));
+                }
+                break;
+            default:
+                System.out.println("No such context defined: acceptable {index, size}");
+        }
+    }
+
     @Override
     public void add(T value) {
         this.ensureCapacity();
@@ -35,14 +54,10 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index < 0 || index > this.size) {
-            throw new ArrayListIndexOutOfBoundsException("Index out of bound.");
-        }
+        this.indexAssert(index, "size");
         this.ensureCapacity();
-        T[] swap = (T[]) new Object[size - index];
-        System.arraycopy(this.elements, index, swap, 0, size - index);
+        System.arraycopy(elements, index, elements, index + 1, size - index);
         this.elements[index] = value;
-        System.arraycopy(swap, 0, this.elements, index + 1, size - index);
         this.size++;
     }
 
@@ -55,25 +70,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index out of bounds");
-        }
+        this.indexAssert(index, "index");
         return elements[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index out of bounds");
-        }
+        this.indexAssert(index, "index");
         elements[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index out of bounds");
-        }
+        this.indexAssert(index, "index");
         T swap = elements[index];
         System.arraycopy(this.elements, index + 1, this.elements, index, size - index - 1);
         size--;
