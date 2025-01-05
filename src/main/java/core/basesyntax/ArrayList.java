@@ -1,6 +1,5 @@
 package core.basesyntax;
 
-import core.basesyntax.ArrayListIndexOutOfBoundsException;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
@@ -84,7 +83,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Index " + index + " is out of bounds");
+            throw new ArrayListIndexOutOfBoundsException("Index " + index + " is out of bounds");
         }
 
         final T removedElement = list[index];
