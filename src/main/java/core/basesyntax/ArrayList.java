@@ -1,5 +1,6 @@
 package core.basesyntax;
 
+import core.basesyntax.ArrayListIndexOutOfBoundsException;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
@@ -7,17 +8,17 @@ public class ArrayList<T> implements List<T> {
     private T[] list;
     private int size;
 
-    private int currntSize;
+    private int currentSize;
 
     public ArrayList() {
         this.size = 0;
-        this.currntSize = 2;
-        this.list = (T[]) new Object[currntSize];
+        this.currentSize = 2;
+        this.list = (T[]) new Object[currentSize];
     }
 
     @Override
     public void add(T value) {
-        if (size == currntSize) {
+        if (size == currentSize) {
             makeListBigger();
         }
         list[size] = value;
@@ -30,7 +31,7 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayListIndexOutOfBoundsException("Index " + index + " is out of bounds");
         }
 
-        if (currntSize <= size + 1) {
+        if (currentSize <= size + 1) {
             makeListBigger();
         }
 
@@ -43,8 +44,8 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void makeListBigger() {
-        currntSize = currntSize * 3 / 2;
-        T[] newList = (T[]) new Object[currntSize];
+        currentSize = currentSize * 3 / 2;
+        T[] newList = (T[]) new Object[currentSize];
         System.arraycopy(this.list, 0, newList, 0, size);
         list = newList;
     }
@@ -52,7 +53,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void addAll(List<T> list) {
 
-        while (currntSize < this.size + list.size()) {
+        while (currentSize < this.size + list.size()) {
             makeListBigger();
         }
 
@@ -83,7 +84,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index " + index + " is out of bounds");
+            throw new IndexOutOfBoundsException("Index " + index + " is out of bounds");
         }
 
         final T removedElement = list[index];
