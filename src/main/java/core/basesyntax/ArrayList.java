@@ -6,12 +6,13 @@ public class ArrayList<T> implements List<T> {
 
     private T[] list;
     private int size;
-
     private int currentSize;
+    private ArrayListIndexOutOfBoundsException exception
+            = new ArrayListIndexOutOfBoundsException("Index is out of bounds");
 
     public ArrayList() {
         this.size = 0;
-        this.currentSize = 2;
+        this.currentSize = 10;
         this.list = (T[]) new Object[currentSize];
     }
 
@@ -27,7 +28,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("Index " + index + " is out of bounds");
+            throw exception;
         }
 
         if (currentSize <= size + 1) {
@@ -67,7 +68,7 @@ public class ArrayList<T> implements List<T> {
     public T get(int index) {
 
         if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index " + index + " is out of bounds");
+            throw exception;
         }
         return list[index];
     }
@@ -75,7 +76,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void set(T value, int index) {
         if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index " + index + " is out of bounds");
+            throw exception;
         }
         list[index] = value;
     }
@@ -83,7 +84,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index " + index + " is out of bounds");
+            throw exception;
         }
 
         final T removedElement = list[index];
