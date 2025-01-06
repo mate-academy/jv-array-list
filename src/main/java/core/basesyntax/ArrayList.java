@@ -3,7 +3,7 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    private final static int START_SIZE = 10;
+    private static final int START_SIZE = 10;
     private Object[] dataStorage;
     private int size;
 
@@ -11,13 +11,14 @@ public class ArrayList<T> implements List<T> {
         dataStorage = new Object[START_SIZE];
         size = 0;
     }
+
     @Override
     public void add(T value) {
         size++;
         if (size > dataStorage.length) {
             this.grow();
         }
-        this.dataStorage[size-1] = value;
+        this.dataStorage[size - 1] = value;
     }
 
     @Override
@@ -80,7 +81,6 @@ public class ArrayList<T> implements List<T> {
         throw new NoSuchElementException("Element not found");
     }
 
-
     @Override
     public int size() {
         return this.size;
@@ -88,7 +88,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public boolean isEmpty() {
-        if(size == 0) {
+        if (size == 0) {
             return true;
         }
         return false;
