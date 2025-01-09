@@ -1,7 +1,7 @@
 package core.basesyntax;
 
+
 import java.util.Arrays;
-import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 2;
@@ -30,20 +30,6 @@ public class ArrayList<T> implements List<T> {
         return elementData;
     }
 
-    public void checkIfElementExists(T element) {
-        boolean elementFaunded = false;
-        for (int i = 0; i < size; i++) {
-            if ((element == null && elementData[i] == null)
-                    || (element != null && element.equals(elementData[i]))) {
-                elementFaunded = true;
-                break;
-            }
-        }
-        if (!elementFaunded) {
-            throw new NoSuchElementException("Element not found in the array");
-        }
-    }
-
     @Override
     public void add(T value) {
         rangeCheck();
@@ -53,34 +39,23 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index > size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index out of bound ... )");
-        }
         rangeCheck();
-    }
-
-    @Override
-    public void addAll(List<T> list) {
-
     }
 
     @Override
     public T get(int index) {
         indexCheck(index);
-        checkIfElementExistsByIndex(index);
         return (T) elementData[index];
     }
-
-    private void checkIfElementExistsByIndex(int index) {
-        if (elementData[index] == null) {
-            throw new RuntimeException("There is no element by this index. Please call to admin to support");
-        }
-    }
-
 
     @Override
     public void set(T value, int index) {
 
+        for (int i = 0; i < elementData.length; i++) {
+            if (i == index) {
+                elementData[i] = value;
+            }
+        }
     }
 
     @Override
@@ -95,7 +70,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        checkIfElementExists(element);
+        rangeCheck();
         for (int i = 0; i < size; i++) {
             if ((element == null && elementData[i] == null) || (element != null && element.equals(elementData[i]))) {
                 T removedElement = remove(i);
