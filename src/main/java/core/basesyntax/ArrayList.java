@@ -1,6 +1,5 @@
 package core.basesyntax;
 
-import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
@@ -24,8 +23,10 @@ public class ArrayList<T> implements List<T> {
     public void add(T value, int index) {
         checkIndexForAdd(index);
         ensureCapacity();
-        System.arraycopy(elements, index, elements, index + 1, size - index);
-        elements[index] = value;
+        for (int i = size; i > index; i--) {
+            elements[i] = elements[i - 1];
+        }
+        elements[index] = value; // Додаємо новий елемент
         size++;
     }
 
@@ -52,9 +53,10 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         checkIndex(index);
         T removedValue = elements[index];
-        System.arraycopy(elements, index
-                + 1, elements, index, size - index - 1); // Зсуваємо елементи вліво
-        elements[--size] = null; // Видаляємо посилання на останній елемент
+        for (int i = index; i < size - 1; i++) {
+            elements[i] = elements[i + 1];
+        }
+        elements[--size] = null; // Очищаємо останній елемент
         return removedValue;
     }
 
@@ -81,7 +83,12 @@ public class ArrayList<T> implements List<T> {
 
     private void resize() {
         int newCapacity = elements.length + elements.length / 2; // Збільшуємо ємність у 1.5 рази
-        elements = Arrays.copyOf(elements, newCapacity); // Копіюємо старі елементи у новий масив
+        @SuppressWarnings("unchecked")
+        T[] newElements = (T[]) new Object[newCapacity]; // Створюємо новий масив
+        for (int i = 0; i < size; i++) { // Копіюємо елементи вручну
+            newElements[i] = elements[i];
+        }
+        elements = newElements; // Змінюємо посилання на новий масив
     }
 
     private void checkIndex(int index) {
