@@ -2,6 +2,7 @@ package core.basesyntax;
 
 public final class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
+    public static final int MAGIC_NUMBER = 3;
     private int size;
     private Object[] elementData;
 
@@ -22,7 +23,7 @@ public final class ArrayList<T> implements List<T> {
     }
 
     private Object[] grow() {
-        int newCapacity = elementData.length * 3 / 2 + 1;
+        int newCapacity = elementData.length * MAGIC_NUMBER / 2 + 1;
         elementData = new Object[newCapacity];
         return elementData;
     }
