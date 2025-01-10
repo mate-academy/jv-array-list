@@ -1,6 +1,6 @@
 package core.basesyntax;
 
-public class ArrayList<T> implements List<T> {
+public final class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private int size;
     private Object[] elementData;
@@ -15,7 +15,7 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private final void indexCheck(final int index) {
+    private void indexCheck(final int index) {
         if (index >= size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Invalid index");
         }
@@ -28,14 +28,14 @@ public class ArrayList<T> implements List<T> {
     }
 
     @Override
-    public final void add(final T value) {
+    public void add(final T value) {
         rangeCheck();
         elementData[size] = value;
         size++;
     }
 
     @Override
-    public final void add(final T value, final int index) {
+    public void add(final T value, final int index) {
         rangeCheck();
     }
 
@@ -59,7 +59,8 @@ public class ArrayList<T> implements List<T> {
     public T remove(final int index) {
         indexCheck(index);
         final T removedElement = (T) elementData[index];
-        System.arraycopy(elementData, index + 1, elementData, index, size - index - 1);
+        System.arraycopy(elementData, index + 1,
+                elementData, index, size - index - 1);
         elementData[size - 1] = null;
         size--;
         return removedElement;
