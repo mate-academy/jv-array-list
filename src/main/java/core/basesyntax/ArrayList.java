@@ -1,7 +1,7 @@
 package core.basesyntax;
 
 public class ArrayList<T> implements List<T> {
-    private static final int DEFAULT_CAPACITY = 10K;
+    private static final int DEFAULT_CAPACITY = 10;
     private int size;
     private Object[] elementData;
 
