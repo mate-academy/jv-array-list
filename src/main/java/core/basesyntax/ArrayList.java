@@ -69,8 +69,8 @@ public class ArrayList<T> implements List<T> {
     public T remove(T element) {
         rangeCheck();
         for (int i = 0; i < size; i++) {
-            if ((element == null && elementData[i] == null) ||
-                    (element != null && element.equals(elementData[i]))) {
+            if ((element == null && elementData[i] == null)
+                    || (element != null && element.equals(elementData[i]))) {
                 T removedElement = remove(i);
                 return removedElement;
             }
