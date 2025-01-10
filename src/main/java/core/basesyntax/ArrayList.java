@@ -9,13 +9,13 @@ public class ArrayList<T> implements List<T> {
         elementData = new Object[DEFAULT_CAPACITY];
     }
 
-    public void rangeCheck() {
+    private void rangeCheck() {
         if (size == elementData.length) {
             grow();
         }
     }
 
-    public void indexCheck(int index) {
+    private void indexCheck(int index) {
         if (index >= size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Invalid index");
         }
