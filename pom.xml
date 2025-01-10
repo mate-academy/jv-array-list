@@ -12,9 +12,9 @@
         <jdk.version>17</jdk.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-<!--        <maven.checkstyle.plugin.configLocation>-->
-<!--            https://raw.githubusercontent.com/mate-academy/style-guides/master/java/checkstyle.xml-->
-<!--        </maven.checkstyle.plugin.configLocation>-->
+        <maven.checkstyle.plugin.configLocation>
+            https://raw.githubusercontent.com/mate-academy/style-guides/master/java/checkstyle.xml
+        </maven.checkstyle.plugin.configLocation>
     </properties>
 
     <dependencies>
