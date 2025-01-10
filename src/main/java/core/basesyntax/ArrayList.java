@@ -15,7 +15,7 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private void indexCheck(int index) {
+    private final void indexCheck(final int index) {
         if (index >= size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Invalid index");
         }
@@ -28,25 +28,25 @@ public class ArrayList<T> implements List<T> {
     }
 
     @Override
-    public void add(T value) {
+    public final void add(final T value) {
         rangeCheck();
         elementData[size] = value;
         size++;
     }
 
     @Override
-    public void add(T value, int index) {
+    public final void add(final T value, final int index) {
         rangeCheck();
     }
 
     @Override
-    public T get(int index) {
+    public T get(final int index) {
         indexCheck(index);
         return (T) elementData[index];
     }
 
     @Override
-    public void set(T value, int index) {
+    public void set(final T value, final int index) {
 
         for (int i = 0; i < elementData.length; i++) {
             if (i == index) {
@@ -56,7 +56,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     @Override
-    public T remove(int index) {
+    public T remove(final int index) {
         indexCheck(index);
         final T removedElement = (T) elementData[index];
         System.arraycopy(elementData, index + 1, elementData, index, size - index - 1);
@@ -66,7 +66,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     @Override
-    public T remove(T element) {
+    public T remove(final T element) {
         rangeCheck();
         for (int i = 0; i < size; i++) {
             if ((element == null && elementData[i] == null)
