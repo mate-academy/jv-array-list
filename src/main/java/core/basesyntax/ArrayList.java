@@ -1,10 +1,7 @@
 package core.basesyntax;
 
-
-import java.util.Arrays;
-
 public class ArrayList<T> implements List<T> {
-    private static final int DEFAULT_CAPACITY = 2;
+    private static final int DEFAULT_CAPACITY = 5;
     private int size;
     private Object[] elementData;
 
@@ -26,7 +23,7 @@ public class ArrayList<T> implements List<T> {
 
     private Object[] grow() {
         int newCapacity = elementData.length * 3 / 2 + 1;
-        elementData = Arrays.copyOf(elementData, newCapacity);
+        elementData = new Object[newCapacity];
         return elementData;
     }
 
