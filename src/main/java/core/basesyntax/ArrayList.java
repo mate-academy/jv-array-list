@@ -10,7 +10,7 @@ public class ArrayList<T> implements List<T> {
     private int size;
 
     public ArrayList() {
-        this.arrayList = (T[]) new Object[EMPTY_LIST_SIZE];
+        this.arrayList = (T[]) new Object[DEFAULT_CAPACITY];
         this.size = EMPTY_LIST_SIZE;
     }
 
@@ -45,13 +45,10 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) throws ArrayListIndexOutOfBoundsException {
-        if (arrayList.length == 0) {
-            arrayList = grow();
-        }
         if (index > size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Index is bigger then size");
         }
-        if (index > arrayList.length) {
+        if (size == arrayList.length) {
             arrayList = grow();
         }
         T[] tempArray = (T[]) new Object[size + 1];
@@ -85,15 +82,15 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         indexCheck(index);
-        T[] tempArray = (T[]) new Object[size];
-        size -= 1;
+        T[] tempArray = (T[]) new Object[size - 1];
         if (index == 0 || size == 1) {
-            System.arraycopy(arrayList, 1, tempArray, 0, size);
+            System.arraycopy(arrayList, 1, tempArray, 0, size - 1);
         }
         if (index > 0) {
-            System.arraycopy(arrayList, 0, tempArray, 0, index + 1);
-            System.arraycopy(arrayList, index + 1, tempArray, index, size - index);
+            System.arraycopy(arrayList, 0, tempArray, 0, index);
+            System.arraycopy(arrayList, index + 1, tempArray, index, size - index - 1);
         }
+        size -= 1;
         T elementFromIndex = arrayList[index];
         arrayList = tempArray;
         tempArray = null;
