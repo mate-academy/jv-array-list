@@ -51,12 +51,8 @@ public class ArrayList<T> implements List<T> {
         if (size == arrayList.length) {
             arrayList = grow();
         }
-        T[] tempArray = (T[]) new Object[size + 1];
-        System.arraycopy(arrayList, 0, tempArray, 0, index);
-        tempArray[index] = value;
-        System.arraycopy(arrayList, index, tempArray, index + 1, size - index);
-        arrayList = tempArray;
-        tempArray = null;
+        System.arraycopy(arrayList, index, arrayList, index + 1, size - index);
+        arrayList[index] = value;
         size += 1;
     }
 
@@ -82,18 +78,9 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         indexCheck(index);
-        T[] tempArray = (T[]) new Object[size - 1];
-        if (index == 0 || size == 1) {
-            System.arraycopy(arrayList, 1, tempArray, 0, size - 1);
-        }
-        if (index > 0) {
-            System.arraycopy(arrayList, 0, tempArray, 0, index);
-            System.arraycopy(arrayList, index + 1, tempArray, index, size - index - 1);
-        }
-        size -= 1;
         T elementFromIndex = arrayList[index];
-        arrayList = tempArray;
-        tempArray = null;
+        System.arraycopy(arrayList, index + 1, arrayList, index, size - index - 1);
+        size -= 1;
         return elementFromIndex;
     }
 
