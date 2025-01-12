@@ -67,11 +67,11 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         rangeCheck(index);
         final T removedElement = (T) elementData[index];
-        for (int i = index; i < size - 1; i++) {
-            elementData[i] = elementData[i + 1];
+        int elementsToMove = size - index - 1;
+        if (elementsToMove > 0) {
+            System.arraycopy(elementData, index + 1, elementData, index, elementsToMove);
         }
-        elementData[size - 1] = null;
-        size--;
+        elementData[--size] = null;
         return removedElement;
     }
 
@@ -80,13 +80,7 @@ public class ArrayList<T> implements List<T> {
         for (int i = 0; i < size; i++) {
             if ((elementData[i] == null && element == null)
                     || (elementData[i] != null && elementData[i].equals(element))) {
-                final T removedElement = (T) elementData[i];
-                for (int j = i; j < size - 1; j++) {
-                    elementData[j] = elementData[j + 1];
-                }
-                elementData[size - 1] = null;
-                size--;
-                return removedElement;
+                return remove(i);
             }
         }
         throw new NoSuchElementException("No such element in array");
