@@ -2,7 +2,7 @@ package core.basesyntax;
 
 public final class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    public static final int MAGIC_NUMBER = 3;
+    private static final int MAGIC_NUMBER = 3;
     private int size;
     private Object[] elementData;
 

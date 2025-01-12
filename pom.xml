@@ -40,10 +40,10 @@
                     </execution>
                 </executions>
                 <configuration>
-<!--                    <configLocation>${maven.checkstyle.plugin.configLocation}</configLocation>-->
-<!--                    <consoleOutput>true</consoleOutput>-->
-<!--                    <failsOnError>true</failsOnError>-->
-<!--                    <linkXRef>false</linkXRef>-->
+                    <configLocation>${maven.checkstyle.plugin.configLocation}</configLocation>
+                    <consoleOutput>true</consoleOutput>
+                    <failsOnError>true</failsOnError>
+                    <linkXRef>false</linkXRef>
                 </configuration>
             </plugin>
         </plugins>
