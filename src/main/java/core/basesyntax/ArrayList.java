@@ -1,57 +1,71 @@
 package core.basesyntax;
 
+import java.util.Arrays;
+
 public final class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private static final int MAGIC_NUMBER = 3;
     private int size;
-    private Object[] elementData;
+    private Object[] elements;
 
     public ArrayList() {
-        elementData = new Object[DEFAULT_CAPACITY];
+        elements = new Object[DEFAULT_CAPACITY];
+        size = 0;
     }
 
-    private void rangeCheck() {
-        if (size == elementData.length) {
+    private void ensureCapacity(int size) {
+        if (size == elements.length) {
             grow();
         }
     }
 
     private void indexCheck(final int index) {
         if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index");
+            throw new ArrayListIndexOutOfBoundsException("Index " + index
+                    + " is out of bounds for add operation");
         }
     }
 
-    private Object[] grow() {
-        int newCapacity = elementData.length * MAGIC_NUMBER / 2 + 1;
-        elementData = new Object[newCapacity];
-        return elementData;
+    private void grow() {
+        int newCapacity = elements.length * MAGIC_NUMBER / 2 + 1;
+        elements = Arrays.copyOf(elements, newCapacity);
     }
 
     @Override
-    public void add(final T value) {
-        rangeCheck();
-        elementData[size] = value;
-        size++;
+    public void add(final T element) {
+        ensureCapacity(size);
+        elements[size++] = element;
     }
 
     @Override
     public void add(final T value, final int index) {
-        rangeCheck();
+        indexCheck(index);
+        for (int i = size; i > index; i--) {
+            elements[i] = elements[i - 1];
+        }
+        elements[index] = value;
+        size++;
+    }
+
+    @Override
+    public void addAll(List<T> list) {
+        for (int i = 0; i < list.size(); i++) {
+            this.add(list.get(i));
+        }
     }
 
     @Override
     public T get(final int index) {
         indexCheck(index);
-        return (T) elementData[index];
+        return (T) elements[index];
     }
 
     @Override
     public void set(final T value, final int index) {
 
-        for (int i = 0; i < elementData.length; i++) {
+        for (int i = 0; i < elements.length; i++) {
             if (i == index) {
-                elementData[i] = value;
+                elements[i] = value;
             }
         }
     }
@@ -59,22 +73,21 @@ public final class ArrayList<T> implements List<T> {
     @Override
     public T remove(final int index) {
         indexCheck(index);
-        final T removedElement = (T) elementData[index];
-        System.arraycopy(elementData, index + 1,
-                elementData, index, size - index - 1);
-        elementData[size - 1] = null;
+        final T removedElement = (T) elements[index];
+        System.arraycopy(elements, index + 1,
+                elements, index, size - index - 1);
+        elements[size - 1] = null;
         size--;
         return removedElement;
     }
 
     @Override
     public T remove(final T element) {
-        rangeCheck();
+        ensureCapacity(size);
         for (int i = 0; i < size; i++) {
-            if ((element == null && elementData[i] == null)
-                    || (element != null && element.equals(elementData[i]))) {
-                T removedElement = remove(i);
-                return removedElement;
+            if ((element == null && elements[i] == null)
+                    || (element != null && element.equals(elements[i]))) {
+                return remove(i);
             }
         }
         return null;
@@ -89,5 +102,4 @@ public final class ArrayList<T> implements List<T> {
     public boolean isEmpty() {
         return size == 0;
     }
-
 }
