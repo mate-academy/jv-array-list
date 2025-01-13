@@ -1,115 +1,123 @@
 package core.basesyntax;
 
 import java.util.NoSuchElementException;
-import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
 
+    private static final int INITIAL_CAPACITY = 10;
+    private static final double RESIZE_FACTOR = 1.5;
+
     private T[] array;
-    private int targetIndex = 0;
-    private int actualSize = 0;
+    private int size = 0;
 
     public ArrayList() {
-        array = (T[]) new Object[10];
+        array = (T[]) new Object[INITIAL_CAPACITY];
     }
 
     @Override
     public void add(T value) {
-        if (targetIndex > array.length - 1) {
-            resize();
-        }
-
-        array[targetIndex] = value;
-        targetIndex++;
-        actualSize++;
+        ensureCapacity();
+        array[size++] = value;
     }
 
     @Override
     public void add(T value, int index) {
-        if (actualSize > array.length - 1) {
-            resize();
-        }
-
-        if (index >= 0 && index <= targetIndex) {
-            System.arraycopy(array, index, array, index + 1, array.length - index - 1);
-            array[index] = value;
-            targetIndex++;
-            actualSize++;
-            return;
-        }
-
-        throw new ArrayListIndexOutOfBoundsException("Error");
+        validateIndexForAdd(index);
+        ensureCapacity();
+        System.arraycopy(array, index, array, index + 1, size - index);
+        array[index] = value;
+        size++;
     }
 
     @Override
     public void addAll(List<T> list) {
         for (int i = 0; i < list.size(); i++) {
-            T targetElement = list.get(i);
-            add(targetElement);
+            add(list.get(i));
         }
     }
 
     @Override
     public T get(int index) {
-        if (index >= 0 && index <= targetIndex - 1) {
-            return array[index];
-        }
-
-        throw new ArrayListIndexOutOfBoundsException("Error");
+        validateIndex(index);
+        return array[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index >= 0 && index <= targetIndex - 1) {
-            array[index] = value;
-            return;
-        }
-
-        throw new ArrayListIndexOutOfBoundsException("Error");
+        validateIndex(index);
+        array[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index >= 0 && index <= targetIndex - 1) {
-            final T targetElement = array[index];
-            actualSize--;
-            System.arraycopy(array, index + 1, array, index, array.length - index - 1);
-            array[array.length - 1] = null;
-            return targetElement;
-        }
-
-        throw new ArrayListIndexOutOfBoundsException("Error");
+        validateIndex(index);
+        final T targetElement = array[index];
+        size--;
+        System.arraycopy(array, index + 1, array, index, size - index);
+        array[size] = null;
+        return targetElement;
     }
 
     @Override
     public T remove(T element) {
-        for (int i = 0; i < array.length; i++) {
-
-            if (Objects.equals(array[i], element)) {
-                final T targetElement = array[i];
-                actualSize--;
-                System.arraycopy(array, i + 1, array, i, array.length - i - 1);
-                array[array.length - 1] = null;
-                return targetElement;
+        if (element == null) {
+            for (int i = 0; i < size; i++) {
+                if (array[i] == null) {
+                    final T targetElement = array[i];
+                    size--;
+                    System.arraycopy(array, i + 1, array, i, size - i);
+                    array[size - 1] = null;
+                    return targetElement;
+                }
+            }
+        } else {
+            for (int i = 0; i < size; i++) {
+                if (element.equals(array[i])) {
+                    final T targetElement = array[i];
+                    size--;
+                    System.arraycopy(array, i + 1, array, i, size - i);
+                    array[size] = null;
+                    return targetElement;
+                }
             }
         }
-
-        throw new NoSuchElementException("Error");
+        throw new NoSuchElementException("Item not found: " + element);
     }
 
     @Override
     public int size() {
-        return actualSize;
+        return size;
     }
 
     @Override
     public boolean isEmpty() {
-        return size() == 0;
+        return size == 0;
+    }
+
+    private void ensureCapacity() {
+        if (size >= array.length) {
+            resize();
+        }
     }
 
     private void resize() {
-        Object[] biggerArray = new Object[(int) (array.length * 1.5)];
-        System.arraycopy(array, 0, biggerArray, 0, array.length);
-        array = (T[]) biggerArray;
+        int newCapacity = (int) (array.length * RESIZE_FACTOR);
+        T[] newArray = (T[]) new Object[newCapacity];
+        System.arraycopy(array, 0, newArray, 0, size);
+        array = newArray;
+    }
+
+    private void validateIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Index " + index
+                    + " out of bounds. Valid index values: from 0 to " + (size - 1));
+        }
+    }
+
+    private void validateIndexForAdd(int index) {
+        if (index < 0 || index > size) {
+            throw new ArrayListIndexOutOfBoundsException("Index" + index
+                    + " out of bounds for add operation. Valid index values: from 0 to" + size);
+        }
     }
 }
