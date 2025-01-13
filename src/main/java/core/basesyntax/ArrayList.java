@@ -1,6 +1,7 @@
 package core.basesyntax;
 
 import java.util.Arrays;
+import java.util.NoSuchElementException;
 
 public final class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
@@ -20,7 +21,13 @@ public final class ArrayList<T> implements List<T> {
     }
 
     private void indexCheck(final int index) {
-        if (index >= size || index < 0) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Index " + index + " is out of bounds");
+        }
+    }
+
+    private void checkIndexForAdd(int index) {
+        if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException("Index " + index
                     + " is out of bounds for add operation");
         }
@@ -39,10 +46,9 @@ public final class ArrayList<T> implements List<T> {
 
     @Override
     public void add(final T value, final int index) {
-        indexCheck(index);
-        for (int i = size; i > index; i--) {
-            elements[i] = elements[i - 1];
-        }
+        checkIndexForAdd(index);
+        ensureCapacity(size);
+        System.arraycopy(elements, index, elements, index + 1, size - index);
         elements[index] = value;
         size++;
     }
@@ -62,7 +68,7 @@ public final class ArrayList<T> implements List<T> {
 
     @Override
     public void set(final T value, final int index) {
-
+        indexCheck(index);
         for (int i = 0; i < elements.length; i++) {
             if (i == index) {
                 elements[i] = value;
@@ -83,14 +89,13 @@ public final class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(final T element) {
-        ensureCapacity(size);
         for (int i = 0; i < size; i++) {
             if ((element == null && elements[i] == null)
                     || (element != null && element.equals(elements[i]))) {
                 return remove(i);
             }
         }
-        return null;
+        throw new NoSuchElementException("Element doesn't exist");
     }
 
     @Override
