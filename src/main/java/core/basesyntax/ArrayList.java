@@ -22,32 +22,22 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index != size) {
-            rangeCheck(index);
-        }
+        checkIndex(index);
         if (size == elementData.length) {
             ensureCapacity();
         }
-        if (index == size) {
-            elementData[size] = value;
-        } else {
-            System.arraycopy(elementData, index, elementData, index + 1, size - index);
-            elementData[index] = value;
-        }
+        System.arraycopy(elementData, index, elementData, index + 1, size - index);
+        elementData[index] = value;
         size++;
     }
 
     @Override
     public void addAll(List<T> list) {
-        while (size + list.size() > elementData.length) {
+        if (size + list.size() > elementData.length) {
             ensureCapacity();
         }
-        int indexOfList = 0;
-        int forLoop = size;
-        for (int i = size; i < forLoop + list.size(); i++) {
-            elementData[i] = list.get(indexOfList);
-            size++;
-            indexOfList++;
+        for (int i = 0; i < list.size(); i++) {
+            add(list.get(i), size);
         }
     }
 
@@ -78,8 +68,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if ((elementData[i] == null && element == null)
-                    || (elementData[i] != null && elementData[i].equals(element))) {
+            if (elementData[i] == element
+                    || elementData[i] != null && elementData[i].equals(element)) {
                 return remove(i);
             }
         }
@@ -94,6 +84,15 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private void checkIndex(int index) {
+        if (index < 0 || index > size) {
+            throw new ArrayListIndexOutOfBoundsException("Index out of bounds"
+                    + System.lineSeparator()
+                    + "Index: " + index + System.lineSeparator()
+                    + "Size: " + size);
+        }
     }
 
     private void rangeCheck(int index) {
