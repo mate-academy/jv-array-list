@@ -69,11 +69,7 @@ public final class ArrayList<T> implements List<T> {
     @Override
     public void set(final T value, final int index) {
         indexCheck(index);
-        for (int i = 0; i < elements.length; i++) {
-            if (i == index) {
-                elements[i] = value;
-            }
-        }
+        elements[index] = value;
     }
 
     @Override
