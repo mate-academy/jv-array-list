@@ -1,5 +1,6 @@
 package core.basesyntax;
 
+import core.basesyntax.ArrayListIndexOutOfBoundsException;
 import java.util.Arrays;
 import java.util.NoSuchElementException;
 
@@ -77,13 +78,6 @@ public class ArrayList<E> {
     private void ensureCapacity() {
         if (size == elements.length) {
             elements = Arrays.copyOf(elements, elements.length * 2);
-        }
-    }
-
-    private void ensureCapacity(int minCapacity) {
-        if (minCapacity > elements.length) {
-            int newCapacity = Math.max(elements.length * 2, minCapacity);
-            elements = Arrays.copyOf(elements, newCapacity);
         }
     }
 
