@@ -8,6 +8,21 @@ public class ArrayList<T> implements List<T> {
     private Object[] elementData;
     private int size = 0;
 
+    public ArrayList() {
+        setElementData(new Object[DEFAULT_CAPACITY]);
+    }
+
+    public ArrayList(Collection<? extends T> c) {
+        if (c == null) {
+            throw new NullPointerException("Collection cannot be null");
+        }
+        elementData = c.toArray();
+        setSize(elementData.length);
+        if (size == 0) {
+            setElementData(new Object[DEFAULT_CAPACITY]);
+        }
+    }
+
     public int getSize() {
         return size;
     }
@@ -22,21 +37,6 @@ public class ArrayList<T> implements List<T> {
 
     public void setElementData(Object[] elementData) {
         this.elementData = elementData;
-    }
-
-    public ArrayList() {
-        setElementData(new Object[DEFAULT_CAPACITY]);
-    }
-
-    public ArrayList(Collection<? extends T> c) {
-        if (c == null) {
-            throw new NullPointerException("Collection cannot be null");
-        }
-        elementData = c.toArray();
-        setSize(elementData.length);
-        if (size == 0) {
-            setElementData(new Object[DEFAULT_CAPACITY]);
-        }
     }
 
     @Override
