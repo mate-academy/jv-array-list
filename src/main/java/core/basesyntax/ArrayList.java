@@ -1,6 +1,5 @@
 package core.basesyntax;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.NoSuchElementException;
 
@@ -112,17 +111,25 @@ public class ArrayList<T> implements List<T> {
 
     private void growCapacity() {
         int newCapacity = elementData.length + (elementData.length >> 1);
-        elementData = Arrays.copyOf(elementData, newCapacity);
+        elementData = copyOf(elementData, newCapacity);
     }
 
     private void growCapacity(int minCapacity) {
         int newCapacity = Math.max(elementData.length + (elementData.length >> 1), minCapacity);
-        elementData = Arrays.copyOf(elementData, newCapacity);
+        elementData = copyOf(elementData, newCapacity);
     }
 
     private void checkIndex(int index) {
         if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
         }
+    }
+
+    private Object[] copyOf(Object[] original, int newLength) {
+        Object[] newArray = new Object[newLength];
+        for (int i = 0; i < original.length && i < newLength; i++) {
+            newArray[i] = original[i];
+        }
+        return newArray;
     }
 }
