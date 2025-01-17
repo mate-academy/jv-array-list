@@ -5,11 +5,27 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    Object[] elementData;
-    int size = 0;
+    private Object[] elementData;
+    private int size = 0;
+
+    public int getSize() {
+        return size;
+    }
+
+    public void setSize(int size) {
+        this.size = size;
+    }
+
+    public Object[] getElementData() {
+        return elementData;
+    }
+
+    public void setElementData(Object[] elementData) {
+        this.elementData = elementData;
+    }
 
     public ArrayList() {
-        elementData = new Object[DEFAULT_CAPACITY];
+        setElementData(new Object[DEFAULT_CAPACITY]);
     }
 
     public ArrayList(Collection<? extends T> c) {
@@ -17,9 +33,9 @@ public class ArrayList<T> implements List<T> {
             throw new NullPointerException("Collection cannot be null");
         }
         elementData = c.toArray();
-        size = elementData.length;
+        setSize(elementData.length);
         if (size == 0) {
-            elementData = new Object[DEFAULT_CAPACITY];
+            setElementData(new Object[DEFAULT_CAPACITY]);
         }
     }
 
