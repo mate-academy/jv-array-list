@@ -22,13 +22,11 @@ public class ArrayList<T> implements List<T> {
     public void add(T value, int index) {
         validateIndexForAdd(index);
         ifFullResize();
-        if (index >= 0 && index <= size) {
-            for (int i = size; i > index; i--) {
-                elements[i] = elements[i - 1];
-            }
-            elements[index] = value;
-            size++;
+        for (int i = size; i > index; i--) {
+            elements[i] = elements[i - 1];
         }
+        elements[index] = value;
+        size++;
     }
 
     @Override
@@ -53,7 +51,6 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         validateIndex(index);
-        ifFullResize();
         T removedElement = (T) elements[index];
         for (int i = index; i < size - 1; i++) {
             elements[i] = elements[i + 1];
