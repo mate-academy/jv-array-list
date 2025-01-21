@@ -319,3 +319,4 @@ public class ArrayListTest {
         Assert.assertTrue("Test failed! ArrayList should be empty", arrayList.isEmpty());
     }
 }
+
