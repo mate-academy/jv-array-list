@@ -1,151 +1,124 @@
 package core.basesyntax;
 
-import java.util.Collection;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    private static final int INITIAL_CAPACITY = 10;
-    private Object[] elementData;
-    private int size = 0;
+
+    private T[] list;
+    private int size;
+    private int currentSize;
+    private ArrayListIndexOutOfBoundsException exception
+            = new ArrayListIndexOutOfBoundsException("Index is out of bounds");
 
     public ArrayList() {
-        setElementData(new Object[INITIAL_CAPACITY]);
-    }
-
-    public ArrayList(Collection<? extends T> c) {
-        if (c == null) {
-            throw new NullPointerException("Collection cannot be null");
-        }
-        elementData = c.toArray();
-        setSize(elementData.length);
-        if (size == 0) {
-            setElementData(new Object[INITIAL_CAPACITY]);
-        }
-    }
-
-    public int getSize() {
-        return size;
-    }
-
-    public void setSize(int size) {
-        this.size = size;
-    }
-
-    public Object[] getElementData() {
-        return elementData;
-    }
-
-    public void setElementData(Object[] elementData) {
-        this.elementData = elementData;
+        this.size = 0;
+        this.currentSize = 10;
+        this.list = (T[]) new Object[currentSize];
     }
 
     @Override
     public void add(T value) {
-        ensureCapacity();
-        elementData[size++] = value;
-    }
-
-    @Override
-    public void add(T value, int index) {
-        if (index > size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
+        if (size == currentSize) {
+            makeListBigger();
         }
-        ensureCapacity();
-        System.arraycopy(elementData, index, elementData, index + 1, size - index);
-        elementData[index] = value;
+        list[size] = value;
         size++;
     }
 
     @Override
+    public void add(T value, int index) {
+        if (index < 0 || index > size) {
+            throw exception;
+        }
+
+        if (currentSize <= size + 1) {
+            makeListBigger();
+        }
+
+        for (int i = size; i > index; i--) {
+            list[i] = list[i - 1];
+        }
+
+        list[index] = value;
+        size++;
+    }
+
+    private void makeListBigger() {
+        currentSize = currentSize * 3 / 2;
+        T[] newList = (T[]) new Object[currentSize];
+        System.arraycopy(this.list, 0, newList, 0, size);
+        list = newList;
+    }
+
+    @Override
     public void addAll(List<T> list) {
-        if (list == null) {
-            throw new NullPointerException("List cannot be null");
+
+        while (currentSize < this.size + list.size()) {
+            makeListBigger();
         }
-        int newSize = size + list.size();
-        ensureCapacity(newSize);
+
         for (int i = 0; i < list.size(); i++) {
-            elementData[size + i] = list.get(i);
+            this.list[size + i] = list.get(i);
         }
-        size = newSize;
+
+        size += list.size();
     }
 
     @Override
     public T get(int index) {
-        checkIndex(index);
-        return (T) elementData[index];
+
+        if (index < 0 || index >= size) {
+            throw exception;
+        }
+        return list[index];
     }
 
     @Override
     public void set(T value, int index) {
-        checkIndex(index);
-        elementData[index] = value;
+        if (index < 0 || index >= size) {
+            throw exception;
+        }
+        list[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        checkIndex(index);
-        T removedElement = (T) elementData[index];
-        int numMoved = size - index - 1;
-        if (numMoved > 0) {
-            System.arraycopy(elementData, index + 1, elementData, index, numMoved);
+        if (index < 0 || index >= size) {
+            throw exception;
         }
-        elementData[--size] = null;
+
+        final T removedElement = list[index];
+        for (int i = index; i < size - 1; i++) {
+            list[i] = list[i + 1];
+        }
+
+        list[size - 1] = null;
+        size--;
         return removedElement;
     }
 
     @Override
-    public T remove(T element) {
+    public T remove(Object value) {
         for (int i = 0; i < size; i++) {
-            if (element == elementData[i] || (element != null && element.equals(elementData[i]))) {
-                return remove(i);
+            if ((value == null && list[i] == null) || (value != null && value.equals(list[i]))) {
+                T removedValue = list[i];
+                for (int j = i; j < size - 1; j++) {
+                    list[j] = list[j + 1];
+                }
+                list[--size] = null;
+                return removedValue;
             }
         }
-        throw new NoSuchElementException("Element not found: " + element);
+        throw new NoSuchElementException("No such element");
     }
 
     @Override
     public int size() {
-        return size;
+        return this.size;
     }
 
     @Override
     public boolean isEmpty() {
         return size == 0;
-    }
-
-    private void ensureCapacity() {
-        if (size == elementData.length) {
-            growCapacity();
-        }
-    }
-
-    private void ensureCapacity(int minCapacity) {
-        if (minCapacity > elementData.length) {
-            growCapacity(minCapacity);
-        }
-    }
-
-    private void growCapacity() {
-        int newCapacity = elementData.length + (elementData.length >> 1);
-        elementData = copyOf(elementData, newCapacity);
-    }
-
-    private void growCapacity(int minCapacity) {
-        int newCapacity = Math.max(elementData.length + (elementData.length >> 1), minCapacity);
-        elementData = copyOf(elementData, newCapacity);
-    }
-
-    private void checkIndex(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
-        }
-    }
-
-    private Object[] copyOf(Object[] original, int newLength) {
-        Object[] newArray = new Object[newLength];
-        for (int i = 0; i < original.length && i < newLength; i++) {
-            newArray[i] = original[i];
-        }
-        return newArray;
     }
 }
