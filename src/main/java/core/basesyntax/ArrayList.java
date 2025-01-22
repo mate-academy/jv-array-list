@@ -1,15 +1,14 @@
 package core.basesyntax;
 
-import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
+    private static final int DEFAULT_CAPACITY = 10;
     private Object[] elements;
     private int size;
 
     public ArrayList() {
-        elements = new Object[10];
-        size = 0;
+        elements = new Object[DEFAULT_CAPACITY];
     }
 
     @Override
@@ -22,9 +21,7 @@ public class ArrayList<T> implements List<T> {
     public void add(T value, int index) {
         validateIndexForAdd(index);
         ifFullResize();
-        for (int i = size; i > index; i--) {
-            elements[i] = elements[i - 1];
-        }
+        System.arraycopy(elements, index, elements, index + 1, size - index);
         elements[index] = value;
         size++;
     }
@@ -52,9 +49,7 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         validateIndex(index);
         T removedElement = (T) elements[index];
-        for (int i = index; i < size - 1; i++) {
-            elements[i] = elements[i + 1];
-        }
+        System.arraycopy(elements, index + 1, elements, index, size - index - 1);
         size--;
         return removedElement;
     }
@@ -63,7 +58,7 @@ public class ArrayList<T> implements List<T> {
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
             if (elements[i] != null && elements[i].equals(element)
-                    || elements[i] == null && element == null) {
+                    || elements[i] == element) {
                 return remove(i);
             }
         }
@@ -87,7 +82,10 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void resize() {
-        elements = Arrays.copyOf(elements, elements.length + (elements.length / 2));
+        int newCapacity = elements.length * (elements.length / 2);
+        Object[] newElements = new Object[newCapacity];
+        System.arraycopy(elements, 0, newElements, 0, size);
+        elements = newElements;
     }
 
     private void validateIndex(int index) {
