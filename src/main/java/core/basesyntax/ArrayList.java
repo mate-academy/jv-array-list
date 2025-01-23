@@ -3,18 +3,13 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 
+
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_ARRAY = 10;
     private int size;
     private T[] elements;
 
-    public ArrayList() {
-        elements = (T[]) new Object[DEFAULT_ARRAY];
-        size = 0;
-    }
-
-    @Override
-    public void add(T value) {
+    public void newArray () {
         if (elements.length == size) {
             int newCapacity = elements.length == 0 ? DEFAULT_ARRAY : (int) (elements.length * 1.5);
             T[] newElements = (T[]) new Object[newCapacity];
@@ -23,6 +18,16 @@ public class ArrayList<T> implements List<T> {
             }
             elements = newElements;
         }
+    }
+
+    public ArrayList() {
+        elements = (T[]) new Object[DEFAULT_ARRAY];
+        size = 0;
+    }
+
+    @Override
+    public void add(T value) {
+        newArray();
         elements[size] = value;
         size++;
     }
@@ -32,14 +37,7 @@ public class ArrayList<T> implements List<T> {
         if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException("Index " + index + " is out of bounds.");
         }
-        if (elements.length == size) {
-            int newCapacity = elements.length == 0 ? DEFAULT_ARRAY : (int) (elements.length * 1.5);
-            T[] newElements = (T[]) new Object[newCapacity];
-            for (int i = 0; i < elements.length; i++) {
-                newElements[i] = elements[i];
-            }
-            elements = newElements;
-        }
+        newArray();
         for (int i = size; i > index; i--) {
             elements[i] = elements[i - 1];
         }
@@ -89,7 +87,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if (Objects.equals(elements[i], element)) {
+            if (elements[i].equals(element)) {
                 return remove(i);
             }
         }
