@@ -1,15 +1,18 @@
 package core.basesyntax;
 
 import java.util.NoSuchElementException;
-import java.util.Objects;
-
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_ARRAY = 10;
     private int size;
     private T[] elements;
 
-    public void newArray () {
+    public ArrayList() {
+        elements = (T[]) new Object[DEFAULT_ARRAY];
+        size = 0;
+    }
+
+    public void newArray() {
         if (elements.length == size) {
             int newCapacity = elements.length == 0 ? DEFAULT_ARRAY : (int) (elements.length * 1.5);
             T[] newElements = (T[]) new Object[newCapacity];
@@ -18,11 +21,6 @@ public class ArrayList<T> implements List<T> {
             }
             elements = newElements;
         }
-    }
-
-    public ArrayList() {
-        elements = (T[]) new Object[DEFAULT_ARRAY];
-        size = 0;
     }
 
     @Override
@@ -87,8 +85,14 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if (elements[i].equals(element)) {
-                return remove(i);
+            if (element == null) {
+                if (elements[i] == null) {
+                    return remove(i);
+                }
+            } else {
+                if (elements[i] != null && elements[i].equals(element)) {
+                    return remove(i);
+                }
             }
         }
         throw new NoSuchElementException("Element not found " + element);
