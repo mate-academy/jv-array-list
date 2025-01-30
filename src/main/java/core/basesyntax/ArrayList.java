@@ -8,7 +8,6 @@ public class ArrayList<T> implements List<T> {
 
     private static final int DEFAULT_CAPACITY = 10;
     private static final Object[] EMPTY_ELEMENTDATA = {};
-    private static final Object[] DEFAULTCAPACITY_EMPTY_ELEMENTDATA = {};
 
     private transient Object[] elementData;
     private int size;
@@ -45,7 +44,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void ensureCapacityInternal(int minCapacity) {
-        if (elementData == DEFAULTCAPACITY_EMPTY_ELEMENTDATA) {
+        if (elementData == EMPTY_ELEMENTDATA) {
             minCapacity = Math.max(DEFAULT_CAPACITY, minCapacity);
         }
 
@@ -67,7 +66,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("Index out of bounds" + index);
+            throw new IndexOutOfBoundsException("Index out of bounds" + index);
         }
 
         ensureCapacityInternal(size + 1);
@@ -97,7 +96,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index out of bound" + index);
+            throw new IndexOutOfBoundsException("Index out of bound" + index);
         }
 
         T elementDatum = (T) elementData[index];
@@ -107,7 +106,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void set(T value, int index) {
         if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index out of bound" + index);
+            throw new IndexOutOfBoundsException("Index out of bound" + index);
         }
 
         elementData[index] = value;
@@ -116,7 +115,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index out of bound" + index);
+            throw new IndexOutOfBoundsException("Index out of bound" + index);
         }
 
         final T removedElement = (T) elementData[index];
