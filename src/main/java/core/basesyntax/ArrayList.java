@@ -100,7 +100,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if (Objects.equals(elements[i],element)) {
+            if (Objects.equals(elements[i], element)) {
                 return remove(i);
             }
         }
