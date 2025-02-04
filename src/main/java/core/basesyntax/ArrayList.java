@@ -1,8 +1,6 @@
 package core.basesyntax;
 
-import java.util.Arrays;
 import java.util.NoSuchElementException;
-import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
@@ -15,7 +13,11 @@ public class ArrayList<T> implements List<T> {
 
     private void grow() {
         int newCapacity = (int) (elements.length * 1.5);
-        elements = Arrays.copyOf(elements, newCapacity);
+        T[] newElements = (T[]) new Object[newCapacity];
+        for (int i = 0; i < size; i++) {
+            newElements[i] = elements[i];
+        }
+        elements = newElements;
     }
 
     public void checkIndex(int index) {
@@ -29,7 +31,11 @@ public class ArrayList<T> implements List<T> {
         while (newCapacity < minCapacity) {
             newCapacity = (int) (newCapacity * 1.5);
         }
-        elements = Arrays.copyOf(elements, newCapacity);
+        T[] newElements = (T[]) new Object[newCapacity];
+        for (int i = 0; i < size; i++) {
+            newElements[i] = elements[i];
+        }
+        elements = newElements;
     }
 
     @Override
@@ -100,7 +106,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if (Objects.equals(elements[i], element)) {
+            if ((elements[i] == element) || (elements[i] != null && elements[i].equals(element))) {
                 return remove(i);
             }
         }
