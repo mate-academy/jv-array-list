@@ -140,7 +140,6 @@ public class MyArrayList<T> implements List<T> {
             System.out.println("Exception: " + e.getMessage());
         }
 
-        // Test addAll method
         MyArrayList<String> newList = new MyArrayList<>();
         newList.add("Test");
         newList.add("AddAll");
