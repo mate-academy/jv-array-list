@@ -31,7 +31,8 @@ public class ArrayList<T> implements List<T> {
     public void add(T value, int index) {
         checkIndexForAdd(index);
         ensureCapacity();
-        System.arraycopy(elements, index, elements, index + 1,size - index);
+        System.arraycopy(elements, index, elements, index + 1, size - index);
+        elements[index] = value;
         size++;
     }
 
@@ -65,13 +66,14 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        for (int i = 0; 1 < size; i++) {
+        for (int i = 0; i < size; i++) {
             if (Objects.equals(elements[i], element)) {
                 return remove(i);
             }
         }
         throw new NoSuchElementException("Element not found: " + element);
     }
+
 
     @Override
     public int size() {
