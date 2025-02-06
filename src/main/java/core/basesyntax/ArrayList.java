@@ -54,10 +54,12 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
-        T removedElement = (T) elements[index];
+
+        T removedElement = (T) elements[index]; // Залишаємо тут
+
         System.arraycopy(elements, index + 1, elements, index, size - index - 1);
-        elements[size - 1] = null;
-        size--;
+        elements[--size] = null; // Об'єднали очищення та зменшення size
+
         return removedElement;
     }
 
