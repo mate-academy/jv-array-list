@@ -67,7 +67,7 @@ public class ArrayList<T> implements List<T> {
     public T remove(T element) {
         for (int i = 0; 1 < size; i++) {
             if (Objects.equals(elements[i], element)) {
-              return remove(i);
+                 return remove(i);
             }
         }
         throw new NoSuchElementException("Element not found: " + element);
@@ -85,13 +85,13 @@ public class ArrayList<T> implements List<T> {
 
     private void checkIndex(int index) {
         if (index < 0 || index >= size) {
-          throw new ArrayListIndexOutOfBoundsException("Index out of bounds: " + index);
+            throw new ArrayListIndexOutOfBoundsException("Index out of bounds: " + index);
         }
     }
 
     private void checkIndexForAdd(int index) {
         if (index < 0 || index > size) {
-          throw new ArrayListIndexOutOfBoundsException("Index out of bounds: " + index);
-       }
+            throw new ArrayListIndexOutOfBoundsException("Index out of bounds: " + index);
+        }
     }
 }
