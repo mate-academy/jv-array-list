@@ -5,21 +5,21 @@ import java.util.NoSuchElementException;
 import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
-  private static final int DEFAULT_CAPACITY = 10;
-  private static final double GROWTH_FACTOR = 1.5;
-  private Object[] elements;
-  private  int size = 0;
+    private static final int DEFAULT_CAPACITY = 10;
+    private static final double GROWTH_FACTOR = 1.5;
+    private Object[] elements;
+    private int size = 0;
 
-  public ArrayList(){
-    this.elements = new Object[DEFAULT_CAPACITY];
-  }
-
-  private void ensureCapacity () {
-    if (size == elements.length) {
-      int newCapacity = (int) (elements.length * GROWTH_FACTOR);
-      elements = Arrays.copyOf(elements, newCapacity);
+    public ArrayList() {
+      this.elements = new Object[DEFAULT_CAPACITY];
     }
-  }
+
+    private void ensureCapacity() {
+      if (size == elements.length) {
+        int newCapacity = (int) (elements.length * GROWTH_FACTOR);
+        elements = Arrays.copyOf(elements, newCapacity);
+      }
+    }
 
     @Override
     public void add(T value) {
@@ -31,7 +31,7 @@ public class ArrayList<T> implements List<T> {
     public void add(T value, int index) {
       checkIndexForAdd(index);
       ensureCapacity();
-      System.arraycopy(elements, index, elements, index +1, size - index);
+      System.arraycopy(elements, index, elements, index +1,size - index);
       size++;
     }
 
