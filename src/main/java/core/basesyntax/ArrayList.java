@@ -16,8 +16,8 @@ public class ArrayList<T> implements List<T> {
 
     private void ensureCapacity() {
         if (size == elements.length) {
-          int newCapacity = (int) (elements.length * GROWTH_FACTOR);
-          elements = Arrays.copyOf(elements, newCapacity);
+            int newCapacity = (int) (elements.length * GROWTH_FACTOR);
+            elements = Arrays.copyOf(elements, newCapacity);
         }
     }
 
@@ -38,14 +38,14 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void addAll(List<T> list) {
         for (int i = 0; i < list.size(); i++) {
-          add(list.get(i));
+            add(list.get(i));
         }
     }
 
     @Override
     public T get(int index) {
-      checkIndex(index);
-      return (T) elements[index];
+        checkIndex(index);
+        return (T) elements[index];
     }
 
     @Override
@@ -66,11 +66,11 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; 1 < size; i++) {
-          if (Objects.equals(elements[i], element)) {
-            return remove(i);
-          }
+            if (Objects.equals(elements[i], element)) {
+              return remove(i);
+            }
         }
-        throw  new NoSuchElementException("Element not found: " + element);
+        throw new NoSuchElementException("Element not found: " + element);
     }
 
     @Override
@@ -84,14 +84,14 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void checkIndex(int index) {
-      if (index < 0 || index >= size) {
-        throw new ArrayListIndexOutOfBoundsException("Index out of bounds: " + index);
-      }
+        if (index < 0 || index >= size) {
+          throw new ArrayListIndexOutOfBoundsException("Index out of bounds: " + index);
+        }
     }
 
     private void checkIndexForAdd(int index) {
-      if (index < 0 || index > size) {
-        throw new ArrayListIndexOutOfBoundsException("Index out of bounds: " + index);
-      }
+        if (index < 0 || index > size) {
+          throw new ArrayListIndexOutOfBoundsException("Index out of bounds: " + index);
+       }
     }
 }
