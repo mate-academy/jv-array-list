@@ -4,9 +4,9 @@ import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    private final int DEFAULT_CAPACITY = 10;
-    private Object[] arr = new Object[DEFAULT_CAPACITY];
-    private final int GROWTH_FACTOR = 2;
+    private final int defaultCapacity = 10;
+    private Object[] arr = new Object[defaultCapacity];
+    private final double growthFactor = 1.5;
     private int size = 0;
 
     @Override
@@ -81,7 +81,8 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void growIfNeeded() {
-        arr = Arrays.copyOf(arr, arr.length + (arr.length / GROWTH_FACTOR));
+        int newCapacity = (int) (arr.length * growthFactor);
+        arr = Arrays.copyOf(arr, newCapacity);
     }
 
     private void checkIndex(int index) {
