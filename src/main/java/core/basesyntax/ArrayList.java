@@ -4,13 +4,15 @@ import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    private Object[] arr = new Object[10];
+    private final int DEFAULT_CAPACITY = 10;
+    private Object[] arr = new Object[DEFAULT_CAPACITY];
+    private final int GROWTH_FACTOR = 2;
     private int size = 0;
 
     @Override
     public void add(T value) {
         if (size == arr.length) {
-            grow();
+            growIfNeeded();
         }
         arr[size] = value;
         size++;
@@ -21,7 +23,7 @@ public class ArrayList<T> implements List<T> {
         checkIndexForAdd(index); // Проверяем индекс перед вставкой
 
         if (size == arr.length) {
-            grow();
+            growIfNeeded();
         }
 
         System.arraycopy(arr, index, arr, index + 1, size - index);
@@ -78,8 +80,8 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void grow() {
-        arr = Arrays.copyOf(arr, arr.length + (arr.length / 2));
+    private void growIfNeeded() {
+        arr = Arrays.copyOf(arr, arr.length + (arr.length / GROWTH_FACTOR));
     }
 
     private void checkIndex(int index) {
