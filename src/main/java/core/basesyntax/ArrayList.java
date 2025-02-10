@@ -1,8 +1,6 @@
 package core.basesyntax;
 
-import java.util.Arrays;
 import java.util.NoSuchElementException;
-import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
@@ -61,7 +59,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if (Objects.equals(elements[i], element)) {
+            if ((elements[i] == element) || (elements[i] != null && elements[i].equals(element))) {
                 return remove(i);
             }
         }
@@ -81,7 +79,14 @@ public class ArrayList<T> implements List<T> {
     private void ensureCapacity() {
         if (size == elements.length) {
             int newCapacity = (int) (elements.length * GROWTH_FACTOR);
-            elements = Arrays.copyOf(elements, newCapacity);
+            Object[] newElements = new Object[newCapacity];
+
+            // Копіюємо старі елементи в новий масив
+            for (int i = 0; i < size; i++) {
+                newElements[i] = elements[i];
+            }
+
+            elements = newElements; // Заміна старого масиву новим
         }
     }
 
