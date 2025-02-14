@@ -45,10 +45,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void addAll(List<T> list) {
         if (!list.isEmpty()) {
+            elementData = Arrays.copyOf(elementData, size + list.size());
             for (int i = 0; i < list.size(); i++) {
-                if (elementData.length < (size + list.size())) {
-                    growIfNeeded();
-                }
                 elementData[size++] = list.get(i);
             }
         }
