@@ -2,7 +2,6 @@ package core.basesyntax;
 
 import java.util.Arrays;
 import java.util.NoSuchElementException;
-import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
     private static final int INITIAL_CAPACITY = 10;
@@ -16,10 +15,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (counter == newCapacity) {
-            newCapacity = (int) (array.length * 1.5);
-            array = Arrays.copyOf(array, newCapacity);
-        }
+        createNewCapacity();
         array[counter] = value;
         counter++;
     }
@@ -29,10 +25,7 @@ public class ArrayList<T> implements List<T> {
         if (index < 0 || index > counter) {
             throw new ArrayListIndexOutOfBoundsException("index:" + index + "is out of bounds");
         }
-        if (counter == newCapacity) {
-            newCapacity = (int) (array.length * 1.5);
-            array = Arrays.copyOf(array, newCapacity);
-        }
+        createNewCapacity();
         if (index < counter) {
             System.arraycopy(array, index, array, index + 1, counter - index);
             array[index] = value;
@@ -45,10 +38,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void addAll(List<T> list) {
         for (int i = 0; i < list.size(); i++) {
-            if (counter == newCapacity) {
-                newCapacity = (int) (array.length * 1.5);
-                array = Arrays.copyOf(array, newCapacity);
-            }
+            createNewCapacity();
             array[counter++] = list.get(i);
 
         }
@@ -56,9 +46,9 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index >= counter || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("index:" + index + "is out of bounds");
-        }
+
+        throwAnError(index);
+
         return array[index];
     }
 
@@ -73,13 +63,10 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
 
-        if (index >= counter || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("index:" + index + "is out of bounds");
-        }
-        if (counter == newCapacity) {
-            newCapacity = (int) (array.length * 1.5);
-            array = Arrays.copyOf(array, newCapacity);
-        }
+        throwAnError(index);
+
+        createNewCapacity();
+
         final T removed = array[index];
         System.arraycopy(array, index + 1, array, index, counter - index);
         counter--;
@@ -89,15 +76,25 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
+        if (element == null) {
+            for (int i = 0; i < counter; i++) {
+                if (array[i] == null) {
+                    T removedElement = array[i];
+                    System.arraycopy(array, i + 1, array, i, counter - i);
+                    array[--counter] = null;
+                    return removedElement;
+                }
+            }
+        }
         for (int i = 0; i < counter; i++) {
-            if (Objects.equals(element, array[i])) {
+            if (array[i] != null && array[i].equals(element)) {
                 T removedElement = array[i];
                 System.arraycopy(array, i + 1, array, i, counter - i);
                 array[--counter] = null;
                 return removedElement;
             }
         }
-        throw new NoSuchElementException("index is out of bounds" + element);
+        throw new NoSuchElementException("there is no such element present" + element);
     }
 
     @Override
@@ -107,6 +104,20 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public boolean isEmpty() {
-        return counter == 0 ? true : false;
+        return counter == 0;
     }
+
+    public void createNewCapacity() {
+        if (counter == newCapacity) {
+            newCapacity = (int) (array.length * 1.5);
+            array = Arrays.copyOf(array, newCapacity);
+        }
+    }
+
+    public void throwAnError(int index) {
+        if (index >= counter || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("index:" + index + "is out of bounds");
+        }
+    }
+
 }
