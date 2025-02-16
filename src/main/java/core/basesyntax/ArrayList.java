@@ -28,12 +28,12 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayListIndexOutOfBoundsException(
                     "The index is not included in the arrayList size.");
         }
-        if (size == capacity - 1) {
+        if (size == capacity) {
             growCapacity();
         }
         if (index < size) {
             Object[] tempArrayList = arrayList;
-            System.arraycopy(tempArrayList, index, arrayList, index + 1, size - index + 1);
+            System.arraycopy(tempArrayList, index, arrayList, index + 1, size - index);
         }
         arrayList[index] = value;
         size++;
@@ -76,19 +76,14 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         T removedElement = null;
-        int index = -1;
         for (int i = 0; i < size; i++) {
             if (equality((T) arrayList[i], element)) {
                 removedElement = (T) arrayList[i];
-                index = i;
-                break;
+                Object[] tempArrayList = arrayList;
+                System.arraycopy(tempArrayList, i + 1, arrayList, i, size - i - 1);
+                size--;
+                return removedElement;
             }
-        }
-        if (index > -1) {
-            Object[] tempArrayList = arrayList;
-            System.arraycopy(tempArrayList, index + 1, arrayList, index, size - index);
-            size--;
-            return removedElement;
         }
         throw new NoSuchElementException("The entered element is missing.");
     }
@@ -105,7 +100,7 @@ public class ArrayList<T> implements List<T> {
 
     private void growCapacity() {
         Object[] tempArray = arrayList;
-        capacity *= 1.5;
+        capacity = (int) (capacity * 1.5);
         arrayList = new Object[capacity];
         for (int i = 0; i < tempArray.length; i++) {
             arrayList[i] = tempArray[i];
