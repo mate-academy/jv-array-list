@@ -6,11 +6,11 @@ public class ArrayList<T> implements List<T> {
     private static final int START_LENGTH_ARRAY = 10;
     private int capacity;
     private int size;
-    private Element<T>[] array;
+    private Object[] arrayList;
 
     public ArrayList() {
         capacity = START_LENGTH_ARRAY;
-        array = new Element[capacity];
+        arrayList = new Object[capacity];
     }
 
     @Override
@@ -18,7 +18,7 @@ public class ArrayList<T> implements List<T> {
         if (size == capacity) {
             growCapacity();
         }
-        array[size] = new Element<>(value);
+        arrayList[size] = value;
         size++;
     }
 
@@ -26,22 +26,17 @@ public class ArrayList<T> implements List<T> {
     public void add(T value, int index) {
         if (index > size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException(
-                    "The index entered exceeds the storage size");
+                    "The index is not included in the arrayList size.");
         }
-        if (size == capacity) {
+        if (size == capacity - 1) {
             growCapacity();
         }
-        if (index == size) {
-            array[index] = new Element<>(value);
+        if (index < size) {
+            Object[] tempArrayList = arrayList;
+            System.arraycopy(tempArrayList, index, arrayList, index + 1, size - index + 1);
         }
-        for (int i = size - 1; i >= index; i--) {
-            if (i == size - 1) {
-                array[i + 1] = new Element<>(array[i].value);
-            }
-            array[i + 1].value = array[i].value;
-        }
+        arrayList[index] = value;
         size++;
-        array[index].value = value;
     }
 
     @Override
@@ -51,41 +46,31 @@ public class ArrayList<T> implements List<T> {
             growCapacity();
         }
         for (int i = 0; i < list.size(); i++) {
-            array[size] = new Element<>(list.get(i));
+            arrayList[size] = list.get(i);
             size++;
         }
     }
 
     @Override
     public T get(int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException(
-                    "The index entered exceeds the storage size");
-        }
-        return array[index].value;
+        checkIndexInSize(index);
+        return (T) arrayList[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException(
-                    "The index entered exceeds the storage size");
-        }
-        array[index].value = value;
+        checkIndexInSize(index);
+        arrayList[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException(
-                    "The index entered exceeds the storage size");
-        }
-        T removedValue = array[index].value;
-        for (int i = index; i < size; i++) {
-            array[i].value = i == size - 1 ? null : array[i + 1].value;
-        }
+        checkIndexInSize(index);
+        T removeValue = (T) arrayList[index];
+        Object[] tempArrayList = arrayList;
+        System.arraycopy(tempArrayList, index + 1, arrayList, index, size - index - 1);
         size--;
-        return removedValue;
+        return removeValue;
     }
 
     @Override
@@ -93,25 +78,19 @@ public class ArrayList<T> implements List<T> {
         T removedElement = null;
         int index = -1;
         for (int i = 0; i < size; i++) {
-            if (equality(array[i].value, element)) {
-                removedElement = array[i].value;
+            if (equality((T) arrayList[i], element)) {
+                removedElement = (T) arrayList[i];
                 index = i;
                 break;
             }
         }
         if (index > -1) {
-            for (int i = index; i < size; i++) {
-                array[i].value = i == size - 1 ? null : array[i + 1].value;
-            }
+            Object[] tempArrayList = arrayList;
+            System.arraycopy(tempArrayList, index + 1, arrayList, index, size - index);
             size--;
             return removedElement;
         }
-        throw new NoSuchElementException("The entered element is missing");
-    }
-
-    private boolean equality(T elementOne, T elementSecond) {
-        return elementOne == elementSecond
-                || elementOne != null && elementOne.equals(elementSecond);
+        throw new NoSuchElementException("The entered element is missing.");
     }
 
     @Override
@@ -125,19 +104,23 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void growCapacity() {
-        Element[] tempArray = array;
+        Object[] tempArray = arrayList;
         capacity *= 1.5;
-        array = new Element[capacity];
+        arrayList = new Object[capacity];
         for (int i = 0; i < tempArray.length; i++) {
-            array[i] = tempArray[i];
+            arrayList[i] = tempArray[i];
         }
     }
 
-    private class Element<T> {
-        private T value;
+    private boolean equality(T elementOne, T elementSecond) {
+        return elementOne == elementSecond
+                || elementOne != null && elementOne.equals(elementSecond);
+    }
 
-        public Element(T value) {
-            this.value = value;
+    private void checkIndexInSize(int index) {
+        if (index >= size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException(
+                    "The index is not included in the arrayList size.");
         }
     }
 }
