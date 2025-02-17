@@ -5,18 +5,15 @@ import java.util.NoSuchElementException;
 import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
-    transient Object[] elementData;
-    private int size;
     private static final int DEFAULT_CAPACITY = 10;
     private static final double GROWTH_FACTOR = 1.5;
-    private static final Object[] EMPTY_ELEMENT_DATA = {};
-    private static final Object[] DEFAULT_CAPACITY_EMPTY_ELEMENT_DATA = {};
+    private Object[] elementData;
+    private int size;
 
     public ArrayList() {
         this.elementData = new Object[DEFAULT_CAPACITY];
         this.size = 0;
     }
-
 
     @Override
     public void add(T value) {
@@ -40,7 +37,7 @@ public class ArrayList<T> implements List<T> {
         if (list == null) {
             throw new NullPointerException("List cannot be null");
         }
-        for (int i = 0; i < list.size(); i++){
+        for (int i = 0; i < list.size(); i++) {
             add(list.get(i));
         }
     }
