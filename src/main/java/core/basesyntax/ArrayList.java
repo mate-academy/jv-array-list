@@ -5,18 +5,16 @@ import java.util.NoSuchElementException;
 public class ArrayList<T> implements List<T> {
     private static final int START_LENGTH_ARRAY = 10;
     private static final double GROWTH_SIZE = 1.5;
-    private int capacity;
     private int size;
     private Object[] arrayList;
 
     public ArrayList() {
-        capacity = START_LENGTH_ARRAY;
-        arrayList = new Object[capacity];
+        arrayList = new Object[START_LENGTH_ARRAY];
     }
 
     @Override
     public void add(T value) {
-        if (size == capacity) {
+        if (size == arrayList.length) {
             growCapacity();
         }
         arrayList[size] = value;
@@ -25,13 +23,16 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
+        if (index < 0 || index > size) {
+            throw new ArrayListIndexOutOfBoundsException(
+                    "The index " + index + " is not included in the arrayList size.");
+        }
+        if (size == arrayList.length) {
+            growCapacity();
+        }
         if (index == size) {
             add(value);
             return;
-        }
-        checkIndexInSize(index);
-        if (size == capacity) {
-            growCapacity();
         }
         Object[] tempArrayList = arrayList;
         System.arraycopy(tempArrayList, index, arrayList, index + 1, size - index);
@@ -42,7 +43,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void addAll(List<T> list) {
         int totalSize = size + list.size();
-        while (totalSize >= capacity) {
+        while (totalSize >= arrayList.length) {
             growCapacity();
         }
         for (int i = 0; i < list.size(); i++) {
@@ -94,7 +95,7 @@ public class ArrayList<T> implements List<T> {
 
     private void growCapacity() {
         Object[] tempArray = arrayList;
-        capacity = (int) (capacity * GROWTH_SIZE);
+        int capacity = (int) (arrayList.length * GROWTH_SIZE);
         arrayList = new Object[capacity];
         System.arraycopy(tempArray, 0, arrayList, 0, size);
     }
@@ -105,7 +106,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void checkIndexInSize(int index) {
-        if (index >= size || index < 0) {
+        if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException(
                     "The index " + index + " is not included in the arrayList size.");
         }
