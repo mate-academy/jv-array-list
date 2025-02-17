@@ -1,12 +1,10 @@
 package core.basesyntax;
 
-import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
 
     private static final int DEFAULT_CAPACITY = 10;
-    private static final int MAGIC_NUMBER = 3;
     private int size;
     private Object[] elements;
 
@@ -35,8 +33,10 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void grow() {
-        int newCapacity = elements.length * MAGIC_NUMBER / 2 + 1;
-        elements = Arrays.copyOf(elements, newCapacity);
+        int newCapacity = (int) (elements.length * 1.5);
+        Object[] newElements = new Object[newCapacity];
+        System.arraycopy(elements, 0, newElements, 0, size);
+        elements = newElements;
     }
 
     @Override
@@ -70,11 +70,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void set(final T value, final int index) {
         indexCheck(index);
-        for (int i = 0; i < elements.length; i++) {
-            if (i == index) {
-                elements[i] = value;
-            }
-        }
+        elements[index] = value;
     }
 
     @Override
