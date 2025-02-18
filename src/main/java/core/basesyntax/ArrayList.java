@@ -76,7 +76,7 @@ public class ArrayList<T> implements List<T> {
             array[i] = array[i + 1];
         }
         array[size - 1] = null;
-        size --;
+        size--;
         return removedElement;
     }
 
