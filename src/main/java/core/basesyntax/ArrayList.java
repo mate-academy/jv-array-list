@@ -8,7 +8,7 @@ public class ArrayList<T> implements List<T> {
     private int size = 0;
 
     private void grow() {
-        int newCapacity = (int) (array.length * 1.5);
+        int newCapacity = (int) (array.length *1.5);
         T[] newArray = (T[]) new Object[newCapacity];
         for (int i = 0; i < size; i++) {
             newArray[i] = array[i];
