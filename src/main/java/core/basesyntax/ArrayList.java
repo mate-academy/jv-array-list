@@ -7,7 +7,6 @@ public class ArrayList<T> implements List<T> {
     private T[] array = (T[]) new Object[DEFAULT_CAPACITY];
     private int size = 0;
 
-
     private void grow() {
         int newCapacity = (int) (array.length * 1.5);
         T[] newArray = (T[]) new Object[newCapacity];
@@ -25,7 +24,6 @@ public class ArrayList<T> implements List<T> {
         array[size] = value;
         size++;
     }
-
 
     @Override
     public void add(T value, int index) {
@@ -72,13 +70,13 @@ public class ArrayList<T> implements List<T> {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Index " + index + " is out of bounds");
         }
-        T removedElement = array[index];
+        final T removedElement = array[index];
 
         for (int i = index; i < size - 1; i++) {
             array[i] = array[i + 1];
         }
         array[size - 1] = null;
-        size--;
+        size --;
         return removedElement;
     }
 
