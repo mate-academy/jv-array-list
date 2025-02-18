@@ -7,14 +7,6 @@ public class ArrayList<T> implements List<T> {
     private T[] array = (T[]) new Object[DEFAULT_CAPACITY];
     private int size = 0;
 
-    @Override
-    public void add(T value) {
-        if (size == array.length) {
-            grow();
-        }
-        array[size] = value;
-        size++;
-    }
 
     private void grow() {
         int newCapacity = (int) (array.length * 1.5);
@@ -24,6 +16,16 @@ public class ArrayList<T> implements List<T> {
         }
         array = newArray;
     }
+
+    @Override
+    public void add(T value) {
+        if (size == array.length) {
+            grow();
+        }
+        array[size] = value;
+        size++;
+    }
+
 
     @Override
     public void add(T value, int index) {
@@ -83,7 +85,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if (array[i] == null && element == null || array[i] != null && array[i].equals(element)) {
+            if (array[i] == null && element == null
+                    || array[i] != null && array[i].equals(element)) {
                 return remove(i);
             }
         }
