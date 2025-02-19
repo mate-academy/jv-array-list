@@ -1,0 +1,62 @@
+Subject: [PATCH] Task completed - fixes 3
+---
+Index: src/main/java/core/basesyntax/ArrayList.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/core/basesyntax/ArrayList.java b/src/main/java/core/basesyntax/ArrayList.java
+--- a/src/main/java/core/basesyntax/ArrayList.java	(revision 3d630f6c97937d5fdaa180323376b030b17c1987)
++++ b/src/main/java/core/basesyntax/ArrayList.java	(revision fb5d6e94c260986da058dd9446840a48c63ced40)
+@@ -2,7 +2,6 @@
+ 
+ import java.util.NoSuchElementException;
+ 
+-
+ public class ArrayList<T> implements List<T> {
+ 
+     private static final int DEFAULT_CAPACITY = 10;
+@@ -15,7 +14,7 @@
+ 
+     @Override
+     public void add(T value) {
+-        fullSize();
++        resizeArray();
+         elementData[size] = value;
+         size++;
+     }
+@@ -23,7 +22,7 @@
+     @Override
+     public void add(T value, int index) {
+         auditIndexAdd(index);
+-        fullSize();
++        resizeArray();
+         System.arraycopy(elementData, index, elementData, index + 1,size - index);
+         elementData[index] = value;
+         size++;
+@@ -79,7 +78,7 @@
+         return size == 0;
+     }
+ 
+-    private void fullSize() {
++    private void resizeArray() {
+         if (size == elementData.length) {
+             newList();
+         }
+Index: src/main/java/core/basesyntax/List.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/core/basesyntax/List.java b/src/main/java/core/basesyntax/List.java
+--- a/src/main/java/core/basesyntax/List.java	(revision 3d630f6c97937d5fdaa180323376b030b17c1987)
++++ b/src/main/java/core/basesyntax/List.java	(revision fb5d6e94c260986da058dd9446840a48c63ced40)
+@@ -13,7 +13,7 @@
+ 
+     T remove(int index);
+ 
+-    T remove(T element);
++    T remove(T element) throws NoSuchFieldException;
+ 
+     int size();
+ 
