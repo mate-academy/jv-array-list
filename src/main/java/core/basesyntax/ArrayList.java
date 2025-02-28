@@ -5,18 +5,18 @@ import java.util.NoSuchElementException;
 public class ArrayList<T> implements List<T> {
     private Object[] data;
     private int size;
-    private static final int DEFAULT_CAPACITY = 10;
+    private final int defaultCapacity = 10;
 
     public ArrayList() {
-        data = new Object[DEFAULT_CAPACITY];
+        data = new Object[defaultCapacity];
         size = 0;
     }
 
     @Override
     public void add(T value) {
-       ensureCapacity();
-       data[size] = value;
-       size++;
+        ensureCapacity();
+        data[size] = value;
+        size++;
     }
 
     @Override
@@ -42,27 +42,22 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-      if (index < 0 || index >= size) {
-          throw new ArrayListIndexOutOfBoundsException("Індекс поза межами: " + index);
-      }
-      return (T) data[index];
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Індекс поза межами: " + index);
+        }
+        return (T) data[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Індекс поза межами: " + index);
-        }
+        getException(index);
         data[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Індекс поза межами: " + index);
-        }
-        T removedElemt = (T) data[index];
-
+        getException(index);
+        final T removedElemt = (T) data[index];
         for (int i = index; i < size - 1; i++) {
             data[i] = data[i + 1];
         }
@@ -74,7 +69,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if ((element == null && data[i] == null) || (element != null && element.equals(data[i]))) {
+            if ((element == null && data[i] == null)
+                    || (element != null && element.equals(data[i]))) {
                 return remove(i);
             }
         }
@@ -93,11 +89,17 @@ public class ArrayList<T> implements List<T> {
 
     private void ensureCapacity() {
         if (size == data.length) {
-            Object[] newData = new Object[data.length * 2];
+            Object[] newData = new Object[(int) (data.length * 1.5)];
             for (int i = 0; i < size; i++) {
                 newData[i] = data[i];
             }
             data = newData;
+        }
+    }
+
+    private void getException(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Індекс поза межами: " + index);
         }
     }
 }
