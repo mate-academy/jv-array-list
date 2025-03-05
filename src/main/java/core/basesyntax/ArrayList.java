@@ -1,7 +1,6 @@
 package core.basesyntax;
 
 import java.util.NoSuchElementException;
-import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
@@ -28,7 +27,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value) {
         if (size + 1 == values.length) {
-            values = grow();
+            values = growIfNecessary();
         }
         values[size] = value;
         size++;
@@ -47,7 +46,7 @@ public class ArrayList<T> implements List<T> {
         }
 
         if ((size + 1) > values.length) {
-            values = grow();
+            values = growIfNecessary();
         } else if (values[index] != null) {
             T tempValue = values[index];
             T tempValueNext = values[index + 1];
@@ -66,9 +65,6 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void addAll(List<T> list) {
         int length = list.size();
-        if (list == null) {
-            throw new ArrayListIndexOutOfBoundsException("You can't add null Array " + list);
-        }
         for (int i = 0; i < length; i++) {
             add(list.get(i));
         }
@@ -122,10 +118,10 @@ public class ArrayList<T> implements List<T> {
     public T remove(T element) {
         if (size == 0) {
             throw new NoSuchElementException("You cant remove "
-                    + element + " by empty array");
+                    + element + " by not exiting index");
         }
         for (int i = 0; i < size; i++) {
-            if (Objects.equals(get(i),element)) {
+            if ((get(i) == element) || (get(i) != null && get(i).equals(element))) {
                 T result = remove(i);
                 return result;
             }
@@ -143,7 +139,7 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    public T[] grow() {
+    public T[] growIfNecessary() {
         int newCapacity = values.length + (values.length >> 1);
         T[] newArray = (T[]) new Object[newCapacity];
         System.arraycopy(values, INDEX_ZERO, newArray, INDEX_ZERO, size);
