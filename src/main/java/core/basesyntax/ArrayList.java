@@ -9,22 +9,20 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (checkSize(countIndex + 1)) {
-            objects[countIndex] = value;
-            countIndex++;
-        }
+        correctSize(countIndex + 1);
+        objects[countIndex] = value;
+        countIndex++;
     }
 
     @Override
     public void add(T value, int index) {
-        if (!(index < 0) && (index <= countIndex)) {
-            if (checkSize(countIndex + 1)) {
-                Object[] tempArray = new Object[(objects.length - 1) - index];
-                System.arraycopy(objects, index, tempArray, 0, tempArray.length);
-                objects[index] = value;
-                System.arraycopy(tempArray, 0, objects, index + 1, tempArray.length);
-                countIndex++;
-            }
+        if (index >= 0 && index <= countIndex) {
+            correctSize(countIndex + 1);
+            Object[] tempArray = new Object[(objects.length - 1) - index];
+            System.arraycopy(objects, index, tempArray, 0, tempArray.length);
+            objects[index] = value;
+            System.arraycopy(tempArray, 0, objects, index + 1, tempArray.length);
+            countIndex++;
         } else {
             throw new ArrayListIndexOutOfBoundsException("Can't add a new element");
         }
@@ -32,11 +30,10 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        if (checkSize(list.size())) {
-            for (int i = 0; i < list.size(); i++) {
-                objects[countIndex] = list.get(i);
-                countIndex++;
-            }
+        correctSize((objects.length - countIndex) + list.size());
+        for (int i = 0; i < list.size(); i++) {
+            objects[countIndex] = list.get(i);
+            countIndex++;
         }
     }
 
@@ -60,19 +57,15 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(int index) {
-        if (!(index < 0) && (index < countIndex)) {
+        if (index >= 0 && index < countIndex) {
             T t;
-            try {
-                t = (T) objects[index];
-                for (int i = index; i < objects.length - 1; i++) {
-                    objects[i] = objects[i + 1];
-                }
-                objects[objects.length - 1] = null;
-                countIndex--;
-                return t;
-            } catch (Exception e) {
-                throw new ArrayListIndexOutOfBoundsException("Can't remove an element by index");
+            t = (T) objects[index];
+            for (int i = index; i < objects.length - 1; i++) {
+                objects[i] = objects[i + 1];
             }
+            objects[objects.length - 1] = null;
+            countIndex--;
+            return t;
         } else {
             throw new ArrayListIndexOutOfBoundsException("Can't remove an element by index");
         }
@@ -105,17 +98,14 @@ public class ArrayList<T> implements List<T> {
         return countIndex <= 0;
     }
 
-    private int grow() {
+    private void grow() {
         int oldCapacity = objects.length;
         objects = Arrays.copyOf(objects,(oldCapacity + (oldCapacity >> 1)));
-        return objects.length;
     }
 
-    private boolean checkSize(int size) {
-        int newSize = objects.length;
-        while ((newSize - countIndex) < size) {
-            newSize = grow();
+    private void correctSize(int size) {
+        while (objects.length < size) {
+            grow();
         }
-        return true;
     }
 }
