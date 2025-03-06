@@ -5,7 +5,7 @@ import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
     public static final int DEFAULT_CAPACITY = 10;
-    public static final String EXCEPTION_MASSAGE = " index doesn't exist";
+    public static final String EXCEPTION_MESSAGE = " index doesn't exist";
     private T[] arrayList = (T[])new Object[DEFAULT_CAPACITY];
     private int size = 0;
 
@@ -22,7 +22,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         if (index > size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException(index + EXCEPTION_MASSAGE);
+            throw new ArrayListIndexOutOfBoundsException(index + EXCEPTION_MESSAGE);
         }
 
         if (size == arrayList.length) {
@@ -39,7 +39,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        while (list.size() > arrayList.length) {
+        while (size + list.size() > arrayList.length) {
             resize();
         }
 
@@ -53,7 +53,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         if (index == size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException(index + EXCEPTION_MASSAGE);
+            throw new ArrayListIndexOutOfBoundsException(index + EXCEPTION_MESSAGE);
         }
 
         return arrayList[index];
@@ -62,7 +62,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void set(T value, int index) {
         if (index == size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException(index + EXCEPTION_MASSAGE);
+            throw new ArrayListIndexOutOfBoundsException(index + EXCEPTION_MESSAGE);
         }
 
         arrayList[index] = value;
@@ -71,7 +71,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException(index + EXCEPTION_MASSAGE);
+            throw new ArrayListIndexOutOfBoundsException(index + EXCEPTION_MESSAGE);
         }
 
         T removedElement = arrayList[index];
@@ -110,11 +110,10 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    public T[] resize() {
+    public void resize() {
         int newCapacity = arrayList.length + (arrayList.length / 2);
         T[] newArrayList = (T[]) new Object[newCapacity];
         System.arraycopy(arrayList, 0, newArrayList, 0, arrayList.length);
         arrayList = newArrayList;
-        return arrayList;
     }
 }
