@@ -1,7 +1,6 @@
 package core.basesyntax;
 
 import java.util.NoSuchElementException;
-import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
     private static final float MULTIPLIER = 1.5f;
@@ -33,11 +32,8 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("");
-        } else {
-            return arrayValue[index];
-        }
+        indexCheck(index, false);
+        return arrayValue[index];
     }
 
     @Override
@@ -58,15 +54,12 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        T removedElement;
-        for (int i = 0; i <= size; i++) {
-            if (Objects.equals(element, arrayValue[i])) {
-                removedElement = arrayValue[i];
-                remove(i);
-                return removedElement;
+        for (int i = 0; i < size; i++) {
+            if ((element == null && arrayValue[i] == null) || (arrayValue[i] != null && arrayValue[i].equals(element))) {
+                return remove(i);
             }
         }
-        throw new NoSuchElementException("");
+        throw new NoSuchElementException("Element not found");
     }
 
     @Override
@@ -91,11 +84,11 @@ public class ArrayList<T> implements List<T> {
     private void indexCheck(int index, boolean isAdd) {
         if (isAdd) {
             if (index > size || index < 0) {
-                throw new ArrayListIndexOutOfBoundsException("");
+                throw new ArrayListIndexOutOfBoundsException("Incorrect index");
             }
         } else {
             if (index >= size || index < 0) {
-                throw new ArrayListIndexOutOfBoundsException("");
+                throw new ArrayListIndexOutOfBoundsException("Incorrect index");
             }
         }
     }
