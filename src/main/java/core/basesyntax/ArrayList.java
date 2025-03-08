@@ -7,7 +7,7 @@ public class ArrayList<T> implements List<T> {
     private static final float MULTIPLIER = 1.5f;
     private int maxElements = 10;
     private int size = 0;
-    T[] arrayValue = (T[]) new Object[maxElements];
+    private T[] arrayValue = (T[]) new Object[maxElements];
 
     @Override
     public void add(T value) {
