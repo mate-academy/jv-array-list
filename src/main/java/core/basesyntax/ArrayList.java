@@ -5,13 +5,15 @@ import java.util.NoSuchElementException;
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private static final double GROWTH_FACTOR = 1.5;
+
     private Object[] elementData;
     private int size;
+
     public ArrayList() {
         elementData = new Object[DEFAULT_CAPACITY];
         size = 0;
     }
-    
+
     @Override
     public void add(T value) {
         ensureCapacity();
@@ -50,12 +52,12 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         checkIndexForAccess(index);
-        T removedValue = (T) elementData[index];
+        final T removedValue = (T) elementData[index]; 
         int numMoved = size - index - 1;
         if (numMoved > 0) {
             System.arraycopy(elementData, index + 1, elementData, index, numMoved);
         }
-        elementData[size - 1] = null; 
+        elementData[size - 1] = null;
         size--;
         return removedValue;
     }
@@ -80,7 +82,7 @@ public class ArrayList<T> implements List<T> {
     public int size() {
         return size;
     }
-    
+
     @Override
     public boolean isEmpty() {
         return size == 0;
@@ -92,7 +94,7 @@ public class ArrayList<T> implements List<T> {
                 "Index " + index + " is out of bounds. Size: " + size);
         }
     }
-    
+
     private void checkIndexForInsertion(int index) {
         if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException(
