@@ -10,11 +10,12 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value) {
         if (elementCount == array.length) {
-            int newCapacity = increaseCapacity(array);
+            int newCapacity = (int) increaseCapacity(array);
             array = Arrays.copyOf(array, newCapacity);
         }
         elementCount++;
         array[elementCount - 1] = value;
+        System.out.println(Arrays.toString(array));
     }
 
     @Override
@@ -23,14 +24,13 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayListIndexOutOfBoundsException("The index passed is invalid!");
         }
         if (elementCount == array.length) {
-            int newCapacity = increaseCapacity(array);
+            int newCapacity = (int) increaseCapacity(array);
             array = Arrays.copyOf(array, newCapacity);
         }
+        System.arraycopy(array, index, array, index + 1, array.length - index - 1);
+        array[index] = value;
         elementCount++;
-        T[] array2 = (T[]) new Object[array.length - index];
-        array2[0] = value;
-        System.arraycopy(array, index, array2, 1, array.length - index - 1);
-        System.arraycopy(array2, 0, array, index, array2.length);;
+        System.out.println(Arrays.toString(array));
     }
 
     @Override
@@ -40,8 +40,8 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private int increaseCapacity(T[] array) {
-        return (int) (array.length * 1.5);
+    private double increaseCapacity(T[] array) {
+        return array.length * 1.5;
     }
 
     @Override
@@ -66,7 +66,7 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayListIndexOutOfBoundsException("The index passed is invalid!");
         }
         T removeElement = array[index];
-        System.arraycopy(array, index + 1, array, index, array.length - index - 1);
+        System.arraycopy(array, index + 1, array, index, elementCount - index - 1);
         elementCount--;
         return removeElement;
     }
@@ -75,13 +75,13 @@ public class ArrayList<T> implements List<T> {
     public T remove(T element) {
         T removeElement = null;
         if (element == null) {
-            for (int i = 0; i < array.length; i++) {
+            for (int i = 0; i < elementCount; i++) {
                 if (array[i] == null) {
                     return remove(i);
                 }
             }
         }
-        for (int i = 0; i < array.length; i++) {
+        for (int i = 0; i < elementCount; i++) {
             if (element.equals(array[i])) {
                 removeElement = remove(i);
                 break;
@@ -100,10 +100,6 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public boolean isEmpty() {
-        if (elementCount > 0) {
-            return false;
-        } else {
-            return true;
-        }
+        return elementCount == 0;
     }
 }
