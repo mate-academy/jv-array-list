@@ -1,40 +1,38 @@
 package core.basesyntax;
 
-import.java.util.ArrayList;
-
-public class ArrayList<T> implements List<T> {
+public class MainArrayList implements List{
     @Override
-    public void add(T value) {
+    public void add(Object value) {
 
     }
 
     @Override
-    public void add(T value, int index) {
+    public void add(Object value, int index) {
 
     }
 
     @Override
-    public void addAll(List<T> list) {
+    public void addAll(List list) {
 
     }
 
     @Override
-    public T get(int index) {
+    public Object get(int index) {
         return null;
     }
 
     @Override
-    public void set(T value, int index) {
+    public void set(Object value, int index) {
 
     }
 
     @Override
-    public T remove(int index) {
+    public Object remove(int index) {
         return null;
     }
 
     @Override
-    public T remove(T element) {
+    public Object remove(Object element) {
         return null;
     }
 
