@@ -1,8 +1,16 @@
 package core.basesyntax;
 
-import.java.util.ArrayList;
+import java.util.List;
 
 public class ArrayList<T> implements List<T> {
+    public T[] lita;
+    public int size;
+
+    public ArrayList(T[] lita, int size) {
+        this.lita = lita;
+        this.size = size;
+    }
+
     @Override
     public void add(T value) {
 
