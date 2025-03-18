@@ -5,8 +5,24 @@ import java.util.Objects;
 
 @SuppressWarnings("unchecked")
 public class ArrayList<T> implements List<T> {
-    T[] myArrayList = (T[]) new Object[10];
+    private T[] myArrayList = (T[]) new Object[10];
     private int size = 0;
+
+    public T[] getMyArrayList() {
+        return myArrayList;
+    }
+
+    public void setMyArrayList(T[] myArrayList) {
+        this.myArrayList = myArrayList;
+    }
+
+    public int getSize() {
+        return size;
+    }
+
+    public void setSize(int size) {
+        this.size = size;
+    }
 
     private void incrSize() {
         if (size != myArrayList.length) {
@@ -67,7 +83,6 @@ public class ArrayList<T> implements List<T> {
         return myArrayList[index];
     }
 
-
     @Override
     public void set(T value, int index) {
         if (index < 0 || index >= size) {
@@ -93,7 +108,6 @@ public class ArrayList<T> implements List<T> {
 
         return removedElement;
     }
-
 
     @Override
     public T remove(T element) {
