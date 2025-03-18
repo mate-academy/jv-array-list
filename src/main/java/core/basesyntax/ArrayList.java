@@ -63,7 +63,6 @@ public class ArrayList<T> implements List<T> {
         size++;
     }
 
-
     @Override
     public void addAll(List<T> list) {
         if (list == null || list.isEmpty()) {
@@ -97,7 +96,7 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayListIndexOutOfBoundsException("Index out of bounds");
         }
 
-        T removedElement = myArrayList[index];
+        final T removedElement = myArrayList[index];
 
         for (int i = index; i < size - 1; i++) {
             myArrayList[i] = myArrayList[i + 1];
