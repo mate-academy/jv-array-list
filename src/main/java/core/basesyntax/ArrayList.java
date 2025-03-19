@@ -4,6 +4,7 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
+    private static final int MAX_ARRAY_SIZE = Integer.MAX_VALUE - 8;
     private int size;
     private Object[] elementData;
 
@@ -96,6 +97,9 @@ public class ArrayList<T> implements List<T> {
         int newCapacity = elementData.length + (elementData.length >> 1);
         if (newCapacity < minCapacity) {
             newCapacity = minCapacity;
+        }
+        if (minCapacity > MAX_ARRAY_SIZE || newCapacity > MAX_ARRAY_SIZE) {
+            throw new OutOfMemoryError("Array size exceeds maximum allowed: " + MAX_ARRAY_SIZE);
         }
         Object[] biggerElementData = new Object[newCapacity];
         System.arraycopy(elementData, 0, biggerElementData, 0, elementData.length);
