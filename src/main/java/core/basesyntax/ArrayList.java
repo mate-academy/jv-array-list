@@ -4,7 +4,8 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    private static final int MAX_ARRAY_SIZE = Integer.MAX_VALUE - 8;
+    private static final int MAX_ARRAY_SIZE = Integer.MAX_VALUE;
+    private static final int NOT_FOUND = -1;
     private int size;
     private Object[] elementData;
 
@@ -69,7 +70,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        int indexToRemove = -1;
+        int indexToRemove = NOT_FOUND;
         for (int i = 0; i < size; i++) {
             if (element == null && elementData[i] == null
                     || element != null && element.equals(elementData[i])) {
@@ -77,7 +78,7 @@ public class ArrayList<T> implements List<T> {
                 break;
             }
         }
-        if (indexToRemove == -1) {
+        if (indexToRemove == NOT_FOUND) {
             throw new NoSuchElementException("No such element " + element);
         }
         return remove(indexToRemove);
@@ -98,7 +99,7 @@ public class ArrayList<T> implements List<T> {
         if (newCapacity < minCapacity) {
             newCapacity = minCapacity;
         }
-        if (minCapacity > MAX_ARRAY_SIZE || newCapacity > MAX_ARRAY_SIZE) {
+        if (newCapacity > MAX_ARRAY_SIZE) {
             throw new OutOfMemoryError("Array size exceeds maximum allowed: " + MAX_ARRAY_SIZE);
         }
         Object[] biggerElementData = new Object[newCapacity];
