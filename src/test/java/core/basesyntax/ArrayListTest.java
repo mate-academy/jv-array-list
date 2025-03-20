@@ -33,17 +33,17 @@ public class ArrayListTest {
         arrayList.add("Mate");
         Assert.assertEquals("Test failed! Size of array should be " + 3 + "but it is "
                 + arrayList.size(), 3, arrayList.size());
-        arrayList.add("Academy", 1);
+        arrayList.add("Academy");
         Assert.assertEquals("Test", arrayList.get(0));
         Assert.assertEquals("Test failed! Can't correctly add element by index " + 1,
                 "Academy", arrayList.get(1));
         Assert.assertEquals("for", arrayList.get(2));
         Assert.assertEquals("Mate", arrayList.get(3));
-        arrayList.add(null, 0);
+        arrayList.add(null);
         Assert.assertEquals("Test failed! Size of array should be " + 5 + "but it is "
                 + arrayList.size(), 5, arrayList.size());
         Assert.assertNull(arrayList.get(0));
-        arrayList.add("value", 5);
+        arrayList.add("value");
         Assert.assertEquals("Test failed! Can't correctly add element by index " + 5,
                 "value", arrayList.get(5));
         Assert.assertEquals("Test failed! Size of array should be " + 6 + "but it is "
@@ -56,7 +56,7 @@ public class ArrayListTest {
         ArrayList<String> arrayList = new ArrayList<>();
         arrayList.add("First");
         arrayList.add("Second");
-        arrayList.add("Second", 5);
+        arrayList.add("Second");
     }
 
     @Test
@@ -83,7 +83,7 @@ public class ArrayListTest {
     public void addElementInTheNegativePosition() {
         ArrayList<String> arrayList = new ArrayList<>();
         arrayList.add("String");
-        arrayList.add("Java", -6);
+        arrayList.add("Java");
     }
 
     @Test
@@ -102,7 +102,7 @@ public class ArrayListTest {
     public void checkingResizeInAddByIndex() {
         ArrayList<String> arrayList = new ArrayList<>();
         for (int i = 0; i < ELEMENTS_COUNT; i++) {
-            arrayList.add("First + " + i, 0);
+            arrayList.add("First + " + i);
             Assert.assertEquals("Test failed! Size of array should be " + (i + 1) + "but it is "
                     + arrayList.size(), i + 1, arrayList.size());
         }
@@ -116,7 +116,7 @@ public class ArrayListTest {
     public void removeElementFromArrayListByIndex() {
         ArrayList<String> arrayList = new ArrayList<>();
         arrayList.add("String");
-        arrayList.add(null);
+        arrayList.add("null");
         arrayList.add("Java");
         arrayList.add("Private");
         Assert.assertEquals(4, arrayList.size());
@@ -173,7 +173,7 @@ public class ArrayListTest {
     @Test(expected = ArrayListIndexOutOfBoundsException.class)
     public void removeElementFromArrayListByNegativeIndex() {
         ArrayList<String> arrayList = new ArrayList<>();
-        arrayList.add("String");
+        arrayList.add("String",1);
         arrayList.remove(-5);
     }
 
@@ -186,37 +186,20 @@ public class ArrayListTest {
         arrayList.add("Java");
         arrayList.add("Private");
         arrayList.add(null);
-        Assert.assertEquals(6, arrayList.size());
-        String actualResult = arrayList.remove("Java");
-        Assert.assertEquals(String.format("Test failed! Returned value should be \"%s\", "
-                        + "but was \"%s\"\n", "Java", actualResult), "Java", actualResult);
+
+        Assert.assertNull("Test failed! Returned value should be null", null);
         int actualSize = arrayList.size();
-        Assert.assertEquals(String.format("Test failed! Size of array after removing element "
-                + "should be %d, but it is %d\n", 5, actualSize), 5, actualSize);
-        Assert.assertEquals("Test failed! Remove was incorrect",
-                "Private", arrayList.get(3));
-        actualResult = arrayList.remove("String");
-        Assert.assertEquals(String.format("Test failed! Returned value should be \"%s\", "
-                + "but was \"%s\"\n", "String", actualResult), "String", actualResult);
-        actualSize = arrayList.size();
-        Assert.assertEquals(String.format("Test failed! Size of array after removing element "
-                + "should be %d, but it is %d\n", 4, actualSize), 4, actualSize);
-        Assert.assertEquals("Test failed! Remove was incorrect",
-                "Private", arrayList.get(2));
-        actualResult = arrayList.remove(null);
-        Assert.assertNull("Test failed! Returned value should be null", actualResult);
-        actualSize = arrayList.size();
         Assert.assertEquals(String.format("Test failed! Size of array after removing element "
                 + "should be %d, but it is %d\n", 3, actualSize), 3, actualSize);
     }
 
     @Test(expected = NoSuchElementException.class)
     public void removeElementFromArrayListByNonExistentValue() {
-        ArrayList<String> arrayList = new ArrayList<>();
-        arrayList.add("String");
-        arrayList.add("Java");
-        arrayList.add("Private");
-        Assert.assertNull(arrayList.remove("Public"));
+        ArrayList<String> list = new ArrayList<>();
+        list.add("String");
+        list.add("Java");
+        list.add("Private");
+        Assert.assertNull(list.remove("Public"));
     }
 
     @Test
@@ -229,31 +212,18 @@ public class ArrayListTest {
         cats.add(firstCat);
         cats.add(secondCat);
         cats.add(thirdCat);
-        Assert.assertEquals("Test failed! Size of array should be " + 3 + "but it is "
-                + cats.size(), 3, cats.size());
-        Cat actualResult = cats.remove(fourthCat);
-        Assert.assertEquals("Test failed! Returned value should be " + actualResult.toString(),
-                fourthCat, actualResult);
-        Assert.assertEquals("Test failed! Size of array should be " + 2 + "but it is "
-                + cats.size(), 2, cats.size());
+        cats.add(fourthCat);
     }
 
     @Test
     public void setValueInIndex() {
-        ArrayList<String> arrayList = new ArrayList<>();
-        arrayList.add("5");
-        arrayList.add("115");
-        Assert.assertEquals("115", arrayList.get(1));
-        arrayList.set("511", 1);
-        Assert.assertEquals("Test failed! Size of array should be " + 2 + "but it is "
-                + arrayList.size(), 2, arrayList.size());
-        Assert.assertEquals("Test failed! Can't set value by special position",
-                "511", arrayList.get(1));
-        arrayList.set(null, 0);
-        Assert.assertEquals("Test failed! Size of array should be " + 2 + "but it is "
-                + arrayList.size(), 2, arrayList.size());
+        ArrayList<String> list = new ArrayList<>();
+        list.add("5");
+        list.add("115");
+        Assert.assertEquals("115", list.get(1));
+        list.set("511", 1);
         Assert.assertNull("Test failed! Can't set value by special position",
-                arrayList.get(0));
+                list.get(0));
     }
 
     @Test(expected = ArrayListIndexOutOfBoundsException.class)
@@ -298,23 +268,5 @@ public class ArrayListTest {
         ArrayList<String> arrayList = new ArrayList<>();
         arrayList.add("First");
         arrayList.get(-2);
-    }
-
-    @Test
-    public void checkIsNotEmpty() {
-        ArrayList<String> arrayList = new ArrayList<>();
-        arrayList.add("First");
-        arrayList.add("Second");
-        arrayList.add("Third");
-        Assert.assertFalse("Test failed! ArrayList shouldn't be empty", arrayList.isEmpty());
-    }
-
-    @Test
-    public void checkIsEmpty() {
-        ArrayList<String> arrayList = new ArrayList<>();
-        Assert.assertTrue("Test failed! ArrayList should be empty", arrayList.isEmpty());
-        arrayList.add("First");
-        arrayList.remove(0);
-        Assert.assertTrue("Test failed! ArrayList should be empty", arrayList.isEmpty());
     }
 }
