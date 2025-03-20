@@ -4,7 +4,7 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    private static final int MAX_ARRAY_SIZE = Integer.MAX_VALUE;
+    private static final double CAPACITY_INDEX = 1.5;
     private static final int NOT_FOUND = -1;
     private int size;
     private Object[] elementData;
@@ -62,7 +62,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         checkIfIndexValid(index);
-        T elementToRemove = get(index);
+        T elementToRemove = (T) elementData[index];
         System.arraycopy(elementData, index + 1, elementData, index, size - index - 1);
         size--;
         return elementToRemove;
@@ -72,10 +72,8 @@ public class ArrayList<T> implements List<T> {
     public T remove(T element) {
         int indexToRemove = NOT_FOUND;
         for (int i = 0; i < size; i++) {
-            if (element == null && elementData[i] == null
-                    || element != null && element.equals(elementData[i])) {
+            if (element == elementData[i] || element != null && element.equals(elementData[i])) {
                 indexToRemove = i;
-                break;
             }
         }
         if (indexToRemove == NOT_FOUND) {
@@ -95,16 +93,13 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void grow(int minCapacity) {
-        int newCapacity = elementData.length + (elementData.length >> 1);
+        int newCapacity = (int) (elementData.length * CAPACITY_INDEX);
         if (newCapacity < minCapacity) {
             newCapacity = minCapacity;
         }
-        if (newCapacity > MAX_ARRAY_SIZE) {
-            throw new OutOfMemoryError("Array size exceeds maximum allowed: " + MAX_ARRAY_SIZE);
-        }
-        Object[] biggerElementData = new Object[newCapacity];
-        System.arraycopy(elementData, 0, biggerElementData, 0, elementData.length);
-        elementData = biggerElementData;
+        Object[] newArray = new Object[newCapacity];
+        System.arraycopy(elementData, 0, newArray, 0, elementData.length);
+        elementData = newArray;
     }
 
     private void checkIfIndexValid(int index) {
