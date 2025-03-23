@@ -35,7 +35,7 @@ public class ArrayListTest {
                 + arrayList.size(), 3, arrayList.size());
         arrayList.add("Academy");
         Assert.assertEquals("Test", arrayList.get(0));
-        Assert.assertEquals("Test failed! Can't correctly add element by index " + 1,
+        Assert.assertEquals("Test failed! Can't correctly add element by index ",
                 "Academy", arrayList.get(1));
         Assert.assertEquals("for", arrayList.get(2));
         Assert.assertEquals("Mate", arrayList.get(3));
@@ -56,7 +56,7 @@ public class ArrayListTest {
         ArrayList<String> arrayList = new ArrayList<>();
         arrayList.add("First");
         arrayList.add("Second");
-        arrayList.add("Second", 5);
+        arrayList.add(5, "Second");
     }
 
     @Test
@@ -83,7 +83,7 @@ public class ArrayListTest {
     public void addElementInTheNegativePosition() {
         ArrayList<String> arrayList = new ArrayList<>();
         arrayList.add("String");
-        arrayList.add("Java", -6);
+        arrayList.add(-6, "Java");
     }
 
     @Test
@@ -164,7 +164,7 @@ public class ArrayListTest {
     @Test(expected = ArrayListIndexOutOfBoundsException.class)
     public void removeElementFromArrayListByNonExistentIndex() {
         ArrayList<String> arrayList = new ArrayList<>();
-        arrayList.add("String", 1);
+        arrayList.add(1,"String");
         arrayList.add("Java");
         arrayList.add("Private");
         arrayList.remove(3);
@@ -173,7 +173,7 @@ public class ArrayListTest {
     @Test(expected = ArrayListIndexOutOfBoundsException.class)
     public void removeElementFromArrayListByNegativeIndex() {
         ArrayList<String> arrayList = new ArrayList<>();
-        arrayList.add("String",1);
+        arrayList.add(1,"String");
         arrayList.remove(-5);
     }
 
@@ -221,7 +221,7 @@ public class ArrayListTest {
         list.add("5");
         list.add("115");
         Assert.assertEquals("115", list.get(1));
-        list.set("511", 1);
+        list.set(1, "511");
         Assert.assertEquals("Test failed! Wrong value at index 0", "115",
                 list.get(0));
     }
@@ -231,14 +231,14 @@ public class ArrayListTest {
         ArrayList<String> arrayList = new ArrayList<>();
         arrayList.add("First");
         arrayList.add("Second");
-        arrayList.set("Third", 2);
+        arrayList.set(2, "Third");
     }
 
     @Test(expected = ArrayListIndexOutOfBoundsException.class)
     public void setValueInTheNegativePosition() {
         ArrayList<String> arrayList = new ArrayList<>();
         arrayList.add("First");
-        arrayList.set("Third", -2);
+        arrayList.set(-2, "Third");
     }
 
     @Test
