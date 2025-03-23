@@ -56,7 +56,7 @@ public class ArrayListTest {
         ArrayList<String> arrayList = new ArrayList<>();
         arrayList.add("First");
         arrayList.add("Second");
-        arrayList.add("Second");
+        arrayList.add("Second", 5);
     }
 
     @Test
@@ -83,7 +83,7 @@ public class ArrayListTest {
     public void addElementInTheNegativePosition() {
         ArrayList<String> arrayList = new ArrayList<>();
         arrayList.add("String");
-        arrayList.add("Java");
+        arrayList.add("Java", -6);
     }
 
     @Test
@@ -164,7 +164,7 @@ public class ArrayListTest {
     @Test(expected = ArrayListIndexOutOfBoundsException.class)
     public void removeElementFromArrayListByNonExistentIndex() {
         ArrayList<String> arrayList = new ArrayList<>();
-        arrayList.add("String");
+        arrayList.add("String", 1);
         arrayList.add("Java");
         arrayList.add("Private");
         arrayList.remove(3);
@@ -222,7 +222,7 @@ public class ArrayListTest {
         list.add("115");
         Assert.assertEquals("115", list.get(1));
         list.set("511", 1);
-        Assert.assertNull("Test failed! Can't set value by special position",
+        Assert.assertEquals("Test failed! Wrong value at index 0", "115",
                 list.get(0));
     }
 

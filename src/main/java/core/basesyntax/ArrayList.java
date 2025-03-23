@@ -1,6 +1,7 @@
 package core.basesyntax;
 
 import java.util.Arrays;
+import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
@@ -23,7 +24,9 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         checkIndexForAdd(index);
-        ensureCapacity();
+        if (size == elements.length){
+            grow();
+        }
         System.arraycopy(elements, index, elements, index + 1, size - index);
         elements[index] = value;
         size++;
@@ -65,7 +68,7 @@ public class ArrayList<T> implements List<T> {
                 return remove(i);
             }
         }
-        return null;
+        throw new NoSuchElementException("Element not found: " + element);
     }
 
     @Override
@@ -86,16 +89,20 @@ public class ArrayList<T> implements List<T> {
     }
     private void checkIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Index " + index + " is out of bounds");
+            throw new ArrayListIndexOutOfBoundsException("Index " + index + " is out of bounds");
         }
     }
     private void checkIndexForAdd(int index) {
         if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException("Index " + index + " is out of bounds for add operation");
+            throw new ArrayListIndexOutOfBoundsException("Index " + index + " is out of bounds for add operation");
         }
     }
     private boolean elementsEqual(T first, T second) {
         return (first == null && second == null)
                 || (first != null && first.equals(second));
+    }
+    private void grow() {
+        int newCapacity = elements.length * 2;
+        elements = Arrays.copyOf(elements, newCapacity);
     }
 }
