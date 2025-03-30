@@ -107,11 +107,8 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
+    @SuppressWarnings("unchecked")
     public T castElement(Object element) {
-        try {
-            return (T) element;
-        } catch (ClassCastException e) {
-            throw new RuntimeException("Class can't be casted.");
-        }
+        return (T) element;
     }
 }
