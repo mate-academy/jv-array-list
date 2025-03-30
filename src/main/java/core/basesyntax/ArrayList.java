@@ -22,18 +22,20 @@ public class ArrayList<T> implements List<T> {
 
     public void checkIndex(int index) {
         if (index < ZERO || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Incorrect index.");
+            throw new ArrayListIndexOutOfBoundsException(
+                    "Index %d out of bounds for size %d.".formatted(index, size));
         }
     }
 
     public void checkIndexForAdd(int index) {
         if (index < ZERO || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("Incorrect index.");
+            throw new ArrayListIndexOutOfBoundsException(
+                    "Index %d out of bounds for size %d.".formatted(index, size));
         }
     }
 
     public void grow() {
-        int newSize = (int) (size * MULTIPLIER);
+        int newSize = (int) (elements.length * MULTIPLIER);
         Object[] newElements = new Object[newSize];
         System.arraycopy(elements, ZERO, newElements, ZERO, size);
         elements = newElements;
@@ -65,7 +67,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         checkIndex(index);
-        return castElement(elements[index]);
+        return (T) elements[index];
     }
 
     @Override
@@ -77,7 +79,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
-        T deletedElement = castElement(elements[index]);
+        T deletedElement = (T) elements[index];
         System.arraycopy(elements, index + 1, elements, index, size - index - 1);
         elements[--size] = null;
         return deletedElement;
@@ -88,7 +90,7 @@ public class ArrayList<T> implements List<T> {
         for (int i = 0; i < size; i++) {
             if ((element != null && element.equals(elements[i]))
                     || (element == null && elements[i] == null)) {
-                T removedElement = castElement(elements[i]);
+                T removedElement = (T) elements[i];
                 System.arraycopy(elements, i + 1, elements, i, size - i - 1);
                 elements[--size] = null;
                 return removedElement;
@@ -105,10 +107,5 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
-    }
-
-    @SuppressWarnings("unchecked")
-    public T castElement(Object element) {
-        return (T) element;
     }
 }
