@@ -11,30 +11,29 @@ public class ArrayList<T> implements List<T> {
 
     public ArrayList() {
         elements = new Object[DEFAULT_SIZE];
-        size = ZERO;
     }
 
-    public void checkCapacity() {
+    private void checkCapacity() {
         if (size == elements.length) {
             grow();
         }
     }
 
-    public void checkIndex(int index) {
+    private void checkIndex(int index) {
         if (index < ZERO || index >= size) {
             throw new ArrayListIndexOutOfBoundsException(
                     "Index %d out of bounds for size %d.".formatted(index, size));
         }
     }
 
-    public void checkIndexForAdd(int index) {
+    private void checkIndexForAdd(int index) {
         if (index < ZERO || index > size) {
             throw new ArrayListIndexOutOfBoundsException(
                     "Index %d out of bounds for size %d.".formatted(index, size));
         }
     }
 
-    public void grow() {
+    private void grow() {
         int newSize = (int) (elements.length * MULTIPLIER);
         Object[] newElements = new Object[newSize];
         System.arraycopy(elements, ZERO, newElements, ZERO, size);
