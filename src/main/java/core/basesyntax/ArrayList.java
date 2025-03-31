@@ -13,33 +13,6 @@ public class ArrayList<T> implements List<T> {
         elements = new Object[DEFAULT_SIZE];
     }
 
-    private void checkCapacity() {
-        if (size == elements.length) {
-            grow();
-        }
-    }
-
-    private void checkIndex(int index) {
-        if (index < ZERO || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException(
-                    "Index %d out of bounds for size %d.".formatted(index, size));
-        }
-    }
-
-    private void checkIndexForAdd(int index) {
-        if (index < ZERO || index > size) {
-            throw new ArrayListIndexOutOfBoundsException(
-                    "Index %d out of bounds for size %d.".formatted(index, size));
-        }
-    }
-
-    private void grow() {
-        int newSize = (int) (elements.length * MULTIPLIER);
-        Object[] newElements = new Object[newSize];
-        System.arraycopy(elements, ZERO, newElements, ZERO, size);
-        elements = newElements;
-    }
-
     @Override
     public void add(T value) {
         checkCapacity();
@@ -87,15 +60,15 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if ((element != null && element.equals(elements[i]))
-                    || (element == null && elements[i] == null)) {
+            if (element != null && element.equals(elements[i])
+                    || element == null && elements[i] == null) {
                 T removedElement = (T) elements[i];
                 System.arraycopy(elements, i + 1, elements, i, size - i - 1);
                 elements[--size] = null;
                 return removedElement;
             }
         }
-        throw new NoSuchElementException("Such element doesn't exist.");
+        throw new NoSuchElementException("Element \"" + element + "\" doesn't exist.");
     }
 
     @Override
@@ -106,5 +79,32 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private void checkCapacity() {
+        if (size == elements.length) {
+            grow();
+        }
+    }
+
+    private void checkIndex(int index) {
+        if (index < ZERO || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException(
+                    "Index %d out of bounds for size %d.".formatted(index, size));
+        }
+    }
+
+    private void checkIndexForAdd(int index) {
+        if (index < ZERO || index > size) {
+            throw new ArrayListIndexOutOfBoundsException(
+                    "Index %d out of bounds for size %d.".formatted(index, size));
+        }
+    }
+
+    private void grow() {
+        int newSize = (int) (elements.length * MULTIPLIER);
+        Object[] newElements = new Object[newSize];
+        System.arraycopy(elements, ZERO, newElements, ZERO, size);
+        elements = newElements;
     }
 }
