@@ -10,7 +10,6 @@ public class ArrayList<T> implements List<T> {
 
     public ArrayList() {
         elementData = new Object[DEFAULT_CAPACITY];
-        size = 0;
     }
 
     @Override
@@ -25,9 +24,7 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
         }
         ensureCapacity();
-        for (int i = size; i > index; i--) {
-            elementData[i] = elementData[i - 1];
-        }
+        System.arraycopy(elementData, index, elementData, index + 1, size - index);
         elementData[index] = value;
         size++;
     }
@@ -35,8 +32,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void addAll(List<T> list) {
         for (int i = 0; i < list.size(); i++) {
-            T element = list.get(i);
-            this.add(element);
+            add(list.get(i));
         }
     }
 
@@ -56,11 +52,11 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         checkIndex(index);
         final T removedElement = (T) elementData[index];
-        for (int i = index; i < size - 1; i++) {
-            elementData[i] = elementData[i + 1];
+        int numMoved = size - index - 1;
+        if (numMoved > 0) {
+            System.arraycopy(elementData, index + 1, elementData, index, numMoved);
         }
-        elementData[size - 1] = null;
-        size--;
+        elementData[--size] = null; // prevent memory leak
         return removedElement;
     }
 
@@ -91,12 +87,14 @@ public class ArrayList<T> implements List<T> {
             if (newCapacity == elementData.length) {
                 newCapacity++;
             }
-            Object[] newArray = new Object[newCapacity];
-            for (int i = 0; i < elementData.length; i++) {
-                newArray[i] = elementData[i];
-            }
-            elementData = newArray;
+            resizeArray(newCapacity);
         }
+    }
+
+    private void resizeArray(int newCapacity) {
+        Object[] newArray = new Object[newCapacity];
+        System.arraycopy(elementData, 0, newArray, 0, size);
+        elementData = newArray;
     }
 
     private void checkIndex(int index) {
