@@ -56,7 +56,7 @@ public class ArrayList<T> implements List<T> {
         if (numMoved > 0) {
             System.arraycopy(elementData, index + 1, elementData, index, numMoved);
         }
-        elementData[--size] = null; // prevent memory leak
+        elementData[--size] = null;
         return removedElement;
     }
 
