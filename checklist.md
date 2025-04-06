@@ -59,13 +59,16 @@ Another good example:
     }
 ```
 In the first example, we have `grow()` with `if` inside. 
-This means that sometimes the array grows and sometimes it doesn't. When a developer who reads the code sees a call to the `grow()` method, 
-he thinks that the array will be increased. Only if he reads the body of the `grow()` method, he will understand that the array does not always grow. 
+This means that sometimes the array grows and sometimes it doesn't. When a developer who reads the code sees a call to the `grow()`method, 
+he thinks that the array will be increased. Only if he reads the body of the `grow()` method, he will understand that the array 
+does not always grow. 
 The method name says nothing about this conditional logic.
 #### Don't create redundant variables.
 Redundant variables are confusing and make your code less clean and much more difficult to read. Not to mention they occupy stack memory.
 #### Use [System.arraycopy()](https://docs.oracle.com/javase/8/docs/api/java/lang/System.html#arraycopy-java.lang.Object-int-java.lang.Object-int-int-) to move your array elements.
 #### Resize the array in a separate method.
-According to one of the important principles called the **Single Responsibility** principle, any software component must have only one responsibility, that is, to be in charge of doing just one concrete thing.
+According to one of the important principles called the **Single Responsibility** principle, any software component must 
+have only one responsibility, that is, to be in charge of doing just one concrete thing.
 #### Make your exceptions informative.
-If you throw an Exception, you should always add an informative message so that it would be clear from the stack trace what exactly went wrong.
+If you throw an Exception, you should always add an informative message so that it would be clear from the stack trace what exactly 
+went wrong.
