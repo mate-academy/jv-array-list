@@ -4,13 +4,11 @@ import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    private static final int DEFAULT_CAPACITY = 10;
-    private static final double GROWTH_CAPACITY = 1.5;
     private T[] array;
     private int size;
 
     public ArrayList() {
-        array = (T[]) new Object[DEFAULT_CAPACITY];
+        array = (T[]) new Object[10];
         size = 0;
     }
 
@@ -22,16 +20,23 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-
+        ensureCapacity();
+        if (index < 0 || index > size) {
+            throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
+        }
+        System.arraycopy(array, index, array, index + 1, size - index);
+        array[index] = value;
+        size++;
     }
 
     @Override
     public void addAll(List<T> list) {
+        ensureCapacity();
         if (list == null || list.isEmpty()) {
             return;
         }
 
-        while (size + list.size() > array.length) {
+        if (size + list.size() > array.length) {
             ensureCapacity();
         }
 
@@ -65,11 +70,14 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if (element != null && array[i].equals(element)) {
-                array[i] = null;
+            if ((element == null && array[i] == null) || (element != null && element.equals(array[i]))) {
+               T removed = array[i];
+               System.arraycopy(array, i + 1, array, i, size - i - 1);
+               array[--size] = null;
+               return removed;
             }
         }
-        throw new NoSuchElementException("This element does not exist: " + element);
+        throw new NoSuchElementException("This element does not exists: " + element);
     }
 
     @Override
@@ -83,8 +91,8 @@ public class ArrayList<T> implements List<T> {
     }
 
     public void ensureCapacity() {
-        if (size == array.length) {
-            int increasedSize = (int) (array.length * GROWTH_CAPACITY);
+        if (size  >= array.length) {
+            int increasedSize = (int) (array.length * 1.5);
             array = Arrays.copyOf(array, increasedSize);
         }
     }
