@@ -31,13 +31,12 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        ensureCapacity();
         if (list == null || list.isEmpty()) {
             return;
         }
 
         if (size + list.size() > array.length) {
-            ensureCapacity();
+            array = Arrays.copyOf(array, size + list.size());
         }
 
         for (int i = 0; i < list.size(); i++) {
