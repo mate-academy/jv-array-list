@@ -79,13 +79,14 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int index = 0; index < size; index++) {
-            if (element == null ? array[index] == null : array[index].equals(element)) {
+            if (array[index] != null && array[index].equals(element) || element == null && array[index] == null) {
                 System.arraycopy(array, index + 1, array, index, size - index - 1);
-                array[--size] = null;
+                array[size] = null;
+                size--;
                 return element;
             }
         }
-        throw new NoSuchElementException("Element not found: " + element);
+        throw new NoSuchElementException();
     }
 
     @Override
