@@ -81,10 +81,10 @@ public class ArrayList<T> implements List<T> {
         for (int index = 0; index < size; index++) {
             if (array[index] != null && array[index].equals(element)
                     || element == null && array[index] == null) {
+                T deletedValue = array[index];
                 System.arraycopy(array, index + 1, array, index, size - index - 1);
-                array[size] = null;
                 size--;
-                return element;
+                return deletedValue;
             }
         }
         throw new NoSuchElementException();
