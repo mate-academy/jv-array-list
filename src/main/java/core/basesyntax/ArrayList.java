@@ -72,7 +72,7 @@ public class ArrayList<T> implements List<T> {
 
         T deletedValue = array[index];
         System.arraycopy(array, index + 1, array, index, size - index - 1);
-        array[--size] = null;
+        size--;
         return deletedValue;
     }
 
