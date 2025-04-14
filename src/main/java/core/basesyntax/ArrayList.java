@@ -67,7 +67,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        for (int i = 0; i < masiv.length; i++) {
+        for (int i = 0; i < size; i++) {
             if (masiv[i] != null && masiv[i].equals(element)
                     || masiv[i] == null && element == null) {
                 T removedElement = remove(i);
@@ -87,11 +87,10 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private boolean indexCheck(int index) {
-        if (index < size && index >= 0) {
-            return true;
+    private void indexCheck(int index) {
+        if (!(index < size && index >= 0)) {
+            throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
         }
-        throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
     }
 
     private void moreCapacity() {
