@@ -15,8 +15,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     public ArrayList() {
-        int CAPACITY = 10;
-        elements = new Object[CAPACITY];
+        elements = new Object[10];
     }
 
     public void add(T value) {
