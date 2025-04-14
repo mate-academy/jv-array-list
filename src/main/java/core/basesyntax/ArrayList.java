@@ -6,6 +6,7 @@ public class ArrayList<T> implements List<T> {
 
     private int size = 0;
     private Object[] elements;
+    private final Integer CAPACITY = 10;
 
 
     public ArrayList(int CAPACITY) {
@@ -15,7 +16,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     public ArrayList() {
-        elements = new Object[10];
+        elements = new Object[CAPACITY];
     }
 
     public void add(T value) {
