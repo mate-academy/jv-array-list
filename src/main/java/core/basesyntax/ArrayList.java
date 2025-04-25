@@ -34,13 +34,37 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-
+        if (index < 0 || index > size) {
+            throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
+        }
+        if (size == elements.length) {
+            resize();
+        }
+        for (int i = size; i > index; i--) {
+            elements[i] = elements[i - 1];
+        }
+        elements[index] = value;
+        size++;
     }
+
 
     @Override
     public void addAll(List<T> list) {
+        if (list == null || list.size() == 0) {
+            return; // нічого не додаємо, якщо список порожній
+        }
 
+        int newElementsCount = list.size();
+        if (size + newElementsCount > elements.length) {
+            resize();
+        }
+
+        for (int i = 0; i < newElementsCount; i++) {
+            elements[size] = list.get(i);
+            size++;
+        }
     }
+
 
     @Override
     public T get(int index) {
