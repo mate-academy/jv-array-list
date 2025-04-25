@@ -1,8 +1,7 @@
 package core.basesyntax;
 
-import java.util.Objects;
 import java.util.NoSuchElementException;
-
+import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
 
@@ -15,21 +14,19 @@ public class ArrayList<T> implements List<T> {
         size = 0;
     }
 
-    private void resize() {
-        int newCapacity = elements.length + elements.length / 2;
-        Object[] newElements = new Object[newCapacity];
-        System.arraycopy(elements, 0, newElements, 0, size);
-        elements = newElements;
+    private void resize(int newCapacity) {
+        T[] newArray = (T[]) new Object[newCapacity];
+        System.arraycopy(elements, 0, newArray, 0, size);
+        elements = newArray;
     }
 
     @Override
     public void add(T value) {
-        if(size == elements.length) {
-            resize();
+        if (size == elements.length) {
+            resize(elements.length * 3 / 2);
         }
         elements[size] = value;
         size++;
-
     }
 
     @Override
@@ -38,7 +35,7 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
         }
         if (size == elements.length) {
-            resize();
+            resize(elements.length * 3 / 2);
         }
         for (int i = size; i > index; i--) {
             elements[i] = elements[i - 1];
@@ -47,16 +44,18 @@ public class ArrayList<T> implements List<T> {
         size++;
     }
 
-
     @Override
     public void addAll(List<T> list) {
         if (list == null || list.size() == 0) {
-            return; // нічого не додаємо, якщо список порожній
+            return;
         }
 
         int newElementsCount = list.size();
-        if (size + newElementsCount > elements.length) {
-            resize();
+        int requiredCapacity = size + newElementsCount;
+
+        if (requiredCapacity > elements.length) {
+            int newCapacity = Math.max(elements.length * 3 / 2, requiredCapacity);
+            resize(newCapacity);
         }
 
         for (int i = 0; i < newElementsCount; i++) {
@@ -64,7 +63,6 @@ public class ArrayList<T> implements List<T> {
             size++;
         }
     }
-
 
     @Override
     public T get(int index) {
@@ -77,7 +75,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void set(T value, int index) {
         if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index" + index);
+            throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
         }
         elements[index] = value;
     }
@@ -91,7 +89,7 @@ public class ArrayList<T> implements List<T> {
         for (int i = index; i < size - 1; i++) {
             elements[i] = elements[i + 1];
         }
-        elements[size - 1] = null; // очищаємо останній елемент
+        elements[size - 1] = null;
         size--;
         return removedElement;
     }
@@ -99,13 +97,12 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if (elements[i] == element || (elements[i] != null && elements[i].equals(element))) {
+            if (Objects.equals(elements[i], element)) {
                 return remove(i);
             }
         }
         throw new NoSuchElementException("Element not found: " + element);
     }
-
 
     @Override
     public int size() {
