@@ -1,8 +1,34 @@
 package core.basesyntax;
 
+import java.util.Objects;
+import java.util.NoSuchElementException;
+
+
 public class ArrayList<T> implements List<T> {
+
+    private static final int DEFAULT_CAPACITY = 10;
+    private Object[] elements;
+    private int size;
+
+    public ArrayList() {
+        elements = new Object[DEFAULT_CAPACITY];
+        size = 0;
+    }
+
+    private void resize() {
+        int newCapacity = elements.length + elements.length / 2;
+        Object[] newElements = new Object[newCapacity];
+        System.arraycopy(elements, 0, newElements, 0, size);
+        elements = newElements;
+    }
+
     @Override
     public void add(T value) {
+        if(size == elements.length) {
+            resize();
+        }
+        elements[size] = value;
+        size++;
 
     }
 
@@ -18,31 +44,52 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        return null;
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
+        }
+        return (T) elements[index];
     }
 
     @Override
     public void set(T value, int index) {
-
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Invalid index" + index);
+        }
+        elements[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        return null;
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
+        }
+        T removedElement = (T) elements[index];
+        for (int i = index; i < size - 1; i++) {
+            elements[i] = elements[i + 1];
+        }
+        elements[size - 1] = null; // очищаємо останній елемент
+        size--;
+        return removedElement;
     }
 
     @Override
     public T remove(T element) {
-        return null;
+        for (int i = 0; i < size; i++) {
+            if (elements[i] == element || (elements[i] != null && elements[i].equals(element))) {
+                return remove(i);
+            }
+        }
+        throw new NoSuchElementException("Element not found: " + element);
     }
+
 
     @Override
     public int size() {
-        return 0;
+        return size;
     }
 
     @Override
     public boolean isEmpty() {
-        return false;
+        return size == 0;
     }
 }
