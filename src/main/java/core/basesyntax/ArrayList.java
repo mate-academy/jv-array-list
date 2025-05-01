@@ -24,11 +24,11 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayListIndexOutOfBoundsException("There is no such index as : " + index);
         }
 
+        sizeCheck();
         int sizeAddByIndex = size;
         size = sizeAddByIndex + 1;
-        sizeCheck();
         Object[] elementDataAddByIndex = elementData;
-        System.arraycopy(elementDataAddByIndex, index, elementDataAddByIndex,
+        System.arraycopy(elementData, index, elementDataAddByIndex,
                 index + 1,sizeAddByIndex - index);
         elementData[index] = value;
     }
@@ -74,7 +74,7 @@ public class ArrayList<T> implements List<T> {
         T removedElement = null;
         int indexToRemove = -1;
 
-        for (int i = 0; i < elementData.length; i++) {
+        for (int i = 0; i < size; i++) {
             if ((element == null && elementData[i] == null)
                     || (element != null && element.equals(elementData[i]))) {
                 removedElement = (T) elementData[i];
