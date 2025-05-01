@@ -19,3 +19,4 @@ public interface List<T> {
 
     boolean isEmpty();
 }
+
