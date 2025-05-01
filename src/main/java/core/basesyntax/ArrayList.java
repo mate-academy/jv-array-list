@@ -1,18 +1,24 @@
 package core.basesyntax;
+
 import java.util.NoSuchElementException;
+
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_ARRAY_SIZE = 10;
     private T[] array;
     private int arraySize = 0;
+
     public ArrayList() {
+
         array = (T[]) new Object[DEFAULT_ARRAY_SIZE];
     }
+
     private void resize() {
         int newSize = array.length + (array.length / 2);
         T[] newArray = (T[]) new Object[newSize];
         System.arraycopy(array, 0, newArray, 0, array.length);
         array = newArray;
     }
+
     @Override
     public void add(T value) {
         if (arraySize == array.length) {
@@ -21,6 +27,7 @@ public class ArrayList<T> implements List<T> {
         array[arraySize] = value;
         arraySize++;
     }
+
     @Override
     public void add(T value, int index) {
         if (index < 0 || index > arraySize) {
@@ -33,6 +40,7 @@ public class ArrayList<T> implements List<T> {
         array[index] = value;
         arraySize++;
     }
+
     @Override
     public void addAll(List<T> list) {
         System.out.println("public void addAll");
@@ -47,6 +55,7 @@ public class ArrayList<T> implements List<T> {
             array[arraySize++] = list.get(i);
         }
     }
+
     @Override
     public T get(int index) {
         if (index < 0 || index >= arraySize) {
@@ -55,6 +64,7 @@ public class ArrayList<T> implements List<T> {
             return array[index];
         }
     }
+
     @Override
     public void set(T value, int index) {
         if (index >= 0 && index < arraySize) {
@@ -63,11 +73,13 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayListIndexOutOfBoundsException("Invalid index");
         }
     }
+
     @Override
     public T remove(int index) {
         if (index < 0 || index >= arraySize) {
             throw new ArrayListIndexOutOfBoundsException("Invalid index");
         }
+
         T removed = array[index];
         for (int i = index; i < arraySize - 1; i++) {
             array[i] = array[i + 1];
@@ -75,6 +87,7 @@ public class ArrayList<T> implements List<T> {
         array[--arraySize] = null;
         return removed;
     }
+
     @Override
     public T remove(T element) {
         for (int i = 0; i < arraySize; i++) {
@@ -90,10 +103,12 @@ public class ArrayList<T> implements List<T> {
         }
         throw new NoSuchElementException("Element not found");
     }
+
     @Override
     public int size() {
         return arraySize;
     }
+
     @Override
     public boolean isEmpty() {
         return arraySize == 0;
