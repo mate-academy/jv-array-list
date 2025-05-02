@@ -3,19 +3,16 @@ package core.basesyntax;
 public interface List<T> {
     void add(T value);
 
-    void add(T value, int index);
-
-    void addAll(List<T> list);
+    void add(int index, T value);
 
     T get(int index);
 
-    void set(T value, int index);
+    T set(int index, T value);
 
     T remove(int index);
 
-    T remove(T element);
+   boolean remove(T value);
 
     int size();
 
-    boolean isEmpty();
 }
