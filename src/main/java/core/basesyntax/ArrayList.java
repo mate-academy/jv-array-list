@@ -1,48 +1,74 @@
 package core.basesyntax;
 
+import java.util.NoSuchElementException;
+
 public class ArrayList<T> implements List<T> {
-    @Override
-    public void add(T value) {
+    private static final int DEFAULT_CAPACITY = 10;
+    private Object[] elements;
+    private int size;
 
+    public ArrayList() {
+        this.elements = new Object[DEFAULT_CAPACITY];
+        this.size = 0;
     }
 
     @Override
-    public void add(T value, int index) {
-
-    }
-
-    @Override
-    public void addAll(List<T> list) {
-
+    public void add(T element) {
+        if (size == elements.length) {
+            grow();
+        }
+        elements[size++] = element;
     }
 
     @Override
     public T get(int index) {
-        return null;
+        checkIndex(index);
+        return (T) elements[index];
     }
 
     @Override
-    public void set(T value, int index) {
-
-    }
-
-    @Override
-    public T remove(int index) {
-        return null;
-    }
-
-    @Override
-    public T remove(T element) {
-        return null;
+    public void remove(T element) {
+        int index = indexOf(element);
+        if (index == -1) {
+            throw new NoSuchElementException("Element not found: " + element);
+        }
+        removeAt(index);
     }
 
     @Override
     public int size() {
-        return 0;
+        return size;
     }
 
     @Override
     public boolean isEmpty() {
-        return false;
+        return size == 0;
+    }
+
+    private void grow() {
+        int newCapacity = (int) (elements.length * 1.5);
+        Object[] newArray = new Object[newCapacity];
+        System.arraycopy(elements, 0, newArray, 0, elements.length);
+        elements = newArray;
+    }
+
+    private void checkIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Index out of bounds: " + index);
+        }
+    }
+
+    private int indexOf(T element) {
+        for (int i = 0; i < size; i++) {
+            if (elements[i].equals(element)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    private void removeAt(int index) {
+        System.arraycopy(elements, index + 1, elements, index, size - index - 1);
+        elements[--size] = null; // Null out the last element
     }
 }
