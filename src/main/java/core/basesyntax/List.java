@@ -1,5 +1,8 @@
 package core.basesyntax;
 
+/**
+ * Custom List interface.
+ */
 public interface List<T> {
     void add(T value);
 
