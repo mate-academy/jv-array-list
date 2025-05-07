@@ -1,48 +1,130 @@
 package core.basesyntax;
 
+import java.util.NoSuchElementException;
+
 public class ArrayList<T> implements List<T> {
+    private static final int DEFAULT_SIZE = 10;
+    private static final double GROW_COEFFICIENT = 1.5;
+    private int size;
+    private T[] customArrayList;
+
+    public ArrayList() {
+        customArrayList = (T[]) new Object[DEFAULT_SIZE];
+    }
+
+    private void growIfArrayFull() {
+        if (size == customArrayList.length) {
+            int newSize = (int) (customArrayList.length * GROW_COEFFICIENT);
+            T[] biggerArrayList = (T[]) new Object[newSize];
+            System.arraycopy(customArrayList, 0, biggerArrayList, 0, customArrayList.length);
+            customArrayList = biggerArrayList;
+        }
+    }
+
+    private void checkIfIndexValid(int index) {
+        if (index >= size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("DevCap: IndexException");
+        }
+    }
+
+    private void checkIfIndexValidExclusive(int index) {
+        if (index > size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("DevCap: IndexException");
+        }
+    }
+
+    private int findValueInArray(T value) {
+        for (int i = 0; i < size; i++) {
+            // Additional built in check for nulls
+            if (equals(customArrayList[i], value)) {
+                return i;
+            }
+        }
+        // Element not found
+        return -1;
+    }
+
+    // Custom Object.equals realisation
+    private boolean equals(Object a, Object b) {
+        return (a == b) || (a != null && a.equals(b));
+    }
+
+    private void changeSize(int delta) {
+        size += delta;
+    }
+
     @Override
     public void add(T value) {
-
+        growIfArrayFull();
+        customArrayList[size] = value;
+        changeSize(1);
     }
 
     @Override
     public void add(T value, int index) {
-
+        checkIfIndexValidExclusive(index);
+        if (index == size) {
+            add(value);
+        } else {
+            growIfArrayFull();
+            System.arraycopy(customArrayList, index, customArrayList, index + 1, size - index);
+            customArrayList[index] = value;
+            changeSize(1);
+        }
     }
 
     @Override
     public void addAll(List<T> list) {
-
+        // For each is not working because Custom list does not implement iterable interface
+        for (int i = 0; i < list.size(); i++) {
+            add(list.get(i));
+        }
     }
 
     @Override
     public T get(int index) {
-        return null;
+        checkIfIndexValid(index);
+        // Caution, unchecked cast
+        return (T) customArrayList[index];
     }
 
     @Override
     public void set(T value, int index) {
-
+        checkIfIndexValid(index);
+        customArrayList[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        return null;
+        checkIfIndexValid(index);
+        final T value = get(index);
+        System.arraycopy(customArrayList, 0, customArrayList, 0, index);
+        // If our element is last, no need to fetch second part of array
+        // (there is no second part in fact, it will cause index exception)
+        if (index != size() - 1) {
+            System.arraycopy(customArrayList, index + 1, customArrayList, index, size - index);
+        }
+        changeSize(-1);
+        return value;
     }
 
     @Override
     public T remove(T element) {
-        return null;
+        int index = findValueInArray(element);
+        if (index == -1) {
+            throw new NoSuchElementException("DevCap: There is no such element in array");
+        } else {
+            return remove(index);
+        }
     }
 
     @Override
     public int size() {
-        return 0;
+        return size;
     }
 
     @Override
     public boolean isEmpty() {
-        return false;
+        return size() == 0;
     }
 }
