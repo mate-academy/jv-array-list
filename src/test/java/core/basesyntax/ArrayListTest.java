@@ -196,7 +196,7 @@ public class ArrayListTest {
         Assert.assertEquals("Test failed! Remove was incorrect",
                 "Private", arrayList.get(3));
         actualResult = arrayList.remove("String");
-        Assert.assertEquals(String.format("Test failed! Returned value should be \"%s\", "
+         Assert.assertEquals(String.format("Test failed! Returned value should be \"%s\", "
                 + "but was \"%s\"\n", "String", actualResult), "String", actualResult);
         actualSize = arrayList.size();
         Assert.assertEquals(String.format("Test failed! Size of array after removing element "
