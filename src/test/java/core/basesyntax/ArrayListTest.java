@@ -1,6 +1,8 @@
 package core.basesyntax;
 
 import java.util.NoSuchElementException;
+
+import core.basesyntax.exceptions.ArrayListIndexOutOfBoundsException;
 import org.junit.Assert;
 import org.junit.Test;
 

@@ -1,4 +1,4 @@
-package core.basesyntax;
+package core.basesyntax.interfaces;
 
 public interface List<T> {
     void add(T value);
