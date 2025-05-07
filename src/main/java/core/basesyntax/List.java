@@ -1,6 +1,6 @@
 package core.basesyntax;
 
-public interface List<T> {
+public interface List<T> extends Iterable {
     void add(T value);
 
     void add(T value, int index);
