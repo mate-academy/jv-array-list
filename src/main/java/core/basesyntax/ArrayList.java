@@ -1,48 +1,104 @@
 package core.basesyntax;
 
+import java.util.NoSuchElementException;
+
 public class ArrayList<T> implements List<T> {
+    private static final float RESIZE_FACTOR = 1.5f;
+    private static final int DEFAULT_CAPACITY = 10;
+    private T[] elementData;
+    private int size;
+
+    public ArrayList() {
+        elementData = (T[]) new Object[DEFAULT_CAPACITY];
+    }
+
     @Override
     public void add(T value) {
-
+        if (size == elementData.length) {
+            grow();
+        }
+        elementData[size++] = value;
     }
 
     @Override
     public void add(T value, int index) {
-
+        indexRangeCheckForAdd(index);
+        if (size == elementData.length) {
+            grow();
+        }
+        System.arraycopy(elementData, index, elementData, index + 1, size - index);
+        elementData[index] = value;
+        size++;
     }
 
     @Override
     public void addAll(List<T> list) {
-
+        for (int i = 0; i < list.size(); i++) {
+            add(list.get(i));
+        }
     }
 
     @Override
     public T get(int index) {
-        return null;
+        indexRangeCheck(index);
+        return elementData[index];
     }
 
     @Override
     public void set(T value, int index) {
-
+        indexRangeCheck(index);
+        elementData[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        return null;
+        indexRangeCheck(index);
+        T removedObject = (T) elementData[index];
+        int newSize;
+        if ((newSize = size - 1) > index) {
+            System.arraycopy(elementData, index + 1, elementData, index, size - index);
+        }
+        elementData[size = newSize] = null;
+        return removedObject;
     }
 
     @Override
     public T remove(T element) {
-        return null;
+        for (int i = 0; i < size; i++) {
+            if (elementData[i] == element
+                    || (elementData[i] != null && elementData[i].equals(element))) {
+                return remove(i);
+            }
+        }
+        throw new NoSuchElementException("There is no such element to remove");
     }
 
     @Override
     public int size() {
-        return 0;
+        return size;
     }
 
     @Override
     public boolean isEmpty() {
-        return false;
+        return size() == 0;
+    }
+
+    private void indexRangeCheck(int index) {
+        if (index >= size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Invalid index");
+        }
+    }
+
+    private void indexRangeCheckForAdd(int index) {
+        if (index > size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Invalid index");
+        }
+    }
+
+    private void grow() {
+        int newCapacity = (int) (elementData.length * RESIZE_FACTOR);
+        T[] grownArray = (T[]) new Object[newCapacity];
+        System.arraycopy(elementData, 0, grownArray, 0, elementData.length);
+        elementData = grownArray;
     }
 }
