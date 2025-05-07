@@ -315,6 +315,7 @@ public class ArrayListTest {
         Assert.assertTrue("Test failed! ArrayList should be empty", arrayList.isEmpty());
         arrayList.add("First");
         arrayList.remove(0);
-        Assert.assertTrue("Test failed! ArrayList should be empty", arrayList.isEmpty());
+        Assert.assertTrue("Test failed! ArrayList should be empty",
+                arrayList.isEmpty());
     }
 }
