@@ -1,7 +1,7 @@
 package core.basesyntax;
 
 public interface List<T> {
-    void add(T value);
+    boolean add(T value);
 
     void add(T value, int index);
 
@@ -9,7 +9,7 @@ public interface List<T> {
 
     T get(int index);
 
-    void set(T value, int index);
+    T set(T value, int index);
 
     T remove(int index);
 
