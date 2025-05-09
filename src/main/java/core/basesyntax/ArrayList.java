@@ -61,10 +61,10 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void set(T value, int index) {
-        if (index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index is out of bounds");
-        } else if (index < 0) {
+        if (index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Index is negative");
+        } else if (index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Index is out of bounds");
         } else {
             array[index] = value;
         }
