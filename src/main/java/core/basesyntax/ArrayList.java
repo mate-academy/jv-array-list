@@ -61,10 +61,10 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void set(T value, int index) {
-        if (index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index is out of bounds");
-        } else if (index < 0) {
+        if (index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Index is negative");
+        } else if (index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Index is out of bounds");
         } else {
             array[index] = value;
         }
@@ -105,16 +105,19 @@ public class ArrayList<T> implements List<T> {
 
     @SuppressWarnings("unchecked")
     private void ensureCapacity() {
-        if (size == array.length) {
-            int newCapacity = (int) Math.min(array.length * GROWTH_FACTOR, Integer.MAX_VALUE);
-            if (newCapacity == array.length) {
+        long newCapacityLong = (long) (array.length * GROWTH_FACTOR);
+        if (newCapacityLong > Integer.MAX_VALUE) {
+            if (array.length == Integer.MAX_VALUE) {
                 throw new OutOfMemoryError("Cannot expand array any further");
             }
-            T[] newArray = (T[]) new Object[newCapacity];
-            System.arraycopy(array, 0, newArray, 0, array.length);
-            array = newArray;
-        } else if (size == 0) {
-            array = (T[]) new Object[DEFAULT_CAPACITY];
+            newCapacityLong = Integer.MAX_VALUE;
         }
+        int newCapacity = (int) newCapacityLong;
+        if (newCapacity == array.length) {
+            newCapacity = array.length + 1;
+        }
+        T[] newArray = (T[]) new Object[newCapacity];
+        System.arraycopy(array, 0, newArray, 0, size);
+        array = newArray;
     }
 }
