@@ -24,6 +24,9 @@ public class ArrayList<T> implements List<T> {
             newCapacity = Math.max(array.length + 1,
                     (int) (array.length * GROWTH_FACTOR));
         }
+        if (newCapacity <= array.length) {
+            newCapacity = array.length + 1;
+        }
         T[] newArray = (T[]) new Object[newCapacity];
         System.arraycopy(array, 0, newArray, 0, size);
         array = newArray;
