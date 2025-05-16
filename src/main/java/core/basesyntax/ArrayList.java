@@ -11,7 +11,7 @@ public class ArrayList<T> implements List<T> {
 
     public ArrayList(int capasity) {
         if (capasity < 0) {
-            throw new ArrayListIndexOutOfBoundsException("public ArrayList(int capasity) {");
+            throw new IllegalArgumentException("public ArrayList(int capasity) {");
         }
         this.elementData = new Object[capasity];
     }
@@ -108,7 +108,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void grow() {
-        int size = elementData.length == 0 ? DEFAULT_CAPACITY : elementData.length * 2;
-        elementData = Arrays.copyOf(elementData, size << 1);
+        int size = elementData.length == 0 ? DEFAULT_CAPACITY : elementData.length << 1;
+        elementData = Arrays.copyOf(elementData, size);
     }
 }
