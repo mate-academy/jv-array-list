@@ -10,9 +10,10 @@ public class ArrayList<T> implements List<T> {
     private int size = 0;
 
     public ArrayList(int capasity) {
-        if (capasity >= 0) {
-            this.elementData = new Object[capasity];
+        if (capasity < 0) {
+            throw new ArrayListIndexOutOfBoundsException("public ArrayList(int capasity) {");
         }
+        this.elementData = new Object[capasity];
     }
 
     public ArrayList() {
@@ -85,6 +86,7 @@ public class ArrayList<T> implements List<T> {
             if (Objects.equals(element, elementData[i])) {
                 isExist = true;
                 index = i;
+                break;
             }
         }
         if (!isExist) {
@@ -106,6 +108,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void grow() {
+        int size = elementData.length == 0 ? DEFAULT_CAPACITY : elementData.length * 2;
         elementData = Arrays.copyOf(elementData, size << 1);
     }
 }
