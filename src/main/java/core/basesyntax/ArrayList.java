@@ -14,7 +14,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        ensureCapacity();
+        ensureCapacity(size + 1);
         elements[size] = value;
         size++;
     }
@@ -22,7 +22,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         checkInsertIndex(index);
-        ensureCapacity();
+        ensureCapacity(size + 1);
 
         if (index < size) {
             shiftRightFromIndex(index);
@@ -34,17 +34,12 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        Object[] newArrayList = new Object[capacity + list.size()];
+        ensureCapacity(size + list.size());
 
-        for (int i = 0; i < size; i++) {
-            newArrayList[i] = elements[i];
+        for (int i = 0; i < list.size(); i++) {
+            elements[size + i] = list.get(i);
         }
 
-        for (int i = size; i < size + list.size(); i++) {
-            newArrayList[i] = list.get(i - size);
-        }
-        elements = newArrayList;
-        capacity += list.size();
         size += list.size();
     }
 
@@ -104,28 +99,24 @@ public class ArrayList<T> implements List<T> {
 
     private void shiftRightFromIndex(int index) {
         for (int i = size; i >= index; i--) {
-            if (i == 0) {
-                elements[i] = null;
-                return;
+            if (i > 0) {
+                elements[i] = elements[i - 1];
             }
-            elements[i] = elements[i - 1];
         }
     }
 
     private void shiftLeftFromIndex(int index) {
-        for (int i = index; i < size; i++) {
-            if (i + 1 == size) {
-                elements[i] = null;
-                return;
-            }
+        for (int i = index; i < size - 1; i++) {
             elements[i] = elements[i + 1];
         }
+        elements[size - 1] = null;
     }
 
-    private void ensureCapacity() {
-
-        if (size == capacity) {
-            capacity = capacity + (capacity >> 1);
+    private void ensureCapacity(int minCapacity) {
+        if (minCapacity > capacity) {
+            while (capacity < minCapacity) {
+                capacity = capacity + (capacity >> 1);
+            }
             Object[] temp = new Object[capacity];
             for (int i = 0; i < size; i++) {
                 temp[i] = elements[i];
