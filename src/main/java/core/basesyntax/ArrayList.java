@@ -1,12 +1,12 @@
 package core.basesyntax;
 
 import java.util.NoSuchElementException;
+import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private Object[] elements;
-    private int size = 0;
-    private int capacity = 10;
+    private int size;
 
     public ArrayList() {
         this.elements = new Object[DEFAULT_CAPACITY];
@@ -34,13 +34,9 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        ensureCapacity(size + list.size());
-
         for (int i = 0; i < list.size(); i++) {
-            elements[size + i] = list.get(i);
+            add(list.get(i));
         }
-
-        size += list.size();
     }
 
     @SuppressWarnings("unchecked")
@@ -70,21 +66,11 @@ public class ArrayList<T> implements List<T> {
     @SuppressWarnings("unchecked")
     @Override
     public T remove(T element) {
-        for (int i = 0; i < size; i++) {
-            if (element == null) {
-                if (elements[i] == null) {
-                    shiftLeftFromIndex(i);
-                    size--;
-                    return null;
-                }
-            } else if (element.equals(elements[i])) {
-                T removed = (T) elements[i];
-                shiftLeftFromIndex(i);
-                size--;
-                return removed;
-            }
-        }
-        throw new NoSuchElementException("Element not found");
+        int index = getElementIndex(element);
+        T removeElement = (T) elements[index];
+        shiftLeftFromIndex(index);
+        size--;
+        return removeElement;
     }
 
     @Override
@@ -98,29 +84,23 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void shiftRightFromIndex(int index) {
-        for (int i = size; i >= index; i--) {
-            if (i > 0) {
-                elements[i] = elements[i - 1];
-            }
-        }
+        System.arraycopy(elements, index, elements, index + 1, size - index);
     }
 
     private void shiftLeftFromIndex(int index) {
-        for (int i = index; i < size - 1; i++) {
-            elements[i] = elements[i + 1];
-        }
+        System.arraycopy(elements, index + 1, elements, index, size - index - 1);
         elements[size - 1] = null;
     }
 
     private void ensureCapacity(int minCapacity) {
-        if (minCapacity > capacity) {
-            while (capacity < minCapacity) {
-                capacity = capacity + (capacity >> 1);
+        if (minCapacity > elements.length) {
+            int newCapacity = elements.length;
+            while (newCapacity < minCapacity) {
+                newCapacity += (newCapacity >> 1);
             }
-            Object[] temp = new Object[capacity];
-            for (int i = 0; i < size; i++) {
-                temp[i] = elements[i];
-            }
+
+            Object[] temp = new Object[newCapacity];
+            System.arraycopy(elements, 0, temp, 0, size);
             elements = temp;
         }
     }
@@ -139,5 +119,14 @@ public class ArrayList<T> implements List<T> {
                     + index + ". Allowed range for add: 0 to " + size
             );
         }
+    }
+
+    private int getElementIndex(T element) {
+        for (int i = 0; i < size; i++) {
+            if (Objects.equals(element, elements[i])) {
+                return i;
+            }
+        }
+        throw new NoSuchElementException("Element not found");
     }
 }
