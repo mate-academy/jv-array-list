@@ -25,7 +25,7 @@ public class ArrayList<T> implements List<T> {
         ensureCapacity(size + 1);
 
         if (index < size) {
-            shiftRightFromIndex(index);
+            System.arraycopy(elements, index, elements, index + 1, size - index);
         }
 
         elements[index] = value;
@@ -58,19 +58,17 @@ public class ArrayList<T> implements List<T> {
         checkAccessIndex(index);
 
         T removeElement = (T) elements[index];
-        shiftLeftFromIndex(index);
+        System.arraycopy(elements, index + 1, elements, index, size - index - 1);
+        elements[size - 1] = null;
         size--;
         return removeElement;
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public T remove(T element) {
         int index = getElementIndex(element);
-        T removeElement = (T) elements[index];
-        shiftLeftFromIndex(index);
-        size--;
-        return removeElement;
+
+        return remove(index);
     }
 
     @Override
@@ -81,15 +79,6 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
-    }
-
-    private void shiftRightFromIndex(int index) {
-        System.arraycopy(elements, index, elements, index + 1, size - index);
-    }
-
-    private void shiftLeftFromIndex(int index) {
-        System.arraycopy(elements, index + 1, elements, index, size - index - 1);
-        elements[size - 1] = null;
     }
 
     private void ensureCapacity(int minCapacity) {
@@ -121,9 +110,11 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
+    @SuppressWarnings("unchecked")
     private int getElementIndex(T element) {
         for (int i = 0; i < size; i++) {
-            if (Objects.equals(element, elements[i])) {
+            T currentElement = (T) elements[i];
+            if (element == null ? currentElement == null : element.equals(currentElement)) {
                 return i;
             }
         }
