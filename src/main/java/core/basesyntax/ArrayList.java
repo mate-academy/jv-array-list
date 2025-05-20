@@ -1,7 +1,6 @@
 package core.basesyntax;
 
 import java.util.NoSuchElementException;
-import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
@@ -56,8 +55,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         checkAccessIndex(index);
-
-        T removeElement = (T) elements[index];
+        final T removeElement = (T) elements[index];
         System.arraycopy(elements, index + 1, elements, index, size - index - 1);
         elements[size - 1] = null;
         size--;
