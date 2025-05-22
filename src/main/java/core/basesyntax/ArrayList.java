@@ -14,21 +14,6 @@ public class ArrayList<T> implements List<T> {
         size = 0;
     }
 
-    private void growIfNeeded() {
-        if (size == elements.length) {
-            int newCapacity = (int) (elements.length * GROWTH_FACTOR);
-            Object[] newArray = new Object[newCapacity];
-            System.arraycopy(elements, 0, newArray, 0, size);
-            elements = newArray;
-        }
-    }
-
-    private void validateIndex(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index " + index + " is out of bounds.");
-        }
-    }
-
     @Override
     public void add(T value) {
         growIfNeeded();
@@ -37,9 +22,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
-        }
+        validateIndexForAdd(index);
         growIfNeeded();
         System.arraycopy(elements, index, elements, index + 1, size - index);
         elements[index] = value;
@@ -93,5 +76,26 @@ public class ArrayList<T> implements List<T> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    private void growIfNeeded() {
+        if (size == elements.length) {
+            int newCapacity = (int) (elements.length * GROWTH_FACTOR);
+            Object[] newArray = new Object[newCapacity];
+            System.arraycopy(elements, 0, newArray, 0, size);
+            elements = newArray;
+        }
+    }
+
+    private void validateIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Index " + index + " is out of bounds.");
+        }
+    }
+
+    private void validateIndexForAdd(int index) {
+        if (index < 0 || index > size) {
+            throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
+        }
     }
 }
