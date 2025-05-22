@@ -6,24 +6,24 @@ public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private static final double GROWTH_FACTOR = 1.5;
 
-    private Object[] elementData;
+    private Object[] elements;
     private int size;
 
     public ArrayList() {
-        elementData = new Object[DEFAULT_CAPACITY];
+        elements = new Object[DEFAULT_CAPACITY];
         size = 0;
     }
 
-    private void ensureCapacity() {
-        if (size == elementData.length) {
-            int newCapacity = (int) (elementData.length * GROWTH_FACTOR);
+    private void growIfNeeded() {
+        if (size == elements.length) {
+            int newCapacity = (int) (elements.length * GROWTH_FACTOR);
             Object[] newArray = new Object[newCapacity];
-            System.arraycopy(elementData, 0, newArray, 0, size);
-            elementData = newArray;
+            System.arraycopy(elements, 0, newArray, 0, size);
+            elements = newArray;
         }
     }
 
-    private void checkIndex(int index) {
+    private void validateIndex(int index) {
         if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException("Index " + index + " is out of bounds.");
         }
@@ -31,8 +31,8 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        ensureCapacity();
-        elementData[size++] = value;
+        growIfNeeded();
+        elements[size++] = value;
     }
 
     @Override
@@ -40,9 +40,9 @@ public class ArrayList<T> implements List<T> {
         if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
         }
-        ensureCapacity();
-        System.arraycopy(elementData, index, elementData, index + 1, size - index);
-        elementData[index] = value;
+        growIfNeeded();
+        System.arraycopy(elements, index, elements, index + 1, size - index);
+        elements[index] = value;
         size++;
     }
 
@@ -55,38 +55,30 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        checkIndex(index);
-        return (T) elementData[index];
+        validateIndex(index);
+        return (T) elements[index];
     }
 
     @Override
     public void set(T value, int index) {
-        checkIndex(index);
-        elementData[index] = value;
+        validateIndex(index);
+        elements[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        checkIndex(index);
-        T removedElement = (T) elementData[index];
-        System.arraycopy(elementData, index + 1, elementData, index, size - index - 1);
+        validateIndex(index);
+        T removedElement = (T) elements[index];
+        System.arraycopy(elements, index + 1, elements, index, size - index - 1);
         size--;
         return removedElement;
     }
 
     @Override
     public T remove(T element) {
-        if (element == null) {
-            for (int i = 0; i < size; i++) {
-                if (elementData[i] == null) {
-                    return remove(i);
-                }
-            }
-            throw new NoSuchElementException("Element not found: null");
-        }
-
         for (int i = 0; i < size; i++) {
-            if (elementData[i] != null && elementData[i].equals(element)) {
+            if ((elements[i] == null && element == null)
+                    || (elements[i] != null && elements[i].equals(element))) {
                 return remove(i);
             }
         }
