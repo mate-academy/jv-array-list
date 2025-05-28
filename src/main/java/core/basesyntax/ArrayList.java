@@ -20,11 +20,8 @@ public class ArrayList<T> implements List<T> {
             for (int i = 0; i < clone.length; i++) {
                 elements[i] = clone[i];
             }
-            elements[size] = value;
-
-        } else {
-            elements[size] = value;
         }
+        elements[size] = value;
         size++;
     }
 
@@ -33,7 +30,7 @@ public class ArrayList<T> implements List<T> {
         if (index > size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Wrong index");
         }
-        if (size + 1 >= elements.length) {
+        if (size >= elements.length) {
             Object[] clone = elements.clone();
             elements = new Object[clone.length + clone.length / 2];
             for (int i = 0; i < size; i++) {
@@ -59,14 +56,13 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        if (list.size() + size >= elements.length) {
-            Object[] clone = elements.clone();
-            while (list.size() + size >= elements.length) {
-                elements = new Object[elements.length + elements.length / 2];
-            }
-            for (int i = 0; i < size; i++) {
-                elements[i] = clone[i];
-            }
+        if (list == null || list.isEmpty()) {
+            return;
+        }
+        int minCapacity = list.size() + size;
+        if (elements.length < minCapacity) {
+            int newCapacity = Math.max(elements.length + (elements.length >> 1), minCapacity);
+            elements = Arrays.copyOf(elements, newCapacity);
         }
         for (int i = 0; i < list.size(); i++) {
             elements[size + i] = list.get(i);
