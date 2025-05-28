@@ -15,11 +15,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value) {
         if (size >= elements.length) {
-            Object[] clone = elements.clone();
-            elements = new Object[clone.length + clone.length / 2];
-            for (int i = 0; i < clone.length; i++) {
-                elements[i] = clone[i];
-            }
+            elements = Arrays.copyOf(elements, elements.length + (elements.length << 1));
         }
         elements[size] = value;
         size++;
@@ -31,11 +27,7 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayListIndexOutOfBoundsException("Wrong index");
         }
         if (size >= elements.length) {
-            Object[] clone = elements.clone();
-            elements = new Object[clone.length + clone.length / 2];
-            for (int i = 0; i < size; i++) {
-                elements[i] = clone[i];
-            }
+            elements = Arrays.copyOf(elements, elements.length + (elements.length << 1));
         }
         if (index == size) {
             elements[index] = value;
