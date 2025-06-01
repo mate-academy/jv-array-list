@@ -1,0 +1,18 @@
+[1mdiff --git a/src/main/java/core/basesyntax/ArrayList.java b/src/main/java/core/basesyntax/ArrayList.java[m
+[1mindex aa5d6e6..1ff5fce 100644[m
+[1m--- a/src/main/java/core/basesyntax/ArrayList.java[m
+[1m+++ b/src/main/java/core/basesyntax/ArrayList.java[m
+[36m@@ -82,13 +82,9 @@[m [mpublic class ArrayList<T> implements List<T> {[m
+ [m
+     private void ensureCapacity() {[m
+         if (size == elements.length) {[m
+[31m-<<<<<<< HEAD[m
+[31m-            int newCapacity = (int) (elements.length * GROWTH_FACTOR);[m
+[31m-=======[m
+             int newCapacity = Math.max([m
+                     (int) (elements.length * GROWTH_FACTOR),[m
+                     elements.length + 1);[m
+[31m->>>>>>> faa653c (Fix ArrayList implementation)[m
+             Object[] newArray = new Object[newCapacity];[m
+             System.arraycopy(elements, 0, newArray, 0, size);[m
+             elements = newArray;[m
