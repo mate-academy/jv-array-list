@@ -1,6 +1,5 @@
 package core.basesyntax;
 
-import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
@@ -12,6 +11,12 @@ public class ArrayList<T> implements List<T> {
     public ArrayList() {
         elements = (T[]) new Object[DEFAULT_CAPACITY];
         size = 0;
+    }
+
+    private void checkIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
+        }
     }
 
     @Override
@@ -45,25 +50,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
-        }
+        checkIndex(index);
         return elements[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
-        }
+        checkIndex(index);
         elements[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
-        }
+        checkIndex(index);
         T removed = elements[index];
         for (int i = index; i < size - 1; i++) {
             elements[i] = elements[i + 1];
@@ -96,7 +95,12 @@ public class ArrayList<T> implements List<T> {
 
     private void resizeIfNeeded() {
         if (size == elements.length) {
-            elements = Arrays.copyOf(elements, (int)(elements.length * 1.5) + 1);
+            T[] newElements = (T[]) new Object [(int)(elements.length * 1.5)];
+            for (int i = 0; i < elements.length; i++) {
+                newElements[i] = elements[i];
+            }
+            elements = newElements;
         }
     }
+
 }
