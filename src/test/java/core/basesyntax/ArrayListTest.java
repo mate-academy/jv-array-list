@@ -60,7 +60,7 @@ public class ArrayListTest {
     }
 
     @Test
-    public void addListToArrayList() {
+    public void addListToArrayList() throws Exception {
         ArrayList<String> arrayList = new ArrayList<>();
         arrayList.add("Test");
         arrayList.add("for");

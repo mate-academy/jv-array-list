@@ -5,7 +5,7 @@ public interface List<T> {
 
     void add(T value, int index);
 
-    void addAll(List<T> list);
+    void addAll(List<T> list) throws Exception;
 
     T get(int index);
 
