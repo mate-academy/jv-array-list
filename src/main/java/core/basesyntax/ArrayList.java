@@ -16,7 +16,6 @@ public class ArrayList<T> implements List<T> {
         if (listSize == capacity) {
             capacity = (int) (capacity * 1.5) + 1;
             T[] newArr = (T[]) new Object[capacity];
-
             for (int i = 0; i < listSize; i++) {
                 newArr[i] = arr[i];
             }
@@ -101,14 +100,12 @@ public class ArrayList<T> implements List<T> {
         if (index < 0 || index >= listSize) {
             throw new ArrayListIndexOutOfBoundsException("Index:" + index);
         }
-        T removedElement = arr[index];
-
+        final T removedElement = arr[index];
         for (int i = index; i < listSize - 1; i++) {
             arr[i] = arr[i + 1];
         }
         arr[listSize - 1] = null;
         listSize--;
-
         return removedElement;
     }
 
@@ -116,7 +113,7 @@ public class ArrayList<T> implements List<T> {
     public T remove(T value) {
         for (int i = 0; i < listSize; i++) {
             if (arr[i] == null && value == null) {
-                T removedElement = arr[i];
+                final T removedElement = arr[i];
                 for (int j = i; j < listSize - 1; j++) {
                     arr[j] = arr[j + 1];
                 }
@@ -125,7 +122,7 @@ public class ArrayList<T> implements List<T> {
                 return removedElement;
             }
             if (arr[i] != null && arr[i].equals(value)) {
-                T removedElement = arr[i];
+                final T removedElement = arr[i];
                 for (int j = i; j < listSize - 1; j++) {
                     arr[j] = arr[j + 1];
                 }
