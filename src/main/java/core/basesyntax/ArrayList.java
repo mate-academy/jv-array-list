@@ -54,7 +54,7 @@ public class ArrayList<T> implements List<T> {
         if (numMoved > 0) {
             System.arraycopy(elementData, index + 1, elementData, index, numMoved);
         }
-        elementData[--size] = null; // avoid memory leak
+        elementData[--size] = null;
         return removed;
     }
 
@@ -79,6 +79,8 @@ public class ArrayList<T> implements List<T> {
     public boolean isEmpty() {
         return size == 0;
     }
+
+    // HELPERS
 
     private void ensureCapacity(int minCapacity) {
         if (minCapacity > elementData.length) {
