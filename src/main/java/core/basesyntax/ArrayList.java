@@ -3,40 +3,50 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-
     private static final int DEFAULT_CAPACITY = 10;
+    private static final double GROWTH_FACTOR = 1.5;
     private int size;
-    private Object[] elementsData;
+    private Object[] elementData;
 
     public ArrayList() {
-        elementsData = new Object[DEFAULT_CAPACITY];
+        elementData = new Object[DEFAULT_CAPACITY];
         size = 0;
     }
 
     private void expandCapacity() {
-        if (size == elementsData.length) {
-            int newCapacity = (int) (elementsData.length * 1.5);
+        if (size == elementData.length) {
+            int newCapacity = (int) (elementData.length * GROWTH_FACTOR);
             Object[] newArray = new Object[newCapacity];
-            System.arraycopy(elementsData, 0, newArray, 0, elementsData.length);
-            elementsData = newArray;
+            System.arraycopy(elementData, 0, newArray, 0, elementData.length);
+            elementData = newArray;
+        }
+    }
+
+    private void checkPositionIndex(int index) {
+        if (index < 0 || index > size) {
+            throw new ArrayListIndexOutOfBoundsException("Index:" + index + "Size" + size);
+        }
+    }
+
+    private void checkElementIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Index:" + index + "Size" + size);
         }
     }
 
     @Override
     public void add(T value) {
         expandCapacity();
-        elementsData[size] = value;
+        elementData[size] = value;
         size++;
     }
 
     @Override
     public void add(T value, int index) {
-        if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("Index:" + index + "Size" + size);
-        }
+        checkPositionIndex(index);
         expandCapacity();
-        System.arraycopy(elementsData, index, elementsData, index + 1, size - index);
-        elementsData[index] = value;
+        System.arraycopy(elementData, index, elementData, index + 1, size - index);
+        elementData[index] = value;
         size++;
     }
 
@@ -49,29 +59,22 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index:" + index + "Size" + size);
-        }
-        return (T) elementsData[index];
+        checkElementIndex(index);
+        return (T) elementData[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index:" + index + "Size" + size);
-        }
-        elementsData[index] = value;
+        checkElementIndex(index);
+        elementData[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index:" + index + "Size" + size);
-        }
-
-        final T oldValue = (T) elementsData[index];
-        System.arraycopy(elementsData, index + 1, elementsData, index, size - index - 1);
-        elementsData[size - 1] = null;
+        checkElementIndex(index);
+        final T oldValue = (T) elementData[index];
+        System.arraycopy(elementData, index + 1, elementData, index, size - index - 1);
+        elementData[size - 1] = null;
         size--;
         return oldValue;
     }
@@ -79,10 +82,10 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if (elementsData[i] == null && element == null) {
+            if (elementData[i] == null && element == null) {
                 return remove(i);
             }
-            if (elementsData[i] != null && elementsData[i].equals(element)) {
+            if (elementData[i] != null && elementData[i].equals(element)) {
                 return remove(i);
             }
         }
