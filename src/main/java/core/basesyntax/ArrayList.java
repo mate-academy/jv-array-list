@@ -29,7 +29,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("Index (" + index + ") must be not smaller than 0 "
+            throw new ArrayListIndexOutOfBoundsException("Index (" + index
+                    + ") must be not smaller than 0 "
                     + "and not greater than size of array (" + size + ")");
         }
         add(value);
@@ -56,7 +57,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index (" + index + ") must be not smaller than 0 "
+            throw new ArrayListIndexOutOfBoundsException("Index (" + index
+                    + ") must be not smaller than 0 "
                     + "and smaller than size of array (" + size + ")");
         }
         return elementData[index];
@@ -65,7 +67,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void set(T value, int index) {
         if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index (" + index + ") must be not smaller than 0 "
+            throw new ArrayListIndexOutOfBoundsException("Index (" + index
+                    + ") must be not smaller than 0 "
                     + "and smaller than size of array (" + size + ")");
         }
         this.elementData[index] = value;
@@ -74,7 +77,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index (" + index + ") must be not smaller than 0 "
+            throw new ArrayListIndexOutOfBoundsException("Index (" + index
+                    + ") must be not smaller than 0 "
                     + "and smaller than size of array (" + size + ")");
         }
         T t = get(index);
