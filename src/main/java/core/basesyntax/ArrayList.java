@@ -1,6 +1,5 @@
 package core.basesyntax;
 
-import java.util.Arrays;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 
@@ -8,22 +7,21 @@ public class ArrayList<T> implements List<T> {
 
     private static final int DEFAULT_CAPACITY = 10;
     private int size = 0;
-    private T[] elementData = (T[]) new Object[size];
+    private T[] elementData = (T[]) new Object[0];
 
     @Override
     public void add(T value) {
         if (elementData.length == 0) {
             elementData = (T[]) new Object[DEFAULT_CAPACITY];
-            add(value);
         } else {
-            if (size < elementData.length) {
-                elementData[size++] = value;
-            } else {
+            if (size >= elementData.length) {
                 int newLength = elementData.length + elementData.length / 2;
-                elementData = Arrays.copyOf(elementData, newLength);
-                add(value);
+                T[] array = (T[]) new Object[newLength];
+                System.arraycopy(elementData, 0, array, 0, elementData.length);
+                elementData = array;
             }
         }
+        elementData[size++] = value;
     }
 
     @Override
@@ -34,7 +32,8 @@ public class ArrayList<T> implements List<T> {
                     + "and not greater than size of array (" + size + ")");
         }
         add(value);
-        T[] after = Arrays.copyOfRange(elementData, index, size - 1);
+        T[] after = (T[]) new Object[size - index];
+        System.arraycopy(elementData, index, after, 0, size - index);
         swap(index, size - 1);
         for (int i = index + 1; i < size; i++) {
             set(after[i - (index + 1)], i);
