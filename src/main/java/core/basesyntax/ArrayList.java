@@ -1,11 +1,10 @@
 package core.basesyntax;
 
-import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-
+    private static final double GROWTH_FACTOR = 1.5;
     private static final Object[] EMPTY_ELEMENTDATA = {};
     private Object[] elementData;
     private int size = 0;
@@ -16,41 +15,45 @@ public class ArrayList<T> implements List<T> {
 
     public ArrayList(int capacity) {
         if (capacity < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Please enter the "
-                    + "positive length of an array");
+            throw new ArrayListIndexOutOfBoundsException("Index " + capacity
+                    + " out of bounds for size " + size);
+        } else {
+            elementData = new Object[capacity];
         }
-        elementData = EMPTY_ELEMENTDATA;
+
+    }
+
+    private void resizeCapacity() {
+        if (size == elementData.length) {
+            int newCapacity = (elementData.length == 0)
+                    ? DEFAULT_CAPACITY : (int) (elementData.length * GROWTH_FACTOR);
+            Object[] newArray = new Object[newCapacity];
+            System.arraycopy(elementData, 0, newArray, 0, size);
+            elementData = newArray;
+        }
     }
 
     @Override
     public void add(T value) {
-        if (size == elementData.length) {
-            int newCapacity = (elementData.length == 0)
-                    ? DEFAULT_CAPACITY : (int) (elementData.length * 1.5);
-            elementData = Arrays.copyOf(elementData, newCapacity);
-        }
+        resizeCapacity();
         elementData[size] = value;
         size++;
     }
 
     @Override
     public void add(T value, int index) {
-
-        if (size == elementData.length) {
-            int newCapacity = (elementData.length == 0)
-                    ? DEFAULT_CAPACITY : (int) (elementData.length * 1.5);
-            elementData = Arrays.copyOf(elementData, newCapacity);
-        }
-
+        resizeCapacity();
+        // Сдвиг елементов вправо
         if (index >= 0 && index <= size) {
-            for (int i = size; i > index; i--) {
-                elementData[i] = elementData[i - 1];
-            }
+
+            // TODO: 50-51 заменить на System.copyarray потому что используеться manual shifting
+            System.arraycopy(elementData, index, elementData, index + 1, size - index);
+            //
             elementData[index] = value;
             size++;
         } else {
-            throw new ArrayListIndexOutOfBoundsException("Please enter the positive "
-                    + "index of the element in the array");
+            throw new ArrayListIndexOutOfBoundsException("Index " + index
+                    + " out of bounds for size " + size);
         }
     }
 
@@ -68,8 +71,8 @@ public class ArrayList<T> implements List<T> {
         if (index >= 0 && index < size) {
             return (T) elementData[index];
         } else {
-            throw new ArrayListIndexOutOfBoundsException("Please enter the "
-                    + "index of the element in the array");
+            throw new ArrayListIndexOutOfBoundsException("Index " + index
+                    + " out of bounds for size " + size);
         }
     }
 
@@ -79,7 +82,7 @@ public class ArrayList<T> implements List<T> {
             elementData[index] = value;
         } else {
             throw new ArrayListIndexOutOfBoundsException("Index " + index
-                    + " out of bounds for length " + size);
+                    + " out of bounds for size " + size);
         }
     }
 
@@ -93,9 +96,10 @@ public class ArrayList<T> implements List<T> {
             for (int j = index; j < size(); j++) {
                 elementData[j] = elementData[j + 1];
             }
+            elementData[size] = null;
         } else {
             throw new ArrayListIndexOutOfBoundsException("Index " + index
-                    + " out of bounds for length " + size);
+                    + " out of bounds for size " + size);
         }
 
         return removedValue;
@@ -128,7 +132,7 @@ public class ArrayList<T> implements List<T> {
 
         // Если элемент не найден — выбрасываем исключение
         if (foundIndex == -1) {
-            throw new NoSuchElementException("Element not found");
+            throw new NoSuchElementException("Element not found" + element);
         }
 
         // Сдвигаем элементы после найденного
@@ -157,8 +161,13 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public String toString() {
-        Object[] actualElements = Arrays.copyOf(elementData, size);
-        return Arrays.toString(actualElements);
+        StringBuilder sb = new StringBuilder();
+        Object[] actualElements = new Object[size];
+        System.arraycopy(elementData, 0, actualElements, 0, size);
+        for (Object element : actualElements) {
+            sb.append(element).append(" ");
+        }
+        return sb.toString(); // Arrays тут всё равно нужен для красивого вывода
     }
 
 }
