@@ -9,6 +9,12 @@ public class ArrayList<T> implements List<T> {
     private int size = 0;
     private T[] elementData = (T[]) new Object[0];
 
+    private void ensureCapacity(int newLength) {
+        T[] array = (T[]) new Object[newLength];
+        System.arraycopy(elementData, 0, array, 0, elementData.length);
+        elementData = array;
+    }
+
     @Override
     public void add(T value) {
         if (elementData.length == 0) {
@@ -19,12 +25,6 @@ public class ArrayList<T> implements List<T> {
             }
         }
         elementData[size++] = value;
-    }
-
-    private void ensureCapacity(int newLength) {
-        T[] array = (T[]) new Object[newLength];
-        System.arraycopy(elementData, 0, array, 0, elementData.length);
-        elementData = array;
     }
 
     @Override
