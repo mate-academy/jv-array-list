@@ -35,18 +35,8 @@ public class ArrayList<T> implements List<T> {
                     + "and not greater than size of array (" + size + ")");
         }
         add(value);
-        T[] after = (T[]) new Object[size - index];
-        System.arraycopy(elementData, index, after, 0, size - index);
-        swap(index, size - 1);
-        for (int i = index + 1; i < size; i++) {
-            set(after[i - (index + 1)], i);
-        }
-    }
-
-    private void swap(int firstElementIndex, int secondElementIndex) {
-        T t1 = get(firstElementIndex);
-        set(get(secondElementIndex), firstElementIndex);
-        set(t1, secondElementIndex);
+        System.arraycopy(elementData, index, elementData, index + 1, size - index - 1);
+        set(value, index);
     }
 
     @Override
