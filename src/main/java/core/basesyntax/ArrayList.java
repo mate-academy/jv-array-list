@@ -81,10 +81,8 @@ public class ArrayList<T> implements List<T> {
                     + "and smaller than size of array (" + size + ")");
         }
         T t = get(index);
+        System.arraycopy(elementData, index + 1, elementData, index, size - index - 1);
         size -= 1;
-        for (int i = index; i < size; i++) {
-            elementData[i] = elementData[i + 1];
-        }
         return t;
     }
 
