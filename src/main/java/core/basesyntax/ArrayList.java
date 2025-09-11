@@ -46,7 +46,6 @@ public class ArrayList<T> implements List<T> {
         // Сдвиг елементов вправо
         if (index >= 0 && index <= size) {
 
-            // TODO: 50-51 заменить на System.copyarray потому что используеться manual shifting
             System.arraycopy(elementData, index, elementData, index + 1, size - index);
             //
             elementData[index] = value;
