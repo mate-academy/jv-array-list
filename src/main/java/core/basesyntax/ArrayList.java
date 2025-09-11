@@ -1,7 +1,6 @@
 package core.basesyntax;
 
 import java.util.NoSuchElementException;
-import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
 
@@ -90,7 +89,7 @@ public class ArrayList<T> implements List<T> {
     public T remove(T element) {
         int index = indexOf(element);
         if (index < 0) {
-            throw new NoSuchElementException("ArrayList contains no suitable element");
+            throw new NoSuchElementException("ArrayList contains no suitable element: " + element);
         }
         return remove(index);
     }
@@ -98,7 +97,7 @@ public class ArrayList<T> implements List<T> {
     private int indexOf(T element) {
         for (int i = 0; i < size; i++) {
             T t = elementData[i];
-            if (Objects.equals(t, element)) {
+            if ((t == element) || (t != null && t.equals(element))) {
                 return i;
             }
         }
