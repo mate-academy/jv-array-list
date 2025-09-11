@@ -15,13 +15,16 @@ public class ArrayList<T> implements List<T> {
             elementData = (T[]) new Object[DEFAULT_CAPACITY];
         } else {
             if (size >= elementData.length) {
-                int newLength = (int) (elementData.length * GROWTH_FACTOR);
-                T[] array = (T[]) new Object[newLength];
-                System.arraycopy(elementData, 0, array, 0, elementData.length);
-                elementData = array;
+                ensureCapacity((int) (elementData.length * GROWTH_FACTOR));
             }
         }
         elementData[size++] = value;
+    }
+
+    private void ensureCapacity(int newLength) {
+        T[] array = (T[]) new Object[newLength];
+        System.arraycopy(elementData, 0, array, 0, elementData.length);
+        elementData = array;
     }
 
     @Override
