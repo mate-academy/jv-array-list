@@ -55,31 +55,27 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
+        validateIndex(index);
+        return elementData[index];
+    }
+
+    private void validateIndex(int index) {
         if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException("Index (" + index
                     + ") must be not smaller than 0 "
                     + "and smaller than size of array (" + size + ")");
         }
-        return elementData[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index (" + index
-                    + ") must be not smaller than 0 "
-                    + "and smaller than size of array (" + size + ")");
-        }
+        validateIndex(index);
         this.elementData[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index (" + index
-                    + ") must be not smaller than 0 "
-                    + "and smaller than size of array (" + size + ")");
-        }
+        validateIndex(index);
         T t = get(index);
         System.arraycopy(elementData, index + 1, elementData, index, size - index - 1);
         size -= 1;
