@@ -90,19 +90,15 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         T removedValue;
         if (index >= 0 && index < size) {
-            size--;
             removedValue = (T) elementData[index];
-            for (int j = index; j < size(); j++) {
-                elementData[j] = elementData[j + 1];
-            }
-            elementData[size] = null;
+            System.arraycopy(elementData, index + 1, elementData, index, size - index - 1);
+            elementData[size - 1] = null;
+            size--;
         } else {
             throw new ArrayListIndexOutOfBoundsException("Index " + index
                     + " out of bounds for size " + size);
         }
-
         return removedValue;
-
     }
 
     @SuppressWarnings("unchecked")
@@ -128,23 +124,19 @@ public class ArrayList<T> implements List<T> {
                 }
             }
         }
-
         // Если элемент не найден — выбрасываем исключение
         if (foundIndex == -1) {
             throw new NoSuchElementException("Element not found" + element);
         }
 
         // Сдвигаем элементы после найденного
-        for (int j = foundIndex; j < size - 1; j++) {
-            elementData[j] = elementData[j + 1];
-        }
-
+        System.arraycopy(elementData, foundIndex + 1, elementData, foundIndex,
+                size - foundIndex - 1);
         // Очищаем последний элемент
         elementData[size - 1] = null;
 
-        // Уменьшаем размер
         size--;
-
+        // Уменьшаем размер
         return removedValue;
     }
 
@@ -166,7 +158,7 @@ public class ArrayList<T> implements List<T> {
         for (Object element : actualElements) {
             sb.append(element).append(" ");
         }
-        return sb.toString(); // Arrays тут всё равно нужен для красивого вывода
+        return sb.toString();
     }
 
 }
