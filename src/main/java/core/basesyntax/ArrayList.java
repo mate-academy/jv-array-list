@@ -107,8 +107,12 @@ public class ArrayList<T> implements List<T> {
     }
 
     private boolean elementsEqual(T a, T b) {
-        if (a == null && b == null) return true;
-        if (a == null || b == null) return false;
+        if (a == null && b == null) {
+            return true;
+        }
+        if (a == null || b == null) {
+            return false;
+        }
         return a.equals(b);
     }
 }
