@@ -3,14 +3,14 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    private final int defaultCapacity = 10;
-    private int capacity = defaultCapacity;
+    private static final int DEFAULT_CAPACITY = 10;
+    private int capacity = DEFAULT_CAPACITY;
     private T[] arr = (T[])new Object[capacity];
     private int size = 0;
 
     @Override
     public void add(T value) {
-        this.sizeValidation();
+        this.ensureCapacity();
 
         this.arr[size++] = value;
     }
@@ -18,10 +18,10 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         if (index < 0 || index > this.size) {
-            throw new ArrayListIndexOutOfBoundsException("Index: " + index);
+            throw new ArrayListIndexOutOfBoundsException("Index: " + index + ",size: " + this.size);
         }
 
-        this.sizeValidation();
+        this.ensureCapacity();
 
         System.arraycopy(this.arr, index, this.arr, index + 1, size - index);
 
@@ -79,7 +79,7 @@ public class ArrayList<T> implements List<T> {
         }
 
         if (elementIndex == -1) {
-            throw new NoSuchElementException("Index: " + elementIndex);
+            throw new NoSuchElementException("Element not found: " + element);
         }
 
         return this.remove(elementIndex);
@@ -95,6 +95,14 @@ public class ArrayList<T> implements List<T> {
         return this.size == 0;
     }
 
+    public void clear() {
+        for (int i = 0; i < this.size; i++) {
+            this.arr[i] = null;
+        }
+
+        this.size = 0;
+    }
+
     private void grow() {
         this.capacity = this.capacity + (this.capacity >> 1);
         T[] newArr = (T[])new Object[this.capacity];
@@ -106,11 +114,11 @@ public class ArrayList<T> implements List<T> {
 
     private void indexValidation(int index) {
         if (index < 0 || index >= this.size) {
-            throw new ArrayListIndexOutOfBoundsException("Index: " + index);
+            throw new ArrayListIndexOutOfBoundsException("Index: " + index + ",size: " + this.size);
         }
     }
 
-    private void sizeValidation() {
+    private void ensureCapacity() {
         if (this.size == capacity) {
             this.grow();
         }
