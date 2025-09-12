@@ -33,6 +33,14 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
+    private boolean checkElementIndex(int index) {
+        return index >= 0 && index < size;
+    }
+
+    private boolean isValidAddIndex(int index) {
+        return index >= 0 && index <= size;
+    }
+
     @Override
     public void add(T value) {
         resizeCapacity();
@@ -44,16 +52,13 @@ public class ArrayList<T> implements List<T> {
     public void add(T value, int index) {
         resizeCapacity();
         // Сдвиг елементов вправо
-        if (index >= 0 && index <= size) {
-
-            System.arraycopy(elementData, index, elementData, index + 1, size - index);
-            //
-            elementData[index] = value;
-            size++;
-        } else {
+        if (!isValidAddIndex(index)) {
             throw new ArrayListIndexOutOfBoundsException("Index " + index
                     + " out of bounds for size " + size);
         }
+        System.arraycopy(elementData, index, elementData, index + 1, size - index);
+        elementData[index] = value;
+        size++;
     }
 
     @Override
@@ -66,22 +71,20 @@ public class ArrayList<T> implements List<T> {
     @SuppressWarnings("unchecked")
     @Override
     public T get(int index) {
-
-        if (index >= 0 && index < size) {
-            return (T) elementData[index];
-        } else {
+        if (!checkElementIndex(index)) {
             throw new ArrayListIndexOutOfBoundsException("Index " + index
                     + " out of bounds for size " + size);
         }
+        return (T) elementData[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index >= 0 && index < size) {
-            elementData[index] = value;
-        } else {
+        if (!checkElementIndex(index)) {
             throw new ArrayListIndexOutOfBoundsException("Index " + index
                     + " out of bounds for size " + size);
+        } else {
+            elementData[index] = value;
         }
     }
 
@@ -126,7 +129,10 @@ public class ArrayList<T> implements List<T> {
         }
         // Если элемент не найден — выбрасываем исключение
         if (foundIndex == -1) {
-            throw new NoSuchElementException("Element not found" + element);
+            String message = (element == null)
+                    ? "Element 'null' not found"
+                    : "Element '" + element.toString() + "' not found";
+            throw new NoSuchElementException(message);
         }
 
         // Сдвигаем элементы после найденного
