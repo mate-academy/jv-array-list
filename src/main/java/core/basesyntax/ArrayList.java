@@ -80,7 +80,6 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    // === Helpers ===
     private void ensureCapacity() {
         if (size == elements.length) {
             @SuppressWarnings("unchecked")
