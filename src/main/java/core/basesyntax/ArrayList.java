@@ -3,16 +3,17 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
+    private static final int GROWTH_FACTOR = 1;
     private static final int DEFAULT_CAPACITY = 10;
     private int capacity = DEFAULT_CAPACITY;
-    private T[] arr = (T[])new Object[capacity];
+    private T[] elements = (T[])new Object[capacity];
     private int size = 0;
 
     @Override
     public void add(T value) {
         this.ensureCapacity();
 
-        this.arr[size++] = value;
+        this.elements[size++] = value;
     }
 
     @Override
@@ -23,10 +24,10 @@ public class ArrayList<T> implements List<T> {
 
         this.ensureCapacity();
 
-        System.arraycopy(this.arr, index, this.arr, index + 1, size - index);
+        System.arraycopy(this.elements, index, this.elements, index + 1, size - index);
 
         this.size++;
-        this.arr[index] = value;
+        this.elements[index] = value;
     }
 
     @Override
@@ -44,25 +45,25 @@ public class ArrayList<T> implements List<T> {
     public T get(int index) {
         this.indexValidation(index);
 
-        return this.arr[index];
+        return this.elements[index];
     }
 
     @Override
     public void set(T value, int index) {
         this.indexValidation(index);
 
-        this.arr[index] = value;
+        this.elements[index] = value;
     }
 
     @Override
     public T remove(int index) {
         this.indexValidation(index);
 
-        T elementToRemove = this.arr[index];
+        T elementToRemove = this.elements[index];
 
-        System.arraycopy(this.arr, index + 1, this.arr, index, size - index - 1);
+        System.arraycopy(this.elements, index + 1, this.elements, index, size - index - 1);
 
-        this.arr[--size] = null;
+        this.elements[--size] = null;
 
         return elementToRemove;
     }
@@ -72,9 +73,16 @@ public class ArrayList<T> implements List<T> {
         int elementIndex = -1;
 
         for (int i = 0; i < this.size; i++) {
-            if (this.arr[i] == null ? this.arr[i] == element : this.arr[i].equals(element)) {
-                elementIndex = i;
-                break;
+            if (this.elements[i] == null) {
+                if (this.elements[i] == element) {
+                    elementIndex = i;
+                    break;
+                }
+            } else {
+                if (this.elements[i].equals(element)) {
+                    elementIndex = i;
+                    break;
+                }
             }
         }
 
@@ -97,19 +105,19 @@ public class ArrayList<T> implements List<T> {
 
     public void clear() {
         for (int i = 0; i < this.size; i++) {
-            this.arr[i] = null;
+            this.elements[i] = null;
         }
 
         this.size = 0;
     }
 
     private void grow() {
-        this.capacity = this.capacity + (this.capacity >> 1);
+        this.capacity = this.capacity + (this.capacity >> GROWTH_FACTOR);
         T[] newArr = (T[])new Object[this.capacity];
 
-        System.arraycopy(this.arr, 0, newArr, 0, this.size);
+        System.arraycopy(this.elements, 0, newArr, 0, this.size);
 
-        this.arr = newArr;
+        this.elements = newArr;
     }
 
     private void indexValidation(int index) {
