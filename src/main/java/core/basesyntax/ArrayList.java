@@ -10,7 +10,7 @@ public class ArrayList<T> implements List<T> {
     private int size = 0;
 
     public ArrayList() {
-        elementData = EMPTY_ELEMENTDATA;
+        elementData = new Object[DEFAULT_CAPACITY];
     }
 
     public ArrayList(int capacity) {
@@ -33,12 +33,20 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private boolean checkElementIndex(int index) {
-        return index >= 0 && index < size;
+    // get, set, remove
+    private void checkElementAccessIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Index " + index
+                    + " out of bounds for size " + size);
+        }
     }
 
-    private boolean isValidAddIndex(int index) {
-        return index >= 0 && index <= size;
+    // add (index, value)
+    private void checkElementAddIndex(int index) {
+        if (index < 0 || index > size) {
+            throw new ArrayListIndexOutOfBoundsException("Index " + index
+                    + " out of bounds for size " + size);
+        }
     }
 
     @Override
@@ -50,12 +58,9 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
+        checkElementAddIndex(index);
         resizeCapacity();
         // Сдвиг елементов вправо
-        if (!isValidAddIndex(index)) {
-            throw new ArrayListIndexOutOfBoundsException("Index " + index
-                    + " out of bounds for size " + size);
-        }
         System.arraycopy(elementData, index, elementData, index + 1, size - index);
         elementData[index] = value;
         size++;
@@ -71,36 +76,25 @@ public class ArrayList<T> implements List<T> {
     @SuppressWarnings("unchecked")
     @Override
     public T get(int index) {
-        if (!checkElementIndex(index)) {
-            throw new ArrayListIndexOutOfBoundsException("Index " + index
-                    + " out of bounds for size " + size);
-        }
+        checkElementAccessIndex(index);
         return (T) elementData[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (!checkElementIndex(index)) {
-            throw new ArrayListIndexOutOfBoundsException("Index " + index
-                    + " out of bounds for size " + size);
-        } else {
-            elementData[index] = value;
-        }
+        checkElementAccessIndex(index);
+        elementData[index] = value;
+
     }
 
-    @SuppressWarnings("unchecked")
     @Override
+    @SuppressWarnings("unchecked")
     public T remove(int index) {
-        T removedValue;
-        if (index >= 0 && index < size) {
-            removedValue = (T) elementData[index];
-            System.arraycopy(elementData, index + 1, elementData, index, size - index - 1);
-            elementData[size - 1] = null;
-            size--;
-        } else {
-            throw new ArrayListIndexOutOfBoundsException("Index " + index
-                    + " out of bounds for size " + size);
-        }
+        checkElementAccessIndex(index);
+
+        T removedValue = (T) elementData[index];
+        System.arraycopy(elementData, index + 1, elementData, index, size - index - 1);
+        elementData[--size] = null;
         return removedValue;
     }
 
@@ -129,10 +123,7 @@ public class ArrayList<T> implements List<T> {
         }
         // Если элемент не найден — выбрасываем исключение
         if (foundIndex == -1) {
-            String message = (element == null)
-                    ? "Element 'null' not found"
-                    : "Element '" + element.toString() + "' not found";
-            throw new NoSuchElementException(message);
+            throw new NoSuchElementException(String.valueOf(element));
         }
 
         // Сдвигаем элементы после найденного
@@ -153,7 +144,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public boolean isEmpty() {
-        return size <= 0;
+        return size == 0;
     }
 
     @Override
@@ -161,9 +152,11 @@ public class ArrayList<T> implements List<T> {
         StringBuilder sb = new StringBuilder();
         Object[] actualElements = new Object[size];
         System.arraycopy(elementData, 0, actualElements, 0, size);
+        sb.append("[");
         for (Object element : actualElements) {
             sb.append(element).append(" ");
         }
+        sb.append("]");
         return sb.toString();
     }
 
