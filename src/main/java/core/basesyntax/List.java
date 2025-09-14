@@ -18,4 +18,7 @@ public interface List<T> {
     int size();
 
     boolean isEmpty();
+
+    /** ✅ Missing clear() implementation */
+    void clear();
 }
