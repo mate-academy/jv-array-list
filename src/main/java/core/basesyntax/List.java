@@ -9,7 +9,7 @@ public interface List<T> {
 
     T get(int index);
 
-    void set(T value, int index);
+    Object set(T value, int index);
 
     T remove(int index);
 
@@ -18,4 +18,6 @@ public interface List<T> {
     int size();
 
     boolean isEmpty();
+
+    Object[] toArray();
 }
