@@ -7,15 +7,19 @@ public interface List<T> {
 
     void addAll(List<T> list);
 
+    void clear();
+
     T get(int index);
 
-    void set(T value, int index);
+    T set(T value, int index);
 
     T remove(int index);
 
     T remove(T element);
 
     int size();
+
+    boolean contains(T element);
 
     boolean isEmpty();
 }
