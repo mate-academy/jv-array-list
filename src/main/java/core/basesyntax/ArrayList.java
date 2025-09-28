@@ -28,15 +28,11 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void shiftRight(int index) {
-        for (int i = size - 1; i >= index; --i) {
-            elementData[i + 1] = elementData[i];
-        }
+        System.arraycopy(elementData, index, elementData, index + 1, size - index);
     }
 
     private void shiftLeft(int index) {
-        for (int i = index; i < size - 1; ++i) {
-            elementData[i] = elementData[i + 1];
-        }
+        System.arraycopy(elementData, index + 1, elementData, index, size - index - 1);
         elementData[size - 1] = null;
     }
 
@@ -46,12 +42,14 @@ public class ArrayList<T> implements List<T> {
             if (newCapacity < requiredCapacity) {
                 newCapacity = requiredCapacity;
             }
-            T[] newElementData = (T[]) new Object[newCapacity];
-            for (int i = 0; i < size; ++i) {
-                newElementData[i] = elementData[i];
-            }
-            elementData = newElementData;
+           resizeCopyArray(newCapacity);
         }
+    }
+
+    private void resizeCopyArray(int newCapacity) {
+        T[] newElementData = (T[]) new Object[newCapacity];
+        System.arraycopy(elementData, 0, newElementData, 0, size);
+        elementData = newElementData;
     }
 
     @Override
@@ -83,15 +81,25 @@ public class ArrayList<T> implements List<T> {
     }
 
     @Override
+    public void clear() {
+        for (int i = 0; i < size; ++i) {
+            elementData[i] = null;
+        }
+        size = 0;
+    }
+
+    @Override
     public T get(int index) {
         checkIndex(index);
         return elementData[index];
     }
 
     @Override
-    public void set(T value, int index) {
+    public T set(T value, int index) {
         checkIndex(index);
+        T oldValue = elementData[index];
         elementData[index] = value;
+        return oldValue;
     }
 
     @Override
@@ -120,6 +128,17 @@ public class ArrayList<T> implements List<T> {
     @Override
     public int size() {
         return size;
+    }
+
+    @Override
+    public boolean contains(T element) {
+        for (int i = 0; i < size; ++i) {
+            if ((elementData[i] == null && element == null)
+                    || (elementData[i] != null && elementData[i].equals(element))) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
