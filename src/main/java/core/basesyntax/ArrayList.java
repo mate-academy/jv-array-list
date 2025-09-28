@@ -42,7 +42,7 @@ public class ArrayList<T> implements List<T> {
             if (newCapacity < requiredCapacity) {
                 newCapacity = requiredCapacity;
             }
-           resizeCopyArray(newCapacity);
+            resizeCopyArray(newCapacity);
         }
     }
 
