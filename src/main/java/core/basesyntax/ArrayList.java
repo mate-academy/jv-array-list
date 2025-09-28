@@ -21,6 +21,12 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
+    private void checkIndexForAdd(int index) {
+        if (index < 0 || index > size) {
+            throw new ArrayListIndexOutOfBoundsException("Index: " + index + ", Size: " + size);
+        }
+    }
+
     private void shiftRight(int index) {
         for (int i = size - 1; i >= index; --i) {
             elementData[i + 1] = elementData[i];
@@ -57,7 +63,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        checkIndex(index);
+        checkIndexForAdd(index);
         growIfArrayFull(size + 1);
         shiftRight(index);
         elementData[index] = value;
