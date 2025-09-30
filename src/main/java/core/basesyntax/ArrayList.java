@@ -75,7 +75,9 @@ public class ArrayList<T> implements List<T> {
         int removeIndex = -1;
         for (int i = 0; i < this.size; i++) {
             T currentElement = this.array[i];
-            if (currentElement == element || currentElement != null && currentElement.equals(element)) {
+            if (currentElement == element
+                    || currentElement != null
+                    && currentElement.equals(element)) {
                 removeIndex = i;
                 break;
             }
