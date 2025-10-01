@@ -55,7 +55,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         checkIndexForAccess(index);
-        T value = this.array[index];
+        final T value = this.array[index];
         System.arraycopy(this.array, index + 1, this.array, index, this.size - index - 1);
         this.size--;
         this.array[size] = null;
@@ -77,7 +77,7 @@ public class ArrayList<T> implements List<T> {
         if (removeIndex == -1) {
             throw new NoSuchElementException("Element not found: " + element);
         }
-        T value = this.array[removeIndex];
+        final T value = this.array[removeIndex];
         System.arraycopy(
                 this.array,
                 removeIndex + 1,
