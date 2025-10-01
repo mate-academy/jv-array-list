@@ -4,7 +4,7 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     public static final int DEFAULT_CAPACITY = 10;
-    public static final double EXTENSION_COEFFICIENT = 1.5;
+    public static final int EXTENSION_DIVIDER = 2;
     private T[] array;
     private int size;
 
@@ -58,6 +58,7 @@ public class ArrayList<T> implements List<T> {
         T value = this.array[index];
         System.arraycopy(this.array, index + 1, this.array, index, this.size - index - 1);
         this.size--;
+        this.array[size] = null;
         return value;
     }
 
@@ -74,7 +75,7 @@ public class ArrayList<T> implements List<T> {
             }
         }
         if (removeIndex == -1) {
-            throw new NoSuchElementException("Element not found");
+            throw new NoSuchElementException("Element not found: " + element);
         }
         T value = this.array[removeIndex];
         System.arraycopy(
@@ -84,6 +85,7 @@ public class ArrayList<T> implements List<T> {
                 removeIndex,
                 this.size - removeIndex - 1);
         this.size--;
+        this.array[size] = null;
         return value;
     }
 
@@ -98,7 +100,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void extendArray() {
-        T[] newArray = (T[]) new Object[(int) (this.array.length * EXTENSION_COEFFICIENT)];
+        T[] newArray = (T[]) new Object[this.array.length + this.array.length / EXTENSION_DIVIDER];
         System.arraycopy(this.array, 0, newArray, 0, this.size);
         this.array = newArray;
     }
