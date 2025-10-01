@@ -24,15 +24,11 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index > this.size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index out of bounds: " + index);
-        }
+        checkIndexForAdd(index);
         if (this.size == this.array.length) {
             extendArray();
         }
-        for (int i = this.size; i > index; i--) {
-            this.array[i] = this.array[i - 1];
-        }
+        System.arraycopy(this.array, index, this.array, index + 1, this.size - index);
         this.array[index] = value;
         this.size++;
     }
@@ -46,27 +42,22 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index >= this.size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index out of bounds: " + index);
-        }
+        checkIndexForAccess(index);
         return this.array[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index >= this.size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index out of bounds: " + index);
-        }
+        checkIndexForAccess(index);
         this.array[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index >= this.size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index out of bounds: " + index);
-        }
+        checkIndexForAccess(index);
         T value = this.array[index];
-        shiftLeft(index);
+        System.arraycopy(this.array, index + 1, this.array, index, this.size - index - 1);
+        this.size--;
         return value;
     }
 
@@ -86,7 +77,8 @@ public class ArrayList<T> implements List<T> {
             throw new NoSuchElementException("Element not found");
         }
         T value = this.array[removeIndex];
-        shiftLeft(removeIndex);
+        System.arraycopy(this.array, removeIndex + 1, this.array, removeIndex, this.size - removeIndex - 1);
+        this.size--;
         return value;
     }
 
@@ -100,18 +92,23 @@ public class ArrayList<T> implements List<T> {
         return this.size == 0;
     }
 
-    public void extendArray() {
+    private void extendArray() {
         T[] newArray = (T[]) new Object[(int) (this.array.length * EXTENSION_COEFFICIENT)];
-        for (int i = 0; i < this.size; i++) {
-            newArray[i] = this.array[i];
-        }
+        System.arraycopy(this.array, 0, newArray, 0, this.size);
         this.array = newArray;
     }
 
-    public void shiftLeft(int index) {
-        for (int i = index; i < this.array.length - 1; i++) {
-            this.array[i] = this.array[i + 1];
+    private void checkIndexForAccess(int index) {
+        if (index >= this.size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException(
+                    "Index out of bounds: Index - " + index + ", Size - " + this.size);
         }
-        this.size--;
+    }
+
+    private void checkIndexForAdd(int index) {
+        if (index > this.size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException(
+                    "Index out of bounds: Index - " + index + ", Size - " + this.size);
+        }
     }
 }
