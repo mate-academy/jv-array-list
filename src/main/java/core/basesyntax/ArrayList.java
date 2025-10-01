@@ -77,7 +77,12 @@ public class ArrayList<T> implements List<T> {
             throw new NoSuchElementException("Element not found");
         }
         T value = this.array[removeIndex];
-        System.arraycopy(this.array, removeIndex + 1, this.array, removeIndex, this.size - removeIndex - 1);
+        System.arraycopy(
+                this.array,
+                removeIndex + 1,
+                this.array,
+                removeIndex,
+                this.size - removeIndex - 1);
         this.size--;
         return value;
     }
