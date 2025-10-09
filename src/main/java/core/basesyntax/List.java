@@ -18,4 +18,10 @@ public interface List<T> {
     int size();
 
     boolean isEmpty();
+
+    void clear();
+
+    boolean contains(T element);
+
+    int indexOf(T element);
 }
