@@ -13,14 +13,6 @@ public class ArrayList<T> implements List<T> {
         size = 0;
     }
 
-    @Override
-    public void add(T value) {
-        growIfFull();
-
-        elements[size] = value;
-        size++;
-    }
-
     private void growIfFull() {
         if (size == elements.length) {
             int newCapacity = elements.length + elements.length / GROWTH_DIVISOR;
@@ -31,6 +23,21 @@ public class ArrayList<T> implements List<T> {
             elements = newArray;
         }
     }
+
+    private void checkIndex(int ind) {
+        if (ind < 0 || ind >= size) {
+            throw new ArrayListIndexOutOfBoundsException("invalid index");
+        }
+    }
+
+    @Override
+    public void add(T value) {
+        growIfFull();
+
+        elements[size] = value;
+        size++;
+    }
+
 
     @Override
     public void add(T value, int index) {
@@ -56,11 +63,6 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private void checkIndex(int ind) {
-        if (ind < 0 || ind >= size) {
-            throw new ArrayListIndexOutOfBoundsException("invalid index");
-        }
-    }
 
     @SuppressWarnings("unchecked")
     @Override
@@ -84,6 +86,7 @@ public class ArrayList<T> implements List<T> {
 
         T oldElement = (T) elements[index];
         System.arraycopy(elements, index + 1, elements, index, size - index - 1);
+        elements[size] = null;
         size--;
 
         return oldElement;
