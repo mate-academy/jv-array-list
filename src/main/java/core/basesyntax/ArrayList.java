@@ -5,30 +5,28 @@ import java.util.NoSuchElementException;
 public class ArrayList<T> implements List<T> {
     private Object[] elements;
     private int size;
-    private static final int DEFAULT_CAPASITY = 10;
+    private static final int DEFAULT_CAPACITY = 10;
+    private static final int GROWTH_DIVISOR = 2;
 
     public ArrayList() {
-        elements = new Object[DEFAULT_CAPASITY];
+        elements = new Object[DEFAULT_CAPACITY];
         size = 0;
     }
 
     @Override
     public void add(T value) {
-        changeSizeOfArray();
+        growIfFull();
 
         elements[size] = value;
         size++;
     }
 
-    private void changeSizeOfArray() {
+    private void growIfFull() {
         if (size == elements.length) {
-            final int dividedBy = 2;
-            int newCapacity = elements.length + elements.length / dividedBy;
+            int newCapacity = elements.length + elements.length / GROWTH_DIVISOR;
             Object[] newArray = new Object[newCapacity];
 
-            for (int i = 0; i < size; i++) {
-                newArray[i] = elements[i];
-            }
+            System.arraycopy(elements, 0, newArray, 0, size);
 
             elements = newArray;
         }
@@ -40,7 +38,7 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayListIndexOutOfBoundsException("invalid index");
         }
 
-        changeSizeOfArray();
+        growIfFull();
 
         System.arraycopy(elements, index, elements, index + 1, size - index);
         elements[index] = value;
@@ -52,7 +50,7 @@ public class ArrayList<T> implements List<T> {
         int listSize = list.size();
 
         for (int i = 0; i < listSize; i++) {
-            changeSizeOfArray();
+            growIfFull();
 
             elements[size++] = list.get(i);
         }
