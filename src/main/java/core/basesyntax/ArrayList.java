@@ -1,6 +1,5 @@
 package core.basesyntax;
 
-import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
@@ -15,13 +14,24 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (size == elements.length) {
-            int newCapacity = elements.length + elements.length / 2;
-            elements = Arrays.copyOf(elements, newCapacity);
-        }
+        changeSizeOfArray();
 
         elements[size] = value;
         size++;
+    }
+
+    private void changeSizeOfArray() {
+        if (size == elements.length) {
+            final int dividedBy = 2;
+            int newCapacity = elements.length + elements.length / dividedBy;
+            Object[] newArray = new Object[newCapacity];
+
+            for (int i = 0; i < size; i++) {
+                newArray[i] = elements[i];
+            }
+
+            elements = newArray;
+        }
     }
 
     @Override
@@ -30,10 +40,7 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayListIndexOutOfBoundsException("invalid index");
         }
 
-        if (size == elements.length) {
-            int newCapacity = elements.length + elements.length / 2;
-            elements = Arrays.copyOf(elements, newCapacity);
-        }
+        changeSizeOfArray();
 
         System.arraycopy(elements, index, elements, index + 1, size - index);
         elements[index] = value;
@@ -45,39 +52,38 @@ public class ArrayList<T> implements List<T> {
         int listSize = list.size();
 
         for (int i = 0; i < listSize; i++) {
-            if (size == elements.length) {
-                int newCapacity = elements.length + elements.length / 2;
-                elements = Arrays.copyOf(elements, newCapacity);
-            }
+            changeSizeOfArray();
 
             elements[size++] = list.get(i);
+        }
+    }
+
+    private void checkIndex(int ind) {
+        if (ind < 0 || ind >= size) {
+            throw new ArrayListIndexOutOfBoundsException("invalid index");
         }
     }
 
     @SuppressWarnings("unchecked")
     @Override
     public T get(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("invalid index");
-        }
+        checkIndex(index);
 
         return (T) elements[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("invalid index");
-        }
+        checkIndex(index);
+
         elements[index] = value;
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public T remove(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("invalid index");
-        }
+        checkIndex(index);
+
         T oldElement = (T) elements[index];
         System.arraycopy(elements, index + 1, elements, index, size - index - 1);
         size--;
