@@ -61,9 +61,9 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         validateIndex(index);
-        int moveCount = size - index - 1;
         @SuppressWarnings("unchecked")
-        T removed = (T) elementData[index];
+        final T removed = (T) elementData[index];
+        int moveCount = size - index - 1;
         if (moveCount > 0) {
             System.arraycopy(elementData, index + 1, elementData, index, moveCount);
         }
