@@ -8,10 +8,6 @@ public class ArrayList<T> implements List<T> {
     private int size;
     private Object[] elementData;
 
-    public ArrayList() {
-        this.elementData = new Object[LENGTHS];
-    }
-
     private void initArrayIfNull() {
         if (elementData == null) {
             this.elementData = new Object[LENGTHS];
@@ -49,9 +45,8 @@ public class ArrayList<T> implements List<T> {
         }
         initArrayIfNull();
         grow(1);
-        for (int i = size - 1; i >= index; i--) {
-            elementData[i + 1] = elementData[i];
-        }
+        System.arraycopy(elementData, index, elementData, index + 1, size - index);
+
         elementData[index] = value;
         size++;
     }
