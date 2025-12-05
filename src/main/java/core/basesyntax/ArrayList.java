@@ -78,7 +78,7 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void ensureCapacity(int required){
+    private void ensureCapacity(int required) {
         if (required > elementData.length) {
             int newCapacity = elementData.length + elementData.length / 2;
             if (newCapacity < required) {
@@ -96,7 +96,7 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private void checkIndexForAdd(int index){
+    private void checkIndexForAdd(int index) {
         if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException("Index: " + index);
         }
