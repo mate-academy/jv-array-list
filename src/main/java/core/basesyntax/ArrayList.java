@@ -60,35 +60,36 @@ public class ArrayList<T> implements List<T> {
         checkIndex(index, size);
         T removed = arrayList[index];
         System.arraycopy(arrayList, index + 1, arrayList, index, size - index - 1);
-        size--;
+        arrayList[--size] = null;
         return removed;
     }
 
     @Override
     public T remove(T element) {
-        T removed = null;
+        T removed;
         int index = -1;
         if (element == null) {
-            for (int i = 0; i < arrayList.length; i++) {
+            for (int i = 0; i < size; i++) {
                 if (arrayList[i] == null) {
                     index = i;
                     break;
                 }
             }
         } else {
-            for (int i = 0; i < arrayList.length; i++) {
+            for (int i = 0; i < size; i++) {
                 if (arrayList[i] != null && arrayList[i].equals(element)) {
                     index = i;
-                    removed = arrayList[index];
-                    System.arraycopy(arrayList, index + 1, arrayList, index, size - index - 1);
                     break;
                 }
             }
         }
         if (index == -1) {
-            throw new NoSuchElementException();
+            throw new NoSuchElementException("Element not found: " + String.valueOf(element)
+                    + ", size: " + size);
         }
-        size--;
+        removed = arrayList[index];
+        System.arraycopy(arrayList, index + 1, arrayList, index, size - index - 1);
+        arrayList[--size] = null;
         return removed;
     }
 
@@ -102,18 +103,18 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void checkIndex(int index, int size) {
-        if (index < 0 || index >= size) {
+    private void checkIndex(int index, int currentSize) {
+        if (index < 0 || index >= currentSize) {
             throw new ArrayListIndexOutOfBoundsException("Index out of bounds: " + index
-                    + ", ArrayList size: " + size);
+                    + ", ArrayList size: " + currentSize);
         }
     }
 
     @SuppressWarnings("unchecked")
     private void grow() {
-        int growCapacity = size == 0
-                ? DEFAULT_CAPACITY : (int) (size * GROWS);
-        T[] growArrayList = (T[]) new Object[growCapacity];
+        int newCapacity = size == 0
+                ? DEFAULT_CAPACITY : (int) (arrayList.length * GROWS);
+        T[] growArrayList = (T[]) new Object[newCapacity];
         System.arraycopy(arrayList, 0, growArrayList, 0, size);
         arrayList = growArrayList;
     }
