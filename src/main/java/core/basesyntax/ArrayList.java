@@ -15,9 +15,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (size() >= arr.length) {
-            grow();
-        }
+        grow();
         arr[size] = value;
         size++;
     }
@@ -25,9 +23,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         indexValidationForAdd(index);
-        if (size() >= arr.length) {
-            grow();
-        }
+        grow();
         System.arraycopy(arr, index, arr, index + 1, size - index);
         arr[index] = value;
         size++;
@@ -75,7 +71,7 @@ public class ArrayList<T> implements List<T> {
                 }
             }
         }
-        throw new NoSuchElementException("No such element"
+        throw new NoSuchElementException("No such element "
                 + "present in the list: " + element);
     }
 
@@ -91,11 +87,11 @@ public class ArrayList<T> implements List<T> {
 
     @SuppressWarnings("unchecked")
     public void grow() {
-        T[] newArr = (T[]) new Object[(int) (arr.length * TIMES_TO_GROW)];
-        if (size >= 0) {
+        if (size() >= arr.length) {
+            T[] newArr = (T[]) new Object[(int) (arr.length * TIMES_TO_GROW)];
             System.arraycopy(arr, 0, newArr, 0, size);
+            arr = newArr;
         }
-        arr = newArr;
     }
 
     private void indexValidationGeneral(int index) {
@@ -110,13 +106,5 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayListIndexOutOfBoundsException(
                     "The index is invalid:" + index);
         }
-    }
-
-    public int getSize() {
-        return size;
-    }
-
-    public void setSize(int size) {
-        this.size = size;
     }
 }
