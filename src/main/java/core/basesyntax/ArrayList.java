@@ -1,16 +1,16 @@
 package core.basesyntax;
 
-import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final double TIMES_TO_GROW = 1.5;
-    private int capacity = 10;
+    private static final int DEFAULT_CAPACITY = 10;
     private T[] arr;
     private int size = 0;
 
+    @SuppressWarnings("unchecked")
     public ArrayList() {
-        arr = (T[]) new Object[capacity];
+        arr = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
     @Override
@@ -24,16 +24,11 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException(
-                    "The index is invalid:" + index);
-        }
+        indexValidationForAdd(index);
         if (size() >= arr.length) {
             grow();
         }
-        for (int i = size; i > index; i--) {
-            arr[i] = arr[i - 1];
-        }
+        System.arraycopy(arr, index, arr, index + 1, size - index);
         arr[index] = value;
         size++;
     }
@@ -47,32 +42,21 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException(
-                    "The index is invalid:" + index);
-        }
+        indexValidationGeneral(index);
         return arr[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException(
-                    "The index is invalid:" + index);
-        }
+        indexValidationGeneral(index);
         arr[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException(
-                    "The index is invalid:" + index);
-        }
+        indexValidationGeneral(index);
         final T value = arr[index];
-        for (int i = index; i < size - 1; i++) {
-            arr[i] = arr[i + 1];
-        }
+        System.arraycopy(arr, index + 1, arr, index, size - index - 1);
         size--;
         arr[size] = null;
         return value;
@@ -105,9 +89,27 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
+    @SuppressWarnings("unchecked")
     public void grow() {
-        capacity = (int) (capacity * TIMES_TO_GROW);
-        arr = Arrays.copyOf(arr, capacity);
+        T[] newArr = (T[]) new Object[(int) (arr.length * TIMES_TO_GROW)];
+        if (size >= 0) {
+            System.arraycopy(arr, 0, newArr, 0, size);
+        }
+        arr = newArr;
+    }
+
+    private void indexValidationGeneral(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException(
+                    "The index is invalid:" + index);
+        }
+    }
+
+    private void indexValidationForAdd(int index) {
+        if (index < 0 || index > size) {
+            throw new ArrayListIndexOutOfBoundsException(
+                    "The index is invalid:" + index);
+        }
     }
 
     public int getSize() {
