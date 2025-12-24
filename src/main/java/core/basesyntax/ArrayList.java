@@ -1,48 +1,1 @@
-package core.basesyntax;
-
-public class ArrayList<T> implements List<T> {
-    @Override
-    public void add(T value) {
-
-    }
-
-    @Override
-    public void add(T value, int index) {
-
-    }
-
-    @Override
-    public void addAll(List<T> list) {
-
-    }
-
-    @Override
-    public T get(int index) {
-        return null;
-    }
-
-    @Override
-    public void set(T value, int index) {
-
-    }
-
-    @Override
-    public T remove(int index) {
-        return null;
-    }
-
-    @Override
-    public T remove(T element) {
-        return null;
-    }
-
-    @Override
-    public int size() {
-        return 0;
-    }
-
-    @Override
-    public boolean isEmpty() {
-        return false;
-    }
-}
+package core.basesyntax;import java.util.NoSuchElementException;public class ArrayList<T> implements List<T> {    private static final int DEFAULT_CAPACITY = 10;    private Object[] elements;    private int size;    public ArrayList(int capacity) {        if (capacity < 0) {            throw new IllegalArgumentException("Capacity can't be negative");        }        this.elements = new Object[capacity];        this.size = 0;    }    public ArrayList() {        this.elements = new Object[DEFAULT_CAPACITY];        this.size = 0;    }    private void checkIndex(int index) {        if (index < 0 || index >= size) {            throw new ArrayListIndexOutOfBoundsException("Index out of bound");        }    }    private void grow() {        int newCapacity = elements.length == 0                ? DEFAULT_CAPACITY : elements.length + elements.length / 2;        Object[] newElements = new Object[newCapacity];        System.arraycopy(elements, 0, newElements, 0, size);        elements = newElements;    }    @Override    public void add(T value) {        if (size == elements.length) {            grow();        }        elements[size] = value;        size++;    }    @Override    public void add(T value, int index) {        if (index < 0 || index > size) {            throw new ArrayListIndexOutOfBoundsException("index out of bounds");        }        if (size == elements.length) {            grow();        }        System.arraycopy(elements, index, elements, index + 1, size - index);        elements[index] = value;        size++;    }    private void ensureCapacity(int minCapacity) {        if (minCapacity <= elements.length) {            return;        }        int newCapacity = elements.length + elements.length / 2;        if (minCapacity > newCapacity) {            newCapacity = minCapacity;        }        Object[] newElements = new Object[newCapacity];        System.arraycopy(elements, 0, newElements, 0, size);        elements = newElements;    }    @Override    public void addAll(List<T> list) {        if (list == null) {            throw new NullPointerException("Input list can not be null");        }        int newSize = size + list.size();        ensureCapacity(newSize);        for (int i = 0; i < list.size(); i++) {            elements[size++] = list.get(i);        }    }    @Override    public T get(int index) {        checkIndex(index);        T element = (T) elements[index];        return element;    }    @Override    public void set(T value, int index) {        checkIndex(index);        elements[index] = value;    }    @Override    public T remove(int index) {        checkIndex(index);        T removed = (T) elements[index];        System.arraycopy(elements, index + 1, elements, index, size - index - 1);        size--;        return removed;    }    @Override    public T remove(T element) {        for (int i = 0; i < size; i++) {            if (elements[i] == null ? element == null : elements[i].equals(element)) {                return remove(i);            }        }        throw new NoSuchElementException("There is no such element");    }    @Override    public int size() {        return size;    }    @Override    public boolean isEmpty() {        return size == 0;    }}
