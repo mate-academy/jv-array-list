@@ -4,8 +4,10 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final double GROW_BY = 1.5;
-    private int size = 0;
-    private int capacity = 10;
+    private static final int DEFAULT_SIZE = 0;
+    private static final int DEFAULT_CAPACITY = 10;
+    private int size = DEFAULT_SIZE;
+    private int capacity = DEFAULT_CAPACITY;
     private Object[] list = new Object[capacity];
 
     @Override
@@ -22,9 +24,7 @@ public class ArrayList<T> implements List<T> {
 
         ensureCapacity(size + 1);
 
-        for (int i = size; i > index; i--) {
-            list[i] = list[i - 1];
-        }
+        System.arraycopy(list, index, list, index + 1, size - index);
         list[index] = value;
         size++;
     }
@@ -56,9 +56,8 @@ public class ArrayList<T> implements List<T> {
         checkIndex(index);
         T removed = (T) list[index];
 
-        for (int i = index; i < size - 1; i++) {
-            list[i] = list[i + 1];
-        }
+        System.arraycopy(list, index + 1, list, index, size - index - 1);
+
         list[--size] = null;
 
         return removed;
@@ -71,7 +70,7 @@ public class ArrayList<T> implements List<T> {
                 return remove(i);
             }
         }
-        throw new NoSuchElementException();
+        throw new NoSuchElementException("Can`t delete non existing element " + element);
     }
 
     @Override
