@@ -13,7 +13,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        grow();
+        growIfFull();
         elementData[size] = value;
         size++;
     }
@@ -23,7 +23,7 @@ public class ArrayList<T> implements List<T> {
         if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException("Index: " + index + ", Size: " + size);
         }
-        grow();
+        growIfFull();
         System.arraycopy(elementData, index, elementData, index + 1, size - index);
         elementData[index] = value;
         size++;
@@ -69,7 +69,7 @@ public class ArrayList<T> implements List<T> {
                 return remove(i);
             }
         }
-        throw new NoSuchElementException();
+        throw new NoSuchElementException("Element not found: " + element);
     }
 
     @Override
@@ -82,12 +82,12 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
-    private void grow() {
+    private void growIfFull() {
         if (size == elementData.length) {
             int newCapacity = elementData.length + (elementData.length >> 1);
-            T[] newArray = (T[]) new Object[newCapacity];
-            System.arraycopy(elementData, 0, newArray, 0, size);
-            elementData = newArray;
+            T[] newElementData = (T[]) new Object[newCapacity];
+            System.arraycopy(elementData, 0, newElementData, 0, size);
+            elementData = newElementData;
         }
     }
 
