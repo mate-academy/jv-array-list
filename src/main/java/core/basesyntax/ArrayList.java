@@ -4,14 +4,29 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
+    private static final double GROWTH_FACTOR = 1.5;
     private Object[] elementData = new Object[DEFAULT_CAPACITY];
     private int size;
 
     private void grow() {
-        int newCapacity = (int) (elementData.length * 1.5);
+        int newCapacity = (int) (elementData.length * GROWTH_FACTOR);
         Object[] newArray = new Object[newCapacity];
         System.arraycopy(elementData, 0, newArray, 0, elementData.length);
         elementData = newArray;
+    }
+
+    // Хелпер для перевірки індексу при додаванні (0 <= index <= size)
+    private void checkPositionIndex(int index) {
+        if (index < 0 || index > size) {
+            throw new ArrayListIndexOutOfBoundsException("Invalid position index: " + index);
+        }
+    }
+
+    // Хелпер для перевірки індексу при отриманні/видаленні (0 <= index < size)
+    private void checkElementIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Invalid element index: " + index);
+        }
     }
 
     @Override
@@ -19,15 +34,12 @@ public class ArrayList<T> implements List<T> {
         if (size == elementData.length) {
             grow();
         }
-        elementData[size] = value;
-        size++;
+        elementData[size++] = value;
     }
 
     @Override
     public void add(T value, int index) {
-        if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
-        }
+        checkPositionIndex(index);
         if (size == elementData.length) {
             grow();
         }
@@ -46,35 +58,26 @@ public class ArrayList<T> implements List<T> {
     @SuppressWarnings("unchecked")
     @Override
     public T get(int index) {
-        // ВИПРАВЛЕНО: тепер >= size
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index: " + index + ", Size: " + size);
-        }
+        checkElementIndex(index);
         return (T) elementData[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index: " + index + ", Size: " + size);
-        }
+        checkElementIndex(index);
         elementData[index] = value;
     }
 
     @SuppressWarnings("unchecked")
     @Override
     public T remove(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index: " + index + ", Size: " + size);
-        }
-        // ВИПРАВЛЕНО: додано final для Checkstyle
+        checkElementIndex(index);
         final T removedValue = (T) elementData[index];
         int numMoved = size - index - 1;
         if (numMoved > 0) {
             System.arraycopy(elementData, index + 1, elementData, index, numMoved);
         }
-        size--;
-        elementData[size] = null;
+        elementData[--size] = null;
         return removedValue;
     }
 
