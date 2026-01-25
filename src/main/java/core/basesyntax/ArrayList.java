@@ -1,11 +1,12 @@
 package core.basesyntax;
+
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    int DEFAULT_CAPACITY = 10;
-    int size = 0;
+    private static final int DEFAULT_CAPACITY = 10;
+    private int size = 0;
 
-    Object[] array = new Object[DEFAULT_CAPACITY];
+    private Object[] array = new Object[DEFAULT_CAPACITY];
 
     @Override
     public void add(T value) {
@@ -14,15 +15,6 @@ public class ArrayList<T> implements List<T> {
         }
         array[size] = value;
         size++;
-    }
-
-    public void grow() {
-        int newCapacity = (int) (array.length * 1.5);
-        Object[] newCapacityArray = new Object[newCapacity];
-        for (int i = 0; i < array.length; i++) {
-            newCapacityArray[i] = array[i];
-        }
-        array = newCapacityArray;
     }
 
     @Override
@@ -38,6 +30,15 @@ public class ArrayList<T> implements List<T> {
         }
         array[index] = value;
         size++;
+    }
+
+    public void grow() {
+        int newCapacity = (int) (array.length * 1.5);
+        Object[] newCapacityArray = new Object[newCapacity];
+        for (int i = 0; i < array.length; i++) {
+            newCapacityArray[i] = array[i];
+        }
+        array = newCapacityArray;
     }
 
     @Override
@@ -71,7 +72,7 @@ public class ArrayList<T> implements List<T> {
         }
 
         // 2. Zapisz element do zwrócenia
-        T removed = (T) array[index];
+        final T removed = (T) array[index];
 
         // 3. Przesuń elementy W LEWO (od index+1 do końca)
         for (int i = index; i < size - 1; i++) {
@@ -88,6 +89,15 @@ public class ArrayList<T> implements List<T> {
         return removed;
     }
 
+    @Override
+    public T remove(T element) {// ← TUTAJ dodaj tę metodę
+        for (int i = 0; i < size; i++) {
+            if (element == null ? array[i] == null : element.equals(array[i])) {
+                return remove(i);
+            }
+        }
+        throw new NoSuchElementException("Element not found");
+    }
 
     @Override
     public int size() {
@@ -98,14 +108,6 @@ public class ArrayList<T> implements List<T> {
     public boolean isEmpty() {
         return size == 0;
     }
-    @Override
-    public T remove(T element) {  // ← TUTAJ dodaj tę metodę
-        for (int i = 0; i < size; i++) {
-            if (element == null ? array[i] == null : element.equals(array[i])) {
-                return remove(i);
-            }
-        }
-        throw new NoSuchElementException("Element not found");
-    }
+
 }
 
