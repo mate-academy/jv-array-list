@@ -1,48 +1,111 @@
 package core.basesyntax;
+import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
+    int DEFAULT_CAPACITY = 10;
+    int size = 0;
+
+    Object[] array = new Object[DEFAULT_CAPACITY];
+
     @Override
     public void add(T value) {
+        if (size == array.length) {
+            grow();
+        }
+        array[size] = value;
+        size++;
+    }
 
+    public void grow() {
+        int newCapacity = (int) (array.length * 1.5);
+        Object[] newCapacityArray = new Object[newCapacity];
+        for (int i = 0; i < array.length; i++) {
+            newCapacityArray[i] = array[i];
+        }
+        array = newCapacityArray;
     }
 
     @Override
     public void add(T value, int index) {
-
+        if (index < 0 || index > size) {
+            throw new ArrayListIndexOutOfBoundsException("Index out of bounds");
+        }
+        if (size == array.length) {
+            grow();
+        }
+        for (int i = size - 1; i >= index; i--) {
+            array[i + 1] = array[i];
+        }
+        array[index] = value;
+        size++;
     }
 
     @Override
     public void addAll(List<T> list) {
-
+        for (int i = 0; i < list.size(); i++) {
+            add(list.get(i));
+        }
     }
 
     @Override
     public T get(int index) {
-        return null;
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Index: " + index + ", Size: " + size);
+        }
+        return (T) array[index];
     }
 
     @Override
     public void set(T value, int index) {
-
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Index: " + index + ", Size: " + size);
+        }
+        array[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        return null;
+        // 1. Sprawdź poprawność indeksu
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Index: " + index + ", Size: " + size);
+        }
+
+        // 2. Zapisz element do zwrócenia
+        T removed = (T) array[index];
+
+        // 3. Przesuń elementy W LEWO (od index+1 do końca)
+        for (int i = index; i < size - 1; i++) {
+            array[i] = array[i + 1];
+        }
+
+        // 4. Wyczyść ostatnią pozycję (garbage collector)
+        array[size - 1] = null;
+
+        // 5. Zmniejsz rozmiar
+        size--;
+
+        // 6. Zwróć usunięty element
+        return removed;
     }
 
-    @Override
-    public T remove(T element) {
-        return null;
-    }
 
     @Override
     public int size() {
-        return 0;
+        return size;
     }
 
     @Override
     public boolean isEmpty() {
-        return false;
+        return size == 0;
+    }
+    @Override
+    public T remove(T element) {  // ← TUTAJ dodaj tę metodę
+        for (int i = 0; i < size; i++) {
+            if (element == null ? array[i] == null : element.equals(array[i])) {
+                return remove(i);
+            }
+        }
+        throw new NoSuchElementException("Element not found");
     }
 }
+
