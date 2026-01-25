@@ -70,27 +70,17 @@ public class ArrayList<T> implements List<T> {
         if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException("Index: " + index + ", Size: " + size);
         }
-
-        // 2. Zapisz element do zwrócenia
         final T removed = (T) array[index];
-
-        // 3. Przesuń elementy W LEWO (od index+1 do końca)
         for (int i = index; i < size - 1; i++) {
             array[i] = array[i + 1];
         }
-
-        // 4. Wyczyść ostatnią pozycję (garbage collector)
         array[size - 1] = null;
-
-        // 5. Zmniejsz rozmiar
         size--;
-
-        // 6. Zwróć usunięty element
         return removed;
     }
 
     @Override
-    public T remove(T element) {// ← TUTAJ dodaj tę metodę
+    public T remove(T element) {
         for (int i = 0; i < size; i++) {
             if (element == null ? array[i] == null : element.equals(array[i])) {
                 return remove(i);
@@ -110,4 +100,3 @@ public class ArrayList<T> implements List<T> {
     }
 
 }
-
