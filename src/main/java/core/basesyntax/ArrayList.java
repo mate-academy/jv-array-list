@@ -5,7 +5,6 @@ import java.util.NoSuchElementException;
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private int size = 0;
-
     private Object[] array = new Object[DEFAULT_CAPACITY];
 
     @Override
@@ -19,6 +18,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
+
         if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException("Index out of bounds");
         }
@@ -32,15 +32,6 @@ public class ArrayList<T> implements List<T> {
         size++;
     }
 
-    public void grow() {
-        int newCapacity = (int) (array.length * 1.5);
-        Object[] newCapacityArray = new Object[newCapacity];
-        for (int i = 0; i < array.length; i++) {
-            newCapacityArray[i] = array[i];
-        }
-        array = newCapacityArray;
-    }
-
     @Override
     public void addAll(List<T> list) {
         for (int i = 0; i < list.size(); i++) {
@@ -50,26 +41,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index: " + index + ", Size: " + size);
-        }
+        checkIndex(index);
         return (T) array[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index: " + index + ", Size: " + size);
-        }
+        checkIndex(index);
         array[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        // 1. Sprawdź poprawność indeksu
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index: " + index + ", Size: " + size);
-        }
+        checkIndex(index);
         final T removed = (T) array[index];
         for (int i = index; i < size - 1; i++) {
             array[i] = array[i + 1];
@@ -99,4 +83,18 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
+    private void checkIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Index: " + index + ", Size: " + size);
+        }
+    }
+
+    private void grow() {
+        int newCapacity = (int) (array.length * 1.5);
+        Object[] newCapacityArray = new Object[newCapacity];
+        for (int i = 0; i < array.length; i++) {
+            newCapacityArray[i] = array[i];
+        }
+        array = newCapacityArray;
+    }
 }
