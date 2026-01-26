@@ -25,7 +25,8 @@ public class ArrayList<T> implements List<T> {
         if (size == elementData.length) {
             grow();
         }
-        System.arraycopy(elementData, index, elementData, index + 1, size - index);
+        System.arraycopy(elementData, index, elementData, index + 1,
+                size - index);
 
         elementData[index] = value;
         size++;
@@ -59,7 +60,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index: " + index + ", Size: " + size);
+            throw new ArrayListIndexOutOfBoundsException
+                    ("Index: " + index + ", Size: " + size);
         }
         T oldValue = elementData[index];
 
@@ -77,8 +79,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if (element == null ? elementData[i] == null
-                    : element.equals(elementData[i])) {
+            if ((element == null) ?
+                    elementData[i] == null : element.equals(elementData[i])) {
                 return remove(i);
             }
         }
@@ -98,7 +100,8 @@ public class ArrayList<T> implements List<T> {
     private void grow() {
         int newCapacity = elementData.length + (elementData.length >> 1);
         T[] newElementData = (T[]) new Object[newCapacity];
-        System.arraycopy(elementData, 0, newElementData, 0, elementData.length);
+        System.arraycopy(elementData, 0, newElementData, 0,
+                elementData.length);
         elementData = newElementData;
     }
 }
