@@ -7,26 +7,24 @@ public class ArrayList<T> implements List<T> {
     private T[] elementData;
     private int size;
 
+    @SuppressWarnings("unchecked")
     public ArrayList() {
         elementData = (T[]) new Object[DEFAULT_CAPACITY];
     }
 
     @Override
     public void add(T value) {
-        if (size == elementData.length) {
-            grow();
-        }
+        ensureCapacity();
         elementData[size++] = value;
     }
 
     @Override
     public void add(T value, int index) {
         if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("Index out of bounds");
+            throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index
+                    + ", Size: " + size);
         }
-        if (size == elementData.length) {
-            grow();
-        }
+        ensureCapacity();
         System.arraycopy(elementData, index, elementData, index + 1, size - index);
         elementData[index] = value;
         size++;
@@ -34,6 +32,12 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
+        // Obliczamy wymagane miejsce raz
+        int minCapacity = size + list.size();
+        while (elementData.length < minCapacity) {
+            grow();
+        }
+        // Teraz dodajemy elementy, wiedząc, że tablica jest wystarczająco duża
         for (int i = 0; i < list.size(); i++) {
             add(list.get(i));
         }
@@ -83,6 +87,13 @@ public class ArrayList<T> implements List<T> {
         return size == 0;
     }
 
+    private void ensureCapacity() {
+        if (size == elementData.length) {
+            grow();
+        }
+    }
+
+    @SuppressWarnings("unchecked")
     private void grow() {
         int newCapacity = elementData.length + (elementData.length >> 1);
         T[] newElementData = (T[]) new Object[newCapacity];
