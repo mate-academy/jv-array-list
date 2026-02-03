@@ -1,7 +1,6 @@
 package core.basesyntax;
 
 import java.util.NoSuchElementException;
-import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
     private static final int NEW_ARRAY_SIZE = 10;
@@ -31,9 +30,7 @@ public class ArrayList<T> implements List<T> {
         if (size == array.length - 1) {
             array = grow();
         }
-        for (int i = size - 1; i >= index; i--) {
-            array[i + 1] = array[i];
-        }
+        System.arraycopy(array, index, array, index + 1, size - index);
         array[index] = value;
         size++;
 
@@ -56,7 +53,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void set(T value, int index) {
-        if (index >= size || index < 0) {
+        if (indexValidation(index)) {
             throw new ArrayListIndexOutOfBoundsException("ArrayList index out of bounds");
         }
         array[index] = value;
@@ -64,13 +61,11 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(int index) {
-        if (index >= size || index < 0) {
+        if (indexValidation(index)) {
             throw new ArrayListIndexOutOfBoundsException("ArrayList index out of bounds");
         }
         T removed = (T) array[index];
-        for (int i = index; i < size - 1; i++) {
-            array[i] = array[i + 1];
-        }
+        System.arraycopy(array, index + 1, array, index, size - index - 1);
         size--;
         return removed;
 
@@ -79,7 +74,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if (Objects.equals(array[i], element)) {
+            if (array[i] == element || (array[i] != null && array[i].equals(element))) {
                 return remove(i);
             }
         }
@@ -97,10 +92,12 @@ public class ArrayList<T> implements List<T> {
     }
 
     private Object[] grow() {
-        Object[] growedArray = new Object[size + (size << 1)];
-        for (int i = 0; i < this.array.length; i++) {
-            growedArray[i] = this.array[i];
-        }
+        Object[] growedArray = new Object[array.length + (array.length << 1)];
+        System.arraycopy(array, 0, growedArray, 0, array.length);
         return growedArray;
+    }
+
+    private boolean indexValidation(int index) {
+        return index < 0 || index >= size;
     }
 }
