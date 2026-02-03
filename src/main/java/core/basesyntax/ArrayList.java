@@ -24,7 +24,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (indexValidation(index)) {
+        if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException("ArrayList index out of bounds");
         }
         if (size == array.length) {
