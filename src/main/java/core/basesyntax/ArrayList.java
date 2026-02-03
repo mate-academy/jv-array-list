@@ -24,10 +24,10 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        if (index > size || index < 0) {
+        if (indexValidation(index)) {
             throw new ArrayListIndexOutOfBoundsException("ArrayList index out of bounds");
         }
-        if (size == array.length - 1) {
+        if (size == array.length) {
             array = grow();
         }
         System.arraycopy(array, index, array, index + 1, size - index);
@@ -45,7 +45,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index >= size || index < 0) {
+        if (indexValidation(index)) {
             throw new ArrayListIndexOutOfBoundsException("ArrayList index out of bounds");
         }
         return (T) array[index];
@@ -92,7 +92,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     private Object[] grow() {
-        Object[] growedArray = new Object[array.length + (array.length << 1)];
+        Object[] growedArray = new Object[array.length + (array.length >> 1)];
         System.arraycopy(array, 0, growedArray, 0, array.length);
         return growedArray;
     }
