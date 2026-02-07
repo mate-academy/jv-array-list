@@ -14,19 +14,17 @@ public class ArrayList<T> implements List<T> {
         size = 0;
     }
 
+    @SuppressWarnings("unchecked")
     private void grow() {
-        if (size == elementData.length) {
-            int oldCapacity = elementData.length;
-            int newCapacity = oldCapacity + (oldCapacity >> 1);
-            if (newCapacity <= oldCapacity) {
-                newCapacity = oldCapacity + 1;
-            }
-
-            @SuppressWarnings("unchecked")
-            T[] newArray = (T[]) new Object[newCapacity];
-            System.arraycopy(elementData, 0, newArray, 0, size);
-            elementData = newArray;
+        int oldCapacity = elementData.length;
+        int newCapacity = oldCapacity + (oldCapacity >> 1);
+        if (newCapacity <= oldCapacity) {
+            newCapacity = oldCapacity + 1;
         }
+
+        T[] newArray = (T[]) new Object[newCapacity];
+        System.arraycopy(elementData, 0, newArray, 0, size);
+        elementData = newArray;
     }
 
     private void checkIndex(int index) {
@@ -45,16 +43,32 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
+    private T removeAt(int index) {
+        T removed = elementData[index];
+
+        int numMoved = size - index - 1;
+        if (numMoved > 0) {
+            System.arraycopy(elementData, index + 1, elementData, index, numMoved);
+        }
+
+        elementData[--size] = null;
+        return removed;
+    }
+
     @Override
     public void add(T value) {
-        grow();
+        if (size == elementData.length) {
+            grow();
+        }
         elementData[size++] = value;
     }
 
     @Override
     public void add(T value, int index) {
         checkIndexForAdd(index);
-        grow();
+        if (size == elementData.length) {
+            grow();
+        }
         System.arraycopy(elementData, index, elementData, index + 1, size - index);
         elementData[index] = value;
         size++;
@@ -91,15 +105,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
-        T removed = elementData[index];
-
-        int numMoved = size - index - 1;
-        if (numMoved > 0) {
-            System.arraycopy(elementData, index + 1, elementData, index, numMoved);
-        }
-
-        elementData[--size] = null;
-        return removed;
+        return removeAt(index);
     }
 
     @Override
@@ -108,19 +114,9 @@ public class ArrayList<T> implements List<T> {
             if (element == null
                     ? elementData[i] == null
                     : element.equals(elementData[i])) {
-
-                T removed = elementData[i];
-                int numMoved = size - i - 1;
-
-                if (numMoved > 0) {
-                    System.arraycopy(elementData, i + 1, elementData, i, numMoved);
-                }
-
-                elementData[--size] = null;
-                return removed;
+                return removeAt(i);
             }
         }
-
         throw new NoSuchElementException("Element " + element + " not found");
     }
 
