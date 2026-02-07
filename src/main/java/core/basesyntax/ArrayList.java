@@ -14,6 +14,12 @@ public class ArrayList<T> implements List<T> {
         size = 0;
     }
 
+    private void ensureCapacity(int minCapacity) {
+        if (minCapacity > elementData.length) {
+            grow();
+        }
+    }
+
     @SuppressWarnings("unchecked")
     private void grow() {
         int oldCapacity = elementData.length;
@@ -57,18 +63,15 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (size == elementData.length) {
-            grow();
-        }
+        ensureCapacity(size + 1);
         elementData[size++] = value;
     }
 
     @Override
     public void add(T value, int index) {
         checkIndexForAdd(index);
-        if (size == elementData.length) {
-            grow();
-        }
+        ensureCapacity(size + 1);
+
         System.arraycopy(elementData, index, elementData, index + 1, size - index);
         elementData[index] = value;
         size++;
@@ -81,9 +84,7 @@ public class ArrayList<T> implements List<T> {
         }
 
         int additionalSize = list.size();
-        while (size + additionalSize > elementData.length) {
-            grow();
-        }
+        ensureCapacity(size + additionalSize);
 
         for (int i = 0; i < list.size(); i++) {
             elementData[size++] = list.get(i);
