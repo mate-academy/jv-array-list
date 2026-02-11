@@ -9,9 +9,14 @@ public class ArrayList<T> implements List<T> {
     private Object[] elementsData = new Object[DEFAULT_CAPACITY];
 
     private void grow() {
-        int newCapacity = Math.max(MIN_CAPACITY, size + (size >> 1));
+        int oldCapacity = elementsData.length;
+        int newCapacity = Math.max(
+                MIN_CAPACITY,
+                oldCapacity + (oldCapacity >> 1)
+        );
+
         Object[] newElementsData = new Object[newCapacity];
-        System.arraycopy(elementsData,0,newElementsData,0, size);
+        System.arraycopy(elementsData, 0, newElementsData, 0, size);
         elementsData = newElementsData;
     }
 
