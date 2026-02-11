@@ -1,7 +1,7 @@
 package core.basesyntax;
 
 public class ArrayListIndexOutOfBoundsException extends IndexOutOfBoundsException {
-    public ArrayListIndexOutOfBoundsException(String message) {
-        super(message);
+    public ArrayListIndexOutOfBoundsException(int index, int size) {
+        super("Index " + index + " out of bounds for size " + size);
     }
 }
