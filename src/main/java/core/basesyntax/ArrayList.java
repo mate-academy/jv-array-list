@@ -8,23 +8,22 @@ public class ArrayList<T> implements List<T> {
     private int size = 0;
     private Object[] elementsData = new Object[DEFAULT_CAPACITY];
 
-    public Object[] grow() {
+    private void grow() {
         int newCapacity = Math.max(MIN_CAPACITY, size + (size >> 1));
         Object[] newElementsData = new Object[newCapacity];
         System.arraycopy(elementsData,0,newElementsData,0, size);
         elementsData = newElementsData;
-        return elementsData;
     }
 
     public void checkAddIndex(int index) {
         if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("wrong index here");
+            throw new ArrayListIndexOutOfBoundsException("Index X out of bounds for size Y");
         }
     }
 
     public void checkElementIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("wrong index here");
+            throw new ArrayListIndexOutOfBoundsException("Index X out of bounds for size Y");
         }
     }
 
@@ -62,7 +61,6 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-
         for (int i = 0; i < list.size(); i++) {
             add(list.get(i));
         }
@@ -82,9 +80,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(int index) {
-
         checkElementIndex(index);
-
         T removedElement = (T) elementsData[index];
         System.arraycopy(
                 elementsData,
@@ -110,7 +106,7 @@ public class ArrayList<T> implements List<T> {
                 }
             }
         }
-        throw new NoSuchElementException("No such element!");
+        throw new NoSuchElementException("there is no such element in this ArrayList:" + element);
     }
 
     @Override
@@ -120,9 +116,6 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public boolean isEmpty() {
-        if (size == 0) {
-            return true;
-        }
-        return false;
+        return size == 0;
     }
 }
