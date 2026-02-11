@@ -17,13 +17,19 @@ public class ArrayList<T> implements List<T> {
 
     public void checkAddIndex(int index) {
         if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("Index X out of bounds for size Y");
+            throw new ArrayListIndexOutOfBoundsException("Index"
+                    + index
+                    + "out of bounds for size"
+                    + size);
         }
     }
 
     public void checkElementIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index X out of bounds for size Y");
+            throw new ArrayListIndexOutOfBoundsException("Index"
+                    + index
+                    + "out of bounds for size"
+                    + size);
         }
     }
 
