@@ -1,48 +1,128 @@
 package core.basesyntax;
 
+import java.util.NoSuchElementException;
+
 public class ArrayList<T> implements List<T> {
+    private static final int DEFAULT_CAPACITY = 10;
+    private static final int MIN_CAPACITY = 1;
+    private int size = 0;
+    private Object[] elementsData = new Object[DEFAULT_CAPACITY];
+
+    public Object[] grow() {
+        int newCapacity = Math.max(MIN_CAPACITY, size + (size >> 1));
+        Object[] newElementsData = new Object[newCapacity];
+        System.arraycopy(elementsData,0,newElementsData,0, size);
+        elementsData = newElementsData;
+        return elementsData;
+    }
+
+    public void checkAddIndex(int index) {
+        if (index < 0 || index > size) {
+            throw new ArrayListIndexOutOfBoundsException("wrong index here");
+        }
+    }
+
+    public void checkElementIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("wrong index here");
+        }
+    }
+
     @Override
     public void add(T value) {
-
+        if (size == elementsData.length) {
+            grow();
+        }
+        elementsData[size] = value;
+        size++;
     }
 
     @Override
     public void add(T value, int index) {
+        checkAddIndex(index);
+        if (size == index) {
+            add(value);
+            return;
+        }
 
+        if (size == elementsData.length) {
+            grow();
+        }
+        // зсунути вправо
+        System.arraycopy(
+                elementsData,
+                index,
+                elementsData,
+                index + 1,
+                size - index
+        );
+        elementsData[index] = value;
+        size++;
     }
 
     @Override
     public void addAll(List<T> list) {
 
+        for (int i = 0; i < list.size(); i++) {
+            add(list.get(i));
+        }
     }
 
     @Override
     public T get(int index) {
-        return null;
+        checkElementIndex(index);
+        return (T)elementsData[index];
     }
 
     @Override
     public void set(T value, int index) {
-
+        checkElementIndex(index);
+        elementsData[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        return null;
+
+        checkElementIndex(index);
+
+        T removedElement = (T) elementsData[index];
+        System.arraycopy(
+                elementsData,
+                index + 1,
+                elementsData,
+                index,
+                size - index - 1
+        );
+        elementsData[--size] = null;
+        return removedElement;
     }
 
     @Override
     public T remove(T element) {
-        return null;
+        for (int i = 0; i < size; i++) {
+            if (element == null) {
+                if (elementsData[i] == null) {
+                    return remove(i);
+                }
+            } else {
+                if (element.equals(elementsData[i])) {
+                    return remove(i);
+                }
+            }
+        }
+        throw new NoSuchElementException("No such element!");
     }
 
     @Override
     public int size() {
-        return 0;
+        return size;
     }
 
     @Override
     public boolean isEmpty() {
+        if (size == 0) {
+            return true;
+        }
         return false;
     }
 }
