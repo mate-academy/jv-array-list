@@ -1,57 +1,35 @@
 package core.basesyntax;
 
-import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    private T[] array;
-    private int elementsAmount;
+
+    private Object[] elementData;
+    private int size;
 
     public ArrayList() {
-        array = (T[]) new Object[DEFAULT_CAPACITY];
-        elementsAmount = 0;
+        elementData = new Object[DEFAULT_CAPACITY];
+        size = 0;
     }
 
     @Override
     public void add(T value) {
-        if (array.length == size()) {
-            increaseArrayLength();
-        }
-        array[size()] = value;
-        increaseElementsAmount();
+        ensureCapacity(size + 1);
+        elementData[size++] = value;
     }
 
     @Override
     public void add(T value, int index) {
-        if (index > size() || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("The index is incorrect");
-        }
+        checkIndexForAdd(index);
+        ensureCapacity(size + 1);
 
-        if (index != size()) {
-            T[] newArray = (T[]) new Object[size() + 1];
+        System.arraycopy(elementData, index,
+                elementData, index + 1,
+                size - index);
 
-            for (int i = 0; i < newArray.length; i++) {
-                if (i == index) {
-                    newArray[i] = value;
-                }
-                if (i < index) {
-                    newArray[i] = array[i];
-                }
-                if (i > index) {
-                    newArray[i] = array[i - 1];
-                }
-            }
-
-            if (array.length == size()) {
-                increaseArrayLength();
-            }
-
-            array = copyArray(newArray);
-            increaseElementsAmount();
-        } else {
-            add(value);
-        }
+        elementData[index] = value;
+        size++;
     }
 
     @Override
@@ -63,104 +41,95 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index < 0 || index >= size()) {
-            throw new ArrayListIndexOutOfBoundsException("The index is incorrect");
-        }
-        return array[index];
+        checkIndex(index);
+        return (T) elementData[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index < 0 || index >= size()) {
-            throw new ArrayListIndexOutOfBoundsException("The index is incorrect");
-        }
-        array[index] = value;
+        checkIndex(index);
+        elementData[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index < 0 || index >= size()) {
-            throw new ArrayListIndexOutOfBoundsException("The index is incorrect");
-        }
-        final T element = array[index];
-        T[] newArray = (T[]) new Object[size() - 1];
+        checkIndex(index);
 
-        for (int i = 0; i < size(); i++) {
-            if (i < index) {
-                newArray[i] = array[i];
-            }
-            if (i > index) {
-                newArray[i - 1] = array[i];
-            }
-        }
-        array = copyArray(newArray);
-        decreaseElementsAmount();
+        T removed = (T) elementData[index];
 
-        return element;
+        int elementsToMove = size - index - 1;
+        if (elementsToMove > 0) {
+            System.arraycopy(elementData,
+                    index + 1,
+                    elementData,
+                    index,
+                    elementsToMove);
+        }
+
+        elementData[--size] = null; // avoid memory leak
+        return removed;
     }
 
     @Override
     public T remove(T element) {
-        T[] newArray = (T[]) new Object[size() - 1];
-        boolean isFound = false;
+        int index = indexOf(element);
 
-        for (int i = 0; i < size(); i++) {
-            if (!isFound
-                    && (((element == null)
-                    && (array[i] != null))
-                    || ((element != null)
-                    && (array[i] == null)))) {
-                if (newArray.length == i) {
-                    throw new NoSuchElementException("No such element");
-                }
-                newArray[i] = array[i];
-                continue;
-            } else if (!isFound
-                    && (((array[i] == null)
-                    && (element == null))
-                    || array[i].equals(element))) {
-                isFound = true;
-                continue;
-            }
-
-            if (!isFound) {
-                if (newArray.length == i) {
-                    throw new NoSuchElementException("No such element");
-                }
-                newArray[i] = array[i];
-            } else {
-                newArray[i - 1] = array[i];
-            }
+        if (index == -1) {
+            throw new NoSuchElementException("No such element");
         }
-        array = copyArray(newArray);
-        decreaseElementsAmount();
 
-        return element;
+        return remove(index);
     }
 
     @Override
     public int size() {
-        return elementsAmount;
+        return size;
     }
 
     @Override
     public boolean isEmpty() {
-        return elementsAmount == 0;
+        return size == 0;
     }
 
-    private void increaseArrayLength() {
-        array = Arrays.copyOf(array, (array.length + (array.length >> 1)));
+    private void ensureCapacity(int minCapacity) {
+        if (minCapacity > elementData.length) {
+            int newCapacity = elementData.length + (elementData.length >> 1);
+            if (newCapacity < minCapacity) {
+                newCapacity = minCapacity;
+            }
+
+            Object[] newArray = new Object[newCapacity];
+            System.arraycopy(elementData, 0, newArray, 0, size);
+            elementData = newArray;
+        }
     }
 
-    private void increaseElementsAmount() {
-        elementsAmount++;
+    private void checkIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Index: " + index);
+        }
     }
 
-    private void decreaseElementsAmount() {
-        elementsAmount--;
+    private void checkIndexForAdd(int index) {
+        if (index < 0 || index > size) {
+            throw new ArrayListIndexOutOfBoundsException("Index: " + index);
+        }
     }
 
-    private T[] copyArray(T[] newArray) {
-        return Arrays.copyOf(newArray, array.length);
+    private int indexOf(T element) {
+        if (element == null) {
+            for (int i = 0; i < size; i++) {
+                if (elementData[i] == null) {
+                    return i;
+                }
+            }
+        } else {
+            for (int i = 0; i < size; i++) {
+                if (element.equals(elementData[i])) {
+                    return i;
+                }
+            }
+        }
+        return -1;
     }
 }
