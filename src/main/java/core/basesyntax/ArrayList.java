@@ -3,8 +3,10 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    private int currentMaxSize = 10;
-    private Object[] dataArray = new Object[currentMaxSize];
+    private static final int INIT_SIZE = 10;
+    
+    private int currentMaxSize = INIT_SIZE;
+    private Object[] elements = new Object[INIT_SIZE];
     private int filledElements = 0;
 
     @Override
@@ -19,12 +21,12 @@ public class ArrayList<T> implements List<T> {
                     + "or value cant be added to the non-initialized part of array!");
         }
 
-        if (filledElements == dataArray.length) {
+        if (filledElements == elements.length) {
             expandArray();
         }
 
-        System.arraycopy(dataArray, index, dataArray, index + 1, filledElements - index);
-        dataArray[index] = value;
+        System.arraycopy(elements, index, elements, index + 1, filledElements - index);
+        elements[index] = value;
         filledElements++;
     }
 
@@ -42,7 +44,7 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayListIndexOutOfBoundsException("the value in index you have entered "
                     + "is not reachable!");
         }
-        return (T) dataArray[index];
+        return (T) elements[index];
     }
 
     @Override
@@ -52,7 +54,7 @@ public class ArrayList<T> implements List<T> {
                     + "is not reachable!");
         }
 
-        dataArray[index] = value;
+        elements[index] = value;
     }
 
     @SuppressWarnings("unchecked")
@@ -63,10 +65,10 @@ public class ArrayList<T> implements List<T> {
                     + "is not reachable!");
         }
 
-        final T removed = (T) dataArray[index];
-        System.arraycopy(dataArray, index + 1, dataArray, index, filledElements - index - 1);
+        final T removed = (T) elements[index];
+        System.arraycopy(elements, index + 1, elements, index, filledElements - index - 1);
         filledElements--;
-        dataArray[filledElements] = null;
+        elements[filledElements] = null;
         return removed;
     }
 
@@ -74,11 +76,11 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < filledElements; i++) {
-            if (element == null ? dataArray[i] == null : element.equals(dataArray[i])) {
-                final T removed = (T) dataArray[i];
-                System.arraycopy(dataArray, i + 1, dataArray, i, filledElements - i - 1);
+            if (element == null ? elements[i] == null : element.equals(elements[i])) {
+                final T removed = (T) elements[i];
+                System.arraycopy(elements, i + 1, elements, i, filledElements - i - 1);
                 filledElements--;
-                dataArray[filledElements] = null;
+                elements[filledElements] = null;
                 return removed;
             }
         }
@@ -99,9 +101,9 @@ public class ArrayList<T> implements List<T> {
         int newCapacity = currentMaxSize + (currentMaxSize >> 1);
         Object[] newArray = new Object[newCapacity];
 
-        System.arraycopy(dataArray, 0, newArray, 0, filledElements);
+        System.arraycopy(elements, 0, newArray, 0, filledElements);
 
-        dataArray = newArray;
+        elements = newArray;
         currentMaxSize = newCapacity;
     }
 
