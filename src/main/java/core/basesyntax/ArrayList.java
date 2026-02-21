@@ -5,7 +5,6 @@ import java.util.NoSuchElementException;
 public class ArrayList<T> implements List<T> {
     private static final int INIT_SIZE = 10;
     
-    private int currentMaxSize = INIT_SIZE;
     private Object[] elements = new Object[INIT_SIZE];
     private int filledElements = 0;
 
@@ -98,13 +97,12 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void expandArray() {
-        int newCapacity = currentMaxSize + (currentMaxSize >> 1);
+        int newCapacity = elements.length + (elements.length >> 1);
         Object[] newArray = new Object[newCapacity];
 
         System.arraycopy(elements, 0, newArray, 0, filledElements);
 
         elements = newArray;
-        currentMaxSize = newCapacity;
     }
 
     private boolean isInArrayBounds(int index) {
