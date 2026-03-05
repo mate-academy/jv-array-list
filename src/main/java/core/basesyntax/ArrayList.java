@@ -70,9 +70,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(int index) {
-        if (index < 0 || index >= count) {
-            throw new ArrayListIndexOutOfBoundsException("Index:" + index + ", Size: " + count);
-        }
+        validateIndex(index);
         T removedElement = (T) items[index];
         int numMoved = count - index - NEXT_ITEM;
         if (numMoved > 0) {
