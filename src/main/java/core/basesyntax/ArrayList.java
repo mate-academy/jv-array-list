@@ -8,7 +8,6 @@ public class ArrayList<T> implements List<T> {
 
     private int count;
     private Object[] items;
-    private Object getValue;
 
     public ArrayList() {
         items = new Object[MAX_ITEMS_NUMBER];
@@ -20,6 +19,12 @@ public class ArrayList<T> implements List<T> {
         Object[] newItems = new Object[newCapacity];
         System.arraycopy(items, 0, newItems, 0, items.length);
         items = newItems;
+    }
+
+    private void validateIndex(int index) {
+        if (index >= count || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Index:" + index + ", Size: " + count);
+        }
     }
 
     @Override
@@ -53,17 +58,13 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index < 0 || index >= count) {
-            throw new ArrayListIndexOutOfBoundsException("Index: " + index + ", Size: " + count);
-        }
+        validateIndex(index);
         return (T) items[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index >= count || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Index:" + index + ", Size: " + count);
-        }
+        validateIndex(index);
         items[index] = value;
     }
 
