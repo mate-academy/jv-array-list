@@ -42,13 +42,6 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private T removeAt(int i) {
-        T old = (T) array[i];
-        System.arraycopy(array, i + 1, array, i, size - i - 1);
-        array[--size] = null;
-        return old;
-    }
-
     @Override
     public void add(T value) {
         ensureCapacity(size + 1);
