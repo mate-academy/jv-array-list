@@ -36,10 +36,17 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private void rangeChekForAdd(int index) {
+    private void rangeCheckForAdd(int index) {
         if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException("Index: " + index + ", Size: " + size);
         }
+    }
+
+    private T removeAt(int i) {
+        T old = (T) array[i];
+        System.arraycopy(array, i + 1, array, i, size - i - 1);
+        array[--size] = null;
+        return old;
     }
 
     @Override
@@ -51,7 +58,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        rangeChekForAdd(index);
+        rangeCheckForAdd(index);
         ensureCapacity(size + 1);
         System.arraycopy(array, index, array, index + 1, size - index);
         array[index] = value;
@@ -92,19 +99,13 @@ public class ArrayList<T> implements List<T> {
         if (element == null) {
             for (int i = 0; i < size; i++) {
                 if (array[i] == null) {
-                    T old = (T) array[i];
-                    System.arraycopy(array, i + 1, array, i, size - i - 1);
-                    array[--size] = null;
-                    return old;
+                    return remove(i);
                 }
             }
         } else {
             for (int i = 0; i < size; i++) {
                 if (array[i] != null && array[i].equals(element)) {
-                    T old = (T) array[i];
-                    System.arraycopy(array, i + 1, array, i, size - i - 1);
-                    array[--size] = null;
-                    return old;
+                    return remove(i);
                 }
             }
         }
