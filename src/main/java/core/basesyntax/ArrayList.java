@@ -3,6 +3,7 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
+    private static final double GROWTH_FACTOR = 1.5;
     private static final int CAPACITY = 10;
     private T[] elements;
     private int size;
@@ -13,12 +14,10 @@ public class ArrayList<T> implements List<T> {
     }
 
     public void resize() {
-        int newCapacity = (int) (elements.length * 1.5);
+        int newCapacity = (int) (elements.length * GROWTH_FACTOR);
         T[] newArray = (T[]) new Object[newCapacity ];
 
-        for (int i = 0; i < elements.length; i++) {
-            newArray[i] = elements[i];
-        }
+        System.arraycopy(elements, 0, newArray, 0, size);
 
         elements = newArray;
     }
@@ -41,9 +40,9 @@ public class ArrayList<T> implements List<T> {
         if (size == elements.length) {
             resize();
         }
-        for (int i = size; i > index; i--) {
-            elements[i] = elements[i - 1];
-        }
+
+        System.arraycopy(elements, index, elements, index + 1, size - index);
+
         elements[index] = value;
         size++;
     }
@@ -82,9 +81,9 @@ public class ArrayList<T> implements List<T> {
         }
 
         final T removed = elements[index];
-        for (int i = index; i < size - 1; i++) {
-            elements[i] = elements[i + 1];
-        }
+
+        System.arraycopy(elements, index + 1, elements, index, size - index - 1);
+
         elements[size - 1] = null;
         size--;
         return removed;
@@ -96,15 +95,15 @@ public class ArrayList<T> implements List<T> {
             if ((elements[i] == null && element == null)
                     || (elements[i] != null && elements[i].equals(element))) {
                 final T removed = elements[i];
-                for (int j = i; j < size - 1; j++) {
-                    elements[j] = elements[j + 1];
-                }
+
+                System.arraycopy(elements, i + 1, elements, i, size - i - 1);
+
                 elements[size - 1] = null;
                 size--;
                 return removed;
             }
         }
-        throw new NoSuchElementException();
+        throw new NoSuchElementException("Element not found: " + element);
     }
 
     @Override
