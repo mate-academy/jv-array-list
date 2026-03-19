@@ -22,6 +22,12 @@ public class ArrayList<T> implements List<T> {
         elements = newArray;
     }
 
+    private void validateIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Index " + index);
+        }
+    }
+
     @Override
     public void add(T value) {
         if (size == elements.length) {
@@ -60,25 +66,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index " + index);
-        }
+        validateIndex(index);
         return elements[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index " + index);
-        }
+        validateIndex(index);
         elements[index] = value;
     }
 
     @Override
     public T remove(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index " + index);
-        }
+        validateIndex(index);
 
         final T removed = elements[index];
 
