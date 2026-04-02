@@ -109,10 +109,12 @@ public class ArrayList<T> implements List<T> {
         }
         throw new NoSuchElementException("Element not found");
     }
+
     @Override
     public int size() {
         return arraySize;
     }
+
     @Override
     public boolean isEmpty() {
         return arraySize == 0;
