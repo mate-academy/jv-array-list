@@ -1,7 +1,6 @@
 package core.basesyntax;
 
 import java.util.NoSuchElementException;
-import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
@@ -14,9 +13,10 @@ public class ArrayList<T> implements List<T> {
         size = 0;
     }
 
-    public void ensureCapacity() {
+    // Увеличиваем массив, если он заполнен
+    private void growIfFull() {
         if (size == elements.length) {
-            int newCapacity = (int)(elements.length * INCREASED_VARIABLE);
+            int newCapacity = (int) (elements.length * INCREASED_VARIABLE);
             if (newCapacity == elements.length) {
                 newCapacity++;
             }
@@ -26,26 +26,30 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
+    // Проверка индекса для get/set/remove
     private void checkIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException("Index: " + index
-                    + ", size: " + size);
+            throw new ArrayListIndexOutOfBoundsException("Index: " + index + ", size: " + size);
+        }
+    }
+
+    // Проверка индекса для add (допускаем index == size)
+    private void checkAddIndex(int index) {
+        if (index < 0 || index > size) {
+            throw new ArrayListIndexOutOfBoundsException("Index: " + index + ", size: " + size);
         }
     }
 
     @Override
     public void add(T value) {
-        ensureCapacity();
+        growIfFull();
         elements[size++] = value;
     }
 
     @Override
     public void add(T value, int index) {
-        if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("Index: " + index
-                    + ", size: " + size);
-        }
-        ensureCapacity();
+        checkAddIndex(index);
+        growIfFull();
         System.arraycopy(elements, index, elements, index + 1, size - index);
         elements[index] = value;
         size++;
@@ -76,7 +80,7 @@ public class ArrayList<T> implements List<T> {
         T oldElement = (T) elements[index];
         int numMoved = size - index - 1;
         if (numMoved > 0) {
-            System.arraycopy(elements,index + 1, elements, index, numMoved);
+            System.arraycopy(elements, index + 1, elements, index, numMoved);
         }
         elements[--size] = null;
         return oldElement;
@@ -85,8 +89,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if (Objects.equals(elements[i], element)) {
-                return remove((i));
+            if (element == null ? elements[i] == null : element.equals(elements[i])) {
+                return remove(i);
             }
         }
         throw new NoSuchElementException("Element not found: " + element);
