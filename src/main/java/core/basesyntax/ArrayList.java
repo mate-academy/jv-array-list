@@ -4,30 +4,28 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private int size;
+    private static final int NUM = 10;
     private Object[] data;
 
     public ArrayList() {
-        data = new Object[10];
+        data = new Object[NUM];
         size = 0;
     }
 
     @Override
     public void add(T value) {
-        if (size == data.length) {
-            grow();
-        }
+        ensureCapacity();
         data[size] = value;
         size++;
     }
 
     @Override
     public void add(T value, int index) {
-        if (index > size || index < 0) { // allow index == size
-            throw new ArrayListIndexOutOfBoundsException("Нет места");
+        if (index > size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("\n" + //
+                    "\"Index \" + index + \" out of bounds for size \" + size");
         }
-        if (size == data.length) {
-            grow();
-        }
+        ensureCapacity();
         System.arraycopy(data, index, data, index + 1, size - index);
         data[index] = value;
         size++;
@@ -69,7 +67,7 @@ public class ArrayList<T> implements List<T> {
                 return remove(i);
             }
         }
-        throw new NoSuchElementException("Нету");
+        throw new NoSuchElementException("There is no such element");
     }
 
     @Override
@@ -90,7 +88,14 @@ public class ArrayList<T> implements List<T> {
 
     private void checkIndex(int index) {
         if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Нет места");
+            throw new ArrayListIndexOutOfBoundsException("\n" + //
+                    "    \"Index \" + index + \" out of bounds for size \" + size");
+        }
+    }
+
+    private void ensureCapacity() {
+        if (size == data.length) {
+            grow();
         }
     }
 }
