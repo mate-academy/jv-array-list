@@ -3,8 +3,8 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    private int size;
     private static final int NUM = 10;
+    private int size;
     private Object[] data;
 
     public ArrayList() {
@@ -22,8 +22,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void add(T value, int index) {
         if (index > size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("\n" + //
-                    "\"Index \" + index + \" out of bounds for size \" + size");
+            throw new ArrayListIndexOutOfBoundsException("\n"
+                    + "\"Index \" + index + \" out of bounds for size \" + size");
         }
         ensureCapacity();
         System.arraycopy(data, index, data, index + 1, size - index);
@@ -88,8 +88,8 @@ public class ArrayList<T> implements List<T> {
 
     private void checkIndex(int index) {
         if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("\n" + //
-                    "    \"Index \" + index + \" out of bounds for size \" + size");
+            throw new ArrayListIndexOutOfBoundsException("\n"
+                    + "\"Index \" + index + \" out of bounds for size \" + size");
         }
     }
 
