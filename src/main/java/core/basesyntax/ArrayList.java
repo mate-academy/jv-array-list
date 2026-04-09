@@ -1,5 +1,7 @@
 package core.basesyntax;
 
+import java.util.NoSuchElementException;
+
 public class ArrayList<T> implements List<T> {
     private int size;
     private Object[] data;
@@ -26,9 +28,7 @@ public class ArrayList<T> implements List<T> {
         if (size == data.length) {
             grow();
         }
-        for (int i = size; i > index; i--) {
-            data[i] = data[i - 1];
-        }
+        System.arraycopy(data, index, data, index + 1, size - index);
         data[index] = value;
         size++;
     }
@@ -56,11 +56,9 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         checkIndex(index);
         T oldIndex = (T) data[index];
-        for (int i = index; i < size - 1; i++) {
-            data[i] = data[i + 1];
-        }
+        System.arraycopy(data, index + 1, data, index, size - index - 1);
         size--;
-        data[size - 1] = null;
+        data[size] = null;
         return oldIndex;
     }
 
@@ -71,7 +69,7 @@ public class ArrayList<T> implements List<T> {
                 return remove(i);
             }
         }
-        throw new ArrayListIndexOutOfBoundsException("Нет места");
+        throw new NoSuchElementException("Нету");
     }
 
     @Override
@@ -86,9 +84,7 @@ public class ArrayList<T> implements List<T> {
 
     public void grow() {
         Object[] newData = new Object[(int) (data.length + data.length / 2)];
-        for (int i = 0; i < data.length; i++) {
-            newData[i] = data[i];
-        }
+        System.arraycopy(data, 0, newData, 0, data.length);
         data = newData;
     }
 
