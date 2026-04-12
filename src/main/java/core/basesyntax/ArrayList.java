@@ -3,14 +3,13 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-
     private static final int DEFAULT_CAPACITY = 10;
     private Object[] elementData;
     private int size;
+
     public ArrayList() {
         elementData = new Object[DEFAULT_CAPACITY];
     }
-
     private void ensureCapacity() {
         if (size >= elementData.length) {
             int newCapacity = elementData.length + (elementData.length >> 1);
@@ -19,7 +18,6 @@ public class ArrayList<T> implements List<T> {
             elementData = newArray;
         }
     }
-
     private void checkIndex(int index) {
         if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException("Index: " + index + ", Size: " + size);
@@ -88,7 +86,7 @@ public class ArrayList<T> implements List<T> {
                 return removed;
             }
         }
-        throw new NoSuchElementException();
+        throw new NoSuchElementException("Element not found: " + element);
     }
 
     @Override
