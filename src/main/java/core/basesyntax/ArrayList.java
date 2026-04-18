@@ -10,6 +10,7 @@ public class ArrayList<T> implements List<T> {
     public ArrayList() {
         elementData = new Object[DEFAULT_CAPACITY];
     }
+
     private void ensureCapacity() {
         if (size >= elementData.length) {
             int newCapacity = elementData.length + (elementData.length >> 1);
@@ -18,11 +19,13 @@ public class ArrayList<T> implements List<T> {
             elementData = newArray;
         }
     }
+
     private void checkIndex(int index) {
         if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException("Index: " + index + ", Size: " + size);
         }
     }
+
     private void checkIndexForAdd(int index) {
         if (index < 0 || index > size) {
             throw new ArrayListIndexOutOfBoundsException("Index: " + index + ", Size: " + size);
@@ -96,6 +99,6 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public boolean isEmpty() {
-        return size==0;
+        return size == 0;
     }
 }
