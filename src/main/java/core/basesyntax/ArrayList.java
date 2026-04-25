@@ -10,7 +10,6 @@ public class ArrayList<T> implements List<T> {
     @SuppressWarnings("unchecked")
     public ArrayList() {
         valueArray = (T[]) new Object[DEFAULT_CAPACITY];
-        this.size = 0;
     }
 
     @Override
@@ -70,7 +69,7 @@ public class ArrayList<T> implements List<T> {
                 return remove(i);
             }
         }
-        throw new NoSuchElementException("Element not found");
+        throw new NoSuchElementException("Element " + element + " not found");
     }
 
     @Override
@@ -95,13 +94,17 @@ public class ArrayList<T> implements List<T> {
 
     private void checkIndex(int index) {
         if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index");
+            throw new ArrayListIndexOutOfBoundsException(
+                    "Index " + index + " is out of bounds for size " + size
+            );
         }
     }
 
     private void checkIndexForAdd(int index) {
         if (index < 0 || index > size) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index");
+            throw new ArrayListIndexOutOfBoundsException(
+                    "Index " + index + " is out of bounds for add. Valid range: 0 to " + size
+            );
         }
     }
 }
