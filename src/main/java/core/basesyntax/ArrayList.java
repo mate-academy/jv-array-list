@@ -22,13 +22,6 @@ public class ArrayList<T> implements List<T> {
 
     }
 
-    @SuppressWarnings("unchecked")
-    private void growArray() {
-        int newCapacity = elements.length + elements.length / 2;
-        T[] newElements = (T[]) new Object[newCapacity];
-        System.arraycopy(elements, 0, newElements, 0, size);
-        elements = newElements;
-    }
 
     @Override
     public void add(T value, int index) {
@@ -50,6 +43,14 @@ public class ArrayList<T> implements List<T> {
             add(value);
         }
 
+    }
+
+    @SuppressWarnings("unchecked")
+    private void growArray() {
+        int newCapacity = elements.length + elements.length / 2;
+        T[] newElements = (T[]) new Object[newCapacity];
+        System.arraycopy(elements, 0, newElements, 0, size);
+        elements = newElements;
     }
 
     private void checkIndex(int index) {
