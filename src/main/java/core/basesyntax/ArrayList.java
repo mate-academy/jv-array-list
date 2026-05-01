@@ -19,9 +19,7 @@ public class ArrayList<T> implements List<T> {
         }
         elements[size] = value;
         size++;
-
     }
-
 
     @Override
     public void add(T value, int index) {
@@ -42,7 +40,6 @@ public class ArrayList<T> implements List<T> {
             T value = list.get(i);
             add(value);
         }
-
     }
 
     @SuppressWarnings("unchecked")
@@ -69,7 +66,6 @@ public class ArrayList<T> implements List<T> {
     public void set(T value, int index) {
         checkIndex(index);
         elements[index] = value;
-
     }
 
     @Override
