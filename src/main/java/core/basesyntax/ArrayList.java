@@ -1,5 +1,7 @@
 package core.basesyntax;
 
+import java.util.NoSuchElementException;
+
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private T[] elements;
@@ -14,7 +16,6 @@ public class ArrayList<T> implements List<T> {
     public void add(T value) {
         if (size == elements.length) {
             growArray();
-
         }
         elements[size] = value;
         size++;
@@ -23,24 +24,21 @@ public class ArrayList<T> implements List<T> {
 
     @SuppressWarnings("unchecked")
     private void growArray() {
-        T[] newElements = (T[]) new Object[elements.length * 2];
-        for (int i = 0; i < size; i++) {
-            newElements[i] = elements[i];
-        }
+        int newCapacity = elements.length + elements.length / 2;
+        T[] newElements = (T[]) new Object[newCapacity];
+        System.arraycopy(elements, 0, newElements, 0, size);
         elements = newElements;
     }
 
     @Override
     public void add(T value, int index) {
         if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
+            throw new ArrayListIndexOutOfBoundsException("Index: " + index + ", Size: " + size);
         }
         if (size == elements.length) {
             growArray();
         }
-        for (int i = size; i > index; i--) {
-            elements[i] = elements[i - 1];
-        }
+        System.arraycopy(elements, index, elements, index + 1, size - index);
         elements[index] = value;
         size++;
     }
@@ -56,7 +54,7 @@ public class ArrayList<T> implements List<T> {
 
     private void checkIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Index: " + index + ", Size" + size);
+            throw new ArrayListIndexOutOfBoundsException("Index: " + index + ", Size: " + size);
         }
     }
 
@@ -76,11 +74,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
-        T removedElement = elements[index];
-        for (int i = index; i < size - 1; i++) {
-            elements[i] = elements[i + 1];
-
-        }
+        final T removedElement = elements[index];
+        System.arraycopy(elements, index + 1, elements, index, size - index - 1);
         size--;
         elements[size] = null;
         return removedElement;
@@ -100,7 +95,7 @@ public class ArrayList<T> implements List<T> {
                 }
             }
         }
-        return null;
+        throw new NoSuchElementException();
     }
 
     @Override
