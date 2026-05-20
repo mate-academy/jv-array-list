@@ -1,6 +1,15 @@
 package core.basesyntax;
 
 public class ArrayList<T> implements List<T> {
+    private static final int InitialCapacity = 10;
+    private T[] elements;
+    private int size;
+
+    public ArrayList() {
+        elements = (T[]) new Object[InitialCapacity];
+        size = 0;
+    }
+
     @Override
     public void add(T value) {
 
@@ -38,7 +47,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public int size() {
-        return 0;
+        return this.size;
     }
 
     @Override
