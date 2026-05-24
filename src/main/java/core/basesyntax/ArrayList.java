@@ -1,15 +1,15 @@
 package core.basesyntax;
 
-import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
-    private Object[] elementData = new Object[10];
+    private static final int DEFAULT_ARRAY_CAPACITY = 10;
+    private Object[] elementData = new Object[DEFAULT_ARRAY_CAPACITY];
     private int size;
 
     @Override
     public void add(T value) {
-        elementData = getNewCapacityArray(elementData);
+        elementData = checkCapacity(elementData);
         elementData[size()] = value;
         size++;
     }
@@ -19,7 +19,7 @@ public class ArrayList<T> implements List<T> {
         if (index > size() || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("This index doesn't exist");
         }
-        elementData = getNewCapacityArray(elementData);
+        elementData = checkCapacity(elementData);
         System.arraycopy(elementData, index, elementData, index + 1, size() - index);
         elementData[index] = value;
         size++;
@@ -35,13 +35,14 @@ public class ArrayList<T> implements List<T> {
         Object[] summaryArray = new Object[capacity];
         System.arraycopy(elementData, 0, summaryArray, 0, size());
         System.arraycopy(arrayFromCollection, 0, summaryArray, size(), list.size());
-        elementData = getNewCapacityArray(summaryArray);
+        elementData = checkCapacity(summaryArray);
         size += list.size();
     }
 
     @Override
     public T get(int index) {
-        if (index < size() && index >= 0) {
+        boolean rightIndex = validateIndex(index);
+        if (rightIndex == true) {
             return (T) elementData[index];
         } else {
             throw new ArrayListIndexOutOfBoundsException("This index doesn't exist");
@@ -50,7 +51,8 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void set(T value, int index) {
-        if (index < size() && index >= 0) /*&& elementData[index] != null)*/ {
+        boolean rightIndex = validateIndex(index);
+        if (rightIndex == true) {
             elementData[index] = value;
         } else {
             throw new ArrayListIndexOutOfBoundsException("This index doesn't exist");
@@ -60,7 +62,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         T deletedElement;
-        if (index < size() && index >= 0) {
+        boolean rigthIndex = validateIndex(index);
+        if (rigthIndex == true) {
             deletedElement = (T) elementData[index];
             System.arraycopy(elementData, index + 1, elementData, index, size() - index - 1);
             elementData[size - 1] = null;
@@ -94,6 +97,21 @@ public class ArrayList<T> implements List<T> {
         return false;
     }
 
+    public Object[] checkCapacity(Object[] elementData) {
+        if (size() >= elementData.length) {
+            elementData = getNewCapacityArray(elementData);
+            return elementData;
+        }
+        return elementData;
+    }
+
+    public boolean validateIndex(int index) {
+        if (index < size() && index >= 0) /*&& elementData[index] != null)*/ {
+            return true;
+        }
+        return false;
+    }
+
     public Object[] getArrayFromCollection(List<T> list) {
         Object[] arrayFromCollection = new Object[list.size()];
         for (int i = 0; i < list.size(); i++) {
@@ -104,17 +122,9 @@ public class ArrayList<T> implements List<T> {
 
     public Object[] getNewCapacityArray(Object[] elementData) {
         int capacityArray = elementData.length;
-        if (size() >= elementData.length) {
-            capacityArray += (capacityArray >> 1);
-            return Arrays.copyOf(elementData, capacityArray);
-        }
-        return elementData;
-    }
-
-    @Override
-    public String toString() {
-        return "ArrayList{"
-                + "elementData=" + Arrays.toString(elementData)
-                + ", size = " + size + '}';
+        capacityArray += (capacityArray >> 1);
+        Object[] newArray = new Object[capacityArray];
+        System.arraycopy(elementData, 0, newArray, 0, size());
+        return newArray;
     }
 }
