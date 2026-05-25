@@ -1,15 +1,15 @@
 package core.basesyntax;
 
-import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
+    private static final Object[] EMPTY_ELEMENTDATA = {};
     private static final int DEFAULT_CAPACITY = 10;
     private Object[] elementData;
     private int size;
 
     public ArrayList() {
-        this.elementData = new Object[DEFAULT_CAPACITY];
+        this.elementData = EMPTY_ELEMENTDATA;
         this.size = 0;
     }
 
@@ -38,7 +38,9 @@ public class ArrayList<T> implements List<T> {
             if (newLength < minCapacity) {
                 newLength = minCapacity;
             }
-            this.elementData = Arrays.copyOf(elementData, newLength);
+            Object[] newElementData = new Object[newLength];
+            System.arraycopy(elementData,0, newElementData, 0, size);
+            this.elementData = newElementData;
         }
     }
 
