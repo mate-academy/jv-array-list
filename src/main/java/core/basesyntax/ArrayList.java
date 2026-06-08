@@ -1,18 +1,29 @@
 package core.basesyntax;
 
 public class ArrayList<T> implements List<T> {
-    private static final int InitialCapacity = 10;
-    private T[] elements;
+    private static final int INITIAL_CAPACITY = 10;
+    private T[] elementDate;
     private int size;
 
     public ArrayList() {
-        elements = (T[]) new Object[InitialCapacity];
+        elementDate = (T[]) new Object[INITIAL_CAPACITY];
         size = 0;
     }
 
     @Override
     public void add(T value) {
+        if (size == elementDate.length) {
+            grow();
+        }
+        elementDate[size] = value;
+        size++;
+    }
 
+    private void grow() {
+        int newArrayCapacity = elementDate.length + elementDate.length / 2;
+        T[] newArray = (T[]) new Object[newArrayCapacity];
+        System.arraycopy(elementDate, 0, newArray, 0, size);
+        elementDate = newArray;
     }
 
     @Override
