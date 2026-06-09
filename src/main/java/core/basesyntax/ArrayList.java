@@ -28,22 +28,25 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-
+        this.elementDate[index] = value;
+        size++;
     }
 
     @Override
     public void addAll(List<T> list) {
-
+        for (int i = 0; i < list.size(); i++) {
+            this.add(list.get(i));
+        }
     }
 
     @Override
     public T get(int index) {
-        return null;
+        return this.elementDate[index];
     }
 
     @Override
     public void set(T value, int index) {
-
+        this.elementDate[index] = value;
     }
 
     @Override
@@ -63,6 +66,6 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public boolean isEmpty() {
-        return false;
+        return this.size == 0;
     }
 }
