@@ -3,8 +3,8 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
+    private static final int defaultSize = 10;
     private int size;
-    private static final  int defaultSize = 10;
     private Object[] elementData = new Object[defaultSize];
 
     private void grow() {
