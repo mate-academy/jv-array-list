@@ -6,7 +6,7 @@ import java.util.Objects;
 public class ArrayList<T> implements List<T> {
     private int size;
     private int defaultSize = 10;
-    Object[] elementData = new Object[defaultSize];
+    private Object[] elementData = new Object[defaultSize];
 
     private void grow() {
         int newCapacity = (int) (elementData.length * 1.5);
@@ -69,7 +69,7 @@ public class ArrayList<T> implements List<T> {
         if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException("index out of bounds");
         }
-        T value = (T) elementData[index];
+        final T value = (T) elementData[index];
         for (int i = index; i < size - 1; i++) {
             elementData[i] = elementData[i + 1];
         }
