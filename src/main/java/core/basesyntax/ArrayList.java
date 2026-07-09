@@ -3,13 +3,14 @@ package core.basesyntax;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
+    private static final int DEFAULT_CAPACITY = 10;
+    private static final int CAPACITY_GROWTH_FACTOR = 2;
     private int size = 0;
-    private int capacity = 10;
+    private int capacity = DEFAULT_CAPACITY;
     private Object[] array = new Object[capacity];
 
     public void increaseCapacity() {
-        int capacityDiv = 2;
-        capacity = capacity + (capacity / capacityDiv);
+        capacity = capacity + (capacity / CAPACITY_GROWTH_FACTOR);
         Object[] newArray = new Object[capacity];
         System.arraycopy(array, 0, newArray, 0, size);
         array = newArray;
