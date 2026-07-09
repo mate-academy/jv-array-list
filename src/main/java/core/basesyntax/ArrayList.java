@@ -32,7 +32,9 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        checkBounds(index);
+        if (index < 0 || index > size) {
+            throw new ArrayListIndexOutOfBoundsException("Index is out of bounds");
+        }
         if (size == capacity) {
             increaseCapacity();
         }
@@ -68,8 +70,9 @@ public class ArrayList<T> implements List<T> {
     public T remove(int index) {
         checkBounds(index);
         final T removed = (T) array[index];
-        array[index] = null;
-        System.arraycopy(array, index + 1, array, index, size - index - 1);
+        if (index < size - 1) {
+            System.arraycopy(array, index + 1, array, index, size - index - 1);
+        }
         size--;
         return removed;
     }
