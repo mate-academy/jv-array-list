@@ -24,9 +24,7 @@ public class ArrayList<T> implements List<T> {
         int oldCapacity = elements.length;
         int newCapacity = oldCapacity + (oldCapacity >> 1);
         Object[] newElements = new Object[newCapacity];
-        for (int i = 0; i < size; i++) {
-            newElements[i] = elements[i];
-        }
+        System.arraycopy(elements, 0, newElements, 0, size);
         elements = newElements;
     }
 
@@ -94,7 +92,7 @@ public class ArrayList<T> implements List<T> {
                 return remove(i);
             }
         }
-        throw new NoSuchElementException("Element not in found");
+        throw new NoSuchElementException("Element not found");
     }
 
     @Override
