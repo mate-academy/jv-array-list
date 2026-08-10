@@ -77,7 +77,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
-        T value = (T) array[index];
+        final T value = (T) array[index];
         System.arraycopy(array, index + 1, array, index, size - index - 1);
         size--;
         array[size] = null;
@@ -88,7 +88,7 @@ public class ArrayList<T> implements List<T> {
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
             if (Objects.equals(array[i], element)) {
-                T removedElement = (T) array[i];
+                final T removedElement = (T) array[i];
                 System.arraycopy(array, i + 1, array, i, size - i - 1);
                 size--;
                 array[size] = null;
