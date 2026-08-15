@@ -48,10 +48,9 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
-        final T removeValue = array[index];
+        T removeValue = array[index];
         System.arraycopy(array, index + 1, array, index, size - index - 1);
-        array[size - 1] = null;
-        size--;
+        array[--size] = null;
         return removeValue;
     }
 
