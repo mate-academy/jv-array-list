@@ -5,8 +5,9 @@ import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
+    private static final double GROW_INDEX = 1.5;
 
-    private Object[] array = new Object[DEFAULT_CAPACITY];
+    private T[] array = (T[]) new Object[DEFAULT_CAPACITY];
     private int size;
 
     @Override
@@ -53,7 +54,7 @@ public class ArrayList<T> implements List<T> {
     public T get(int index) {
         checkIndex(index);
 
-        return (T) array[index];
+        return array[index];
     }
 
     @Override
@@ -66,17 +67,10 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
-
-        T value = (T) array[index];
-
-        for (int i = index; i < size - 1; i++) {
-            array[i] = array[i + 1];
-        }
-
-        size--;
-        array[size] = null;
-
-        return value;
+        final T removeValue = array[index];
+        System.arraycopy(array, index + 1, array, index, size - index - 1);
+        array[--size] = null;
+        return removeValue;
     }
 
     @Override
@@ -116,7 +110,7 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void grow() {
-        Object[] newArray = new Object[(int) (array.length * 1.5)];
+        T[] newArray = (T[]) new Object[(int) (array.length * GROW_INDEX)];
         System.arraycopy(array, 0, newArray, 0, size);
         array = newArray;
     }
