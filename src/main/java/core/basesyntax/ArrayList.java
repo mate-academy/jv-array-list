@@ -1,6 +1,5 @@
 package core.basesyntax;
 
-import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
@@ -33,14 +32,14 @@ public class ArrayList<T> implements List<T> {
     @Override
     public void addAll(List<T> list) {
         if (list == null) {
-            System.out.println("List doesn`t exist");
             return;
         }
         for (int i = 0; i < list.size(); ++i) {
-            T o = list.get(i);
+            /*T o = list.get(i);
             checkCapacity();
             elementData[size] = o;
-            size++;
+            size++;*/
+            add(list.get(i));
         }
     }
 
@@ -59,14 +58,15 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
-        final T removed = (T)elementData[index];
+        /*final T removed = (T)elementData[index];
         Object[] firstPart = Arrays.copyOf(elementData, index);
         Object[] secondPart = Arrays.copyOfRange(elementData, index + 1, size);
         Object[] result = Arrays.copyOf(firstPart, firstPart.length + secondPart.length);
         System.arraycopy(secondPart, 0, result, firstPart.length, secondPart.length);
         elementData = result;
         size--;
-        return removed;
+        return removed;*/
+        return removeElementAtIndex(index);
     }
 
     @Override
@@ -83,14 +83,15 @@ public class ArrayList<T> implements List<T> {
         if (!found) {
             throw new NoSuchElementException("Such an element doesn`t exist");
         }
-        final T removed = (T)elementData[index];
+        /*final T removed = (T)elementData[index];
         Object[] firstPart = Arrays.copyOf(elementData, index);
         Object[] secondPart = Arrays.copyOfRange(elementData, index + 1, size);
         Object[] result = Arrays.copyOf(firstPart, firstPart.length + secondPart.length);
         System.arraycopy(secondPart, 0, result, firstPart.length, secondPart.length);
         elementData = result;
         size--;
-        return removed;
+        return removed;*/
+        return removeElementAtIndex(index);
     }
 
     @Override
@@ -110,10 +111,33 @@ public class ArrayList<T> implements List<T> {
         return index;
     }
 
-    public void checkCapacity() {
+    /*public void checkCapacity() {
         if (elementData.length == size) {
             int newCapacity = elementData.length + (elementData.length / 2);
             elementData = Arrays.copyOf(elementData, newCapacity);
         }
+    }*/
+    public void checkCapacity() {
+        if (elementData.length == size) {
+            grow();
+        }
+    }
+
+    private void grow() {
+        int newCapacity = elementData.length + (elementData.length / 2);
+        Object[] newElementData = new Object[newCapacity];
+        System.arraycopy(elementData, 0, newElementData, 0, size);
+        elementData = newElementData;
+    }
+
+    private T removeElementAtIndex(int index) {
+        final T removed = (T) elementData[index];
+        int numMoved = size - index - 1;
+        if (numMoved > 0) {
+            System.arraycopy(elementData, index + 1, elementData, index, numMoved);
+        }
+        size--;
+        elementData[size] = null;
+        return removed;
     }
 }
