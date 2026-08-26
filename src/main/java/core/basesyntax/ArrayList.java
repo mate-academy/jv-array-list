@@ -8,7 +8,6 @@ public class ArrayList<T> implements List<T> {
     private T[] array;
     private int size;
 
-
     public ArrayList() {
         array = (T[]) new Object[DEFAULT_SIZE];
     }
@@ -36,7 +35,6 @@ public class ArrayList<T> implements List<T> {
         for (int i = 0; i < list.size(); i++) {
             add(list.get(i));
         }
-
     }
 
     @Override
@@ -83,9 +81,9 @@ public class ArrayList<T> implements List<T> {
 
     private void checkAndResize() {
         if (array.length == size) {
-            T[] newMainData = (T[]) new Object[(int) (array.length * RESIZE_FACTOR)];
-            System.arraycopy(array, 0, newMainData, 0, array.length);
-            array = newMainData;
+            T[] resizedArray = (T[]) new Object[(int) (array.length * RESIZE_FACTOR)];
+            System.arraycopy(array, 0, resizedArray, 0, array.length);
+            array = resizedArray;
         }
     }
 
