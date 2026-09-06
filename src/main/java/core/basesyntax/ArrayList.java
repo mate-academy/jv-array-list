@@ -4,6 +4,7 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
+    private static final int GROWTH_MULTIPLIER = 2;
     private Object[] elementData;
     private int size;
 
@@ -12,13 +13,24 @@ public class ArrayList<T> implements List<T> {
         size = 0;
     }
 
-    @Override
-    public void add(T value) {
+    private void addCheck() {
         if (size == elementData.length) {
-            Object[] newElementData = new Object[elementData.length + elementData.length / 2];
+            Object[] newElementData = new Object[elementData.length
+                    + elementData.length / GROWTH_MULTIPLIER];
             System.arraycopy(elementData, 0, newElementData, 0, size);
             elementData = newElementData;
         }
+    }
+
+    private void checkException(int index) {
+        if (index >= size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
+        }
+    }
+
+    @Override
+    public void add(T value) {
+        addCheck();
         elementData[size] = value;
         size++;
     }
@@ -28,11 +40,7 @@ public class ArrayList<T> implements List<T> {
         if (index > size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
         }
-        if (size == elementData.length) {
-            Object[] newElementData = new Object[elementData.length + elementData.length / 2];
-            System.arraycopy(elementData, 0, newElementData, 0, size);
-            elementData = newElementData;
-        }
+        addCheck();
         System.arraycopy(elementData, index, elementData, index + 1, size - index);
         elementData[index] = value;
         size++;
@@ -43,42 +51,38 @@ public class ArrayList<T> implements List<T> {
         if (list.size() == 0) {
             return;
         }
-        int newCapacity = Math.max(elementData.length + elementData.length / 2, size + list.size());
-        Object[] array = new Object[list.size()];
+        int newCapacity = Math.max(elementData.length
+                + elementData.length / GROWTH_MULTIPLIER, size
+                + list.size());
+        Object[] listElements = new Object[list.size()];
         for (int i = 0; i < list.size(); i++) {
-            array[i] = list.get(i);
+            listElements[i] = list.get(i);
         }
         if ((size + list.size()) > elementData.length) {
             Object[] newElementData = new Object[newCapacity];
             System.arraycopy(elementData, 0, newElementData, 0, size);
             elementData = newElementData;
         }
-        System.arraycopy(array, 0, elementData, size, list.size());
+        System.arraycopy(listElements, 0, elementData, size, list.size());
         size = size + list.size();
     }
 
     @Override
     public T get(int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
-        }
+        checkException(index);
         return (T) elementData[index];
     }
 
     @Override
     public void set(T value, int index) {
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
-        }
+        checkException(index);
         elementData[index] = value;
     }
 
     @Override
     public T remove(int index) {
         T result;
-        if (index >= size || index < 0) {
-            throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
-        }
+        checkException(index);
         result = (T) elementData[index];
         System.arraycopy(elementData, index + 1, elementData, index, size - index - 1);
         size--;
@@ -89,7 +93,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         T result = null;
-        boolean temp = true;
+        boolean elementFound = true;
         for (int i = 0; i < size; i++) {
             if (element == null && null == elementData[i]
                     || element != null && element.equals(elementData[i])) {
@@ -97,11 +101,11 @@ public class ArrayList<T> implements List<T> {
                 System.arraycopy(elementData, i + 1, elementData, i, size - i - 1);
                 size--;
                 elementData[size] = null;
-                temp = false;
+                elementFound = false;
                 break;
             }
         }
-        if (temp) {
+        if (elementFound) {
             throw new NoSuchElementException("Invalid element: " + element);
         }
         return result;
