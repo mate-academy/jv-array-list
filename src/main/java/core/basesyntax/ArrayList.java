@@ -4,7 +4,7 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    private static final int GROWTH_MULTIPLIER = 2;
+    private static final int GROWTH_DIVISOR = 2;
     private Object[] elementData;
     private int size;
 
@@ -13,10 +13,10 @@ public class ArrayList<T> implements List<T> {
         size = 0;
     }
 
-    private void addCheck() {
-        if (size == elementData.length) {
-            Object[] newElementData = new Object[elementData.length
-                    + elementData.length / GROWTH_MULTIPLIER];
+    private void ensureCapacity(int minCapacity) {
+        if (minCapacity > elementData.length) {
+            int newCapacity = elementData.length + elementData.length / GROWTH_DIVISOR;
+            Object[] newElementData = new Object[Math.max(newCapacity, minCapacity)];
             System.arraycopy(elementData, 0, newElementData, 0, size);
             elementData = newElementData;
         }
@@ -30,7 +30,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        addCheck();
+        ensureCapacity(size + 1);
         elementData[size] = value;
         size++;
     }
@@ -40,7 +40,7 @@ public class ArrayList<T> implements List<T> {
         if (index > size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException("Invalid index: " + index);
         }
-        addCheck();
+        ensureCapacity(size + 1);
         System.arraycopy(elementData, index, elementData, index + 1, size - index);
         elementData[index] = value;
         size++;
@@ -51,18 +51,11 @@ public class ArrayList<T> implements List<T> {
         if (list.size() == 0) {
             return;
         }
-        int newCapacity = Math.max(elementData.length
-                + elementData.length / GROWTH_MULTIPLIER, size
-                + list.size());
         Object[] listElements = new Object[list.size()];
         for (int i = 0; i < list.size(); i++) {
             listElements[i] = list.get(i);
         }
-        if ((size + list.size()) > elementData.length) {
-            Object[] newElementData = new Object[newCapacity];
-            System.arraycopy(elementData, 0, newElementData, 0, size);
-            elementData = newElementData;
-        }
+        ensureCapacity(size + list.size());
         System.arraycopy(listElements, 0, elementData, size, list.size());
         size = size + list.size();
     }
