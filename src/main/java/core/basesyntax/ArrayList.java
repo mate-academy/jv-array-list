@@ -51,11 +51,23 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(int index) {
-        return null;
+        if (index < 0 || index >= size) {
+            throw new ArrayListIndexOutOfBoundsException("Index: " + index + ", is invalid");
+        }
+
+        T removedValue = this.elementDate[index];
+
+        for (int i = index; i < size - 1; i++) {
+            this.elementDate[i] = this.elementDate[i + 1];
+        }
+        size--;
+        elementDate[size] = null;
+
+        return removedValue;
     }
 
     @Override
-    public T remove(T element) {
+    public T remove(T element) {;
         return null;
     }
 
