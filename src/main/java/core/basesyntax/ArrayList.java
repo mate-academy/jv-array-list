@@ -4,11 +4,11 @@ import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
     private static final int INITIAL_CAPACITY = 10;
-    private T[] elementDate;
+    private T[] elementData;
     private int size;
 
     public ArrayList() {
-        elementDate = (T[]) new Object[INITIAL_CAPACITY];
+        elementData = (T[]) new Object[INITIAL_CAPACITY];
         size = 0;
     }
 
@@ -26,10 +26,10 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        if (size == elementDate.length) {
-            grow();
+        if (size == elementData.length) {
+            growIfArrayFull();
         }
-        elementDate[size] = value;
+        elementData[size] = value;
         size++;
     }
 
@@ -37,15 +37,15 @@ public class ArrayList<T> implements List<T> {
     public void add(T value, int index) {
         checkIndexArrayListForAdd(index);
 
-        if (size == elementDate.length) {
-            grow();
+        if (size == elementData.length) {
+            growIfArrayFull();
         }
 
         for (int i = size; i > index; i--) {
-            elementDate[i] = elementDate[i - 1];
+            elementData[i] = elementData[i - 1];
         }
 
-        elementDate[index] = value;
+        elementData[index] = value;
         size++;
     }
 
@@ -56,36 +56,36 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private void grow() {
-        int newArrayCapacity = elementDate.length + elementDate.length / 2;
+    private void growIfArrayFull() {
+        int newArrayCapacity = elementData.length + elementData.length / 2;
         T[] newArray = (T[]) new Object[newArrayCapacity];
-        System.arraycopy(elementDate, 0, newArray, 0, size);
-        elementDate = newArray;
+        System.arraycopy(elementData, 0, newArray, 0, size);
+        elementData = newArray;
     }
 
     @Override
     public T get(int index) {
         checkIndexArrayList(index);
-        return this.elementDate[index];
+        return this.elementData[index];
     }
 
     @Override
     public void set(T value, int index) {
         checkIndexArrayList(index);
-        this.elementDate[index] = value;
+        this.elementData[index] = value;
     }
 
     @Override
     public T remove(int index) {
         checkIndexArrayList(index);
 
-        final T removedValue = this.elementDate[index];
+        final T removedValue = this.elementData[index];
 
         for (int i = index; i < size - 1; i++) {
-            this.elementDate[i] = this.elementDate[i + 1];
+            this.elementData[i] = this.elementData[i + 1];
         }
         size--;
-        elementDate[size] = null;
+        elementData[size] = null;
 
         return removedValue;
     }
@@ -93,8 +93,8 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(T element) {
         for (int i = 0; i < size; i++) {
-            if ((element == null && elementDate[i] == null)
-                    || (element != null && element.equals(elementDate[i]))) {
+            if ((element == null && elementData[i] == null)
+                    || (element != null && element.equals(elementData[i]))) {
                 return remove(i);
             }
         }
