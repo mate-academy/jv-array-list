@@ -63,7 +63,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index >= size || index < 0) {
+        if (!checkIndex(index)) {
             throw new ArrayListIndexOutOfBoundsException("Can't element by index " + index);
         }
 
@@ -72,7 +72,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void set(T value, int index) {
-        if (index < 0 || index >= size) {
+        if (!checkIndex(index)) {
             throw new ArrayListIndexOutOfBoundsException("Can't set value "
                     + value + " by index " + index);
         }
@@ -82,7 +82,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(int index) {
-        if (index < 0 || index >= size) {
+        if (!checkIndex(index)) {
             throw new ArrayListIndexOutOfBoundsException("Can't remove element by index" + index);
         }
 
@@ -112,10 +112,10 @@ public class ArrayList<T> implements List<T> {
             throw new NoSuchElementException("Can't remove this element " + element);
         }
 
-        for (int i = index; i < storage.length - 1; i++) {
+        for (int i = index; i < size - 1; i++) {
             storage[i] = storage[i + 1];
         }
-        storage[storage.length - 1] = null;
+        storage[size - 1] = null;
 
         size--;
 
@@ -133,12 +133,14 @@ public class ArrayList<T> implements List<T> {
     }
 
     private void grow() {
-        Object[] newStorage = new Object[(int) (size * GROW_INDEX)];
+        Object[] newStorage = new Object[(int) (storage.length * GROW_INDEX)];
 
-        for (int i = 0; i < size; i++) {
-            newStorage[i] = storage[i];
-        }
+        System.arraycopy(storage, 0, newStorage, 0, size);
 
         storage = newStorage;
+    }
+
+    private boolean checkIndex(int index) {
+        return index >= 0 && index < size;
     }
 }
