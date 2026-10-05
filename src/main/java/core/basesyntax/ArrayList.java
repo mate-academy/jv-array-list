@@ -9,7 +9,7 @@ public class ArrayList<T> implements List<T> {
     private static final double CAPACITY_GROWTH_FACTOR = 1.5;
     private transient T[] elementData;
     private int size;
-    
+
     public ArrayList() {
         elementData = (T[]) new Object[DEFAULT_CAPACITY];
 
@@ -65,7 +65,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T remove(int index) {
         checkIndex(index);
-        T removed = elementData[index];
+        final T removed = elementData[index];
         for (int i = index; i < size - 1; i++) {
             elementData[i] = elementData[i + 1];
         }
@@ -91,7 +91,6 @@ public class ArrayList<T> implements List<T> {
     public int size() {
         return size;
     }
-
 
     @Override
     public boolean isEmpty() {
