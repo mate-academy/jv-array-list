@@ -1,14 +1,30 @@
 package core.basesyntax;
 
 public class ArrayList<T> implements List<T> {
+    ArrayList<T> elementData;
+    int size;
+    float grow;
+
+    public int checkIndex() {
+        return (elementData.lenght - 1);
+    }public ArrayList<>()
+
+    {
+    };
+
     @Override
     public void add(T value) {
-
+        int index = checkIndex();
+        elementData[index] = value;
     }
 
     @Override
     public void add(T value, int index) {
-
+        if (checkIndex() >= index) {
+            elementData[index] = value;
+        } else {
+            elementData[checkIndex()] = value;
+        }
     }
 
     @Override
@@ -18,6 +34,9 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
+        if (index < checkIndex()) {
+            return elementData[index];
+        }
         return null;
     }
 
@@ -28,21 +47,30 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(int index) {
-        return null;
+        elementData[index] = null;
+        int i = index;
+        while(elementData.[i + 1] < elementData.length){
+            elementData[i] = element[i + 1];
+            i++;
+        }
     }
 
     @Override
     public T remove(T element) {
-        return null;
+        for (int i = 0; i < elementData.length; i++) {
+            if (elementData[i] == element) {
+                this.remove(i);
+            }
+        }
     }
 
     @Override
     public int size() {
-        return 0;
+        return elementData.length;
     }
 
     @Override
     public boolean isEmpty() {
-        return false;
+        return elementData.length == 0;
     }
 }
