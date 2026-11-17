@@ -1,30 +1,45 @@
 package core.basesyntax;
 
 public class ArrayList<T> implements List<T> {
-    ArrayList<T> elementData;
+    transient Object[] elementData;
     int size;
     float grow;
 
     public int checkIndex() {
         return (elementData.lenght - 1);
-    }public ArrayList<>()
+    }
 
-    {
-    };
+    @Override
+    public Object[] grow() {
+        return grow(size * 1.5);
+    }
 
     @Override
     public void add(T value) {
-        int index = checkIndex();
-        elementData[index] = value;
+        modCount++;
+        add(value, elementData, size);
+    }
+
+    private void add(T value, Object[] elementData, int s) {
+        if (s == elementData.length)
+            elementData = grow();
+        elementData[s] = value;
+        size = s + 1;
+    }
+
+    private Object[] grow() {
+        return grow(size + 1);
+    }
+
+    private Object[] grow(int minCapacity) {
+        oldCapacity = elementData.length;
     }
 
     @Override
     public void add(T value, int index) {
-        if (checkIndex() >= index) {
-            elementData[index] = value;
-        } else {
-            elementData[checkIndex()] = value;
-        }
+        modCount++;
+        add(e, elementData, size);
+        return
     }
 
     @Override
