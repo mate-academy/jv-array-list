@@ -1,9 +1,22 @@
 package core.basesyntax;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 public class ArrayList<T> implements List<T> {
     transient Object[] elementData;
     int size;
     float grow;
+
+    private static final int DEFAULT_CAPACITY = 10;
+
+    private static final Object[] EMPTY_ELEMENTDATA = {};
+
+    private static final Object[] DEFAULTCAPACITY_EMPTY_ELEMENTDATA = {};
+
+    public ArrayList() {
+        this.elementData = DEFAULTCAPACITY_EMPTY_ELEMENTDATA;
+    }
 
     public int checkIndex() {
         return (elementData.lenght - 1);
@@ -11,7 +24,19 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public Object[] grow() {
-        return grow(size * 1.5);
+        return grow(size + 1);
+    }
+
+    private Object[] grow(int minCapacity) {
+        int oldCapacity = elementData.length;
+        if (oldCapacity > 0 || elementData != DEFAULTCAPACITY_EMPTY_ELEMENTDATA) {
+            int newCapacity = ArraysSupport.newLength(oldCapacity,
+                    minCapacity - oldCapacity,
+                    oldCapacity >> 1);
+            return elementData = Arrays.copyOf(elementData, newCapacity);
+        } else {
+            return elementData = new Object[Math.max(DEFAULT_CAPACITY, minCapacity)];
+        }
     }
 
     @Override
