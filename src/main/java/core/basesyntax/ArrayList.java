@@ -41,7 +41,6 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value) {
-        modCount++;
         add(value, elementData, size);
     }
 
@@ -62,9 +61,23 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T value, int index) {
-        modCount++;
-        add(e, elementData, size);
-        return
+        if (index <= size) {
+            final int s;
+            Object[] elementData;
+            if ((s = size) == (elementData = this.elementData).length) {
+                elementData = grow();
+            }
+            int i = index;
+            while (i < this.elementData.length) {
+                elementData[i + 1] = elementData[i];
+                i++;
+            }
+            elementData[index] = value;
+            add(value, elementData, index);
+            return;
+        } else {
+            add(value, elementData, (size + 1));
+        }
     }
 
     @Override
@@ -87,12 +100,16 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(int index) {
-        elementData[index] = null;
-        int i = index;
-        while(elementData.[i + 1] < elementData.length){
-            elementData[i] = element[i + 1];
-            i++;
+        if (index < size) {
+            int i = index;
+            while ((i + 1) < elementData.length) {
+                elementData[i] = elementData[i + 1];
+                i++;
+            }
+            elementData[i] = null;
+
         }
+
     }
 
     @Override
