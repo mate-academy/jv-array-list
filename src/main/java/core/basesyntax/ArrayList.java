@@ -1,12 +1,11 @@
 package core.basesyntax;
 
-import java.util.Arrays;
 import java.util.NoSuchElementException;
-import java.util.Objects;
 
 public class ArrayList<T> implements List<T> {
 
     private static final int DEFAULT_CAPACITY = 10;
+    private static final double COEFFICIENT = 1.5;
     private int size;
     private T[] values;
 
@@ -17,7 +16,11 @@ public class ArrayList<T> implements List<T> {
 
     private void addCapacity() {
         if (size == values.length) {
-            values = Arrays.copyOf(values, (int) (size * 1.5));
+            T[] newValues = (T[]) new Object[(int) (values.length * COEFFICIENT)];
+            for (int index = 0; index < values.length; index++) {
+                newValues[index] = values[index];
+            }
+            values = newValues;
         }
     }
 
@@ -51,12 +54,8 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        int oldLength = values.length;
-        if (oldLength < size + list.size()) {
-            values = Arrays.copyOf(values, oldLength + list.size());
-        }
-        for (int i = 0; i < list.size(); i++) {
-            values[size++] = list.get(i);
+        for (int index = 0; index < list.size(); index++) {
+            add(list.get(index));
         }
     }
 
@@ -82,17 +81,15 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        for (int i = 0; i < size; i++) {
-            if (Objects.equals(values[i], element)) {
-                removeByIndex(i);
-                break;
-            }
-            if (i == size - 1) {
-                throw new NoSuchElementException(
-                        "The element: " + element + "does not exist in the list");
+        for (int index = 0; index < size; index++) {
+            if ((values[index] == element) || (values[index] != null && values[index].equals(
+                    element))) {
+                removeByIndex(index);
+                return element;
             }
         }
-        return element;
+        throw new NoSuchElementException(
+                "The element: " + element + "does not exist in the list");
     }
 
     @Override
