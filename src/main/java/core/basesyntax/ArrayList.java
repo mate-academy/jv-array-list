@@ -16,10 +16,6 @@ public class ArrayList<T> implements List<T> {
         this.elementData = DEFAULTCAPACITY_EMPTY_ELEMENTDATA;
     }
 
-    public int checkIndex() {
-        return (elementData.length - 1);
-    }
-
     private T[] grow(int minCapacity) {
         int oldCapacity = elementData.length;
         if (oldCapacity > 0 || elementData != DEFAULTCAPACITY_EMPTY_ELEMENTDATA) {
