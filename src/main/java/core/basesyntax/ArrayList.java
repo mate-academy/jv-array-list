@@ -1,6 +1,7 @@
 package core.basesyntax;
 
 import java.util.Arrays;
+import java.lang.Exception;
 
 public class ArrayList<T> implements List<T> {
     transient Object[] elementData;
@@ -76,9 +77,9 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void set(T value, int index) {
-        if(index <= size + 1){
-            elementData[index] = value
-        }else{
+        if (index <= size) {
+            elementData[index] = value;
+        } else {
             throw ArrayListIndexOutOfBoundsException("No such index");
         }
     }
