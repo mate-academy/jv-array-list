@@ -1,33 +1,32 @@
 package core.basesyntax;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 
 public class ArrayList<T> implements List<T> {
-    transient Object[] elementData;
+    transient T[] elementData;
     int size;
     float grow;
 
     private static final int DEFAULT_CAPACITY = 10;
 
-    private static final Object[] EMPTY_ELEMENTDATA = {};
+    private static final T[] EMPTY_ELEMENTDATA = {};
 
-    private static final Object[] DEFAULTCAPACITY_EMPTY_ELEMENTDATA = {};
+    private static final T[] DEFAULTCAPACITY_EMPTY_ELEMENTDATA = {};
 
     public ArrayList() {
         this.elementData = DEFAULTCAPACITY_EMPTY_ELEMENTDATA;
     }
 
     public int checkIndex() {
-        return (elementData.lenght - 1);
+        return (elementData.length - 1);
     }
 
-    @Override
-    public Object[] grow() {
-        return grow(size + 1);
-    }
+    // @Override
+    // public T[] grow() {
+    // return grow(size + 1);
+    // }
 
-    private Object[] grow(int minCapacity) {
+    private T[] grow(int minCapacity) {
         int oldCapacity = elementData.length;
         if (oldCapacity > 0 || elementData != DEFAULTCAPACITY_EMPTY_ELEMENTDATA) {
             int newCapacity = ArraysSupport.newLength(oldCapacity,
@@ -35,7 +34,7 @@ public class ArrayList<T> implements List<T> {
                     oldCapacity >> 1);
             return elementData = Arrays.copyOf(elementData, newCapacity);
         } else {
-            return elementData = new Object[Math.max(DEFAULT_CAPACITY, minCapacity)];
+            return elementData = new T[Math.max(DEFAULT_CAPACITY, minCapacity)];
         }
     }
 
@@ -46,18 +45,18 @@ public class ArrayList<T> implements List<T> {
 
     private void add(T value, Object[] elementData, int s) {
         if (s == elementData.length)
-            elementData = grow();
+            elementData = grow(size + 1);
         elementData[s] = value;
         size = s + 1;
     }
 
-    private Object[] grow() {
-        return grow(size + 1);
-    }
+    // private Object[] grow() {
+    // return grow(size + 1);
+    // }
 
-    private Object[] grow(int minCapacity) {
-        oldCapacity = elementData.length;
-    }
+    // private Object[] grow(int minCapacity) {
+    // oldCapacity = elementData.length;
+    // }
 
     @Override
     public void add(T value, int index) {
