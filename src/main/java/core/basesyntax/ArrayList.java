@@ -5,7 +5,7 @@ import java.util.Arrays;
 public class ArrayList<T> implements List<T> {
     transient T[] elementData;
     int size;
-    float grow;
+    double static final grow = 1.5;
 
     private static final int DEFAULT_CAPACITY = 10;
 
@@ -86,10 +86,10 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index < checkIndex()) {
+        if (index < elementData.length) {
             return elementData[index];
         }
-        return null;
+        throw ArrayListIndexOutOfBoundsException("No such index");
     }
 
     @Override
