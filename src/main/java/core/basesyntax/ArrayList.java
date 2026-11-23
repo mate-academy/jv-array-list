@@ -101,10 +101,15 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
+        int isFound = 0;
         for (int i = 0; i < elementData.length; i++) {
             if (elementData[i] == element) {
                 this.remove(i);
+                isFound = 1;
             }
+        }
+        if (isFound) {
+            throw NoSuchElementException();
         }
     }
 
