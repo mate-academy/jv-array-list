@@ -28,11 +28,12 @@ public class ArrayList<T> implements List<T> {
             increseMaxSize();
         }
 
-            for (int i = size - 1; i >= index; i--) {
-                elements[i + 1] = elements[i];
-            }
-            elements[index] = value;
-            size++;
+        for (int i = size - 1; i >= index; i--) {
+            elements[i + 1] = elements[i];
+        }
+
+        elements[index] = value;
+        size++;
     }
 
     @Override
@@ -72,14 +73,13 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayListIndexOutOfBoundsException("Invalid index");
         }
 
-        T result = (T) elements[index];
+        final T result = (T)elements[index];
 
         for (int i = index; i < size - 1; i++) {
             elements[i] = elements[i + 1];
         }
 
         size--;
-
         elements[size] = null;
 
         return result;
