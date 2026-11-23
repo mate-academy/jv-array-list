@@ -5,7 +5,7 @@ import java.util.Arrays;
 public class ArrayList<T> implements List<T> {
     transient T[] elementData;
     int size;
-    double static final grow = 1.5;
+    private static final double grow = 1.5;
 
     private static final int DEFAULT_CAPACITY = 10;
 
@@ -20,11 +20,6 @@ public class ArrayList<T> implements List<T> {
     public int checkIndex() {
         return (elementData.length - 1);
     }
-
-    // @Override
-    // public T[] grow() {
-    // return grow(size + 1);
-    // }
 
     private T[] grow(int minCapacity) {
         int oldCapacity = elementData.length;
@@ -49,14 +44,6 @@ public class ArrayList<T> implements List<T> {
         elementData[s] = value;
         size = s + 1;
     }
-
-    // private Object[] grow() {
-    // return grow(size + 1);
-    // }
-
-    // private Object[] grow(int minCapacity) {
-    // oldCapacity = elementData.length;
-    // }
 
     @Override
     public void add(T value, int index) {
@@ -107,6 +94,8 @@ public class ArrayList<T> implements List<T> {
             }
             elementData[i] = null;
 
+        } else {
+            throw NoSuchElementException();
         }
 
     }
