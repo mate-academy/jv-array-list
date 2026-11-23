@@ -115,11 +115,17 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public int size() {
-        return elementData.length;
+        return size;
     }
 
     @Override
     public boolean isEmpty() {
-        return elementData.length == 0;
+        for (int i = 0; i < size; i++) {
+            if (elementData[i] != null) {
+                return false;
+            }
+
+        }
+        return true;
     }
 }
