@@ -23,9 +23,11 @@ public class ArrayList<T> implements List<T> {
             int newCapacity = ArraysSupport.newLength(oldCapacity,
                     minCapacity - oldCapacity,
                     oldCapacity >> 1);
+            elementData = (T) elementData;
             return elementData = Arrays.copyOf(elementData, newCapacity);
         } else {
-            return elementData = new T[Math.max(DEFAULT_CAPACITY, minCapacity)];
+            elementData = (T) elementData;
+            return elementData = (new T[Math.max(DEFAULT_CAPACITY, minCapacity)]);
         }
     }
 
@@ -101,11 +103,11 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(T element) {
-        int isFound = 0;
+        boolean isFound = false;
         for (int i = 0; i < elementData.length; i++) {
             if (elementData[i] == element) {
                 this.remove(i);
-                isFound = 1;
+                isFound = true;
             }
         }
         if (isFound) {
