@@ -61,9 +61,7 @@ public class ArrayList<T> implements List<T> {
 
         final T removeElement = (T) elements[index];
 
-        for (int currentIndex = index; currentIndex < size - 1; currentIndex++) {
-            elements[currentIndex] = elements[currentIndex + 1];
-        }
+        System.arraycopy(elements, index + 1, elements, index, size - index - 1);
 
         size--;
         elements[size] = null;
@@ -96,9 +94,7 @@ public class ArrayList<T> implements List<T> {
             int newCapacity = elements.length + elements.length / GROWTH_DIVISION;
             Object[] newElements = new Object[newCapacity];
 
-            for (int index = 0; index < size; index++) {
-                newElements[index] = elements[index];
-            }
+            System.arraycopy(elements, 0, newElements, 0, size);
 
             elements = newElements;
         }
